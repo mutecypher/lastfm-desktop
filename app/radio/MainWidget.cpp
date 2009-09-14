@@ -77,7 +77,7 @@ MainWidget::onStartRadio(RadioStation rs)
 void
 MainWidget::onShowMoreRecentStations()
 {
-    RadioListWidget* w = new RadioListWidget();
+    RadioListWidget* w = new RadioListWidget( &m_recentModel );
     connect(w, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
     connect(w, SIGNAL(startRadio(RadioStation)), SLOT(onStartRadio(RadioStation)));
 

@@ -19,9 +19,9 @@
 
 #include "RadioListWidget.h"
 
-RadioListWidget::RadioListWidget(QWidget* parent)
-: QListWidget(parent)
+RadioListWidget::RadioListWidget(QAbstractItemModel* model, QWidget* parent)
+: QListView(parent)
 {
-
+    setModel( model );
 }
 

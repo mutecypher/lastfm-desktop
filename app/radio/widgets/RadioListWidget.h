@@ -20,15 +20,14 @@
 #ifndef RADIO_LIST_WIDGET_H
 #define RADIO_LIST_WIDGET_H
 
-#include <QListWidget>
+#include <QListView>
 
-class RadioListWidget : public QListWidget
+class RadioListWidget : public QListView
 {
     Q_OBJECT
 
 public:
-    RadioListWidget(QWidget* parent = 0);
-
+    RadioListWidget(QAbstractItemModel*, QWidget* parent = 0);
 
 };
 
