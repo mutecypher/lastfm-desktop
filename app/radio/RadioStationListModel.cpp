@@ -44,6 +44,7 @@ RadioStationListModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
         case Qt::DisplayRole: return i.title();
+        case Qt::ToolTipRole: return i.title();
         case UrlRole: return i.url();
     }
 

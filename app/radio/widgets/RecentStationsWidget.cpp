@@ -35,6 +35,7 @@
 RecentStationsWidget::RecentStationsWidget()
 {
     m_list = new ColumnListView(350, GRID_HEIGHT_PX);
+    m_list->setAttribute( Qt::WA_MacShowFocusRect, false );
     m_list->setSelectionMode(QAbstractItemView::NoSelection);
     m_list->setWrapping(true);
     m_list->setResizeMode(QListView::Adjust);
