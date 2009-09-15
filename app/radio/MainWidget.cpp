@@ -38,6 +38,7 @@ MainWidget::MainWidget( QWidget* parent )
     connect(radio, SIGNAL(stopped()), m_nowPlaying, SLOT(onStopped()));
 
     m_layout = new SideBySideLayout( this );
+    connect( m_layout, SIGNAL(moveFinished(QLayoutItem*)), SLOT(onSlideFinished(QLayoutItem*)));
 
     MainStarterWidget* w = new MainStarterWidget;
     w->setRecentStationsModel(&m_recentModel);
@@ -53,6 +54,14 @@ MainWidget::MainWidget( QWidget* parent )
     connect(ctrl, SIGNAL(forward()), SLOT(onForward()));
     m_layout->addWidget(ctrl);
 
+}
+
+
+void
+MainWidget::onSlideFinished( QLayoutItem* item )
+{
+    if( item->widget() )
+        emit widgetChanged( item->widget());
 }
 
 void 

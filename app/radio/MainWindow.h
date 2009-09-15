@@ -38,6 +38,9 @@ signals:
 public slots:
     void onRadioError(int code, const QVariant& data);
 
+protected slots:
+    void onWidgetChanged( QWidget* );
+
 protected:
     virtual void resizeEvent(QResizeEvent* event);
     
