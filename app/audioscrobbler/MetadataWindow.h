@@ -25,6 +25,11 @@ class MetadataWindow : public unicorn::MainWindow
 {
     Q_OBJECT
 
+    struct{ 
+        class RestWidget* rest;
+        QWidget* nowScrobbling;
+    } stack;
+
     struct{
         class ScrobbleStatus* now_playing_source;
         class QLabel* artist_image;
@@ -50,6 +55,8 @@ public:
 public slots:
     void onTrackStarted(const Track&, const Track&);
     void onStopped();
+    void onPaused();
+    void onResumed();
 
 private slots:
     void onArtistGotInfo();
@@ -60,5 +67,6 @@ private slots:
     
 private:
     Track m_currentTrack;
+    void setCurrentWidget( QWidget* );
 };
 

@@ -22,6 +22,7 @@
 #include "ScrobbleStatus.h"
 #include "ScrobbleControls.h"
 #include "Application.h"
+#include "RestWidget.h"
 #include "lib/unicorn/StylableWidget.h"
 
 #include <lastfm/Artist>
@@ -35,6 +36,7 @@
 #include <QNetworkReply>
 #include <QTextFrame>
 #include <QVBoxLayout>
+#include <QStackedLayout>
 #include <QScrollArea>
 #include <QStatusBar>
 #include <QSizeGrip>
@@ -44,8 +46,13 @@
 MetadataWindow::MetadataWindow()
 {
     setCentralWidget(new QWidget);
-    QVBoxLayout* v = new QVBoxLayout(centralWidget());
 
+    QStackedLayout* stackLayout = new QStackedLayout( centralWidget());
+    stackLayout->addWidget( stack.rest = new RestWidget());
+
+    stack.nowScrobbling = new QWidget( centralWidget() );
+    QVBoxLayout* v = new QVBoxLayout( stack.nowScrobbling );
+    stackLayout->addWidget( stack.nowScrobbling );
     setMinimumWidth( 410 );
 
     v->addWidget(ui.now_playing_source = new ScrobbleStatus());
@@ -188,6 +195,7 @@ MetadataWindow::onBioChanged( const QSizeF& size )
 void
 MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
 {
+    setCurrentWidget( stack.nowScrobbling );
     const unsigned short em_dash = 0x2014;
     QString title = QString("%1 ") + QChar(em_dash) + " %2";
     ui.title->setText(title.arg(t.artist()).arg(t.title()));
@@ -268,6 +276,7 @@ MetadataWindow::onArtistImageDownloaded()
 void
 MetadataWindow::onStopped()
 {
+    setCurrentWidget( stack.rest );
     ui.bio->clear();
     ui.artist_image->clear();
     ui.title->clear();
@@ -277,4 +286,22 @@ MetadataWindow::onStopped()
     ui.scrobbles->clear();
     m_currentTrack = Track();
     ui.now_playing_source->onTrackStopped();
+}
+
+void
+MetadataWindow::onResumed()
+{
+    setCurrentWidget( stack.nowScrobbling );
+}
+
+void
+MetadataWindow::onPaused()
+{
+    setCurrentWidget( stack.rest );
+}
+
+void
+MetadataWindow::setCurrentWidget( QWidget* w )
+{
+    ((QStackedLayout*)centralWidget()->layout())->setCurrentWidget( w );
 }
