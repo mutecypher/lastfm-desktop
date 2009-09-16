@@ -12,4 +12,6 @@ DEFINES += LASTFM_COLLAPSE_NAMESPACE
 SOURCES -= LegacyTuner.cpp
 HEADERS -= LegacyTuner.h
 
+ICON = ../client/mac/client.icns
+
 #RC_FILE = radio.rc
