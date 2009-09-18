@@ -22,6 +22,7 @@
 #include "widgets/MessageBar.h"
 #include "widgets/MultiStarterWidget.h"
 #include "widgets/PlaybackControlsWidget.h"
+#include "widgets/NowPlayingWidget.h"
 #include <lastfm/RadioStation>
 #include <QLineEdit>
 #include <QSizeGrip>
@@ -53,6 +54,7 @@ MainWindow::MainWindow()
     status->addWidget( new QWidget( status), 1 );
 
     setStatusBar( status );
+    status->hide();
 
     MainWidget* mw;
 
@@ -60,6 +62,8 @@ MainWindow::MainWindow()
     
     new QVBoxLayout( w );
     w->layout()->addWidget(mw = new MainWidget());
+
+    connect( mw, SIGNAL( widgetChanged(QWidget*)), SLOT( onWidgetChanged( QWidget* )));
 
     m_messageBar = new MessageBar( this );
 
@@ -79,6 +83,15 @@ MainWindow::MainWindow()
     menuBar()->addMenu("Normania")->addAction( tr("RQL"), mw, SLOT(rawrql()), QKeySequence(tr("Ctrl+r")) );
 
     m_messageBar->raise();
+}
+
+void 
+MainWindow::onWidgetChanged( QWidget* widget )
+{
+    if(! widget->findChildren<NowPlayingWidget*>().isEmpty())
+        statusBar()->show();
+    else
+        statusBar()->hide();
 }
 
 void

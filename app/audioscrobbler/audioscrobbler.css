@@ -56,11 +56,27 @@ QPushButton#love:checked {
 }
 
 QPushButton#tag {
-    background-image: url(:/tag.png);
+    background-image: url(:/tag-rest.png);
+}
+
+QPushButton#tag:hover {
+    background-image: url(:/tag-onhover.png);
+}
+
+QPushButton#tag:pressed {
+    background-image: url(:/tag-onpress.png);
 }
 
 QPushButton#share {
-    background-image: url(:/share.png);
+    background-image: url(:/share-rest.png);
+}
+
+QPushButton#share:hover {
+    background-image: url(:/share-onhover.png);
+}
+
+QPushButton#share:pressed {
+    background-image: url(:/share-onpress.png);
 }
 
 QStatusBar::item {

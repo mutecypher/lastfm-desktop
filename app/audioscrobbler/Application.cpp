@@ -141,6 +141,8 @@ Application::setConnection(PlayerConnection*c)
     connect(c, SIGNAL(stopped()), SLOT(onStopped()));
     connect(c, SIGNAL(trackStarted(Track, Track)), mw, SLOT(onTrackStarted(Track, Track)));
     connect(c, SIGNAL(trackStarted(Track, Track)), SIGNAL(trackStarted(Track, Track)));
+    connect(c, SIGNAL(resumed()), mw, SLOT(onResumed()));
+    connect(c, SIGNAL(paused()), mw, SLOT(onPaused()));
     connect(c, SIGNAL(stopped()), mw, SLOT(onStopped()));
     connection = c;
 

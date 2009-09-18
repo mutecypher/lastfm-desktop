@@ -1,5 +1,6 @@
 /*
    Copyright 2005-2009 Last.fm Ltd. 
+      - Primarily authored by Jono Cole
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -17,18 +18,15 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RADIO_LIST_WIDGET_H
-#define RADIO_LIST_WIDGET_H
+#include "lib/unicorn/StylableWidget.h"
 
-#include <QListView>
-
-class RadioListWidget : public QListView
+class RestWidget : public StylableWidget
 {
     Q_OBJECT
 
 public:
-    RadioListWidget(QAbstractItemModel*, QWidget* parent = 0);
+    RestWidget( QWidget* p = 0 ): StylableWidget( p )
+    {
+    }
 
 };
-
-#endif

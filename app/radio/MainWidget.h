@@ -43,6 +43,7 @@ public:
     
 signals:
     void startRadio(RadioStation);
+    void widgetChanged( QWidget* );
 
 private slots:
     void onStartRadio(RadioStation rs);
@@ -64,6 +65,7 @@ private slots:
     void onTagActivated(const QModelIndex& idx);
     void onFriendActivated(const QModelIndex& idx);
     void onPlaylistActivated(const QModelIndex& idx);
+    void onSlideFinished( QLayoutItem* );
 
     void rawrql();
 

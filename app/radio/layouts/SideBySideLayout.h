@@ -53,7 +53,7 @@ public:
     void insertWidget(int index, QWidget* widget);
 
 signals:
-    void moveFinished();
+    void moveFinished( QLayoutItem* );
     
 public slots:
     void moveForward();
@@ -61,6 +61,7 @@ public slots:
 
 private slots:
     void onFrameChanged( int frame );
+    void onMoveFinished();
 
 
 private:

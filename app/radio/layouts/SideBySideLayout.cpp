@@ -27,7 +27,7 @@ SideBySideLayout::SideBySideLayout( QWidget* parent )
 {
     m_timeLine->setUpdateInterval( 25 );
     connect( m_timeLine, SIGNAL(frameChanged( int )), SLOT(onFrameChanged( int )));
-    connect( m_timeLine, SIGNAL(finished()), SIGNAL(moveFinished()));
+    connect( m_timeLine, SIGNAL(finished()), SLOT(onMoveFinished()));
 }
 
 
@@ -35,6 +35,13 @@ SideBySideLayout::~SideBySideLayout()
 {
     while( QLayoutItem* i = takeAt( 0 ) )
         delete i;
+}
+
+
+void
+SideBySideLayout::onMoveFinished()
+{
+    emit moveFinished( m_currentItem );
 }
 
 
