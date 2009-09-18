@@ -106,9 +106,9 @@ MultiStarterWidget::MultiStarterWidget(bool advanced, int maxSources, QWidget *p
         label->setObjectName("sliderDescription");
         sliderslayout->addWidget(label, Qt::AlignCenter);       // although it doesn't seem to center :(
         QLayout* layout = new QHBoxLayout(this);
-        layout->addWidget(new QLabel(tr("Popular")));
-        layout->addWidget(m_mainstrSlider = new QSlider(Qt::Horizontal));
         layout->addWidget(new QLabel(tr("Obscure")));
+        layout->addWidget(m_mainstrSlider = new QSlider(Qt::Horizontal));
+        layout->addWidget(new QLabel(tr("Popular")));
         sliderslayout->addLayout(layout);
     }
     {
@@ -116,9 +116,9 @@ MultiStarterWidget::MultiStarterWidget(bool advanced, int maxSources, QWidget *p
         label->setObjectName("sliderDescription");
         sliderslayout->addWidget(label, Qt::AlignCenter);
         QLayout* layout = new QHBoxLayout(this);
-        layout->addWidget(new QLabel(tr("More")));
-        layout->addWidget(m_repSlider = new QSlider(Qt::Horizontal));
         layout->addWidget(new QLabel(tr("Less")));
+        layout->addWidget(m_repSlider = new QSlider(Qt::Horizontal));
+        layout->addWidget(new QLabel(tr("More")));
         sliderslayout->addLayout(layout);
     }
     
