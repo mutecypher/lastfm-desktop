@@ -52,6 +52,7 @@ ScrobbleStatus::ScrobbleStatus( QWidget* parent )
     ((QBoxLayout*)layout())->addStretch( 1 );
 
     ui.playerStatus = new QLabel();
+    ui.playerStatus->setObjectName( "player_status" );
     layout()->addWidget( ui.playerStatus );
 
     m_timer = new QTimer(this);
@@ -70,7 +71,7 @@ ScrobbleStatus::paintEvent( QPaintEvent* event )
 
     QPainter p( this );
     p.setPen( QColor( Qt::transparent ));
-    p.setBrush( QColor( 0, 0, 0, 100 ));
+    p.setBrush( QColor( 0, 0, 0, 60 ));
     
     float percentage = (m_stopWatch->elapsed()/1000.0f) / m_stopWatch->scrobblePoint(); 
     p.drawRect( 0, 0, width() * percentage , height());
@@ -80,12 +81,14 @@ void
 ScrobbleStatus::onWatchPaused( bool isPaused )
 {
     if( !isPaused ) {
-        qDebug() << "StopWatch unpaused!";
+        ui.playerStatus->setText( ((audioscrobbler::Application*)qApp)->currentConnection()->name());
+        movie.scrobbler_as->jumpToFrame( 0 );
         ui.as->setMovie(movie.scrobbler_as );
         ui.as->movie()->start();
         return; 
     }
     
+    ui.playerStatus->setText( ((audioscrobbler::Application*)qApp)->currentConnection()->name() + tr( " is paused" ));
     ui.as->setMovie(movie.scrobbler_paused);
     ui.as->movie()->start();
 }
@@ -94,6 +97,7 @@ void
 ScrobbleStatus::onWatchFinished()
 {
     connect( ui.as->movie(), SIGNAL(loopFinished()), ui.as->movie(), SLOT(stop()));
+    ui.playerStatus->setText( tr( "Track Scrobbled" ));
 }
 
 void 
@@ -101,6 +105,8 @@ ScrobbleStatus::onTrackStarted( const Track& track, const Track& previousTrack )
 {
     qDebug() << "New Track " << track.toString();
     ui.title->setText( track.toString() );
+    
+    //FIXME: this looks like it could be dodgy!
     ui.playerStatus->setText( ((audioscrobbler::Application*)qApp)->currentConnection()->name());
     ui.as->setMovie( movie.scrobbler_as );
     ui.as->movie()->start();

@@ -154,6 +154,10 @@ ScrobbleStatus QLabel {
     background: none;
 }
 
+ScrobbleStatus QLabel#player_status {
+    color: #676767;
+}
+
 a {
     color: #4c7699;
     text-decoration: none;
