@@ -67,7 +67,15 @@ MainWidget::onSlideFinished( QLayoutItem* item )
 void 
 MainWidget::onStartRadio(RadioStation rs)
 {
-    qDebug() << rs.title() << " -> " << rs.url();
+    if( radio->state() != Radio::Stopped ) {
+        foreach( NowPlayingWidget* npw, findChildren<NowPlayingWidget*>())
+        {
+            m_layout->removeWidget( npw->parentWidget() );
+            npw->parentWidget()->deleteLater();
+        }
+    }
+    //Events must be processed in order to prepare the layout for a slide animation
+    qApp->processEvents();
 
     NowPlayingWidget* w = new NowPlayingWidget;
     connect(radio, SIGNAL(tuningIn( RadioStation )), w, SLOT(onTuningIn( RadioStation )));
@@ -205,14 +213,14 @@ MainWidget::onBack()
 void
 MainWidget::onBackDelete()
 {
-    connect(m_layout, SIGNAL(moveFinished()), SLOT(onMoveFinished()));
+    connect(m_layout, SIGNAL(moveFinished(QLayoutItem*)), SLOT(onMoveFinished()));
     m_layout->moveBackward();
 }
 
 void
 MainWidget::onMoveFinished()
 {
-    disconnect(m_layout, SIGNAL(moveFinished()), this, SLOT(onMoveFinished()));
+    disconnect(m_layout, SIGNAL(moveFinished(QLayoutItem*)), this, SLOT(onMoveFinished()));
     QWidget* w = m_layout->nextWidget();
     if (w) {
         m_layout->removeWidget(w);
