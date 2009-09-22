@@ -291,13 +291,12 @@ MetadataWindow::onStopped()
 void
 MetadataWindow::onResumed()
 {
-    setCurrentWidget( stack.nowScrobbling );
+
 }
 
 void
 MetadataWindow::onPaused()
 {
-    setCurrentWidget( stack.rest );
 }
 
 void

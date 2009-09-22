@@ -25,7 +25,6 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QTimer>
-#include <QMovie>
 
 ScrobbleStatus::ScrobbleStatus( QWidget* parent )   
                :StylableWidget( parent ),
@@ -40,9 +39,11 @@ ScrobbleStatus::ScrobbleStatus( QWidget* parent )
     ui.as = new QLabel();
     ui.as->setObjectName( "as_logo" );
 
-    QMovie* scrobbler_as = new QMovie( ":/scrobbler_as.mng" );
-    
-    ui.as->setMovie( scrobbler_as );
+    movie.scrobbler_as = new Movie( ":/scrobbler_as.mng" );
+    movie.scrobbler_paused = new Movie( ":/scrobbler_as_paused.mng" );
+    movie.scrobbler_as->setCacheMode( QMovie::CacheAll );
+    movie.scrobbler_paused->setCacheMode( QMovie::CacheAll );
+    ui.as->setMovie( movie.scrobbler_as );
     layout()->addWidget( ui.as );
 
     ui.title = new QLabel();
@@ -79,18 +80,20 @@ void
 ScrobbleStatus::onWatchPaused( bool isPaused )
 {
     if( !isPaused ) {
+        qDebug() << "StopWatch unpaused!";
+        ui.as->setMovie(movie.scrobbler_as );
         ui.as->movie()->start();
         return; 
     }
     
-    ui.as->movie()->jumpToFrame( 1 );
-    ui.as->movie()->stop();
+    ui.as->setMovie(movie.scrobbler_paused);
+    ui.as->movie()->start();
 }
 
 void
 ScrobbleStatus::onWatchFinished()
 {
-
+    connect( ui.as->movie(), SIGNAL(loopFinished()), ui.as->movie(), SLOT(stop()));
 }
 
 void 
@@ -99,6 +102,8 @@ ScrobbleStatus::onTrackStarted( const Track& track, const Track& previousTrack )
     qDebug() << "New Track " << track.toString();
     ui.title->setText( track.toString() );
     ui.playerStatus->setText( ((audioscrobbler::Application*)qApp)->currentConnection()->name());
+    ui.as->setMovie( movie.scrobbler_as );
+    ui.as->movie()->start();
 
     if( m_stopWatch ) {
         disconnect( m_stopWatch, 0, this, 0 );
@@ -115,4 +120,5 @@ ScrobbleStatus::onTrackStopped()
 {
     ui.title->setText("");
     ui.playerStatus->setText("");
+    ui.as->clear();
 }

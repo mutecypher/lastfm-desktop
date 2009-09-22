@@ -41,6 +41,11 @@ private:
         class QLabel* playerStatus;
     } ui;
 
+    struct {
+        class QMovie* scrobbler_as;
+        class QMovie* scrobbler_paused;
+    } movie;
+
     QPointer<StopWatch> m_stopWatch;
     QTimer* m_timer;
 
@@ -53,4 +58,27 @@ private slots:
     void onWatchFinished();
 };
 
+#include <QMovie>
+
+class Movie : public QMovie
+{
+Q_OBJECT
+public:
+    Movie( const QString& filename, const QByteArray& format = QByteArray(), QObject* parent = 0 )
+    :QMovie( filename, format, parent )
+    {
+        connect( this, SIGNAL( frameChanged(int)), SLOT(onFrameChanged(int)));
+    }
+
+signals:
+    void loopFinished();
+
+private slots:
+    void onFrameChanged( int f )
+    {
+        if( f == (frameCount() - 1)) {
+            emit loopFinished();
+        }
+    }
+};
 #endif //SCROBBLE_STATUS_H_
