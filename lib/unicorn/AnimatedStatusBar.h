@@ -1,9 +1,10 @@
 #ifndef ANIMATED_STATUS_BAR_H
 #define ANIMATED_STATUS_BAR_H
 
+#include <lib/DllExportMacro.h>
 #include <QStatusBar>
 
-class AnimatedStatusBar: public QStatusBar {
+class UNICORN_DLLEXPORT AnimatedStatusBar: public QStatusBar {
     Q_OBJECT
 public:
     AnimatedStatusBar( QWidget* parent = 0 );
