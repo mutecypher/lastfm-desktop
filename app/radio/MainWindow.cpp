@@ -23,17 +23,17 @@
 #include "widgets/MultiStarterWidget.h"
 #include "widgets/PlaybackControlsWidget.h"
 #include "widgets/NowPlayingWidget.h"
+#include "lib/unicorn/AnimatedStatusBar.h"
 #include <lastfm/RadioStation>
 #include <QLineEdit>
 #include <QSizeGrip>
-#include <QStatusBar>
 #include <QMenuBar>
 
 MainWindow::MainWindow()
 {
     setUnifiedTitleAndToolBarOnMac( true );
 
-    QStatusBar* status = new QStatusBar( this );
+    AnimatedStatusBar* status = new AnimatedStatusBar( this );
     PlaybackControlsWidget* pcw = new PlaybackControlsWidget( status );
 
     //FIXME: this code is duplicated in the audioscrobbler app too
@@ -89,9 +89,9 @@ void
 MainWindow::onWidgetChanged( QWidget* widget )
 {
     if(! widget->findChildren<NowPlayingWidget*>().isEmpty())
-        statusBar()->show();
+        ((AnimatedStatusBar*)statusBar())->showAnimated();
     else
-        statusBar()->hide();
+        ((AnimatedStatusBar*)statusBar())->hideAnimated();
 }
 
 void
