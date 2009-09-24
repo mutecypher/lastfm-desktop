@@ -52,6 +52,9 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
     tray = new QSystemTrayIcon(this);
     connect(tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT(onTrayActivated(QSystemTrayIcon::ActivationReason)));
     QIcon trayIcon( AS_TRAY_ICON );
+    #ifdef Q_WS_MAC
+        trayIcon.addFile( ":19x15_selected.png", QSize(), QIcon::Selected );
+    #endif
     tray->setIcon(trayIcon);
     tray->show();
 
