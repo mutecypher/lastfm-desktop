@@ -43,7 +43,7 @@ using audioscrobbler::Application;
 #elif defined( Q_WS_WIN )
     #define AS_TRAY_ICON ":22x22.png"
 #elif defined( Q_WS_MAC )
-    #define AS_TRAY_ICON ":19x15.png"
+    #define AS_TRAY_ICON ":systray_icon_rest_mac.png"
 #endif
 
 Application::Application(int& argc, char** argv) : unicorn::Application(argc, argv)
@@ -53,7 +53,7 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
     connect(tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT(onTrayActivated(QSystemTrayIcon::ActivationReason)));
     QIcon trayIcon( AS_TRAY_ICON );
     #ifdef Q_WS_MAC
-        trayIcon.addFile( ":19x15_selected.png", QSize(), QIcon::Selected );
+        trayIcon.addFile( ":systray_icon_pressed_mac.png", QSize(), QIcon::Selected );
     #endif
     tray->setIcon(trayIcon);
     tray->show();

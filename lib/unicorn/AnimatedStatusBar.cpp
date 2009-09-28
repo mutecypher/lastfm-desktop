@@ -6,10 +6,11 @@
 AnimatedStatusBar::AnimatedStatusBar( QWidget* parent )
                   :QStatusBar( parent )
 {
-    m_timeline = new QTimeLine( 200, this );
+    m_timeline = new QTimeLine( 50, this );
     m_timeline->setUpdateInterval( 20 );
     m_timeline->setCurveShape( QTimeLine::EaseInCurve );
     connect( m_timeline, SIGNAL( frameChanged(int)), SLOT(onFrameChanged(int)));
+    connect( m_timeline, SIGNAL( finished()), SLOT(onFinished()));
 }
 
 
@@ -18,6 +19,7 @@ AnimatedStatusBar::showAnimated()
 {
     if( isVisible() && height() > 0 ) return;
     
+    window()->setMinimumHeight( window()->height());
     m_timeline->setFrameRange( 0, sizeHint().height());
     m_timeline->setDirection( QTimeLine::Forward );
     setFixedHeight( 0 );
@@ -32,6 +34,7 @@ AnimatedStatusBar::hideAnimated()
 {
     if( !isVisible() || height() == 0 ) return;
     
+    window()->setMaximumHeight( window()->height());
     m_timeline->setFrameRange( 0, sizeHint().height());
     m_timeline->setDirection( QTimeLine::Backward );
     
@@ -39,7 +42,20 @@ AnimatedStatusBar::hideAnimated()
     m_timeline->start();
 }
 
-#include <QApplication>
+void 
+AnimatedStatusBar::onFinished()
+{
+    if( m_timeline->direction() == QTimeLine::Backward ) {
+        hide();
+    }
+
+    setMaximumHeight( QWIDGETSIZE_MAX );
+    setMinimumHeight( 0 );
+    window()->setMinimumHeight( 0 );
+    window()->setMaximumHeight( QWIDGETSIZE_MAX );
+}
+
+
 void 
 AnimatedStatusBar::onFrameChanged( int f )
 {
