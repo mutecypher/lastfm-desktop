@@ -14,6 +14,7 @@ public slots:
 
 private slots:
     void onFrameChanged(int);
+    void onFinished();
 
 private:
     class QTimeLine* m_timeline;
