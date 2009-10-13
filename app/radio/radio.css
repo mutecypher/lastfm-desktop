@@ -34,10 +34,22 @@ QuickStartWidget > QLineEdit {
     position: relative;
 }
 
-QuickStartWidget > QPushButton,
-BackForwardControls > QPushButton {
+BackForwardControls {
+    margin: 0px;
+    padding: 0px;
+}
+
+BackForwardControls #BackForwardsRow {
+    background: qlineargradient( x1:0, y1:0, x2:0, y2:1, 
+                                 stop:0 #727070, stop:1 #353434 );
+    padding:0px;
+    margin:0px;
+}
+
+QuickStartWidget QPushButton,
+BackForwardControls > * > QPushButton {
     background: qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
-                                 stop:0 #7e7e7e, stop:1 #373737 );
+                                 stop:0 #515050, stop:1 #242424 );
     border-radius: 3px;
     color: white;
     border-width: 2px;
@@ -47,31 +59,31 @@ BackForwardControls > QPushButton {
     margin-right: 5px;
 }
 
-BackForwardControls > #NowPlayingButton::enabled {
+BackForwardControls > * > #NowPlayingButton::enabled {
     background: qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
                                  stop:0 #cc3333, stop:1 #660000 );
 }
 
-BackForwardControls > #NowPlayingButton::disabled {
+BackForwardControls > * > #NowPlayingButton::disabled {
     background: transparent;
     color: transparent;
 }
 
-
 QuickStartWidget > QPushButton:pressed,
-BackForwardControls > QPushButton:pressed {
+BackForwardControls > * > QPushButton:pressed {
     background: qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
                                  stop:0 #3d3d3d, stop:1 #242424 );
 }
 
-BackForwardControls > #NowPlayingButton:pressed {
+BackForwardControls > * > #NowPlayingButton:pressed {
     background: qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
                                  stop:0 #781313, stop:1 #3c0404 );
 }
 
-BackForwardControls QLabel 
+BackForwardControls > * > QLabel 
 {
     color: white;
+    font-weight: bold;
 }
 
 PlayableItemWidget, 

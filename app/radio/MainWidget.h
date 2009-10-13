@@ -28,6 +28,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QLabel>
+#include "lib/unicorn/AnimatedPushButton.h"
 #include "PlaylistMeta.h"
 #include "RadioStationListModel.h"
 
@@ -65,7 +66,7 @@ private slots:
     void onTagActivated(const QModelIndex& idx);
     void onFriendActivated(const QModelIndex& idx);
     void onPlaylistActivated(const QModelIndex& idx);
-    void onSlideFinished( QLayoutItem* );
+    void onSlideStarted( QLayoutItem* next, QLayoutItem* prev );
 
     void rawrql();
 
@@ -130,7 +131,8 @@ private:
 // back button at the top-left and an optional forward button at the 
 // top-right.
 //
-class BackForwardControls : public QWidget
+#include "lib/unicorn/StylableWidget.h"
+class BackForwardControls : public StylableWidget
 {
     Q_OBJECT;
 
@@ -142,29 +144,41 @@ public:
     BackForwardControls(const QString& backLabel, const QString& mainLabel, NowPlayingState* nowPlaying, QWidget* child)
     {
         QVBoxLayout* layout = new QVBoxLayout(this);
+        layout->setContentsMargins( 0, 0, 0, 0 );
         QHBoxLayout* rowLayout = new QHBoxLayout();
+        rowLayout->setContentsMargins( 4, 1, 4, 1 );
         if (!backLabel.isNull()) {
             QPushButton* button = new QPushButton(backLabel);
             button->setObjectName("back");
             connect(button, SIGNAL(clicked()), SIGNAL(back()));
             rowLayout->addWidget(button, 1, Qt::AlignLeft);
+            rowLayout->addStrut( button->sizeHint().height() - 8);
         }
         if (!mainLabel.isNull()) {
             rowLayout->addWidget(new QLabel(mainLabel), 1, Qt::AlignCenter);
         }
         if (nowPlaying) {
             // a button which toggles enable/disabled state (use css to make it visible/invisible)
-            QPushButton* button = new QPushButton(tr("Now Playing"));
-            button->setObjectName("NowPlayingButton");
-            button->setEnabled(nowPlaying->isPlaying());
+            QMovie* movie = new QMovie( ":/now_playing.mng" );
+            QPushButton* button = new AnimatedPushButton( movie, tr("Now Playing"));
+            button->setObjectName( "NowPlayingButton" );
+            button->setVisible(nowPlaying->isPlaying());
             connect(button, SIGNAL(clicked()), SIGNAL(forward()));
-            connect(nowPlaying, SIGNAL(playingStateChange(bool)), button, SLOT(setEnabled(bool)));
+            connect(nowPlaying, SIGNAL(playingStateChange(bool)), button, SLOT(setVisible(bool)));
             rowLayout->addWidget(button, 1, Qt::AlignRight);
+            rowLayout->addStrut( button->sizeHint().height() - 8);
         } else {
             rowLayout->addStretch(1);            // need this to get the label centered
         }
-        if (!backLabel.isNull() || nowPlaying) 
-            layout->addLayout(rowLayout);
+        if (!backLabel.isNull() || nowPlaying) {
+            QWidget* w = new StylableWidget(this);
+            w->setContentsMargins( 0, 0, 0, 0 );
+            w->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+            w->setObjectName( "BackForwardsRow" );
+            w->setLayout( rowLayout );
+            layout->addWidget( w );
+        }
+
         layout->addWidget(child);
     }
 

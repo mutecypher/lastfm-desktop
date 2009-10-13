@@ -25,7 +25,7 @@
 SideBySideLayout::SideBySideLayout( QWidget* parent )
            : QLayout( parent ), m_currentItem( 0 ), m_timeLine( new QTimeLine( 100, this ) )
 {
-    m_timeLine->setUpdateInterval( 25 );
+    m_timeLine->setUpdateInterval( 20 );
     connect( m_timeLine, SIGNAL(frameChanged( int )), SLOT(onFrameChanged( int )));
     connect( m_timeLine, SIGNAL(finished()), SLOT(onMoveFinished()));
 }
@@ -149,7 +149,9 @@ SideBySideLayout::moveForward()
     if( nextIndex >= m_itemList.count() )
         return;
 
+    QLayoutItem* previousItem = m_currentItem;
     m_currentItem = m_itemList.at( nextIndex );
+    emit moveStarted( m_currentItem, previousItem );
     
     if( m_timeLine->state() == QTimeLine::Running && 
         m_timeLine->direction() == QTimeLine::Backward )
@@ -174,7 +176,10 @@ SideBySideLayout::moveBackward()
     if( nextIndex < 0 )
         return;
     
+
+    QLayoutItem* previousItem = m_currentItem;
     m_currentItem = m_itemList.at( nextIndex );
+    emit moveStarted( m_currentItem, previousItem );
 
     if( m_timeLine->state() == QTimeLine::Running && 
         m_timeLine->direction() == QTimeLine::Forward )

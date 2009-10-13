@@ -25,8 +25,6 @@ class RestWidget : public StylableWidget
     Q_OBJECT
 
 public:
-    RestWidget( QWidget* p = 0 ): StylableWidget( p )
-    {
-    }
+    RestWidget( QWidget* p = 0 );
 
 };

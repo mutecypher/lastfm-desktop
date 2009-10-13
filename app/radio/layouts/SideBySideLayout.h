@@ -53,6 +53,7 @@ public:
     void insertWidget(int index, QWidget* widget);
 
 signals:
+    void moveStarted( QLayoutItem* next, QLayoutItem* prev );
     void moveFinished( QLayoutItem* );
     
 public slots:
