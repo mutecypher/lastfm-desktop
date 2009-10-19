@@ -38,8 +38,7 @@ MainWidget::MainWidget( QWidget* parent )
     connect(radio, SIGNAL(stopped()), m_nowPlaying, SLOT(onStopped()));
 
     m_layout = new SideBySideLayout( this );
-    connect( m_layout, SIGNAL(moveFinished(QLayoutItem*)), SLOT(onSlideFinished(QLayoutItem*)));
-
+    connect( m_layout, SIGNAL(moveStarted(QLayoutItem*, QLayoutItem*)), SLOT(onSlideStarted(QLayoutItem*, QLayoutItem*)));
     MainStarterWidget* w = new MainStarterWidget;
     w->setRecentStationsModel(&m_recentModel);
     connect(w, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
@@ -53,16 +52,17 @@ MainWidget::MainWidget( QWidget* parent )
     BackForwardControls* ctrl = new BackForwardControls(QString(), QString(), m_nowPlaying, w);
     connect(ctrl, SIGNAL(forward()), SLOT(onForward()));
     m_layout->addWidget(ctrl);
-
+    m_layout->setContentsMargins( 0, 0, 0, 0);
 }
 
 
-void
-MainWidget::onSlideFinished( QLayoutItem* item )
+void 
+MainWidget::onSlideStarted( QLayoutItem* next, QLayoutItem* prev )
 {
-    if( item->widget() )
-        emit widgetChanged( item->widget());
+    if( next->widget() )
+        emit widgetChanged( next->widget());
 }
+
 
 void 
 MainWidget::onStartRadio(RadioStation rs)

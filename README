@@ -2,7 +2,15 @@ Build Instructions
 ==================
 ./configure && make
 
-If that didn't work it's because:-
+Apps are styled using stylesheets which are found in the source directory
+of the app. To apply the style execute the application in the following manner:
+
+./audioscrobbler -stylesheet path/to/audioscrobbler.css
+
+(by default the exectuable path is checked for the css file on Windows and on OSX 
+ the bundle Resource directory is checked)
+
+If building didn't work it's because:-
 
 
 Build Dependencies
@@ -69,5 +77,5 @@ Bugs
 ====
 If you find a bug in the software, please let us know about it.
 
-Max Howell <max@last.fm>
+Jono Cole<jono@last.fm>
 Clientside Lead Developer, Last.fm

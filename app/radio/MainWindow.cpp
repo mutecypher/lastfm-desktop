@@ -28,6 +28,7 @@
 #include <QLineEdit>
 #include <QSizeGrip>
 #include <QMenuBar>
+#include "radio.h"
 
 MainWindow::MainWindow()
 {
@@ -63,6 +64,7 @@ MainWindow::MainWindow()
     QWidget* w = new QWidget();
     
     new QVBoxLayout( w );
+    w->layout()->setContentsMargins( 0, 0, 0, 0 );
     w->layout()->addWidget(mw = new MainWidget());
 
     connect( mw, SIGNAL( widgetChanged(QWidget*)), SLOT( onWidgetChanged( QWidget* )));
@@ -77,6 +79,9 @@ MainWindow::MainWindow()
     connect(user.getPlaylists(), SIGNAL(finished()), mw, SLOT(onUserGotPlaylists()));
     connect(user.getRecentStations(), SIGNAL(finished()), mw, SLOT(onUserGotRecentStations()));
 
+    connect(radio, SIGNAL(stopped()), status, SLOT(hideAnimated()));
+    connect(radio, SIGNAL(tuningIn( const RadioStation&)), status, SLOT(showAnimated()));
+
     setCentralWidget( w );
 
     finishUi();
@@ -90,10 +95,10 @@ MainWindow::MainWindow()
 void 
 MainWindow::onWidgetChanged( QWidget* widget )
 {
-    if(! widget->findChildren<NowPlayingWidget*>().isEmpty())
+    /*if(!widget->findChildren<NowPlayingWidget*>().isEmpty() )
         ((AnimatedStatusBar*)statusBar())->showAnimated();
     else
-        ((AnimatedStatusBar*)statusBar())->hideAnimated();
+        ((AnimatedStatusBar*)statusBar())->hideAnimated();*/
 }
 
 void
