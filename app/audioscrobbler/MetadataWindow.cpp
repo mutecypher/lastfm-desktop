@@ -24,6 +24,7 @@
 #include "Application.h"
 #include "RestWidget.h"
 #include "lib/unicorn/StylableWidget.h"
+#include "lib/unicorn/qtwin.h"
 
 #include <lastfm/Artist>
 #include <lastfm/XmlQuery>
@@ -51,6 +52,7 @@ MetadataWindow::MetadataWindow()
     stackLayout->addWidget( stack.rest = new RestWidget());
 
     stack.nowScrobbling = new QWidget( centralWidget() );
+    stack.nowScrobbling->setObjectName( "NowScrobbling" );
     QVBoxLayout* v = new QVBoxLayout( stack.nowScrobbling );
     stackLayout->addWidget( stack.nowScrobbling );
     setMinimumWidth( 410 );
@@ -142,7 +144,7 @@ MetadataWindow::MetadataWindow()
     // status bar and scrobble controls
     {
         QStatusBar* status = new QStatusBar( this );
-        
+        QtWin::enableBlurBehindWindow( this );
         //FIXME: this code is duplicated in the radio too
         //In order to compensate for the sizer grip on the bottom right
         //of the window, an empty QWidget is added as a spacer.

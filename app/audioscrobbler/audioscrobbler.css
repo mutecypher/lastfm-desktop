@@ -1,4 +1,5 @@
-unicorn--MainWindow {
+unicorn--MainWindow RestWidget,
+unicorn--MainWindow QWidget#NowScrobbling {
     background-color: rgb(20,20,20);
 }
 

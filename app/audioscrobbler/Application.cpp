@@ -60,6 +60,7 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
     #endif
 	tray->setIcon(trayIcon);
 	tray->show();
+    connect( this, SIGNAL( aboutToQuit()), tray, SLOT( hide()));
 
 /// tray menu
     QMenu* menu = new QMenu;

@@ -1,6 +1,7 @@
 #include "AnimatedStatusBar.h"
 
 #include <QTimeLine>
+#include "qtwin.h"
 #include <qDebug>
 
 AnimatedStatusBar::AnimatedStatusBar( QWidget* parent )
@@ -11,6 +12,7 @@ AnimatedStatusBar::AnimatedStatusBar( QWidget* parent )
     m_timeline->setCurveShape( QTimeLine::EaseInCurve );
     connect( m_timeline, SIGNAL( frameChanged(int)), SLOT(onFrameChanged(int)));
     connect( m_timeline, SIGNAL( finished()), SLOT(onFinished()));
+    QtWin::enableBlurBehindWindow( this, true );
 }
 
 
