@@ -54,8 +54,10 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
     #ifdef Q_WS_MAC
         trayIcon.addFile( ":systray_icon_pressed_mac.png", QSize(), QIcon::Selected );
     #endif
-	connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
 
+    #ifdef Q_WS_WIN
+	    connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+    #endif
 	tray->setIcon(trayIcon);
 	tray->show();
 
@@ -63,7 +65,7 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
     QMenu* menu = new QMenu;
 	m_toggle_window_action = menu->addAction( tr("Show Scrobbler"));
 	m_toggle_window_action->setCheckable( true );
-
+    menu->addSeparator();
     m_title_action = menu->addAction(tr("Ready"));
     m_love_action = menu->addAction(tr("Love"));
     connect( m_love_action, SIGNAL(triggered()), SLOT(onLoveTriggered()));
