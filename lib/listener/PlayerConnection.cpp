@@ -87,7 +87,7 @@ PlayerConnection::handleCommand( PlayerCommand command, Track t )
                 break;
                 
             case CommandBootstrap:
-                Q_ASSERT( 0 ); // you shouldn't be parsing this here so wtf happened?!
+				emit bootstrapReady();
                 break;
         }
         

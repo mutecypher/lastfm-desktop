@@ -18,7 +18,7 @@
 *   51 Franklin Steet, Fifth Floor, Boston, MA  02110-1301, USA.          *
 ***************************************************************************/
 
-#include "Bootstrapper/AbstractBootstrapper.h"
+#include "AbstractBootstrapper.h"
 
 #include <lastfm/ws.h>
 #include <QNetworkRequest>
@@ -29,10 +29,9 @@
 
 #include <time.h>
 
-#define ZLIB_WINAPI
 #include "zlib.h"
 
-static const QString k_host = "localhost:8888";
+static const QString k_host = "bootstrap.last.fm";
 
 
 AbstractBootstrapper::AbstractBootstrapper( QObject* parent )
@@ -119,7 +118,7 @@ AbstractBootstrapper::sendZip( const QString& inFile )
     emit percentageUploaded( 0 );
 
     QNetworkReply* reply = lastfm::nam()->post( request, bytes );
-    connect( reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT( onUploadProgress(qint64,qint64)));
+    //connect( reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT( onUploadProgress(qint64,qint64)));
     connect( reply, SIGNAL(finished()), SLOT(onUploadDone()));
 }
 

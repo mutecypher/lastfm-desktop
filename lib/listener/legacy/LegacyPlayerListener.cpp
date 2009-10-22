@@ -71,10 +71,6 @@ LegacyPlayerListener::onDataReady()
             
             switch (parser.command())
             {
-                case CommandBootstrap:
-                    qWarning() << "We no longer support Bootstrapping with the LegacyPlayerListener";
-                    break;
-                    
                 case CommandTerm:
                     m_connections.remove( id );
                     // FALL THROUGH

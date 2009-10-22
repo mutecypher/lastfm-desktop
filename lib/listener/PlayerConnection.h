@@ -80,6 +80,7 @@ signals:
     void paused();
     void resumed();
     void stopped();
+	void bootstrapReady();
 
 };
 
