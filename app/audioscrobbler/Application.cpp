@@ -50,16 +50,20 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
 {
 /// tray
     tray = new QSystemTrayIcon(this);
-    connect(tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT(onTrayActivated(QSystemTrayIcon::ActivationReason)));
     QIcon trayIcon( AS_TRAY_ICON );
     #ifdef Q_WS_MAC
         trayIcon.addFile( ":systray_icon_pressed_mac.png", QSize(), QIcon::Selected );
     #endif
-    tray->setIcon(trayIcon);
-    tray->show();
+	connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+
+	tray->setIcon(trayIcon);
+	tray->show();
 
 /// tray menu
     QMenu* menu = new QMenu;
+	m_toggle_window_action = menu->addAction( tr("Show Scrobbler"));
+	m_toggle_window_action->setCheckable( true );
+
     m_title_action = menu->addAction(tr("Ready"));
     m_love_action = menu->addAction(tr("Love"));
     connect( m_love_action, SIGNAL(triggered()), SLOT(onLoveTriggered()));
@@ -120,13 +124,10 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
         qWarning() << e.what();
         //TODO user visible warning
     }
+
+	connect( m_toggle_window_action, SIGNAL( toggled(bool)), mw, SLOT( setVisible(bool)) );
 }
 
-void
-Application::onTrayActivated(QSystemTrayIcon::ActivationReason)
-{
-    mw->show();
-}
 
 void
 Application::setConnection(PlayerConnection*c)
@@ -247,4 +248,11 @@ StopWatch*
 Application::stopWatch() const
 {
     return watch;
+}
+
+void 
+Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason ) 
+{
+    if( reason == QSystemTrayIcon::Context ) return;
+    m_toggle_window_action->toggle();
 }
