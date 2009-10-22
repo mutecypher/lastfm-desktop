@@ -46,6 +46,9 @@
 
 MetadataWindow::MetadataWindow()
 {
+    //Enable aero blurry window effect:
+    QtWin::enableBlurBehindWindow( this );
+    
     setCentralWidget(new QWidget);
 
     QStackedLayout* stackLayout = new QStackedLayout( centralWidget());
@@ -144,7 +147,6 @@ MetadataWindow::MetadataWindow()
     // status bar and scrobble controls
     {
         QStatusBar* status = new QStatusBar( this );
-        QtWin::enableBlurBehindWindow( this );
         //FIXME: this code is duplicated in the radio too
         //In order to compensate for the sizer grip on the bottom right
         //of the window, an empty QWidget is added as a spacer.
