@@ -47,7 +47,7 @@
 MetadataWindow::MetadataWindow()
 {
     //Enable aero blurry window effect:
-    QtWin::enableBlurBehindWindow( this );
+    QtWin::extendFrameIntoClientArea( this );
     
     setCentralWidget(new QWidget);
 
@@ -147,6 +147,11 @@ MetadataWindow::MetadataWindow()
     // status bar and scrobble controls
     {
         QStatusBar* status = new QStatusBar( this );
+        addDragHandleWidget( status );
+
+#ifdef Q_WS_WIN
+        status->setSizeGripEnabled( false );
+#else
         //FIXME: this code is duplicated in the radio too
         //In order to compensate for the sizer grip on the bottom right
         //of the window, an empty QWidget is added as a spacer.
@@ -157,7 +162,7 @@ MetadataWindow::MetadataWindow()
             w->setFixedWidth( gripWidth );
             status->addWidget( w );
         }
-
+#endif
         //Seemingly the only way to get a central widget in a QStatusBar
         //is to add an empty widget either side with a stretch value.
         status->addWidget( new QWidget( status), 1 );

@@ -26,6 +26,7 @@
 #include <QDesktopServices>
 #include <QMenuBar>
 #include <QShortcut>
+#include <QMouseEvent>
 
 
 #define SETTINGS_POSITION_KEY "MainWindowPosition"
@@ -111,4 +112,45 @@ void
 unicorn::MainWindow::openLog()
 {
     QDesktopServices::openUrl( QUrl::fromLocalFile( unicorn::CoreApplication::log().absoluteFilePath() ) );    
+}
+
+
+
+bool 
+unicorn::MainWindow::eventFilter( QObject* o, QEvent* event )
+{
+#ifdef SUPER_MEGA_DEBUG
+	qDebug() << o << event;
+#endif
+	
+    QWidget* obj = qobject_cast<QWidget*>( o );
+    if (!obj)
+        return false;
+    
+    QMouseEvent* e = static_cast<QMouseEvent*>( event );
+    
+    switch ((int)e->type())
+    {
+        case QEvent::MouseButtonPress:
+            m_dragHandleMouseDownPos[ obj ] = e->globalPos() - pos();
+            break;
+
+        case QEvent::MouseButtonRelease:
+            m_dragHandleMouseDownPos[ obj ] = QPoint();
+            break;
+            
+        case QEvent::MouseMove:
+            if (m_dragHandleMouseDownPos.contains( obj ) && !m_dragHandleMouseDownPos[ obj ].isNull())
+                move( e->globalPos() - m_dragHandleMouseDownPos[ obj ]);
+            break;
+    }
+
+    return false;
+}
+
+
+void 
+unicorn::MainWindow::addDragHandleWidget( QWidget* w )
+{
+    w->installEventFilter( this );
 }

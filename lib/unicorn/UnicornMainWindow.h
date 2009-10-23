@@ -25,6 +25,7 @@
 #include <QMainWindow>
 #include <QPointer>
 #include <QDialog>
+#include <QMap>
 class AboutDialog;
 class UpdateDialog;
 class QNetworkReply;
@@ -63,6 +64,7 @@ namespace unicorn
 
         /** call this to add the account menu and about menu action, etc. */
         void finishUi();
+        void addDragHandleWidget( QWidget* );
 
     public slots:
         void about();
@@ -81,6 +83,11 @@ namespace unicorn
             OneDialogPointer<AboutDialog> about;
             
         } ui;
+
+        virtual bool eventFilter( QObject*, QEvent* );
+
+    private:
+        QMap<QWidget*, QPoint> m_dragHandleMouseDownPos;
 
     private slots:
         void onUserGotInfo( QNetworkReply* );
