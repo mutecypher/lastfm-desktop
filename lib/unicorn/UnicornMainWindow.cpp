@@ -33,6 +33,7 @@
 
 
 unicorn::MainWindow::MainWindow()
+:QMainWindow()
 {
     new QShortcut( QKeySequence(Qt::CTRL+Qt::Key_W), this, SLOT(close()) );
     new QShortcut( QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_L), this, SLOT(openLog()) );

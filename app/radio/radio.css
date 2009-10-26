@@ -1,4 +1,4 @@
-unicorn--MainWindow {
+MainWidget {
     background: #1a1a1a; /*qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
                                  stop:0 #211f20, stop:1 #383840 );*/
 }
@@ -6,7 +6,11 @@ unicorn--MainWindow {
 YourStationsWidget, RecentStationsWidget,
 QuickStartWidget, MoreStationsWidget {
     background: #242424;
-    border-radius: 5px;
+    border-radius: 3px;
+    border-color: #ff0000;
+    border-style: solid;
+    border-width: 5px;
+    background-origin: contents;
     padding-bottom: 20px;
 }
 

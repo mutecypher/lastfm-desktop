@@ -147,6 +147,7 @@ MetadataWindow::MetadataWindow()
     // status bar and scrobble controls
     {
         QStatusBar* status = new QStatusBar( this );
+        status->setContentsMargins( 0, 0, 0, 0 );
         addDragHandleWidget( status );
 
 #ifdef Q_WS_WIN

@@ -23,18 +23,23 @@
 #include "widgets/MultiStarterWidget.h"
 #include "widgets/PlaybackControlsWidget.h"
 #include "widgets/NowPlayingWidget.h"
+#include "lib/unicorn/qtwin.h"
 #include "lib/unicorn/AnimatedStatusBar.h"
 #include <lastfm/RadioStation>
 #include <QLineEdit>
 #include <QSizeGrip>
 #include <QMenuBar>
+#include <QPaintEngine>
+#include <QPainter>
 #include "radio.h"
 
 MainWindow::MainWindow()
 {
     setUnifiedTitleAndToolBarOnMac( true );
+    QtWin::extendFrameIntoClientArea( this );
 
     AnimatedStatusBar* status = new AnimatedStatusBar( this );
+    addDragHandleWidget( status );
     PlaybackControlsWidget* pcw = new PlaybackControlsWidget( status );
 
     //FIXME: this code is duplicated in the audioscrobbler app too

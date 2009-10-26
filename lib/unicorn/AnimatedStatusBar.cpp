@@ -12,7 +12,6 @@ AnimatedStatusBar::AnimatedStatusBar( QWidget* parent )
     m_timeline->setCurveShape( QTimeLine::EaseInCurve );
     connect( m_timeline, SIGNAL( frameChanged(int)), SLOT(onFrameChanged(int)));
     connect( m_timeline, SIGNAL( finished()), SLOT(onFinished()));
-    QtWin::enableBlurBehindWindow( this, true );
 }
 
 

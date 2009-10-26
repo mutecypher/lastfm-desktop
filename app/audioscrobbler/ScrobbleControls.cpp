@@ -28,6 +28,7 @@
 ScrobbleControls::ScrobbleControls()
 {
     new QHBoxLayout( this );
+    layout()->setContentsMargins( 0, 0, 0, 0 );
     layout()->addWidget(ui.love = new QPushButton(tr("love")));
     ui.love->setObjectName("love");
     

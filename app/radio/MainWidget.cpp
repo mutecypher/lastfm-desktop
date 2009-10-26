@@ -31,7 +31,7 @@
 
 
 MainWidget::MainWidget( QWidget* parent )
-           :QWidget( parent )
+           :StylableWidget( parent )
 {
     m_nowPlaying = new NowPlayingState();
     connect(radio, SIGNAL(tuningIn(RadioStation)), m_nowPlaying, SLOT(onTuningIn(RadioStation)));

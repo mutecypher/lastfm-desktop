@@ -28,6 +28,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QLabel>
+#include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/AnimatedPushButton.h"
 #include "PlaylistMeta.h"
 #include "RadioStationListModel.h"
@@ -35,7 +36,7 @@
 class SideBySideLayout;
 class NowPlayingState;
 
-class MainWidget : public QWidget
+class MainWidget : public StylableWidget
 {
     Q_OBJECT
     
