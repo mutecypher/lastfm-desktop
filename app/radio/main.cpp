@@ -32,7 +32,6 @@
 #include "lib/unicorn/UniqueApplication.h"
 #include "lib/unicorn/UnicornApplication.h"
 #include "MainWindow.h"
-#include "widgets/MessageBar.h"
 #include "Radio.h"
 #include "app/moose.h"
 

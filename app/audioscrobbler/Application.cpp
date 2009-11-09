@@ -31,9 +31,11 @@
 #include "lib/listener/mac/ITunesListener.h"
 #endif
 #include <lastfm/Audioscrobbler>
+#include <lastfm/AuthenticatedUser>
 #include <QMenu>
 #include "TagDialog.h"
 #include "ShareDialog.h"
+
 using audioscrobbler::Application;
 
 #define ELLIPSIS QString::fromUtf8("…")
@@ -65,7 +67,6 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
 /// tray menu
     QMenu* menu = new QMenu;
 	m_toggle_window_action = menu->addAction( tr("Show Scrobbler"));
-	m_toggle_window_action->setCheckable( true );
     menu->addSeparator();
     m_title_action = menu->addAction(tr("Ready"));
     m_love_action = menu->addAction(tr("Love"));
@@ -90,6 +91,8 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
     m_submit_scrobbles_toggle->setCheckable(true);
     m_submit_scrobbles_toggle->setChecked(true);
     tray->setContextMenu(menu);
+
+    connect(lastfm::AuthenticatedUser::getInfo(), SIGNAL(finished()), SLOT(onUserGotInfo()));
 
 /// MetadataWindow
     mw = new MetadataWindow;
@@ -128,7 +131,11 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
         //TODO user visible warning
     }
 
-	connect( m_toggle_window_action, SIGNAL( toggled(bool)), mw, SLOT( setVisible(bool)) );
+	connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( show()) );
+    connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( setFocus()) );
+    connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( raise()) );
+
+    m_toggle_window_action->trigger();
 }
 
 
@@ -174,7 +181,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
         return;
     }
     
-    m_title_action->setText( t.title() + " [" + t.durationString()+']' );
+    m_title_action->setText( t.title() + " [" + t.durationString() + ']' );
 
     delete watch;
     as->submit();
@@ -198,7 +205,7 @@ Application::onPaused()
 {
     Q_ASSERT(connection);
     Q_ASSERT(watch);
-    if(watch)watch->pause();
+    if(watch) watch->pause();
 }
 
 void
@@ -207,7 +214,7 @@ Application::onResumed()
     Q_ASSERT(watch);
     Q_ASSERT(connection);    
 
-    if(watch)watch->resume();
+    if(watch) watch->resume();
 }
 
 void
@@ -257,5 +264,19 @@ void
 Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason ) 
 {
     if( reason == QSystemTrayIcon::Context ) return;
-    m_toggle_window_action->toggle();
+#ifdef Q_WS_WIN
+    if( reason != QSystemTrayIcon::DoubleClick ) return;
+#endif
+    m_toggle_window_action->trigger();
+}
+
+void 
+Application::onUserGotInfo()
+{
+    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+    Q_ASSERT( reply );
+
+    bool canBootstrap = AuthenticatedUser::canBootstrap( reply );
+    if( canBootstrap )
+        mw->showBootstrapMessage();
 }

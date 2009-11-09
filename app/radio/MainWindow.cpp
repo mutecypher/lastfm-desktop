@@ -19,12 +19,12 @@
 
 #include "MainWindow.h"
 #include "MainWidget.h"
-#include "widgets/MessageBar.h"
 #include "widgets/MultiStarterWidget.h"
 #include "widgets/PlaybackControlsWidget.h"
 #include "widgets/NowPlayingWidget.h"
 #include "lib/unicorn/qtwin.h"
 #include "lib/unicorn/AnimatedStatusBar.h"
+#include "lib/unicorn/widgets/MessageBar.h"
 #include <lastfm/RadioStation>
 #include <QLineEdit>
 #include <QSizeGrip>
@@ -74,7 +74,7 @@ MainWindow::MainWindow()
 
     connect( mw, SIGNAL( widgetChanged(QWidget*)), SLOT( onWidgetChanged( QWidget* )));
 
-    m_messageBar = new MessageBar( this );
+    m_messageBar = new MessageBar( w );
 
     connect(mw, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
 
@@ -93,8 +93,6 @@ MainWindow::MainWindow()
 
     //todo: bury this:
     menuBar()->addMenu("Normania")->addAction( tr("RQL"), mw, SLOT(rawrql()), QKeySequence(tr("Ctrl+r")) );
-
-    m_messageBar->raise();
 }
 
 void 
@@ -134,11 +132,4 @@ MainWindow::onRadioError(int code, const QVariant& data)
             m_messageBar->show("Sorry, an unexpected error occurred.");
             break;
     }
-}
-
-#include <QResizeEvent>
-void 
-MainWindow::resizeEvent(QResizeEvent* event)
-{
-    m_messageBar->resize( event->size().width(), m_messageBar->height());
 }

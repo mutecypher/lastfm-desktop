@@ -85,12 +85,18 @@ namespace unicorn
         } ui;
 
         virtual bool eventFilter( QObject*, QEvent* );
+        virtual void hideEvent( QHideEvent* );
+        virtual void showEvent( QShowEvent* );
 
     private:
         QMap<QWidget*, QPoint> m_dragHandleMouseDownPos;
 
     private slots:
         void onUserGotInfo( QNetworkReply* );
+    
+    signals:
+        void hidden( bool );   
+        void shown( bool );
     };
 }
 

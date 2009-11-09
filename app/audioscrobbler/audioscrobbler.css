@@ -1,9 +1,10 @@
 unicorn--MainWindow RestWidget,
-unicorn--MainWindow QWidget#NowScrobbling {
+unicorn--MainWindow QWidget#NowScrobbling,
+unicorn--MainWindow StylableWidget {
     background-color: rgb(20,20,20);
 }
 
-MetadataWindow QPushButton {
+QStatusBar QPushButton {
     color: transparent;
     background-color: transparent;
     background-position: center;

@@ -41,9 +41,6 @@ public slots:
 protected slots:
     void onWidgetChanged( QWidget* );
 
-protected:
-    virtual void resizeEvent(QResizeEvent* event);
-    
 private:
     MessageBar* m_messageBar;
 };

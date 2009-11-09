@@ -147,7 +147,7 @@ public:
         QVBoxLayout* layout = new QVBoxLayout(this);
         layout->setContentsMargins( 0, 0, 0, 0 );
         QHBoxLayout* rowLayout = new QHBoxLayout();
-        rowLayout->setContentsMargins( 4, 1, 4, 1 );
+        //rowLayout->setContentsMargins( 4, 1, 4, 1 );
         if (!backLabel.isNull()) {
             QPushButton* button = new QPushButton(backLabel);
             button->setObjectName("back");

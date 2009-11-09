@@ -24,10 +24,29 @@
 #include "QuickStartWidget.h"
 #include "../StationSearch.h"
 
+#include <QStylePainter>
+class AAQPushButton : public QPushButton
+{
+public:
+    AAQPushButton( const QString& caption )
+        :QPushButton( caption )
+    {}
+
+    virtual void paintEvent( QPaintEvent* e )
+    {
+        QStylePainter p( this );
+        QStyleOptionButton option;
+        initStyleOption( &option );
+
+        p.setRenderHint( QPainter::HighQualityAntialiasing );
+        p.drawControl( QStyle::CE_PushButton, option );
+    }
+};
+
 QuickStartWidget::QuickStartWidget()
 {
     QHBoxLayout* layout = new QHBoxLayout(this);
-    QPushButton* button = new QPushButton(tr("Play"));
+    QPushButton* button = new AAQPushButton(tr("Play"));
     layout->addWidget(m_edit = new QLineEdit());
     layout->addWidget(button);
 

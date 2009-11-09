@@ -155,3 +155,17 @@ unicorn::MainWindow::addDragHandleWidget( QWidget* w )
 {
     w->installEventFilter( this );
 }
+
+
+void 
+unicorn::MainWindow::hideEvent( QHideEvent* )
+{
+    emit hidden( false );
+}
+
+
+void 
+unicorn::MainWindow::showEvent( QShowEvent* )
+{
+    emit shown( true );
+}

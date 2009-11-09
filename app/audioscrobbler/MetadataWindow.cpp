@@ -19,10 +19,12 @@
 */
 #include "MetadataWindow.h"
 
+#include "Preferences/BootstrapWizard.h"
 #include "ScrobbleStatus.h"
 #include "ScrobbleControls.h"
 #include "Application.h"
 #include "RestWidget.h"
+#include "lib/unicorn/widgets/MessageBar.h"
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/qtwin.h"
 
@@ -46,6 +48,7 @@
 
 MetadataWindow::MetadataWindow()
 {
+    setWindowFlags( Qt::Tool );
     //Enable aero blurry window effect:
     QtWin::extendFrameIntoClientArea( this );
     
@@ -53,6 +56,9 @@ MetadataWindow::MetadataWindow()
 
     QStackedLayout* stackLayout = new QStackedLayout( centralWidget());
     stackLayout->addWidget( stack.rest = new RestWidget());
+
+    stack.bootstrap = new BootstrapWizard(centralWidget());
+    stackLayout->addWidget( stack.bootstrap );
 
     stack.nowScrobbling = new QWidget( centralWidget() );
     stack.nowScrobbling->setObjectName( "NowScrobbling" );
@@ -182,6 +188,9 @@ MetadataWindow::MetadataWindow()
     setUnifiedTitleAndToolBarOnMac( true );
     setMinimumHeight( 80 );
     resize(20, 500);
+
+    ui.message_bar = new MessageBar( centralWidget());
+    finishUi();
 }
 
 //ScrobbleControls* 
@@ -313,4 +322,11 @@ void
 MetadataWindow::setCurrentWidget( QWidget* w )
 {
     ((QStackedLayout*)centralWidget()->layout())->setCurrentWidget( w );
+}
+
+void 
+MetadataWindow::showBootstrapMessage()
+{
+    stack.bootstrap->show();
+    setCurrentWidget( stack.bootstrap );
 }

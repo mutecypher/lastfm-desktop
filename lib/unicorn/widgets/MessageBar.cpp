@@ -25,6 +25,9 @@
 MessageBar::MessageBar( QWidget* parent )
            :QWidget( parent )
 {
+    if( parent )
+        parent->installEventFilter( this );
+
     setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
     updateGeometry();
     setFixedHeight( 0 );
@@ -45,57 +48,46 @@ MessageBar::MessageBar( QWidget* parent )
 void
 MessageBar::show( const QString& message, const QString& id )
 {    
-    QLabel* label = findChild<QLabel*>( id );
-    
-    if (label && id.size()) {
-        if (message.isEmpty())
-        {
-            QProgressBar* p = label->findChild<QProgressBar*>();
-            if (p)
-                p->setRange( 0, 1 ),
-                p->setValue( 1 );
-            QTimer::singleShot( 3000, label, SLOT(deleteLater()) );
-        }
-        else
-            label->setText( message );
-        return;
-    }
-    
-    label = new QLabel( message, ui.papyrus );
+    QLabel* label = new QLabel( message, ui.papyrus );
     label->setBackgroundRole( QPalette::Base );
     label->setMargin( 8 );
     label->setIndent( 4 );
     label->setTextFormat( Qt::RichText );
     label->setOpenExternalLinks( true );
     label->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse );
+    label->setObjectName( id );
+
+    label->adjustSize();
+
+    show( label );
+}
+
+
+void 
+MessageBar::show( QWidget* w )
+{
+    if ( w->objectName().size() && 
+        findChild<QLabel*>( w->objectName() )) {
+        return;
+    }
     
     QPushButton* close = new QPushButton( "x" );
-    QHBoxLayout* h = new QHBoxLayout( label );
+    QHBoxLayout* h = new QHBoxLayout( w );
     h->addStretch();
-    
-    if (id.size())
-    {
-        label->setObjectName( id );
-        
-        QProgressBar* p;
-        h->addWidget( p = new QProgressBar );
-        p->setRange( 0, 0 );
-        p->setFixedWidth( 90 );
-    }
 
     h->addWidget( close );
     h->setMargin( 4 );
     
-    label->setFixedWidth( width() );
-    label->adjustSize();
-    label->show();
-    
-    ui.papyrus->move( 0, -label->height() );
+    ui.papyrus->move( 0, -w->height() );
+
+    w->setFixedWidth( width());
+    w->setParent( this );
+    w->show();
 
     doLayout();
     
-    connect( close, SIGNAL(clicked()), label, SLOT(deleteLater()) );    
-    connect( label, SIGNAL(destroyed()), SLOT(onLabelDestroyed()), Qt::QueuedConnection );
+    connect( close, SIGNAL(clicked()), w, SLOT(deleteLater()) );    
+    connect( w, SIGNAL(destroyed()), SLOT(onLabelDestroyed()), Qt::QueuedConnection );
         
     m_timeline->setFrameRange( height(), ui.papyrus->height() );
     m_timeline->start();
@@ -144,4 +136,15 @@ void
 MessageBar::remove( const QString& id )
 {
     delete findChild<QLabel*>( id );
+}
+
+
+bool
+MessageBar::eventFilter( QObject* obj, QEvent* event )
+{
+    if( event->type() == QEvent::Resize ) {
+        QResizeEvent* e = static_cast<QResizeEvent*>( event );
+        resize( e->size().width(), height());
+    }
+    return false;
 }

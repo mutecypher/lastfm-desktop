@@ -21,11 +21,11 @@
 #define MESSAGE_BAR_H
 
 #include <QWidget>
-
+#include "lib/DllExportMacro.h"
 
 /** @author <max@last.fm> */
 
-class MessageBar : public QWidget
+class UNICORN_DLLEXPORT MessageBar : public QWidget
 {
     Q_OBJECT
     
@@ -39,9 +39,14 @@ class MessageBar : public QWidget
     void doLayout();
     
 public:
-    MessageBar( QWidget* parent = 0 );
+    /** Parent should be the widget that the messagebar is added to.
+        It should not be added to a layout. */
+    MessageBar( QWidget* parent );
+
+    bool eventFilter( QObject* obj, QEvent *event );
     
 public slots:
+    void show( QWidget* );
     void show( const QString&, const QString& id = QString() );
     void remove( const QString& id );
     
