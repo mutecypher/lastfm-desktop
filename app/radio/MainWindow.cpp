@@ -31,7 +31,7 @@
 #include <QMenuBar>
 #include <QPaintEngine>
 #include <QPainter>
-#include "radio.h"
+#include "Radio.h"
 
 MainWindow::MainWindow()
 {
