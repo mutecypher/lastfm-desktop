@@ -210,6 +210,13 @@ SideBySideLayout::currentWidget()
 }
 
 QWidget* 
+SideBySideLayout::prevWidget()
+{
+    int prevIndex = m_itemList.indexOf( m_currentItem ) - 1;
+    return prevIndex >= 0 ? m_itemList[prevIndex]->widget() : 0;
+}
+
+QWidget* 
 SideBySideLayout::nextWidget()
 {
     int nextIndex = m_itemList.indexOf( m_currentItem ) + 1;

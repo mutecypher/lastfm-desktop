@@ -21,7 +21,7 @@
 #include <lastfm.h>
 #include <QtGui>
 #include <stdarg.h>
-#include "layouts/SideBySideLayout.h"
+#include "lib/unicorn/layouts/SideBySideLayout.h"
 #include "widgets/MainStarterWidget.h"
 #include "widgets/NowPlayingWidget.h"
 #include "widgets/MultiStarterWidget.h"

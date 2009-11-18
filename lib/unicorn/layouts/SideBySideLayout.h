@@ -20,6 +20,7 @@
 #ifndef SIDE_BY_SIDE_LAYOUT_H
 #define SIDE_BY_SIDE_LAYOUT_H
 
+#include <lib/DllExportMacro.h>
 #include <QLayout>
 
 /** @brief: A layout that allows 2 or more widgets to be laid out side by side
@@ -31,7 +32,7 @@
   *                     make sure it's robust 
   */
 
-class SideBySideLayout : public QLayout
+class UNICORN_DLLEXPORT SideBySideLayout : public QLayout
 {
     Q_OBJECT
 
@@ -49,7 +50,13 @@ public:
     QSize sizeHint() const;
     QLayoutItem *takeAt(int index);
     QWidget* currentWidget();
+    
+    /** Return previous widget or 0 if first */
+    QWidget* prevWidget();
+
+    /** Return next widget or 0 if last */
     QWidget* nextWidget();
+
     void insertWidget(int index, QWidget* widget);
 
 signals:

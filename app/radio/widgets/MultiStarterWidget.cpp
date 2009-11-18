@@ -31,7 +31,7 @@
 #include "SourceSelectorWidget.h"
 #include "SourceListWidget.h"
 #include "../SourceListModel.h"
-#include "../layouts/SideBySideLayout.h"
+#include "lib/unicorn/layouts/SideBySideLayout.h"
 #include "SearchBox.h"
 #include "YouListWidget.h"
 
