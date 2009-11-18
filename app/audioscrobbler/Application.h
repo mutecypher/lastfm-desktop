@@ -30,6 +30,13 @@ class QAction;
 
 namespace audioscrobbler
 {
+    
+    /**
+      * @brief Main application logic for the audioscrobbler app.
+      *
+      * This class contains the core components of the application
+      * (ie Audioscrobbler, PlayerConnection etc), top-level gui widgets and the system tray.
+      */
     class Application : public unicorn::Application
     {
         Q_OBJECT

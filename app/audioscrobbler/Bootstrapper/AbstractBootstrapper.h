@@ -24,6 +24,16 @@
 
 class QString;
 
+/**
+  * @author Jono Cole <jono@last.fm>
+  *
+  * @brief The AbstractBootstrapper class is the abstract base class of
+  *        bootstrapper implementations, providing common functionality.
+  *
+  * Subclasses of this class can implement the bootStrap method to perform
+  * the bootstrapping operation and then call the zipFile / sendZip methods
+  * to submit the bootstrap.
+  */
 class AbstractBootstrapper : public QObject
 {
     Q_OBJECT

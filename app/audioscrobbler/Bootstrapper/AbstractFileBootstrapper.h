@@ -24,6 +24,16 @@
 #include "AbstractBootstrapper.h"
 #include <lastfm/Track>
 
+/**
+  * @author Jono Cole <jono@last.fm>
+  * @brief AbstractFileBootstrapper is an Abstract class which provides
+  *        common functionality for bootstrappers which read library /
+  *        playcount information from the filesystem.
+  *
+  * Bootstrapping classes using this base class should call the appendTrack
+  * method for each track that it has processed from the file before calling
+  * the zipAndSend method to submit the bootstrap.
+  */
 class AbstractFileBootstrapper : public AbstractBootstrapper
 {
     Q_OBJECT

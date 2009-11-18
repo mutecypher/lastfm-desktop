@@ -25,6 +25,12 @@
 #include <lastfm/Track>
 #include <QDateTime>
 
+/**
+  * @brief The MediaDeviceInterface is a base class for classes
+  * representing a mediaplayer (currently only iTunes/iPod). This
+  * code has not been properly migrated into client 2.0 yet.
+  *
+  */
 class MediaDeviceInterface : public QObject
 {
     public:

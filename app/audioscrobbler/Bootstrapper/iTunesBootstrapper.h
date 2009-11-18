@@ -23,7 +23,11 @@
 
 #include "AbstractFileBootstrapper.h"
 
-
+/** 
+  * @author Jono Cole <jono@last.fm>
+  * @brief Bootstrap using information from the iTunes Music Library.xml
+  * file.
+  */
 class iTunesBootstrapper : public AbstractFileBootstrapper
 {
     Q_OBJECT

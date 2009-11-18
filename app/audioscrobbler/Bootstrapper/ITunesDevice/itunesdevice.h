@@ -27,6 +27,12 @@
 #include "MediaDeviceInterface.h"
 #include <lastfm/Track>
 
+/** 
+  * @brief The ITunesDevice class parses the iTunes Music Library.xml file
+  * and allows iterating over the Track information.
+  *
+  * @todo Rename this to something more descriptive.
+  */
 class ITunesDevice : public QObject
 {
     Q_OBJECT

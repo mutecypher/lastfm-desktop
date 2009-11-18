@@ -22,7 +22,12 @@
 #include <QXmlContentHandler>
 #include <QXmlSimpleReader>
 
-
+/**
+  * @brief XML Event handler for parsing the iTunes Library xml
+  * file. 
+  *
+  * @todo this should probably be renamed to something more appropriate. 
+  */
 class ITunesParser : public QXmlContentHandler
 {
     public:
