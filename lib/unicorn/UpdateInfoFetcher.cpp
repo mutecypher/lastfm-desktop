@@ -5,6 +5,16 @@
 #include <QSettings>
 #include <QString>
 
+#ifdef WIN32
+    static const char *PLATFORM = "win";
+#elif defined Q_WS_X11
+    static const char *PLATFORM = "linux";
+#elif defined Q_WS_MAC
+    static const char *PLATFORM = "mac";
+#else
+    static const char *PLATFORM = "unknown";
+#endif
+
 Plugin::Plugin( const XmlQuery& query )
        :m_valid( true ),
         m_bootstrapType( NoBootstrap )
@@ -30,6 +40,7 @@ Plugin::Plugin( const XmlQuery& query )
 bool 
 Plugin::isInstalled() const
 {
+#ifdef Q_OS_WIN
     QSettings s("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\", QSettings::NativeFormat );
     foreach( QString group, s.childGroups()) {
         s.beginGroup( group );
@@ -41,14 +52,21 @@ Plugin::isInstalled() const
         s.endGroup();
     }
     return false;
+#elif defined Q_OS_MAC
+    return true;
+#endif
 }
 
 
 bool 
 Plugin::isPluginInstalled() const
 {
+#ifdef Q_OS_WIN
     QSettings s( "HKEY_LOCAL_MACHINE\\SOFTWARE\\Last.fm\\Client\\Plugins", QSettings::NativeFormat );
     return s.childGroups().contains( m_id );
+#elif defined Q_OS_MAC
+    return true;
+#endif
 }
 
 
@@ -73,7 +91,7 @@ UpdateInfoFetcher::UpdateInfoFetcher( QNetworkReply* reply, QObject* parent )
 QNetworkReply* 
 UpdateInfoFetcher::fetchInfo() //static
 {
-    QString url = QString( "http://%1/ass/upgrade.xml.php?platform=win&lang=en" ).arg( lastfm::ws::host() );
+    QString url = QString( "http://%1/ass/upgrade.xml.php?platform=%2&lang=en" ).arg( lastfm::ws::host(), PLATFORM );
     QNetworkRequest req( url );
     return lastfm::nam()->get( req );
 }
