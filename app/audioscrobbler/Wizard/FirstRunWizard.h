@@ -22,8 +22,12 @@
 
 #include "IntroPage.h"
 #include "LoginPage.h"
+#include "LoggingInPage.h"
 #include "PluginPage.h"
+#include "BootstrapPage.h"
+
 #include <QWizard>
+#include <QDebug>
 
 /**  @author Jono Cole <jono@last.fm>
   *  @brief Initial wizard to guide the user through login, plugin installation, bootstrapping etc 
@@ -35,6 +39,7 @@ class FirstRunWizard : public QWizard
        Page_Intro = 0,
        Page_Login,
        Page_Plugin,
+       Page_Bootstrap
     };
 
 public:
@@ -42,22 +47,29 @@ public:
     : QWizard( parent )
     {
         resize( 625, 440 );
-        setPage( Page_Intro, new IntroPage());
+        setPage( Page_Intro, new IntroPage(this));
         setPage( Page_Plugin, new PluginPage());
-        setPage( Page_Login, new LoginPage());
+        setPage( Page_Login, new LoginPage(this));
+        setPage( Page_Bootstrap, new BootstrapPage( this ));
     }
 
     int nextId() const
     {
         switch( currentId()) {
-        case Page_Intro:
-            return Page_Login;
-        
-        case Page_Login:
-            return Page_Plugin;
+            case Page_Intro:
+                return Page_Login;
+            
+            case Page_Login:
+            #ifdef Q_OS_WIN32
+                return Page_Plugin;
+            #else
+                return Page_Bootstrap;
+            #endif
 
-        default:
-            return -1;
+            case Page_Bootstrap:
+
+            default:
+                return -1;
         }
     }
 };

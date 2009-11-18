@@ -165,3 +165,10 @@ a {
     text-decoration: none;
 }
 
+QWizard QLabel#errorMsg {
+    background-color: #ffaaaa;
+    border-color: #ffaaaa;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 6px;
+}

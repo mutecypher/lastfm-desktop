@@ -4,6 +4,9 @@ include( qmake/QtOverride.pro.inc )
 include( qmake/3rdparty.pro.inc )
 include( qmake/1stparty.pro.inc )
 
+QMAKE_CC = "/usr/bin/distcc /usr/bin/gcc"
+QMAKE_CXX = "/usr/bin/distcc /usr/bin/g++"
+
 linux*{
 	CONFIG += link_pkgconfig
 	# use KDE phonon if installed in preference

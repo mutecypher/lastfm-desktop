@@ -35,6 +35,7 @@
 #include <QMenu>
 #include "TagDialog.h"
 #include "ShareDialog.h"
+#include "Wizard/FirstRunWizard.h"
 
 using audioscrobbler::Application;
 
@@ -50,6 +51,11 @@ using audioscrobbler::Application;
 
 Application::Application(int& argc, char** argv) : unicorn::Application(argc, argv)
 {
+    if( unicorn::GlobalSettings( "Audioscrobbler" ).value( "FirstRun", true )
+        == true ) {
+        (new FirstRunWizard())->exec();
+    }
+
 /// tray
     tray = new QSystemTrayIcon(this);
     QIcon trayIcon( AS_TRAY_ICON );
@@ -92,8 +98,6 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
     m_submit_scrobbles_toggle->setChecked(true);
     tray->setContextMenu(menu);
 
-    connect(lastfm::AuthenticatedUser::getInfo(), SIGNAL(finished()), SLOT(onUserGotInfo()));
-
 /// MetadataWindow
     mw = new MetadataWindow;
     ScrobbleControls* sc = mw->scrobbleControls();
@@ -131,11 +135,13 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
         //TODO user visible warning
     }
 
+
 	connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( show()) );
     connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( setFocus()) );
     connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( raise()) );
 
     m_toggle_window_action->trigger();
+
 }
 
 
@@ -273,10 +279,10 @@ Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason )
 void 
 Application::onUserGotInfo()
 {
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+    /*QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
     Q_ASSERT( reply );
 
     bool canBootstrap = AuthenticatedUser::canBootstrap( reply );
     if( canBootstrap )
-        mw->showBootstrapMessage();
+        mw->showBootstrapMessage();*/
 }

@@ -26,7 +26,7 @@ class MetadataWindow : public unicorn::MainWindow
     Q_OBJECT
 
     struct{ 
-        class BootstrapWizard* bootstrap;
+        class FirstRunWizard* firstrun;
         class RestWidget* rest;
         QWidget* nowScrobbling;
     } stack;
@@ -54,7 +54,6 @@ public:
     MetadataWindow();
     const Track& currentTrack() const{ return m_currentTrack; }
     class ScrobbleControls* scrobbleControls() const{ return ui.sc; }
-    void showBootstrapMessage();
 
 public slots:
     void onTrackStarted(const Track&, const Track&);

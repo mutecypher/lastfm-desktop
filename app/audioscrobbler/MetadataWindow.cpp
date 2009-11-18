@@ -19,7 +19,6 @@
 */
 #include "MetadataWindow.h"
 
-#include "Preferences/BootstrapWizard.h"
 #include "ScrobbleStatus.h"
 #include "ScrobbleControls.h"
 #include "Application.h"
@@ -49,16 +48,18 @@
 MetadataWindow::MetadataWindow()
 {
     setWindowFlags( Qt::Tool );
+    setAttribute( Qt::WA_MacAlwaysShowToolWindow );
     //Enable aero blurry window effect:
     QtWin::extendFrameIntoClientArea( this );
     
     setCentralWidget(new QWidget);
 
+
+
     QStackedLayout* stackLayout = new QStackedLayout( centralWidget());
+
     stackLayout->addWidget( stack.rest = new RestWidget());
 
-    stack.bootstrap = new BootstrapWizard(centralWidget());
-    stackLayout->addWidget( stack.bootstrap );
 
     stack.nowScrobbling = new QWidget( centralWidget() );
     stack.nowScrobbling->setObjectName( "NowScrobbling" );
@@ -324,9 +325,3 @@ MetadataWindow::setCurrentWidget( QWidget* w )
     ((QStackedLayout*)centralWidget()->layout())->setCurrentWidget( w );
 }
 
-void 
-MetadataWindow::showBootstrapMessage()
-{
-    stack.bootstrap->show();
-    setCurrentWidget( stack.bootstrap );
-}

@@ -20,63 +20,35 @@
 #ifndef LOGIN_PAGE_H_
 #define LOGIN_PAGE_H_
 
-#include <QVBoxLayout>
-#include <QGridLayout>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QDebug>
-
-#include "lib/unicorn/StylableWidget.h"
-#include "lib/unicorn/layouts/SideBySideLayout.h"
 
 #include <QWizardPage>
-
+#include <QAbstractButton>
 class LoginPage : public QWizardPage
 {
     Q_OBJECT
 public:
-    LoginPage( QWidget* parent = 0 )
-    :QWizardPage( parent )
+    LoginPage( QWidget* parent = 0 );
+
+    virtual void initializePage()
     {
-        setTitle(tr( "Login" ));
-        setSubTitle(tr( "Please enter your last.fm username and password below:" ));
-        new QVBoxLayout( this );
-
-        QWidget* login = new QWidget( this );
-        QGridLayout* loginLayout = new QGridLayout( login );
-        
-        ui.username = new QLineEdit( login );
-        ui.password = new QLineEdit( login );
-        ui.password->setEchoMode( QLineEdit::Password );
-
-        connect( ui.username, SIGNAL(textChanged(QString)), SIGNAL( completeChanged()));
-        connect( ui.password, SIGNAL(textChanged(QString)), SIGNAL( completeChanged()));
-
-        loginLayout->addWidget( new QLabel( tr( "Username:" ), login ), 0, 0 );
-        loginLayout->addWidget( ui.username, 0, 1 );
-        loginLayout->addWidget( new QLabel( tr( "Password:" ), login ), 1, 0 );
-        loginLayout->addWidget( ui.password, 1, 1 );
-
-        QLabel* signup = new QLabel( "<a href=\"https://www.last.fm/join\">" + tr( "Sign up for a Last.fm account" ) + "</a>", login);
-        signup->setOpenExternalLinks( true );
-
-        loginLayout->addWidget( signup, 2, 0, 1, 2, Qt::AlignTop );
-
-        loginLayout->setRowStretch( 2, 1 );
-
-        layout()->addWidget( login );
+        QAbstractButton* b = wizard()->button( QWizard::NextButton );
+        b->disconnect();
+        connect( b, SIGNAL( clicked()), SLOT( authenticate()));
     }
 
-    virtual bool isComplete() const
-    {
-        return !(ui.username->text().isEmpty() || ui.password->text().isEmpty());
-    }
+    virtual void cleanupPage();
+ 
+private slots:
+    
+    void authenticate();
+    void onAuthenticated();
 
 private:
+
     struct {
-        QLineEdit* username;
-        QLineEdit* password;
+        class QLineEdit* username;
+        class QLineEdit* password;
+        class QLabel* errorMsg;
     } ui;
 
 };
