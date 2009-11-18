@@ -1,3 +1,22 @@
+/*
+   Copyright 2005-2009 Last.fm Ltd. 
+      - Primarily authored by Jono Cole
+
+   This file is part of the Last.fm Desktop Application Suite.
+
+   lastfm-desktop is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   lastfm-desktop is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
+*/
 #ifndef BOOTSTRAP_WIZARD_H
 #define BOOTSTRAP_WIZARD_H
 
@@ -16,10 +35,22 @@ class SelectBSMediaPlayer: public StylableWidget
 public:
     SelectBSMediaPlayer( QWidget* parent = 0 )
     :StylableWidget( parent) { 
-        QNetworkReply* reply = UpdateInfoFetcher::fetchInfo();
-        connect( reply, SIGNAL( finished()), SLOT(updateInfoFetched()));
         new QVBoxLayout( this );
     }
+
+    virtual void showEvent ( QShowEvent * event ) {
+        emit enableNext();
+        StylableWidget::showEvent( event );
+    }
+
+    void fetchInfo()
+    {
+        QNetworkReply* reply = UpdateInfoFetcher::fetchInfo();
+        connect( reply, SIGNAL( finished()), SLOT(updateInfoFetched()));
+    }
+
+signals:
+    void enableNext();
 
 private slots:
     void updateInfoFetched() {
@@ -37,18 +68,26 @@ private slots:
         layout()->addWidget( new QRadioButton( tr("None"), this ));
         ((QBoxLayout*)layout())->addStretch();
         update();
+        emit enableNext();
     }
 };
 
 class BootstrapWizard: public StylableWidget
 {
+Q_OBJECT
 public:
     BootstrapWizard( QWidget* parent = 0 )
     :StylableWidget( parent ) {
         new QVBoxLayout( this );
-        layout()->addWidget( new SelectBSMediaPlayer( this ));
+        SelectBSMediaPlayer* mps;
+        layout()->addWidget( mps = new SelectBSMediaPlayer( this ));
+        connect( mps, SIGNAL( enableNext()), SIGNAL( enableNext()));
+        mps->fetchInfo();
     }
     ~BootstrapWizard();
+
+signals:
+    void enableNext();
 };
 
 #endif //BOOTSTRAP_WIZARD_H
