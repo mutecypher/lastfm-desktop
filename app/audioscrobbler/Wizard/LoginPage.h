@@ -29,13 +29,7 @@ class LoginPage : public QWizardPage
 public:
     LoginPage( QWidget* parent = 0 );
 
-    virtual void initializePage()
-    {
-        QAbstractButton* b = wizard()->button( QWizard::NextButton );
-        b->disconnect();
-        connect( b, SIGNAL( clicked()), SLOT( authenticate()));
-    }
-
+    virtual void initializePage();
     virtual void cleanupPage();
  
 private slots:

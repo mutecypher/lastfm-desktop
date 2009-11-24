@@ -49,6 +49,8 @@ LoginPage::LoginPage( QWidget* parent )
 
     connect( ui.username, SIGNAL(textChanged(QString)), SIGNAL( completeChanged()));
     connect( ui.password, SIGNAL(textChanged(QString)), SIGNAL( completeChanged()));
+    connect( ui.username, SIGNAL(returnPressed()), ui.username->nextInFocusChain(), SLOT(setFocus()));
+    connect( ui.password, SIGNAL(returnPressed()), ui.password->nextInFocusChain(), SLOT(setFocus()));
 
     ui.errorMsg = new QLabel( "", login );
     ui.errorMsg->setObjectName( "errorMsg" );
@@ -76,7 +78,23 @@ LoginPage::LoginPage( QWidget* parent )
 
     layout()->addWidget( login );
 }
+
+
+void
+LoginPage::initializePage()
+{
+    QAbstractButton* b = wizard()->button( QWizard::NextButton );
+    b->disconnect();
+    connect( b, SIGNAL( clicked()), SLOT( authenticate()));
     
+    // setFocus is not really necessary but gives nice visual hint as to
+    // the action being performed by pushing return.
+    connect( ui.password, SIGNAL( returnPressed()), wizard()->button( QWizard::NextButton ), SLOT(setFocus()));
+    
+    connect( ui.password, SIGNAL( returnPressed()), wizard()->button( QWizard::NextButton ), SLOT(click()));
+}
+
+
 void 
 LoginPage::cleanupPage()
 {
@@ -190,6 +208,8 @@ LoginPage::onAuthenticated()
             #endif
                 break;
         }
+        ui.password->setFocus();
+        ui.password->selectAll();
         ui.errorMsg->show();
     }
 }

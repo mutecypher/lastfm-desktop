@@ -22,7 +22,6 @@
 
 #include "IntroPage.h"
 #include "LoginPage.h"
-#include "LoggingInPage.h"
 #include "PluginPage.h"
 #include "BootstrapPage.h"
 
