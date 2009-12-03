@@ -54,7 +54,7 @@ do
             echo "Will generate Visual Studio .sln file"
             VS="-tp vs";;
         --help | -h | --usage)
-            echo "options include: --release, --tests, --xcode"
+            echo "options include: --release, --tests, --xcode, --vs"
             exit;;
     esac
     
@@ -142,8 +142,12 @@ else
         *)
             #svn co svn+ssh://gimli.last.fm/svn/clientside/bin/win _bin
             qmake -recursive $VS Last.fm.pro "CONFIG -= flat" || die "Configure failed."
-            fix_sln
-            BUILD_CMD='devenv /useenv Last.sln';;
+            if [ -n $VS ]; then
+                fix_sln
+                BUILD_CMD='devenv /useenv Last.sln'
+            else
+                BUILD_CMD='nmake all'
+            fi;;
     esac
 fi
 
