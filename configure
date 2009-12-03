@@ -138,7 +138,7 @@ else
 
         *)
             #svn co svn+ssh://gimli.last.fm/svn/clientside/bin/win _bin
-            qmake -recursive -tp vc Last.fm.pro "CONFIG -= flat" || die "Configure failed."
+            qmake -recursive Last.fm.pro "CONFIG -= flat" || die "Configure failed."
             fix_sln
             BUILD_CMD='devenv /useenv Last.sln';;
     esac

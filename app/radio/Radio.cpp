@@ -22,14 +22,10 @@
 #include <QTimer>
 #include <cmath>
 #include <lastfm/RadioTuner>
-#include "Radio.h"
+#include <phonon/mediaobject.h>
+#include <phonon/backendcapabilities.h>
 
-#ifdef Q_OS_UNIX
-    #include <phonon/mediaobject.h>
-    #include <phonon/backendcapabilities.h>
-#else
-    #include <phonon>
-#endif
+#include "Radio.h"
 
 Radio::Radio( )
      : m_audioOutput( 0 ),

@@ -19,6 +19,10 @@
 */
 #include "LoginPage.h"
 
+#ifdef WIN32
+#include <windows.h>
+#endif // WIN32
+
 #include <QVBoxLayout>
 #include <QGridLayout>
 
@@ -197,7 +201,7 @@ LoginPage::onAuthenticated()
                         .setTitle( tr("Cannot connect to Last.fm") ) */
                 ui.errorMsg->setText( tr("Last.fm cannot be reached. Please check your firewall or proxy settings.") );
                         /*.exec();*/
-                
+
             #ifdef WIN32
                 // show Internet Settings Control Panel
                 HMODULE h = LoadLibraryA( "InetCpl.cpl" );

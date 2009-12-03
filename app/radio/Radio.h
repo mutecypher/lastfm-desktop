@@ -25,17 +25,13 @@
 #include <lastfm/RadioTuner>
 #include <lastfm/ws.h>
 #include <phonon/phononnamespace.h>
+#include <phonon/audiooutput.h>
+#include <phonon/mediasource.h>
 #include <QList>
 #include <QPointer>
 #include <QThread>
 #include <QVariant>
 
-#ifdef Q_OS_UNIX
-    #include <phonon/audiooutput.h>
-    #include <phonon/mediasource.h>
-#else
-    #include <phonon>
-#endif
 namespace Phonon
 {
 	class MediaObject;
