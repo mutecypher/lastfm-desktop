@@ -7,7 +7,6 @@ YourStationsWidget, RecentStationsWidget,
 QuickStartWidget, MoreStationsWidget {
     background: #242424;
     border-radius: 3px;
-    border-color: #ff0000;
     border-style: solid;
     border-width: 5px;
     background-origin: contents;
@@ -147,7 +146,6 @@ MoreStationsWidget QPushButton#combos { background-image: url(:/combo_rest_26x27
 MoreStationsWidget QPushButton#combos:hover { background-image: url(:/combo_hover_26x27.png); }
 MoreStationsWidget QPushButton#combos:pressed { background-image: url(:/combo_pressed_26x27.png); }
 
-
 PlaybackControlsWidget QPushButton {
     color: transparent;
     background-color: transparent;
@@ -157,6 +155,13 @@ PlaybackControlsWidget QPushButton {
     margin: 5px 15px;
     height: 29px;
     width: 40;
+}
+
+PlaybackControlsWidget QPushButton#volume {
+    background-image: url(:/default_user_small.png);
+	border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
 }
 
 PlaybackControlsWidget QPushButton#love {
