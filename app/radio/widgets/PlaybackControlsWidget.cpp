@@ -30,6 +30,7 @@
 #include <QToolButton>
 #include <QPainter>
 #include <QPaintEvent>
+#include <QMouseEvent>
 
 #include <Phonon/VolumeSlider>
 
@@ -46,7 +47,10 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     ui.volumeSlider = new Phonon::VolumeSlider(window());
     ui.volumeSlider->setObjectName("volumeSlider");
     ui.volumeSlider->setOrientation(Qt::Vertical);
-    ui.volumeSlider->resize(ui.volumeSlider->width(), 100);
+    ui.volumeSlider->setFixedWidth( 30 );
+    ui.volumeSlider->setContentsMargins( 0, 4, 0, 4 );
+    ui.volumeSlider->layout()->setSpacing( 5 );
+    ui.volumeSlider->resize(ui.volumeSlider->width(), 120);
     ui.volumeSlider->hide();
     
     h->addWidget( ui.love = new QPushButton( tr( "love" ) ));
@@ -69,21 +73,7 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     connect( ui.skip, SIGNAL( clicked()), radio, SLOT(skip()));
     connect( ui.volume, SIGNAL( clicked()), SLOT(onVolumeClicked()));
 
-    installEventFilterForParentAndChildren(window(), this);
-
     setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-}
-
-void
-PlaybackControlsWidget::installEventFilterForParentAndChildren(QObject* parent, QObject* eventFilter)
-{
-    parent->installEventFilter(eventFilter);
-
-    const QObjectList& children(parent->children());
-    for (int i(0) ; i < children.count() ; ++i)
-    {
-        installEventFilterForParentAndChildren(children.at(i), eventFilter);
-    }
 }
 
 void
@@ -93,6 +83,7 @@ PlaybackControlsWidget::onVolumeClicked()
     {
         ui.volumeSlider->setAudioOutput(radio->audioOutput());
         moveVolumeSlider();
+        ui.volumeSlider->setWindowFlags( Qt::Popup );
         ui.volumeSlider->raise();
         ui.volumeSlider->show();
     }
@@ -101,7 +92,9 @@ PlaybackControlsWidget::onVolumeClicked()
 void
 PlaybackControlsWidget::moveVolumeSlider()
 {
-    ui.volumeSlider->move(mapTo(window(), ui.volume->pos()) - QPoint(0, ui.volumeSlider->height()));
+    int v2 = ui.volumeSlider->width() / 2;
+    int b2 = ui.volume->width() / 2;
+    ui.volumeSlider->move(mapToGlobal( ui.volume->pos()) - QPoint(v2 - b2, ui.volumeSlider->height()));
 }
 
 void
@@ -127,26 +120,3 @@ PlaybackControlsWidget::onPlayClicked()
         radio->play( RadioStation( "" ) );
 }
 
-bool
-PlaybackControlsWidget::eventFilter(QObject *obj, QEvent *event)
-{
-    if (event->type() == QEvent::Resize)
-    {
-        moveVolumeSlider();
-    }
-    else if (event->type() == QEvent::MouseButtonPress)
-    {
-        qDebug() << obj;
-        static int debug_id = 0;
-        qDebug() << debug_id++ << event;
-
-        if (ui.volumeSlider->isVisible() &&
-            obj->isWidgetType() &&
-            !ui.volumeSlider->isAncestorOf(static_cast<QWidget*>(obj)))
-        {
-            ui.volumeSlider->hide();
-        }
-    }
-
-    return QObject::eventFilter(obj, event);
-}

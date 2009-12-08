@@ -20,7 +20,7 @@
 
 #include "iTunesBootstrapper.h"
 
-#include "ITunesDevice/ITunesDevice.h"
+#include "ITunesDevice/itunesdevice.h"
 
 #include <QApplication>
 

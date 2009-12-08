@@ -54,12 +54,8 @@ private slots:
 	void onPlayClicked();
     void onVolumeClicked();
 
-protected:
-    bool eventFilter(QObject *obj, QEvent *event);
-
 private:
     void moveVolumeSlider();
-    void installEventFilterForParentAndChildren(QObject* parent, QObject* eventFilter);
 	
 signals:
 	void stop();

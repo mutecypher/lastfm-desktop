@@ -2,7 +2,7 @@
 
 #include <QTimeLine>
 #include "qtwin.h"
-#include <qDebug>
+#include <QDebug>
 
 AnimatedStatusBar::AnimatedStatusBar( QWidget* parent )
                   :QStatusBar( parent )
