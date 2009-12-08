@@ -30,7 +30,9 @@
 #include <QToolButton>
 #include <QPainter>
 #include <QPaintEvent>
+#include <QMouseEvent>
 
+#include <Phonon/VolumeSlider>
 
 PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
                        :StylableWidget( parent )
@@ -38,6 +40,18 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     QHBoxLayout* h = new QHBoxLayout( this );
     h->setContentsMargins( 12, 0, 12, 0 );
     h->setSpacing( 5 );
+
+    h->addWidget( ui.volume = new QPushButton( tr( "volume" ) ));
+    ui.volume->setObjectName( "volume" );
+
+    ui.volumeSlider = new Phonon::VolumeSlider(window());
+    ui.volumeSlider->setObjectName("volumeSlider");
+    ui.volumeSlider->setOrientation(Qt::Vertical);
+    ui.volumeSlider->setFixedWidth( 30 );
+    ui.volumeSlider->setContentsMargins( 0, 4, 0, 4 );
+    ui.volumeSlider->layout()->setSpacing( 5 );
+    ui.volumeSlider->resize(ui.volumeSlider->width(), 120);
+    ui.volumeSlider->hide();
     
     h->addWidget( ui.love = new QPushButton( tr( "love" ) ));
     ui.love->setObjectName( "love" );
@@ -57,11 +71,31 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     connect( radio, SIGNAL(tuningIn( const RadioStation&)), SLOT( onRadioTuningIn( const RadioStation&)));
 	connect( ui.play, SIGNAL( clicked()), SLOT( onPlayClicked()) );
     connect( ui.skip, SIGNAL( clicked()), radio, SLOT(skip()));
+    connect( ui.volume, SIGNAL( clicked()), SLOT(onVolumeClicked()));
 
     setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-    
 }
 
+void
+PlaybackControlsWidget::onVolumeClicked()
+{
+    if (!ui.volumeSlider->isVisible())
+    {
+        ui.volumeSlider->setAudioOutput(radio->audioOutput());
+        moveVolumeSlider();
+        ui.volumeSlider->setWindowFlags( Qt::Popup );
+        ui.volumeSlider->raise();
+        ui.volumeSlider->show();
+    }
+}
+
+void
+PlaybackControlsWidget::moveVolumeSlider()
+{
+    int v2 = ui.volumeSlider->width() / 2;
+    int b2 = ui.volume->width() / 2;
+    ui.volumeSlider->move(mapToGlobal( ui.volume->pos()) - QPoint(v2 - b2, ui.volumeSlider->height()));
+}
 
 void
 PlaybackControlsWidget::onRadioStopped()
@@ -85,3 +119,4 @@ PlaybackControlsWidget::onPlayClicked()
     else
         radio->play( RadioStation( "" ) );
 }
+

@@ -26,6 +26,8 @@ class QPushButton;
 
 namespace lastfm{ class RadioStation; };
 
+namespace Phonon{ class VolumeSlider; };
+
 using lastfm::RadioStation;
 
 class PlaybackControlsWidget : public StylableWidget
@@ -37,6 +39,8 @@ public:
 
 	struct Ui
     {
+        QPushButton* volume;
+        Phonon::VolumeSlider* volumeSlider;
         QPushButton* love;
         QPushButton* ban;
         QPushButton* play;
@@ -48,7 +52,10 @@ private slots:
 	void onRadioStopped();
     void onRadioTuningIn( const class RadioStation& );
 	void onPlayClicked();
-    
+    void onVolumeClicked();
+
+private:
+    void moveVolumeSlider();
 	
 signals:
 	void stop();
