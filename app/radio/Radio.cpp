@@ -26,6 +26,7 @@
 #include <phonon/backendcapabilities.h>
 
 #include "Radio.h"
+#include "lib/unicorn/UnicornSettings.h"
 
 Radio::Radio( )
      : m_audioOutput( 0 ),
@@ -353,7 +354,7 @@ Radio::onOutputDeviceChanged(const Phonon::AudioOutputDevice& newDevice)
 void
 Radio::onVolumeChanged(qreal vol)
 {
-    Q_UNUSED(vol)
+    unicorn::GlobalSettings().setValue("Volume", vol);
 }
 
 void
@@ -369,7 +370,17 @@ bool
 Radio::initRadio()
 {
 	Phonon::AudioOutput* audioOutput = new Phonon::AudioOutput( Phonon::MusicCategory, this );
-//	audioOutput->setVolume( QSettings().value( "Volume", 80 ).toUInt() );
+
+    // restore the last volume
+    if (unicorn::GlobalSettings().contains("Volume"))
+    {
+        bool ok;
+        double volume = unicorn::GlobalSettings().value("Volume", 0).toDouble(&ok);
+        if (ok)
+        {
+            audioOutput->setVolume(volume);
+        }
+    }
 
     qDebug() << audioOutput->name();
     qDebug() << audioOutput->outputDevice().description();
