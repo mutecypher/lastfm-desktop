@@ -47,14 +47,17 @@
 
 MetadataWindow::MetadataWindow()
 {
-    setWindowFlags( Qt::Tool );
+    setAttribute( Qt::WA_TranslucentBackground );
+    QPalette pal(palette());
+    pal.setColor( QPalette::Window, QColor( 26, 26, 26, 190 ));
+    setPalette( pal );
+    setAutoFillBackground( true );
+    setWindowFlags( Qt::CustomizeWindowHint );
     setAttribute( Qt::WA_MacAlwaysShowToolWindow );
     //Enable aero blurry window effect:
     QtWin::extendFrameIntoClientArea( this );
     
     setCentralWidget(new QWidget);
-
-
 
     QStackedLayout* stackLayout = new QStackedLayout( centralWidget());
 
@@ -81,11 +84,8 @@ MetadataWindow::MetadataWindow()
         v->addWidget( sa );
     }
 
-
-
     // listeners, scrobbles, tags:
     {
-       
         QLabel* label;
         QGridLayout* grid = new QGridLayout();
         grid->setSpacing( 0 );

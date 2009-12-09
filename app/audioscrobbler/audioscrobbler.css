@@ -1,7 +1,7 @@
 unicorn--MainWindow RestWidget,
 unicorn--MainWindow QWidget#NowScrobbling,
 unicorn--MainWindow StylableWidget {
-    background-color: rgb(20,20,20);
+    background-color: rgba(20,20,20,190);
 }
 
 QStatusBar QPushButton {
@@ -27,8 +27,8 @@ QScrollArea {
     border: none;
 }
 
-MetadataWindow QLabel{ padding: 3px 0px 1px 5px; margin: 0px; font-size: 11px; font-weight: bold;}
-MetadataWindow QLabel[alternate="true"]{ background-origin: margin; background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #171717, stop:0 #212222 ); }
+MetadataWindow QLabel{ background-color transparent; padding: 3px 0px 1px 5px; margin: 0px; font-size: 11px; font-weight: bold;}
+MetadataWindow QLabel[alternate="true"]{ background-origin: margin; background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 rgba(23,23,23,100), stop:0 rgba(33,33,34,100)); }
 MetadataWindow QLabel#name { color: #afafaf; margin-left: 15px; }
 MetadataWindow QLabel#value { color: #cccccc; font-weight: bold; margin: 0px; margin-right:11px; }
 
@@ -94,7 +94,7 @@ QTextBrowser {
     padding: 0px;
     margin: -7px 0px 0px -5px;
     border:none;
-    background-color: rgb(20,20,20);
+    background-color: transparent;
 }
 
 QLabel#title1 
