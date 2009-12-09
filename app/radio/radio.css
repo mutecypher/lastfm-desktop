@@ -164,6 +164,13 @@ PlaybackControlsWidget QPushButton#volume {
     border-width: 1px;
 }
 
+PlaybackControlsWidget QPushButton#volume:checked {
+    background-image: url(:/default_user_small.png);
+	border-radius: 5px;
+    border-style: solid;
+    border-width: 4px;
+}
+
 PlaybackControlsWidget QPushButton#love {
     background-image: url(:/love-rest.png);
 }

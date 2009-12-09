@@ -35,7 +35,7 @@
 #include <Phonon/VolumeSlider>
 
 PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
-                       :StylableWidget( parent )
+                       :StylableWidget( parent ), m_sliderHiddenOnButtonClick(false)
 {
     QHBoxLayout* h = new QHBoxLayout( this );
     h->setContentsMargins( 12, 0, 12, 0 );
@@ -43,10 +43,13 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
 
     h->addWidget( ui.volume = new QPushButton( tr( "volume" ) ));
     ui.volume->setObjectName( "volume" );
+    ui.volume->setCheckable(true);
+    ui.volume->setChecked(false);
 
     ui.volumeSlider = new Phonon::VolumeSlider(window());
     ui.volumeSlider->setObjectName("volumeSlider");
-    ui.volumeSlider->setOrientation(Qt::Vertical);
+    ui.volumeSlider->setWindowFlags( Qt::Popup );
+    ui.volumeSlider->setOrientation( Qt::Vertical );
     ui.volumeSlider->setFixedWidth( 30 );
     ui.volumeSlider->setContentsMargins( 0, 4, 0, 4 );
     ui.volumeSlider->layout()->setSpacing( 5 );
@@ -71,21 +74,37 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     connect( radio, SIGNAL(tuningIn( const RadioStation&)), SLOT( onRadioTuningIn( const RadioStation&)));
 	connect( ui.play, SIGNAL( clicked()), SLOT( onPlayClicked()) );
     connect( ui.skip, SIGNAL( clicked()), radio, SLOT(skip()));
-    connect( ui.volume, SIGNAL( clicked()), SLOT(onVolumeClicked()));
+    connect( ui.volume, SIGNAL( toggled(bool)), SLOT(onVolumeToggled(bool)));
 
     setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+
+    ui.volumeSlider->installEventFilter(this);
 }
 
 void
-PlaybackControlsWidget::onVolumeClicked()
+PlaybackControlsWidget::onVolumeToggled(bool checked)
 {
-    if (!ui.volumeSlider->isVisible())
+    if (checked)
     {
-        ui.volumeSlider->setAudioOutput(radio->audioOutput());
-        moveVolumeSlider();
-        ui.volumeSlider->setWindowFlags( Qt::Popup );
-        ui.volumeSlider->raise();
-        ui.volumeSlider->show();
+        if (m_sliderHiddenOnButtonClick)
+        {
+            // we have been check again because the volume butt
+
+            ui.volume->setChecked(false);
+            m_sliderHiddenOnButtonClick = false;
+        }
+        else
+        {
+            // show the volume slider
+            ui.volumeSlider->setAudioOutput(radio->audioOutput());
+            moveVolumeSlider();
+            ui.volumeSlider->raise();
+            ui.volumeSlider->show();
+        }
+    }
+    else
+    {
+        ui.volumeSlider->hide();
     }
 }
 
@@ -94,7 +113,7 @@ PlaybackControlsWidget::moveVolumeSlider()
 {
     int v2 = ui.volumeSlider->width() / 2;
     int b2 = ui.volume->width() / 2;
-    ui.volumeSlider->move(mapToGlobal( ui.volume->pos()) - QPoint(v2 - b2, ui.volumeSlider->height()));
+    ui.volumeSlider->move(mapToGlobal(ui.volume->pos()) - QPoint(v2 - b2, ui.volumeSlider->height()));
 }
 
 void
@@ -120,3 +139,14 @@ PlaybackControlsWidget::onPlayClicked()
         radio->play( RadioStation( "" ) );
 }
 
+bool
+PlaybackControlsWidget::eventFilter(QObject* object, QEvent* event)
+{
+    if (event->type() == QEvent::Hide)
+    {
+        m_sliderHiddenOnButtonClick = ui.volume->rect().contains( mapFromGlobal( QCursor::pos()));
+        ui.volume->setChecked(false);
+    }
+
+    return QObject::eventFilter(object, event);
+}

@@ -52,16 +52,19 @@ private slots:
 	void onRadioStopped();
     void onRadioTuningIn( const class RadioStation& );
 	void onPlayClicked();
-    void onVolumeClicked();
+    void onVolumeToggled(bool);
 
 private:
     void moveVolumeSlider();
+    bool eventFilter(QObject* object, QEvent* event);
 	
 signals:
 	void stop();
     void play();
     void skip();
 
+private:
+    bool m_sliderHiddenOnButtonClick;
 };
 
 
