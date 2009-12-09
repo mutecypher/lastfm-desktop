@@ -342,7 +342,7 @@ Radio::onBuffering( int percent_filled )
 void
 Radio::onMutedChanged(bool muted)
 {
-    Q_UNUSED(muted);
+    unicorn::GlobalSettings().setValue("Muted", muted);
 }
 
 void
@@ -381,6 +381,8 @@ Radio::initRadio()
             audioOutput->setVolume(volume);
         }
     }
+
+    audioOutput->setMuted(unicorn::GlobalSettings().value("Muted", false).toBool());
 
     qDebug() << audioOutput->name();
     qDebug() << audioOutput->outputDevice().description();
