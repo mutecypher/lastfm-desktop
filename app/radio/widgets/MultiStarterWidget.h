@@ -31,6 +31,7 @@ class QTreeWidgetItem;
 class SourceListModel;
 class SourceListWidget;
 class SourceSelectorWidget;
+class AdvancedOptionsWidget;
 
 class MultiStarterWidget : public StylableWidget
 {
@@ -60,10 +61,7 @@ private:
     SourceSelectorWidget* m_artists;
     SourceSelectorWidget* m_users;
     QWidget* m_youWidget;
-    QWidget* m_sliders;
-    QSlider* m_repSlider;
-    QSlider* m_mainstrSlider;
-    QCheckBox* m_disco;
+    AdvancedOptionsWidget* m_optionsWidget;
     QPushButton* m_playButton;
     const int m_minTagCount;
     const int m_minArtistCount;

@@ -34,6 +34,7 @@
 #include "lib/unicorn/layouts/SideBySideLayout.h"
 #include "SearchBox.h"
 #include "YouListWidget.h"
+#include "AdvancedOptionsWidget.h"
 
 #include <QGroupBox>
 
@@ -58,14 +59,14 @@ MultiStarterWidget::MultiStarterWidget(bool advanced, int maxSources, QWidget *p
 {
     QGridLayout* grid = new QGridLayout(this);
 
-    QHBoxLayout* titleLayout = new QHBoxLayout();
+    QHBoxLayout* titleLayout = new QHBoxLayout(this);
     QCheckBox* checkbox;
     titleLayout->addWidget(new QLabel("Choose up to " + QString::number(maxSources) + " items and press play."), 0, Qt::AlignCenter);
     titleLayout->addWidget(checkbox = new QCheckBox("Show options"), 0, Qt::AlignRight);
     connect(checkbox, SIGNAL(stateChanged(int)), SLOT(onCheckBox(int)));
     checkbox->setChecked(advanced);
     
-    QTabWidget* tabwidget = new QTabWidget();
+    QTabWidget* tabwidget = new QTabWidget(this);
 
     {
         m_youWidget = new QWidget(this);
@@ -97,43 +98,11 @@ MultiStarterWidget::MultiStarterWidget(bool advanced, int maxSources, QWidget *p
     m_sourceList = new SourceListWidget(this);
     m_sourceList->setModel(m_sourceModel);
 
-    QVBoxLayout* rightside = new QVBoxLayout();
+    m_optionsWidget = new AdvancedOptionsWidget(this);
+
+    QVBoxLayout* rightside = new QVBoxLayout(this);
     rightside->addWidget(m_sourceList);
-
-    QVBoxLayout* sliderslayout = new QVBoxLayout();
-    {
-        QLabel* label = new QLabel(tr("Type of tracks played"));
-        label->setObjectName("sliderDescription");
-        sliderslayout->addWidget(label, Qt::AlignCenter);       // although it doesn't seem to center :(
-        QLayout* layout = new QHBoxLayout(this);
-        layout->addWidget(new QLabel(tr("Obscure")));
-        layout->addWidget(m_mainstrSlider = new QSlider(Qt::Horizontal));
-        layout->addWidget(new QLabel(tr("Popular")));
-        sliderslayout->addLayout(layout);
-    }
-    {
-        QLabel* label = new QLabel(tr("Tracks from the same artist"));
-        label->setObjectName("sliderDescription");
-        sliderslayout->addWidget(label, Qt::AlignCenter);
-        QLayout* layout = new QHBoxLayout(this);
-        layout->addWidget(new QLabel(tr("Less")));
-        layout->addWidget(m_repSlider = new QSlider(Qt::Horizontal));
-        layout->addWidget(new QLabel(tr("More")));
-        sliderslayout->addLayout(layout);
-    }
-    
-    m_sliders = new QWidget();
-    m_sliders->setLayout(sliderslayout);
-    m_sliders->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
-
-    m_repSlider->setMinimum(0);
-    m_repSlider->setMaximum(8);
-    m_repSlider->setValue(4);
-    m_mainstrSlider->setMinimum(0);
-    m_mainstrSlider->setMaximum(8);
-    m_mainstrSlider->setValue(4);
-    rightside->addWidget(m_sliders);
-    rightside->addWidget(m_disco = new QCheckBox(tr("Discovery mode")));
+    rightside->addWidget(m_optionsWidget);
     rightside->addWidget(m_playButton = new QPushButton(tr("Play combo")));
 
     grid->addLayout(titleLayout, 0, 0, 1, 2);
@@ -157,9 +126,8 @@ MultiStarterWidget::MultiStarterWidget(bool advanced, int maxSources, QWidget *p
 void
 MultiStarterWidget::onCheckBox(int checkState)
 {
-    m_sliders->setVisible(checkState == Qt::Checked);
+    m_optionsWidget->setVisible(checkState == Qt::Checked);
     m_sourceList->updateAdvanced(checkState);
-    m_disco->setVisible(checkState == Qt::Checked);
 }
 
 void
@@ -296,17 +264,7 @@ MultiStarterWidget::onPlayClicked()
 {
     QString rql = m_sourceList->rql();
     if (rql.length()) {
-        float r = m_repSlider->value() / (float) m_repSlider->maximum();
-        if (r != 0.5) {
-            rql += QString(" opt:rep|%1").arg(r);
-        }
-        float m = m_mainstrSlider->value() / (float) m_mainstrSlider->maximum();
-        if (m != 0.5) {
-            rql += QString(" opt:mainstr|%1").arg(m);
-        }
-        if (m_disco->isChecked()) {
-            rql += QString(" opt:discovery|true");
-        }
+        rql += m_optionsWidget->rqlOptions();
         qDebug() << rql;
         RadioStation rs = RadioStation::rql(rql);
         rs.setTitle(m_sourceList->stationDescription());
