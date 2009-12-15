@@ -6,4 +6,5 @@ CONFIG += lastfm unicorn listener
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 include( $$ROOT_DIR/admin/include.qmake )
 ICON = ../client/mac/client.icns
+macx:LIBS += -lz
 win32:LIBS += shell32.lib
