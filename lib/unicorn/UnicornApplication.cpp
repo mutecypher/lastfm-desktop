@@ -42,7 +42,6 @@
 #include <QFile>
 #include <QFileInfo>
 
-
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QApplication( argc, argv ),
                       m_logoutAtQuit( false )
@@ -73,20 +72,12 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
 
     translate();
 
-    GlobalSettings s;
-    if (s.value( "Username" ).toString().isEmpty() || s.value( "SessionKey" ).toString().isEmpty() || Settings().logOutOnExit())
+    if( !m_currentSession.isValid() )
     {
-        LoginDialog d( s.value( "Username" ).toString() );
+        LoginDialog d( m_currentSession.username() );
         if (d.exec() == QDialog::Accepted)
         {
-            // if LogOutOnExit is enabled, really, we shouldn't store these,
-            // but it means other Unicorn apps can log in while the client is 
-            // loaded, and we delete the settings on exit if logOut is on
-            s.setValue( "Username", d.username() );
-            s.setValue( "SessionKey", d.sessionKey() );
-            s.setValue( "Password", d.passwordHash() );
-            
-            UserSettings().setValue( UserSettings::subscriptionKey(), d.isSubscriber() );
+            m_currentSession = d.session();
         }
         else
         {
@@ -94,8 +85,8 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
         }
     }
 
-    lastfm::ws::Username = s.value( "Username" ).toString();
-    lastfm::ws::SessionKey = s.value( "SessionKey" ).toString();
+    //lastfm::ws::Username = s.value( "Username" ).toString();
+    //lastfm::ws::SessionKey = s.value( "SessionKey" ).toString();
     
     connect( AuthenticatedUser().getInfo(), SIGNAL(finished()), SLOT(onUserGotInfo()) );
     

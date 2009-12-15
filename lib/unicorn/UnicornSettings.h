@@ -22,7 +22,7 @@
 
 #include <QSettings>
 #include <QString>
-
+#include "UnicornApplication.h"
 
 namespace unicorn
 {
@@ -44,7 +44,7 @@ namespace unicorn
     public:
         UserSettings()
         {
-            QString const username = value( "Username" ).toString();
+            QString const username = Application::instance()->currentSession().username();
             beginGroup( username );
             // it shouldn't be possible, since unicorn::Application enforces
             // assignment of the username parameter before anything else

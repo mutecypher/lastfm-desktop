@@ -19,6 +19,7 @@
 */
 #include "ui_LoginDialog.h"
 #include "lib/DllExportMacro.h"
+#include "lib/unicorn/UnicornSession.h"
 #include <QDialog>
 
 
@@ -32,6 +33,7 @@ public:
     QString passwordHash() const { return m_password; }
     QString username() const { return m_username; }
     QString sessionKey() const { return m_sessionKey; }
+    unicorn::Session session() const { return m_session; }
     bool isSubscriber() const { return m_subscriber; }
     
 private slots:
@@ -59,5 +61,6 @@ private:
     QString m_username;
     QString m_password;
     QString m_sessionKey;
+    unicorn::Session m_session;
     bool m_subscriber;
 };

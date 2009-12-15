@@ -22,7 +22,7 @@
 
 #include "common/HideStupidWarnings.h"
 #include "lib/DllExportMacro.h"
-#include "UnicornSettings.h"
+#include "UnicornSession.h"
 #include <QApplication>
 class QNetworkReply;
  
@@ -52,11 +52,9 @@ namespace unicorn
             return m_styleSheet;
         }
 
-        struct Settings
-        {
-            bool logOutOnExit() { return GlobalSettings().value( "LogOutOnExit", false ).toBool(); }
-            void setLogOutOnExit( bool b ) { GlobalSettings().setValue( "LogOutOnExit", b ); }
-        };
+        Session currentSession() { return m_currentSession; }
+
+        static unicorn::Application* instance(){ return (unicorn::Application*)qApp; }
 
     public slots:
         void logout()
@@ -68,6 +66,7 @@ namespace unicorn
     private:
         void translate();
         QString m_styleSheet;
+        Session m_currentSession;
 
     private slots:
         void onUserGotInfo();

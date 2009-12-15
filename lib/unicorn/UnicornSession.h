@@ -1,44 +1,47 @@
 #ifndef UNICORN_SESSION_H_
 #define UNICORN_SESSION_H_
-#include "lib/unicorn/UnicornSettings.h"
+#include <lastfm/XmlQuery>
+#include <lastfm/misc.h>
+#include <lastfm/ws.h>
+#include <QSharedData>
 
 namespace unicorn {
 
-class SessionData : QSharedData
+class SessionData : public QSharedData
 {
 public:
-    SessionData(): isSubscriber( false );
+    SessionData(): isSubscriber( false ){}
+    
+    ~SessionData()
+    {
+        //TODO:
+        //if( remember )
+        // store session key
+    }
 
     QString username;
     QString sessionKey;
     bool isSubscriber;
+    bool remember;
 };
 
-class Session : public QObject
+class Session
 {
 public:
-    Session(){}
-  
-    void setUsername( QString& username )
+    Session();
+    Session( const Session& other );
+    Session( QNetworkReply* reply ) throw( lastfm::ws::Error );
+
+    bool isValid() const
     {
-        GlobalSettings s;
-        s.value( "Username");
+        return d;
     }
 
-    Session( QNetwork Reply* ) throw lastfm::ws::Error
-    {
-        QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
-        
-        lastfm::XmlQuery lfm = lastfm::ws::parse( reply );
-        lastfm::XmlQuery session = lfm["session"];
-        
-        // replace username; because eg. perhaps the user typed their
-        // username with the wrong camel case
-        QString username = session["name"].text();
-        QString sessionKey = session["key"].text();
-        
-        init( username, sessionKey );
-    }
+    void setRememberSession( bool b );
+
+    QString username() const;
+
+    bool isSubscriber() const;
 
 
     static QNetworkReply* 
@@ -47,23 +50,16 @@ public:
         QMap<QString, QString> params;
         params["method"] = "auth.getMobileSession";
         params["username"] = username;
-        params["authToken"] = lastfm::md5( (username + password).toUtf8() );
+        params["authToken"] = lastfm::md5( (username + lastfm::md5( password.toUtf8() ) ).toUtf8() );
         return lastfm::ws::post( params );
     }
 
 protected:
-    void init( const QString& username, const QString& sessionKey, const bool isSubscriber )
-    {
-        d = new SessionData;
-
-        d->username = username;
-        d->sessionKey = sessionKey;
-        d->isSubscriber = isSubscriber;
-    }
+    void init( const QString& username, const QString& sessionKey, const bool isSubscriber );
 
 private:
     QExplicitlySharedDataPointer<SessionData> d;
-    
+    QString m_prevUsername;
 };
 
 }
