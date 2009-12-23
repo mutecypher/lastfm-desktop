@@ -20,7 +20,7 @@
 #include "UnicornCoreApplication.h"
 #include <lastfm/ws.h>
 #include <lastfm/misc.h>
-#include "UnicornSettings.h"
+//#include "UnicornSettings.h"
 #include "common/c++/Logger.h"
 #include <QDebug>
 #include <QLocale>
@@ -39,22 +39,23 @@ unicorn::CoreApplication::CoreApplication( int& argc, char** argv )
 {
     init();
     
-    GlobalSettings s;
-    lastfm::ws::Username = s.value( "Username" ).toString();
-    lastfm::ws::SessionKey = s.value( "SessionKey" ).toString();
+//  GlobalSettings s;
+//  lastfm::ws::Username = s.value( "Username" ).toString();
+//  lastfm::ws::SessionKey = s.value( "SessionKey" ).toString();
 }
 
 
 void //static
 unicorn::CoreApplication::init()
 {
-    QCoreApplication::setOrganizationName( unicorn::organizationName() );
-    QCoreApplication::setOrganizationDomain( unicorn::organizationDomain() );
+    QCoreApplication::setOrganizationName( "Last.fm" /*unicorn::organizationName() */ );
+    QCoreApplication::setOrganizationDomain( "last.fm" /*unicorn::organizationDomain()*/ );
 
     // OHAI! DON'T USE OURS! GET YOUR OWN! http://www.last.fm/api
     lastfm::ws::SharedSecret = "73582dfc9e556d307aead069af110ab8";
     lastfm::ws::ApiKey = "c8c7b163b11f92ef2d33ba6cd3c2c3c3";
 
+    /*
     QVariant const v = GlobalSettings().value( "Locale" );
     if (v.isValid())
         QLocale::setDefault( QLocale::Language(v.toInt()) );
@@ -62,7 +63,7 @@ unicorn::CoreApplication::init()
     else
         QLocale::setDefault( qMacLocale() );
 #endif
-
+    */
     dir::runtimeData().mkpath( "." );
     dir::cache().mkpath( "." );
     dir::logs().mkpath( "." );

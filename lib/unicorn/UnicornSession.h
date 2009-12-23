@@ -11,13 +11,7 @@ class SessionData : public QSharedData
 {
 public:
     SessionData(): isSubscriber( false ){}
-    
-    ~SessionData()
-    {
-        //TODO:
-        //if( remember )
-        // store session key
-    }
+    ~SessionData();
 
     QString username;
     QString sessionKey;
@@ -40,9 +34,9 @@ public:
     void setRememberSession( bool b );
 
     QString username() const;
+    QString sessionKey() const;
 
     bool isSubscriber() const;
-
 
     static QNetworkReply* 
     getMobileSession( const QString& username, const QString& password )
@@ -54,6 +48,30 @@ public:
         return lastfm::ws::post( params );
     }
 
+    QDataStream& write( QDataStream& out ) const
+    {
+        QMap<QString, QString> data;
+        data[ "username" ] = d->username;
+        data[ "sessionkey" ] = d->sessionKey;
+        data[ "subscriber" ] = d->isSubscriber ? "1" : "0";
+        data[ "remember" ] = d->remember ? "1" : "0";
+        out << data;
+        return out;
+    }
+
+    QDataStream& read( QDataStream& in )
+    {
+        QMap<QString, QString> data;
+        in >> data;
+        if( !d ) 
+            d = new SessionData();
+
+        init( data[ "username" ], data[ "sessionkey" ], data[ "subscriber" ] == "1");
+        d->remember = data[ "remember" ] == "1";
+        
+        return in;
+    }
+
 protected:
     void init( const QString& username, const QString& sessionKey, const bool isSubscriber );
 
@@ -63,5 +81,8 @@ private:
 };
 
 }
+
+QDataStream& operator<<( QDataStream& out, const unicorn::Session& s );
+QDataStream& operator>>( QDataStream& in, unicorn::Session& s );
 
 #endif //UNICORN_SESSION_H_

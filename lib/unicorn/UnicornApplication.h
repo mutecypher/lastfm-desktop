@@ -24,11 +24,51 @@
 #include "lib/DllExportMacro.h"
 #include "UnicornSession.h"
 #include <QApplication>
+#include "PlayBus.h"
+#include <QDebug>
+
 class QNetworkReply;
  
 
 namespace unicorn
 {
+    class Bus : public PlayBus
+    {
+        Q_OBJECT
+
+        public:
+            Bus(): PlayBus( "unicorn" )
+            {
+                connect( this, SIGNAL( queryRequest( QString, QByteArray )), SLOT( onQuery( QString, QByteArray )));
+            };
+
+            bool isSigningIn(){ return sendQuery( "SIGNINGIN" ) == "TRUE"; }
+            Session getSession()
+            {
+                Session s;
+                QByteArray ba = sendQuery( "SESSION" ); 
+                if( ba.length() > 0 )
+                {
+                    QDataStream ds( ba );
+                    ds >> s;
+                }
+                return s;
+            }
+
+        private slots:
+            void onQuery( const QString& uuid, const QByteArray& message )
+            {
+                if( message == "SIGNINGIN" )
+                    emit signingInQuery( uuid );
+                else if( message == "SESSION" )
+                    emit sessionQuery( uuid );
+            }
+
+        signals:
+            void signingInQuery( const QString& uuid );
+            void sessionQuery( const QString& uuid );
+    };
+
     class UNICORN_DLLEXPORT Application : public QApplication
     {
         Q_OBJECT
@@ -67,9 +107,14 @@ namespace unicorn
         void translate();
         QString m_styleSheet;
         Session m_currentSession;
+        Bus m_bus;
+        bool m_signingIn;
 
     private slots:
+        void init();
         void onUserGotInfo();
+        void onSigningInQuery( const QString& );
+        void onSessionQuery( const QString& );
 
     signals:
         void userGotInfo( QNetworkReply* );

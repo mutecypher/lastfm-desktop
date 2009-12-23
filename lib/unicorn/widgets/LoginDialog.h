@@ -17,6 +17,9 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef LOGIN_DIALOG_H
+#define LOGIN_DIALOG_H
+
 #include "ui_LoginDialog.h"
 #include "lib/DllExportMacro.h"
 #include "lib/unicorn/UnicornSession.h"
@@ -64,3 +67,5 @@ private:
     unicorn::Session m_session;
     bool m_subscriber;
 };
+
+#endif

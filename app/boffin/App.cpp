@@ -30,6 +30,7 @@
 #include <phonon/backendcapabilities.h>
 #include <lastfm/NetworkAccessManager>
 #include "lib/unicorn/QMessageBoxBuilder.h"
+#include "lib/unicorn/UnicornSettings.h"
 #include "App.h"
 #include "MainWindow.h"
 #include "MediaPipeline.h"

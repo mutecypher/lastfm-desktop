@@ -1,18 +1,34 @@
 #include "UnicornSession.h"
 #include "UnicornSettings.h"
+#include <QDebug>
 
 namespace unicorn {
+
+SessionData::~SessionData()
+{
+    GlobalSettings s;
+    s.beginGroup( username );
+    s.setValue( "Subscriber", isSubscriber );
+    if( remember ) {
+        s.setValue( "SessionKey", sessionKey );
+    }
+}
 
 Session::Session()
         :d( 0 )
 {
-
     GlobalSettings s;
-    QString username = s.value( "Username").toString();
-
+    
     //use the Username setting or the first username if there have been any logged in previously
-    username = username.isEmpty() ? (s.childGroups().isEmpty() ? "" : s.childGroups()[0]) 
-                                  : username;
+    QString username = s.value( "Username", QString()).toString();
+
+    if( username.isEmpty() && !s.childGroups().isEmpty()) {
+        foreach( QString child, s.childGroups()) {
+            if( child == "com" ) continue;
+            username = child;
+            break;
+        }
+    }
 
     if( username.isEmpty()) return;
 
@@ -29,7 +45,6 @@ Session::Session()
 Session::Session( QNetworkReply* reply ) throw( lastfm::ws::Error )
         :d( 0 )
 {
-    //qDebug() << reply->readAll();
     lastfm::XmlQuery lfm = lastfm::ws::parse( reply );
     lastfm::XmlQuery session = lfm["session"];
     
@@ -61,6 +76,15 @@ Session::username() const
         return m_prevUsername;
 }
 
+QString 
+Session::sessionKey() const
+{
+    if( isValid() )
+        return d->sessionKey;
+    
+    return QString();
+}
+
 bool 
 Session::isSubscriber() const 
 {
@@ -75,6 +99,14 @@ Session::init( const QString& username, const QString& sessionKey, const bool is
     d->username = username;
     d->sessionKey = sessionKey;
     d->isSubscriber = isSubscriber;
+    d->remember = false;
+
+    lastfm::ws::Username = username;
+    lastfm::ws::SessionKey = sessionKey;
 }
 
 }
+
+QDataStream& operator<<( QDataStream& out, const unicorn::Session& s ){ return s.write( out ); }
+QDataStream& operator>>( QDataStream& in, unicorn::Session& s ){ return s.read( in ); }
+

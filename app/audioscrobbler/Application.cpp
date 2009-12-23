@@ -51,11 +51,6 @@ using audioscrobbler::Application;
 
 Application::Application(int& argc, char** argv) : unicorn::Application(argc, argv)
 {
-    if( unicorn::GlobalSettings( "Audioscrobbler" ).value( "FirstRun", true )
-        == true ) {
-        (new FirstRunWizard())->exec();
-    }
-
 /// tray
     tray = new QSystemTrayIcon(this);
     QIcon trayIcon( AS_TRAY_ICON );
