@@ -17,27 +17,38 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ADVANCED_OPTIONS_WIDGET_H
-#define ADVANCED_OPTIONS_WIDGET_H
+#ifndef VOLUME_BUTTON_H
+#define VOLUME_BUTTON_H
 
-#include <QWidget>
+#include <QPushButton>
 
-class QSlider;
-class QCheckBox;
+class VolumeSlider;
+class QDockWidget;
+class QTimer;
 
-class AdvancedOptionsWidget : public QWidget
+class VolumeButton : public QPushButton
 {
     Q_OBJECT
 public:
-    AdvancedOptionsWidget(QWidget* parent = 0);
-
-    QString rqlOptions() const;
+    VolumeButton(const QString& text, QWidget* parent = 0);
 
 private:
-    QWidget* m_sliders;
-    QSlider* m_repSlider;
-    QSlider* m_mainstrSlider;
-    QCheckBox* m_disco;
+    void enterEvent(QEvent *event);
+    void leaveEvent(QEvent *event);
+
+    QPoint widgetPosition(const QWidget& dock, const QWidget& child);
+
+private slots:
+    void onToggled(bool checked);
+    void onTimeout();
+
+    void onSliderEnter(QEvent* event);
+    void onSliderLeave(QEvent* event);
+
+private:
+    VolumeSlider* volumeSlider;
+
+    QTimer* timer;
 };
 
-#endif // ADVANCED_OPTIONS_WIDGET_H
+#endif // VOLUME_BUTTON_H

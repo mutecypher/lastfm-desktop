@@ -23,10 +23,10 @@
 #include "lib/unicorn/StylableWidget.h"
 
 class QPushButton;
+class AdvancedOptionsDialog;
+class VolumeButton;
 
 namespace lastfm{ class RadioStation; };
-
-namespace Phonon{ class VolumeSlider; };
 
 using lastfm::RadioStation;
 
@@ -39,8 +39,11 @@ public:
 
 	struct Ui
     {
-        QPushButton* volume;
-        Phonon::VolumeSlider* volumeSlider;
+        VolumeButton* volume;
+
+        QPushButton* options;
+        AdvancedOptionsDialog* optionsDialog;
+
         QPushButton* love;
         QPushButton* ban;
         QPushButton* play;
@@ -52,19 +55,13 @@ private slots:
 	void onRadioStopped();
     void onRadioTuningIn( const class RadioStation& );
 	void onPlayClicked();
-    void onVolumeToggled(bool);
-
-private:
-    void moveVolumeSlider();
-    bool eventFilter(QObject* object, QEvent* event);
+    void onOptionsClicked();
+    void onOptionsFinished(int result);
 	
 signals:
 	void stop();
     void play();
     void skip();
-
-private:
-    bool m_sliderHiddenOnButtonClick;
 };
 
 

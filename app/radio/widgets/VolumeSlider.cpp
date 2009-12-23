@@ -17,27 +17,25 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ADVANCED_OPTIONS_WIDGET_H
-#define ADVANCED_OPTIONS_WIDGET_H
+#include <QTimer>
+#include <QDebug>
 
-#include <QWidget>
+#include "VolumeSlider.h"
 
-class QSlider;
-class QCheckBox;
-
-class AdvancedOptionsWidget : public QWidget
+VolumeSlider::VolumeSlider(QWidget* parent)
+    :Phonon::VolumeSlider(parent)
 {
-    Q_OBJECT
-public:
-    AdvancedOptionsWidget(QWidget* parent = 0);
+    setMouseTracking(true);
+}
 
-    QString rqlOptions() const;
+void
+VolumeSlider::enterEvent(QEvent* event)
+{
+    emit enter(event);
+}
 
-private:
-    QWidget* m_sliders;
-    QSlider* m_repSlider;
-    QSlider* m_mainstrSlider;
-    QCheckBox* m_disco;
-};
-
-#endif // ADVANCED_OPTIONS_WIDGET_H
+void
+VolumeSlider::leaveEvent(QEvent* event)
+{
+    emit leave(event);
+}

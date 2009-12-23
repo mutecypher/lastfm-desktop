@@ -49,18 +49,13 @@ MainWindow::MainWindow()
     QSizeGrip* sg = new QSizeGrip( this );
     sg->move( -sg->width(), -sg->height());
     if( sg ) {
-        int gripWidth = sg->sizeHint().width();
-        QWidget* w = new QWidget( status );
-        w->setFixedWidth( gripWidth );
-        status->addWidget( w );
+        //int gripWidth = sg->sizeHint().width();
+        //QWidget* w = new QWidget( status );
+        //w->setFixedWidth( gripWidth );
+        //status->addWidget( w );
     }
 
-    //Seemingly the only way to get a central widget in a QStatusBar
-    //is to add an empty widget either side with a stretch value.
-    status->addWidget( new QWidget( status), 1 );
-    status->addWidget( pcw );
-    status->addWidget( new QWidget( status), 1 );
-
+    status->addWidget( pcw, 1 );
     setStatusBar( status );
     status->hide();
 

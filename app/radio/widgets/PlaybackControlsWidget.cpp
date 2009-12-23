@@ -17,103 +17,121 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "PlaybackControlsWidget.h"
-
-#include "../Radio.h"
-#include <lastfm/RadioStation>
-
 #include <QPushButton>
 #include <QApplication>
 #include <QHBoxLayout>
+#include <QSpacerItem>
 
 #include <QSlider>
 #include <QToolButton>
 #include <QPainter>
 #include <QPaintEvent>
 #include <QMouseEvent>
+#include <QMdiSubWindow>
+#include <QDialogButtonBox>
 
-#include <Phonon/VolumeSlider>
+#include <lastfm/RadioStation>
+
+#include "PlaybackControlsWidget.h"
+#include "AdvancedOptionsDialog.h"
+#include "../Radio.h"
+#include "VolumeButton.h"
 
 PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
-                       :StylableWidget( parent ), m_sliderHiddenOnButtonClick(false)
+                       :StylableWidget( parent )
 {
-    QHBoxLayout* h = new QHBoxLayout( this );
-    h->setContentsMargins( 12, 0, 12, 0 );
-    h->setSpacing( 5 );
+    QHBoxLayout* everythingLayout = new QHBoxLayout( this );
+    setLayout(everythingLayout);
 
-    h->addWidget( ui.volume = new QPushButton( tr( "volume" ) ));
+    // set up the popup buttons frame
+    QFrame* popupsFrame = new QFrame( this );
+    popupsFrame->setObjectName( "popupsFrame" );
+    popupsFrame->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    everythingLayout->addWidget(popupsFrame, 0, Qt::AlignLeft);
+    QHBoxLayout* popupsLayout = new QHBoxLayout( popupsFrame );
+    popupsFrame->setLayout(popupsLayout);
+    popupsLayout->setContentsMargins( 5, 5, 5, 5 );
+    popupsLayout->setSpacing( 5 );
+
+    popupsLayout->addWidget( ui.volume = new VolumeButton( tr( "volume" ) ));
     ui.volume->setObjectName( "volume" );
-    ui.volume->setCheckable(true);
-    ui.volume->setChecked(false);
 
-    ui.volumeSlider = new Phonon::VolumeSlider(window());
-    ui.volumeSlider->setObjectName("volumeSlider");
-    ui.volumeSlider->setWindowFlags( Qt::Popup );
-    ui.volumeSlider->setOrientation( Qt::Vertical );
-    ui.volumeSlider->setFixedWidth( 30 );
-    ui.volumeSlider->setContentsMargins( 0, 4, 0, 4 );
-    ui.volumeSlider->layout()->setSpacing( 5 );
-    ui.volumeSlider->resize(ui.volumeSlider->width(), 120);
-    ui.volumeSlider->hide();
-    
-    h->addWidget( ui.love = new QPushButton( tr( "love" ) ));
+    popupsLayout->addWidget( ui.options = new QPushButton( tr( "options" ) ));
+    ui.options->setObjectName( "options" );
+    ui.optionsDialog = 0;
+
+    everythingLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding));
+
+    // add the control buttons
+    QFrame* controlsFrame = new QFrame(this);
+    controlsFrame->setObjectName( "controlsFrame" );
+    controlsFrame->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    everythingLayout->addWidget(controlsFrame, 0, Qt::AlignCenter | Qt::AlignAbsolute);
+    QHBoxLayout* controlsLayout = new QHBoxLayout(this);
+    controlsFrame->setLayout(controlsLayout);
+    controlsLayout->setContentsMargins( 5, 5, 5, 5 );
+    controlsLayout->setSpacing( 5 );
+
+    controlsLayout->addWidget( ui.love = new QPushButton( tr( "love" ) ));
     ui.love->setObjectName( "love" );
     
-    h->addWidget( ui.ban = new QPushButton( tr( "ban" ) ));
+    controlsLayout->addWidget( ui.ban = new QPushButton( tr( "ban" ) ));
     ui.ban->setObjectName( "ban" );
     
-    h->addWidget( ui.play = new QPushButton( tr( "play" ) ));
+    controlsLayout->addWidget( ui.play = new QPushButton( tr( "play" ) ));
     ui.play->setObjectName( "play" );
     ui.play->setCheckable( true );
     ui.play->setChecked( false );
     
-    h->addWidget( ui.skip = new QPushButton( tr( "skip" ) ));
+    controlsLayout->addWidget( ui.skip = new QPushButton( tr( "skip" ) ));
     ui.skip->setObjectName( "skip" );
-    
+
+    everythingLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding));
+    everythingLayout->addSpacerItem(new QSpacerItem(popupsFrame->width(), 0, QSizePolicy::Fixed, QSizePolicy::Expanding));
+
 	connect( radio, SIGNAL(stopped()), SLOT(onRadioStopped()) );
     connect( radio, SIGNAL(tuningIn( const RadioStation&)), SLOT( onRadioTuningIn( const RadioStation&)));
 	connect( ui.play, SIGNAL( clicked()), SLOT( onPlayClicked()) );
     connect( ui.skip, SIGNAL( clicked()), radio, SLOT(skip()));
-    connect( ui.volume, SIGNAL( toggled(bool)), SLOT(onVolumeToggled(bool)));
+    connect( ui.options, SIGNAL( clicked()), SLOT(onOptionsClicked()));
 
     setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-
-    ui.volumeSlider->installEventFilter(this);
 }
 
 void
-PlaybackControlsWidget::onVolumeToggled(bool checked)
+PlaybackControlsWidget::onOptionsClicked()
 {
-    if (checked)
+    if (!ui.optionsDialog)
     {
-        if (m_sliderHiddenOnButtonClick)
-        {
-            // we have been check again because the volume butt
+        // show the options widget as a window
+        ui.optionsDialog = new AdvancedOptionsDialog();
 
-            ui.volume->setChecked(false);
-            m_sliderHiddenOnButtonClick = false;
-        }
-        else
-        {
-            // show the volume slider
-            ui.volumeSlider->setAudioOutput(radio->audioOutput());
-            moveVolumeSlider();
-            ui.volumeSlider->raise();
-            ui.volumeSlider->show();
-        }
-    }
-    else
-    {
-        ui.volumeSlider->hide();
+        // add an ok/cancel button box to the control
+        QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+        ui.optionsDialog->layout()->addWidget(buttonBox);
+
+        connect(buttonBox, SIGNAL(accepted()), ui.optionsDialog, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), ui.optionsDialog, SLOT(reject()));
+        connect(ui.optionsDialog, SIGNAL(finished(int)), SLOT(onOptionsFinished(int)));
+
+        ui.optionsDialog->show();
     }
 }
 
 void
-PlaybackControlsWidget::moveVolumeSlider()
+PlaybackControlsWidget::onOptionsFinished(int result)
 {
-    int v2 = ui.volumeSlider->width() / 2;
-    int b2 = ui.volume->width() / 2;
-    ui.volumeSlider->move(mapToGlobal(ui.volume->pos()) - QPoint(v2 - b2, ui.volumeSlider->height()));
+    qDebug() << "finished" << result;
+
+    ui.optionsDialog = 0;
+
+    if (result == QDialogButtonBox::Ok)
+    {
+        // they clicked OK, so lets do what they asked for
+
+        // do not stop the radio but make sure the next track
+        // is of the new radio settings type
+    }
 }
 
 void
@@ -137,16 +155,4 @@ PlaybackControlsWidget::onPlayClicked()
 		radio->stop();
     else
         radio->play( RadioStation( "" ) );
-}
-
-bool
-PlaybackControlsWidget::eventFilter(QObject* object, QEvent* event)
-{
-    if (event->type() == QEvent::Hide)
-    {
-        m_sliderHiddenOnButtonClick = ui.volume->rect().contains( mapFromGlobal( QCursor::pos()));
-        ui.volume->setChecked(false);
-    }
-
-    return QObject::eventFilter(object, event);
 }

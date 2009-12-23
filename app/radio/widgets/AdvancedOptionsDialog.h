@@ -17,27 +17,21 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ADVANCED_OPTIONS_WIDGET_H
-#define ADVANCED_OPTIONS_WIDGET_H
+#ifndef ADVANCED_OPTIONS_DIALOG_H
+#define ADVANCED_OPTIONS_DIALOG_H
 
-#include <QWidget>
+#include <QDialog>
 
-class QSlider;
-class QCheckBox;
+class AdvancedOptionsWidget;
 
-class AdvancedOptionsWidget : public QWidget
+class AdvancedOptionsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    AdvancedOptionsWidget(QWidget* parent = 0);
-
-    QString rqlOptions() const;
+    AdvancedOptionsDialog(QWidget* parent = 0);
 
 private:
-    QWidget* m_sliders;
-    QSlider* m_repSlider;
-    QSlider* m_mainstrSlider;
-    QCheckBox* m_disco;
+    AdvancedOptionsWidget* m_widget;
 };
 
-#endif // ADVANCED_OPTIONS_WIDGET_H
+#endif // ADVANCED_OPTIONS_Dialog_H
