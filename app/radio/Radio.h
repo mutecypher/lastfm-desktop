@@ -59,9 +59,13 @@ public:
 		Playing
 	};
 
+    RadioStation station() const { return m_station; }
+
 	State state() const { return m_state; }
 
     Phonon::AudioOutput* audioOutput() const { return m_audioOutput; }
+
+    void playNext( const RadioStation& station );
 
 public slots:
     void play( const RadioStation& station );

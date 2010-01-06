@@ -62,23 +62,39 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(QWidget* parent)
     m_mainstrSlider->setValue(4);
 }
 
-QString
-AdvancedOptionsWidget::rqlOptions() const
+void
+AdvancedOptionsWidget::setRep(float rep)
 {
-    QString rqlOptions;
+    m_repSlider->setValue( rep * m_repSlider->maximum() );
+}
 
-    float r = m_repSlider->value() / (float) m_repSlider->maximum();
-    if (r != 0.5) {
-        rqlOptions += QString(" opt:rep|%1").arg(r);
-    }
-    float m = m_mainstrSlider->value() / (float) m_mainstrSlider->maximum();
-    if (m != 0.5) {
-        rqlOptions += QString(" opt:mainstr|%1").arg(m);
-    }
-    if (m_disco->isChecked()) {
-        rqlOptions += QString(" opt:discovery|true");
-    }
+void
+AdvancedOptionsWidget::setMainstr(float mainstr)
+{
+    m_mainstrSlider->setValue( mainstr * m_mainstrSlider->maximum() );
+}
 
-    return rqlOptions;
+void
+AdvancedOptionsWidget::setDisco(bool disco)
+{
+    m_disco->setChecked( disco );
+}
+
+float
+AdvancedOptionsWidget::rep() const
+{
+    return m_repSlider->value() / static_cast<float>(m_repSlider->maximum());
+}
+
+float
+AdvancedOptionsWidget::mainstr() const
+{
+    return m_mainstrSlider->value() / static_cast<float>(m_mainstrSlider->maximum());
+}
+
+bool
+AdvancedOptionsWidget::disco() const
+{
+    return m_disco->isChecked();
 }
 

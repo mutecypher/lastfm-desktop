@@ -33,6 +33,7 @@
 #include <lastfm/RadioStation>
 
 #include "PlaybackControlsWidget.h"
+#include "AdvancedOptionsWidget.h"
 #include "AdvancedOptionsDialog.h"
 #include "../Radio.h"
 #include "VolumeButton.h"
@@ -106,10 +107,16 @@ PlaybackControlsWidget::onOptionsClicked()
         // show the options widget as a window
         ui.optionsDialog = new AdvancedOptionsDialog();
 
+        // set the options in the widget to that of the current radio station
+        ui.optionsDialog->widget().setRep( radio->station().rep() );
+        ui.optionsDialog->widget().setMainstr( radio->station().mainstr() );
+        ui.optionsDialog->widget().setDisco( radio->station().disco() );
+
         // add an ok/cancel button box to the control
         QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
         ui.optionsDialog->layout()->addWidget(buttonBox);
 
+        // connect some signals so we knoe when the dialog closes
         connect(buttonBox, SIGNAL(accepted()), ui.optionsDialog, SLOT(accept()));
         connect(buttonBox, SIGNAL(rejected()), ui.optionsDialog, SLOT(reject()));
         connect(ui.optionsDialog, SIGNAL(finished(int)), SLOT(onOptionsFinished(int)));
@@ -121,17 +128,40 @@ PlaybackControlsWidget::onOptionsClicked()
 void
 PlaybackControlsWidget::onOptionsFinished(int result)
 {
-    qDebug() << "finished" << result;
+    if (result == QDialog::Accepted)
+    {
+        // if any of the options have been edited, change the radio station
+        // so that the next track is of the new station options
+
+        lastfm::RadioStation station = radio->station();
+
+        bool optionsChanged(false);
+
+        if ( ui.optionsDialog->widget().rep() != station.rep() )
+        {
+            optionsChanged = true;
+            station.setRep( ui.optionsDialog->widget().rep() );
+        }
+
+        if ( ui.optionsDialog->widget().mainstr() != station.mainstr() )
+        {
+            optionsChanged = true;
+            station.setMainstr( ui.optionsDialog->widget().mainstr() );
+        }
+
+        if ( ui.optionsDialog->widget().disco() != station.disco() )
+        {
+            optionsChanged = true;
+            station.setDisco( ui.optionsDialog->widget().disco() );
+        }
+
+        if ( optionsChanged )
+        {
+            radio->playNext(station);
+        }
+    }
 
     ui.optionsDialog = 0;
-
-    if (result == QDialogButtonBox::Ok)
-    {
-        // they clicked OK, so lets do what they asked for
-
-        // do not stop the radio but make sure the next track
-        // is of the new radio settings type
-    }
 }
 
 void

@@ -98,6 +98,17 @@ Radio::play( const RadioStation& station )
     changeState( TuningIn );
 }
 
+// play this radio station after the current track has finished
+void
+Radio::playNext( const RadioStation& station )
+{
+    if (m_state == Playing)
+    {
+        m_station = station;
+        m_tuner->retune(station);
+    }
+}
+
 
 void
 Radio::enqueue()
@@ -112,7 +123,6 @@ Radio::enqueue()
 	
     phononEnqueue();
 }
-
 
 void
 Radio::skip()

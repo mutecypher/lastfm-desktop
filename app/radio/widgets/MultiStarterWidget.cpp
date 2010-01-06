@@ -264,9 +264,11 @@ MultiStarterWidget::onPlayClicked()
 {
     QString rql = m_sourceList->rql();
     if (rql.length()) {
-        rql += m_optionsWidget->rqlOptions();
-        qDebug() << rql;
         RadioStation rs = RadioStation::rql(rql);
+        rs.setRep(m_optionsWidget->rep());
+        rs.setMainstr(m_optionsWidget->mainstr());
+        rs.setDisco(m_optionsWidget->disco());
+        qDebug() << rql;
         rs.setTitle(m_sourceList->stationDescription());
         emit startRadio(rs);
     }

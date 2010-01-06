@@ -31,7 +31,13 @@ class AdvancedOptionsWidget : public QWidget
 public:
     AdvancedOptionsWidget(QWidget* parent = 0);
 
-    QString rqlOptions() const;
+    void setRep(float rep);
+    void setMainstr(float mainstr);
+    void setDisco(bool disco);
+
+    float rep() const;
+    float mainstr() const;
+    bool disco() const;
 
 private:
     QWidget* m_sliders;

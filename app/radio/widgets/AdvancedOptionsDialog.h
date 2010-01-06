@@ -1,5 +1,5 @@
 /*
-   Copyright 2005-2009 Last.fm Ltd.
+   Copyright 2005-2010 Last.fm Ltd.
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -30,8 +30,10 @@ class AdvancedOptionsDialog : public QDialog
 public:
     AdvancedOptionsDialog(QWidget* parent = 0);
 
+    AdvancedOptionsWidget& widget() const { return *m_widget; }
+
 private:
     AdvancedOptionsWidget* m_widget;
 };
 
-#endif // ADVANCED_OPTIONS_Dialog_H
+#endif // ADVANCED_OPTIONS_DIALOG_H
