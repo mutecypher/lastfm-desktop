@@ -38,26 +38,15 @@ MainWindow::MainWindow()
     setUnifiedTitleAndToolBarOnMac( true );
     QtWin::extendFrameIntoClientArea( this );
 
-    AnimatedStatusBar* status = new AnimatedStatusBar( this );
+    QStatusBar* status = new QStatusBar( this );
     addDragHandleWidget( status );
     PlaybackControlsWidget* pcw = new PlaybackControlsWidget( status );
 
-    //FIXME: this code is duplicated in the audioscrobbler app too
-    //In order to compensate for the sizer grip on the bottom right
-    //of the window, an empty QWidget is added as a spacer.
     status->setSizeGripEnabled( false );
-    QSizeGrip* sg = new QSizeGrip( this );
-    sg->move( -sg->width(), -sg->height());
-    if( sg ) {
-        //int gripWidth = sg->sizeHint().width();
-        //QWidget* w = new QWidget( status );
-        //w->setFixedWidth( gripWidth );
-        //status->addWidget( w );
-    }
 
     status->addWidget( pcw, 1 );
     setStatusBar( status );
-    status->hide();
+    //status->hide();
 
     MainWidget* mw;
 
@@ -66,6 +55,8 @@ MainWindow::MainWindow()
     new QVBoxLayout( w );
     w->layout()->setContentsMargins( 0, 0, 0, 0 );
     w->layout()->addWidget(mw = new MainWidget());
+
+    layout()->setSizeConstraint( QLayout::SetFixedSize );
 
     connect( mw, SIGNAL( widgetChanged(QWidget*)), SLOT( onWidgetChanged( QWidget* )));
 
@@ -79,8 +70,8 @@ MainWindow::MainWindow()
     connect(user.getPlaylists(), SIGNAL(finished()), mw, SLOT(onUserGotPlaylists()));
     connect(user.getRecentStations(), SIGNAL(finished()), mw, SLOT(onUserGotRecentStations()));
 
-    connect(radio, SIGNAL(stopped()), status, SLOT(hideAnimated()));
-    connect(radio, SIGNAL(tuningIn( const RadioStation&)), status, SLOT(showAnimated()));
+    //connect(radio, SIGNAL(stopped()), status, SLOT(hideAnimated()));
+    //connect(radio, SIGNAL(tuningIn( const RadioStation&)), status, SLOT(showAnimated()));
 
     setCentralWidget( w );
 

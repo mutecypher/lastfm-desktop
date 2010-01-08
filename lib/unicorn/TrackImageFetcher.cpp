@@ -100,14 +100,16 @@ TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node
 {
     try {
         XmlQuery lfm = lastfm::ws::parse( reply );
-        foreach (QString size, QStringList() << "extralarge" << "large")
+        foreach (QString size, QStringList() << "mega" << "extralarge" << "large")
         {
             QUrl const url = lfm[root_node]["image size="+size].text();
 
             // we seem to get a load of album.getInfos where the node exists
-            // but the value is ""
+            // but the value is "" and "mega" isn't currently used for album images
             if (!url.isValid())
-                return false;
+                continue;
+
+            qDebug() << root_node << size << url;
 
             QNetworkReply* get = lastfm::nam()->get( QNetworkRequest( url ) );
             connect( get, SIGNAL(finished()), SLOT(onArtistImageDownloaded()) );

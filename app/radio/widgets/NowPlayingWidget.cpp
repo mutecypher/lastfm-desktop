@@ -80,7 +80,11 @@ NowPlayingWidget::onTrackSpooled( const Track& t )
 void 
 NowPlayingWidget::onImageFinished( const QImage& image )
 {
-    ui.cover->setPixmap( QPixmap::fromImage( image ) );
+    QImage sacledImage = image.scaled( 300, 300, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation );
+
+    QImage cropedImage = sacledImage.copy( (sacledImage.width() - 300) / 2, (sacledImage.height() - 300) / 2, 300, 300 );
+
+    ui.cover->setPixmap( QPixmap::fromImage( cropedImage ) );
     sender()->deleteLater();
 }
 
