@@ -92,17 +92,14 @@ LoginDialog::onEdited()
 void
 LoginDialog::authenticate()
 {
-    m_username = ui.username->text().toLower();
-    m_password = lastfm::md5( ui.password->text().toUtf8() );
+    m_username = ui.username->text();
+    m_password = ui.password->text();
+    
+    QNetworkReply* r = unicorn::Session::getMobileSession( ui.username->text(),
+                                                           ui.password->text());
 
-    QMap<QString, QString> params;
-    params["method"] = "auth.getMobileSession";
-    params["username"] = m_username;
-    params["authToken"] = lastfm::md5( (m_username + m_password).toUtf8() );
-    QNetworkReply* reply = lastfm::ws::post( params );
-    reply->setParent( this );
-
-    connect( reply, SIGNAL(finished()), SLOT(onAuthenticated()) );
+    
+    connect( r, SIGNAL(finished()), SLOT(onAuthenticated()) );
 
 #ifdef Q_OS_MAC
     ui.transient->show();
@@ -131,22 +128,8 @@ LoginDialog::onAuthenticated()
     QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
     
     try {
-        lastfm::XmlQuery lfm = lastfm::ws::parse( reply );
-        lastfm::XmlQuery session = lfm["session"];
-        
-        // replace username; because eg. perhaps the user typed their
-        // username with the wrong camel case
-        QString username = session["name"].text();
-        if (username.size())
-            m_username = username;
-        
-        m_sessionKey = session["key"].text();
-        m_subscriber = session["subscriber"].text() != "0";
+        m_session = unicorn::Session( reply );
         accept();
-        
-    #ifdef Q_WS_MAC
-        ui.text->setText( "<b>Authentication successful" );
-    #endif
     }
     catch (lastfm::ws::ParseError& e)
     {

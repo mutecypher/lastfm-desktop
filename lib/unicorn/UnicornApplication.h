@@ -22,13 +22,69 @@
 
 #include "common/HideStupidWarnings.h"
 #include "lib/DllExportMacro.h"
-#include "UnicornSettings.h"
+#include "UnicornSession.h"
 #include <QApplication>
+#include "PlayBus.h"
+#include <QDebug>
+
 class QNetworkReply;
  
 
 namespace unicorn
 {
+    class Bus : public PlayBus
+    {
+        Q_OBJECT
+
+        public:
+            Bus(): PlayBus( "unicorn" )
+            {
+                connect( this, SIGNAL( message(QByteArray)), SLOT( onMessage(QByteArray)));
+                connect( this, SIGNAL( queryRequest( QString, QByteArray )), SLOT( onQuery( QString, QByteArray )));
+            };
+
+            bool isSigningIn(){ return sendQuery( "SIGNINGIN" ) == "TRUE"; }
+            Session getSession()
+            {
+                Session s;
+                QByteArray ba = sendQuery( "SESSION" ); 
+                if( ba.length() > 0 )
+                {
+                    QDataStream ds( ba );
+                    ds >> s;
+                }
+                return s;
+            }
+
+        private slots:
+
+            void onMessage( const QByteArray& message )
+            {
+                if( message.contains( "SESSIONCHANGED" ))
+                {
+                    QByteArray sessionData = message.right( message.size() - 14 );
+                    qDebug() << "Session data: " << sessionData.toPercentEncoding() << endl;
+                    QDataStream ds( sessionData );
+                    Session newSession;
+                    ds >> newSession;
+                    emit sessionChanged( newSession );
+                }
+            }
+
+            void onQuery( const QString& uuid, const QByteArray& message )
+            {
+                if( message == "SIGNINGIN" )
+                    emit signingInQuery( uuid );
+                else if( message == "SESSION" )
+                    emit sessionQuery( uuid );
+            }
+
+        signals:
+            void signingInQuery( const QString& uuid );
+            void sessionQuery( const QString& uuid );
+            void sessionChanged( const Session );
+    };
+
     class UNICORN_DLLEXPORT Application : public QApplication
     {
         Q_OBJECT
@@ -52,11 +108,9 @@ namespace unicorn
             return m_styleSheet;
         }
 
-        struct Settings
-        {
-            bool logOutOnExit() { return GlobalSettings().value( "LogOutOnExit", false ).toBool(); }
-            void setLogOutOnExit( bool b ) { GlobalSettings().setValue( "LogOutOnExit", b ); }
-        };
+        Session currentSession() { return m_currentSession; }
+
+        static unicorn::Application* instance(){ return (unicorn::Application*)qApp; }
 
     public slots:
         void logout()
@@ -68,9 +122,16 @@ namespace unicorn
     private:
         void translate();
         QString m_styleSheet;
+        Session m_currentSession;
+        Bus m_bus;
+        bool m_signingIn;
 
     private slots:
+        void init();
         void onUserGotInfo();
+        void onSigningInQuery( const QString& );
+        void onSessionQuery( const QString& );
+        void onSessionChanged( const Session& );
 
     signals:
         void userGotInfo( QNetworkReply* );
