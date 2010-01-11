@@ -77,6 +77,8 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
 
     connect( &m_bus, SIGNAL( signingInQuery( QString )), SLOT( onSigningInQuery( QString )));
     connect( &m_bus, SIGNAL( sessionQuery( QString )), SLOT( onSessionQuery( QString )));
+    connect( &m_bus, SIGNAL( sessionChanged( Session )), SLOT( onSessionChanged( Session )));
+
     m_bus.board();
 
     if( !styleSheet().isEmpty() ) {
@@ -94,7 +96,10 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     QTimer::singleShot( 0, this, SLOT( init()));
 
     if( m_bus.isSigningIn() ) {
-        throw StubbornUserException();
+        if( !SignalBlocker( &m_bus, SIGNAL( sessionChanged(Session)), 9999999 ).start())
+        {
+            quit();
+        }
     }
     
     Session busSession = m_bus.getSession();
@@ -106,18 +111,23 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     {
         m_signingIn = true;
         LoginDialog d( m_currentSession.username() );
+        connect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise()));
         if (d.exec() == QDialog::Accepted)
         {
             m_currentSession = d.session();
-            m_signingIn = false;
+            QByteArray ba;
+            QDataStream ds( &ba, QIODevice::WriteOnly );
+            ds << "SESSIONCHANGED";
+            ds << currentSession();
+            m_bus.sendMessage( ba );
         }
         else
         {
             quit();
         }
-        m_signingIn = false;
     }
 
+    m_signingIn = false;
     connect( AuthenticatedUser().getInfo(), SIGNAL(finished()), SLOT(onUserGotInfo()) );
 }
 
@@ -183,7 +193,8 @@ unicorn::Application::onUserGotInfo()
     {
         qWarning() << e.what();
     }
-    
+
+
     emit userGotInfo( reply );
 }
 
@@ -191,7 +202,7 @@ unicorn::Application::onUserGotInfo()
 void 
 unicorn::Application::onSigningInQuery( const QString& uuid )
 {
-    qDebug() << "Are we signed in? " << m_signingIn;
+    qDebug() << "Are we signing in? " << m_signingIn;
     if( m_signingIn )
         m_bus.sendQueryResponse( uuid, "TRUE" );
     else
@@ -206,6 +217,13 @@ unicorn::Application::onSessionQuery( const QString& uuid )
     QDataStream s( &ba, QIODevice::WriteOnly );
     s << currentSession();
     m_bus.sendQueryResponse( uuid, ba );
+}
+
+
+void 
+unicorn::Application::onSessionChanged( const Session& session )
+{
+    qDebug() << "The session has changed to: " << session.username();
 }
 
 

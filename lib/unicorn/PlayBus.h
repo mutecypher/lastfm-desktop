@@ -15,7 +15,9 @@
 #include <QDateTime>
 #include <QSignalMapper>
 #include <QEventLoop>
-
+#ifdef Q_OS_WIN
+	#include <QSharedMemory>
+#endif
 
 /**
   * @brief Waits for a Qt signal to be emitted before
@@ -41,7 +43,6 @@ public:
     bool start()
     {
         if( m_ret == false ) return false;
-
         m_timer.start();
         m_loop.exec();
         return m_ret;
@@ -81,7 +82,7 @@ private:
   * the server mediation is handled at the kernel level by exploiting the 
   * logic that allows only one process to listen on a named pipe.
   *
-  * This code will not work across distributed hosts as no master no
+  * This code will not work across distributed hosts as no master node
   * mediation is carried out. This could be extended by using a known
   * mediation algorithm.
   */
@@ -92,7 +93,11 @@ public:
     /** @param name The name of the bus to connect to or create */
     PlayBus( const QString& name, QObject* parent = 0 )
     :QObject( parent ),
-     m_busName( name )
+     m_busName( name ),
+     m_queryMessages( false )
+#ifdef Q_OS_WIN
+	 ,m_sharedMemory( name )
+#endif
     {
         connect( &m_server, SIGNAL( newConnection()),
                             SLOT( onIncomingConnection()));
@@ -101,6 +106,9 @@ public:
     ~PlayBus()
     {
         m_server.close();
+#ifdef Q_OS_WIN
+		m_sharedMemory.detach();
+#endif
     }
 
     void board()
@@ -113,6 +121,10 @@ public:
         return m_lastMessage;
     }
 
+    void setQueryMessages( bool b )
+    {
+        m_queryMessages = b;
+    }
 
 public slots:
  
@@ -151,10 +163,7 @@ public slots:
 signals:
     /** a new message has been received from the bus */
     void message( const QByteArray& msg );
-
     void queryRequest( const QString& uuid, const QByteArray& message);
-
-    void nodes( const QStringList& );
 
 private slots:
 
@@ -173,16 +182,30 @@ private slots:
 
     void reinit()
     {
-        foreach( QLocalSocket* socket, m_sockets ) {
+		if( m_server.isListening())
+			return;
+
+		foreach( QLocalSocket* socket, m_sockets ) {
             m_sockets.removeAll(socket);
             socket->disconnect();
             socket->close();
             socket->deleteLater();
         }
 
+#ifndef Q_OS_WIN
         if( m_server.listen( m_busName )) {
             return;
         }
+#else
+		if( m_sharedMemory.create( 1 )) {
+			emit message( "Now Listening" );
+			m_server.listen( m_busName );
+			return;
+		} else
+		{
+			emit message( "Connecting to server" );
+		}
+#endif
 
         m_server.close();
         QLocalSocket* socket = new QLocalSocket( this );
@@ -194,10 +217,15 @@ private slots:
 
     void onError( const QLocalSocket::LocalSocketError& e )
     {
-        if( e == QLocalSocket::ConnectionRefusedError )
-            QFile::remove( QDir::tempPath() + "/" + m_busName );
-
-        reinit();
+#ifndef Q_OS_WIN
+		if( e == QLocalSocket::ConnectionRefusedError ) {
+			QFile::remove( QDir::tempPath() + "/" + m_busName );
+		}
+#endif
+		QLocalSocket* s = qobject_cast<QLocalSocket*>(sender());
+		s->close();
+		s->deleteLater();
+		QTimer::singleShot( 10, this, SLOT(reinit()));
     }
 
     void onIncomingConnection()
@@ -205,6 +233,7 @@ private slots:
         QLocalSocket* socket = 0;
         while( (socket = m_server.nextPendingConnection()) )
         {
+			socket->setParent( this );
             addSocket( socket );
         }
     }
@@ -218,13 +247,18 @@ private slots:
             
             // ignore any queries that have already been seen
             if( !m_dispatchedQueries.contains( uuid ) && 
-                 m_servicedQueries.contains( uuid )) return;
+                 m_servicedQueries.contains( uuid )) {
+                 if( m_queryMessages )
+                    emit message( data );
+                 return;
+            }
 
             m_lastQueryUuid = uuid;
             m_lastQueryResponse = data.mid( 39 ); //remove uuid and seperator
             m_servicedQueries << m_lastQueryUuid;
             emit queryRequest( m_lastQueryUuid, m_lastQueryResponse);
-            return;
+            if( !m_queryMessages )
+                return;
         }
         emit message( data );
     }
@@ -250,7 +284,8 @@ private slots:
     
     void onSocketDestroyed( QObject* o )
     {
-        QLocalSocket* s = static_cast<QLocalSocket*>(o);
+        QLocalSocket* s = dynamic_cast<QLocalSocket*>(o);
+        if( !s ) return;
         s->blockSignals(true);
         m_sockets.removeAll( s );
     }
@@ -283,6 +318,10 @@ private:
     QList<QString> m_servicedQueries;
     QByteArray m_lastQueryResponse;
     QString m_lastQueryUuid;
+    bool m_queryMessages;
+#ifdef Q_OS_WIN
+	QSharedMemory m_sharedMemory;
+#endif
 };
 
 

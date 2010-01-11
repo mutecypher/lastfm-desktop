@@ -39,6 +39,7 @@ namespace unicorn
         public:
             Bus(): PlayBus( "unicorn" )
             {
+                connect( this, SIGNAL( message(QByteArray)), SLOT( onMessage(QByteArray)));
                 connect( this, SIGNAL( queryRequest( QString, QByteArray )), SLOT( onQuery( QString, QByteArray )));
             };
 
@@ -56,6 +57,20 @@ namespace unicorn
             }
 
         private slots:
+
+            void onMessage( const QByteArray& message )
+            {
+                if( message.contains( "SESSIONCHANGED" ))
+                {
+                    QByteArray sessionData = message.right( message.size() - 14 );
+                    qDebug() << "Session data: " << sessionData.toPercentEncoding() << endl;
+                    QDataStream ds( sessionData );
+                    Session newSession;
+                    ds >> newSession;
+                    emit sessionChanged( newSession );
+                }
+            }
+
             void onQuery( const QString& uuid, const QByteArray& message )
             {
                 if( message == "SIGNINGIN" )
@@ -67,6 +82,7 @@ namespace unicorn
         signals:
             void signingInQuery( const QString& uuid );
             void sessionQuery( const QString& uuid );
+            void sessionChanged( const Session );
     };
 
     class UNICORN_DLLEXPORT Application : public QApplication
@@ -115,6 +131,7 @@ namespace unicorn
         void onUserGotInfo();
         void onSigningInQuery( const QString& );
         void onSessionQuery( const QString& );
+        void onSessionChanged( const Session& );
 
     signals:
         void userGotInfo( QNetworkReply* );
