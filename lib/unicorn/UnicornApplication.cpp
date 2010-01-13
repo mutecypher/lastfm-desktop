@@ -77,8 +77,8 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     translate();
 
     connect( &m_bus, SIGNAL( signingInQuery( QString )), SLOT( onSigningInQuery( QString )));
-    connect( &m_bus, SIGNAL( sessionQuery( QString )), SLOT( onSessionQuery( QString )));
-    connect( &m_bus, SIGNAL( sessionChanged( Session )), SLOT( onSessionChanged( Session )));
+    connect( &m_bus, SIGNAL( sessionQuery( QString )), SLOT( onBusSessionQuery( QString )));
+    connect( &m_bus, SIGNAL( sessionChanged( Session )), SLOT( onBusSessionChanged( Session )));
 
     m_bus.board();
 
@@ -101,12 +101,13 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
         {
             quit();
         }
+    } else {
+        
+        Session busSession = m_bus.getSession();
+       
+        if( busSession.isValid() )
+            m_currentSession = busSession;
     }
-    
-    Session busSession = m_bus.getSession();
-   
-    if( busSession.isValid() )
-        m_currentSession = busSession;
     
     if( !m_currentSession.isValid() )
     {
@@ -116,18 +117,18 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
         if (d.exec() == QDialog::Accepted)
         {
             m_currentSession = d.session();
-            QByteArray ba;
-            QDataStream ds( &ba, QIODevice::WriteOnly );
-            ds << "SESSIONCHANGED";
+            QByteArray* ba = new QByteArray("");
+            QDataStream ds( ba, QIODevice::WriteOnly | QIODevice::Truncate);
+            ds << QByteArray( "SESSIONCHANGED" );
             ds << currentSession();
-            m_bus.sendMessage( ba );
+            m_bus.sendMessage( *ba );
+            delete ba;
         }
         else
         {
             quit();
         }
     }
-
     m_signingIn = false;
     connect( AuthenticatedUser().getInfo(), SIGNAL(finished()), SLOT(onUserGotInfo()) );
 }
@@ -212,7 +213,7 @@ unicorn::Application::onSigningInQuery( const QString& uuid )
 
 
 void 
-unicorn::Application::onSessionQuery( const QString& uuid )
+unicorn::Application::onBusSessionQuery( const QString& uuid )
 {
     QByteArray ba;
     QDataStream s( &ba, QIODevice::WriteOnly );
@@ -222,9 +223,17 @@ unicorn::Application::onSessionQuery( const QString& uuid )
 
 
 void 
-unicorn::Application::onSessionChanged( const Session& session )
+unicorn::Application::onBusSessionChanged( const Session& session )
 {
-    qDebug() << "The session has changed to: " << session.username();
+    changeSession( session );
+}
+
+void 
+unicorn::Application::changeSession( const Session& newSession )
+{
+    Session oldSession = currentSession();
+    m_currentSession = newSession;
+    emit sessionChanged( currentSession(), oldSession );
 }
 
 

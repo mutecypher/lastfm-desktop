@@ -28,7 +28,6 @@
 #include <QDebug>
 
 class QNetworkReply;
- 
 
 namespace unicorn
 {
@@ -62,8 +61,7 @@ namespace unicorn
             {
                 if( message.contains( "SESSIONCHANGED" ))
                 {
-                    QByteArray sessionData = message.right( message.size() - 14 );
-                    qDebug() << "Session data: " << sessionData.toPercentEncoding() << endl;
+                    QByteArray sessionData = message.right( message.size() - 18);
                     QDataStream ds( sessionData );
                     Session newSession;
                     ds >> newSession;
@@ -121,6 +119,7 @@ namespace unicorn
 
     private:
         void translate();
+        void changeSession( const Session& newSession );
         QString m_styleSheet;
         Session m_currentSession;
         Bus m_bus;
@@ -130,11 +129,12 @@ namespace unicorn
         void init();
         void onUserGotInfo();
         void onSigningInQuery( const QString& );
-        void onSessionQuery( const QString& );
-        void onSessionChanged( const Session& );
+        void onBusSessionQuery( const QString& );
+        void onBusSessionChanged( const Session& );
 
     signals:
         void userGotInfo( QNetworkReply* );
+        void sessionChanged( const Session& newSession, const Session oldSession );
     };
 }
 
