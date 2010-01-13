@@ -30,6 +30,7 @@
 #include "QMessageBoxBuilder.h"
 #include "UnicornCoreApplication.h"
 #include "widgets/LoginDialog.h"
+#include "SignalBlocker.h"
 #include "UnicornSettings.h"
 #include <lastfm/misc.h>
 #include <lastfm/User>
@@ -96,7 +97,7 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     QTimer::singleShot( 0, this, SLOT( init()));
 
     if( m_bus.isSigningIn() ) {
-        if( !SignalBlocker( &m_bus, SIGNAL( sessionChanged(Session)), 9999999 ).start())
+        if( !SignalBlocker( &m_bus, SIGNAL( sessionChanged(Session)), -1 ).start())
         {
             quit();
         }
