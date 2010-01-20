@@ -5,9 +5,11 @@
 #include <lastfm/ws.h>
 #include <QSharedData>
 
+#include "lib/DllExportMacro.h"
+
 namespace unicorn {
 
-class SessionData : public QSharedData
+class UNICORN_DLLEXPORT SessionData : public QSharedData
 {
 public:
     SessionData(): isSubscriber( false ){}
@@ -19,7 +21,7 @@ public:
     bool remember;
 };
 
-class Session
+class UNICORN_DLLEXPORT Session
 {
 public:
     Session();
