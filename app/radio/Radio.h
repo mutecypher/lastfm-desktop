@@ -99,7 +99,7 @@ private slots:
     void onVolumeChanged(qreal);
 
 	/** we get a "proper" station name from the tune webservice */
-	void setStationNameIfCurrentlyBlank( const QString& );
+    void setStationName( const QString& );
 	
 private:
     /** resets internals to what Stopped means, used by changeState() */

@@ -146,8 +146,30 @@ MoreStationsWidget QPushButton#combos { background-image: url(:/combo_rest_26x27
 MoreStationsWidget QPushButton#combos:hover { background-image: url(:/combo_hover_26x27.png); }
 MoreStationsWidget QPushButton#combos:pressed { background-image: url(:/combo_pressed_26x27.png); }
 
+PlaybackControlsWidget QLabel {
+    color: transparent;
+    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+	margin: 0px 0px;
+}
 
-PlaybackControlsWidget QFrame QPushButton {
+PlaybackControlsWidget QLabel#volumeLeft {
+    background-image: url(:/vol-left.png);
+	height: 16px;
+    width: 19px;
+	margin: 0px 0px;
+}
+
+PlaybackControlsWidget  QLabel#volumeRight {
+    background-image: url(:/vol-right.png);
+	height: 16px;
+    width: 19px;
+	margin: 0px 0px;
+}
+
+PlaybackControlsWidget QPushButton {
     color: transparent;
     background-color: transparent;
     background-position: center;
@@ -155,50 +177,31 @@ PlaybackControlsWidget QFrame QPushButton {
     border: none;
     margin: 0px 5px;
     height: 29px;
-    width: 40;
+    width: 31px;
 }
 
-PlaybackControlsWidget QFrame#popupsFrame QPushButton {
-    margin: 0px 5px;
-    height: 15px;
-    width: 15px;
-}
-
-PlaybackControlsWidget QPushButton#options {
-    background-image: url(:/delete.png);
-    border-radius: 1px;
-    border-style: solid;
-    border-width: 2px;
-}
-
-PlaybackControlsWidget QPushButton#volume {
-    background-image: url(:/delete.png);
-    border-radius: 1px;
-    border-style: solid;
-    border-width: 2px;
-}
-
-PlaybackControlsWidget QPushButton#volume:checked {
-    background-image: url(:/delete.png);
-    border-radius: 1px;
-    border-style: solid;
-    border-width: 2px;
+PlaybackControlsWidget QPushButton#radioOptions {
+    background-image: url(:/love-rest.png);
 }
 
 PlaybackControlsWidget QPushButton#love {
     background-image: url(:/love-rest.png);
 }
 
-PlaybackControlsWidget QPushButton#love:hover {
+PlaybackControlsWidget  QPushButton#love:hover {
     background-image: url(:/love-onhover.png);
 }
 
-PlaybackControlsWidget QPushButton#love:pressed {
+PlaybackControlsWidget  QPushButton#love:pressed {
     background-image: url(:/love-onpress.png);
 }
 
 PlaybackControlsWidget QPushButton#love:checked {
     background-image: url(:/love-isloved.png);
+}
+
+PlaybackControlsWidget QPushButton#love:disabled {
+    background-image: url(:/love-disabled.png);
 }
 
 PlaybackControlsWidget QPushButton#ban {
@@ -211,6 +214,10 @@ PlaybackControlsWidget QPushButton#ban:hover {
 
 PlaybackControlsWidget QPushButton#ban:pressed {
     background-image: url(:/ban-onpress.png);
+}
+
+PlaybackControlsWidget QPushButton#ban:disabled {
+    background-image: url(:/ban-disabled.png);
 }
 
 PlaybackControlsWidget QPushButton#play {
@@ -239,6 +246,7 @@ PlaybackControlsWidget QPushButton#play:pressed:checked {
 
 PlaybackControlsWidget QPushButton#skip {
     background-image: url(:/skip-rest.png);
+	width: 45px;
 }
 
 PlaybackControlsWidget QPushButton#skip:hover {
@@ -247,6 +255,56 @@ PlaybackControlsWidget QPushButton#skip:hover {
 
 PlaybackControlsWidget QPushButton#skip:pressed {
     background-image: url(:/skip-onpress.png);
+}
+
+PlaybackControlsWidget QPushButton#skip:disabled {
+    background-image: url(:/skip-disabled.png);
+}
+
+PlaybackControlsWidget QToolButton {
+	background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    margin: 0px 0px;
+	height: 29px;
+    width: 48px;
+}
+
+PlaybackControlsWidget QToolButton#cog {
+    background-image: url(:/cog-rest.png);
+}
+
+PlaybackControlsWidget QToolButton::menu-indicator {
+    image: none;
+}
+
+PlaybackControlsWidget QToolButton#cog:pressed {
+    background-image: url(:/cog-onpress.png);
+}
+
+PlaybackControlsWidget QToolButton#cog:hover {
+    background-image: url(:/cog-onhover.png);
+}
+
+PlaybackControlsWidget QSlider::groove:horizontal {
+    background-image: url(:/vol-rail.png);
+	background-position: center;
+    background-repeat: no-repeat;
+	width: 72px;
+}
+
+PlaybackControlsWidget QSlider::handle:horizontal {
+    background-image: url(:/vol-handle-rest.png);
+	background-position: center;
+    background-repeat: no-repeat;
+	height: 16px;
+    width: 16px;
+	margin: 0px 0px;
+}
+
+PlaybackControlsWidget QSlider::handle:horizontal:pressed {
+    background-image: url(:/vol-handle-onpress.png);
 }
 
 QStatusBar::item {

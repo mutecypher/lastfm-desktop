@@ -36,11 +36,14 @@ NowPlayingWidget::NowPlayingWidget()
 {
     new QVBoxLayout( this );
 
-    ui.cover = new QLabel();
+    ui.cover = new QLabel( this );
     ui.cover->setAlignment( Qt::AlignCenter );
+
+    static_cast<QBoxLayout*>(layout())->addStretch();
+
     layout()->addWidget( ui.cover );
-    
-    ((QBoxLayout*)layout())->addStretch();
+
+    static_cast<QBoxLayout*>(layout())->addStretch();
     
     ui.track = new QLabel();
     layout()->addWidget( ui.track );

@@ -70,8 +70,7 @@ MainWindow::MainWindow()
     connect(user.getPlaylists(), SIGNAL(finished()), mw, SLOT(onUserGotPlaylists()));
     connect(user.getRecentStations(), SIGNAL(finished()), mw, SLOT(onUserGotRecentStations()));
 
-    //connect(radio, SIGNAL(stopped()), status, SLOT(hideAnimated()));
-    //connect(radio, SIGNAL(tuningIn( const RadioStation&)), status, SLOT(showAnimated()));
+    connect(pcw, SIGNAL(startRadio(RadioStation)), mw, SLOT(onStartRadio(RadioStation)));
 
     setCentralWidget( w );
 

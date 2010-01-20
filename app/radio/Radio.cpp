@@ -34,6 +34,7 @@ Radio::Radio( )
        m_state( Radio::Stopped ),
        m_bErrorRecover( false )
 {
+    initRadio();
 }
 
 
@@ -91,7 +92,7 @@ Radio::play( const RadioStation& station )
 	m_station = station;
     m_tuner = new lastfm::RadioTuner(station);
 
-	connect( m_tuner, SIGNAL(title( QString )), SLOT(setStationNameIfCurrentlyBlank( QString )) );
+    connect( m_tuner, SIGNAL(title( QString )), SLOT(setStationName( QString )) );
 	connect( m_tuner, SIGNAL(trackAvailable()), SLOT(enqueue()) );
     connect( m_tuner, SIGNAL(error( lastfm::ws::Error )), SLOT(onTunerError( lastfm::ws::Error )) );
 
@@ -334,13 +335,10 @@ Radio::changeState( Radio::State const newstate )
 
 
 void
-Radio::setStationNameIfCurrentlyBlank( const QString& s )
+Radio::setStationName( const QString& s )
 {
-    if (m_station.title().isEmpty())
-    {
-        m_station.setTitle( s );
-        emit tuningIn( m_station );
-    }
+    m_station.setTitle( s );
+    emit tuningIn( m_station );
 }
 
 void
