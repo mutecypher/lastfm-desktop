@@ -46,7 +46,6 @@ MainWindow::MainWindow()
 
     status->addWidget( pcw, 1 );
     setStatusBar( status );
-    //status->hide();
 
     MainWidget* mw;
 
@@ -55,8 +54,6 @@ MainWindow::MainWindow()
     new QVBoxLayout( w );
     w->layout()->setContentsMargins( 0, 0, 0, 0 );
     w->layout()->addWidget(mw = new MainWidget());
-
-    layout()->setSizeConstraint( QLayout::SetFixedSize );
 
     connect( mw, SIGNAL( widgetChanged(QWidget*)), SLOT( onWidgetChanged( QWidget* )));
 
@@ -78,15 +75,6 @@ MainWindow::MainWindow()
 
     //todo: bury this:
     menuBar()->addMenu("Normania")->addAction( tr("RQL"), mw, SLOT(rawrql()), QKeySequence(tr("Ctrl+r")) );
-}
-
-void 
-MainWindow::onWidgetChanged( QWidget* widget )
-{
-    /*if(!widget->findChildren<NowPlayingWidget*>().isEmpty() )
-        ((AnimatedStatusBar*)statusBar())->showAnimated();
-    else
-        ((AnimatedStatusBar*)statusBar())->hideAnimated();*/
 }
 
 void

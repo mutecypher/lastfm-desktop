@@ -64,6 +64,8 @@ private slots:
     void onPlayToggled( bool checked );
     void onRadioOptionsClicked();
     void onRadioOptionsFinished( int result );
+    void onTagClicked();
+    void onShareClicked();
 	
 signals:
     void startRadio(RadioStation);

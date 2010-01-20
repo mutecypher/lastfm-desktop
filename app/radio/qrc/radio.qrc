@@ -25,6 +25,7 @@
 		<file alias="cog-rest.png" >cog_button_rest.png</file>
         <file alias="cog-onpress.png" >cog_button_press.png</file>
 		<file alias="cog-onhover.png" >cog_button_hover.png</file>
+		<file alias="share-small.png" >share_16x16.png</file>
 		<file alias="tag-small.png" >tag_16x16.png</file>
 		<file alias="vol-handle-rest.png" >vol_handle_rest_16x16.png</file>
 		<file alias="vol-handle-onpress.png" >vol_handle_pressed_16x16.png</file>

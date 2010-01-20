@@ -38,9 +38,6 @@ signals:
 public slots:
     void onRadioError(int code, const QVariant& data);
 
-protected slots:
-    void onWidgetChanged( QWidget* );
-
 private:
     MessageBar* m_messageBar;
 };

@@ -54,30 +54,30 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     {
         QHBoxLayout* volumeLayout = new QHBoxLayout( this );
         volumeLayout->setObjectName( "volumeLayout" );
-        volumeLayout->setContentsMargins( 0, 0, 0, 0 );
-        volumeLayout->setSpacing( 0 );
 
-        volumeLayout->setSizeConstraint( QLayout::SetMinimumSize );
 
-        QLabel* volumeLeft = new QLabel( "volume left", this );
+        QLabel* volumeLeft = new QLabel( "Volume Down", this );
         volumeLeft->setObjectName( "volumeLeft" );
         volumeLayout->addWidget( volumeLeft );
 
         // add the volume slider on the left
         volumeLayout->addWidget( ui.volume = new Phonon::VolumeSlider(radio->audioOutput()));
 
-        QLabel* volumeRight = new QLabel( "volume right", this );
+        QLabel* volumeRight = new QLabel( "Volume Up", this );
         volumeRight->setObjectName( "volumeRight" );
         volumeLayout->addWidget( volumeRight );
 
         ui.volume->setMuteVisible( false );
         ui.volume->setOrientation( Qt::Horizontal );
         ui.volume->setObjectName( "volume" );
+        volumeLayout->setContentsMargins( 0, 0, 0, 0 );
+        volumeLayout->setSpacing( 0 );
+
 
         layout->addLayout( volumeLayout );
     }
 
-    layout->addSpacerItem(new QSpacerItem(20, 0, QSizePolicy::Expanding, QSizePolicy::Expanding));
+    layout->addStretch( 20 );
 
     {
         // add the control buttons
@@ -103,7 +103,7 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
         layout->addLayout( controlsLayout );
     }
 
-    layout->addSpacerItem(new QSpacerItem(20, 0, QSizePolicy::Expanding, QSizePolicy::Expanding));
+    layout->addStretch( 20 );
 
     layout->addWidget( ui.cog = new QToolButton( this ));
     ui.cog->setObjectName( "cog" );
@@ -111,9 +111,8 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     ui.cog->setPopupMode( QToolButton::InstantPopup );
 
     QMenu* cogMenu = new QMenu(this);
-    //cogMenu->addAction("Radio options", this, SLOT(onRadioOptionsClicked()))->setObjectName("radioOptions");
-    cogMenu->addAction("Tag", this, SLOT(onRadioOptionsClicked()))->setObjectName("tag");
-    cogMenu->addAction("Share", this, SLOT(onRadioOptionsClicked()))->setObjectName("share");
+    cogMenu->addAction(QIcon(":/tag-small.png"), "Tag", this, SLOT(onTagClicked()))->setObjectName("tag");
+    cogMenu->addAction(QIcon(":/share-small.png"), "Share", this, SLOT(onShareClicked()))->setObjectName("share");
     ui.cog->setMenu(cogMenu);
 
     ui.radioOptionsDialog = 0;
@@ -238,4 +237,16 @@ PlaybackControlsWidget::onPlayToggled( bool checked )
         radio->play( RadioStation( "" ) );
         emit startRadio( RadioStation( "" ) );
     }
+}
+
+void
+PlaybackControlsWidget::onTagClicked()
+{
+
+}
+
+void
+PlaybackControlsWidget::onShareClicked()
+{
+
 }

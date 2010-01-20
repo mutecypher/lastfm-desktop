@@ -158,15 +158,43 @@ PlaybackControlsWidget QLabel {
 PlaybackControlsWidget QLabel#volumeLeft {
     background-image: url(:/vol-left.png);
 	height: 16px;
-    width: 19px;
-	margin: 0px 0px;
+    min-width: 19px;
+	max-width: 19px;
 }
 
 PlaybackControlsWidget  QLabel#volumeRight {
     background-image: url(:/vol-right.png);
 	height: 16px;
-    width: 19px;
+    min-width: 19px;
+	max-width: 19px;
+}
+
+PlaybackControlsWidget QSlider {
+	margin: 0px;
+	border: none;
+	max-width: 72px;
+}
+
+PlaybackControlsWidget QSlider::groove:horizontal {
+    background-image: url(:/vol-rail.png);
+	background-position: center;
+    background-repeat: no-repeat;
+	margin: 0px;
+	border: none;
+}
+
+PlaybackControlsWidget QSlider::handle:horizontal {
+    background-image: url(:/vol-handle-rest.png);
+	background-position: center;
+    background-repeat: no-repeat;
+	height: 16px;
+    width: 16px;
 	margin: 0px 0px;
+	border: none;
+}
+
+PlaybackControlsWidget QSlider::handle:horizontal:pressed {
+    background-image: url(:/vol-handle-onpress.png);
 }
 
 PlaybackControlsWidget QPushButton {
@@ -285,26 +313,6 @@ PlaybackControlsWidget QToolButton#cog:pressed {
 
 PlaybackControlsWidget QToolButton#cog:hover {
     background-image: url(:/cog-onhover.png);
-}
-
-PlaybackControlsWidget QSlider::groove:horizontal {
-    background-image: url(:/vol-rail.png);
-	background-position: center;
-    background-repeat: no-repeat;
-	width: 72px;
-}
-
-PlaybackControlsWidget QSlider::handle:horizontal {
-    background-image: url(:/vol-handle-rest.png);
-	background-position: center;
-    background-repeat: no-repeat;
-	height: 16px;
-    width: 16px;
-	margin: 0px 0px;
-}
-
-PlaybackControlsWidget QSlider::handle:horizontal:pressed {
-    background-image: url(:/vol-handle-onpress.png);
 }
 
 QStatusBar::item {
