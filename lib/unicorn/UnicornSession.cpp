@@ -37,12 +37,12 @@ Session::Session()
     s.beginGroup( username );
 
     if( s.contains( "SessionKey" )) {
-        init( username, s.value( "SessionKey" ).toString(), s.value("subscription", false).toBool());
+        init( username, s.value( "SessionKey" ).toString(), s.value("Subscriber", false).toBool());
     }
 
 }
 
-Session::Session( QNetworkReply* reply ) throw( lastfm::ws::Error )
+Session::Session( QNetworkReply* reply ) throw( lastfm::ws::ParseError )
         :d( 0 )
 {
     lastfm::XmlQuery lfm = lastfm::ws::parse( reply );
@@ -101,8 +101,6 @@ Session::init( const QString& username, const QString& sessionKey, const bool is
     d->isSubscriber = isSubscriber;
     d->remember = false;
 
-    lastfm::ws::Username = username;
-    lastfm::ws::SessionKey = sessionKey;
 }
 
 }

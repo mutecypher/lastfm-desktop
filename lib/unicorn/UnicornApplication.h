@@ -111,13 +111,18 @@ namespace unicorn
         static unicorn::Application* instance(){ return (unicorn::Application*)qApp; }
 
     public slots:
-        void logout()
+        bool logout()
         {
-            m_logoutAtQuit = true;
-            quit();
+            try {
+                initiateLogin( true );
+            } catch( const StubbornUserException& ) { 
+                return false; 
+            }
+            return true;
         }
 
     private:
+        void initiateLogin( bool forceLogout = false ) throw( StubbornUserException );
         void translate();
         void changeSession( const Session& newSession );
         QString m_styleSheet;
@@ -126,7 +131,6 @@ namespace unicorn
         bool m_signingIn;
 
     private slots:
-        void init();
         void onUserGotInfo();
         void onSigningInQuery( const QString& );
         void onBusSessionQuery( const QString& );
@@ -134,7 +138,7 @@ namespace unicorn
 
     signals:
         void userGotInfo( QNetworkReply* );
-        void sessionChanged( const Session& newSession, const Session oldSession );
+        void sessionChanged( const Session& newSession, const Session& oldSession );
     };
 }
 

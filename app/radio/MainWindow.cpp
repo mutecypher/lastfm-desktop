@@ -22,6 +22,7 @@
 #include "widgets/MultiStarterWidget.h"
 #include "widgets/PlaybackControlsWidget.h"
 #include "widgets/NowPlayingWidget.h"
+#include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/qtwin.h"
 #include "lib/unicorn/AnimatedStatusBar.h"
 #include "lib/unicorn/widgets/MessageBar.h"
@@ -47,34 +48,46 @@ MainWindow::MainWindow()
     status->addWidget( pcw, 1 );
     setStatusBar( status );
 
-    MainWidget* mw;
-
     QWidget* w = new QWidget();
     
     new QVBoxLayout( w );
     w->layout()->setContentsMargins( 0, 0, 0, 0 );
-    w->layout()->addWidget(mw = new MainWidget());
+    w->layout()->addWidget(m_mainWidget = new MainWidget());
 
-    connect( mw, SIGNAL( widgetChanged(QWidget*)), SLOT( onWidgetChanged( QWidget* )));
+    layout()->setSizeConstraint( QLayout::SetFixedSize );
 
     m_messageBar = new MessageBar( w );
 
-    connect(mw, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
+    connect(m_mainWidget, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
 
-    AuthenticatedUser user;
-    connect(user.getFriends(), SIGNAL(finished()), mw, SLOT(onUserGotFriends()));
-    connect(user.getTopTags(), SIGNAL(finished()), mw, SLOT(onUserGotTopTags()));
-    connect(user.getPlaylists(), SIGNAL(finished()), mw, SLOT(onUserGotPlaylists()));
-    connect(user.getRecentStations(), SIGNAL(finished()), mw, SLOT(onUserGotRecentStations()));
-
-    connect(pcw, SIGNAL(startRadio(RadioStation)), mw, SLOT(onStartRadio(RadioStation)));
+    connect(pcw, SIGNAL(startRadio(RadioStation)), m_mainWidget, SLOT(onStartRadio(RadioStation)));
+    
+    connect(radio, SIGNAL(stopped()), status, SLOT(hideAnimated()));
+    connect(radio, SIGNAL(tuningIn( const RadioStation&)), status, SLOT(showAnimated()));
+    
+    connect( qApp, SIGNAL( sessionChanged( Session, Session )), SLOT( onSessionChanged( Session, Session )));
+   
+    //if we've got this far we must already have a session so use
+    //the current session to start things rolling.
+    onSessionChanged( qobject_cast<unicorn::Application*>(qApp)->currentSession(), Session());
 
     setCentralWidget( w );
 
     finishUi();
 
     //todo: bury this:
-    menuBar()->addMenu("Normania")->addAction( tr("RQL"), mw, SLOT(rawrql()), QKeySequence(tr("Ctrl+r")) );
+    menuBar()->addMenu("Normania")->addAction( tr("RQL"), m_mainWidget, SLOT(rawrql()), QKeySequence(tr("Ctrl+r")) );
+}
+
+void 
+MainWindow::onSessionChanged( const unicorn::Session& s, const unicorn::Session& )
+{
+    AuthenticatedUser user;
+    qDebug() << "fetching friends, tags, playlists and recent stations for" << user;
+    connect(user.getFriends(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotFriends()));
+    connect(user.getTopTags(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotTopTags()));
+    connect(user.getPlaylists(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotPlaylists()));
+    connect(user.getRecentStations(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotRecentStations()));
 }
 
 void

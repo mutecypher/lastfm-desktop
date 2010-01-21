@@ -129,6 +129,7 @@ LoginDialog::onAuthenticated()
     
     try {
         m_session = unicorn::Session( reply );
+        m_session.setRememberSession( ui.remember->isChecked());
         accept();
     }
     catch (lastfm::ws::ParseError& e)

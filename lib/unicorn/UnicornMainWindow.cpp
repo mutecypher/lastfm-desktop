@@ -56,10 +56,9 @@ unicorn::MainWindow::finishUi()
     ui.account = menuBar()->addMenu( AuthenticatedUser().name() );
     ui.profile = ui.account->addAction( tr("Visit &Profile"), this, SLOT(visitProfile()) );
     ui.account->addSeparator();
-    ui.account->addAction( tr("Log &Out && Quit"), qApp, SLOT(logout()) );
-#ifndef __APPLE__
-    ui.account->addAction( tr("&Quit"), qApp, SLOT(quit()) );
-#endif
+    ui.account->addAction( tr("Log &Out"), qApp, SLOT(logout()) );
+    QAction* quit = ui.account->addAction( tr("&Quit"), qApp, SLOT(quit()) );
+    quit->setMenuRole( QAction::QuitRole );
 
     menuBar()->insertMenu( menuBar()->actions().first(), ui.account );
     QMenu* help = menuBar()->addMenu( tr("Help") );
@@ -77,6 +76,7 @@ unicorn::MainWindow::finishUi()
 void
 unicorn::MainWindow::onUserGotInfo( QNetworkReply* reply )
 {
+    ui.account->setTitle( AuthenticatedUser());
     QString const text = AuthenticatedUser::getInfoString( reply );
     if (text.size() && ui.account) {
         QAction* a = ui.account->addAction( text );
@@ -134,16 +134,17 @@ unicorn::MainWindow::eventFilter( QObject* o, QEvent* event )
     {
         case QEvent::MouseButtonPress:
             m_dragHandleMouseDownPos[ obj ] = e->globalPos() - pos();
-            break;
+            return true;
 
         case QEvent::MouseButtonRelease:
             m_dragHandleMouseDownPos[ obj ] = QPoint();
-            break;
+            return true;
             
         case QEvent::MouseMove:
-            if (m_dragHandleMouseDownPos.contains( obj ) && !m_dragHandleMouseDownPos[ obj ].isNull())
-                move( e->globalPos() - m_dragHandleMouseDownPos[ obj ]);
-            break;
+            if (m_dragHandleMouseDownPos.contains( obj ) && !m_dragHandleMouseDownPos[ obj ].isNull()) {
+                move( e->globalPos() - m_dragHandleMouseDownPos[ obj ] );
+                return true;
+            }
     }
 
     return false;
