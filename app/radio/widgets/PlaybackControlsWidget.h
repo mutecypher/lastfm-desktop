@@ -62,7 +62,7 @@ private slots:
 	void onRadioStopped();
     void onRadioTuningIn( const class RadioStation& );
     void onPlayToggled( bool checked );
-    void onRadioOptionsClicked();
+    void onRadioOptionsClicked( bool checked );
     void onRadioOptionsFinished( int result );
     void onTagClicked();
     void onShareClicked();

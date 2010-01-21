@@ -50,11 +50,22 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
 
     layout->addWidget( ui.radioOptions = new QPushButton( tr( "radio options" ) ));
     ui.radioOptions->setObjectName( "radioOptions" );
+    ui.radioOptions->setCheckable( true );
+
+    ui.radioOptionsDialog = new AdvancedOptionsDialog( this );
+
+    // add an ok/cancel button box to the control
+    QDialogButtonBox* buttonBox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
+    ui.radioOptionsDialog->layout()->addWidget( buttonBox );
+
+    // connect some signals so we know when the dialog closes
+    connect(buttonBox, SIGNAL(accepted()), ui.radioOptionsDialog, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), ui.radioOptionsDialog, SLOT(reject()));
+    connect(ui.radioOptionsDialog, SIGNAL(finished(int)), SLOT(onRadioOptionsFinished(int)));
 
     {
         QHBoxLayout* volumeLayout = new QHBoxLayout( this );
         volumeLayout->setObjectName( "volumeLayout" );
-
 
         QLabel* volumeLeft = new QLabel( "Volume Down", this );
         volumeLeft->setObjectName( "volumeLeft" );
@@ -115,13 +126,11 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     cogMenu->addAction(QIcon(":/share-small.png"), "Share", this, SLOT(onShareClicked()))->setObjectName("share");
     ui.cog->setMenu(cogMenu);
 
-    ui.radioOptionsDialog = 0;
-
 	connect( radio, SIGNAL(stopped()), SLOT(onRadioStopped()) );
     connect( radio, SIGNAL(tuningIn( const RadioStation&)), SLOT( onRadioTuningIn( const RadioStation&)));
     connect( ui.play, SIGNAL( toggled(bool)), SLOT( onPlayToggled(bool)) );
     connect( ui.skip, SIGNAL( clicked()), radio, SLOT(skip()));
-    connect( ui.radioOptions, SIGNAL( clicked()), SLOT(onRadioOptionsClicked()));
+    connect( ui.radioOptions, SIGNAL( clicked(bool)), SLOT(onRadioOptionsClicked(bool)));
 
     setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
 
@@ -132,31 +141,19 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
 }
 
 void
-PlaybackControlsWidget::onRadioOptionsClicked()
+PlaybackControlsWidget::onRadioOptionsClicked(bool checked)
 {
-    // show the menu
+    // set the options in the widget to that of the current radio station
 
-    if ( !ui.radioOptionsDialog )
-    {
-        // show the options widget as a window
-        ui.radioOptionsDialog = new AdvancedOptionsDialog();
+    //ui.radioOptionsDialog->widget().setRep( radio->station().rep() );
+    //ui.radioOptionsDialog->widget().setMainstr( radio->station().mainstr() );
+    //ui.radioOptionsDialog->widget().setDisco( radio->station().disco() );
 
-        // set the options in the widget to that of the current radio station
-        ui.radioOptionsDialog->widget().setRep( radio->station().rep() );
-        ui.radioOptionsDialog->widget().setMainstr( radio->station().mainstr() );
-        ui.radioOptionsDialog->widget().setDisco( radio->station().disco() );
+    ui.radioOptionsDialog->show();
 
-        // add an ok/cancel button box to the control
-        QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-        ui.radioOptionsDialog->layout()->addWidget(buttonBox);
-
-        // connect some signals so we knoe when the dialog closes
-        connect(buttonBox, SIGNAL(accepted()), ui.radioOptionsDialog, SLOT(accept()));
-        connect(buttonBox, SIGNAL(rejected()), ui.radioOptionsDialog, SLOT(reject()));
-        connect(ui.radioOptionsDialog, SIGNAL(finished(int)), SLOT(onRadioOptionsFinished(int)));
-
-        ui.radioOptionsDialog->show();
-    }
+    ui.radioOptions->setChecked( ui.radioOptionsDialog->widget().rep() != 0.5
+                                    || ui.radioOptionsDialog->widget().mainstr() != 0.5
+                                    || ui.radioOptionsDialog->widget().disco() != false );
 }
 
 void
@@ -195,7 +192,9 @@ PlaybackControlsWidget::onRadioOptionsFinished(int result)
         }
     }
 
-    ui.radioOptionsDialog = 0;
+    ui.radioOptions->setChecked( ui.radioOptionsDialog->widget().rep() != 0.5
+                                    || ui.radioOptionsDialog->widget().mainstr() != 0.5
+                                    || ui.radioOptionsDialog->widget().disco() != false );
 }
 
 void

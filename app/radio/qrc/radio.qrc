@@ -32,6 +32,19 @@
 		<file alias="vol-rail.png" >vol_rail_66x8.png</file>
 		<file alias="vol-left.png" >vol_speakerL.png</file>
 		<file alias="vol-right.png" >vol_speakerR.png</file>
+		
+		<file alias="options-off-rest.png" >options_off_rest.png</file>
+		<file alias="options-off-onhover.png" >options_off_hover.png</file>
+		<file alias="options-off-onpressed.png" >options_off_pressed.png</file>
+		<file alias="options-on-rest.png" >options_on_rest.png</file>
+		<file alias="options-on-onhover.png" >options_on_hover.png</file>
+		<file alias="options-on-onpressed.png" >options_on_pressed.png</file>
+		
+		<file alias="info-rest.png" >info_rest.png</file>
+		<file alias="info-onhover.png" >info_hover.png</file>
+		<file alias="info-onpress.png" >info_pressed.png</file>
+		<file alias="info-disabled.png" >info_inactive.png</file>
+		
         <file>now_playing.mng</file>
         <file>delete.png</file>
         <file>default_user_small.png</file>
