@@ -116,6 +116,9 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
 
     layout->addStretch( 20 );
 
+    layout->addWidget( ui.info = new QPushButton( tr( "info" ) ));
+    ui.info->setObjectName( "info" );
+
     layout->addWidget( ui.cog = new QToolButton( this ));
     ui.cog->setObjectName( "cog" );
     ui.cog->setAutoRaise( true );
@@ -130,6 +133,7 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     connect( radio, SIGNAL(tuningIn( const RadioStation&)), SLOT( onRadioTuningIn( const RadioStation&)));
     connect( ui.play, SIGNAL( toggled(bool)), SLOT( onPlayToggled(bool)) );
     connect( ui.skip, SIGNAL( clicked()), radio, SLOT(skip()));
+    connect( ui.info, SIGNAL( clicked()), SLOT(onInfoClicked()));
     connect( ui.radioOptions, SIGNAL( clicked(bool)), SLOT(onRadioOptionsClicked(bool)));
 
     setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
@@ -207,7 +211,6 @@ PlaybackControlsWidget::onRadioStopped()
     setButtonsEnabled( false );
 }
 
-
 void 
 PlaybackControlsWidget::onRadioTuningIn( const RadioStation& )
 {
@@ -224,6 +227,7 @@ PlaybackControlsWidget::setButtonsEnabled( bool enabled )
     ui.skip->setEnabled( enabled );
     ui.love->setEnabled( enabled );
     ui.ban->setEnabled( enabled );
+    ui.info->setEnabled( enabled );
 }
 
 void
@@ -239,13 +243,19 @@ PlaybackControlsWidget::onPlayToggled( bool checked )
 }
 
 void
+PlaybackControlsWidget::onInfoClicked()
+{
+    // switch to The Scrobbler
+}
+
+void
 PlaybackControlsWidget::onTagClicked()
 {
-
+    // open the tag dialog
 }
 
 void
 PlaybackControlsWidget::onShareClicked()
 {
-
+    // open the share dialog
 }

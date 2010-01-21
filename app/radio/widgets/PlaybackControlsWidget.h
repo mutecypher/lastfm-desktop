@@ -42,16 +42,17 @@ public:
 
 	struct Ui
     {
+        QPushButton* radioOptions;
+        AdvancedOptionsDialog* radioOptionsDialog;
         Phonon::VolumeSlider* volume;
 
-        QPushButton* radioOptions;
         QPushButton* love;
         QPushButton* ban;
         QPushButton* play;
         QPushButton* skip;
 
+        QPushButton* info;
         QToolButton* cog;
-        AdvancedOptionsDialog* radioOptionsDialog;
     } 
 	ui;
 
@@ -66,6 +67,7 @@ private slots:
     void onRadioOptionsFinished( int result );
     void onTagClicked();
     void onShareClicked();
+    void onInfoClicked();
 	
 signals:
     void startRadio(RadioStation);

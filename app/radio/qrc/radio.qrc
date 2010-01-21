@@ -42,7 +42,7 @@
 		
 		<file alias="info-rest.png" >info_rest.png</file>
 		<file alias="info-onhover.png" >info_hover.png</file>
-		<file alias="info-onpress.png" >info_pressed.png</file>
+		<file alias="info-onpressed.png" >info_pressed.png</file>
 		<file alias="info-disabled.png" >info_inactive.png</file>
 		
         <file>now_playing.mng</file>

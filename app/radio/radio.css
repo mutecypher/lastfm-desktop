@@ -323,6 +323,22 @@ PlaybackControlsWidget > QToolButton {
     width: 48px;
 }
 
+PlaybackControlsWidget > QPushButton#info {
+    background-image: url(:/info-rest.png);
+}
+
+PlaybackControlsWidget > QPushButton#info:hover {
+    background-image: url(:/info-onhover.png);
+}
+
+PlaybackControlsWidget > QPushButton#info:pressed {
+    background-image: url(:/info-onpressed.png);
+}
+
+PlaybackControlsWidget > QPushButton#info:disabled {
+    background-image: url(:/info-disabled.png);
+}
+
 PlaybackControlsWidget > QToolButton#cog {
     background-image: url(:/cog-rest.png);
 }
