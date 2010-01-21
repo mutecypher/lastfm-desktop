@@ -26,7 +26,7 @@ class UNICORN_DLLEXPORT Session
 public:
     Session();
     Session( const Session& other );
-    Session( QNetworkReply* reply ) throw( lastfm::ws::Error );
+    Session( QNetworkReply* reply ) throw( lastfm::ws::ParseError );
 
     bool isValid() const
     {

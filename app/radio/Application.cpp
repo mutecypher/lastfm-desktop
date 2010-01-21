@@ -21,6 +21,7 @@
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "Radio.h"
 #include "ScrobSocket.h"
+#include <QDebug>
 
 using moralistfad::Application;
 
@@ -37,7 +38,8 @@ Application::onWsError( lastfm::ws::Error e )
     switch (e)
     {
         case lastfm::ws::InvalidSessionKey:
-            logout();
+            if(!logout())
+                quit();
             break;
 		default:
 			break;

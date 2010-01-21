@@ -49,7 +49,9 @@ using audioscrobbler::Application;
     #define AS_TRAY_ICON ":systray_icon_rest_mac.png"
 #endif
 
-Application::Application(int& argc, char** argv) : unicorn::Application(argc, argv)
+Application::Application(int& argc, char** argv) 
+            : unicorn::Application(argc, argv),
+              as( 0 )
 {
 /// tray
     tray = new QSystemTrayIcon(this);
@@ -100,9 +102,6 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
     sc->setTagAction( m_tag_action );
     sc->setShareAction( m_share_action );
 
-/// scrobbler
-    as = new Audioscrobbler("ass");
-
 /// mediator
     mediator = new PlayerMediator(this);
     connect(mediator, SIGNAL(activeConnectionChanged( PlayerConnection* )), SLOT(setConnection( PlayerConnection* )) );
@@ -138,6 +137,12 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
     m_toggle_window_action->trigger();
 
 }
+
+
+/*void 
+Application::onSessionChanged()
+{
+}*/
 
 
 void
@@ -185,9 +190,10 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     m_title_action->setText( t.title() + " [" + t.durationString() + ']' );
 
     delete watch;
-    as->submit();
-    as->nowPlaying(t);
-    
+    if( as ) {
+        as->submit();
+        as->nowPlaying(t);
+    }
     ScrobblePoint timeout(t.duration()/2);
     watch = new StopWatch(timeout, connection->elapsed());
     watch->resume();
@@ -198,7 +204,7 @@ void
 Application::onStopWatchTimedOut()
 {
     Q_ASSERT(connection);    
-    as->cache(connection->track());
+    if( as ) as->cache(connection->track());
 }
 
 void
@@ -225,7 +231,7 @@ Application::onStopped()
     Q_ASSERT(connection);
         
     delete watch;
-    as->submit();
+   if( as ) as->submit();
 }
 
 void 
@@ -274,6 +280,9 @@ Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason )
 void 
 Application::onUserGotInfo()
 {
+    /// scrobbler
+    as = new Audioscrobbler("ass");
+    
     /*QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
     Q_ASSERT( reply );
 

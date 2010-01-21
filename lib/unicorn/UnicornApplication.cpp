@@ -94,29 +94,31 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
 #ifdef __APPLE__
     setQuitOnLastWindowClosed( false );
 #endif
-    QTimer::singleShot( 0, this, SLOT( init()));
 
+    initiateLogin();
+
+}
+
+void
+unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserException )
+{
     if( m_bus.isSigningIn() ) {
-        if( !SignalBlocker( &m_bus, SIGNAL( sessionChanged(Session)), -1 ).start())
-        {
-            quit();
-        }
-    } else {
-        
+        SignalBlocker( &m_bus, SIGNAL( sessionChanged(Session)), -1 ).start();
+    } else if( !forceLogout ) {
         Session busSession = m_bus.getSession();
        
         if( busSession.isValid() )
             m_currentSession = busSession;
     }
     
-    if( !m_currentSession.isValid() )
+    if( forceLogout || !m_currentSession.isValid() )
     {
         m_signingIn = true;
         LoginDialog d( m_currentSession.username() );
         connect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise()));
         if (d.exec() == QDialog::Accepted)
         {
-            m_currentSession = d.session();
+            changeSession( d.session());
             QByteArray* ba = new QByteArray("");
             QDataStream ds( ba, QIODevice::WriteOnly | QIODevice::Truncate);
             ds << QByteArray( "SESSIONCHANGED" );
@@ -126,17 +128,10 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
         }
         else
         {
-            quit();
+            throw StubbornUserException();
         }
     }
     m_signingIn = false;
-    connect( AuthenticatedUser().getInfo(), SIGNAL(finished()), SLOT(onUserGotInfo()) );
-}
-
-
-void 
-unicorn::Application::init()
-{
 }
 
 
@@ -233,6 +228,10 @@ unicorn::Application::changeSession( const Session& newSession )
 {
     Session oldSession = currentSession();
     m_currentSession = newSession;
+    lastfm::ws::Username = m_currentSession.username();
+    lastfm::ws::SessionKey = m_currentSession.sessionKey();
+
+    connect( AuthenticatedUser().getInfo(), SIGNAL(finished()), SLOT(onUserGotInfo()) );
     emit sessionChanged( currentSession(), oldSession );
 }
 
