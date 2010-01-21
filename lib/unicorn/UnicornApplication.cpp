@@ -110,9 +110,10 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
         if( busSession.isValid() )
             m_currentSession = busSession;
     }
-    
-    if( forceLogout || !m_currentSession.isValid() )
-    {
+
+    if( !forceLogout && m_currentSession.isValid()) {
+        changeSession( m_currentSession );
+    } else {
         m_signingIn = true;
         LoginDialog d( m_currentSession.username() );
         connect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise()));
