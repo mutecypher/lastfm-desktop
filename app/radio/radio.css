@@ -207,13 +207,15 @@ PlaybackControlsWidget > QPushButton {
     background-position: center;
     background-repeat: no-repeat;
     border: none;
-    margin: 0px 5px;
-    height: 29px;
-    width: 31px;
+    margin: 0px 0px;
+	height: 29px;
+	width: 39px;
 }
 
 PlaybackControlsWidget > QPushButton#radioOptions {
     background-image: url(:/options-off-rest.png);
+	height: 29px;
+    width: 29px;
 }
 
 PlaybackControlsWidget > QPushButton#radioOptions:hover {
@@ -298,7 +300,6 @@ PlaybackControlsWidget > QPushButton#play:pressed:checked {
 
 PlaybackControlsWidget > QPushButton#skip {
     background-image: url(:/skip-rest.png);
-	width: 45px;
 }
 
 PlaybackControlsWidget > QPushButton#skip:hover {
@@ -325,6 +326,8 @@ PlaybackControlsWidget > QToolButton {
 
 PlaybackControlsWidget > QPushButton#info {
     background-image: url(:/info-rest.png);
+	height: 29px;
+	width: 18px;
 }
 
 PlaybackControlsWidget > QPushButton#info:hover {

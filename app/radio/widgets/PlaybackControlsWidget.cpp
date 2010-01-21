@@ -88,14 +88,15 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
         layout->addLayout( volumeLayout );
     }
 
+    layout->addSpacing( 20 );
     layout->addStretch( 20 );
 
     {
         // add the control buttons
         QHBoxLayout* controlsLayout = new QHBoxLayout( this );
         controlsLayout->setObjectName( "controls" );
-        controlsLayout->setContentsMargins( 5, 5, 5, 5 );
-        controlsLayout->setSpacing( 5 );
+        controlsLayout->setContentsMargins( 0, 0, 0, 0 );
+        controlsLayout->setSpacing( 0 );
 
         controlsLayout->addWidget( ui.love = new QPushButton( tr( "love" ) ));
         ui.love->setObjectName( "love" );
@@ -114,6 +115,7 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
         layout->addLayout( controlsLayout );
     }
 
+    layout->addSpacing( 20 );
     layout->addStretch( 20 );
 
     layout->addWidget( ui.info = new QPushButton( tr( "info" ) ));
