@@ -83,6 +83,9 @@
        </item>
        <item row="2" column="1">
         <widget class="QCheckBox" name="remember">
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
          <property name="text">
           <string>Remember Me</string>
          </property>
@@ -187,6 +190,7 @@
  <tabstops>
   <tabstop>username</tabstop>
   <tabstop>password</tabstop>
+  <tabstop>remember</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources>
