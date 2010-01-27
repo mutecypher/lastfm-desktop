@@ -60,6 +60,9 @@ public:
 
 private:
     void setButtonsEnabled( bool enabled );
+    void saveRadioOptions();
+    void restoreRadioOptions();
+    void setRadioOptionsChecked();
 
 private slots:
 	void onRadioStopped();

@@ -98,11 +98,11 @@ MultiStarterWidget::MultiStarterWidget(bool advanced, int maxSources, QWidget *p
     m_sourceList = new SourceListWidget(this);
     m_sourceList->setModel(m_sourceModel);
 
-    m_optionsWidget = new AdvancedOptionsWidget(this);
+    //m_optionsWidget = new AdvancedOptionsWidget(this);
 
     QVBoxLayout* rightside = new QVBoxLayout(this);
     rightside->addWidget(m_sourceList);
-    rightside->addWidget(m_optionsWidget);
+    //rightside->addWidget(m_optionsWidget);
     rightside->addWidget(m_playButton = new QPushButton(tr("Play combo")));
 
     grid->addLayout(titleLayout, 0, 0, 1, 2);
@@ -126,7 +126,7 @@ MultiStarterWidget::MultiStarterWidget(bool advanced, int maxSources, QWidget *p
 void
 MultiStarterWidget::onCheckBox(int checkState)
 {
-    m_optionsWidget->setVisible(checkState == Qt::Checked);
+    //m_optionsWidget->setVisible(checkState == Qt::Checked);
     m_sourceList->updateAdvanced(checkState);
 }
 
@@ -265,10 +265,6 @@ MultiStarterWidget::onPlayClicked()
     QString rql = m_sourceList->rql();
     if (rql.length()) {
         RadioStation rs = RadioStation::rql(rql);
-        rs.setRep(m_optionsWidget->rep());
-        rs.setMainstr(m_optionsWidget->mainstr());
-        rs.setDisco(m_optionsWidget->disco());
-        qDebug() << rql;
         rs.setTitle(m_sourceList->stationDescription());
         emit startRadio(rs);
     }

@@ -61,7 +61,6 @@ private:
     SourceSelectorWidget* m_artists;
     SourceSelectorWidget* m_users;
     QWidget* m_youWidget;
-    AdvancedOptionsWidget* m_optionsWidget;
     QPushButton* m_playButton;
     const int m_minTagCount;
     const int m_minArtistCount;

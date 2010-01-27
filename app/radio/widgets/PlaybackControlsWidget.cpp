@@ -45,6 +45,8 @@
 #include "lib/unicorn/widgets/TagDialog.h"
 #include "lib/unicorn/widgets/ShareDialog.h"
 
+#include "lib/unicorn/UnicornSettings.h"
+
 PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
                        :StylableWidget( parent )
 {
@@ -56,6 +58,9 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     ui.radioOptions->setCheckable( true );
 
     ui.radioOptionsDialog = new AdvancedOptionsDialog( this );
+
+    restoreRadioOptions();
+    setRadioOptionsChecked();
 
     // add an ok/cancel button box to the control
     QDialogButtonBox* buttonBox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
@@ -152,19 +157,12 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
 }
 
 void
-PlaybackControlsWidget::onRadioOptionsClicked(bool checked)
+PlaybackControlsWidget::onRadioOptionsClicked( bool /*checked*/ )
 {
     // set the options in the widget to that of the current radio station
-
-    //ui.radioOptionsDialog->widget().setRep( radio->station().rep() );
-    //ui.radioOptionsDialog->widget().setMainstr( radio->station().mainstr() );
-    //ui.radioOptionsDialog->widget().setDisco( radio->station().disco() );
-
     ui.radioOptionsDialog->show();
 
-    ui.radioOptions->setChecked( ui.radioOptionsDialog->widget().rep() != 0.5
-                                    || ui.radioOptionsDialog->widget().mainstr() != 0.5
-                                    || ui.radioOptionsDialog->widget().disco() != false );
+    setRadioOptionsChecked();
 }
 
 void
@@ -172,6 +170,8 @@ PlaybackControlsWidget::onRadioOptionsFinished(int result)
 {
     if (result == QDialog::Accepted)
     {
+        saveRadioOptions();
+
         // if any of the options have been edited, change the radio station
         // so that the next track is of the new station options
 
@@ -202,10 +202,12 @@ PlaybackControlsWidget::onRadioOptionsFinished(int result)
             radio->playNext(station);
         }
     }
+    else
+    {
+        restoreRadioOptions();
+    }
 
-    ui.radioOptions->setChecked( ui.radioOptionsDialog->widget().rep() != 0.5
-                                    || ui.radioOptionsDialog->widget().mainstr() != 0.5
-                                    || ui.radioOptionsDialog->widget().disco() != false );
+    setRadioOptionsChecked();
 }
 
 void
@@ -226,6 +228,31 @@ PlaybackControlsWidget::onRadioTuningIn( const RadioStation& )
 
     // when the radio is playing we can use all the controls
     setButtonsEnabled( true );
+}
+
+void
+PlaybackControlsWidget::saveRadioOptions()
+{
+    unicorn::GlobalSettings().setValue( "rep", ui.radioOptionsDialog->widget().rep() );
+    unicorn::GlobalSettings().setValue( "mainstr", ui.radioOptionsDialog->widget().mainstr() );
+    unicorn::GlobalSettings().setValue( "disco", ui.radioOptionsDialog->widget().disco() );
+}
+
+void
+PlaybackControlsWidget::restoreRadioOptions()
+{
+    bool ok;
+    ui.radioOptionsDialog->widget().setRep( unicorn::GlobalSettings().value( "rep", 0.5 ).toDouble( &ok ) );
+    ui.radioOptionsDialog->widget().setMainstr( unicorn::GlobalSettings().value( "mainstr", 0.5 ).toDouble( &ok ) );
+    ui.radioOptionsDialog->widget().setDisco( unicorn::GlobalSettings().value( "disco", false ).toBool() );
+}
+
+void
+PlaybackControlsWidget::setRadioOptionsChecked()
+{
+    ui.radioOptions->setChecked( ui.radioOptionsDialog->widget().rep() != 0.5
+                                || ui.radioOptionsDialog->widget().mainstr() != 0.5
+                                || ui.radioOptionsDialog->widget().disco() != false );
 }
 
 void

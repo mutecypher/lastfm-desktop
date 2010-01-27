@@ -90,7 +90,14 @@ Radio::play( const RadioStation& station )
     }
 
 	m_station = station;
-    m_tuner = new lastfm::RadioTuner(station);
+
+    // Make sure the radio station has the radio options from the settings
+    bool ok;
+    m_station.setRep( unicorn::GlobalSettings().value( "rep", 0.5 ).toDouble( &ok ) );
+    m_station.setMainstr( unicorn::GlobalSettings().value( "mainstr", 0.5 ).toDouble( &ok ) );
+    m_station.setDisco( unicorn::GlobalSettings().value( "disco", 0.5 ).toBool() );
+
+    m_tuner = new lastfm::RadioTuner( m_station );
 
     connect( m_tuner, SIGNAL(title( QString )), SLOT(setStationName( QString )) );
 	connect( m_tuner, SIGNAL(trackAvailable()), SLOT(enqueue()) );
@@ -106,7 +113,14 @@ Radio::playNext( const RadioStation& station )
     if (m_state == Playing)
     {
         m_station = station;
-        m_tuner->retune(station);
+
+        // Make sure the radio station has the radio options from the settings
+        bool ok;
+        m_station.setRep( unicorn::GlobalSettings().value( "rep", 0.5 ).toDouble( &ok ) );
+        m_station.setMainstr( unicorn::GlobalSettings().value( "mainstr", 0.5 ).toDouble( &ok ) );
+        m_station.setDisco( unicorn::GlobalSettings().value( "disco", 0.5 ).toBool() );
+
+        m_tuner->retune( m_station );
     }
 }
 
