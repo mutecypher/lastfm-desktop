@@ -46,7 +46,7 @@
 #include <QDebug>
 
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
-                    : QApplication( argc, argv ),
+                    : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
                       m_signingIn( true )
 {

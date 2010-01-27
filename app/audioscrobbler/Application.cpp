@@ -33,8 +33,8 @@
 #include <lastfm/Audioscrobbler>
 #include <lastfm/AuthenticatedUser>
 #include <QMenu>
-#include "TagDialog.h"
-#include "ShareDialog.h"
+#include "lib/unicorn/widgets/TagDialog.h"
+#include "lib/unicorn/widgets/ShareDialog.h"
 #include "Wizard/FirstRunWizard.h"
 
 using audioscrobbler::Application;
@@ -53,6 +53,14 @@ Application::Application(int& argc, char** argv)
             : unicorn::Application(argc, argv),
               as( 0 )
 {
+    // We do the actual init slightly later so that if this is the second
+    // time we open the app, we don't get another tray icon etc.
+    QTimer::singleShot(0, this, SLOT(init()));
+}
+
+void
+Application::init()
+{
 /// tray
     tray = new QSystemTrayIcon(this);
     QIcon trayIcon( AS_TRAY_ICON );
@@ -61,15 +69,15 @@ Application::Application(int& argc, char** argv)
     #endif
 
     #ifdef Q_WS_WIN
-	    connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+        connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
     #endif
-	tray->setIcon(trayIcon);
-	tray->show();
+    tray->setIcon(trayIcon);
+    tray->show();
     connect( this, SIGNAL( aboutToQuit()), tray, SLOT( hide()));
 
 /// tray menu
     QMenu* menu = new QMenu;
-	m_toggle_window_action = menu->addAction( tr("Show Scrobbler"));
+    m_toggle_window_action = menu->addAction( tr("Show Scrobbler"));
     menu->addSeparator();
     m_title_action = menu->addAction(tr("Ready"));
     m_love_action = menu->addAction(tr("Love"));
@@ -87,9 +95,9 @@ Application::Application(int& argc, char** argv)
 #endif
     menu->addSeparator();
     QAction* quit = menu->addAction(tr("Quit Audioscrobbler"));
-    
+
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
-        
+
     m_title_action->setEnabled( false );
     m_submit_scrobbles_toggle->setCheckable(true);
     m_submit_scrobbles_toggle->setChecked(true);
@@ -113,12 +121,12 @@ Application::Application(int& argc, char** argv)
         connect(itunes, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
         itunes->start();
     #endif
-        
+
         QObject* o = new PlayerListener(mediator);
         connect(o, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
         o = new LegacyPlayerListener(mediator);
         connect(o, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
-        
+
     #ifdef QT_DBUS_LIB
         DBusListener* dbus = new DBusListener(mediator);
         connect(dbus, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
@@ -130,12 +138,11 @@ Application::Application(int& argc, char** argv)
     }
 
 
-	connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( show()) );
+    connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( show()) );
     connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( setFocus()) );
     connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( raise()) );
 
     m_toggle_window_action->trigger();
-
 }
 
 

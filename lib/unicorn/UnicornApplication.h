@@ -20,6 +20,8 @@
 #ifndef UNICORN_APPLICATION_H
 #define UNICORN_APPLICATION_H
 
+#include "qtsingleapplication/qtsingleapplication.h"
+
 #include "common/HideStupidWarnings.h"
 #include "lib/DllExportMacro.h"
 #include "UnicornSession.h"
@@ -83,7 +85,7 @@ namespace unicorn
             void sessionChanged( const Session );
     };
 
-    class UNICORN_DLLEXPORT Application : public QApplication
+    class UNICORN_DLLEXPORT Application : public QtSingleApplication
     {
         Q_OBJECT
 

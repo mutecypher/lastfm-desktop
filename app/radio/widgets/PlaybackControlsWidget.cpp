@@ -42,6 +42,9 @@
 #include "AdvancedOptionsDialog.h"
 #include "../Radio.h"
 
+#include "lib/unicorn/widgets/TagDialog.h"
+#include "lib/unicorn/widgets/ShareDialog.h"
+
 PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
                        :StylableWidget( parent )
 {
@@ -127,13 +130,15 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     ui.cog->setPopupMode( QToolButton::InstantPopup );
 
     QMenu* cogMenu = new QMenu(this);
-    cogMenu->addAction(QIcon(":/tag-small.png"), "Tag", this, SLOT(onTagClicked()))->setObjectName("tag");
-    cogMenu->addAction(QIcon(":/share-small.png"), "Share", this, SLOT(onShareClicked()))->setObjectName("share");
+    ui.tagAction = cogMenu->addAction(QIcon(":/tag-small.png"), "Tag", this, SLOT(onTagClicked()));
+    ui.tagAction->setObjectName("tag");
+    ui.shareAction = cogMenu->addAction(QIcon(":/share-small.png"), "Share", this, SLOT(onShareClicked()));
+    ui.shareAction->setObjectName("share");
     ui.cog->setMenu(cogMenu);
 
 	connect( radio, SIGNAL(stopped()), SLOT(onRadioStopped()) );
     connect( radio, SIGNAL(tuningIn( const RadioStation&)), SLOT( onRadioTuningIn( const RadioStation&)));
-    connect( ui.play, SIGNAL( toggled(bool)), SLOT( onPlayToggled(bool)) );
+    connect( ui.play, SIGNAL( clicked(bool)), SLOT( onPlayClicked(bool)) );
     connect( ui.skip, SIGNAL( clicked()), radio, SLOT(skip()));
     connect( ui.info, SIGNAL( clicked()), SLOT(onInfoClicked()));
     connect( ui.radioOptions, SIGNAL( clicked(bool)), SLOT(onRadioOptionsClicked(bool)));
@@ -141,7 +146,7 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
 
     // make the space button check and uncheck the play button
-    new QShortcut( QKeySequence(Qt::Key_Space), ui.play, SLOT(toggle()) );
+    new QShortcut( QKeySequence(Qt::Key_Space), this, SLOT(onSpaceKey()) );
 
     setButtonsEnabled( false );
 }
@@ -230,10 +235,12 @@ PlaybackControlsWidget::setButtonsEnabled( bool enabled )
     ui.love->setEnabled( enabled );
     ui.ban->setEnabled( enabled );
     ui.info->setEnabled( enabled );
+    ui.tagAction->setEnabled( enabled );
+    ui.shareAction->setEnabled( enabled );
 }
 
 void
-PlaybackControlsWidget::onPlayToggled( bool checked )
+PlaybackControlsWidget::onPlayClicked( bool checked )
 {
     if ( !checked )
 		radio->stop();
@@ -242,6 +249,18 @@ PlaybackControlsWidget::onPlayToggled( bool checked )
         radio->play( RadioStation( "" ) );
         emit startRadio( RadioStation( "" ) );
     }
+}
+
+void
+PlaybackControlsWidget::onSpaceKey()
+{
+    if ( !ui.play->isChecked() )
+    {
+        radio->play( RadioStation( "" ) );
+        emit startRadio( RadioStation( "" ) );
+    }
+    else
+        radio->stop();
 }
 
 void
@@ -254,10 +273,14 @@ void
 PlaybackControlsWidget::onTagClicked()
 {
     // open the tag dialog
+    TagDialog* td = new TagDialog( radio->currentTrack(), window() );
+    td->show();
 }
 
 void
 PlaybackControlsWidget::onShareClicked()
 {
     // open the share dialog
+    ShareDialog* sd = new ShareDialog( radio->currentTrack(), window() );
+    sd->show();
 }

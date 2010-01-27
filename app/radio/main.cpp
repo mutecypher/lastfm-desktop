@@ -29,8 +29,8 @@
 #include "_version.h"
 #include "Application.h"
 #include "ScrobSocket.h"
-#include "lib/unicorn/UniqueApplication.h"
 #include "lib/unicorn/UnicornApplication.h"
+#include "lib/unicorn/qtsingleapplication/qtsinglecoreapplication.h"
 #include "MainWindow.h"
 #include "Radio.h"
 #include "app/moose.h"
@@ -58,8 +58,8 @@ namespace lastfm
 
 int main( int argc, char** argv )
 {
-    QCoreApplication::setApplicationName( "Last.fm Radio" );
-    QCoreApplication::setApplicationVersion( VERSION );
+    QtSingleCoreApplication::setApplicationName( "Last.fm Radio" );
+    QtSingleCoreApplication::setApplicationVersion( VERSION );
 
     // ATTENTION! Under no circumstance change these strings! --mxcl
 #ifdef WIN32
@@ -69,23 +69,17 @@ int main( int argc, char** argv )
 #elif defined (Q_WS_X11)
     lastfm::UserAgent = "Last.fm Client " VERSION " (X11)";
 #endif
-
-#ifdef NDEBUG
-    UniqueApplication uapp( moose::id() );
-    if (uapp.isAlreadyRunning())
-		return uapp.forward( argc, argv ) ? 0 : 1;
-    uapp.init1();
-#endif
 	
     try
     {
         moralistfad::Application app( argc, argv );
+
+        if ( app.sendMessage( app.arguments().join( "\t" ) ) )
+            return 0;
+
+        QObject::connect(&app, SIGNAL(messageReceived(const QString&)), &app, SLOT(onMessageReceived(const QString&)));
+
 		q = new QMainObject;
-      #ifdef NDEBUG
-		uapp.init2( &app );
-        q->connect( &uapp, SIGNAL(arguments( QStringList )), SLOT(parseArguments( QStringList )) );
-      #endif
-		
         radio = new Radio();
         qAddPostRoutine(cleanup);
 
@@ -100,6 +94,8 @@ int main( int argc, char** argv )
         
         MainWindow window;
 
+        app.setActivationWindow( &window );
+
         q->connect(&window, SIGNAL(startRadio(RadioStation)), SLOT(onStartRadio(RadioStation)));
         window.connect(radio, SIGNAL(error(int, QVariant)), SLOT(onRadioError(int, QVariant)) );
 
@@ -108,6 +104,7 @@ int main( int argc, char** argv )
         window.show();
 
         app.parseArguments( app.arguments() );
+
         int result = app.exec();
         scrobsock->stop();
         return result;

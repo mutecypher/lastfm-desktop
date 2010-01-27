@@ -17,30 +17,43 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "lib/unicorn/UnicornApplication.h"
-#include <lastfm/ws.h>
+#ifndef SHARE_DIALOG_H
+#define SHARE_DIALOG_H
 
-namespace moralistfad
+#include <lastfm/Track>
+#include <QDialogButtonBox>
+#include <QDialog>
+
+#include "lib/DllExportMacro.h"
+
+class UNICORN_DLLEXPORT ShareDialog : public QDialog
 {
-	class Application : public unicorn::Application
-	{
-	    Q_OBJECT
-   
-	public:
-	    Application( int&, char** );
+    Q_OBJECT
 
-	signals:    
-	    /** something should show it. Currently MainWindow does */
-	    void error( const QString& message );
-	    void status( const QString& message, const QString& id );
+    struct {
+        QDialogButtonBox* buttons;
+        class TrackWidget* track;
+        class QLineEdit* edit;
+        class QTextEdit* message;
+        class QPushButton* browseFriends;
+    } ui;
+    
+public:
+    ShareDialog( const Track&, QWidget* parent );
 
-	public slots:
-		void parseArguments( const QStringList& args );
-        void onMessageReceived( const QString& message );
+	Track track() const { return m_track; }
 
-	private slots:    
-	    /** all webservices connect to this and emit in the case of bad errors that
-	     * need to be handled at a higher level */
-	    void onWsError( lastfm::ws::Error );
-	};
-}
+    void setupUi();
+
+private slots:
+    void browseFriends();
+    void enableDisableOk();
+
+private:
+    class QPushButton* ok() { return ui.buttons->button( QDialogButtonBox::Ok ); }
+    virtual void accept();
+
+    Track m_track;
+};
+
+#endif

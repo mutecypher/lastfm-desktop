@@ -67,6 +67,12 @@ Argument argument( const QString& arg )
 }
 
 void
+Application::onMessageReceived( const QString& message )
+{
+    parseArguments( message.split( "\t" ) );
+}
+
+void
 Application::parseArguments( const QStringList& args )
 {
     qDebug() << args;

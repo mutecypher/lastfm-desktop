@@ -60,6 +60,7 @@ public:
 	};
 
     RadioStation station() const { return m_station; }
+    Track currentTrack() const {return m_track;}
 
 	State state() const { return m_state; }
 

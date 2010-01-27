@@ -53,6 +53,8 @@ public:
 
         QPushButton* info;
         QToolButton* cog;
+        QAction* tagAction;
+        QAction* shareAction;
     } 
 	ui;
 
@@ -62,12 +64,13 @@ private:
 private slots:
 	void onRadioStopped();
     void onRadioTuningIn( const class RadioStation& );
-    void onPlayToggled( bool checked );
+    void onPlayClicked( bool checked );
     void onRadioOptionsClicked( bool checked );
     void onRadioOptionsFinished( int result );
     void onTagClicked();
     void onShareClicked();
     void onInfoClicked();
+    void onSpaceKey();
 	
 signals:
     void startRadio(RadioStation);

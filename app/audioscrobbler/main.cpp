@@ -18,7 +18,6 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "_version.h"
-#include "lib/unicorn/UniqueApplication.h"
 #include "Application.h"
 #include "app/moose.h"
 
@@ -28,20 +27,11 @@ int main( int argc, char** argv )
     QCoreApplication::setApplicationName( "Audioscrobbler" );
     QCoreApplication::setApplicationVersion( VERSION );
 
-#ifdef NDEBUG
-    UniqueApplication uapp( "Audioscrobbler-A4BF10D5-6F58-4c1b-9D5B-7D8CE7ECB674" );
-    if (uapp.isAlreadyRunning())
-		return uapp.forward( argc, argv ) ? 0 : 1;
-    uapp.init1();
-#endif
-	
     try
     {
         audioscrobbler::Application app( argc, argv );
-      #ifdef NDEBUG
-		uapp.init2( &app );
-        app.connect( &uapp, SIGNAL(arguments( QStringList )), SLOT(parseArguments( QStringList )) );
-      #endif
+        if ( app.sendMessage("Wake up!") )
+            return 0;
         return app.exec();
     }
     catch (unicorn::Application::StubbornUserException&)
