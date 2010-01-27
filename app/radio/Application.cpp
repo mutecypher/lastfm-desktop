@@ -84,7 +84,7 @@ Application::parseArguments( const QStringList& args )
         switch (argument( arg ))
         {
             case LastFmUrl:
-                radio->play( RadioStation( QUrl( arg ) ) );
+                radio->play( RadioStation( arg ) );
                 break;
 
             case Skip:
