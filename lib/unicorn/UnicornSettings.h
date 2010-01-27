@@ -32,7 +32,7 @@ namespace unicorn
     class GlobalSettings : public QSettings
     {
     public:
-        GlobalSettings( const char* appname = "" ) : QSettings( unicorn::organizationName(), appname )
+        GlobalSettings( QString appname = qApp->applicationName() ) : QSettings( unicorn::organizationName(), appname )
         {}
     };
 
