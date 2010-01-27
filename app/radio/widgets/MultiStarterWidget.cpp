@@ -98,8 +98,6 @@ MultiStarterWidget::MultiStarterWidget(bool advanced, int maxSources, QWidget *p
     m_sourceList = new SourceListWidget(this);
     m_sourceList->setModel(m_sourceModel);
 
-    //m_optionsWidget = new AdvancedOptionsWidget(this);
-
     QVBoxLayout* rightside = new QVBoxLayout(this);
     rightside->addWidget(m_sourceList);
     //rightside->addWidget(m_optionsWidget);
@@ -126,7 +124,6 @@ MultiStarterWidget::MultiStarterWidget(bool advanced, int maxSources, QWidget *p
 void
 MultiStarterWidget::onCheckBox(int checkState)
 {
-    //m_optionsWidget->setVisible(checkState == Qt::Checked);
     m_sourceList->updateAdvanced(checkState);
 }
 
