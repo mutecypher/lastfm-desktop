@@ -59,6 +59,12 @@ QuickStartWidget::QuickStartWidget()
 void
 QuickStartWidget::search()
 {
+    QString trimmedText = m_edit->text().trimmed();
+    if( trimmedText.startsWith("lastfm://")) {
+        emit startRadio( RadioStation( trimmedText ) );
+        return;
+    }
+
     if (m_edit->text().length()) {
         StationSearch* s = new StationSearch();
         connect(s, SIGNAL(searchResult(RadioStation)), SIGNAL(startRadio(RadioStation)));
