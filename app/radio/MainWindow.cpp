@@ -83,10 +83,8 @@ void
 MainWindow::onSessionChanged( const unicorn::Session& s, const unicorn::Session& )
 {
     AuthenticatedUser user;
-    qDebug() << "fetching friends, tags, playlists and recent stations for" << user;
+    qDebug() << "fetching friends and recent stations for" << user;
     connect(user.getFriends(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotFriends()));
-    connect(user.getTopTags(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotTopTags()));
-    connect(user.getPlaylists(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotPlaylists()));
     connect(user.getRecentStations(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotRecentStations()));
 }
 

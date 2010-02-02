@@ -52,22 +52,16 @@ public slots:
     void onStartRadio(RadioStation rs);
     void onShowMoreRecentStations();
     void onCombo();
-    void onYourTags();
     void onYourFriends();
-    void onYourPlaylists();
     void onBack();
     void onBackDelete();
     void onMoveFinished();
     void onForward();
 
     void onUserGotFriends();
-    void onUserGotTopTags();
-    void onUserGotPlaylists();
     void onUserGotRecentStations();
 
-    void onTagActivated(const QModelIndex& idx);
     void onFriendActivated(const QModelIndex& idx);
-    void onPlaylistActivated(const QModelIndex& idx);
     void onSlideStarted( QLayoutItem* next, QLayoutItem* prev );
 
     void rawrql();
@@ -76,8 +70,6 @@ private:
     SideBySideLayout* m_layout;
     NowPlayingState* m_nowPlaying;
     QStringList m_friends;
-    QStringList m_tags;
-    QList<PlaylistMeta> m_playlists;
     RadioStationListModel m_recentModel;
 
     QStringList m_rawrqlItems;

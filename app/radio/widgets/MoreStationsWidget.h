@@ -32,8 +32,6 @@ public:
 
 signals:
     void combo();
-    void tags();
-    void playlists();
     void friends();
 };
 
