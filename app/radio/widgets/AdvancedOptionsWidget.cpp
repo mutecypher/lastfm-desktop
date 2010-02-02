@@ -20,6 +20,7 @@
 #include <QCheckBox>
 #include <QSlider>
 #include <QVBoxLayout>
+#include <QPushButton>
 #include <QLabel>
 
 #include "AdvancedOptionsWidget.h"
@@ -50,6 +51,12 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(QWidget* parent)
     }
 
     optionsLayout->addWidget(m_disco = new QCheckBox(tr("Discovery mode")));
+    setSupportsDisco( true );
+
+    optionsLayout->addWidget( m_restoreDefaults = new QPushButton( tr("Restore defaults") ) );
+    m_restoreDefaults->setObjectName("restoreDefaults");
+
+    connect(m_restoreDefaults, SIGNAL(clicked()), SLOT(onResetDefaultsClicked()));
 
     setLayout(optionsLayout);
     setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
@@ -60,6 +67,29 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(QWidget* parent)
     m_mainstrSlider->setMinimum(0);
     m_mainstrSlider->setMaximum(8);
     m_mainstrSlider->setValue(4);
+}
+
+void
+AdvancedOptionsWidget::onResetDefaultsClicked()
+{
+    setRep( 0.5 );
+    setMainstr( 0.5 );
+    setDisco( false );
+}
+
+void
+AdvancedOptionsWidget::setSupportsDisco( bool supportsDisco )
+{
+    m_disco->setEnabled( supportsDisco );
+
+    if ( supportsDisco )
+    {
+        m_disco->setToolTip( tr( "This will only play you tracks you've never heard before." ) );
+    }
+    else
+    {
+        m_disco->setToolTip( tr( "You've already discovered this music, that's why it's in your library!" ) );
+    }
 }
 
 void

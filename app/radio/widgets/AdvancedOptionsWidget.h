@@ -24,6 +24,7 @@
 
 class QSlider;
 class QCheckBox;
+class QPushButton;
 
 class AdvancedOptionsWidget : public QWidget
 {
@@ -39,11 +40,16 @@ public:
     float mainstr() const;
     bool disco() const;
 
+public slots:
+    void setSupportsDisco( bool supportsDisco );
+    void onResetDefaultsClicked();
+
 private:
     QWidget* m_sliders;
     QSlider* m_repSlider;
     QSlider* m_mainstrSlider;
     QCheckBox* m_disco;
+    QPushButton* m_restoreDefaults;
 };
 
 #endif // ADVANCED_OPTIONS_WIDGET_H

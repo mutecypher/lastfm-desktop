@@ -72,6 +72,7 @@ public slots:
     void play( const RadioStation& station );
     void skip();
     void stop();
+    void setSupportsDisco( bool supportsDisco );
 
 signals:
     /** emitted up to twice, as first time may not have a title for the station
@@ -80,6 +81,7 @@ signals:
     void trackSpooled( const Track& );
     void buffering( int );
     void stopped();
+    void supportsDisco( bool supportsDisco );
 	
 	/** the error is one of lastfm::ws::Error, 
       * if UnknownError, then data is a fatal error from Phonon */

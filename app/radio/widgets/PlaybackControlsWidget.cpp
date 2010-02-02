@@ -59,6 +59,8 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
 
     ui.radioOptionsDialog = new AdvancedOptionsDialog( this );
 
+    connect( radio, SIGNAL(supportsDisco( bool )), &ui.radioOptionsDialog->widget(), SLOT(setSupportsDisco( bool )) );
+
     restoreRadioOptions();
     setRadioOptionsChecked();
 

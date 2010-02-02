@@ -100,6 +100,7 @@ Radio::play( const RadioStation& station )
     m_tuner = new lastfm::RadioTuner( m_station );
 
     connect( m_tuner, SIGNAL(title( QString )), SLOT(setStationName( QString )) );
+    connect( m_tuner, SIGNAL(supportsDisco( bool )), SLOT(setSupportsDisco( bool )) );
 	connect( m_tuner, SIGNAL(trackAvailable()), SLOT(enqueue()) );
     connect( m_tuner, SIGNAL(error( lastfm::ws::Error )), SLOT(onTunerError( lastfm::ws::Error )) );
 
@@ -353,6 +354,13 @@ Radio::setStationName( const QString& s )
 {
     m_station.setTitle( s );
     emit tuningIn( m_station );
+}
+
+
+void
+Radio::setSupportsDisco( bool supportsDiscovery )
+{
+    emit supportsDisco( supportsDiscovery );
 }
 
 void
