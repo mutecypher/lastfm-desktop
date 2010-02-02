@@ -50,7 +50,6 @@ private slots:
     void onGotTopTags();
     void onUserGotTopArtists();
     void onUserGotFriends();
-    void onCheckBox(int checkState);
     void onYouItemActivated(QTreeWidgetItem*, int);
     void onYouBack();
 

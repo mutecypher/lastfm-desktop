@@ -60,11 +60,7 @@ MultiStarterWidget::MultiStarterWidget(bool advanced, int maxSources, QWidget *p
     QGridLayout* grid = new QGridLayout(this);
 
     QHBoxLayout* titleLayout = new QHBoxLayout(this);
-    QCheckBox* checkbox;
     titleLayout->addWidget(new QLabel("Choose up to " + QString::number(maxSources) + " items and press play."), 0, Qt::AlignCenter);
-    titleLayout->addWidget(checkbox = new QCheckBox("Show options"), 0, Qt::AlignRight);
-    connect(checkbox, SIGNAL(stateChanged(int)), SLOT(onCheckBox(int)));
-    checkbox->setChecked(advanced);
     
     QTabWidget* tabwidget = new QTabWidget(this);
 
@@ -116,15 +112,6 @@ MultiStarterWidget::MultiStarterWidget(bool advanced, int maxSources, QWidget *p
     //connect(you.getTopArtists(), SIGNAL(finished()), SLOT(onUserGotTopArtists()));
     //connect(you.getFriends(), SIGNAL(finished()), SLOT(onUserGotFriends()));
     connect(Tag::getTopTags(), SIGNAL(finished()), SLOT(onGotTopTags()));
-
-    onCheckBox(checkbox->checkState());
-}
-
-// "show options" checkbox:
-void
-MultiStarterWidget::onCheckBox(int checkState)
-{
-    m_sourceList->updateAdvanced(checkState);
 }
 
 void
@@ -166,28 +153,6 @@ MultiStarterWidget::onYouItemActivated(QTreeWidgetItem* i, int)
         return;
 
     RqlSource::Type sourceType = (RqlSource::Type) vType.toInt();
-    if (sourceType == RqlSource::User) {
-        // may be the "current" user, or a friend... a friend
-        // user slides forward to the friend's profile
-        QString activatedUsername = i->data(0, SourceListModel::Arg1).toString();
-        YouListWidget* you = (YouListWidget*) sender();
-        if (activatedUsername != you->username()) {
-            // make a profile widget with a back button
-            QWidget* w = new QWidget(this);
-            QLayout* l = new QVBoxLayout(w);
-            QPushButton* b = new QPushButton("back");
-            connect(b, SIGNAL(clicked()), SLOT(onYouBack()));
-            l->addWidget(b);
-            YouListWidget* ylw = new YouListWidget(activatedUsername, this);
-            connect(ylw, SIGNAL(itemActivated(QTreeWidgetItem*, int)), SLOT(onYouItemActivated(QTreeWidgetItem*, int)));
-            l->addWidget(ylw);
-
-            // slide m_youWidget forward to show the new profile
-            m_youWidget->layout()->addWidget(w);
-            ((SideBySideLayout*)m_youWidget->layout())->moveForward();
-            return;
-        }
-    }
 
     m_sourceModel->addSource(RqlSource(
         sourceType,
