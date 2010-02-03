@@ -137,8 +137,7 @@ static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
             AEGetParamPtr( e, keyDirectObject, typeChar, &type, &buf, 1023, &size );
             buf[size] = '\0';
 
-            QUrl const url = QString::fromUtf8( buf );
-            radio->play( RadioStation(url) );
+            radio->play( RadioStation( QString::fromUtf8( buf ) ) );
             return noErr;
         }
             
