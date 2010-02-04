@@ -5,10 +5,6 @@ QT = core gui xml network phonon
 CONFIG += lastfm
 LIBS += -lunicorn
 
-win32:release {
-	LIBS += -lAdvAPI32
-}
-
 include( $$ROOT_DIR/admin/include.qmake )
 
 DEFINES += LASTFM_COLLAPSE_NAMESPACE

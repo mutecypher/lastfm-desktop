@@ -70,11 +70,12 @@ unicorn::CoreApplication::init()
 
 #ifdef WIN32
     QString bytes = CoreApplication::log( applicationName() ).absoluteFilePath();
-    const wchar_t* path = bytes.utf16();
+    const wchar_t* path = reinterpret_cast<const wchar_t*>(bytes.utf16());
 #else
     QByteArray bytes = CoreApplication::log( applicationName() ).absoluteFilePath().toLocal8Bit();
     const char* path = bytes.data();
 #endif
+
     new Logger( path );
 
     qInstallMsgHandler( qMsgHandler );
