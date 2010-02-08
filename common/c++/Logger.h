@@ -20,8 +20,6 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include <QString>
-
 #include "common/c++/string.h"
 #include <fstream>
 #include <sstream>

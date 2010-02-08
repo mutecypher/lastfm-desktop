@@ -64,21 +64,21 @@ Logger::Logger( const COMMON_CHAR* path, Severity severity )
         truncate( path );
 
     ios::openmode flags = ios::out | ios::app;
-    //mFileOut.open( path, flags );
+    mFileOut.open( path, flags );
 
     if (!mFileOut)
     {
 	#ifdef WIN32
-        //OutputDebugStringA( "Could not open log file:" );
-        //OutputDebugStringW( path );
+		OutputDebugStringA( "Could not open log file:" );
+		OutputDebugStringW( path );
 	#else
 		cerr << "Could not open log file" << path;
 	#endif
         return;
     }
     
-    //mFileOut << endl << endl;
-    //mFileOut << "==========================================================================lastfm" << endl;
+    mFileOut << endl << endl;
+    mFileOut << "==========================================================================lastfm" << endl;
 }
 
 
@@ -166,14 +166,14 @@ Logger::truncate( const COMMON_CHAR* path ) //static
 {
     using namespace std;
     
-//    ifstream inFile( path );
-//    inFile.seekg( -400000, std::ios_base::end );
-//    istreambuf_iterator<char> bufReader( inFile ), end;
-//    string sFile;
-//    sFile.reserve( 400005 );
-//    sFile.assign( bufReader, end );
-//    inFile.close();
-//    ofstream outFile( path );
-//    outFile << sFile << flush;
-//    outFile.close();
+    ifstream inFile( path );
+    inFile.seekg( -400000, std::ios_base::end );
+    istreambuf_iterator<char> bufReader( inFile ), end;
+    string sFile;
+    sFile.reserve( 400005 );
+    sFile.assign( bufReader, end );
+    inFile.close();
+    ofstream outFile( path );
+    outFile << sFile << flush;
+    outFile.close();
 }

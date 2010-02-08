@@ -24,8 +24,8 @@
 #include "ITunesParser.h"
 
 #ifdef WIN32
-    //#include "windows.h"
-    //#include "shfolder.h"
+    #include "windows.h"
+    #include "shfolder.h"
 #endif
 
 
@@ -54,33 +54,33 @@ ITunesDevice::LibraryPath()
 #endif
 
 #ifdef WIN32
-//    {
+    {
         // Get path to My Music
-//        char acPath[MAX_PATH];
-//        HRESULT h = SHGetFolderPathA( NULL, CSIDL_MYMUSIC,
-//                                      NULL, 0, acPath );
-//
-//        if ( h == S_OK )
-//            path = QString::fromLocal8Bit( acPath );
-////        else
-////            LOG( 1, "Couldn't get My Music path\n" );
-//
-//        qDebug() << "CSIDL_MYMUSIC path: " << path;
-//    }
-//
-//    {
-//        // Get path to Local App Data
-//        char acPath[MAX_PATH];
-//        HRESULT h = SHGetFolderPathA( NULL, CSIDL_LOCAL_APPDATA,
-//                                      NULL, 0, acPath );
-//
-//        if ( h == S_OK )
-//            confPath = QString::fromLocal8Bit( acPath );
-////        else
-////            LOG( 1, "Couldn't get Local Application Data path\n" );
-//
-//        qDebug() << "CSIDL_LOCAL_APPDATA path: " << confPath;
-//    }
+        char acPath[MAX_PATH];
+        HRESULT h = SHGetFolderPathA( NULL, CSIDL_MYMUSIC,
+                                      NULL, 0, acPath );
+
+        if ( h == S_OK )
+            path = QString::fromLocal8Bit( acPath );
+//        else
+//            LOG( 1, "Couldn't get My Music path\n" );
+
+        qDebug() << "CSIDL_MYMUSIC path: " << path;
+    }
+
+    {
+        // Get path to Local App Data
+        char acPath[MAX_PATH];
+        HRESULT h = SHGetFolderPathA( NULL, CSIDL_LOCAL_APPDATA,
+                                      NULL, 0, acPath );
+
+        if ( h == S_OK )
+            confPath = QString::fromLocal8Bit( acPath );
+//        else
+//            LOG( 1, "Couldn't get Local Application Data path\n" );
+
+        qDebug() << "CSIDL_LOCAL_APPDATA path: " << confPath;
+    }
 
     // Try reading iTunesPrefs.xml for custom library path
     QFile f( confPath + "/Apple Computer/iTunes/iTunesPrefs.xml" );

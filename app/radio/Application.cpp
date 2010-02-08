@@ -29,6 +29,7 @@ using moralistfad::Application;
 Application::Application( int& argc, char** argv ) 
     : unicorn::Application( argc, argv )
 {
+    //addLibraryPath(applicationDirPath() + "\\plugins" );
 }
 
 // lastfmlib invokes this directly, for some errors:
