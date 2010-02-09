@@ -76,7 +76,7 @@ YouListWidget::gotFriends()
 {
     sender()->deleteLater();
     QNetworkReply* r = (QNetworkReply*)sender();
-    lastfm::XmlQuery lfm(r->readAll());
+    lastfm::XmlQuery lfm( lastfm::ws::parse( r ) );
 
     foreach (lastfm::XmlQuery e, lfm["friends"].children("user")) {
         QString name = e["name"].text();
@@ -85,7 +85,12 @@ YouListWidget::gotFriends()
         item->setData(0, SourceListModel::SourceType, RqlSource::User);
         item->setData(0, SourceListModel::Arg1, name);
         item->setData(0, SourceListModel::ImageUrl, e["image size=small"].text());
+
+        // this will determine the sort order
+        item->setText(0, name.toLower());
     }
+
+    m_friendsItem->sortChildren(0, Qt::AscendingOrder);
 }
 
 void
