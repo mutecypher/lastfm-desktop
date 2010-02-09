@@ -67,6 +67,8 @@ private:
 private slots:
 	void onRadioStopped();
     void onRadioTuningIn( const class RadioStation& );
+    void onTrackSpooled( const Track& track );
+
     void onPlayClicked( bool checked );
     void onRadioOptionsClicked( bool checked );
     void onRadioOptionsFinished( int result );
@@ -74,6 +76,12 @@ private slots:
     void onShareClicked();
     void onInfoClicked();
     void onSpaceKey();
+
+    void onLoveClicked(bool);
+    void onLoveFinished();
+
+    void onBanClicked();
+    void onBanFinished();
 	
 signals:
     void startRadio(RadioStation);

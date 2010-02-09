@@ -21,6 +21,7 @@
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QSpacerItem>
+#include <QNetworkReply>
 
 #include <QSlider>
 #include <QToolButton>
@@ -41,6 +42,9 @@
 #include "AdvancedOptionsWidget.h"
 #include "AdvancedOptionsDialog.h"
 #include "../Radio.h"
+
+#include <lastfm/XmlQuery>
+#include <lastfm/Track>
 
 #include "lib/unicorn/widgets/TagDialog.h"
 #include "lib/unicorn/widgets/ShareDialog.h"
@@ -110,6 +114,7 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
 
         controlsLayout->addWidget( ui.love = new QPushButton( tr( "love" ) ));
         ui.love->setObjectName( "love" );
+        ui.love->setCheckable( true );
 
         controlsLayout->addWidget( ui.ban = new QPushButton( tr( "ban" ) ));
         ui.ban->setObjectName( "ban" );
@@ -145,6 +150,10 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
 
 	connect( radio, SIGNAL(stopped()), SLOT(onRadioStopped()) );
     connect( radio, SIGNAL(tuningIn( const RadioStation&)), SLOT( onRadioTuningIn( const RadioStation&)));
+    connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)));
+
+    connect( ui.love, SIGNAL(clicked(bool)), SLOT(onLoveClicked(bool)));
+    connect( ui.ban, SIGNAL(clicked()), SLOT(onBanClicked()));
     connect( ui.play, SIGNAL( clicked(bool)), SLOT( onPlayClicked(bool)) );
     connect( ui.skip, SIGNAL( clicked()), radio, SLOT(skip()));
     connect( ui.info, SIGNAL( clicked()), SLOT(onInfoClicked()));
@@ -233,6 +242,12 @@ PlaybackControlsWidget::onRadioTuningIn( const RadioStation& )
 }
 
 void
+PlaybackControlsWidget::onTrackSpooled( const Track& track )
+{
+    ui.love->setChecked( track.isLoved() );
+}
+
+void
 PlaybackControlsWidget::saveRadioOptions()
 {
     unicorn::GlobalSettings().setValue( "rep", ui.radioOptionsDialog->widget().rep() );
@@ -262,10 +277,67 @@ PlaybackControlsWidget::setButtonsEnabled( bool enabled )
 {
     ui.skip->setEnabled( enabled );
     ui.love->setEnabled( enabled );
+    ui.love->setChecked( false );
     ui.ban->setEnabled( enabled );
     ui.info->setEnabled( enabled );
     ui.tagAction->setEnabled( enabled );
     ui.shareAction->setEnabled( enabled );
+}
+
+void
+PlaybackControlsWidget::onLoveClicked(bool checked)
+{
+    if ( checked )
+    {
+        // The button has been checked so love the track!
+        QNetworkReply* loveReply = MutableTrack( radio->currentTrack() ).love();
+        connect(loveReply, SIGNAL(finished()), SLOT(onLoveFinished()));
+    }
+    else
+    {
+        // The button has been unchecked so unlove the track
+    }
+}
+
+void
+PlaybackControlsWidget::onLoveFinished()
+{
+    // check that the command was succesful
+    lastfm::XmlQuery lfm(lastfm::ws::parse(static_cast<QNetworkReply*>(sender())));
+
+    if ( lfm.attribute( "status" ) == "ok" )
+    {
+        // TODO: show some feedback
+    }
+    else
+    {
+        // TODO: error!
+    }
+}
+
+void
+PlaybackControlsWidget::onBanClicked()
+{
+    // Ban the track
+    QNetworkReply* banReply = MutableTrack( radio->currentTrack() ).ban();
+    connect(banReply, SIGNAL(finished()), SLOT(onBanFinished()));
+}
+
+void
+PlaybackControlsWidget::onBanFinished()
+{
+    // ban the track and skip to the next track (without scrobbling!)
+    lastfm::XmlQuery lfm(lastfm::ws::parse(static_cast<QNetworkReply*>(sender())));
+
+    if ( lfm.attribute( "status" ) == "ok" )
+    {
+        // skip to the next track without scrobbling
+        radio->skip();
+    }
+    else
+    {
+        // TODO: error!
+    }
 }
 
 void
