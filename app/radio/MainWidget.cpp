@@ -105,7 +105,7 @@ MainWidget::onShowMoreRecentStations()
 void
 MainWidget::onCombo()
 {
-    MultiStarterWidget* w = new MultiStarterWidget(false /* simple */, 3);
+    MultiStarterWidget* w = new MultiStarterWidget(3, this);
     connect(w, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
     connect(w, SIGNAL(startRadio(RadioStation)), SLOT(onStartRadio(RadioStation)));
 

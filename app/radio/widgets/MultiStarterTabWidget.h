@@ -17,37 +17,52 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MULTI_STARTER_WIDGET_H
-#define MULTI_STARTER_WIDGET_H
+#ifndef MULTI_STARTER_TAB_WIDGET_H
+#define MULTI_STARTER_TAB_WIDGET_H
 
 #include "lib/unicorn/StylableWidget.h"
 #include <lastfm/RadioStation>
 #include <QListWidgetItem>
 
+#include "../SourceListModel.h"
+
 class QSlider;
 class QCheckBox;
 class QPushButton;
 class QTreeWidgetItem;
+class SearchBox;
 class SourceListModel;
 class SourceListWidget;
 class SourceSelectorWidget;
 class AdvancedOptionsWidget;
-class MultiStarterTabWidget;
 
-class MultiStarterWidget : public StylableWidget
+class MultiStarterTabWidget : public StylableWidget
 {
     Q_OBJECT;
 
 public:
-    MultiStarterWidget(int maxSources, QWidget *parent = 0);
+    MultiStarterTabWidget(int maxSources, RqlSource::Type type, SearchBox* searchBox, QWidget *parent = 0);
 
 signals:
     void startRadio(RadioStation);
 
+private slots:
+    void onAdd(const QString& item, const QString& imgUrl = QString());
+    void onAddItem(QListWidgetItem* item);
+    void onPlayClicked();
+    void onGotTopTags();
+    void onUserGotTopArtists();
+    void onUserGotFriends();
+
 private:
-    MultiStarterTabWidget* m_tags;
-    MultiStarterTabWidget* m_artists;
-    MultiStarterTabWidget* m_users;
+    SourceSelectorWidget* m_sourceSelector;
+    SourceListModel* m_sourceModel;
+    SourceListWidget* m_sourceList;
+
+    QPushButton* m_playButton;
+
+    const int m_minCount;
+    const RqlSource::Type m_type;
 };
 
 #endif

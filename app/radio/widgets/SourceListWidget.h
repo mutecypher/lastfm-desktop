@@ -33,13 +33,11 @@ class SourceListWidget : public QWidget
 public:
     enum Operator { And, Or, AndNot };
 
-    SourceListWidget(bool advanced, QWidget* parent = 0);
+    SourceListWidget(QWidget* parent = 0);
     void setModel(SourceListModel* model);
 
     QString rql();
     QString stationDescription();
-
-    void updateAdvanced(int checkState);
 
 private slots:
     void onDeleteClicked();
@@ -48,7 +46,6 @@ private slots:
     void onRowsAboutToBeRemoved(const QModelIndex&, int, int);
 
 private:
-    void setOp(int sourceIdx);
     void addPlaceholder();
     void addPlaceholders();
 
@@ -57,7 +54,6 @@ private:
 
     QVBoxLayout* m_layout;
     SourceListModel* m_model;
-    bool m_advanced;
 };
 
 #endif
