@@ -22,7 +22,9 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QListWidgetItem>
+#include "SourceSelectorListWidget.h"
 #include "SourceSelectorWidget.h"
+
 
 SourceSelectorWidget::SourceSelectorWidget(QLineEdit* edit, QWidget* parent)
     :StylableWidget(parent)
@@ -40,8 +42,11 @@ SourceSelectorWidget::SourceSelectorWidget(QLineEdit* edit, QWidget* parent)
     grid->setColumnStretch(0, 3);
     onTextChanged(m_edit->text());
 
-    m_list = new QListWidget();
+    m_list = new SourceSelectorListWidget();
     m_list->setIconSize(QSize(0,0));
+    m_list->setTextElideMode(Qt::ElideRight);
+    m_list->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_list->setDragEnabled( true );
     grid->addWidget(m_list, 1, 0, 1, 2);
 
     connect(m_edit, SIGNAL(returnPressed()), SLOT(emitAdd())); 

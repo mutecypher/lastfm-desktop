@@ -29,6 +29,7 @@
 class QSlider;
 class QCheckBox;
 class QPushButton;
+class QRadioButton;
 class QTreeWidgetItem;
 class SearchBox;
 class SourceListModel;
@@ -54,12 +55,19 @@ private slots:
     void onUserGotTopArtists();
     void onUserGotFriends();
 
+    void onImageGetFinished();
+
+private:
+    void doPopulateModel(QString list, QString item, QString name, QString toolTip, QString barChartE);
+
 private:
     SourceSelectorWidget* m_sourceSelector;
     SourceListModel* m_sourceModel;
     SourceListWidget* m_sourceList;
 
     QPushButton* m_playButton;
+    QRadioButton* m_intersection;
+    QRadioButton* m_union;
 
     const int m_minCount;
     const RqlSource::Type m_type;

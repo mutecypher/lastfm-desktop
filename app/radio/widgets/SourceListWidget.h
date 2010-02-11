@@ -36,8 +36,11 @@ public:
     SourceListWidget(QWidget* parent = 0);
     void setModel(SourceListModel* model);
 
-    QString rql();
-    QString stationDescription();
+    QStringList rql();
+    QStringList descriptions();
+
+signals:
+    void add(const QString& item, const QString& imgUrl);
 
 private slots:
     void onDeleteClicked();
@@ -48,6 +51,9 @@ private slots:
 private:
     void addPlaceholder();
     void addPlaceholders();
+
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
 
     SourceItemWidget* createWidget(int index);
     static Operator defaultOp(RqlSource::Type first, RqlSource::Type second);

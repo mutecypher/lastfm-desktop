@@ -26,6 +26,8 @@
 #include <QLabel>
 #include <QSpacerItem>
 #include <QListWidgetItem>
+#include <QDragEnterEvent>
+#include <QDropEvent>
 #include "SourceListWidget.h"
 #include "SourceItemWidget.h"
 #include "lib/unicorn/widgets/ImageButton.h"
@@ -36,7 +38,23 @@ SourceListWidget::SourceListWidget(QWidget* parent)
 : QWidget(parent)
 , m_layout(0)
 {
-    //m_layout = new QVBoxLayout(this);
+    setAcceptDrops( true );
+}
+
+void SourceListWidget::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("application/x-rql-source")
+        && m_model->rql().count() < 3)
+    {
+        event->acceptProposedAction();
+    }
+}
+
+void SourceListWidget::dropEvent(QDropEvent *event)
+{
+    emit add(event->mimeData()->text(), event->mimeData()->imageData().toString());
+
+    event->acceptProposedAction();
 }
 
 void
@@ -66,6 +84,7 @@ void
 SourceListWidget::addPlaceholder()
 {
     QGroupBox* box = new QGroupBox("");
+    box->setAcceptDrops( true );
     m_layout->addWidget(box);
 }
 
@@ -124,44 +143,14 @@ SourceListWidget::defaultOp(RqlSource::Type first, RqlSource::Type second)
     return (first == RqlSource::Tag && second == RqlSource::Tag) ? And : Or;
 }
 
-QString
+QStringList
 SourceListWidget::rql()
 {
-    int count = 0;
-    QString result;
-    foreach (const QString& src, m_model->rql()) {
-        if (count) {
-            // get operator
-            switch (RqlSource::Tag) {
-                case RqlSource::User:
-                case RqlSource::Art: result += " or "; break;
-                case RqlSource::Tag: result += " and "; break;
-            }
-        }
-        result += src;
-        count++;
-    }
-    return result;
+    return m_model->rql();
 }
 
-QString
-SourceListWidget::stationDescription()
+QStringList
+SourceListWidget::descriptions()
 {
-    int count = 0;
-    QString result;
-    foreach (const QString& src, m_model->descriptions()) {
-        if (count) {
-            // get operator
-            //SourceItemWidget* item = qobject_cast<SourceItemWidget*>(m_layout->itemAt(count)->widget());
-
-            switch (RqlSource::Tag) {
-                case RqlSource::User:
-                case RqlSource::Art: result += " or "; break;
-                case RqlSource::Tag: result += " and "; break;
-            }
-        }
-        result += src;
-        count++;
-    }
-    return result;
+    return m_model->descriptions();
 }

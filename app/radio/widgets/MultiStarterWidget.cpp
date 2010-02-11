@@ -57,23 +57,9 @@ MultiStarterWidget::MultiStarterWidget(int maxSources, QWidget *parent)
     : StylableWidget(parent)
 {
     QTabWidget* tabWidget = new QTabWidget(this);
-
-//    {
-//        m_youWidget = new QWidget(this);
-//        SideBySideLayout* layout = new SideBySideLayout(m_youWidget);
-//        YouListWidget* you = new YouListWidget(lastfm::ws::Username, this);
-//        connect(you, SIGNAL(itemActivated(QTreeWidgetItem*, int)), SLOT(onYouItemActivated(QTreeWidgetItem*, int)));
-//        layout->addWidget(you);
-//        tabwidget->addTab(m_youWidget, tr("You"));
-//
-//        m_sourceModel = new SourceListModel(maxSources, this);
-//        m_sourceList = new SourceListWidget(this);
-//        m_sourceList->setModel(m_sourceModel);
-//
-//        QVBoxLayout* rightside = new QVBoxLayout(this);
-//        rightside->addWidget(m_sourceList);
-//        rightside->addWidget(m_playButton = new QPushButton(tr("Play combo")));
-//    }
+    QHBoxLayout* layout = new QHBoxLayout(this);
+    setLayout( layout );
+    layout->addWidget( tabWidget );
 
     lastfm::AuthenticatedUser you;
 
@@ -82,14 +68,10 @@ MultiStarterWidget::MultiStarterWidget(int maxSources, QWidget *parent)
     connect(you.getTopArtists(), SIGNAL(finished()), m_artists, SLOT(onUserGotTopArtists()));
 
     tabWidget->addTab(m_tags = new MultiStarterTabWidget(maxSources, RqlSource::Tag, new TagSearch(), this), tr("Multi-tag"));
-    connect(m_tags, SIGNAL(startRadio(RadioStation)), m_tags, SIGNAL(startRadio(RadioStation)));
+    connect(m_tags, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
     connect(Tag::getTopTags(), SIGNAL(finished()), m_tags, SLOT(onGotTopTags()));
 
     tabWidget->addTab(m_users = new MultiStarterTabWidget(maxSources, RqlSource::User, new UserSearch(), this), tr("Multi-library"));
     connect(m_users, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
     connect(you.getFriends(), SIGNAL(finished()), m_users, SLOT(onUserGotFriends()));
-
-    //connect(you.getTopTags(), SIGNAL(finished()), SLOT(onUserGotTopTags()));
-
-    //layout()->addWidget(tabWidget);
 }
