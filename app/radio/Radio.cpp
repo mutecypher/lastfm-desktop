@@ -95,7 +95,7 @@ Radio::play( const RadioStation& station )
     bool ok;
     m_station.setRep( unicorn::GlobalSettings().value( "rep", 0.5 ).toDouble( &ok ) );
     m_station.setMainstr( unicorn::GlobalSettings().value( "mainstr", 0.5 ).toDouble( &ok ) );
-    m_station.setDisco( unicorn::GlobalSettings().value( "disco", 0.5 ).toBool() );
+    m_station.setDisco( unicorn::GlobalSettings().value( "disco", false ).toBool() );
 
     m_tuner = new lastfm::RadioTuner( m_station );
 
@@ -119,7 +119,7 @@ Radio::playNext( const RadioStation& station )
         bool ok;
         m_station.setRep( unicorn::GlobalSettings().value( "rep", 0.5 ).toDouble( &ok ) );
         m_station.setMainstr( unicorn::GlobalSettings().value( "mainstr", 0.5 ).toDouble( &ok ) );
-        m_station.setDisco( unicorn::GlobalSettings().value( "disco", 0.5 ).toBool() );
+        m_station.setDisco( unicorn::GlobalSettings().value( "disco", false ).toBool() );
 
         m_tuner->retune( m_station );
     }
