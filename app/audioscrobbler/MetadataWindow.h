@@ -37,9 +37,13 @@ class MetadataWindow : public unicorn::MainWindow
         class QLabel* album_image;
         class QLabel* title;
         class QLabel* album;
-        class QLabel* listeners;
-        class QLabel* scrobbles;
-        class QLabel* tags;
+        class QListWidget* topFans;
+        class QLabel* onTour;
+        class QListWidget* similarArtists;
+        class QLabel* artistScrobbles;
+        class QLabel* albumScrobbles;
+        class QLabel* trackScrobbles;
+        class QListWidget* tags;
         class QTextBrowser* bio;
 
         class QPushButton* love;
@@ -63,7 +67,13 @@ public slots:
 
 private slots:
     void onArtistGotInfo();
-//    void onAlbumGotInfo();
+    void onArtistGotEvents();
+
+    void onAlbumGotInfo();
+
+    void onTrackGotInfo();
+    void onTrackGotTopFans();
+
     void onAnchorClicked( const QUrl& link );
     void onArtistImageDownloaded();
     void onBioChanged( const QSizeF& );
