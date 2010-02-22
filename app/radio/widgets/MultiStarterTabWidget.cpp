@@ -56,16 +56,6 @@ MultiStarterTabWidget::MultiStarterTabWidget(int maxSources, RqlSource::Type typ
 
     QVBoxLayout* rightside = new QVBoxLayout(this);
     rightside->addWidget(m_sourceList);
-
-    if (m_type == RqlSource::User)
-    {
-        // allow the user to select and or or
-        rightside->addWidget( m_intersection = new QRadioButton( tr("Shared music"), this) );
-        rightside->addWidget( m_union = new QRadioButton( tr("All music"), this) );
-
-        m_intersection->setChecked( true );
-    }
-
     rightside->addWidget(m_playButton = new QPushButton(tr("Play combo")));
 
     layout->addLayout(rightside);
@@ -241,12 +231,6 @@ MultiStarterTabWidget::onPlayClicked()
             switch (m_type)
             {
                 case RqlSource::User:
-                {
-                    m_intersection->isChecked()?
-                        rql += " and ":
-                        rql += " or ";
-                }
-                break;
                 case RqlSource::Art: rql += " or "; break;
                 case RqlSource::Tag: rql += " and "; break;
             }
@@ -267,12 +251,6 @@ MultiStarterTabWidget::onPlayClicked()
 
                 switch (m_type) {
                     case RqlSource::User:
-                        {
-                        m_intersection->isChecked()?
-                            description += " and ":
-                            description += " or ";
-                        }
-                    break;
                     case RqlSource::Art: description += " or "; break;
                     case RqlSource::Tag: description += " and "; break;
                 }
