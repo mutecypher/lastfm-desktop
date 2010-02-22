@@ -78,9 +78,11 @@ MultiStarterTabWidget::MultiStarterTabWidget(int maxSources, RqlSource::Type typ
 
     connect(m_playButton, SIGNAL(clicked()), SLOT(onPlayClicked()));
 
+#if QT_VERSION >= 0x040500
     // this makes the left and right-hand side have the same horizontal width
     layout->setStretch(0, 1);
     layout->setStretch(1, 1);
+#endif
 }
 
 void
