@@ -66,12 +66,21 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     #else
         #define CSS_PATH "/"
     #endif
+    if( !styleSheet().isEmpty() ) {
+        QString cssPath = QUrl( styleSheet() ).toLocalFile();
+        cssPath = QDir::currentPath() + cssPath;
+        QFile cssFile( cssPath );
+        cssFile.open( QIODevice::ReadOnly );
+        m_styleSheet = cssFile.readAll();
+        cssFile.close();
+    }
+    
     if( styleSheet().isEmpty()) {
         QString cssFileName = QFileInfo(applicationFilePath()).baseName() + ".css";
         QFile stylesheetFile( applicationDirPath() + CSS_PATH + cssFileName );
         stylesheetFile.open( QIODevice::ReadOnly );
-        QString stylesheet( stylesheetFile.readAll() );
-        setStyleSheet( stylesheet );
+        m_styleSheet = stylesheetFile.readAll();
+        setStyleSheet( m_styleSheet );
     }
 
     translate();
@@ -81,15 +90,6 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     connect( &m_bus, SIGNAL( sessionChanged( Session )), SLOT( onBusSessionChanged( Session )));
 
     m_bus.board();
-
-    if( !styleSheet().isEmpty() ) {
-        QString cssPath = QUrl( styleSheet() ).toLocalFile();
-        cssPath = QDir::currentPath() + cssPath;
-        QFile cssFile( cssPath );
-        cssFile.open( QIODevice::ReadOnly );
-        m_styleSheet = cssFile.readAll();
-        cssFile.close();
-    }
 
 #ifdef __APPLE__
     setQuitOnLastWindowClosed( false );
