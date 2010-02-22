@@ -34,7 +34,7 @@
 #include <QMenu>
 #include <QLabel>
 
-#include <Phonon/VolumeSlider>
+#include <phonon/volumeslider.h>
 
 #include <lastfm/RadioStation>
 

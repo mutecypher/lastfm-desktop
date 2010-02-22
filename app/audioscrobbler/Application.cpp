@@ -61,6 +61,7 @@ Application::Application(int& argc, char** argv)
 void
 Application::init()
 {
+    as = new Audioscrobbler("ass");
 /// tray
     tray = new QSystemTrayIcon(this);
     QIcon trayIcon( AS_TRAY_ICON );
@@ -197,8 +198,10 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     m_title_action->setText( t.title() + " [" + t.durationString() + ']' );
 
     delete watch;
+    qDebug() << "********** AS = " << as;
     if( as ) {
         as->submit();
+        qDebug() << "************** Now Playing..";
         as->nowPlaying(t);
     }
     ScrobblePoint timeout(t.duration()/2);
@@ -288,7 +291,6 @@ void
 Application::onUserGotInfo()
 {
     /// scrobbler
-    as = new Audioscrobbler("ass");
     
     /*QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
     Q_ASSERT( reply );
