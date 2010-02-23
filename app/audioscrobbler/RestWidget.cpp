@@ -22,10 +22,12 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
+#include <lastfm/ws.h>
+
 RestWidget::RestWidget( QWidget* p )
            :StylableWidget( p )
 {
     new QVBoxLayout( this );
-    layout()->addWidget( new QLabel( "Hi, blah" ));
+    layout()->addWidget( new QLabel( QString("Hi, ") + lastfm::ws::Username + ".\nListen to some music to scrobble it to your Last.fm profile." ));
 }
 
