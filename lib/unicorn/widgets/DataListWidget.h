@@ -22,10 +22,25 @@
 
 #include "lib/DllExportMacro.h"
 
+class QListWidgetItem;
+
 class UNICORN_DLLEXPORT DataListWidget : public QListWidget
 {
+    Q_OBJECT
 public:
-    DataListWidget(QWidget* parent = 0);
+    enum Roles
+    {
+        LastFMUrl = Qt::UserRole
+    };
+
+private:
+    QMimeData* mimeData( const QList<QListWidgetItem*> items ) const;
+
+public:
+    explicit DataListWidget(QWidget* parent = 0);
+
+private slots:
+    void onItemActivated(QListWidgetItem* item);
 
 public:
 };

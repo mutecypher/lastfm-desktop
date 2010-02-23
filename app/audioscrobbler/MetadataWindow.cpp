@@ -116,13 +116,10 @@ MetadataWindow::MetadataWindow()
         // Similar artists
         label = new QLabel(tr("Similar artists"));
         label->setObjectName("name");
-        label->setProperty("alternate", QVariant(true));
         label->setAlignment( Qt::AlignTop );
         grid->addWidget( label, 2, 0 );
         ui.similarArtists = new DataListWidget(this);
         ui.similarArtists->setObjectName("value");
-        ui.similarArtists->setProperty("alternate", QVariant(true));
-        //ui.similarArtists->setWordWrap(true);
         grid->addWidget(ui.similarArtists, 2, 1);
 
         // Top fans
@@ -134,7 +131,6 @@ MetadataWindow::MetadataWindow()
         ui.topFans = new DataListWidget(this);
         ui.topFans->setObjectName("value");
         ui.topFans->setProperty("alternate", QVariant(true));
-       // ui.topFans->setWordWrap(true);
         grid->addWidget(ui.topFans, 3, 1);
 
         {
@@ -170,7 +166,6 @@ MetadataWindow::MetadataWindow()
         ui.tags = new DataListWidget(this);
         ui.tags->setObjectName("value");
         ui.tags->setProperty("alternate", QVariant(true));
-        //ui.tags->setWordWrap(true);
         grid->addWidget(ui.tags, 5, 1);
 
         // bio:
@@ -182,11 +177,6 @@ MetadataWindow::MetadataWindow()
         ui.bio->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
         ui.bio->setOpenLinks( false );
 
-        //grid->setRowStretch( 1, 1 );
-        //grid->setRowStretch( 2, 1 );
-        //grid->setRowStretch( 3, 1 );
-        //grid->setRowStretch( 4, 1 );
-        //grid->setRowStretch( 5, 1 );
         grid->setRowStretch( 6, 1 );
 
         vs->addLayout(grid, 1);
@@ -239,12 +229,6 @@ MetadataWindow::MetadataWindow()
     finishUi();
 }
 
-//ScrobbleControls* 
-//MetadataWindow::scrobbleControls() const
-//{
-//    return ui.sc;
-//}
-
 void
 MetadataWindow::onAnchorClicked( const QUrl& link )
 {
@@ -280,7 +264,7 @@ MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
         ui.tags->clear();
 
         connect(t.artist().getInfo( lastfm::ws::Username , lastfm::ws::SessionKey ), SIGNAL(finished()), SLOT(onArtistGotInfo()));
-        connect(t.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
+        connect(t.artist().getEvents( 1 ), SIGNAL(finished()), SLOT(onArtistGotEvents()));
     }
 
     connect(t.album().getInfo( lastfm::ws::Username , lastfm::ws::SessionKey ), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
@@ -299,33 +283,17 @@ MetadataWindow::onArtistGotInfo()
     int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
     int userListens = lfm["artist"]["stats"]["userplaycount"].text().toInt();
 
-    //QString simArt;
     foreach(const XmlQuery& e, lfm["artist"]["similar"].children("artist"))
     {
-//        if (simArt.length())
-//        {
-//            simArt += ", ";
-//        }
-//        simArt += e["name"].text();
-        ui.similarArtists->addItem(e["name"].text());
-        ui.similarArtists->updateGeometry();
+        QListWidgetItem* item = new QListWidgetItem(e["name"].text(), ui.similarArtists);
+        item->setData(DataListWidget::LastFMUrl, QUrl(e["url"].text()));
     }
 
-    //ui.similarArtists->setText(simArt);
-
-    //QString tags;
     foreach(const XmlQuery& e, lfm["artist"]["tags"].children("tag"))
     {
-//        if (tags.length())
-//        {
-//            tags += ", ";
-//        }
-//        tags += e["name"].text();
-
-        ui.tags->addItem(e["name"].text());
+        QListWidgetItem* item = new QListWidgetItem(e["name"].text(), ui.tags);
+        item->setData(DataListWidget::LastFMUrl, QUrl(e["url"].text()));
     }
-
-    //ui.tags->setText(tags);
 
     ui.artistScrobbles->setText(QString("%L1").arg(scrobbles) + " plays (" + QString("%L1").arg(listeners) + " listeners)" + "\n" + QString("%L1").arg(userListens) + " plays in your library");
 
@@ -374,16 +342,7 @@ MetadataWindow::onAlbumGotInfo()
     int listeners = lfm["album"]["listeners"].text().toInt();
     int userListens = lfm["album"]["userplaycount"].text().toInt();
 
-//    QString tags;
-//    foreach(const XmlQuery& e, lfm["artist"]["tags"].children("tag")) {
-//        if (tags.length()) {
-//            tags += ", ";
-//        }
-//        tags += e["name"].text();
-//    }
-
     ui.albumScrobbles->setText(QString("%L1").arg(scrobbles) + " plays (" + QString("%L1").arg(listeners) + " listeners)" + "\n" + QString("%L1").arg(userListens) + " plays in your library");;
-//    ui.tags->setText(tags);
 }
 
 void
@@ -395,18 +354,7 @@ MetadataWindow::onTrackGotInfo()
     int listeners = lfm["track"]["listeners"].text().toInt();
     int userListens = lfm["track"]["userplaycount"].text().toInt();
 
-//    QString tags;
-//    foreach(const XmlQuery& e, lfm["track"]["toptags"].children("tag")) {
-//        if (tags.length()) {
-//            tags += ", ";
-//        }
-//        tags += e["name"].text();
-//    }
-//
-//    ui.tags->setText(tags);
-
     ui.trackScrobbles->setText(QString("%L1").arg(scrobbles) + " plays (" + QString("%L1").arg(listeners) + " listeners)" + "\n" + QString("%L1").arg(userListens) + " plays in your library");;
-
 }
 
 void
@@ -414,18 +362,11 @@ MetadataWindow::onTrackGotTopFans()
 {
     XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
 
-    //QString topFans;
     foreach(const XmlQuery& e, lfm["topfans"].children("user").mid(0, 5))
     {
-//        if (topFans.length())
-//        {
-//            topFans += ", ";
-//        }
-//        topFans += e["name"].text();
-        ui.topFans->addItem(e["name"].text());
+        QListWidgetItem* item = new QListWidgetItem(e["name"].text(), ui.topFans);
+        item->setData(DataListWidget::LastFMUrl, QUrl(e["url"].text()));
     }
-
-//    ui.topFans->setText(topFans);
 }
 
 void

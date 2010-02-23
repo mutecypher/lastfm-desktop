@@ -18,8 +18,12 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QDebug>
 #include <QLayout>
 #include <QScrollArea>
+#include <QUrl>
+#include <QDesktopServices>
+#include <QMimeData>
 
 #include "DataListWidget.h"
 
@@ -30,19 +34,32 @@ DataListWidget::DataListWidget(QWidget* parent)
     setWrapping( true );
     setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-
-    setDragEnabled( true );
-    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
     setFrameShape( QFrame::NoFrame );
+    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
+    setSelectionMode( QAbstractItemView::SingleSelection );
+    setDragEnabled( true );
+    model()->setSupportedDragActions( Qt::CopyAction );
 
-    //static_cast<QScrollArea*>(viewport())->setWidgetResizable( true );
-
-    //viewport()->setMinimumHeight(0);
-    //viewport()->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
-
-    //setResizeMode( QListWidget::Adjust );
-
-    //setLayoutMode( QListWidget::SinglePass );
+    connect(this, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(onItemActivated(QListWidgetItem*)));
 }
 
+QMimeData* DataListWidget::mimeData(const QList<QListWidgetItem*> items) const
+{
+    if (items.count() < 1)
+        return 0;
+
+    QMimeData* data = new QMimeData();
+    data->setText( items[0]->text() );
+
+    QList<QUrl> urls;
+    urls.append( items[0]->data(LastFMUrl).toUrl() );
+    data->setUrls( urls );
+
+    return data;
+}
+
+void DataListWidget::onItemActivated(QListWidgetItem* item)
+{
+    QDesktopServices::openUrl( item->data(LastFMUrl).toUrl() );
+}
 
