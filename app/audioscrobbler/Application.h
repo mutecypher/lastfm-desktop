@@ -86,5 +86,7 @@ namespace audioscrobbler
 
         void onUserGotInfo();
 
+        void onActivateWindow();
+
     };
 }

@@ -33,6 +33,7 @@
 #include <lastfm/Audioscrobbler>
 #include <lastfm/AuthenticatedUser>
 #include <QMenu>
+#include <QDebug>
 #include "lib/unicorn/widgets/TagDialog.h"
 #include "lib/unicorn/widgets/ShareDialog.h"
 #include "Wizard/FirstRunWizard.h"
@@ -142,8 +143,13 @@ Application::init()
     connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( show()) );
     connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( setFocus()) );
     connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( raise()) );
+    connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( onActivateWindow()) );
+
 
     m_toggle_window_action->trigger();
+
+    // clicking on a system tray message should show the scrobbler
+    connect( tray, SIGNAL(messageClicked()), m_toggle_window_action, SLOT(trigger()));
 }
 
 
@@ -208,6 +214,8 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     watch = new StopWatch(timeout, connection->elapsed());
     watch->resume();
     connect(watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
+
+    tray->showMessage(applicationName(), t.toString());
 }
 
 void
@@ -285,6 +293,12 @@ Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason )
     if( reason != QSystemTrayIcon::DoubleClick ) return;
 #endif
     m_toggle_window_action->trigger();
+}
+
+void
+Application::onActivateWindow()
+{
+    mw->activateWindow();
 }
 
 void 
