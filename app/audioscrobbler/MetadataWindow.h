@@ -37,13 +37,13 @@ class MetadataWindow : public unicorn::MainWindow
         class QLabel* album_image;
         class QLabel* title;
         class QLabel* album;
-        class QListWidget* topFans;
+        class DataListWidget* topFans;
         class QLabel* onTour;
-        class QListWidget* similarArtists;
+        class DataListWidget* similarArtists;
         class QLabel* artistScrobbles;
         class QLabel* albumScrobbles;
         class QLabel* trackScrobbles;
-        class QListWidget* tags;
+        class DataListWidget* tags;
         class QTextBrowser* bio;
 
         class QPushButton* love;

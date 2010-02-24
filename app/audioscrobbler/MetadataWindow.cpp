@@ -285,14 +285,12 @@ MetadataWindow::onArtistGotInfo()
 
     foreach(const XmlQuery& e, lfm["artist"]["similar"].children("artist"))
     {
-        QListWidgetItem* item = new QListWidgetItem(e["name"].text(), ui.similarArtists);
-        item->setData(DataListWidget::LastFMUrl, QUrl(e["url"].text()));
+        ui.similarArtists->addItem( e["name"].text(), QUrl(e["url"].text()));
     }
 
     foreach(const XmlQuery& e, lfm["artist"]["tags"].children("tag"))
     {
-        QListWidgetItem* item = new QListWidgetItem(e["name"].text(), ui.tags);
-        item->setData(DataListWidget::LastFMUrl, QUrl(e["url"].text()));
+        ui.tags->addItem( e["name"].text(), QUrl(e["url"].text()));
     }
 
     ui.artistScrobbles->setText(QString("%L1").arg(scrobbles) + " plays (" + QString("%L1").arg(listeners) + " listeners)" + "\n" + QString("%L1").arg(userListens) + " plays in your library");
@@ -364,8 +362,7 @@ MetadataWindow::onTrackGotTopFans()
 
     foreach(const XmlQuery& e, lfm["topfans"].children("user").mid(0, 5))
     {
-        QListWidgetItem* item = new QListWidgetItem(e["name"].text(), ui.topFans);
-        item->setData(DataListWidget::LastFMUrl, QUrl(e["url"].text()));
+        ui.topFans->addItem(e["name"].text(), QUrl(e["url"].text()));
     }
 }
 
