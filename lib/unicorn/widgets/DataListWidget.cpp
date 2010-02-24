@@ -32,7 +32,7 @@
 
 #include "DataListWidget.h"
 
-#include "layouts/flowlayout.h"
+#include "lib/unicorn/layouts/flowlayout.h"
 
 class DataItem : public QLabel
 {
@@ -79,7 +79,7 @@ protected:
         mimeData->setUrls( urls );
         drag->setMimeData(mimeData);
 
-        Qt::DropAction dropAction = drag->exec(Qt::CopyAction);
+        drag->exec(Qt::CopyAction);
     }
 
     QUrl m_url;
