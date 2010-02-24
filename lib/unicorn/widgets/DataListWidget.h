@@ -18,13 +18,12 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QListWidget>
-
+#include "StylableWidget.h"
 #include "lib/DllExportMacro.h"
 
-class QListWidgetItem;
+class QUrl;
 
-class UNICORN_DLLEXPORT DataListWidget : public QListWidget
+class UNICORN_DLLEXPORT DataListWidget : public StylableWidget
 {
     Q_OBJECT
 public:
@@ -34,13 +33,15 @@ public:
     };
 
 private:
-    QMimeData* mimeData( const QList<QListWidgetItem*> items ) const;
+    //QMimeData* mimeData( const QList<QListWidgetItem*> items ) const;
 
 public:
     explicit DataListWidget(QWidget* parent = 0);
+    void clear();
+    void addItem( const QString&, const QUrl& );
 
 private slots:
-    void onItemActivated(QListWidgetItem* item);
+    //void onItemActivated(QListWidgetItem* item);
 
 public:
 };

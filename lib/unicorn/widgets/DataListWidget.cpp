@@ -24,42 +24,100 @@
 #include <QUrl>
 #include <QDesktopServices>
 #include <QMimeData>
+#include <QUrl>
+#include <QLabel>
+#include <QDrag>
+#include <QMouseEvent>
+#include <QApplication>
 
 #include "DataListWidget.h"
 
-DataListWidget::DataListWidget(QWidget* parent)
-    :QListWidget(parent)
-{
-    setFlow( QListView::LeftToRight );
-    setWrapping( true );
-    setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    setFrameShape( QFrame::NoFrame );
-    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
-    setSelectionMode( QAbstractItemView::SingleSelection );
-    setDragEnabled( true );
-    model()->setSupportedDragActions( Qt::CopyAction );
+#include "layouts/flowlayout.h"
 
+class DataItem : public QLabel
+{
+public:
+    explicit DataItem( const QString& text, const QUrl& url ) 
+    :m_url(url)
+    {
+        setText( text );
+        setContentsMargins( 0, 0, 0, 0 );
+    }
+
+    QUrl url() const{ return m_url; }
+
+protected:
+    void mouseReleaseEvent( QMouseEvent* event )
+    {
+        if ((event->pos() - m_dragStartPosition).manhattanLength()
+                >= QApplication::startDragDistance())
+            return;
+        QDesktopServices::openUrl( url() );
+    }
+
+    void mousePressEvent(QMouseEvent *event)
+    {
+        if (event->button() == Qt::LeftButton)
+            m_dragStartPosition = event->pos();
+    }
+
+    void mouseMoveEvent(QMouseEvent *event)
+    {
+        if (!(event->buttons() & Qt::LeftButton))
+            return;
+        if ((event->pos() - m_dragStartPosition).manhattanLength()
+                < QApplication::startDragDistance())
+            return;
+
+        QDrag *drag = new QDrag(this);
+        QMimeData *mimeData = new QMimeData;
+
+        mimeData->setText( text() );
+
+        QList<QUrl> urls;
+        urls.append( url() );
+        mimeData->setUrls( urls );
+        drag->setMimeData(mimeData);
+
+        Qt::DropAction dropAction = drag->exec(Qt::CopyAction);
+    }
+
+    QUrl m_url;
+    QPoint m_dragStartPosition;
+};
+
+DataListWidget::DataListWidget(QWidget* parent)
+    :StylableWidget(parent)
+{
+    new FlowLayout( this, 0, 0, 0 );
     connect(this, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(onItemActivated(QListWidgetItem*)));
 }
 
-QMimeData* DataListWidget::mimeData(const QList<QListWidgetItem*> items) const
+/*QMimeData* DataListWidget::mimeData(const QList<QListWidgetItem*> items) const
 {
     if (items.count() < 1)
         return 0;
 
     QMimeData* data = new QMimeData();
-    data->setText( items[0]->text() );
-
-    QList<QUrl> urls;
-    urls.append( items[0]->data(LastFMUrl).toUrl() );
-    data->setUrls( urls );
 
     return data;
 }
+*/
+void 
+DataListWidget::clear()
+{
+    foreach( QObject* c, findChildren<QWidget*>())
+        c->deleteLater();
+}
 
-void DataListWidget::onItemActivated(QListWidgetItem* item)
+void 
+DataListWidget::addItem( const QString& text, const QUrl& url )
+{
+    layout()->addWidget( new DataItem( text, url ));
+}
+
+/*void DataListWidget::onItemActivated(QListWidgetItem* item)
 {
     QDesktopServices::openUrl( item->data(LastFMUrl).toUrl() );
-}
+}*/
 
