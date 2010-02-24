@@ -41,7 +41,6 @@ public:
     :m_url(url)
     {
         setText( text );
-        setContentsMargins( 0, 0, 0, 0 );
     }
 
     QUrl url() const{ return m_url; }
@@ -90,6 +89,7 @@ DataListWidget::DataListWidget(QWidget* parent)
     :StylableWidget(parent)
 {
     new FlowLayout( this, 0, 0, 0 );
+    setContentsMargins( 0, 3, 0, 7 );
     connect(this, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(onItemActivated(QListWidgetItem*)));
 }
 
