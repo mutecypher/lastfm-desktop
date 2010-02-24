@@ -75,8 +75,9 @@ MainWindow::MainWindow()
 
     finishUi();
 
-    //todo: bury this:
+#ifndef NDEBUG
     menuBar()->addMenu("Normania")->addAction( tr("RQL"), m_mainWidget, SLOT(rawrql()), QKeySequence(tr("Ctrl+r")) );
+#endif
 }
 
 void 
