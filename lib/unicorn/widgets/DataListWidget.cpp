@@ -33,14 +33,19 @@
 #include "DataListWidget.h"
 
 #include "layouts/flowlayout.h"
+#include "UnicornApplication.h"
 
-class DataItem : public QLabel
+class DataItem : protected QLabel
 {
 public:
     explicit DataItem( const QString& text, const QUrl& url ) 
-    :m_url(url)
+    :m_url(url),
+     m_text(text)
     {
-        setText( text );
+        setOpenExternalLinks( true );
+        setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse );
+        QString ss = qobject_cast<unicorn::Application*>(qApp)->loadedStyleSheet();
+        setText( "<style>" + ss + "</style><a href=\"" + url.toString() + "\">" + text + "</a>" );
     }
 
     QUrl url() const{ return m_url; }
@@ -48,20 +53,23 @@ public:
 protected:
     void mouseReleaseEvent( QMouseEvent* event )
     {
+        QLabel::mouseReleaseEvent( event );
         if ((event->pos() - m_dragStartPosition).manhattanLength()
                 >= QApplication::startDragDistance())
             return;
-        QDesktopServices::openUrl( url() );
+        //QDesktopServices::openUrl( url() );
     }
 
     void mousePressEvent(QMouseEvent *event)
     {
+        QLabel::mousePressEvent( event );
         if (event->button() == Qt::LeftButton)
             m_dragStartPosition = event->pos();
     }
 
     void mouseMoveEvent(QMouseEvent *event)
     {
+        QLabel::mouseMoveEvent( event );
         if (!(event->buttons() & Qt::LeftButton))
             return;
         if ((event->pos() - m_dragStartPosition).manhattanLength()
@@ -71,7 +79,7 @@ protected:
         QDrag *drag = new QDrag(this);
         QMimeData *mimeData = new QMimeData;
 
-        mimeData->setText( text() );
+        mimeData->setText( m_text );
 
         QList<QUrl> urls;
         urls.append( url() );
@@ -82,6 +90,7 @@ protected:
     }
 
     QUrl m_url;
+    QString m_text;
     QPoint m_dragStartPosition;
 };
 

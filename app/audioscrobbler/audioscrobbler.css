@@ -35,7 +35,6 @@ MetadataWindow QListView{ padding: 3px 0px 1px 5px; margin: 0px; font-size: 11px
 MetadataWindow QLabel[alternate="true"], MetadataWindow DataListWidget[alternate="true"]{ background-origin: margin; background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #171717, stop:0 #212222 ); }
 MetadataWindow QLabel#name { color: #afafaf; margin-left: 15px; }
 MetadataWindow QLabel#value,
-MetadataWindow #value > QLabel,
 MetadataWindow QListView  { color: #cccccc; font-weight: bold; margin: 0px; margin-right:11px; }
 
 MetadataWindow #artist_image {

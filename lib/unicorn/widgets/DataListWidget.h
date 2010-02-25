@@ -18,7 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "StylableWidget.h"
+#include "lib/unicorn/StylableWidget.h"
 #include "lib/DllExportMacro.h"
 
 class QUrl;

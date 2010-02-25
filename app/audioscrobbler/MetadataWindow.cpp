@@ -48,7 +48,7 @@
 
 MetadataWindow::MetadataWindow()
 {
-    setWindowFlags( Qt::Tool );
+//    setWindowFlags( Qt::Tool );
     setAttribute( Qt::WA_MacAlwaysShowToolWindow );
     //Enable aero blurry window effect:
     QtWin::extendFrameIntoClientArea( this );
@@ -98,10 +98,13 @@ MetadataWindow::MetadataWindow()
             v2->addWidget(ui.title = new QLabel);
             v2->addWidget(ui.album = new QLabel);
             v2->addStretch();
+            ui.title->setOpenExternalLinks( true );
             ui.title->setObjectName("title1");
-            ui.title->setTextInteractionFlags( Qt::TextSelectableByMouse );
+            ui.title->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse );
             ui.title->setWordWrap(true);
             ui.album->setObjectName("title2");
+            ui.album->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse );
+            ui.album->setOpenExternalLinks( true );
             grid->addLayout(v2, 0, 1, Qt::AlignTop );
         }
 
@@ -246,9 +249,15 @@ MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
 {
     setCurrentWidget( stack.nowScrobbling );
     const unsigned short em_dash = 0x2014;
-    QString title = QString("%1 ") + QChar(em_dash) + " %2";
-    ui.title->setText(title.arg(t.artist()).arg(t.title()));
-    ui.album->setText("from " + t.album().title());
+    QString title = QString("<a href=\"%1\">%2</a> ") + QChar(em_dash) + " <a href=\"%3\">%4</a>";
+    const unicorn::Application* uApp = qobject_cast<unicorn::Application*>(qApp);
+    ui.title->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg(t.artist().www().toString())
+                                                                                .arg(t.artist())
+                                                                                .arg(t.www().toString())
+                                                                                .arg(t.title()));
+    QString album("from <a href=\"%1\">%2</a>");
+    ui.album->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( t.album().www().toString())
+                                                                               .arg( t.album().title()));
 
     ui.onTour->hide();
 
