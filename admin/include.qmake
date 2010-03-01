@@ -13,6 +13,26 @@ linux*{
 #default install target
 target.path = $$INSTALL_DIR/lib
 
+macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
+    DISTDIR = $$ROOT_DIR/admin/dist/mac
+    BUNDLE_DIR = $$DESTDIR/$$TARGET$$quote(.app)
+
+    ## install_name_tool / copy frameworks, dylibs etc
+    QMAKE_POST_LINK = $$DISTDIR/bundleFrameworks.sh $$BUNDLE_DIR;
+    
+    ## copy any css file if it exists
+    CSS_PATH=$$_PRO_FILE_PWD_/$$TARGET$$quote(.css)
+    exists( $$CSS_PATH ) {
+        QMAKE_POST_LINK += cp $$CSS_PATH $$BUNDLE_DIR/Contents/Resources;
+    }
+    
+    CONFIG( no_dock_icon ) {
+        QMAKE_INFO_PLIST = $$DISTDIR/NoDockIcon.plist
+    } else {
+        QMAKE_INFO_PLIST = $$DISTDIR/Standard.plist
+    }
+}
+
 defineTest( generateBuildParameters ) {
 	system( echo \'$DESTDIR = \"$$DESTDIR\";\' > _build_parameters.pl.h )
 	system( echo \'$VERSION = \"$$VERSION\";\' >> _build_parameters.pl.h )

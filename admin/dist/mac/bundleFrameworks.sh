@@ -14,7 +14,7 @@ function deposx {
 
 function getBundleBin {
     if echo $1|grep -q framework; then
-        echo $1/`cat $1/Contents/Info.plist | sed -n '/CFBundleExecutable<\/key>/,/<\/string>/ s/.*<string>\(.*\)<.*/\1/p'`
+        echo $1/`cat $1/Contents/Info.plist | sed -n '/CFBundleExecutable<\/key>/,/<\/string>/ s/.*<string>\(.*\)<.*/\1/p'|sed s/_debug//`
     else
         echo $1/Contents/MacOS/`cat $1/Contents/Info.plist | sed -n '/CFBundleExecutable<\/key>/,/<\/string>/ s/.*<string>\(.*\)<.*/\1/p'`
     fi
