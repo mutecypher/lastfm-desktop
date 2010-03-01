@@ -25,6 +25,8 @@ macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
     exists( $$CSS_PATH ) {
         QMAKE_POST_LINK += cp $$CSS_PATH $$BUNDLE_DIR/Contents/Resources;
     }
+
+    QMAKE_POST_LINK += find $$BUNDLE_DIR -iname \*Headers -print0| xargs -0 rm -rf; find $$BUNDLE_DIR -iname \*_debug -print0|xargs -0 rm
     
     CONFIG( no_dock_icon ) {
         QMAKE_INFO_PLIST = $$DISTDIR/NoDockIcon.plist
