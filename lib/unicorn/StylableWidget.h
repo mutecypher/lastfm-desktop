@@ -20,13 +20,13 @@
 
 #ifndef STYLABLE_WIDGET_H_
 #define STYLABLE_WIDGET_H_
-#include <QWidget>
-#include <QStyleOption>
+#include <QFrame>
+#include <QStyleOptionFrameV3>
 #include <QPainter>
 
-class StylableWidget: public QWidget {
+class StylableWidget: public QFrame{
 public:
-    StylableWidget( QWidget* parent = 0 ):QWidget( parent ){}
+    StylableWidget( QWidget* parent = 0 ):QFrame( parent ){}
 
 protected:
     void paintEvent(QPaintEvent*)
@@ -34,7 +34,7 @@ protected:
         QStyleOption opt;
         opt.init(this);
         QPainter p(this);
-        style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+        style()->drawPrimitive(QStyle::PE_Frame, &opt, &p, this);
     }
 };
 

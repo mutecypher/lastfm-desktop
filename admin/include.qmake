@@ -16,15 +16,16 @@ target.path = $$INSTALL_DIR/lib
 macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
     DISTDIR = $$ROOT_DIR/admin/dist/mac
     BUNDLE_DIR = $$DESTDIR/$$TARGET$$quote(.app)
-
-    ## install_name_tool / copy frameworks, dylibs etc
-    QMAKE_POST_LINK = $$DISTDIR/bundleFrameworks.sh $$BUNDLE_DIR;
     
     ## copy any css file if it exists
     CSS_PATH=$$_PRO_FILE_PWD_/$$TARGET$$quote(.css)
     exists( $$CSS_PATH ) {
-        QMAKE_POST_LINK += cp $$CSS_PATH $$BUNDLE_DIR/Contents/Resources;
+        QMAKE_POST_LINK += echo Copying css file..; cp $$CSS_PATH $$BUNDLE_DIR/Contents/Resources;
     }
+
+    ## install_name_tool / copy frameworks, dylibs etc
+    QMAKE_POST_LINK = $$DISTDIR/bundleFrameworks.sh $$BUNDLE_DIR;
+
 
     QMAKE_POST_LINK += find $$BUNDLE_DIR -iname \*Headers -print0| xargs -0 rm -rf; find $$BUNDLE_DIR -iname \*_debug -print0|xargs -0 rm
     
