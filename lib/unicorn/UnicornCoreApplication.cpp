@@ -44,7 +44,6 @@ unicorn::CoreApplication::CoreApplication( int& argc, char** argv )
 //  lastfm::ws::SessionKey = s.value( "SessionKey" ).toString();
 }
 
-
 void //static
 unicorn::CoreApplication::init()
 {

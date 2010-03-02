@@ -123,6 +123,8 @@ namespace unicorn
             return true;
         }
 
+        void onMessageRecieved(const QString& message);
+
     private:
         void initiateLogin( bool forceLogout = false ) throw( StubbornUserException );
         void translate();

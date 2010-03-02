@@ -21,25 +21,43 @@
 #define TRACK_WIDGET_H
 
 #include <lastfm/global.h>
+#include <lastfm/Track>
 #include <QWidget>
+#include <QPixmap>
 #include "lib/DllExportMacro.h"
+#include <QStackedWidget>
 
 class UNICORN_DLLEXPORT TrackWidget : public QWidget
 {
-    Q_OBJECT
-    
-    struct {
-        class QLabel* cover;
-        class QLabel* track;
-    } ui;    
-    
+    Q_OBJECT   
 public:
-    TrackWidget();
+    enum Type
+    {
+        Artist,
+        Album,
+        Track
+    } m_type;
 
-    void setTrack( const Track& );
+private:
+    struct
+    {
+        class QLabel* image;
+        class QLabel* description;
+        class QPixmap artistImage;
+        class QPixmap albumImage;
+    } ui;
+
+public:
+    TrackWidget( const lastfm::Track& track );
+
+    void setType( Type type );
     
 private slots:
     void onCoverDownloaded( const class QImage& );
+
+private:
+    const lastfm::Track& m_track;
+    class TrackImageFetcher* m_fetcher;
 };
 
 #endif

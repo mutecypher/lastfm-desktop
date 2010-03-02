@@ -19,57 +19,58 @@
 */
 #include "TrackWidget.h"
 #include "lib/unicorn/TrackImageFetcher.h"
-#include <lastfm/Track>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QLabel>
+#include <QStackedWidget>
 
 
-TrackWidget::TrackWidget()
+TrackWidget::TrackWidget( const lastfm::Track& track )
+    :m_track( track )
 {    
-    QHBoxLayout *h = new QHBoxLayout( this );
-    h->addWidget( ui.cover = new QLabel );
-    h->addWidget( ui.track = new QLabel );
-    h->setMargin( 0 );
-    
-    ui.cover->setScaledContents( true );
-    ui.track->setTextFormat( Qt::RichText );    
+    QHBoxLayout* h = new QHBoxLayout( this );
+    h->addWidget( ui.image = new QLabel );
+    ui.image->setFixedSize(50, 50);
+
+    h->addWidget( ui.description = new QLabel );
+
+    ui.image->setScaledContents( true );
+
+    // start fetching the image
+    m_fetcher = new TrackImageFetcher( track );
+    connect( m_fetcher, SIGNAL(finished( QImage )), SLOT(onCoverDownloaded( QImage )) );
+    m_fetcher->start();
+
+    setType( Track );
 }
 
-
-void
-TrackWidget::setTrack( const Track& track )
+void TrackWidget::setType( Type type )
 {
-    TrackImageFetcher* fetcher = new TrackImageFetcher( track );
-    connect( fetcher, SIGNAL(finished( QImage )), SLOT(onCoverDownloaded( QImage )) );
-    fetcher->start();
-    
-    QString title = track.title();
-    QString artist = track.artist();
-    QString album = track.album();
-    if (title.isEmpty()) title = '[' + tr("Unknown Track") + ']';
-    if (track.duration()) title += " </b>(" + track.durationString() + ')';
-    if (album.size()) album = tr("from %1").arg( "<span style='color:#fff'>" + album );
-    if (artist.isEmpty()) artist = '[' + tr("Unknown Artist") + ']';
-    artist = tr("by %1").arg( "<span style='color:#fff'>" + artist + "</span>" );
-    
-    ui.track->setText( QString("<div style='color:#fff;margin-bottom:2px'><b>") + 
-                #ifdef Q_WS_MAC
-                      "<span style='font-size:15pt'>" + 
-                #endif
-                      title + "</b></div>"
-                #ifdef Q_WS_MAC
-                      "<span style='font-size:10pt'>" + 
-                #endif
-                      "<span style='color:#878787'><div style='margin-bottom:3px'>" + artist + "</div><div>" + album );
-    
-    int const h = ui.track->sizeHint().height();
-    ui.cover->setFixedSize( h, h );
-}
+    m_type = type;
 
+    switch ( m_type )
+    {
+        case Artist:
+            ui.description->setText( m_track.artist().name() );
+            ui.image->setPixmap( ui.artistImage );
+            break;
+        case Album:
+            ui.description->setText( m_track.album().title() + "\nby " + m_track.artist().name() );
+            ui.image->setPixmap( ui.albumImage );
+            break;
+        case Track:
+            ui.description->setText(  m_track.title() + "\nby " + m_track.artist().name() + "\nfrom " + m_track.album().title() );
+            ui.image->setPixmap( ui.albumImage );
+            break;
+    }
+}
 
 void
 TrackWidget::onCoverDownloaded( const QImage& image )
 {
-    ui.cover->setPixmap( QPixmap::fromImage( image ) );
+    ui.albumImage = QPixmap::fromImage( image );
+
+    setType( m_type );
+
     sender()->deleteLater();
 }

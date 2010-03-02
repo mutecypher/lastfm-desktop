@@ -31,7 +31,13 @@
 class UNICORN_DLLEXPORT TrackImageFetcher : public QObject
 {
     Q_OBJECT
+public:
+    TrackImageFetcher( const Track& t ) : m_track( t )
+    {}
 
+    void start();
+
+private:
     Track m_track;
 
     void artistGetInfo();
@@ -40,12 +46,6 @@ class UNICORN_DLLEXPORT TrackImageFetcher : public QObject
     
     Album album() const { return m_track.album(); }
     Artist artist() const { return m_track.artist(); }
-    
-public:
-    TrackImageFetcher( const Track& t ) : m_track( t )
-    {}
-
-    void start();
 
 signals:
     void finished( const class QImage& );

@@ -18,7 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "ShareDialog.h"
-#include "lib/unicorn/widgets/FriendsPicker.h"
+#include "RecipientsWidget.h"
 #include "lib/unicorn/widgets/TrackWidget.h"
 #include <lastfm/User>
 #include <QLineEdit>
@@ -30,20 +30,19 @@
 #include <QLabel>
 #include <QTextEdit>
 #include <QEvent>
+#include <QRadioButton>
+#include <QComboBox>
+#include <QListWidget>
 
 
 ShareDialog::ShareDialog( const Track& t, QWidget* parent )
         : QDialog( parent )
 {
+    m_track = t;
+
     setupUi();
     setWindowTitle( tr("Share") );    
     enableDisableOk();
-    
-    m_track = t;
-    ui.track->setTrack( t );
-    
-    connect( ui.edit, SIGNAL(textChanged( QString )), SLOT(enableDisableOk()) );
-    connect( ui.browseFriends, SIGNAL(clicked()), SLOT(browseFriends()) );
     
     connect( ui.buttons, SIGNAL(accepted()), SLOT(accept()) );
     connect( ui.buttons, SIGNAL(rejected()), SLOT(reject()) );
@@ -53,15 +52,31 @@ ShareDialog::ShareDialog( const Track& t, QWidget* parent )
 void
 ShareDialog::setupUi()
 {
-    QHBoxLayout* h = new QHBoxLayout;
-    h->addWidget( ui.edit = new QLineEdit );
-    h->addWidget( ui.browseFriends = new QPushButton( tr("Browse Friends") ) );
-    h->setSpacing( 12 );
-    
+    // the radio buttons layout
+    QVBoxLayout* radioButtons = new QVBoxLayout;
+
+    radioButtons->addWidget( ui.trackShare = new QRadioButton( tr("Track"), this ) );
+    radioButtons->addWidget( ui.artistShare = new QRadioButton( tr("Artist"), this ) );
+    radioButtons->addWidget( ui.albumShare = new QRadioButton( tr("Album"), this ) );
+
+    connect( ui.artistShare, SIGNAL(clicked(bool)), SLOT(onRadioButtonsClicked(bool)) );
+    connect( ui.albumShare, SIGNAL(clicked(bool)), SLOT(onRadioButtonsClicked(bool)) );
+    connect( ui.trackShare, SIGNAL(clicked(bool)), SLOT(onRadioButtonsClicked(bool)) );
+
+    // Default to artist sharing
+    ui.trackShare->setChecked( true );
+
+    QHBoxLayout* h1 = new QHBoxLayout;
+    h1->addLayout( radioButtons );
+    h1->addWidget( ui.track = new TrackWidget( m_track ), Qt::AlignLeft );
+
     QVBoxLayout* v1 = new QVBoxLayout;
-    v1->addWidget( new QLabel( tr("To") ) );
-    v1->addLayout( h );
+    
+    v1->addWidget( new QLabel( tr("To:") ) );
+    v1->addWidget( ui.recipients = new RecipientsWidget(this) );
     v1->setSpacing( 0 );
+
+    connect( ui.recipients, SIGNAL(changed()), SLOT(enableDisableOk()));
 
     QVBoxLayout* v2 = new QVBoxLayout;
     v2->addWidget( new QLabel( tr("Message (optional)") ) );
@@ -69,7 +84,7 @@ ShareDialog::setupUi()
     v2->setSpacing( 4 );
     
     QVBoxLayout* v = new QVBoxLayout( this );
-    v->addWidget( ui.track = new TrackWidget );
+    v->addLayout( h1 );
     v->addLayout( v1 );
     v->addLayout( v2 );
     v->addWidget( ui.buttons = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );
@@ -84,36 +99,46 @@ ShareDialog::setupUi()
 #endif
 }
 
+void
+ShareDialog::onRadioButtonsClicked( bool )
+{
+    // which radio button is checked
+
+    if ( ui.artistShare->isChecked() ) ui.track->setType( TrackWidget::Artist );
+    else if ( ui.albumShare->isChecked() ) ui.track->setType( TrackWidget::Album );
+    else if ( ui.trackShare->isChecked() ) ui.track->setType( TrackWidget::Track );
+}
 
 void
 ShareDialog::enableDisableOk()
 {
-    ok()->setEnabled( ui.edit->text().size() );
+    ok()->setEnabled( ui.recipients->recipients().count() > 0 );
 }
 
 
 void
 ShareDialog::accept()
 {
-    User recipient( ui.edit->text() );
+    QStringList recipients( ui.recipients->recipients() );
     QString const message = ui.message->toPlainText();
 
-    m_track.share( recipient, message );
+    if ( ui.artistShare->isChecked() )
+    {
+        m_track.artist().share( recipients, message );
+    }
+    else if ( ui.albumShare->isChecked() )
+    {
+        m_track.album().share( recipients, message );
+    }
+    else
+    {
+        m_track.share( recipients, message );
+    }
+
+
 
     //TODO feedback on success etc, do via that bar thing you planned
 
     QDialog::accept();
 }
 
-
-void
-ShareDialog::browseFriends()
-{
-    FriendsPicker fp;
-    fp.exec();
-    
-    foreach (User u, fp.selection())
-    {
-        qDebug() << u;
-    }
-}

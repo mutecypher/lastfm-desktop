@@ -90,19 +90,8 @@ DataListWidget::DataListWidget(QWidget* parent)
 {
     new FlowLayout( this, 0, 0, 0 );
     setContentsMargins( 0, 3, 0, 7 );
-    connect(this, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(onItemActivated(QListWidgetItem*)));
 }
 
-/*QMimeData* DataListWidget::mimeData(const QList<QListWidgetItem*> items) const
-{
-    if (items.count() < 1)
-        return 0;
-
-    QMimeData* data = new QMimeData();
-
-    return data;
-}
-*/
 void 
 DataListWidget::clear()
 {
@@ -115,9 +104,4 @@ DataListWidget::addItem( const QString& text, const QUrl& url )
 {
     layout()->addWidget( new DataItem( text, url ));
 }
-
-/*void DataListWidget::onItemActivated(QListWidgetItem* item)
-{
-    QDesktopServices::openUrl( item->data(LastFMUrl).toUrl() );
-}*/
 

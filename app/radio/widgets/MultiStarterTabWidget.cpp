@@ -35,7 +35,7 @@
 #include "SourceSelectorWidget.h"
 #include "SourceListWidget.h"
 #include "lib/unicorn/layouts/SideBySideLayout.h"
-#include "SearchBox.h"
+#include "lib/unicorn/widgets/SearchBox.h"
 #include "YouListWidget.h"
 #include "AdvancedOptionsWidget.h"
 

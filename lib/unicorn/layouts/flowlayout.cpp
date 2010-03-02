@@ -72,6 +72,16 @@ void FlowLayout::addItem(QLayoutItem *item)
 }
 //! [3]
 
+void FlowLayout::insertWidget(int index, QWidget* widget)
+{
+    // don't allow duplicates!
+    addChildWidget(widget);
+
+    QWidgetItem* item = new QWidgetItem(widget);
+    itemList.insert(index, item);
+    invalidate();
+}
+
 //! [4]
 int FlowLayout::horizontalSpacing() const
 {
@@ -95,7 +105,7 @@ int FlowLayout::verticalSpacing() const
 //! [5]
 int FlowLayout::count() const
 {
-    return itemList.size();
+    return itemList.count();
 }
 
 QLayoutItem *FlowLayout::itemAt(int index) const

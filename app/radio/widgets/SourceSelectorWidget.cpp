@@ -22,6 +22,7 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QListWidgetItem>
+#include <QCompleter>
 #include "SourceSelectorListWidget.h"
 #include "SourceSelectorWidget.h"
 
@@ -51,6 +52,8 @@ SourceSelectorWidget::SourceSelectorWidget(QLineEdit* edit, QWidget* parent)
 
     connect(m_edit, SIGNAL(returnPressed()), SLOT(emitAdd())); 
     connect(m_edit, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
+    connect(m_edit->completer(), SIGNAL(activated(QString)), SLOT(onCompleterActivated(QString)));
+
     connect(m_button, SIGNAL(clicked()), SLOT(emitAdd()));
     connect(m_list, SIGNAL(itemActivated(QListWidgetItem *)), SIGNAL(itemActivated(QListWidgetItem *)));
 }
@@ -71,4 +74,11 @@ void
 SourceSelectorWidget::emitAdd()
 {
     emit add(m_edit->text());
+}
+
+void
+SourceSelectorWidget::onCompleterActivated(const QString& text)
+{
+    m_edit->setText(text);
+    emit add(text);
 }

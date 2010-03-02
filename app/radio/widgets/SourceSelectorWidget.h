@@ -47,6 +47,7 @@ protected:
 private slots:
     void emitAdd();
     void onTextChanged(const QString& text);
+    void onCompleterActivated(const QString& text);
 };
 
 #endif

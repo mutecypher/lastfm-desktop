@@ -31,11 +31,13 @@ class UNICORN_DLLEXPORT ShareDialog : public QDialog
     Q_OBJECT
 
     struct {
-        QDialogButtonBox* buttons;
+        class QRadioButton* artistShare;
+        class QRadioButton* albumShare;
+        class QRadioButton* trackShare;
         class TrackWidget* track;
-        class QLineEdit* edit;
+        class RecipientsWidget* recipients;
         class QTextEdit* message;
-        class QPushButton* browseFriends;
+        QDialogButtonBox* buttons;
     } ui;
     
 public:
@@ -46,8 +48,8 @@ public:
     void setupUi();
 
 private slots:
-    void browseFriends();
     void enableDisableOk();
+    void onRadioButtonsClicked( bool checked );
 
 private:
     class QPushButton* ok() { return ui.buttons->button( QDialogButtonBox::Ok ); }
