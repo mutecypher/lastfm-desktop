@@ -40,6 +40,14 @@ ScrobbleControls::ScrobbleControls()
 }
 
 void
+ScrobbleControls::setEnabled( bool enabled )
+{
+    ui.love->setEnabled( enabled );
+    ui.tag->setEnabled( enabled );
+    ui.share->setEnabled( enabled );
+}
+
+void
 ScrobbleControls::setLoveAction( const QAction* a )
 {
     connect( ui.love, SIGNAL(clicked()), a, SLOT(trigger()));

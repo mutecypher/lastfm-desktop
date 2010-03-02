@@ -108,6 +108,7 @@ Application::init()
 /// MetadataWindow
     mw = new MetadataWindow;
     ScrobbleControls* sc = mw->scrobbleControls();
+    sc->setEnabled( false );
     sc->setLoveAction( m_love_action );
     sc->setTagAction( m_tag_action );
     sc->setShareAction( m_share_action );
@@ -216,6 +217,8 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     connect(watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
 
     tray->showMessage(applicationName(), t.toString());
+
+    mw->scrobbleControls()->setEnabled( true );
 }
 
 void
@@ -250,6 +253,8 @@ Application::onStopped()
         
     delete watch;
    if( as ) as->submit();
+
+   mw->scrobbleControls()->setEnabled( false );
 }
 
 void 
