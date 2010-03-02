@@ -39,6 +39,7 @@ class MetadataWindow : public unicorn::MainWindow
         class QLabel* album;
         class DataListWidget* topFans;
         class QLabel* onTour;
+        class QLabel* onTourBlank;
         class DataListWidget* similarArtists;
         class QLabel* artistScrobbles;
         class QLabel* albumScrobbles;

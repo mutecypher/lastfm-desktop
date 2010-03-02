@@ -104,7 +104,7 @@ namespace unicorn
            (on the command-line with -stylesheet or with setStyleSheet(). )
            Note. the QApplication styleSheet property will return the path 
                  to the css file unlike this method. */
-        const QString& loadedStyleSheet() {
+        const QString& loadedStyleSheet() const {
             return m_styleSheet;
         }
 

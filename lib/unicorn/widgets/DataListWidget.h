@@ -18,30 +18,18 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "lib/unicorn/StylableWidget.h"
 #include "lib/DllExportMacro.h"
+#include <QFrame>
 
 class QUrl;
 
-class UNICORN_DLLEXPORT DataListWidget : public StylableWidget
+class UNICORN_DLLEXPORT DataListWidget : public QFrame
 {
     Q_OBJECT
-public:
-    enum Roles
-    {
-        LastFMUrl = Qt::UserRole
-    };
-
-private:
-    //QMimeData* mimeData( const QList<QListWidgetItem*> items ) const;
 
 public:
     explicit DataListWidget(QWidget* parent = 0);
     void clear();
     void addItem( const QString&, const QUrl& );
 
-private slots:
-    //void onItemActivated(QListWidgetItem* item);
-
-public:
 };
