@@ -34,29 +34,49 @@ RestWidget QLabel { color: #cccccc; font-weight: bold; }
 
 MetadataWindow QLabel,
 MetadataWindow QListView,
-MetadataWindow DataListWidget{ padding: 3px 3px 1px 5px; margin: 0px; font-size: 11px; font-weight: bold;}
+MetadataWindow DataListWidget
+{
+    color: #cccccc;
+    padding: 1px 3px 1px 5px;
+    margin: 0px;
+    font-size: 11px;
+    font-weight: bold;
+}
 
 MetadataWindow QLabel[alternate="true"], 
 MetadataWindow DataListWidget[alternate="true"] { 
     font-weight: bold;
-    background-origin: content; 
-    /*background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #171717, stop:0 #212222 ); */
     border-top: 1px solid #333;
     border-bottom: 1px solid #333;
 }
 
 MetadataWindow QLabel#name {
     margin-left:11px;
+    padding-top:2px;
     color: #afafaf;
 }
+
+DataListWidget QLabel { padding: 0px; margin: 0px; }
+
+
 
 MetadataWindow QLabel#value,
 MetadataWindow #value > QLabel, 
 MetadataWindow DataListWidget {
-    color: #cccccc;
-    font-weight: bold;
-    margin: 0px;
+    padding-top: 1px;
     margin-right:11px;
+    font-weight: normal;
+}
+
+MetadataWindow QLabel#value { padding: 5px; }
+
+QTextBrowser {
+    font-size: 12px;
+    padding: 0px;
+    margin-left: -4px;
+    margin-top: -8px;
+    border:none;
+    background-color: rgb(20,20,20);
 }
 
 MetadataWindow #artist_image {
@@ -117,27 +137,19 @@ QTextBrowser, QLabel#title1, QLabel#title2 {
     color: #e6e6e6;
 }
 
-QTextBrowser {
-    font-size: 12px;
-    padding: 0px;
-    margin: -7px 0px 0px 0px;
-    border:none;
-    background-color: rgb(20,20,20);
-}
 
 QLabel#title1 
 {
-    margin-left: -2px;
     font-size: 18px;
     font-weight:bold;
-    padding-top:12px 12px 0px 0px;
+    padding:12px 10px 0px 10px;
 }
 
 QLabel#title2
 {
     font-size: 12px;
     font-weight: bold;
-    padding-top:12px 12px 0px 0px;
+    padding:12px 10px 0px 10px;
 }
 
 QScrollBar {
@@ -187,6 +199,18 @@ ScrobbleStatus QLabel#player_status {
     color: #676767;
 }
 
+QWizard QLabel#errorMsg {
+    background-color: #ffaaaa;
+    border-color: #ffaaaa;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 6px;
+}
+
+/*
+ * The following css will affect rich text in QLabel / QTextBrowser etc
+ */
+
 a {
     color: #4c7699;
     text-decoration: none;
@@ -195,17 +219,10 @@ a {
 
 a.title {
     font-weight: bold;
-    color: #fff;
 }
 
 a.title :hover {
     color: #4c7699
 }
 
-QWizard QLabel#errorMsg {
-    background-color: #ffaaaa;
-    border-color: #ffaaaa;
-    border-width: 2px;
-    border-style: solid;
-    border-radius: 6px;
-}
+
