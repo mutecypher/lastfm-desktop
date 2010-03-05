@@ -51,13 +51,16 @@ public:
     TrackWidget( const lastfm::Track& track );
 
     void setType( Type type );
+    void setCoverHeight( int height );
     
 private slots:
     void onCoverDownloaded( const class QImage& );
+    void onArtistDownloaded( const class QImage& );
 
 private:
     const lastfm::Track& m_track;
-    class TrackImageFetcher* m_fetcher;
+    class TrackImageFetcher* m_fetcherAlbum;
+    class TrackImageFetcher* m_fetcherArtist;
 };
 
 #endif

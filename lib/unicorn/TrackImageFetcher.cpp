@@ -26,7 +26,7 @@
 
 
 void
-TrackImageFetcher::start()
+TrackImageFetcher::startAlbum()
 {
     if (!album().isNull()) 
     {
@@ -35,6 +35,13 @@ TrackImageFetcher::start()
     }
     else
         artistGetInfo();
+}
+
+
+void
+TrackImageFetcher::startArtist()
+{
+    artistGetInfo();
 }
 
 

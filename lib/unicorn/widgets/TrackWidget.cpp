@@ -30,21 +30,33 @@ TrackWidget::TrackWidget( const lastfm::Track& track )
 {    
     QHBoxLayout* h = new QHBoxLayout( this );
     h->addWidget( ui.image = new QLabel );
-    ui.image->setFixedSize(50, 50);
-
     h->addWidget( ui.description = new QLabel );
 
     ui.image->setScaledContents( true );
 
     // start fetching the image
-    m_fetcher = new TrackImageFetcher( track );
-    connect( m_fetcher, SIGNAL(finished( QImage )), SLOT(onCoverDownloaded( QImage )) );
-    m_fetcher->start();
+    m_fetcherAlbum = new TrackImageFetcher( track );
+    connect( m_fetcherAlbum, SIGNAL(finished( QImage )), SLOT(onCoverDownloaded( QImage )) );
+    m_fetcherAlbum->startAlbum();
+
+    // start fetching the image
+    m_fetcherArtist = new TrackImageFetcher( track );
+    connect( m_fetcherArtist, SIGNAL(finished( QImage )), SLOT(onArtistDownloaded( QImage )) );
+    m_fetcherArtist->startArtist();
 
     setType( Track );
+
+    setCoverHeight( ui.description->sizeHint().height() );
 }
 
-void TrackWidget::setType( Type type )
+void
+TrackWidget::setCoverHeight( int height )
+{
+    ui.image->setFixedSize( height, height );
+}
+
+void
+TrackWidget::setType( Type type )
 {
     m_type = type;
 
@@ -69,6 +81,16 @@ void
 TrackWidget::onCoverDownloaded( const QImage& image )
 {
     ui.albumImage = QPixmap::fromImage( image );
+
+    setType( m_type );
+
+    sender()->deleteLater();
+}
+
+void
+TrackWidget::onArtistDownloaded( const QImage& image )
+{
+    ui.artistImage = QPixmap::fromImage( image );
 
     setType( m_type );
 

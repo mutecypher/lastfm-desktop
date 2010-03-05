@@ -26,7 +26,7 @@
 
 #include "lib/DllExportMacro.h"
 
-class UNICORN_DLLEXPORT ShareDialog : public QDialog
+class UNICORN_DLLEXPORT ShareDialog : public QWidget
 {
     Q_OBJECT
 
@@ -36,7 +36,8 @@ class UNICORN_DLLEXPORT ShareDialog : public QDialog
         class QRadioButton* trackShare;
         class TrackWidget* track;
         class RecipientsWidget* recipients;
-        class QTextEdit* message;
+        class QPlainTextEdit* message;
+        class QLabel* characterLimit;
         QDialogButtonBox* buttons;
     } ui;
     
@@ -50,10 +51,12 @@ public:
 private slots:
     void enableDisableOk();
     void onRadioButtonsClicked( bool checked );
+    void accept();
+    void onMessageChanged();
 
 private:
     class QPushButton* ok() { return ui.buttons->button( QDialogButtonBox::Ok ); }
-    virtual void accept();
+    void updateCharacterLimit();
 
     Track m_track;
 };

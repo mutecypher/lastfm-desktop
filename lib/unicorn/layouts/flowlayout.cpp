@@ -72,6 +72,12 @@ void FlowLayout::addItem(QLayoutItem *item)
 }
 //! [3]
 
+void FlowLayout::removeItem(QLayoutItem *item)
+{
+    itemList.removeAt(itemList.indexOf(item));
+    invalidate();
+}
+
 void FlowLayout::insertWidget(int index, QWidget* widget)
 {
     // don't allow duplicates!

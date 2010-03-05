@@ -483,3 +483,50 @@ YouListWidget::item:open {
     background-color: #e9eaea;
     color: #999999;
 }
+
+RecipientsWidget {
+	background: #FFFFFF;
+	border: 1px solid #BBBBBB;
+	border-color: black;
+	padding: 0;
+}
+
+RecipientsWidget:edit-focus {
+	border-color: blue;
+}
+
+RecipientWidget {
+	background-color: #dddddd;
+	margin: 1px;
+	padding: 2px;
+	border: 0px;
+}
+
+RecipientWidget:hover {
+	background: #cccccc;
+}
+
+RecipientWidget QLabel {
+	background-color: transparent;
+	color: black;
+	font-weight: normal;
+	margin: 1px;
+	padding: 0;
+	border: 0;
+}
+
+RecipientWidget QPushButton {
+	background-color: transparent;
+	background-image: url(:/delete.png);
+	background-repeat: no-repeat;
+    background-position: left;
+	background-origin: margin;
+	color: transparent;
+    border: none;
+    text-align: left;
+    padding: 0px 0px; 
+    margin: 0px 0px;
+	height: 15px;
+    min-width: 15px;
+	max-width: 15px;
+}

@@ -35,7 +35,8 @@ public:
     TrackImageFetcher( const Track& t ) : m_track( t )
     {}
 
-    void start();
+    void startAlbum();
+    void startArtist();
 
 private:
     Track m_track;

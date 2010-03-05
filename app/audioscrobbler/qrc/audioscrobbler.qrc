@@ -17,5 +17,6 @@
         <file alias="share-rest.png">share_29x29_rest.png</file>
         <file alias="share-onhover.png">share_29x29_hover.png</file>
         <file alias="share-onpress.png">share_29x29_pressed.png</file>
+		<file alias="delete.png">delete.png</file>
     </qresource>
 </RCC>
