@@ -35,6 +35,7 @@ SearchBox::SearchBox(QWidget* parent)
 : QLineEdit(parent)
 , m_searching(false)
 {
+    setAttribute( Qt::WA_MacShowFocusRect, false );
     m_completer = new QCompleter(this);
     m_completer->setCaseSensitivity(Qt::CaseInsensitive);
     setCompleter(m_completer);
