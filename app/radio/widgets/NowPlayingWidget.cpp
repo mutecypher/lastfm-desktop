@@ -67,7 +67,7 @@ NowPlayingWidget::onTrackSpooled( const Track& t )
     ui.cover->clear();
     TrackImageFetcher* imageFetcher = new TrackImageFetcher( t );
     connect( imageFetcher, SIGNAL( finished( QImage )), SLOT( onImageFinished( QImage )));
-    imageFetcher->start();
+    imageFetcher->startAlbum();
     
     ui.track->setText( t.artist() + " - " + t.title() );
     if (!t.album().isNull()) {

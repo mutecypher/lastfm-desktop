@@ -32,6 +32,7 @@
 #include <QComboBox>
 #include <QListWidget>
 #include <QDebug>
+#include <QCheckBox>
 
 #include <lastfm/User>
 
@@ -94,6 +95,8 @@ ShareDialog::setupUi()
     connect( ui.message , SIGNAL(textChanged()), SLOT(onMessageChanged()));
     connect( ui.message , SIGNAL(textChanged()), SLOT(enableDisableOk()));
     v2->addWidget( ui.characterLimit = new QLabel( this ) );
+    v2->addWidget( ui.isPublic = new QCheckBox( tr("Include in my recent activity"), this ) );
+    ui.isPublic->setChecked( true );
     updateCharacterLimit();
     v2->setSpacing( 4 );
     
@@ -161,10 +164,11 @@ ShareDialog::accept()
 {
     QStringList recipients( ui.recipients->recipients() );
     QString const message = ui.message->toPlainText();
+    bool isPublic = ui.isPublic->isChecked();
 
-    if ( ui.artistShare->isChecked() ) m_track.artist().share( recipients, message );
-    else if ( ui.albumShare->isChecked() )  m_track.album().share( recipients, message );
-    else m_track.share( recipients, message );
+    if ( ui.artistShare->isChecked() ) m_track.artist().share( recipients, message, isPublic );
+    else if ( ui.albumShare->isChecked() )  m_track.album().share( recipients, message, isPublic );
+    else m_track.share( recipients, message, isPublic );
 
     //TODO feedback on success etc, do via that bar thing you planned
     //QDialog::accept();

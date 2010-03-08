@@ -35,7 +35,8 @@ QScrollArea {
 
 RestWidget QLabel,
 ShareDialog QLabel,
-ShareDialog QRadioButton { color: #cccccc; font-weight: bold; }
+ShareDialog QRadioButton,
+ShareDialog QCheckBox  { color: #cccccc; font-weight: bold; }
 
 ShareDialog QLabel[xerror="true"] { color: #d51007; }
 

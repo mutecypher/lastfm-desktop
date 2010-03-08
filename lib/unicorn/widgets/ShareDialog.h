@@ -38,6 +38,7 @@ class UNICORN_DLLEXPORT ShareDialog : public QWidget
         class RecipientsWidget* recipients;
         class QPlainTextEdit* message;
         class QLabel* characterLimit;
+        class QCheckBox* isPublic;
         QDialogButtonBox* buttons;
     } ui;
     
