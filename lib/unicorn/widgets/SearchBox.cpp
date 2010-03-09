@@ -133,27 +133,33 @@ UserSearch::UserSearch(QWidget* parent)
     connect(AuthenticatedUser().getFriends(), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
 }
 
+int CaseInsensitiveLessThan(const QString& s1, const QString &s2)
+{
+    return s1.toLower() < s2.toLower();
+}
+
 void
 UserSearch::onGetFriendsFinished()
 {
-    lastfm::UserList friends = User::list( (QNetworkReply*)sender() );
-    m_friends += friends;
+    lastfm::UserList friendPage = User::list( (QNetworkReply*)sender() );
+    m_friends += friendPage;
 
-    if ( friends.page == friends.totalPages )
+    if ( friendPage.page == friendPage.totalPages )
     {
         QStringList friends;
 
         foreach (User u, m_friends)
             friends << u.name();
 
+        qSort(friends.begin(), friends.end(), CaseInsensitiveLessThan);
+
         m_completer->setCaseSensitivity( Qt::CaseInsensitive );
-        //m_completer->setModelSorting( QCompleter::CaseInsensitivelySortedModel );
         m_completer->setModel(new QStringListModel( friends ));
     }
     else
     {
         // get the next page of friends
-        connect(AuthenticatedUser().getFriends( friends.perPage, friends.page + 1 ), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
+        connect(AuthenticatedUser().getFriends( friendPage.perPage, friendPage.page + 1 ), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
     }
 }
 
