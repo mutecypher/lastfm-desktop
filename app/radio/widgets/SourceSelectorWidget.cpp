@@ -55,7 +55,7 @@ SourceSelectorWidget::SourceSelectorWidget(QLineEdit* edit, QWidget* parent)
     connect(m_edit->completer(), SIGNAL(activated(QString)), SLOT(onCompleterActivated(QString)));
 
     connect(m_button, SIGNAL(clicked()), SLOT(emitAdd()));
-    connect(m_list, SIGNAL(itemActivated(QListWidgetItem *)), SIGNAL(itemActivated(QListWidgetItem *)));
+    connect(m_list, SIGNAL(itemClicked(QListWidgetItem *)), SIGNAL(itemClicked(QListWidgetItem *)));
 }
 
 QListWidget* 

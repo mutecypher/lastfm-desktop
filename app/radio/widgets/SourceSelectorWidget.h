@@ -36,7 +36,7 @@ public:
     QListWidget* list();
 
 signals:
-    void itemActivated(QListWidgetItem* item);      // item chosen from the list
+    void itemClicked(QListWidgetItem* item);      // item chosen from the list
     void add(const QString& item);                  // item typed in
 
 protected:
