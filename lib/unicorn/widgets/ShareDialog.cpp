@@ -19,11 +19,9 @@
 */
 
 #include <QApplication>
-#include <QLineEdit>
 #include <QPainter>
 #include <QTimer>
 #include <QPushButton>
-#include <QLineEdit>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPlainTextEdit>
@@ -94,6 +92,7 @@ ShareDialog::setupUi()
     QVBoxLayout* v2 = new QVBoxLayout;
     v2->addWidget( new QLabel( tr("Message (optional)") ) );
     v2->addWidget( ui.message = new QPlainTextEdit );
+    ui.message->setAttribute( Qt::WA_MacShowFocusRect, false );
     connect( ui.message , SIGNAL(textChanged()), SLOT(onMessageChanged()));
     connect( ui.message , SIGNAL(textChanged()), SLOT(enableDisableOk()));
     v2->setSpacing( 4 );
@@ -112,8 +111,6 @@ ShareDialog::setupUi()
     v->addLayout( h2 );
     v->addWidget( ui.buttons = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );
     
-    ui.message->setAttribute( Qt::WA_MacShowFocusRect, true );
-    
     // make sure that pressing enter doesn't complete the dialog
     ui.buttons->button( QDialogButtonBox::Ok )->setText( tr("Share") );
     
@@ -121,6 +118,10 @@ ShareDialog::setupUi()
     foreach (QLabel* l, findChildren<QLabel*>())
         l->setAttribute( Qt::WA_MacSmallSize );
 #endif
+
+    //tab order
+    setTabOrder( ui.recipients, ui.message );
+    setTabOrder( ui.message, ui.buttons );
 }
 
 void
