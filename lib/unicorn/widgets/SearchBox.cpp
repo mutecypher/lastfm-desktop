@@ -28,8 +28,7 @@
 #include <lastfm/XmlQuery>
 #include <lastfm/Artist>
 #include <lastfm/Tag>
-
-#include <lastfm/User>
+#include <lastfm/UserList>
 
 SearchBox::SearchBox(QWidget* parent)
 : QLineEdit(parent)
@@ -137,14 +136,25 @@ UserSearch::UserSearch(QWidget* parent)
 void
 UserSearch::onGetFriendsFinished()
 {
-    QStringList friends;
+    lastfm::UserList friends = User::list( (QNetworkReply*)sender() );
+    m_friends += friends;
 
-    foreach (User u, User::list( (QNetworkReply*)sender() ))
-        friends << u.name();
+    if ( friends.page == friends.totalPages )
+    {
+        QStringList friends;
 
-    m_completer->setCaseSensitivity( Qt::CaseInsensitive );
-    //m_completer->setModelSorting( QCompleter::CaseInsensitivelySortedModel );
-    m_completer->setModel(new QStringListModel( friends ));
+        foreach (User u, m_friends)
+            friends << u.name();
+
+        m_completer->setCaseSensitivity( Qt::CaseInsensitive );
+        //m_completer->setModelSorting( QCompleter::CaseInsensitivelySortedModel );
+        m_completer->setModel(new QStringListModel( friends ));
+    }
+    else
+    {
+        // get the next page of friends
+        connect(AuthenticatedUser().getFriends( friends.perPage, friends.page + 1 ), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
+    }
 }
 
 QNetworkReply*

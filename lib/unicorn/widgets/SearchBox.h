@@ -23,6 +23,7 @@
 #include <QLineEdit>
 #include <lastfm/global.h>
 #include "lib/DllExportMacro.h"
+#include <lastfm/User>
 
 class QNetworkReply;
 class QCompleter;
@@ -90,6 +91,8 @@ public slots:
      void finishEdit(){ emit editingFinished(); }
 private slots:
     void onGetFriendsFinished();
+private:
+    QList<lastfm::User> m_friends;
 };
 
 #endif
