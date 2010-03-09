@@ -31,14 +31,14 @@ class UNICORN_DLLEXPORT ShareDialog : public QWidget
     Q_OBJECT
 
     struct {
-        class QRadioButton* artistShare;
-        class QRadioButton* albumShare;
         class QRadioButton* trackShare;
+        class QRadioButton* albumShare;
+        class QRadioButton* artistShare;
         class TrackWidget* track;
         class RecipientsWidget* recipients;
         class QPlainTextEdit* message;
-        class QLabel* characterLimit;
         class QCheckBox* isPublic;
+        class QLabel* characterLimit;
         QDialogButtonBox* buttons;
     } ui;
     

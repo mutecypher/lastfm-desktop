@@ -63,16 +63,16 @@ TrackWidget::setType( Type type )
     switch ( m_type )
     {
         case Artist:
-            ui.description->setText( m_track.artist().name() );
+            ui.description->setText( m_track.artist().name() + "\n" );
             ui.image->setPixmap( ui.artistImage );
             break;
         case Album:
-            ui.description->setText( m_track.album().title() + "\nby " + m_track.artist().name() );
+            ui.description->setText( m_track.album().title() + "\n" + m_track.artist().name() );
             ui.image->setPixmap( ui.albumImage );
             break;
         case Track:
-            ui.description->setText(  m_track.title() + "\nby " + m_track.artist().name() + "\nfrom " + m_track.album().title() );
-            ui.image->setPixmap( ui.albumImage );
+            ui.description->setText(  m_track.title() + " (" + m_track.durationString() + ")\n" + m_track.artist().name() );
+            ui.image->setPixmap( ui.artistImage );
             break;
     }
 }

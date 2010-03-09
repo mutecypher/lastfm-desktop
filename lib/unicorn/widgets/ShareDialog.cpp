@@ -65,12 +65,14 @@ ShareDialog::setupUi()
     QVBoxLayout* radioButtons = new QVBoxLayout;
 
     radioButtons->addWidget( ui.trackShare = new QRadioButton( tr("Track"), this ) );
-    radioButtons->addWidget( ui.artistShare = new QRadioButton( tr("Artist"), this ) );
     radioButtons->addWidget( ui.albumShare = new QRadioButton( tr("Album"), this ) );
+    radioButtons->addWidget( ui.artistShare = new QRadioButton( tr("Artist"), this ) );
 
     connect( ui.artistShare, SIGNAL(clicked(bool)), SLOT(onRadioButtonsClicked(bool)) );
     connect( ui.albumShare, SIGNAL(clicked(bool)), SLOT(onRadioButtonsClicked(bool)) );
     connect( ui.trackShare, SIGNAL(clicked(bool)), SLOT(onRadioButtonsClicked(bool)) );
+
+    if ( m_track.album().isNull() ) ui.albumShare->setEnabled( false );
 
     // Default to artist sharing
     ui.trackShare->setChecked( true );
@@ -82,9 +84,9 @@ ShareDialog::setupUi()
 
     QVBoxLayout* v1 = new QVBoxLayout;
     
-    v1->addWidget( new QLabel( tr("To:") ) );
+    v1->addWidget( new QLabel( tr("To") ) );
     v1->addWidget( ui.recipients = new RecipientsWidget(this) );
-    v1->addWidget( new QLabel( tr("Type friends’ names or emails (up to 10) above, separated by commas.") ) );
+    v1->addWidget( new QLabel( tr("Type friends or emails (up to 10), separated by commas.") ) );
     v1->setSpacing( 0 );
 
     connect( ui.recipients, SIGNAL(changed()), SLOT(enableDisableOk()));
@@ -94,16 +96,20 @@ ShareDialog::setupUi()
     v2->addWidget( ui.message = new QPlainTextEdit );
     connect( ui.message , SIGNAL(textChanged()), SLOT(onMessageChanged()));
     connect( ui.message , SIGNAL(textChanged()), SLOT(enableDisableOk()));
-    v2->addWidget( ui.characterLimit = new QLabel( this ) );
-    v2->addWidget( ui.isPublic = new QCheckBox( tr("Include in my recent activity"), this ) );
-    ui.isPublic->setChecked( true );
-    updateCharacterLimit();
     v2->setSpacing( 4 );
+
+    QHBoxLayout* h2 = new QHBoxLayout;
+    h2->addWidget( ui.isPublic = new QCheckBox( tr("Include in my recent activity"), this ) );
+    ui.isPublic->setChecked( true );
+    h2->addWidget( ui.characterLimit = new QLabel( this ), 0, Qt::AlignRight );
+    updateCharacterLimit();
     
     QVBoxLayout* v = new QVBoxLayout( this );
+    v->addWidget( new QLabel( tr("Choose something to share:") ) );
     v->addLayout( h1 );
     v->addLayout( v1 );
     v->addLayout( v2 );
+    v->addLayout( h2 );
     v->addWidget( ui.buttons = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );
     
     ui.message->setAttribute( Qt::WA_MacShowFocusRect, true );
@@ -136,18 +142,13 @@ ShareDialog::enableDisableOk()
 void
 ShareDialog::updateCharacterLimit()
 {
-    ui.characterLimit->setText( QString::number( ui.message->toPlainText().length() ) + "/" + QString::number(kMaxMessage) + " characters used" );
+    ui.characterLimit->setText( QString::number( ui.message->toPlainText().length() ) + "/" + QString::number(kMaxMessage) );
 
     if ( ui.message->toPlainText().length() > kMaxMessage ) {
         ui.characterLimit->setProperty( "xerror", QVariant( true ) );
     }
-    //else if ( ui.message->toPlainText().length() > kMaxMessage - 20 )
-    //    ui.characterLimit->setProperty( "status", "warning");
     else
         ui.characterLimit->setProperty( "xerror", QVariant( false ) );
-
-    //ui.characterLimit->style()->unpolish(ui.characterLimit);
-    //ui.characterLimit->ensurePolished();
 
     ui.characterLimit->setStyle(QApplication::style());
 }
