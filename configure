@@ -157,6 +157,8 @@ then
     cp admin/tests/run_tests.sh _bin/tests
 fi
 
+middle "Generating GenPluginList"
+admin/genPluginInfo > lib/unicorn/Updater/gen_PluginList.h
 
 middle "Generating _configure.h"
 case `uname` in

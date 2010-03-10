@@ -39,7 +39,7 @@ unicorn::MainWindow::MainWindow()
     new QShortcut( QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_L), this, SLOT(openLog()) );
     connect( qApp, SIGNAL(userGotInfo( QNetworkReply* )), SLOT(onUserGotInfo( QNetworkReply* )) );
 
-    QVariant v = unicorn::GlobalSettings().value( SETTINGS_POSITION_KEY );
+    QVariant v = unicorn::AppSettings().value( SETTINGS_POSITION_KEY );
     if (v.isValid()) move( v.toPoint() ); //if null, let Qt decide
 }
 

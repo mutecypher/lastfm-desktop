@@ -1,0 +1,42 @@
+#!/bin/bash
+ROOT_DIR=$(dirname $(cd `dirname $0` && pwd))
+cd $ROOT_DIR/lib/unicorn/Updater
+while read infoh; do
+    INCLUDE=$INCLUDE$'\n'"#include \"$infoh\""
+    INSTANCE=$INSTANCE$'\n'"        *this << (new "$(cat $infoh | grep class | sed "s/class \(.*\) :.*/\1\(\)\);/g")
+done < <(find ../../../plugins -iname PluginInfo.h)
+cat << EOF
+#ifndef GEN_PLUGIN_LIST_H_
+#define GEN_PLUGIN_LIST_H_
+
+#include <QList>
+#include "IPluginInfo.h"
+EOF
+
+echo "$INCLUDE"
+
+cat << EOF
+class GenPluginList : public QList<IPluginInfo*>
+{
+public:
+    GenPluginList()
+    { 
+EOF
+       echo "$INSTANCE"
+cat << EOF
+
+    }
+};
+EOF
+
+
+echo
+echo "#endif //GEN_PLUGIN_LIST_H_"
+#find . -iname \*.iss | while read rc; do 
+#    PVersion=$(cat $rc| grep ^Version\= | sed s///)
+#    if [ "$PVersion" == "" ]; then continue; fi
+#    echo -n \#define\ 
+#    echo -n $(basename $(dirname $rc))
+#    echo -n " \""
+#    echo "$PVersion\"" | sed "s/Version\=//"
+#done

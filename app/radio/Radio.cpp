@@ -93,9 +93,9 @@ Radio::play( const RadioStation& station )
 
     // Make sure the radio station has the radio options from the settings
     bool ok;
-    m_station.setRep( unicorn::GlobalSettings().value( "rep", 0.5 ).toDouble( &ok ) );
-    m_station.setMainstr( unicorn::GlobalSettings().value( "mainstr", 0.5 ).toDouble( &ok ) );
-    m_station.setDisco( unicorn::GlobalSettings().value( "disco", false ).toBool() );
+    m_station.setRep( unicorn::AppSettings().value( "rep", 0.5 ).toDouble( &ok ) );
+    m_station.setMainstr( unicorn::AppSettings().value( "mainstr", 0.5 ).toDouble( &ok ) );
+    m_station.setDisco( unicorn::AppSettings().value( "disco", false ).toBool() );
 
     m_tuner = new lastfm::RadioTuner( m_station );
 
@@ -117,9 +117,9 @@ Radio::playNext( const RadioStation& station )
 
         // Make sure the radio station has the radio options from the settings
         bool ok;
-        m_station.setRep( unicorn::GlobalSettings().value( "rep", 0.5 ).toDouble( &ok ) );
-        m_station.setMainstr( unicorn::GlobalSettings().value( "mainstr", 0.5 ).toDouble( &ok ) );
-        m_station.setDisco( unicorn::GlobalSettings().value( "disco", false ).toBool() );
+        m_station.setRep( unicorn::AppSettings().value( "rep", 0.5 ).toDouble( &ok ) );
+        m_station.setMainstr( unicorn::AppSettings().value( "mainstr", 0.5 ).toDouble( &ok ) );
+        m_station.setDisco( unicorn::AppSettings().value( "disco", false ).toBool() );
 
         m_tuner->retune( m_station );
     }
@@ -372,7 +372,7 @@ Radio::onBuffering( int percent_filled )
 void
 Radio::onMutedChanged(bool muted)
 {
-    unicorn::GlobalSettings().setValue("Muted", muted);
+    unicorn::AppSettings().setValue("Muted", muted);
 }
 
 void
@@ -384,7 +384,7 @@ Radio::onOutputDeviceChanged(const Phonon::AudioOutputDevice& newDevice)
 void
 Radio::onVolumeChanged(qreal vol)
 {
-    unicorn::GlobalSettings().setValue("Volume", vol);
+    unicorn::AppSettings().setValue("Volume", vol);
 }
 
 void
@@ -402,17 +402,17 @@ Radio::initRadio()
 	Phonon::AudioOutput* audioOutput = new Phonon::AudioOutput( Phonon::MusicCategory, this );
 
     // restore the last volume
-    if (unicorn::GlobalSettings().contains("Volume"))
+    if (unicorn::AppSettings().contains("Volume"))
     {
         bool ok;
-        double volume = unicorn::GlobalSettings().value("Volume", 0).toDouble(&ok);
+        double volume = unicorn::AppSettings().value("Volume", 0).toDouble(&ok);
         if (ok)
         {
             audioOutput->setVolume(volume);
         }
     }
 
-    audioOutput->setMuted(unicorn::GlobalSettings().value("Muted", false).toBool());
+    audioOutput->setMuted(unicorn::AppSettings().value("Muted", false).toBool());
 
     qDebug() << audioOutput->name();
     qDebug() << audioOutput->outputDevice().description();

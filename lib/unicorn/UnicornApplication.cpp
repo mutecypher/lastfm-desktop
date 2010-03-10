@@ -178,7 +178,7 @@ unicorn::Application::~Application()
     /*
     if (Settings().logOutOnExit() || m_logoutAtQuit)
     {
-        GlobalSettings s;
+        AppSettings s;
         s.remove( "SessionKey" );
         s.remove( "Password" );
     }*/
