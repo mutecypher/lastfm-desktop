@@ -22,13 +22,14 @@
 
 #include <QLineEdit>
 
+#include "lib/DllExportMacro.h"
 
-class HelpTextLineEdit : public QLineEdit
+class UNICORN_DLLEXPORT HelpTextLineEdit : public QLineEdit
 {
     QString const m_text;
 
 public:
-    HelpTextLineEdit( const QString& helpText = "" );
+    HelpTextLineEdit( const QString& helpText = "", QWidget* parent = 0 );
     
 protected:
     virtual void paintEvent( QPaintEvent* );

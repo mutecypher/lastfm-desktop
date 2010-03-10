@@ -31,7 +31,7 @@
 #include <lastfm/UserList>
 
 SearchBox::SearchBox(QWidget* parent)
-: QLineEdit(parent)
+: HelpTextLineEdit( tr(""), parent )
 , m_searching(false)
 {
     setAttribute( Qt::WA_MacShowFocusRect, false );
