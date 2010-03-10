@@ -21,7 +21,7 @@
 #ifndef STYLABLE_WIDGET_H_
 #define STYLABLE_WIDGET_H_
 #include <QFrame>
-#include <QStyleOptionFrameV3>
+#include <QStyleOption>
 #include <QPainter>
 
 class StylableWidget: public QFrame{

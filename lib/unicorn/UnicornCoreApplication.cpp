@@ -39,7 +39,7 @@ unicorn::CoreApplication::CoreApplication( int& argc, char** argv )
 {
     init();
     
-//  GlobalSettings s;
+//  AppSettings s;
 //  lastfm::ws::Username = s.value( "Username" ).toString();
 //  lastfm::ws::SessionKey = s.value( "SessionKey" ).toString();
 }
@@ -55,7 +55,7 @@ unicorn::CoreApplication::init()
     lastfm::ws::ApiKey = "c8c7b163b11f92ef2d33ba6cd3c2c3c3";
 
     /*
-    QVariant const v = GlobalSettings().value( "Locale" );
+    QVariant const v = AppSettings().value( "Locale" );
     if (v.isValid())
         QLocale::setDefault( QLocale::Language(v.toInt()) );
 #ifdef __APPLE__

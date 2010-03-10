@@ -250,18 +250,18 @@ PlaybackControlsWidget::onTrackSpooled( const Track& track )
 void
 PlaybackControlsWidget::saveRadioOptions()
 {
-    unicorn::GlobalSettings().setValue( "rep", ui.radioOptionsDialog->widget().rep() );
-    unicorn::GlobalSettings().setValue( "mainstr", ui.radioOptionsDialog->widget().mainstr() );
-    unicorn::GlobalSettings().setValue( "disco", ui.radioOptionsDialog->widget().disco() );
+    unicorn::AppSettings().setValue( "rep", ui.radioOptionsDialog->widget().rep() );
+    unicorn::AppSettings().setValue( "mainstr", ui.radioOptionsDialog->widget().mainstr() );
+    unicorn::AppSettings().setValue( "disco", ui.radioOptionsDialog->widget().disco() );
 }
 
 void
 PlaybackControlsWidget::restoreRadioOptions()
 {
     bool ok;
-    ui.radioOptionsDialog->widget().setRep( unicorn::GlobalSettings().value( "rep", 0.5 ).toDouble( &ok ) );
-    ui.radioOptionsDialog->widget().setMainstr( unicorn::GlobalSettings().value( "mainstr", 0.5 ).toDouble( &ok ) );
-    ui.radioOptionsDialog->widget().setDisco( unicorn::GlobalSettings().value( "disco", false ).toBool() );
+    ui.radioOptionsDialog->widget().setRep( unicorn::AppSettings().value( "rep", 0.5 ).toDouble( &ok ) );
+    ui.radioOptionsDialog->widget().setMainstr( unicorn::AppSettings().value( "mainstr", 0.5 ).toDouble( &ok ) );
+    ui.radioOptionsDialog->widget().setDisco( unicorn::AppSettings().value( "disco", false ).toBool() );
 }
 
 void

@@ -28,7 +28,7 @@ enum IPodType { IPodUnknownType, IPodAutomaticType, IPodManualType };
   */
 class IPodSettings
 {
-    class Settings : public unicorn::GlobalSettings
+    class Settings : public unicorn::AppSettings
     {
     public:
         Settings( IPodSettings const * const s )

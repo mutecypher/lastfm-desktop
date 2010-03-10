@@ -6,7 +6,7 @@ namespace unicorn {
 
 SessionData::~SessionData()
 {
-    GlobalSettings s;
+    Settings s;
     s.beginGroup( username );
     s.setValue( "Subscriber", isSubscriber );
     if( remember ) {
@@ -17,7 +17,7 @@ SessionData::~SessionData()
 Session::Session()
         :d( 0 )
 {
-    GlobalSettings s;
+    Settings s;
     
     //use the Username setting or the first username if there have been any logged in previously
     QString username = s.value( "Username", QString()).toString();

@@ -29,10 +29,17 @@ namespace unicorn
     inline const char* organizationName() { return "Last.fm"; }
     inline const char* organizationDomain() { return "last.fm"; }
 
-    class GlobalSettings : public QSettings
+    class Settings : public QSettings
     {
     public:
-        GlobalSettings( QString appname = qApp->applicationName() ) : QSettings( unicorn::organizationName(), appname )
+        Settings() : QSettings( unicorn::organizationName() )
+        {}
+    };
+
+    class AppSettings : public QSettings
+    {
+    public:
+        AppSettings( QString appname = qApp->applicationName() ) : QSettings( unicorn::organizationName(), appname )
         {}
     };
 

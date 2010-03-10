@@ -36,6 +36,7 @@
 #include <QDebug>
 #include "lib/unicorn/widgets/TagDialog.h"
 #include "lib/unicorn/widgets/ShareDialog.h"
+#include "lib/unicorn/UnicornSettings.h"
 #include "Wizard/FirstRunWizard.h"
 
 using audioscrobbler::Application;
@@ -57,11 +58,21 @@ Application::Application(int& argc, char** argv)
     // We do the actual init slightly later so that if this is the second
     // time we open the app, we don't get another tray icon etc.
     QTimer::singleShot(0, this, SLOT(init()));
+
 }
 
 void
 Application::init()
 {
+    if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
+    {
+        FirstRunWizard* w = new FirstRunWizard();
+        if( !w->exec() ) {
+            quit();
+            return;
+        }
+    }
+    
     as = new Audioscrobbler("ass");
 /// tray
     tray = new QSystemTrayIcon(this);
