@@ -9,4 +9,4 @@ ICON = ../client/mac/client.icns
 macx:LIBS += -lz
 win32:LIBS += shell32.lib
 
-#RC_FILE = audioscrobbler.rc
+RC_FILE = audioscrobbler.rc

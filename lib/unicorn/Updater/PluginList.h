@@ -2,8 +2,9 @@
 #define PLUGIN_LIST_H_
 
 #include "gen_PluginList.h"
+#include "lib/DllExportMacro.h"
 
-class PluginList : public GenPluginList
+class UNICORN_DLLEXPORT PluginList : public GenPluginList
 {
 public:
     QList<IPluginInfo*> availablePlugins() const

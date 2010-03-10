@@ -3,7 +3,6 @@
 
 #include <QList>
 #include "IPluginInfo.h"
-
 #include "../../../plugins/foobar08/PluginInfo.h"
 #include "../../../plugins/foobar09/PluginInfo.h"
 #include "../../../plugins/iTunes/PluginInfo.h"
@@ -15,11 +14,11 @@ public:
     GenPluginList()
     { 
 
-        *this << (new FooBar08PluginInfo());
-        *this << (new FooBar09PluginInfo());
-        *this << (new ITunesPluginInfo());
-        *this << (new WinampPluginInfo());
-        *this << (new WmpPluginInfo());
+        *this << (new UNICORN_DLLEXPORT FooBar08PluginInfo());
+        *this << (new UNICORN_DLLEXPORT FooBar09PluginInfo());
+        *this << (new UNICORN_DLLEXPORT ITunesPluginInfo());
+        *this << (new UNICORN_DLLEXPORT WinampPluginInfo());
+        *this << (new UNICORN_DLLEXPORT WmpPluginInfo());
 
     }
 };

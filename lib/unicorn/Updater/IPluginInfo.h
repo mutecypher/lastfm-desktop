@@ -1,6 +1,8 @@
 #ifndef PLUGIN_INFO_H_
 #define PLUGIN_INFO_H_
 
+#include "lib/DllExportMacro.h"
+
 class Version
 {
 public:
@@ -43,7 +45,7 @@ private:
 };
 
 
-class IPluginInfo
+class UNICORN_DLLEXPORT IPluginInfo
 {
 public:
     IPluginInfo(){}
@@ -70,62 +72,9 @@ public:
     virtual bool isPlatformSupported() const = 0;
 
 #ifdef QT_VERSION
-    bool isAppInstalled() const
-    {
-    #ifdef Q_OS_WIN
-        QString displayName = QString::fromStdString( displayName());
-        QSettings s("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\", QSettings::NativeFormat );
-        foreach( QString group, s.childGroups()) {
-            s.beginGroup( group );
-                QString name = s.value( "DisplayName" ).toString();
-                if( name.contains( displayName ) ||
-                    group.contains( displayName )) {
-                        if( !minVersion().isValid() && 
-                            !maxVersion().isValid())
-                            return true;
-
-                        QStringList verParts = s.value( "DisplayVersion" ).split( "." );
-                        QList<int> verInts;
-                        foreach( QString part, verParts ) {
-                            bool ok;
-                            int i = part.toInt( &ok );
-                            verInts << ok ? i : 0;
-                        }
-                        while verInts.count() < 4 {
-                            verInts << 0;
-                        }
-                        Version installedVersion( verInts[0], verInts[1], verInts[2], verInts[3] );
-                        if( minVersion() < installedVersion &&
-                            installedVersion < maxVersion())
-                            return true;
-                }
-            s.endGroup();
-        }
-        return false;
-    #elif defined Q_OS_MAC
-        return true;
-    #endif
-    }
-
-
-    bool isInstalled() const
-    {
-    #ifdef Q_OS_WIN
-        QSettings s( "HKEY_LOCAL_MACHINE\\SOFTWARE\\Last.fm\\Client\\Plugins", QSettings::NativeFormat );
-        return s.childGroups().contains( id() );
-    #elif defined (Q_OS_MAC)
-        return true;
-    #endif
-    }
-
-
-    bool canBootstrap() const
-    {
-        return (isPlatformSupported() && 
-               bootstrapType() != NoBootstrap);
-    }
-
-
+    bool isAppInstalled() const;
+    bool isInstalled() const;
+    bool canBootstrap() const;
 #endif //QT_VERSION
 };
 
