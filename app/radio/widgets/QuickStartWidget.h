@@ -24,7 +24,7 @@
 #include <lastfm/RadioStation>
 
 class QComboBox;
-class QLineEdit;
+class HelpTextLineEdit;
 
 class QuickStartWidget : public StylableWidget
 {
@@ -40,7 +40,7 @@ private slots:
     void search();
 
 private:
-    QLineEdit* m_edit;
+    HelpTextLineEdit* m_edit;
 };
 
 #endif

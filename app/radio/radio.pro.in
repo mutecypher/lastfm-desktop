@@ -18,4 +18,4 @@ HEADERS -= LegacyTuner.h
 
 ICON = ../client/mac/client.icns
 
-#RC_FILE = radio.rc
+RC_FILE = radio.rc

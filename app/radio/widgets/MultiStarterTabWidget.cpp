@@ -45,7 +45,7 @@ MultiStarterTabWidget::MultiStarterTabWidget(int maxSources, RqlSource::Type typ
     , m_minCount(10)
     , m_type(type)
 {
-    QHBoxLayout* layout = new QHBoxLayout(this);
+    QHBoxLayout* layout = new QHBoxLayout;
 
     m_sourceSelector = new SourceSelectorWidget(searchBox);
     layout->addWidget(m_sourceSelector);
@@ -54,13 +54,26 @@ MultiStarterTabWidget::MultiStarterTabWidget(int maxSources, RqlSource::Type typ
     m_sourceList = new SourceListWidget(this);
     m_sourceList->setModel(m_sourceModel);
 
-    QVBoxLayout* rightside = new QVBoxLayout(this);
+    QVBoxLayout* rightside = new QVBoxLayout;
     rightside->addWidget(m_sourceList);
     rightside->addWidget(m_playButton = new QPushButton(tr("Play combo")));
 
     layout->addLayout(rightside);
 
-    setLayout(layout);
+    QVBoxLayout* v1 = new QVBoxLayout(this);
+    switch (type)
+    {
+    case RqlSource::Art:
+        v1->addWidget(new QLabel( tr("Choose up to three artists and press play.") ), 0, Qt::AlignCenter);
+        break;
+    case RqlSource::User:
+        v1->addWidget(new QLabel( tr("Choose up to three libraries and press play.") ), 0, Qt::AlignCenter);
+        break;
+    case RqlSource::Tag:
+        v1->addWidget(new QLabel( tr("Choose up to three tags and press play.") ), 0, Qt::AlignCenter);
+        break;
+    }
+    v1->addLayout( layout );
 
     connect(m_sourceList, SIGNAL(add(QString, QString)), SLOT(onAdd(QString, QString)));
     connect(m_sourceSelector, SIGNAL(add(QString)), SLOT(onAdd(QString)));
