@@ -64,7 +64,7 @@ MultiStarterTabWidget::MultiStarterTabWidget(int maxSources, RqlSource::Type typ
 
     connect(m_sourceList, SIGNAL(add(QString, QString)), SLOT(onAdd(QString, QString)));
     connect(m_sourceSelector, SIGNAL(add(QString)), SLOT(onAdd(QString)));
-    connect(m_sourceSelector, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(onAddItem(QListWidgetItem*)));
+    connect(m_sourceSelector, SIGNAL(itemClicked(QListWidgetItem*)), SLOT(onAddItem(QListWidgetItem*)));
 
     connect(m_playButton, SIGNAL(clicked()), SLOT(onPlayClicked()));
 

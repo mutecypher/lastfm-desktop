@@ -32,6 +32,8 @@
 #include "RecipientsWidget.h"
 #include "RecipientWidget.h"
 
+#include <lastfm/User>
+
 RecipientsWidget::RecipientsWidget(QWidget* parent)
     :StylableWidget(parent), m_clearText( false )
 {
