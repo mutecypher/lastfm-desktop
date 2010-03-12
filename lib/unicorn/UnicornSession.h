@@ -41,12 +41,19 @@ public:
     bool isSubscriber() const;
 
     static QNetworkReply* 
-    getMobileSession( const QString& username, const QString& password )
+    getToken()
     {
         QMap<QString, QString> params;
-        params["method"] = "auth.getMobileSession";
-        params["username"] = username;
-        params["authToken"] = lastfm::md5( (username + lastfm::md5( password.toUtf8() ) ).toUtf8() );
+        params["method"] = "auth.getToken";
+        return lastfm::ws::get( params );
+    }
+
+    static QNetworkReply*
+    getSession( QString token )
+    {
+        QMap<QString, QString> params;
+        params["method"] = "auth.getSession";
+        params["token"] = token;
         return lastfm::ws::post( params );
     }
 

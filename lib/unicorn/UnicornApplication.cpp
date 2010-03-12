@@ -125,7 +125,7 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
         changeSession( m_currentSession );
     } else {
         m_signingIn = true;
-        LoginDialog d( m_currentSession.username() );
+        LoginDialog d;
         connect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise()));
         if (d.exec() == QDialog::Accepted)
         {
