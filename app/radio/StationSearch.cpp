@@ -54,7 +54,7 @@ StationSearch::onFinished()
 
     // no artist or tag result
     // maybe the user wanted to hear a friend's library?
-    lastfm::AuthenticatedUser you;
+    lastfm::User you;
     connect(you.getFriends(), SIGNAL(finished()), SLOT(onUserGotFriends()));
 }
 

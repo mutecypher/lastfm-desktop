@@ -35,7 +35,7 @@ class UNICORN_DLLEXPORT FriendsPicker : public QDialog
     } ui;
     
 public:
-    FriendsPicker( const User& = AuthenticatedUser() );
+    FriendsPicker( const User& = User() );
     
     QList<User> selection() const;
 

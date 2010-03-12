@@ -45,6 +45,7 @@
 #include <QTimer>
 #include <QDebug>
 
+#include "widgets/UserManager.h"
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
@@ -143,6 +144,8 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
         }
     }
     m_signingIn = false;
+    
+    UserManager().exec();
 }
 
 
@@ -189,20 +192,11 @@ void
 unicorn::Application::onUserGotInfo()
 {
     QNetworkReply* reply = (QNetworkReply*)sender();
+    lastfm::UserDetails userInfo( reply );
+
+    const char* key = UserSettings::subscriptionKey();
+    UserSettings().setValue( key, userInfo.isSubscriber() );
     
-    try
-    {
-        XmlQuery lfm = lastfm::ws::parse( reply );
-        const char* key = UserSettings::subscriptionKey();
-        bool const value = lfm["user"]["subscriber"].text().toInt() == 1;
-        UserSettings().setValue( key, value );
-    }
-    catch (std::runtime_error& e)
-    {
-        qWarning() << e.what();
-    }
-
-
     emit userGotInfo( reply );
 }
 
@@ -242,7 +236,7 @@ unicorn::Application::changeSession( const Session& newSession )
     lastfm::ws::Username = m_currentSession.username();
     lastfm::ws::SessionKey = m_currentSession.sessionKey();
 
-    connect( AuthenticatedUser().getInfo(), SIGNAL(finished()), SLOT(onUserGotInfo()) );
+    connect( lastfm::UserDetails::getInfo(), SIGNAL(finished()), SLOT(onUserGotInfo()) );
     emit sessionChanged( currentSession(), oldSession );
 }
 
