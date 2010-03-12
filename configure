@@ -91,6 +91,9 @@ echo 'Using '`which $QMAKE`
 
 header 'Generating Build System'
 
+middle "Generating GenPluginList"
+admin/genPluginInfo > lib/unicorn/Updater/gen_PluginList.h
+
 middle "Running qpp..."
 for x in `admin/findsrc pro.in lib` `admin/findsrc pro.in app`
 do
@@ -156,9 +159,6 @@ if [ $TESTS ]
 then
     cp admin/tests/run_tests.sh _bin/tests
 fi
-
-middle "Generating GenPluginList"
-admin/genPluginInfo > lib/unicorn/Updater/gen_PluginList.h
 
 middle "Generating _configure.h"
 case `uname` in
