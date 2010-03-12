@@ -2,8 +2,9 @@
 #define ITUNES_PLUGIN_INFO_H_
 
 #include "../../lib/unicorn/Updater/IPluginInfo.h"
+#include "../../lib/DllExportMacro.h"
 
-class ITunesPluginInfo : public IPluginInfo
+class UNICORN_DLLEXPORT ITunesPluginInfo : public IPluginInfo
 {
 public:
     std::string name() const { return "iTunes"; }

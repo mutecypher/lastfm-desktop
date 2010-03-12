@@ -2,8 +2,9 @@
 #define WINAMP_PLUGIN_INFO_H_
 
 #include "../../lib/unicorn/Updater/IPluginInfo.h"
+#include "../../lib/DllExportMacro.h"
 
-class WinampPluginInfo : public IPluginInfo
+class UNICORN_DLLEXPORT WinampPluginInfo : public IPluginInfo
 {
 public:
     std::string name() const { return "Winamp"; }

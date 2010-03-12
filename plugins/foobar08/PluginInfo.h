@@ -2,8 +2,9 @@
 #define FOOBAR08_PLUGIN_INFO_H_
 
 #include "../../lib/unicorn/Updater/IPluginInfo.h"
+#include "../../lib/DllExportMacro.h"
 
-class FooBar08PluginInfo : public IPluginInfo
+class UNICORN_DLLEXPORT FooBar08PluginInfo : public IPluginInfo
 {
 public:
     std::string name() const { return "Foobar 2000 0.9"; }
