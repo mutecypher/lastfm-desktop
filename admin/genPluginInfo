@@ -9,7 +9,7 @@ fi
 
 while read infoh; do
     INCLUDELIST=$INCLUDELIST$'\n'"#include \"$infoh\""
-    CLASSNAME=$(cat $infoh | grep class | sed "s/class \(UNICORN_DLLEXPORT \)*\(.*\) :.*/\2\(\)\)/g")
+    CLASSNAME=$(cat $infoh | grep class | sed "s/class \(UNICORN_DLLEXPORT \)*\(.*\) :.*/\2\(\)/g")
     INSTANCE=$INSTANCE$'\n'"        *this << (new $CLASSNAME);"
 done < <($FIND ../../../plugins -iname PluginInfo.h)
 cat << EOF
