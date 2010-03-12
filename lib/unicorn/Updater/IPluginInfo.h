@@ -48,8 +48,8 @@ private:
 class UNICORN_DLLEXPORT IPluginInfo
 {
 public:
-    IPluginInfo(){}
-    virtual ~IPluginInfo(){}
+    IPluginInfo();
+    virtual ~IPluginInfo();
 
     enum BootstrapType{ NoBootstrap = 0, ClientBootstrap, PluginBootstrap };
 

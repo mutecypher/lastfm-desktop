@@ -2,8 +2,9 @@
 #define WMP_PLUGIN_INFO_H_
 
 #include "../../lib/unicorn/Updater/IPluginInfo.h"
+#include "../../lib/DllExportMacro.h"
 
-class WmpPluginInfo : public IPluginInfo
+class UNICORN_DLLEXPORT WmpPluginInfo : public IPluginInfo
 {
 public:
     std::string name() const { return "Windows Media Player"; }
