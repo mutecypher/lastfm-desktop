@@ -17,16 +17,15 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef LOGIN_DIALOG_H
-#define LOGIN_DIALOG_H
+#ifndef LOGIN_CONTINUE_DIALOG_H
+#define LOGIN_CONTINUE_DIALOG_H
 
-#include "ui_LoginDialog.h"
 #include "lib/DllExportMacro.h"
 #include "lib/unicorn/UnicornSession.h"
 #include <QDialog>
+#include <QDialogButtonBox>
 
-
-class UNICORN_DLLEXPORT LoginDialog : public QDialog
+class UNICORN_DLLEXPORT LoginContinueDialog : public QDialog
 {
     Q_OBJECT
 private:
@@ -39,19 +38,22 @@ private:
     } ui;
 
 public:
-    LoginDialog();
+    LoginContinueDialog( QString token );
 
-    QString token() const { return m_token; }
+    unicorn::Session session() const { return m_session; }
     
 private slots:
-    void authenticate();
-    void onGotToken();
+    void onGetSession();
+    void onGotSession();
 	void cancel();
 
 private:
     QPushButton* ok() const { return ui.buttonBox->button( QDialogButtonBox::Ok ); }
 
+private:
     QString m_token;
+    bool m_subscriber;
+    unicorn::Session m_session;
 };
 
 #endif
