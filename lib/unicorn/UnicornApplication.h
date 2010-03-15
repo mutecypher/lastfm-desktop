@@ -29,6 +29,7 @@
 #include "PlayBus.h"
 #include <QDebug>
 
+namespace lastfm{ class UserDetails; }
 class QNetworkReply;
 
 namespace unicorn
@@ -141,7 +142,7 @@ namespace unicorn
         void onBusSessionChanged( const Session& );
 
     signals:
-        void userGotInfo( QNetworkReply* );
+        void gotUserInfo( const lastfm::UserDetails& );
         void sessionChanged( const Session& newSession, const Session& oldSession );
     };
 }

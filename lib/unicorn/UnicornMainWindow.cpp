@@ -37,7 +37,7 @@ unicorn::MainWindow::MainWindow()
 {
     new QShortcut( QKeySequence(Qt::CTRL+Qt::Key_W), this, SLOT(close()) );
     new QShortcut( QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_L), this, SLOT(openLog()) );
-    connect( qApp, SIGNAL(userGotInfo( QNetworkReply* )), SLOT(onUserGotInfo( QNetworkReply* )) );
+    connect( qApp, SIGNAL(gotUserInfo( const lastfm::UserDetails& )), SLOT(onGotUserInfo( const lastfm::UserDetails& )) );
 
     QVariant v = unicorn::AppSettings().value( SETTINGS_POSITION_KEY );
     if (v.isValid()) move( v.toPoint() ); //if null, let Qt decide
@@ -74,9 +74,8 @@ unicorn::MainWindow::finishUi()
 
 
 void
-unicorn::MainWindow::onUserGotInfo( QNetworkReply* reply )
+unicorn::MainWindow::onGotUserInfo( const lastfm::UserDetails& details )
 {
-    lastfm::UserDetails details = lastfm::UserDetails( reply );
     ui.account->setTitle( details );
     QString const text = details.getInfoString();
     if (text.size() && ui.account) {

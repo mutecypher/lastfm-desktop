@@ -164,7 +164,7 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
     }
     m_signingIn = false;
     
-    UserManager().exec();
+    //UserManager().exec();
 }
 
 
@@ -216,7 +216,7 @@ unicorn::Application::onUserGotInfo()
     const char* key = UserSettings::subscriptionKey();
     UserSettings().setValue( key, userInfo.isSubscriber() );
     
-    emit userGotInfo( reply );
+    emit gotUserInfo( userInfo );
 }
 
 
