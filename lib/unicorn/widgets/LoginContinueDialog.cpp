@@ -136,7 +136,7 @@ LoginContinueDialog::onGotSession()
     }
     
 #ifdef Q_WS_MAC
-    ui.transient->hide();
+    //ui.transient->hide();
 #else
     // do last, otherwise it looks weird
     //ui.retranslateUi( this ); //resets Window title
