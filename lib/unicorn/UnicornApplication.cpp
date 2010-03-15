@@ -30,6 +30,7 @@
 #include "QMessageBoxBuilder.h"
 #include "UnicornCoreApplication.h"
 #include "widgets/LoginDialog.h"
+#include "widgets/LoginContinueDialog.h"
 #include "SignalBlocker.h"
 #include "UnicornSettings.h"
 #include <lastfm/misc.h>
@@ -113,34 +114,52 @@ unicorn::Application::onMessageRecieved(const QString& message)
 void
 unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserException )
 {
-    if( m_bus.isSigningIn() ) {
+    if( m_bus.isSigningIn() )
+    {
         SignalBlocker( &m_bus, SIGNAL( sessionChanged(Session)), -1 ).start();
-    } else if( !forceLogout ) {
+    } else if( !forceLogout )
+    {
         Session busSession = m_bus.getSession();
        
         if( busSession.isValid() )
             m_currentSession = busSession;
     }
 
-    if( !forceLogout && m_currentSession.isValid()) {
+    if( !forceLogout && m_currentSession.isValid())
+    {
         changeSession( m_currentSession );
-    } else {
+    }
+    else
+    {
         m_signingIn = true;
-        LoginDialog d;
-        connect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise()));
-        if (d.exec() == QDialog::Accepted)
+
+        while ( m_signingIn )
         {
-            changeSession( d.session());
-            QByteArray* ba = new QByteArray("");
-            QDataStream ds( ba, QIODevice::WriteOnly | QIODevice::Truncate);
-            ds << QByteArray( "SESSIONCHANGED" );
-            ds << currentSession();
-            m_bus.sendMessage( *ba );
-            delete ba;
-        }
-        else
-        {
-            throw StubbornUserException();
+            LoginDialog d;
+            connect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise() ) );
+
+            if ( d.exec() == QDialog::Accepted )
+            {
+                LoginContinueDialog lc( d.token() );
+                connect( &m_bus, SIGNAL( signingInQuery( QString)), &lc, SLOT( raise() ) );
+
+                if ( lc.exec() == QDialog::Accepted )
+                {
+                    changeSession( lc.session());
+                    QByteArray* ba = new QByteArray("");
+                    QDataStream ds( ba, QIODevice::WriteOnly | QIODevice::Truncate);
+                    ds << QByteArray( "SESSIONCHANGED" );
+                    ds << currentSession();
+                    m_bus.sendMessage( *ba );
+                    delete ba;
+
+                    m_signingIn = false;
+                }
+            }
+            else
+            {
+                throw StubbornUserException();
+            }
         }
     }
     m_signingIn = false;

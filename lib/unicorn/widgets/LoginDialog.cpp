@@ -31,7 +31,6 @@
 
 
 LoginDialog::LoginDialog()
-    :m_subscriber( true )
 {
     setWindowModality( Qt::ApplicationModal );
 
@@ -79,93 +78,11 @@ LoginDialog::onGotToken()
     if ( QDesktopServices::openUrl( authUrl ) )
     {
         // prepare for continue to be clicked
+        accept();
     }
     else
     {
         // We were unable to open a browser - what do we do now?
+        reject(); // ???
     }
-}
-
-void
-LoginDialog::onContinue()
-{
-    connect( unicorn::Session::getSession( m_token ), SIGNAL(finished()), SLOT(onGotSession()) );
-}
-
-void
-LoginDialog::onGotSession()
-{
-    try {
-        m_session = unicorn::Session( static_cast<QNetworkReply*>(sender()) );
-        //m_session.setRememberSession( ui.remember->isChecked() );
-        accept();
-    }
-    catch (lastfm::ws::ParseError& e)
-    {
-        qWarning() << e.what();
-
-        switch (e.enumValue())
-        {
-            case lastfm::ws::AuthenticationFailed:
-                // COPYTODO
-                QMessageBoxBuilder( this )
-                        .setIcon( QMessageBox::Critical )
-                        .setTitle( tr("Login Failed") )
-                        .setText( tr("Sorry, we don't recognise that username, or you typed the password wrongly.") )
-                        .exec();
-                break;
-            
-            default:
-                // COPYTODO
-                QMessageBoxBuilder( this )
-                        .setIcon( QMessageBox::Critical )
-                        .setTitle( tr("Last.fm Unavailable") )
-                        .setText( tr("There was a problem communicating with the Last.fm services. Please try again later.") )
-                        .exec();
-                break;
-            
-            case lastfm::ws::TryAgainLater:
-            case lastfm::ws::UnknownError:
-                switch ((int)static_cast<QNetworkReply*>(sender())->error())
-                {
-                    case QNetworkReply::ProxyConnectionClosedError:
-                    case QNetworkReply::ProxyConnectionRefusedError:
-                    case QNetworkReply::ProxyNotFoundError:
-                    case QNetworkReply::ProxyTimeoutError:
-                    case QNetworkReply::ProxyAuthenticationRequiredError: //TODO we are meant to prompt!
-                    case QNetworkReply::UnknownProxyError:
-                    case QNetworkReply::UnknownNetworkError:
-                        break;
-                    default:
-                        return;
-                }
-
-                // TODO proxy prompting?
-                // COPYTODO
-                QMessageBoxBuilder( this )
-                        .setIcon( QMessageBox::Critical )
-                        .setTitle( tr("Cannot connect to Last.fm") )
-                        .setText( tr("Last.fm cannot be reached. Please check your firewall or proxy settings.") )
-                        .exec();
-                
-            #ifdef WIN32
-                // show Internet Settings Control Panel
-                HMODULE h = LoadLibraryA( "InetCpl.cpl" );
-                if (!h) break;
-                BOOL (WINAPI *cpl)(HWND) = (BOOL (WINAPI *)(HWND)) GetProcAddress( h, "LaunchConnectionDialog" );
-                if (cpl) cpl( winId() );
-                FreeLibrary( h );
-            #endif
-                break;
-        }
-    }
-    
-#ifdef Q_WS_MAC
-    ui.transient->hide();
-#else
-    // do last, otherwise it looks weird
-    //ui.retranslateUi( this ); //resets Window title
-    //ok()->setEnabled( true );
-    //ui.spinner->hide();
-#endif
 }
