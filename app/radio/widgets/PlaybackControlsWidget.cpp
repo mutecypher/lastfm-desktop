@@ -22,6 +22,7 @@
 #include <QHBoxLayout>
 #include <QSpacerItem>
 #include <QNetworkReply>
+#include <QProcess>
 
 #include <QSlider>
 #include <QToolButton>
@@ -367,7 +368,9 @@ PlaybackControlsWidget::onSpaceKey()
 void
 PlaybackControlsWidget::onInfoClicked()
 {
-    // switch to The Scrobbler
+    // open to The Scrobbler
+    QProcess* yeah = new QProcess;
+    yeah->start( qApp->applicationDirPath() + "\\audioscrobbler.exe" );
 }
 
 void
