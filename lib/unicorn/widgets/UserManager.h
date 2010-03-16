@@ -40,9 +40,12 @@ public:
 
 protected slots:
     void onAddUserClicked();
+    void onLoginDialogAccepted();
+    void onUserAdded();
 
 protected:
     struct {
+        class QGroupBox* groupBox;
     } ui;
 };
 

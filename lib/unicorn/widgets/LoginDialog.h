@@ -39,7 +39,7 @@ private:
     } ui;
 
 public:
-    LoginDialog();
+    LoginDialog( QWidget* parent = 0 );
 
     QString token() const { return m_token; }
     

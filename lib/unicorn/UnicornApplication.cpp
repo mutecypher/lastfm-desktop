@@ -164,7 +164,7 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
     }
     m_signingIn = false;
     
-    UserManager().exec();
+    //UserManager().exec();
 }
 
 

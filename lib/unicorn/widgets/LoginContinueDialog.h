@@ -38,7 +38,7 @@ private:
     } ui;
 
 public:
-    LoginContinueDialog( QString token );
+    LoginContinueDialog( QString token, QWidget* parent = 0 );
 
     unicorn::Session session() const { return m_session; }
     

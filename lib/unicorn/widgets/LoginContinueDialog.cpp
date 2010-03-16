@@ -30,8 +30,8 @@
 #endif
 
 
-LoginContinueDialog::LoginContinueDialog( QString token )
-    :m_token( token ), m_subscriber( true )
+LoginContinueDialog::LoginContinueDialog( QString token, QWidget* parent )
+    : QDialog( parent ), m_token( token ), m_subscriber( true )
 {
     setWindowModality( Qt::ApplicationModal );
 

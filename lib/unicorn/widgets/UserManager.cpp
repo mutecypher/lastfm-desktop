@@ -15,6 +15,9 @@
 #include <QGroupBox>
 #include <QDialogButtonBox>
 
+#include "widgets/LoginDialog.h"
+#include "widgets/LoginContinueDialog.h"
+
 using lastfm::UserDetails;
 UserRadioButton::UserRadioButton( const User& user )
 {
@@ -25,7 +28,8 @@ UserRadioButton::UserRadioButton( const User& user )
     l->addWidget( m_image = new QLabel(), 0, Qt::AlignTop);
     m_image->setFrameShape( QFrame::Box );
     m_image->setFrameShadow( QFrame::Plain );
-    m_image->setMinimumSize( QSize( 35, 35 ));
+    unsigned int framewidth = m_image->lineWidth() * 2;
+    m_image->setMinimumSize( QSize( 35+framewidth, 35+ framewidth ));
     m_image->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
     
     installEventFilter( this );
@@ -95,16 +99,15 @@ UserManager::UserManager( QWidget* parent )
     layout->setSpacing( 7 );
     layout->addWidget( new QLabel( tr( "Users authenticated with this application" )));
 
-    QGroupBox* groupBox;
-    layout->addWidget( groupBox = new QGroupBox());
-    new QVBoxLayout( groupBox );
-    //groupBox->setContentsMargins( 0, 0, 0, 0 );
-    groupBox->setTitle( tr( "Log me in as:" ));
+    layout->addWidget( ui.groupBox = new QGroupBox());
+    new QVBoxLayout( ui.groupBox );
+    //ui.groupBox->setContentsMargins( 0, 0, 0, 0 );
+    ui.groupBox->setTitle( tr( "Log me in as:" ));
 
-    groupBox->layout()->addWidget( new UserRadioButton( User() ));
-    groupBox->layout()->addWidget( new UserRadioButton( User( "han")));
-    groupBox->layout()->addWidget( new UserRadioButton( User( "eartle")));
-    groupBox->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
+    ui.groupBox->layout()->addWidget( new UserRadioButton( User() ));
+    ui.groupBox->layout()->addWidget( new UserRadioButton( User( "han")));
+    ui.groupBox->layout()->addWidget( new UserRadioButton( User( "eartle")));
+    ui.groupBox->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
     QHBoxLayout* actionButtons = new QHBoxLayout();
     QDialogButtonBox* bb;
@@ -119,9 +122,39 @@ UserManager::UserManager( QWidget* parent )
     layout->addLayout( actionButtons );
 }
 
-
 void
 UserManager::onAddUserClicked()
 {
-    qDebug() << "Adding user";
+    LoginDialog* ld = new LoginDialog( this );
+    ld->setWindowFlags( Qt::Sheet );
+    ld->open();
+    connect( ld, SIGNAL( accepted()), SLOT( onLoginDialogAccepted()));
 }
+
+
+void
+UserManager::onLoginDialogAccepted()
+{
+    LoginDialog* ld = qobject_cast<LoginDialog*>(sender());
+    Q_ASSERT( ld );
+    
+    QString token = ld->token();
+    ld->deleteLater();
+
+    LoginContinueDialog* lcd = new LoginContinueDialog( token, this );
+    lcd->setWindowFlags( Qt::Sheet );
+    lcd->open();
+    connect( lcd, SIGNAL( accepted()), SLOT( onUserAdded()));
+}
+
+
+void 
+UserManager::onUserAdded()
+{
+    LoginContinueDialog* lcd = qobject_cast<LoginContinueDialog*>(sender());
+    Q_ASSERT( lcd );
+
+    const unicorn::Session& s = lcd->session();
+    ui.groupBox->layout()->addWidget( new UserRadioButton( User( s.username())));
+}
+
