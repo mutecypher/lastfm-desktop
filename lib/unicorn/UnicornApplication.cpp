@@ -142,6 +142,8 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
                 LoginContinueDialog lc( d.token() );
                 connect( &m_bus, SIGNAL( signingInQuery( QString)), &lc, SLOT( raise() ) );
 
+                lc.raise();
+
                 if ( lc.exec() == QDialog::Accepted )
                 {
                     changeSession( lc.session());
