@@ -30,8 +30,8 @@
 #endif
 
 
-LoginContinueDialog::LoginContinueDialog( QString token )
-    :m_token( token ), m_subscriber( true )
+LoginContinueDialog::LoginContinueDialog( QString token, QWidget* parent )
+    : QDialog( parent ), m_token( token ), m_subscriber( true )
 {
     setWindowModality( Qt::ApplicationModal );
 
@@ -136,7 +136,7 @@ LoginContinueDialog::onGotSession()
     }
     
 #ifdef Q_WS_MAC
-    ui.transient->hide();
+    //ui.transient->hide();
 #else
     // do last, otherwise it looks weird
     //ui.retranslateUi( this ); //resets Window title

@@ -22,7 +22,7 @@
 #include "widgets/AboutDialog.h"
 #include "widgets/UpdateDialog.h"
 #include "UnicornSettings.h"
-#include <lastfm/AuthenticatedUser>
+#include <lastfm/User>
 #include <QDesktopServices>
 #include <QMenuBar>
 #include <QShortcut>
@@ -37,7 +37,7 @@ unicorn::MainWindow::MainWindow()
 {
     new QShortcut( QKeySequence(Qt::CTRL+Qt::Key_W), this, SLOT(close()) );
     new QShortcut( QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_L), this, SLOT(openLog()) );
-    connect( qApp, SIGNAL(userGotInfo( QNetworkReply* )), SLOT(onUserGotInfo( QNetworkReply* )) );
+    connect( qApp, SIGNAL(gotUserInfo( const lastfm::UserDetails& )), SLOT(onGotUserInfo( const lastfm::UserDetails& )) );
 
     QVariant v = unicorn::AppSettings().value( SETTINGS_POSITION_KEY );
     if (v.isValid()) move( v.toPoint() ); //if null, let Qt decide
@@ -53,7 +53,7 @@ unicorn::MainWindow::~MainWindow()
 void
 unicorn::MainWindow::finishUi()
 {
-    ui.account = menuBar()->addMenu( AuthenticatedUser().name() );
+    ui.account = menuBar()->addMenu( User().name() );
     ui.profile = ui.account->addAction( tr("Visit &Profile"), this, SLOT(visitProfile()) );
     ui.account->addSeparator();
     ui.account->addAction( tr("Log &Out"), qApp, SLOT(logout()) );
@@ -74,10 +74,10 @@ unicorn::MainWindow::finishUi()
 
 
 void
-unicorn::MainWindow::onUserGotInfo( QNetworkReply* reply )
+unicorn::MainWindow::onGotUserInfo( const lastfm::UserDetails& details )
 {
-    ui.account->setTitle( AuthenticatedUser());
-    QString const text = AuthenticatedUser::getInfoString( reply );
+    ui.account->setTitle( details );
+    QString const text = details.getInfoString();
     if (text.size() && ui.account) {
         QAction* a = ui.account->addAction( text );
         a->setEnabled( false );
@@ -89,7 +89,7 @@ unicorn::MainWindow::onUserGotInfo( QNetworkReply* reply )
 void
 unicorn::MainWindow::visitProfile()
 {
-    QDesktopServices::openUrl( AuthenticatedUser().www() );
+    QDesktopServices::openUrl( User().www() );
 }
 
 

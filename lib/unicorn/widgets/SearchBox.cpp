@@ -131,7 +131,7 @@ TagSearch::handleSearchResponse(XmlQuery& lfm)
 UserSearch::UserSearch(QWidget* parent)
 : SearchBox(parent)
 {
-    connect(AuthenticatedUser().getFriends(), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
+    connect(User().getFriends(), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
 }
 
 int CaseInsensitiveLessThan(const QString& s1, const QString &s2)
@@ -160,7 +160,7 @@ UserSearch::onGetFriendsFinished()
     else
     {
         // get the next page of friends
-        connect(AuthenticatedUser().getFriends( friendPage.perPage, friendPage.page + 1 ), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
+        connect(User().getFriends( friendPage.perPage, friendPage.page + 1 ), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
     }
 }
 

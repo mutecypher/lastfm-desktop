@@ -124,7 +124,7 @@ MultiStarterTabWidget::onUserGotFriends()
     QListWidgetItem* item = new QListWidgetItem(m_sourceSelector->list());
 
     // Add the authenticated user as first in the list
-    lastfm::AuthenticatedUser you;
+    lastfm::User you;
     item->setData(Qt::DisplayRole, you.name().toLower());
     item->setData(Qt::ToolTipRole, you.realName());
     item->setData(SourceListModel::SourceType, m_type);

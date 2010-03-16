@@ -30,7 +30,8 @@
 #endif
 
 
-LoginDialog::LoginDialog()
+LoginDialog::LoginDialog( QWidget* parent )
+            :QDialog( parent )
 {
     setWindowModality( Qt::ApplicationModal );
 
@@ -40,6 +41,7 @@ LoginDialog::LoginDialog()
     ui.title->setObjectName( "title" );
 
     layout->addWidget( ui.description = new QLabel( tr("This application needs your permission to connect to your Last.fm profile.  Click OK to go to the Last.fm website and do this.") ) );
+    ui.description->setWordWrap( true );
     ui.title->setObjectName( "description" );
     ui.title->setWordWrap( true );
 

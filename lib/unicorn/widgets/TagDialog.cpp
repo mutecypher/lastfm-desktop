@@ -50,7 +50,7 @@ TagDialog::TagDialog( const Track& track, QWidget *parent )
     
     setWindowTitle( tr("Tag") );
     
-    QNetworkReply* r = AuthenticatedUser().getTopTags();
+    QNetworkReply* r = User().getTopTags();
     ui.yourTags->setTagsRequest( r );
     follow( r );
 	

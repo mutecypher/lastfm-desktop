@@ -83,7 +83,7 @@ MainWindow::MainWindow()
 void 
 MainWindow::onSessionChanged( const unicorn::Session& s, const unicorn::Session& )
 {
-    AuthenticatedUser user;
+    User user;
     qDebug() << "fetching friends and recent stations for" << user;
     connect(user.getFriends(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotFriends()));
     connect(user.getRecentStations(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotRecentStations()));
