@@ -52,6 +52,10 @@
 
 #include "lib/unicorn/UnicornSettings.h"
 
+#ifdef Q_OS_WIN32
+#include "windows.h"
+#endif
+
 PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
                        :StylableWidget( parent )
 {
@@ -368,9 +372,17 @@ PlaybackControlsWidget::onSpaceKey()
 void
 PlaybackControlsWidget::onInfoClicked()
 {
-    // open to The Scrobbler
-    QProcess* yeah = new QProcess;
-    yeah->start( qApp->applicationDirPath() + "\\audioscrobbler.exe" );
+    QTimer::singleShot(1000, this, SLOT(openScrobbler()));
+#ifdef Q_OS_WIN32
+    AllowSetForegroundWindow(ASFW_ANY);
+#endif
+}
+
+void
+PlaybackControlsWidget::openScrobbler()
+{
+    QProcess* process = new QProcess;
+    process->start( qApp->applicationDirPath() + "\\audioscrobbler.exe" );
 }
 
 void

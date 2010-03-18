@@ -93,8 +93,6 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     connect( &m_bus, SIGNAL( sessionQuery( QString )), SLOT( onBusSessionQuery( QString )));
     connect( &m_bus, SIGNAL( sessionChanged( Session )), SLOT( onBusSessionChanged( Session )));
 
-    connect( this, SIGNAL(messageReceived( QString )), SLOT(onMessageRecieved( QString )));
-
     m_bus.board();
 
 #ifdef __APPLE__
@@ -103,12 +101,6 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
 
     initiateLogin();
 
-}
-
-void
-unicorn::Application::onMessageRecieved(const QString& message)
-{
-    activeWindow()->activateWindow();
 }
 
 void

@@ -17,6 +17,9 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <QStringList>
+
 #include "_version.h"
 #include "Application.h"
 #include "app/moose.h"
@@ -30,7 +33,7 @@ int main( int argc, char** argv )
     try
     {
         audioscrobbler::Application app( argc, argv );
-        if ( app.sendMessage("Wake up!") )
+        if ( app.sendMessage( app.arguments().contains("--tray") ? "--tray" : "" ) )
             return 0;
         return app.exec();
     }

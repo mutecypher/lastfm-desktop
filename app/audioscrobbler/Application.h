@@ -88,5 +88,7 @@ namespace audioscrobbler
 
         void onActivateWindow();
 
+        void onMessageReceived(const QString& message);
+
     };
 }

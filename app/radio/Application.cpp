@@ -31,7 +31,7 @@ Application::Application( int& argc, char** argv )
     : unicorn::Application( argc, argv )
 {
     QProcess* process = new QProcess;
-    process->start( QApplication::applicationDirPath() + "audioscrobbler.exe" );
+    process->start( QApplication::applicationDirPath() + "/audioscrobbler.exe", QStringList("--tray") );
 
 }
 

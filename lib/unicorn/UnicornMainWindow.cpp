@@ -147,7 +147,7 @@ unicorn::MainWindow::eventFilter( QObject* o, QEvent* event )
             }
     }
 
-    return false;
+    return QMainWindow::eventFilter(o, event);
 }
 
 
