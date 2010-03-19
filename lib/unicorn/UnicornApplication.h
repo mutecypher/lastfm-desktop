@@ -132,7 +132,6 @@ namespace unicorn
             return true;
         }
 
-        void onMessageRecieved(const QString& message);
         void manageUsers();
         void changeSession( const unicorn::Session& newSession, bool announce = true );
 

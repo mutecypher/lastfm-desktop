@@ -22,6 +22,7 @@
 #include <QHBoxLayout>
 #include <QSpacerItem>
 #include <QNetworkReply>
+#include <QProcess>
 
 #include <QSlider>
 #include <QToolButton>
@@ -50,6 +51,10 @@
 #include "lib/unicorn/widgets/ShareDialog.h"
 
 #include "lib/unicorn/UnicornSettings.h"
+
+#ifdef Q_OS_WIN32
+#include "windows.h"
+#endif
 
 PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
                        :StylableWidget( parent )
@@ -367,7 +372,17 @@ PlaybackControlsWidget::onSpaceKey()
 void
 PlaybackControlsWidget::onInfoClicked()
 {
-    // switch to The Scrobbler
+    QTimer::singleShot(1000, this, SLOT(openScrobbler()));
+#ifdef Q_OS_WIN32
+    AllowSetForegroundWindow(ASFW_ANY);
+#endif
+}
+
+void
+PlaybackControlsWidget::openScrobbler()
+{
+    QProcess* process = new QProcess;
+    process->start( qApp->applicationDirPath() + "\\audioscrobbler.exe" );
 }
 
 void

@@ -38,6 +38,10 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include "Wizard/FirstRunWizard.h"
 
+#ifdef Q_OS_WIN32
+#include "windows.h"
+#endif
+
 using audioscrobbler::Application;
 
 #define ELLIPSIS QString::fromUtf8("…")
@@ -123,6 +127,8 @@ Application::init()
     sc->setTagAction( m_tag_action );
     sc->setShareAction( m_share_action );
 
+
+
 /// mediator
     mediator = new PlayerMediator(this);
     connect(mediator, SIGNAL(activeConnectionChanged( PlayerConnection* )), SLOT(setConnection( PlayerConnection* )) );
@@ -151,24 +157,31 @@ Application::init()
     }
 
 
-    connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( show()) );
-    connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( setFocus()) );
-    connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( raise()) );
-    connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( onActivateWindow()) );
+    connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( onActivateWindow()), Qt::QueuedConnection );
 
+    connect( this, SIGNAL(messageReceived(QString)), SLOT(onMessageReceived(QString)) );
+    connect( this, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session) ), 
+                   SLOT(onSessionChanged()));
 
-    m_toggle_window_action->trigger();
+    if (!arguments().contains("--tray"))
+    {
+        m_toggle_window_action->trigger();
+    }
 
     // clicking on a system tray message should show the scrobbler
     connect( tray, SIGNAL(messageClicked()), m_toggle_window_action, SLOT(trigger()));
+
+
 }
 
 
-/*void 
+void
 Application::onSessionChanged()
 {
-}*/
-
+    Audioscrobbler* oldAs = as;
+    as = new Audioscrobbler("ass");
+    delete oldAs;
+}
 
 void
 Application::setConnection(PlayerConnection*c)
@@ -313,6 +326,22 @@ Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason )
 void
 Application::onActivateWindow()
 {
+    mw->showNormal();
+    mw->setFocus();
+    mw->raise();
     mw->activateWindow();
+}
+
+void
+Application::onMessageReceived(const QString& message)
+{
+    if (message != "--tray")
+    {
+        // raise the app
+        m_toggle_window_action->trigger();
+#ifdef Q_OS_WIN32
+		SetForegroundWindow(mw->winId());
+#endif
+    }
 }
 

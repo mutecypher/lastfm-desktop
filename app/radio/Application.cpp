@@ -22,6 +22,7 @@
 #include "Radio.h"
 #include "ScrobSocket.h"
 #include <QDebug>
+#include <QProcess>
 
 using moralistfad::Application;
 
@@ -29,7 +30,9 @@ using moralistfad::Application;
 Application::Application( int& argc, char** argv ) 
     : unicorn::Application( argc, argv )
 {
-    //addLibraryPath(applicationDirPath() + "\\plugins" );
+    QProcess* process = new QProcess;
+    process->start( QApplication::applicationDirPath() + "/audioscrobbler.exe", QStringList("--tray") );
+
 }
 
 // lastfmlib invokes this directly, for some errors:

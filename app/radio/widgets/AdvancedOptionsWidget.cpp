@@ -28,37 +28,36 @@
 AdvancedOptionsWidget::AdvancedOptionsWidget(QWidget* parent)
     :QWidget(parent)
 {
-    QVBoxLayout* optionsLayout = new QVBoxLayout(this);
+    QGridLayout* layout = new QGridLayout(this);
     {
         QLabel* label = new QLabel(tr("Type of tracks played"));
         label->setObjectName("sliderDescription");
-        optionsLayout->addWidget(label, Qt::AlignCenter);       // although it doesn't seem to center :(
-        QLayout* layout = new QHBoxLayout(this);
-        layout->addWidget(new QLabel(tr("Obscure")));
-        layout->addWidget(m_mainstrSlider = new QSlider(Qt::Horizontal));
-        layout->addWidget(new QLabel(tr("Popular")));
-        optionsLayout->addLayout(layout);
+        layout->addWidget(label, 0, 0, 1, 3, Qt::AlignCenter);
+        layout->addWidget(new QLabel(tr("Obscure")), 1, 0, 1, 1, Qt::AlignRight);
+        layout->addWidget(m_mainstrSlider = new QSlider(Qt::Horizontal), 1, 1, 1, 1, Qt::AlignCenter);
+        layout->addWidget(new QLabel(tr("Popular")), 1, 2, 1, 1, Qt::AlignLeft);
     }
     {
         QLabel* label = new QLabel(tr("Tracks from the same artist"));
         label->setObjectName("sliderDescription");
-        optionsLayout->addWidget(label, Qt::AlignCenter);
-        QLayout* layout = new QHBoxLayout(this);
-        layout->addWidget(new QLabel(tr("Less")));
-        layout->addWidget(m_repSlider = new QSlider(Qt::Horizontal));
-        layout->addWidget(new QLabel(tr("More")));
-        optionsLayout->addLayout(layout);
+        layout->addWidget(label, 2, 0, 1, 3, Qt::AlignCenter);
+        layout->addWidget(new QLabel(tr("Less")), 3, 0, 1, 1, Qt::AlignRight);
+        layout->addWidget(m_repSlider = new QSlider(Qt::Horizontal), 3, 1, 1, 1, Qt::AlignCenter);
+        layout->addWidget(new QLabel(tr("More")), 3, 2, 1, 1, Qt::AlignLeft);
     }
 
-    optionsLayout->addWidget(m_disco = new QCheckBox(tr("Discovery mode")));
+    layout->addWidget(m_disco = new QCheckBox(tr("Discovery mode")), 4, 0, 1, 3, Qt::AlignCenter);
     setSupportsDisco( true );
 
-    optionsLayout->addWidget( m_restoreDefaults = new QPushButton( tr("Restore defaults") ) );
+    layout->addWidget( m_restoreDefaults = new QPushButton( tr("Restore defaults") ), 5, 0, 1, 3, Qt::AlignCenter );
     m_restoreDefaults->setObjectName("restoreDefaults");
+
+    layout->setRowStretch ( 0, 0 );
+    layout->setRowStretch ( 1, 1 );
+    layout->setRowStretch ( 2, 0 );
 
     connect(m_restoreDefaults, SIGNAL(clicked()), SLOT(onResetDefaultsClicked()));
 
-    setLayout(optionsLayout);
     setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
 
     m_repSlider->setMinimum(0);

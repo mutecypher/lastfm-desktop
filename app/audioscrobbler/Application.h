@@ -84,7 +84,11 @@ namespace audioscrobbler
         void onResumed();
         void onStopped();
 
+        void onSessionChanged();
+
         void onActivateWindow();
+
+        void onMessageReceived(const QString& message);
 
     };
 }
