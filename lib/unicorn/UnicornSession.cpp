@@ -4,16 +4,6 @@
 
 namespace unicorn {
 
-SessionData::~SessionData()
-{
-    Settings s;
-    s.beginGroup( username );
-    s.setValue( "Subscriber", isSubscriber );
-    if( remember ) {
-        s.setValue( "SessionKey", sessionKey );
-    }
-}
-
 Session::Session()
         :d( 0 )
 {
@@ -61,10 +51,16 @@ Session::Session( const Session& other )
         : d( other.d )
 {}
 
-void 
-Session::setRememberSession( bool b )
+Session::Session( const QString& username )
+        : d( 0 )
 {
-    d->remember = b;
+    Settings s;
+    if( !s.childGroups().contains( username, Qt::CaseInsensitive )) return;
+    s.beginGroup( username );
+    bool subscriber = s.value( "Subscriber" ).toBool();
+    QString sessionKey = s.value( "SessionKey" ).toString();
+
+    init( username, sessionKey, subscriber );
 }
 
 QString 
@@ -99,8 +95,11 @@ Session::init( const QString& username, const QString& sessionKey, const bool is
     d->username = username;
     d->sessionKey = sessionKey;
     d->isSubscriber = isSubscriber;
-    d->remember = false;
-
+    
+    Settings s;
+    s.beginGroup( username );
+    s.setValue( "Subscriber", isSubscriber );
+    s.setValue( "SessionKey", sessionKey );
 }
 
 }

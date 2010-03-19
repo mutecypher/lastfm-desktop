@@ -17,16 +17,21 @@ Q_OBJECT
 
 public:
     UserRadioButton( const lastfm::User& user );
+    const QString user() const;
 
 protected slots:
     void onUserDetailsFetched();
     void onImageLoaded();
+    void removeMe();
 
 protected:
     bool eventFilter( QObject* obj, QEvent* event );
 
 protected:
+    QString m_userName;
     QLabel* m_name;
+    QLabel* m_realName;
+    QLabel* m_loggedIn;
     QLabel* m_image;
     QFrame* m_f;
 };
@@ -42,8 +47,11 @@ protected slots:
     void onAddUserClicked();
     void onLoginDialogAccepted();
     void onUserAdded();
+    void onAccept();
 
 protected:
+    class QButtonGroup* m_buttonGroup;
+
     struct {
         class QGroupBox* groupBox;
     } ui;

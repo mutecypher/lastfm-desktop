@@ -22,7 +22,6 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QScrollBar>
-#include <lastfm/AuthenticatedUser>
 #include <lastfm/XmlQuery>
 #include "RecentStationsWidget.h"
 #include "ColumnListView.h"

@@ -140,18 +140,13 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
 
             if ( d.exec() == QDialog::Accepted )
             {
+                disconnect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise()));
                 LoginContinueDialog lc( d.token() );
                 connect( &m_bus, SIGNAL( signingInQuery( QString)), &lc, SLOT( raise() ) );
 
                 if ( lc.exec() == QDialog::Accepted )
                 {
                     changeSession( lc.session());
-                    QByteArray* ba = new QByteArray("");
-                    QDataStream ds( ba, QIODevice::WriteOnly | QIODevice::Truncate);
-                    ds << QByteArray( "SESSIONCHANGED" );
-                    ds << currentSession();
-                    m_bus.sendMessage( *ba );
-                    delete ba;
 
                     m_signingIn = false;
                 }
@@ -163,8 +158,15 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
         }
     }
     m_signingIn = false;
-    
-    //UserManager().exec();
+   
+}
+
+
+void 
+unicorn::Application::manageUsers()
+{
+    if( UserManager().exec())
+        changeSession( Session());
 }
 
 
@@ -215,7 +217,6 @@ unicorn::Application::onUserGotInfo()
 
     const char* key = UserSettings::subscriptionKey();
     UserSettings().setValue( key, userInfo.isSubscriber() );
-    
     emit gotUserInfo( userInfo );
 }
 
@@ -244,18 +245,22 @@ unicorn::Application::onBusSessionQuery( const QString& uuid )
 void 
 unicorn::Application::onBusSessionChanged( const Session& session )
 {
-    changeSession( session );
+    changeSession( session, false );
 }
 
+
 void 
-unicorn::Application::changeSession( const Session& newSession )
+unicorn::Application::changeSession( const Session& newSession, bool announce )
 {
     Session oldSession = currentSession();
     m_currentSession = newSession;
     lastfm::ws::Username = m_currentSession.username();
     lastfm::ws::SessionKey = m_currentSession.sessionKey();
+    connect( lastfm::UserDetails::getInfo(), SIGNAL(finished()), this, SLOT(onUserGotInfo()) );
+    
+    if( announce )
+        m_bus.changeSession( currentSession());
 
-    connect( lastfm::UserDetails::getInfo(), SIGNAL(finished()), SLOT(onUserGotInfo()) );
     emit sessionChanged( currentSession(), oldSession );
 }
 

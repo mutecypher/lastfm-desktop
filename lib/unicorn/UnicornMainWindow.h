@@ -51,10 +51,12 @@ template <typename D> struct OneDialogPointer : public QPointer<D>
     }
 };
 
-namespace lastfm{ class UserDetails; }
+namespace lastfm { class UserDetails; }
 
 namespace unicorn
 {
+    class Session;
+
     class UNICORN_DLLEXPORT MainWindow : public QMainWindow
     {
         Q_OBJECT
@@ -94,6 +96,7 @@ namespace unicorn
 
     private slots:
         void onGotUserInfo( const lastfm::UserDetails& );
+        void onSessionChanged( const unicorn::Session& );
     
     signals:
         void hidden( bool );   

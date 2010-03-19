@@ -21,13 +21,29 @@
 #include "RestWidget.h"
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QPushButton>
+#include "lib/unicorn/UnicornApplication.h"
+#include "lib/unicorn/UnicornSession.h"
 
 #include <lastfm/ws.h>
 
+using unicorn::Session;
 RestWidget::RestWidget( QWidget* p )
            :StylableWidget( p )
 {
-    new QVBoxLayout( this );
-    layout()->addWidget( new QLabel( QString("Hi, ") + lastfm::ws::Username + ".\nListen to some music to scrobble it to your Last.fm profile." ));
+    QPushButton* b;
+    QVBoxLayout* l = new QVBoxLayout( this );
+    l->addWidget( ui.welcomeLabel = new QLabel( tr("Hi, %1.\nListen to some music to scrobble it to your Last.fm profile." ).arg( lastfm::ws::Username )), 0, Qt::AlignBottom);
+    l->addWidget( b = new QPushButton( tr( "Switch users?" )), 0, Qt::AlignTop);
+    b->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
+    
+    connect( qApp, SIGNAL(sessionChanged(unicorn::Session, unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));
+    connect( b, SIGNAL(clicked()), qApp, SLOT( manageUsers()));
+    b->setCursor( Qt::PointingHandCursor );
 }
 
+void 
+RestWidget::onSessionChanged( const Session& session )
+{
+    ui.welcomeLabel->setText( tr("Hi, %1.\nListen to some music to scrobble it to your Last.fm profile." ).arg( session.username() ));
+}

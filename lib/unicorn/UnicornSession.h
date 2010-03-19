@@ -13,7 +13,6 @@ class UNICORN_DLLEXPORT SessionData : public QSharedData
 {
 public:
     SessionData(): isSubscriber( false ){}
-    ~SessionData();
 
     QString username;
     QString sessionKey;
@@ -28,12 +27,13 @@ public:
     Session( const Session& other );
     Session( QNetworkReply* reply ) throw( lastfm::ws::ParseError );
 
+    /** Return session object from stored session */
+    Session( const QString& username );
+
     bool isValid() const
     {
         return d;
     }
-
-    void setRememberSession( bool b );
 
     QString username() const;
     QString sessionKey() const;

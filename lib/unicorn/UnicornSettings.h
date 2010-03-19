@@ -24,6 +24,7 @@
 #include <QString>
 #include "UnicornApplication.h"
 
+namespace lastfm{ class User; }
 namespace unicorn
 {
     inline const char* organizationName() { return "Last.fm"; }
@@ -34,6 +35,9 @@ namespace unicorn
     public:
         Settings() : QSettings( unicorn::organizationName() )
         {}
+        
+        QList<lastfm::User> userRoster();
+
     };
 
     class AppSettings : public QSettings
@@ -61,5 +65,6 @@ namespace unicorn
         static const char* subscriptionKey() { return "subscription"; }
     };
 }
+
 
 #endif

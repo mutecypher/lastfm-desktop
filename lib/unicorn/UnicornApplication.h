@@ -58,6 +58,14 @@ namespace unicorn
                 return s;
             }
 
+            void changeSession( const Session& s )
+            {
+                QByteArray ba("");
+                QDataStream ds( &ba, QIODevice::WriteOnly | QIODevice::Truncate);
+                ds << QByteArray( "SESSIONCHANGED" );
+                ds << s;
+                sendMessage( ba );
+            }
         private slots:
 
             void onMessage( const QByteArray& message )
@@ -125,11 +133,12 @@ namespace unicorn
         }
 
         void onMessageRecieved(const QString& message);
+        void manageUsers();
+        void changeSession( const unicorn::Session& newSession, bool announce = true );
 
     private:
         void initiateLogin( bool forceLogout = false ) throw( StubbornUserException );
         void translate();
-        void changeSession( const Session& newSession );
         QString m_styleSheet;
         Session m_currentSession;
         Bus m_bus;
@@ -143,7 +152,7 @@ namespace unicorn
 
     signals:
         void gotUserInfo( const lastfm::UserDetails& );
-        void sessionChanged( const Session& newSession, const Session& oldSession );
+        void sessionChanged( const unicorn::Session& newSession, const unicorn::Session& oldSession );
     };
 }
 

@@ -20,6 +20,8 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
+namespace unicorn{ class Session; }
+
 class RestWidget : public StylableWidget
 {
     Q_OBJECT
@@ -27,4 +29,11 @@ class RestWidget : public StylableWidget
 public:
     RestWidget( QWidget* p = 0 );
 
+protected slots:
+    void onSessionChanged( const unicorn::Session& );
+
+protected:
+    struct {
+        class QLabel* welcomeLabel;
+    } ui;
 };

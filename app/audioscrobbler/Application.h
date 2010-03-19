@@ -84,8 +84,6 @@ namespace audioscrobbler
         void onResumed();
         void onStopped();
 
-        void onUserGotInfo();
-
         void onActivateWindow();
 
     };

@@ -33,6 +33,7 @@ QScrollArea {
     padding-right:2px;
 }
 
+
 RestWidget QLabel,
 ShareDialog QLabel,
 ShareDialog QRadioButton,
@@ -43,12 +44,25 @@ ShareDialog QLabel[xerror="true"] { color: #d51007; }
 MetadataWindow QLabel,
 MetadataWindow QListView,
 MetadataWindow DataListWidget
-{
+MetadataWindow RestWidget QPushButton {
     color: #cccccc;
     padding: 1px 3px 1px 5px;
     margin: 0px;
     font-size: 11px;
     font-weight: bold;
+}
+
+
+RestWidget QPushButton {
+    border: none;
+    background-color: transparent;
+    color: #59bee5;
+    margin-left: 14px;
+    padding: 0px;
+}
+
+RestWidget QPushButton:hover {
+    text-decoration:
 }
 
 MetadataWindow QLabel[alternate="true"], 

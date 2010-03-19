@@ -70,7 +70,6 @@ LoginContinueDialog::onGotSession()
 {
     try {
         m_session = unicorn::Session( static_cast<QNetworkReply*>(sender()) );
-        m_session.setRememberSession( true );
         accept();
     }
     catch (lastfm::ws::ParseError& e)

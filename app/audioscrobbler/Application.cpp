@@ -31,7 +31,6 @@
 #include "lib/listener/mac/ITunesListener.h"
 #endif
 #include <lastfm/Audioscrobbler>
-#include <lastfm/AuthenticatedUser>
 #include <QMenu>
 #include <QDebug>
 #include "lib/unicorn/widgets/TagDialog.h"
@@ -317,15 +316,3 @@ Application::onActivateWindow()
     mw->activateWindow();
 }
 
-void 
-Application::onUserGotInfo()
-{
-    /// scrobbler
-    
-    /*QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    Q_ASSERT( reply );
-
-    bool canBootstrap = AuthenticatedUser::canBootstrap( reply );
-    if( canBootstrap )
-        mw->showBootstrapMessage();*/
-}
