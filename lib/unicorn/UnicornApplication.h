@@ -92,6 +92,7 @@ namespace unicorn
             void signingInQuery( const QString& uuid );
             void sessionQuery( const QString& uuid );
             void sessionChanged( const Session );
+            void rosterUpdated();
     };
 
     class UNICORN_DLLEXPORT Application : public QtSingleApplication
@@ -152,6 +153,7 @@ namespace unicorn
     signals:
         void gotUserInfo( const lastfm::UserDetails& );
         void sessionChanged( const unicorn::Session& newSession, const unicorn::Session& oldSession );
+        void rosterUpdated();
     };
 }
 

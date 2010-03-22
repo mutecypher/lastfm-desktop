@@ -80,8 +80,6 @@ MetadataWindow QLabel#name {
 
 DataListWidget QLabel { padding: 0px; margin: 0px; }
 
-
-
 MetadataWindow QLabel#value,
 MetadataWindow #value > QLabel, 
 MetadataWindow DataListWidget {
@@ -280,6 +278,10 @@ QWizard QLabel#errorMsg {
     border-radius: 6px;
 }
 
+QComboBox::item:!selected {
+    color: black;
+}
+
 /*
  * The following css will affect rich text in QLabel / QTextBrowser etc
  */
@@ -297,5 +299,4 @@ a.title {
 a.title :hover {
     color: #4c7699
 }
-
 

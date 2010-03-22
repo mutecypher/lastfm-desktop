@@ -54,7 +54,7 @@ public:
         QMap<QString, QString> params;
         params["method"] = "auth.getSession";
         params["token"] = token;
-        return lastfm::ws::post( params );
+        return lastfm::ws::post( params, false );
     }
 
     QDataStream& write( QDataStream& out ) const

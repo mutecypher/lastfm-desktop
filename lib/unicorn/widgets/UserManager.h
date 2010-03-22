@@ -42,6 +42,10 @@ class UserManager : public QDialog
 Q_OBJECT
 public:
     UserManager( QWidget* parent = 0 );
+    ~UserManager();
+
+signals:
+    void rosterUpdated();
 
 protected slots:
     void onAddUserClicked();
@@ -50,6 +54,8 @@ protected slots:
     void onAccept();
 
 protected:
+    void add( UserRadioButton*, bool = true );
+
     class QButtonGroup* m_buttonGroup;
 
     struct {

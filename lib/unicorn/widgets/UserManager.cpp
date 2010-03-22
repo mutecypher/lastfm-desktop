@@ -124,10 +124,11 @@ UserRadioButton::removeMe()
     if( result != QMessageBox::Yes ) return;
 
     unicorn::Settings().remove( m_name->text() );
+
     if( isChecked()) {
         foreach (UserRadioButton* b, parentWidget()->findChildren<UserRadioButton*>()) {
             if( b->user() == User().name()) {
-                b->setChecked( true );
+                b->click();
             }
         }
     }
@@ -157,8 +158,7 @@ UserManager::UserManager( QWidget* parent )
     
     foreach( lastfm::User u, roster ) {
         UserRadioButton* b = new UserRadioButton( u );
-        ui.groupBox->layout()->addWidget( b );
-        m_buttonGroup->addButton( b );
+        add( b, false );
     }
 
     qobject_cast<QBoxLayout*>(ui.groupBox->layout())->addStretch();
@@ -175,6 +175,12 @@ UserManager::UserManager( QWidget* parent )
     connect( bb, SIGNAL( accepted()), SLOT( onAccept()));
     connect( bb, SIGNAL( rejected()), SLOT( reject()));
     layout->addLayout( actionButtons );
+}
+
+
+UserManager::~UserManager()
+{
+    disconnect( this );
 }
 
 void 
@@ -224,12 +230,22 @@ UserManager::onUserAdded()
     
     UserRadioButton* urb = new UserRadioButton( User( s.username()));
     
-    if( ui.groupBox->layout()->count() <= 1 ) urb->setChecked( true );
+    if( ui.groupBox->layout()->count() <= 1 ) urb->click();
+    add( urb );
+}
 
+void 
+UserManager::add( UserRadioButton* urb, bool announce )
+{
     // The user is added 1 widget from last 
     // (the last widget being the stretch)
     qobject_cast<QBoxLayout*>(ui.groupBox->layout())->insertWidget( ui.groupBox->layout()->count() - 1, 
                                                                     urb);
     m_buttonGroup->addButton( urb );
+
+    if( announce )
+        emit rosterUpdated();
+
+    connect( urb, SIGNAL( destroyed(QObject*)), SIGNAL( rosterUpdated()));
 }
 

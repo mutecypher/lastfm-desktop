@@ -159,7 +159,10 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
 void 
 unicorn::Application::manageUsers()
 {
-    if( UserManager().exec())
+    UserManager um;
+    connect( &um, SIGNAL( rosterUpdated()), SIGNAL( rosterUpdated()));
+    
+    if( um.exec())
         changeSession( Session());
 }
 
