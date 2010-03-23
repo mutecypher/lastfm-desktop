@@ -56,6 +56,10 @@
 #include "windows.h"
 #endif
 
+#ifdef Q_OS_MAC
+#include "ApplicationServices/ApplicationServices.h"
+#endif
+
 PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
                        :StylableWidget( parent )
 {
@@ -372,17 +376,23 @@ PlaybackControlsWidget::onSpaceKey()
 void
 PlaybackControlsWidget::onInfoClicked()
 {
-    QTimer::singleShot(1000, this, SLOT(openScrobbler()));
 #ifdef Q_OS_WIN32
     AllowSetForegroundWindow(ASFW_ANY);
 #endif
-}
 
-void
-PlaybackControlsWidget::openScrobbler()
-{
-    QProcess* process = new QProcess;
-    process->start( qApp->applicationDirPath() + "\\audioscrobbler.exe" );
+#ifndef Q_OS_MAC
+    QString path = qApp->applicationDirPath() + "\\audioscrobbler";
+#ifdef Q_OS_WIN
+    path += ".exe"
+#endif
+    QProcess::startDetached( path );
+#else
+    FSRef appRef;
+    CFURLRef appURL;
+    LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
+    OSStatus status = LSOpenFSRef( &appRef, NULL );
+#endif
+    
 }
 
 void

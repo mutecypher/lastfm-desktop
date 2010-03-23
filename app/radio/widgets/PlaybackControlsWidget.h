@@ -83,8 +83,6 @@ private slots:
     void onBanClicked();
     void onBanFinished();
 
-    void openScrobbler();
-	
 signals:
     void startRadio(RadioStation);
 };
