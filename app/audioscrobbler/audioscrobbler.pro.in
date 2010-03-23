@@ -5,7 +5,7 @@ QT = core gui xml network
 CONFIG += lastfm unicorn listener no_dock_icon
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 include( $$ROOT_DIR/admin/include.qmake )
-ICON = ../client/mac/client.icns
+macx:ICON = ./audioscrobbler.icns
 macx:LIBS += -lz
 win32:LIBS += shell32.lib
 
