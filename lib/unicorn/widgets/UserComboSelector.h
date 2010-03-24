@@ -4,10 +4,11 @@
 #include <QComboBox>
 #include <QStandardItemModel>
 #include <lastfm/User>
+#include "lib/DllExportMacro.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/UnicornSession.h"
 
-class UserComboSelector : public QComboBox
+class UNICORN_DLLEXPORT UserComboSelector : public QComboBox
 {
     Q_OBJECT
 public:

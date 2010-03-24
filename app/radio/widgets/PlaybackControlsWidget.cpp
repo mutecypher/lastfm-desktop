@@ -383,7 +383,7 @@ PlaybackControlsWidget::onInfoClicked()
 #ifndef Q_OS_MAC
     QString path = qApp->applicationDirPath() + "\\audioscrobbler";
 #ifdef Q_OS_WIN
-    path += ".exe"
+    path += ".exe";
 #endif
     QProcess::startDetached( path );
 #else

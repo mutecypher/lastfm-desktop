@@ -5,6 +5,7 @@
 
 #include <QDialog>
 #include <QRadioButton>
+#include "lib/DllExportMacro.h"
 
 namespace lastfm{ class User; }
 class QLabel;
@@ -37,7 +38,7 @@ protected:
 };
 
 
-class UserManager : public QDialog
+class UNICORN_DLLEXPORT UserManager : public QDialog
 {
 Q_OBJECT
 public:

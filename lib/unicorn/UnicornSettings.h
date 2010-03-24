@@ -22,6 +22,7 @@
 
 #include <QSettings>
 #include <QString>
+#include "lib/DllExportMacro.h"
 #include "UnicornApplication.h"
 
 namespace lastfm{ class User; }
@@ -30,13 +31,13 @@ namespace unicorn
     inline const char* organizationName() { return "Last.fm"; }
     inline const char* organizationDomain() { return "last.fm"; }
 
-    class Settings : public QSettings
+    class UNICORN_DLLEXPORT Settings : public QSettings
     {
     public:
         Settings() : QSettings( unicorn::organizationName() )
         {}
         
-        QList<lastfm::User> userRoster();
+        QList<lastfm::User> userRoster() const;
 
     };
 
