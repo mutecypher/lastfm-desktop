@@ -1,4 +1,7 @@
 @import "unicorn.css";
+unicorn--mainWindow {
+    border-radius: 3px;
+}
 
 unicorn--MainWindow RestWidget,
 unicorn--MainWindow QWidget#NowScrobbling,
@@ -208,7 +211,6 @@ QTextBrowser, QLabel#title1, QLabel#title2 {
     color: #e6e6e6;
 }
 
-<<<<<<< HEAD:app/audioscrobbler/audioscrobbler.css
 QTextBrowser {
     font-size: 12px;
     padding: 0px;
@@ -216,8 +218,6 @@ QTextBrowser {
     border:none;
     background-color: transparent;
 }
-=======
->>>>>>> master:app/audioscrobbler/audioscrobbler.css
 
 QLabel#title1 
 {
