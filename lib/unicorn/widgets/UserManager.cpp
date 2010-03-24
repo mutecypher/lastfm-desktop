@@ -15,10 +15,10 @@
 #include <QGroupBox>
 #include <QDialogButtonBox>
 
-#include "QMessageBoxBuilder.h"
-#include "UnicornSettings.h"
-#include "widgets/LoginDialog.h"
-#include "widgets/LoginContinueDialog.h"
+#include "lib/unicorn/QMessageBoxBuilder.h"
+#include "lib/unicorn/UnicornSettings.h"
+#include "lib/unicorn/widgets/LoginDialog.h"
+#include "lib/unicorn/widgets/LoginContinueDialog.h"
 
 using lastfm::UserDetails;
 UserRadioButton::UserRadioButton( const User& user )

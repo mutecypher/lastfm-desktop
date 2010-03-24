@@ -67,7 +67,7 @@ Application::Application( int& argc, char** argv )
         
         LSOpenApplication( &params, NULL );
         AEDisposeDesc( &desc );
-#elif Q_OS_WIN
+#elif defined Q_OS_WIN
     QProcess* process = new QProcess;
     process->start( QApplication::applicationDirPath() + "/audioscrobbler.exe", QStringList("--tray") );
 #endif
