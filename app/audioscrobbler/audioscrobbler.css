@@ -1,8 +1,12 @@
+@import "unicorn.css";
+
 unicorn--MainWindow RestWidget,
 unicorn--MainWindow QWidget#NowScrobbling,
-unicorn--MainWindow StylableWidget {
+unicorn--MainWindow StylableWidget,
+ShareDialog {
     background-color: rgba(20,20,20,190);
 }
+
 
 QStatusBar QPushButton {
     color: transparent;
@@ -17,7 +21,8 @@ QStatusBar QPushButton {
 
 QScrollArea,
 QScrollArea > QWidget,
-QScrollArea > QWidget > QWidget {
+QScrollArea > QWidget > QWidget,
+QListView {
     background-color: transparent;
     padding: 0px;
     margin: 0px;
@@ -25,12 +30,125 @@ QScrollArea > QWidget > QWidget {
 
 QScrollArea {
     border: none;
+    padding-right:2px;
 }
 
-MetadataWindow QLabel{ background-color transparent; padding: 3px 0px 1px 5px; margin: 0px; font-size: 11px; font-weight: bold;}
-MetadataWindow QLabel[alternate="true"]{ background-origin: margin; background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 rgba(23,23,23,100), stop:0 rgba(33,33,34,100)); }
-MetadataWindow QLabel#name { color: #afafaf; margin-left: 15px; }
-MetadataWindow QLabel#value { color: #cccccc; font-weight: bold; margin: 0px; margin-right:11px; }
+
+RestWidget QLabel,
+ShareDialog QLabel,
+ShareDialog QRadioButton,
+ShareDialog QCheckBox  { color: #cccccc; font-weight: bold; }
+
+ShareDialog QLabel[xerror="true"] { color: #d51007; }
+
+MetadataWindow QLabel,
+MetadataWindow QListView,
+MetadataWindow DataListWidget
+MetadataWindow RestWidget QPushButton {
+    color: #cccccc;
+    padding: 1px 3px 1px 5px;
+    margin: 0px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+
+RestWidget QPushButton {
+    border: none;
+    background-color: transparent;
+    color: #59bee5;
+    margin-left: 14px;
+    padding: 0px;
+}
+
+RestWidget QPushButton:hover {
+    text-decoration:
+}
+
+MetadataWindow QLabel[alternate="true"], 
+MetadataWindow DataListWidget[alternate="true"] { 
+    font-weight: bold;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+}
+
+MetadataWindow QLabel#name {
+    margin-left:11px;
+    padding-top:2px;
+    color: #afafaf;
+}
+
+DataListWidget QLabel { padding: 0px; margin: 0px; }
+
+MetadataWindow QLabel#value,
+MetadataWindow #value > QLabel, 
+MetadataWindow DataListWidget {
+    padding-top: 1px;
+    margin-right:11px;
+    font-weight: normal;
+}
+
+MetadataWindow QLabel#value { padding: 5px; }
+
+QTextBrowser {
+    font-size: 12px;
+    padding: 0px;
+    margin-left: -4px;
+    margin-top: -8px;
+    border:none;
+    background-color: rgb(20,20,20);
+}
+
+RecipientsWidget {
+	background: #FFFFFF;
+	border: 1px solid #BBBBBB;
+	border-color: black;
+	padding: 0;
+}
+
+RecipientsWidget:edit-focus {
+	border-color: blue;
+}
+
+RecipientWidget {
+	background-color: #dddddd;
+	margin: 1px;
+	padding: 2px;
+	border: 0px;
+}
+
+RecipientWidget:hover {
+	background: #cccccc;
+}
+
+RecipientWidget QLabel {
+	background-color: transparent;
+	color: black;
+	font-weight: normal;
+	margin: 1px;
+	padding: 0;
+	border: 0;
+}
+
+RecipientWidget QPushButton {
+	background-color: transparent;
+	background-image: url(:/delete.png);
+	background-repeat: no-repeat;
+    background-position: left;
+	background-origin: margin;
+	color: transparent;
+    border: none;
+    text-align: left;
+    padding: 0px 0px; 
+    margin: 0px 0px;
+	height: 15px;
+    min-width: 15px;
+	max-width: 15px;
+}
+
+QListView{
+	background-color: white;
+}
 
 MetadataWindow #artist_image {
     padding: 0px;  
@@ -86,9 +204,11 @@ QStatusBar::item {
 }
 
 QTextBrowser, QLabel#title1, QLabel#title2 {
+
     color: #e6e6e6;
 }
 
+<<<<<<< HEAD:app/audioscrobbler/audioscrobbler.css
 QTextBrowser {
     font-size: 12px;
     padding: 0px;
@@ -96,26 +216,26 @@ QTextBrowser {
     border:none;
     background-color: transparent;
 }
+=======
+>>>>>>> master:app/audioscrobbler/audioscrobbler.css
 
 QLabel#title1 
 {
-    margin-left: -2px;
     font-size: 18px;
     font-weight:bold;
-    padding-top:12px 12px 0px 0px;
+    padding:12px 10px 0px 10px;
 }
 
 QLabel#title2
 {
     font-size: 12px;
     font-weight: bold;
-    padding-top:12px 12px 0px 0px;
+    padding:12px 10px 0px 10px;
 }
 
 QScrollBar {
     background-color: #3b3b3b;
     border-radius: 5px;
-    margin-left: -5px;
 }
 
 QScrollBar::add-page, 
@@ -126,7 +246,7 @@ QScrollBar::sub-page {
 QScrollBar::handle {
     background-color: qlineargradient( x1:0, y1:0, x2:1, y2:0, stop:0 #878787, stop:1 #636464 );
     min-height: 20px;
-    margin: 3px 3px 3px 0px;
+    margin: 3px 0px 3px 3px;
     border-radius: 5px;
 }
 
@@ -160,11 +280,6 @@ ScrobbleStatus QLabel#player_status {
     color: #676767;
 }
 
-a {
-    color: #4c7699;
-    text-decoration: none;
-}
-
 QWizard QLabel#errorMsg {
     background-color: #ffaaaa;
     border-color: #ffaaaa;
@@ -172,3 +287,26 @@ QWizard QLabel#errorMsg {
     border-style: solid;
     border-radius: 6px;
 }
+
+QComboBox::item:!selected {
+    color: black;
+}
+
+/*
+ * The following css will affect rich text in QLabel / QTextBrowser etc
+ */
+
+a {
+    color: #4c7699;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+a.title {
+    font-weight: bold;
+}
+
+a.title :hover {
+    color: #4c7699
+}
+

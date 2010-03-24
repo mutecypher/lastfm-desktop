@@ -23,6 +23,8 @@
 #include "lib/unicorn/UnicornMainWindow.h"
 #include <lastfm/RadioStation>
 
+namespace unicorn{ class Session; }
+using unicorn::Session;
 class MessageBar;
 
 class MainWindow : public unicorn::MainWindow
@@ -39,9 +41,10 @@ public slots:
     void onRadioError(int code, const QVariant& data);
 
 protected slots:
-    void onWidgetChanged( QWidget* );
+    void onSessionChanged( const Session& s, const Session& );
 
 private:
+    class MainWidget* m_mainWidget;
     MessageBar* m_messageBar;
 };
 

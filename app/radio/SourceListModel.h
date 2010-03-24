@@ -22,6 +22,8 @@
 
 #include <QAbstractListModel>
 #include <QList>
+#include <QMimeData>
+#include <QListWidgetItem>
 
 struct RqlSource
 {
@@ -74,7 +76,8 @@ public:
         Arg2,
         Weight,
         Rql,
-        ImageUrl
+        ImageUrl,
+        Sort
     };
 
 private:

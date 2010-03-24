@@ -1,6 +1,5 @@
 /*
    Copyright 2005-2009 Last.fm Ltd. 
-      - Primarily authored by Jono Cole
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -18,13 +17,29 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "lib/unicorn/StylableWidget.h"
+#include <QMimeData>
 
-class RestWidget : public StylableWidget
+#include "SourceSelectorListWidget.h"
+#include "SourceListWidget.h"
+
+SourceSelectorListWidget::SourceSelectorListWidget()
+    :QListWidget()
 {
-    Q_OBJECT
+}
 
-public:
-    RestWidget( QWidget* p = 0 );
+QMimeData* SourceSelectorListWidget::mimeData( const QList<QListWidgetItem*> items ) const
+{
+    if( items.count() < 1 )
+        return 0;
 
-};
+    QMimeData* mimeData = new QMimeData;
+
+    // add this mime type so that we know it is coming from us
+    mimeData->setData("application/x-rql-source", "");
+
+    // set the actual data
+    mimeData->setText(items.at(0)->data(Qt::DisplayRole).toString());
+    mimeData->setImageData(items.at(0)->data(SourceListModel::ImageUrl).toString());
+
+    return mimeData;
+}

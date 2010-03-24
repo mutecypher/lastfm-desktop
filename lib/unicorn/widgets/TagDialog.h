@@ -24,13 +24,15 @@
 #include <QModelIndex>
 #include <QDialog>
 
+#include "lib/DllExportMacro.h"
+
 namespace Unicorn
 {
     class TabWidget;
 }
 
 
-class TagDialog : public QDialog
+class UNICORN_DLLEXPORT TagDialog : public QDialog
 {
     Q_OBJECT
 

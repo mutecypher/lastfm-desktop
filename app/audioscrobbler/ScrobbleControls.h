@@ -29,6 +29,8 @@ class ScrobbleControls : public StylableWidget
     Q_OBJECT
 public:
     ScrobbleControls();
+
+    void setEnabled( bool enabled );
     
     void setLoveAction( const QAction* a );
     void setTagAction( const QAction* a );

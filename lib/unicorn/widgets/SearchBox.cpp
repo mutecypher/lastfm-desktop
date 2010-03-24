@@ -17,6 +17,8 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QKeyEvent>
+
 #include "SearchBox.h"
 #include <QNetworkReply>
 #include <QPushButton>
@@ -26,17 +28,18 @@
 #include <lastfm/XmlQuery>
 #include <lastfm/Artist>
 #include <lastfm/Tag>
+#include <lastfm/UserList>
 
 SearchBox::SearchBox(QWidget* parent)
-: QLineEdit(parent)
+: HelpTextLineEdit( tr(""), parent )
 , m_searching(false)
 {
+    setAttribute( Qt::WA_MacShowFocusRect, false );
     m_completer = new QCompleter(this);
     m_completer->setCaseSensitivity(Qt::CaseInsensitive);
     setCompleter(m_completer);
 
     connect(this, SIGNAL(textEdited(QString)), SLOT(onTextEdited(QString)));
-    connect(m_completer, SIGNAL(activated(QString)), SLOT(onCompleterActivated(QString)));
 }
 
 void
@@ -49,14 +52,6 @@ SearchBox::onTextEdited(const QString& text)
             connect(reply, SIGNAL(finished()), SLOT(onSearchFinished()));
         }
     }
-}
-
-void 
-SearchBox::onCompleterActivated(const QString& text)
-{
-    // click on a completion option, and it's like you typed it in!
-    setText(text);
-    emit returnPressed();
 }
 
 void
@@ -136,6 +131,37 @@ TagSearch::handleSearchResponse(XmlQuery& lfm)
 UserSearch::UserSearch(QWidget* parent)
 : SearchBox(parent)
 {
+    connect(User().getFriends(), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
+}
+
+int CaseInsensitiveLessThan(const QString& s1, const QString &s2)
+{
+    return s1.toLower() < s2.toLower();
+}
+
+void
+UserSearch::onGetFriendsFinished()
+{
+    lastfm::UserList friendPage = User::list( (QNetworkReply*)sender() );
+    m_friends += friendPage;
+
+    if ( friendPage.page == friendPage.totalPages )
+    {
+        QStringList friends;
+
+        foreach (User u, m_friends)
+            friends << u.name();
+
+        qSort(friends.begin(), friends.end(), CaseInsensitiveLessThan);
+
+        m_completer->setCaseSensitivity( Qt::CaseInsensitive );
+        m_completer->setModel(new QStringListModel( friends ));
+    }
+    else
+    {
+        // get the next page of friends
+        connect(User().getFriends( friendPage.perPage, friendPage.page + 1 ), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
+    }
 }
 
 QNetworkReply*
@@ -143,6 +169,8 @@ UserSearch::startSearch(const QString& term)
 {
     // alas, there is no user.search yet
     Q_UNUSED(term);
+
+    m_completer->complete();
     return 0;
 }
 
@@ -151,4 +179,24 @@ UserSearch::handleSearchResponse(XmlQuery& lfm)
 {
     Q_UNUSED(lfm);
     return QStringList();
+}
+
+void
+UserSearch::keyPressEvent( QKeyEvent* event )
+{
+    if ( event->key() == Qt::Key_Backspace )
+    {
+        if ( text().isEmpty() )
+        {
+            emit deletePressed();
+            return;
+        }
+    }
+    else if ( event->text() == "," )
+    {
+        emit commaPressed();
+        return;
+    }
+
+    QLineEdit::keyPressEvent( event );
 }

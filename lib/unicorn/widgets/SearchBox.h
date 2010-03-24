@@ -22,6 +22,9 @@
 
 #include <QLineEdit>
 #include <lastfm/global.h>
+#include "lib/DllExportMacro.h"
+#include <lastfm/User>
+#include "lib/unicorn/widgets/HelpTextLineEdit.h"
 
 class QNetworkReply;
 class QCompleter;
@@ -31,20 +34,16 @@ namespace lastfm {
 }
 
 
-class SearchBox : public QLineEdit
+class UNICORN_DLLEXPORT SearchBox : public HelpTextLineEdit
 {
     Q_OBJECT;
 
 public:
     SearchBox(QWidget *parent = 0);
 
-signals:
-    void selected(const QString& item);
-
 private slots:
     void onTextEdited(const QString& text);
     void onSearchFinished();
-    void onCompleterActivated(const QString& text);
 
 protected:
     virtual QNetworkReply* startSearch(const QString& term) = 0;
@@ -55,7 +54,7 @@ protected:
 };
 
 
-class ArtistSearch : public SearchBox
+class UNICORN_DLLEXPORT ArtistSearch : public SearchBox
 {
 public:
     ArtistSearch(QWidget *parent = 0);
@@ -64,7 +63,7 @@ public:
 };
 
 
-class TagSearch : public SearchBox
+class UNICORN_DLLEXPORT TagSearch : public SearchBox
 {
 public:
     TagSearch(QWidget *parent = 0);
@@ -74,12 +73,27 @@ public:
 };
 
 
-class UserSearch : public SearchBox
+class UNICORN_DLLEXPORT UserSearch : public SearchBox
 {
+    Q_OBJECT
 public:
     UserSearch(QWidget *parent = 0);
     virtual QNetworkReply* startSearch(const QString& term);
     virtual QStringList handleSearchResponse(XmlQuery& lfm);
+
+private:
+    void keyPressEvent( QKeyEvent* event );
+
+signals:
+    void commaPressed();
+    void deletePressed();
+
+public slots:
+     void finishEdit(){ emit editingFinished(); }
+private slots:
+    void onGetFriendsFinished();
+private:
+    QList<lastfm::User> m_friends;
 };
 
 #endif

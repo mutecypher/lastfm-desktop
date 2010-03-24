@@ -1,0 +1,41 @@
+#!/bin/bash
+ROOT_DIR=$(dirname $(cd `dirname $0` && pwd))
+cd $ROOT_DIR/lib/unicorn/Updater
+if [ $TERM == "cygwin" ]; then
+    FIND="/bin/find"
+else
+    FIND="find"
+fi
+
+while read infoh; do
+    INCLUDELIST=$INCLUDELIST$'\n'"#include \"$infoh\""
+    CLASSNAME=$(cat $infoh | grep class | sed "s/class \(UNICORN_DLLEXPORT \)*\(.*\) :.*/\2\(\)/g")
+    INSTANCE=$INSTANCE$'\n'"        *this << (new $CLASSNAME);"
+done < <($FIND ../../../plugins -iname PluginInfo.h)
+cat << EOF
+#ifndef GEN_PLUGIN_LIST_H_
+#define GEN_PLUGIN_LIST_H_
+
+#include <QList>
+#include "IPluginInfo.h"
+EOF
+
+echo "$INCLUDELIST"
+
+cat << EOF
+class GenPluginList : public QList<IPluginInfo*>
+{
+public:
+    GenPluginList()
+    { 
+EOF
+       echo "$INSTANCE"
+cat << EOF
+
+    }
+};
+EOF
+
+
+echo
+echo "#endif //GEN_PLUGIN_LIST_H_"

@@ -6,9 +6,11 @@
         <file alias="ban-onhover.png" >ban_hover_29x29.png</file>
         <file alias="ban-onpress.png" >ban_pressed_29x29.png</file>
         <file alias="ban-rest.png" >ban_rest_29x29.png</file>
+		<file alias="ban-disabled.png" >ban_inactive_29x29.png</file>
         <file alias="love-isloved.png" >love_isloved_31x29.png</file>
         <file alias="love-onhover.png" >love_hover_31x29.png</file>
         <file alias="love-onpress.png" >love_pressed_31x29.png</file>
+		<file alias="love-disabled.png" >love_inactive_31x29.png</file>
         <file alias="love-rest.png" >love_rest_31x29.png</file>
         <file alias="play-onhover.png" >play_hover_29x29.png</file>
         <file alias="play-onpress.png" >play_pressed_29x29.png</file>
@@ -19,6 +21,34 @@
         <file alias="skip-onhover.png" >skip_hover_45x29.png</file>
         <file alias="skip-onpress.png" >skip_pressed_45x29.png</file>
         <file alias="skip-rest.png" >skip_rest_45x29.png</file>
+		<file alias="skip-disabled.png" >skip_inactive_45x29.png</file>
+		<file alias="cog-rest.png" >cog_button_rest.png</file>
+        <file alias="cog-onpress.png" >cog_button_press.png</file>
+		<file alias="cog-onhover.png" >cog_button_hover.png</file>
+		<file alias="share-small.png" >share_16x16.png</file>
+		<file alias="tag-small.png" >tag_16x16.png</file>
+		<file alias="vol-handle-rest.png" >vol_handle_rest_16x16.png</file>
+		<file alias="vol-handle-onpress.png" >vol_handle_pressed_16x16.png</file>
+		<file alias="vol-rail.png" >vol_rail_66x8.png</file>
+		<file alias="vol-left.png" >vol_speakerL.png</file>
+		<file alias="vol-right.png" >vol_speakerR.png</file>
+		
+		<file alias="options-off-rest.png" >options_off_rest.png</file>
+		<file alias="options-off-onhover.png" >options_off_hover.png</file>
+		<file alias="options-off-onpressed.png" >options_off_pressed.png</file>
+		<file alias="options-on-rest.png" >options_on_rest.png</file>
+		<file alias="options-on-onhover.png" >options_on_hover.png</file>
+		<file alias="options-on-onpressed.png" >options_on_pressed.png</file>
+		
+		<file alias="scrobbler_rest.png" >scrobble2_rest.png</file>
+		<file alias="scrobbler_hover.png" >scrobble2_hover.png</file>
+		<file alias="scrobbler_pressed.png" >scrobble2_pressed.png</file>
+
+		<file alias="info-rest.png" >info_rest.png</file>
+		<file alias="info-onhover.png" >info_hover.png</file>
+		<file alias="info-onpressed.png" >info_pressed.png</file>
+		<file alias="info-disabled.png" >info_inactive.png</file>
+		
         <file>now_playing.mng</file>
         <file>delete.png</file>
         <file>default_user_small.png</file>

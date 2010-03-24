@@ -1,96 +1,107 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>LoginDialog</class>
- <widget class="QDialog" name="LoginDialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="LoginDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>342</width>
-    <height>140</height>
+    <width>345</width>
+    <height>163</height>
    </rect>
   </property>
-  <property name="sizePolicy" >
-   <sizepolicy vsizetype="MinimumExpanding" hsizetype="Preferred" >
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Log in to Last.fm</string>
   </property>
-  <layout class="QVBoxLayout" >
-   <property name="spacing" >
+  <layout class="QVBoxLayout">
+   <property name="spacing">
     <number>0</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" >
-     <property name="spacing" >
+    <layout class="QHBoxLayout">
+     <property name="spacing">
       <number>0</number>
      </property>
      <item>
-      <layout class="QGridLayout" >
-       <property name="rightMargin" >
+      <layout class="QGridLayout">
+       <property name="rightMargin">
         <number>0</number>
        </property>
-       <property name="spacing" >
+       <property name="spacing">
         <number>6</number>
        </property>
-       <item row="0" column="0" >
-        <widget class="QLabel" name="label_2" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Fixed" hsizetype="Maximum" >
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Username:</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0" >
-        <widget class="QLabel" name="label_3" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Fixed" hsizetype="Maximum" >
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Password:</string>
          </property>
-         <property name="buddy" >
+         <property name="buddy">
           <cstring>password</cstring>
          </property>
         </widget>
        </item>
-       <item row="1" column="1" >
-        <widget class="QLineEdit" name="password" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="password">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="echoMode" >
+         <property name="echoMode">
           <enum>QLineEdit::Password</enum>
          </property>
         </widget>
        </item>
-       <item row="0" column="1" >
-        <widget class="QLineEdit" name="username" />
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="username"/>
+       </item>
+       <item row="2" column="1">
+        <widget class="QCheckBox" name="remember">
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="text">
+          <string>Remember Me</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
      <item>
       <spacer>
-       <property name="orientation" >
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeType" >
+       <property name="sizeType">
         <enum>QSizePolicy::Fixed</enum>
        </property>
-       <property name="sizeHint" stdset="0" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>16</width>
          <height>16</height>
@@ -99,29 +110,29 @@
       </spacer>
      </item>
      <item>
-      <layout class="QVBoxLayout" >
-       <property name="spacing" >
+      <layout class="QVBoxLayout">
+       <property name="spacing">
         <number>0</number>
        </property>
        <item>
-        <widget class="SpinnerLabel" name="spinner" >
-         <property name="minimumSize" >
+        <widget class="SpinnerLabel" name="spinner">
+         <property name="minimumSize">
           <size>
            <width>16</width>
            <height>0</height>
           </size>
          </property>
-         <property name="text" >
+         <property name="text">
           <string/>
          </property>
         </widget>
        </item>
        <item>
         <spacer>
-         <property name="orientation" >
+         <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>0</width>
            <height>20</height>
@@ -135,13 +146,13 @@
    </item>
    <item>
     <spacer>
-     <property name="orientation" >
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeType" >
+     <property name="sizeType">
       <enum>QSizePolicy::Expanding</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>314</width>
        <height>16</height>
@@ -150,17 +161,17 @@
     </spacer>
    </item>
    <item>
-    <layout class="QHBoxLayout" >
+    <layout class="QHBoxLayout">
      <item>
-      <widget class="QLabel" name="urls" >
-       <property name="text" >
-        <string>&lt;a href='http://last.fm/join/'>Sign up&lt;/a>&lt;br>&lt;a href='http://last.fm/settings/lostpassword/'>Forgot your password?&lt;/a></string>
+      <widget class="QLabel" name="urls">
+       <property name="text">
+        <string>&lt;a href='http://last.fm/join/'&gt;Sign up&lt;/a&gt;&lt;br&gt;&lt;a href='http://last.fm/settings/lostpassword/'&gt;Forgot your password?&lt;/a&gt;</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QDialogButtonBox" name="buttonBox" >
-       <property name="standardButtons" >
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="standardButtons">
         <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
        </property>
       </widget>
@@ -179,10 +190,11 @@
  <tabstops>
   <tabstop>username</tabstop>
   <tabstop>password</tabstop>
+  <tabstop>remember</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources>
-  <include location="../../../common/qrc/common.qrc" />
+  <include location="../qrc/unicorn.qrc"/>
  </resources>
  <connections/>
 </ui>

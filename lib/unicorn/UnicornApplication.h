@@ -20,16 +20,82 @@
 #ifndef UNICORN_APPLICATION_H
 #define UNICORN_APPLICATION_H
 
+#include "qtsingleapplication/qtsingleapplication.h"
+
 #include "common/HideStupidWarnings.h"
 #include "lib/DllExportMacro.h"
-#include "UnicornSettings.h"
+#include "UnicornSession.h"
 #include <QApplication>
+#include "PlayBus.h"
+#include <QDebug>
+
+namespace lastfm{ class UserDetails; }
 class QNetworkReply;
- 
 
 namespace unicorn
 {
-    class UNICORN_DLLEXPORT Application : public QApplication
+    class Bus : public PlayBus
+    {
+        Q_OBJECT
+
+        public:
+            Bus(): PlayBus( "unicorn" )
+            {
+                connect( this, SIGNAL( message(QByteArray)), SLOT( onMessage(QByteArray)));
+                connect( this, SIGNAL( queryRequest( QString, QByteArray )), SLOT( onQuery( QString, QByteArray )));
+            };
+
+            bool isSigningIn(){ return sendQuery( "SIGNINGIN" ) == "TRUE"; }
+            Session getSession()
+            {
+                Session s;
+                QByteArray ba = sendQuery( "SESSION" ); 
+                if( ba.length() > 0 )
+                {
+                    QDataStream ds( ba );
+                    ds >> s;
+                }
+                return s;
+            }
+
+            void changeSession( const Session& s )
+            {
+                QByteArray ba("");
+                QDataStream ds( &ba, QIODevice::WriteOnly | QIODevice::Truncate);
+                ds << QByteArray( "SESSIONCHANGED" );
+                ds << s;
+                sendMessage( ba );
+            }
+        private slots:
+
+            void onMessage( const QByteArray& message )
+            {
+                if( message.contains( "SESSIONCHANGED" ))
+                {
+                    QByteArray sessionData = message.right( message.size() - 18);
+                    QDataStream ds( sessionData );
+                    Session newSession;
+                    ds >> newSession;
+                    emit sessionChanged( newSession );
+                }
+            }
+
+            void onQuery( const QString& uuid, const QByteArray& message )
+            {
+                if( message == "SIGNINGIN" )
+                    emit signingInQuery( uuid );
+                else if( message == "SESSION" )
+                    emit sessionQuery( uuid );
+            }
+
+        signals:
+            void signingInQuery( const QString& uuid );
+            void sessionQuery( const QString& uuid );
+            void sessionChanged( const Session );
+            void rosterUpdated();
+    };
+
+    class UNICORN_DLLEXPORT Application : public QtSingleApplication
     {
         Q_OBJECT
 
@@ -48,32 +114,46 @@ namespace unicorn
            (on the command-line with -stylesheet or with setStyleSheet(). )
            Note. the QApplication styleSheet property will return the path 
                  to the css file unlike this method. */
-        const QString& loadedStyleSheet() {
+        const QString& loadedStyleSheet() const {
             return m_styleSheet;
         }
 
-        struct Settings
-        {
-            bool logOutOnExit() { return GlobalSettings().value( "LogOutOnExit", false ).toBool(); }
-            void setLogOutOnExit( bool b ) { GlobalSettings().setValue( "LogOutOnExit", b ); }
-        };
+        Session currentSession() { return m_currentSession; }
+
+        static unicorn::Application* instance(){ return (unicorn::Application*)qApp; }
 
     public slots:
-        void logout()
+        bool logout()
         {
-            m_logoutAtQuit = true;
-            quit();
+            try {
+                initiateLogin( true );
+            } catch( const StubbornUserException& ) { 
+                return false; 
+            }
+            return true;
         }
 
+        void manageUsers();
+        void changeSession( const unicorn::Session& newSession, bool announce = true );
+
     private:
+        void initiateLogin( bool forceLogout = false ) throw( StubbornUserException );
         void translate();
         QString m_styleSheet;
+        Session m_currentSession;
+        Bus m_bus;
+        bool m_signingIn;
 
     private slots:
         void onUserGotInfo();
+        void onSigningInQuery( const QString& );
+        void onBusSessionQuery( const QString& );
+        void onBusSessionChanged( const Session& );
 
     signals:
-        void userGotInfo( QNetworkReply* );
+        void gotUserInfo( const lastfm::UserDetails& );
+        void sessionChanged( const unicorn::Session& newSession, const unicorn::Session& oldSession );
+        void rosterUpdated();
     };
 }
 

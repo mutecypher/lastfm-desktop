@@ -25,6 +25,7 @@
 #include "PluginPage.h"
 #include "BootstrapPage.h"
 
+#include "lib/unicorn/UnicornSettings.h"
 #include <QWizard>
 #include <QDebug>
 
@@ -50,6 +51,7 @@ public:
         setPage( Page_Plugin, new PluginPage());
         setPage( Page_Login, new LoginPage(this));
         setPage( Page_Bootstrap, new BootstrapPage( this ));
+        connect( this, SIGNAL(accepted()), SLOT(onWizardCompleted()));
     }
 
     int nextId() const
@@ -70,6 +72,12 @@ public:
             default:
                 return -1;
         }
+    }
+
+public slots:
+    void onWizardCompleted()
+    {
+        unicorn::Settings().setValue( "FirstRunWizardCompleted", true );
     }
 };
 

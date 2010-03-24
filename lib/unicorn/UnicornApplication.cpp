@@ -23,13 +23,15 @@
     #include <ApplicationServices/ApplicationServices.h>
     static pascal OSErr appleEventHandler( const AppleEvent*, AppleEvent*, long );
     #include <QMainWindow>
-    extern void qt_mac_set_menubar_icons( bool );    
+    extern void qt_mac_set_menubar_icons( bool );
 #endif
 
 #include "UnicornApplication.h"
 #include "QMessageBoxBuilder.h"
 #include "UnicornCoreApplication.h"
 #include "widgets/LoginDialog.h"
+#include "widgets/LoginContinueDialog.h"
+#include "SignalBlocker.h"
 #include "UnicornSettings.h"
 #include <lastfm/misc.h>
 #include <lastfm/User>
@@ -41,12 +43,17 @@
 #include <QTranslator>
 #include <QFile>
 #include <QFileInfo>
+#include <QTimer>
+#include <QDebug>
 
-
+#include "widgets/UserManager.h"
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
-                    : QApplication( argc, argv ),
-                      m_logoutAtQuit( false )
+                    : QtSingleApplication( argc, argv ),
+                      m_logoutAtQuit( false ),
+                      m_signingIn( true )
 {
+    addLibraryPath(applicationDirPath());
+
 #ifdef Q_WS_MAC
     qt_mac_set_menubar_icons( false );
 #endif    
@@ -63,42 +70,6 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     #else
         #define CSS_PATH "/"
     #endif
-    if( styleSheet().isEmpty()) {
-        QString cssFileName = QFileInfo(applicationFilePath()).baseName() + ".css";
-        QFile stylesheetFile( applicationDirPath() + CSS_PATH + cssFileName );
-        stylesheetFile.open( QIODevice::ReadOnly );
-        QString stylesheet( stylesheetFile.readAll() );
-        setStyleSheet( stylesheet );
-    }
-
-    translate();
-
-    GlobalSettings s;
-    if (s.value( "Username" ).toString().isEmpty() || s.value( "SessionKey" ).toString().isEmpty() || Settings().logOutOnExit())
-    {
-        LoginDialog d( s.value( "Username" ).toString() );
-        if (d.exec() == QDialog::Accepted)
-        {
-            // if LogOutOnExit is enabled, really, we shouldn't store these,
-            // but it means other Unicorn apps can log in while the client is 
-            // loaded, and we delete the settings on exit if logOut is on
-            s.setValue( "Username", d.username() );
-            s.setValue( "SessionKey", d.sessionKey() );
-            s.setValue( "Password", d.passwordHash() );
-            
-            UserSettings().setValue( UserSettings::subscriptionKey(), d.isSubscriber() );
-        }
-        else
-        {
-            throw StubbornUserException();
-        }
-    }
-
-    lastfm::ws::Username = s.value( "Username" ).toString();
-    lastfm::ws::SessionKey = s.value( "SessionKey" ).toString();
-    
-    connect( AuthenticatedUser().getInfo(), SIGNAL(finished()), SLOT(onUserGotInfo()) );
-    
     if( !styleSheet().isEmpty() ) {
         QString cssPath = QUrl( styleSheet() ).toLocalFile();
         cssPath = QDir::currentPath() + cssPath;
@@ -107,10 +78,92 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
         m_styleSheet = cssFile.readAll();
         cssFile.close();
     }
+    
+    if( styleSheet().isEmpty()) {
+        QString cssFileName = QFileInfo(applicationFilePath()).baseName() + ".css";
+        QFile stylesheetFile( applicationDirPath() + CSS_PATH + cssFileName );
+        stylesheetFile.open( QIODevice::ReadOnly );
+        m_styleSheet = stylesheetFile.readAll();
+        setStyleSheet( m_styleSheet );
+    }
+
+    translate();
+
+    connect( &m_bus, SIGNAL( signingInQuery( QString )), SLOT( onSigningInQuery( QString )));
+    connect( &m_bus, SIGNAL( sessionQuery( QString )), SLOT( onBusSessionQuery( QString )));
+    connect( &m_bus, SIGNAL( sessionChanged( Session )), SLOT( onBusSessionChanged( Session )));
+
+    m_bus.board();
 
 #ifdef __APPLE__
     setQuitOnLastWindowClosed( false );
 #endif
+
+    initiateLogin();
+
+}
+
+void
+unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserException )
+{
+    if( m_bus.isSigningIn() )
+    {
+        SignalBlocker( &m_bus, SIGNAL( sessionChanged(Session)), -1 ).start();
+    } else if( !forceLogout )
+    {
+        Session busSession = m_bus.getSession();
+       
+        if( busSession.isValid() )
+            m_currentSession = busSession;
+    }
+
+    if( !forceLogout && m_currentSession.isValid())
+    {
+        changeSession( m_currentSession );
+    }
+    else
+    {
+        m_signingIn = true;
+
+        while ( m_signingIn )
+        {
+            LoginDialog d;
+            connect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise() ) );
+
+            if ( d.exec() == QDialog::Accepted )
+            {
+                disconnect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise()));
+                LoginContinueDialog lc( d.token() );
+                connect( &m_bus, SIGNAL( signingInQuery( QString)), &lc, SLOT( raise() ) );
+
+                lc.raise();
+
+                if ( lc.exec() == QDialog::Accepted )
+                {
+                    changeSession( lc.session());
+
+                    m_signingIn = false;
+                }
+            }
+            else
+            {
+                throw StubbornUserException();
+            }
+        }
+    }
+    m_signingIn = false;
+   
+}
+
+
+void 
+unicorn::Application::manageUsers()
+{
+    UserManager um;
+    connect( &um, SIGNAL( rosterUpdated()), SIGNAL( rosterUpdated()));
+    
+    if( um.exec())
+        changeSession( Session());
 }
 
 
@@ -143,12 +196,13 @@ unicorn::Application::~Application()
 {
     // we do this here, rather than when the setting is changed because if we 
     // did it then the user would be unable to change their mind
+    /*
     if (Settings().logOutOnExit() || m_logoutAtQuit)
     {
-        GlobalSettings s;
+        AppSettings s;
         s.remove( "SessionKey" );
         s.remove( "Password" );
-    }
+    }*/
 }
 
 
@@ -156,20 +210,55 @@ void
 unicorn::Application::onUserGotInfo()
 {
     QNetworkReply* reply = (QNetworkReply*)sender();
+    lastfm::UserDetails userInfo( reply );
+
+    const char* key = UserSettings::subscriptionKey();
+    Settings().setValue( key, userInfo.isSubscriber() );
+    emit gotUserInfo( userInfo );
+}
+
+
+void 
+unicorn::Application::onSigningInQuery( const QString& uuid )
+{
+    qDebug() << "Are we signing in? " << m_signingIn;
+    if( m_signingIn )
+        m_bus.sendQueryResponse( uuid, "TRUE" );
+    else
+        m_bus.sendQueryResponse( uuid, "FALSE" );
+}
+
+
+void 
+unicorn::Application::onBusSessionQuery( const QString& uuid )
+{
+    QByteArray ba;
+    QDataStream s( &ba, QIODevice::WriteOnly );
+    s << currentSession();
+    m_bus.sendQueryResponse( uuid, ba );
+}
+
+
+void 
+unicorn::Application::onBusSessionChanged( const Session& session )
+{
+    changeSession( session, false );
+}
+
+
+void 
+unicorn::Application::changeSession( const Session& newSession, bool announce )
+{
+    Session oldSession = currentSession();
+    m_currentSession = newSession;
+    lastfm::ws::Username = m_currentSession.username();
+    lastfm::ws::SessionKey = m_currentSession.sessionKey();
+    connect( lastfm::UserDetails::getInfo(), SIGNAL(finished()), this, SLOT(onUserGotInfo()) );
     
-    try
-    {
-        XmlQuery lfm = lastfm::ws::parse( reply );
-        const char* key = UserSettings::subscriptionKey();
-        bool const value = lfm["user"]["subscriber"].text().toInt() == 1;
-        UserSettings().setValue( key, value );
-    }
-    catch (std::runtime_error& e)
-    {
-        qWarning() << e.what();
-    }
-    
-    emit userGotInfo( reply );
+    if( announce )
+        m_bus.changeSession( currentSession());
+
+    emit sessionChanged( currentSession(), oldSession );
 }
 
 
@@ -179,6 +268,32 @@ static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );
     
+    AEAddressDesc desc;
+
+    OSErr ret;
+    ret = AEGetParamDesc( e, keyAEPropData, typeChar, &desc );
+    
+    if( ret == noErr ) {
+        unsigned int size = AEGetDescDataSize( &desc );
+        char data[size + 1];
+        data[ size ] = 0;
+        ret = AEGetDescData( &desc, data, size );
+        QString dataString( data );
+        if( dataString == "tray" )
+            return unimpErr;
+    }
+
+/*
+    CFStringRef name;
+    CopyProcessName( &psn, &name );
+    
+    char buffer[ CFStringGetLength( name ) + 10 ];
+    CFStringGetCString( name, buffer, sizeof( buffer ), kCFStringEncodingUTF8 );
+    QString processName( buffer );
+    
+    if( processName == "iTunes" ) return unimpErr;
+    
+    qDebug() << "Process Name: " << processName;*/
     switch (id)
     {
         case kAEQuitApplication:
@@ -189,7 +304,7 @@ static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
         {
             foreach (QWidget* w, qApp->topLevelWidgets())
                 if (qobject_cast<QMainWindow*>(w))
-                    w->show(), w->raise();
+                    w->show(), w->raise(), w->activateWindow();
             return noErr;
         }
 

@@ -91,6 +91,9 @@ echo 'Using '`which $QMAKE`
 
 header 'Generating Build System'
 
+middle "Generating GenPluginList"
+admin/genPluginInfo > lib/unicorn/Updater/gen_PluginList.h
+
 middle "Running qpp..."
 for x in `admin/findsrc pro.in lib` `admin/findsrc pro.in app`
 do
@@ -130,7 +133,7 @@ else
                 EXTRA_QMAKE_FLAGS='NOOP=""'
             fi
 
-            qmake -config debug -recursive Last.fm.pro "CONFIG -= app_bundle release" "$EXTRA_QMAKE_FLAGS" || die "Configure failed."
+            qmake -config debug -spec macx-g++ -recursive Last.fm.pro "CONFIG -= release" "$EXTRA_QMAKE_FLAGS" || die "Configure failed."
             BUILD_CMD='make'        
         fi;;
             
@@ -156,7 +159,6 @@ if [ $TESTS ]
 then
     cp admin/tests/run_tests.sh _bin/tests
 fi
-
 
 middle "Generating _configure.h"
 case `uname` in

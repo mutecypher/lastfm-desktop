@@ -51,9 +51,12 @@ template <typename D> struct OneDialogPointer : public QPointer<D>
     }
 };
 
+namespace lastfm { class UserDetails; }
 
 namespace unicorn
 {
+    class Session;
+
     class UNICORN_DLLEXPORT MainWindow : public QMainWindow
     {
         Q_OBJECT
@@ -92,7 +95,8 @@ namespace unicorn
         QMap<QWidget*, QPoint> m_dragHandleMouseDownPos;
 
     private slots:
-        void onUserGotInfo( QNetworkReply* );
+        void onGotUserInfo( const lastfm::UserDetails& );
+        void onSessionChanged( const unicorn::Session& );
     
     signals:
         void hidden( bool );   

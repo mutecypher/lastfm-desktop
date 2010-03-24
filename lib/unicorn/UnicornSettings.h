@@ -22,17 +22,28 @@
 
 #include <QSettings>
 #include <QString>
+#include "UnicornApplication.h"
 
-
+namespace lastfm{ class User; }
 namespace unicorn
 {
     inline const char* organizationName() { return "Last.fm"; }
     inline const char* organizationDomain() { return "last.fm"; }
 
-    class GlobalSettings : public QSettings
+    class Settings : public QSettings
     {
     public:
-        GlobalSettings( const char* appname = "" ) : QSettings( unicorn::organizationName(), appname )
+        Settings() : QSettings( unicorn::organizationName() )
+        {}
+        
+        QList<lastfm::User> userRoster();
+
+    };
+
+    class AppSettings : public QSettings
+    {
+    public:
+        AppSettings( QString appname = qApp->applicationName() ) : QSettings( unicorn::organizationName(), appname )
         {}
     };
 
@@ -44,15 +55,16 @@ namespace unicorn
     public:
         UserSettings()
         {
-            QString const username = value( "Username" ).toString();
+            QString const username = Application::instance()->currentSession().username();
             beginGroup( username );
             // it shouldn't be possible, since unicorn::Application enforces
             // assignment of the username parameter before anything else
             Q_ASSERT( !username.isEmpty() );
         }
 
-        static const char* subscriptionKey() { return "subscription"; }
+        static const char* subscriptionKey() { return "subscriber"; }
     };
 }
+
 
 #endif

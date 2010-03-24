@@ -22,7 +22,6 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QScrollBar>
-#include <lastfm/AuthenticatedUser>
 #include <lastfm/XmlQuery>
 #include "RecentStationsWidget.h"
 #include "ColumnListView.h"
@@ -46,16 +45,16 @@ RecentStationsWidget::RecentStationsWidget()
     connect(m_list, SIGNAL(doubleClicked(QModelIndex)), SLOT(onActivate(QModelIndex)));
     connect(m_list, SIGNAL(columnsChanged()), SLOT(recalcMoreButton()));
 
-    m_moreButton = new QPushButton(tr("more"));
+    /*m_moreButton = new QPushButton(tr("more"));
     m_moreButton->setObjectName("more");
-    m_moreButton->setVisible(false);
+    m_moreButton->setVisible(false);*/
 
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(new QLabel(tr("Your Recent Stations")), 0, Qt::AlignCenter);
     layout->addWidget(m_list);
-    layout->addWidget(m_moreButton, 0, Qt::AlignRight);
+    //layout->addWidget(m_moreButton, 0, Qt::AlignRight);
 
-    connect(m_moreButton, SIGNAL(clicked()), SIGNAL(showMoreRecentStations()));
+    //connect(m_moreButton, SIGNAL(clicked()), SIGNAL(showMoreRecentStations()));
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 }
 
@@ -88,5 +87,5 @@ RecentStationsWidget::recalcMoreButton()
 {
     bool more = m_list->model() && 
         (m_list->model()->rowCount() > m_list->getDisplayedColumns() * ROW_COUNT);
-    m_moreButton->setVisible(more);
+    //m_moreButton->setVisible(more);
 }

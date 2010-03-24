@@ -22,7 +22,10 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QListWidgetItem>
+#include <QCompleter>
+#include "SourceSelectorListWidget.h"
 #include "SourceSelectorWidget.h"
+
 
 SourceSelectorWidget::SourceSelectorWidget(QLineEdit* edit, QWidget* parent)
     :StylableWidget(parent)
@@ -40,14 +43,19 @@ SourceSelectorWidget::SourceSelectorWidget(QLineEdit* edit, QWidget* parent)
     grid->setColumnStretch(0, 3);
     onTextChanged(m_edit->text());
 
-    m_list = new QListWidget();
+    m_list = new SourceSelectorListWidget();
     m_list->setIconSize(QSize(0,0));
+    m_list->setTextElideMode(Qt::ElideRight);
+    m_list->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_list->setDragEnabled( true );
     grid->addWidget(m_list, 1, 0, 1, 2);
 
     connect(m_edit, SIGNAL(returnPressed()), SLOT(emitAdd())); 
     connect(m_edit, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
+    connect(m_edit->completer(), SIGNAL(activated(QString)), SLOT(onCompleterActivated(QString)));
+
     connect(m_button, SIGNAL(clicked()), SLOT(emitAdd()));
-    connect(m_list, SIGNAL(itemActivated(QListWidgetItem *)), SIGNAL(itemActivated(QListWidgetItem *)));
+    connect(m_list, SIGNAL(itemClicked(QListWidgetItem *)), SIGNAL(itemClicked(QListWidgetItem *)));
 }
 
 QListWidget* 
@@ -66,4 +74,11 @@ void
 SourceSelectorWidget::emitAdd()
 {
     emit add(m_edit->text());
+}
+
+void
+SourceSelectorWidget::onCompleterActivated(const QString& text)
+{
+    m_edit->setText(text);
+    emit add(text);
 }

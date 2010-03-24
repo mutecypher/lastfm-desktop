@@ -31,42 +31,23 @@ class QTreeWidgetItem;
 class SourceListModel;
 class SourceListWidget;
 class SourceSelectorWidget;
+class AdvancedOptionsWidget;
+class MultiStarterTabWidget;
 
 class MultiStarterWidget : public StylableWidget
 {
     Q_OBJECT;
 
 public:
-    MultiStarterWidget(bool advanced, int maxSources, QWidget *parent = 0);
+    MultiStarterWidget(int maxSources, QWidget *parent = 0);
 
 signals:
     void startRadio(RadioStation);
 
-private slots:
-    void onAdd(const QString& item, const QString& imgUrl = QString());
-    void onAddItem(QListWidgetItem* item);
-    void onPlayClicked();
-    void onGotTopTags();
-    void onUserGotTopArtists();
-    void onUserGotFriends();
-    void onCheckBox(int checkState);
-    void onYouItemActivated(QTreeWidgetItem*, int);
-    void onYouBack();
-
 private:
-    SourceListModel* m_sourceModel;
-    SourceListWidget* m_sourceList;
-    SourceSelectorWidget* m_tags;
-    SourceSelectorWidget* m_artists;
-    SourceSelectorWidget* m_users;
-    QWidget* m_youWidget;
-    QWidget* m_sliders;
-    QSlider* m_repSlider;
-    QSlider* m_mainstrSlider;
-    QCheckBox* m_disco;
-    QPushButton* m_playButton;
-    const int m_minTagCount;
-    const int m_minArtistCount;
+    MultiStarterTabWidget* m_tags;
+    MultiStarterTabWidget* m_artists;
+    MultiStarterTabWidget* m_users;
 };
 
 #endif

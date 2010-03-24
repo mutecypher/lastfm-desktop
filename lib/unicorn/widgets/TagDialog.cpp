@@ -50,7 +50,7 @@ TagDialog::TagDialog( const Track& track, QWidget *parent )
     
     setWindowTitle( tr("Tag") );
     
-    QNetworkReply* r = AuthenticatedUser().getTopTags();
+    QNetworkReply* r = User().getTopTags();
     ui.yourTags->setTagsRequest( r );
     follow( r );
 	
@@ -92,7 +92,7 @@ TagDialog::setupUi()
     h->addWidget( ui.appliedTags = new TagBuckets( m_track ) );
     
     v = new QVBoxLayout( this );
-    v->addWidget( ui.track = new TrackWidget );
+    v->addWidget( ui.track = new TrackWidget( m_track ) );
     v->addSpacing( 10 );
     v->addLayout( h );
     v->addWidget( ui.buttons = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );
@@ -100,7 +100,6 @@ TagDialog::setupUi()
     ui.suggestedTags->setDragEnabled( true );
     ui.yourTags->setDragEnabled( true );
     ui.track->layout()->addWidget( ui.spinner = new SpinnerLabel );
-    ui.track->setTrack( m_track );
     ui.spinner->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum );
 }
 

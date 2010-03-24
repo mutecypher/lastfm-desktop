@@ -18,8 +18,9 @@
 */
 
 #include <QComboBox>
-#include <QLineEdit>
+#include "lib/unicorn/widgets/HelpTextLineEdit.h"
 #include <QPushButton>
+#include <QLabel>
 #include <QHBoxLayout>
 #include "QuickStartWidget.h"
 #include "../StationSearch.h"
@@ -45,10 +46,15 @@ public:
 
 QuickStartWidget::QuickStartWidget()
 {
-    QHBoxLayout* layout = new QHBoxLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout(this);
+
+    QHBoxLayout* h1 = new QHBoxLayout(this);
     QPushButton* button = new AAQPushButton(tr("Play"));
-    layout->addWidget(m_edit = new QLineEdit());
-    layout->addWidget(button);
+    h1->addWidget(m_edit = new HelpTextLineEdit( tr("Type an artist or tag"), this ) );
+    h1->addWidget(button);
+
+    layout->addWidget( new QLabel( tr("Quick start") ), 0, Qt::AlignCenter );
+    layout->addLayout( h1 );
 
     m_edit->setAttribute( Qt::WA_MacShowFocusRect, false );
     
@@ -59,6 +65,12 @@ QuickStartWidget::QuickStartWidget()
 void
 QuickStartWidget::search()
 {
+    QString trimmedText = m_edit->text().trimmed();
+    if( trimmedText.startsWith("lastfm://")) {
+        emit startRadio( RadioStation( trimmedText ) );
+        return;
+    }
+
     if (m_edit->text().length()) {
         StationSearch* s = new StationSearch();
         connect(s, SIGNAL(searchResult(RadioStation)), SIGNAL(startRadio(RadioStation)));

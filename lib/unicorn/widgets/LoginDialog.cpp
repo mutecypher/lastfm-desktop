@@ -23,94 +23,39 @@
 #include <lastfm/XmlQuery>
 #include <lastfm/ws.h>
 #include <QtGui>
+#include <QDesktopServices>
+
 #ifdef WIN32
 #include <windows.h>
 #endif
 
 
-LoginDialog::LoginDialog( const QString& username )
-           : m_username( username )
-           , m_subscriber( true )
+LoginDialog::LoginDialog( QWidget* parent )
+            :QDialog( parent )
 {
-    ui.setupUi( this );
-    if (username.size())
-    {
-        ui.username->setText( username );
-        ui.password->setFocus();
-    }
-    
-#ifdef Q_WS_MAC
-    ui.spacerItem->changeSize( 0, 0 );
-    ui.spinner->hide();
-    
-    QVBoxLayout* v = new QVBoxLayout( ui.transient = new QDialog( this, Qt::Sheet ) );
-    v->addWidget( ui.text = new QLabel( tr("Authenticating") ) );
-    v->addWidget( ui.progress = new QProgressBar );
-    v->addWidget( ui.cancel = new QPushButton( ' ' + tr("Cancel") + ' ' ) );
-    v->setAlignment( ui.cancel, Qt::AlignRight );
-    v->setSizeConstraint( QLayout::SetFixedSize );
-    ui.text->setWordWrap( true );
-    ui.cancel->setMinimumWidth( ui.cancel->sizeHint().width() );
-    ui.transient->setModal( true );
-    ui.progress->setRange( 0, 0 );
-    ui.text->setFixedWidth( ui.text->sizeHint().width() * 2.5 );
-    ui.urls->setAttribute( Qt::WA_MacSmallSize );
-    
-    connect( ui.cancel, SIGNAL(clicked()), ui.transient, SLOT(reject()) );
-    connect( ui.transient, SIGNAL(rejected()), SLOT(cancel()) );
+    setWindowModality( Qt::ApplicationModal );
 
-    //Qt is shit
-    ui.buttonBox->layout()->setMargin( 0 );
-    ui.buttonBox->setContentsMargins( 0, 0, -5, -7 );
-    ui.buttonBox->layout()->setContentsMargins( 0, 0, 0, 0 );
-    int left, top, right, bottom;
-    layout()->getContentsMargins ( &left, &top, &right, &bottom );
-    layout()->setContentsMargins( left, top, right, bottom - 10 );
-    //Qt is shit
-#else
-    ui.spinner->hide();
-#endif
+    QVBoxLayout* layout = new QVBoxLayout( this );
 
-    ok()->setText( tr("Log In") );
-    ok()->setDisabled( true );
+    layout->addWidget( ui.title = new QLabel( tr("Last.fm needs your permission first!") ) );
+    ui.title->setObjectName( "title" );
+
+    layout->addWidget( ui.description = new QLabel( tr("This application needs your permission to connect to your Last.fm profile.  Click OK to go to the Last.fm website and do this.") ) );
+    ui.description->setWordWrap( true );
+    ui.title->setObjectName( "description" );
+    ui.title->setWordWrap( true );
+
+    layout->addWidget( ui.buttonBox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );
 
     connect( ui.buttonBox, SIGNAL(accepted()), SLOT(authenticate()) );
     connect( ui.buttonBox, SIGNAL(rejected()), SLOT(reject()) );
-    connect( ui.username, SIGNAL(textEdited( QString )), SLOT(onEdited()) );
-    connect( ui.password, SIGNAL(textEdited( QString )), SLOT(onEdited()) );
-}
-
-
-void
-LoginDialog::onEdited()
-{
-    if (!ui.spinner->isVisible())
-        ok()->setDisabled( ui.username->text().isEmpty() || ui.password->text().isEmpty() );
 }
 
 
 void
 LoginDialog::authenticate()
 {
-    m_username = ui.username->text().toLower();
-    m_password = lastfm::md5( ui.password->text().toUtf8() );
-
-    QMap<QString, QString> params;
-    params["method"] = "auth.getMobileSession";
-    params["username"] = m_username;
-    params["authToken"] = lastfm::md5( (m_username + m_password).toUtf8() );
-    QNetworkReply* reply = lastfm::ws::post( params );
-    reply->setParent( this );
-
-    connect( reply, SIGNAL(finished()), SLOT(onAuthenticated()) );
-
-#ifdef Q_OS_MAC
-    ui.transient->show();
-#else
-    ui.spinner->show();
-    setWindowTitle( tr("Verifying Login Credentials...") );
-    ok()->setEnabled( false );
-#endif
+    connect( unicorn::Session::getToken(), SIGNAL(finished()), SLOT(onGotToken()) );
 }
 
 
@@ -118,102 +63,28 @@ void
 LoginDialog::cancel()
 {
     qDeleteAll( findChildren<QNetworkReply*>() );
-
-#ifdef Q_WS_MAC
-    ui.transient->hide();
-#endif
 }
 
 
 void
-LoginDialog::onAuthenticated()
+LoginDialog::onGotToken()
 {
-    QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
-    
-    try {
-        lastfm::XmlQuery lfm = lastfm::ws::parse( reply );
-        lastfm::XmlQuery session = lfm["session"];
-        
-        // replace username; because eg. perhaps the user typed their
-        // username with the wrong camel case
-        QString username = session["name"].text();
-        if (username.size())
-            m_username = username;
-        
-        m_sessionKey = session["key"].text();
-        m_subscriber = session["subscriber"].text() != "0";
-        accept();
-        
-    #ifdef Q_WS_MAC
-        ui.text->setText( "<b>Authentication successful" );
-    #endif
-    }
-    catch (lastfm::ws::ParseError& e)
+    lastfm::XmlQuery lfm = lastfm::XmlQuery( lastfm::ws::parse( static_cast<QNetworkReply*>(sender()) ) );
+
+    m_token = lfm["token"].text();
+
+    QUrl authUrl( "http://www.last.fm/api/auth/" );
+    authUrl.addQueryItem( "api_key", lastfm::ws::ApiKey );
+    authUrl.addQueryItem( "token", m_token );
+
+    if ( QDesktopServices::openUrl( authUrl ) )
     {
-        qWarning() << e.what();
-
-        switch (e.enumValue())
-        {
-            case lastfm::ws::AuthenticationFailed:
-                // COPYTODO
-                QMessageBoxBuilder( this )
-                        .setIcon( QMessageBox::Critical )
-                        .setTitle( tr("Login Failed") )
-                        .setText( tr("Sorry, we don't recognise that username, or you typed the password wrongly.") )
-                        .exec();
-                break;
-            
-            default:
-                // COPYTODO
-                QMessageBoxBuilder( this )
-                        .setIcon( QMessageBox::Critical )
-                        .setTitle( tr("Last.fm Unavailable") )
-                        .setText( tr("There was a problem communicating with the Last.fm services. Please try again later.") )
-                        .exec();
-                break;
-            
-            case lastfm::ws::TryAgainLater:
-            case lastfm::ws::UnknownError:
-                switch ((int)reply->error())
-                {
-                    case QNetworkReply::ProxyConnectionClosedError:
-                    case QNetworkReply::ProxyConnectionRefusedError:
-                    case QNetworkReply::ProxyNotFoundError:
-                    case QNetworkReply::ProxyTimeoutError:
-                    case QNetworkReply::ProxyAuthenticationRequiredError: //TODO we are meant to prompt!
-                    case QNetworkReply::UnknownProxyError:
-                    case QNetworkReply::UnknownNetworkError:
-                        break;
-                    default:
-                        return;
-                }
-
-                // TODO proxy prompting?
-                // COPYTODO
-                QMessageBoxBuilder( this )
-                        .setIcon( QMessageBox::Critical )
-                        .setTitle( tr("Cannot connect to Last.fm") )
-                        .setText( tr("Last.fm cannot be reached. Please check your firewall or proxy settings.") )
-                        .exec();
-                
-            #ifdef WIN32
-                // show Internet Settings Control Panel
-                HMODULE h = LoadLibraryA( "InetCpl.cpl" );
-                if (!h) break;
-                BOOL (WINAPI *cpl)(HWND) = (BOOL (WINAPI *)(HWND)) GetProcAddress( h, "LaunchConnectionDialog" );
-                if (cpl) cpl( winId() );
-                FreeLibrary( h );
-            #endif
-                break;
-        }
+        // prepare for continue to be clicked
+        accept();
     }
-    
-#ifdef Q_WS_MAC
-    ui.transient->hide();
-#else
-    // do last, otherwise it looks weird
-    ui.retranslateUi( this ); //resets Window title
-    ok()->setEnabled( true );
-    ui.spinner->hide();
-#endif
+    else
+    {
+        // We were unable to open a browser - what do we do now?
+        reject(); // ???
+    }
 }

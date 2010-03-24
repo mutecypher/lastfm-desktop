@@ -22,7 +22,7 @@
 #include "widgets/AboutDialog.h"
 #include "widgets/UpdateDialog.h"
 #include "UnicornSettings.h"
-#include <lastfm/AuthenticatedUser>
+#include <lastfm/User>
 #include <QDesktopServices>
 #include <QMenuBar>
 #include <QShortcut>
@@ -37,9 +37,10 @@ unicorn::MainWindow::MainWindow()
 {
     new QShortcut( QKeySequence(Qt::CTRL+Qt::Key_W), this, SLOT(close()) );
     new QShortcut( QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_L), this, SLOT(openLog()) );
-    connect( qApp, SIGNAL(userGotInfo( QNetworkReply* )), SLOT(onUserGotInfo( QNetworkReply* )) );
+    connect( qApp, SIGNAL(gotUserInfo( const lastfm::UserDetails& )), SLOT(onGotUserInfo( const lastfm::UserDetails& )) );
+    connect( qApp, SIGNAL(sessionChanged( unicorn::Session, unicorn::Session )), SLOT(onSessionChanged( unicorn::Session )));
 
-    QVariant v = unicorn::UserSettings().value( SETTINGS_POSITION_KEY );
+    QVariant v = unicorn::AppSettings().value( SETTINGS_POSITION_KEY );
     if (v.isValid()) move( v.toPoint() ); //if null, let Qt decide
 }
 
@@ -53,13 +54,12 @@ unicorn::MainWindow::~MainWindow()
 void
 unicorn::MainWindow::finishUi()
 {
-    ui.account = menuBar()->addMenu( AuthenticatedUser().name() );
+    ui.account = menuBar()->addMenu( User().name() );
     ui.profile = ui.account->addAction( tr("Visit &Profile"), this, SLOT(visitProfile()) );
     ui.account->addSeparator();
-    ui.account->addAction( tr("Log &Out && Quit"), qApp, SLOT(logout()) );
-#ifndef __APPLE__
-    ui.account->addAction( tr("&Quit"), qApp, SLOT(quit()) );
-#endif
+    ui.account->addAction( tr("Log &Out"), qApp, SLOT(logout()) );
+    QAction* quit = ui.account->addAction( tr("&Quit"), qApp, SLOT(quit()) );
+    quit->setMenuRole( QAction::QuitRole );
 
     menuBar()->insertMenu( menuBar()->actions().first(), ui.account );
     QMenu* help = menuBar()->addMenu( tr("Help") );
@@ -75,21 +75,22 @@ unicorn::MainWindow::finishUi()
 
 
 void
-unicorn::MainWindow::onUserGotInfo( QNetworkReply* reply )
+unicorn::MainWindow::onGotUserInfo( const lastfm::UserDetails& details )
 {
-    QString const text = AuthenticatedUser::getInfoString( reply );
+    ui.account->setTitle( details );
+    QString const text = details.getInfoString();
     if (text.size() && ui.account) {
         QAction* a = ui.account->addAction( text );
         a->setEnabled( false );
+        a->setObjectName( "UserBlurb" );
         ui.account->insertAction( ui.profile, a );
-    }
-}
+    } }
 
 
 void
 unicorn::MainWindow::visitProfile()
 {
-    QDesktopServices::openUrl( AuthenticatedUser().www() );
+    QDesktopServices::openUrl( User().www() );
 }
 
 
@@ -134,19 +135,20 @@ unicorn::MainWindow::eventFilter( QObject* o, QEvent* event )
     {
         case QEvent::MouseButtonPress:
             m_dragHandleMouseDownPos[ obj ] = e->globalPos() - pos();
-            break;
+            return true;
 
         case QEvent::MouseButtonRelease:
             m_dragHandleMouseDownPos[ obj ] = QPoint();
-            break;
+            return true;
             
         case QEvent::MouseMove:
-            if (m_dragHandleMouseDownPos.contains( obj ) && !m_dragHandleMouseDownPos[ obj ].isNull())
-                move( e->globalPos() - m_dragHandleMouseDownPos[ obj ]);
-            break;
+            if (m_dragHandleMouseDownPos.contains( obj ) && !m_dragHandleMouseDownPos[ obj ].isNull()) {
+                move( e->globalPos() - m_dragHandleMouseDownPos[ obj ] );
+                return true;
+            }
     }
 
-    return false;
+    return QMainWindow::eventFilter(o, event);
 }
 
 
@@ -168,4 +170,12 @@ void
 unicorn::MainWindow::showEvent( QShowEvent* )
 {
     emit shown( true );
+}
+
+
+void
+unicorn::MainWindow::onSessionChanged( const Session& session )
+{
+    ui.account->findChild<QAction*>("UserBlurb")->deleteLater();
+    ui.account->setTitle( session.username());
 }

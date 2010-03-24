@@ -21,8 +21,8 @@
 #include <QPainter>
 
 
-HelpTextLineEdit::HelpTextLineEdit( const QString& text )
-                : m_text( text )
+HelpTextLineEdit::HelpTextLineEdit( const QString& text, QWidget* parent )
+                :QLineEdit( parent ), m_text( text )
 {
     setMinimumWidth( fontMetrics().width( m_text ) + 12 );
 }

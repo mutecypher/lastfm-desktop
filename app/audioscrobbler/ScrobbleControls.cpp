@@ -24,6 +24,7 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QAction>
+#include "lib/unicorn/widgets/UserComboSelector.h"
 
 ScrobbleControls::ScrobbleControls()
 {
@@ -37,6 +38,16 @@ ScrobbleControls::ScrobbleControls()
     
     layout()->addWidget(ui.share = new QPushButton(tr("share")));
     ui.share->setObjectName("share");
+
+    layout()->addWidget( new UserComboSelector() );
+}
+
+void
+ScrobbleControls::setEnabled( bool enabled )
+{
+    ui.love->setEnabled( enabled );
+    ui.tag->setEnabled( enabled );
+    ui.share->setEnabled( enabled );
 }
 
 void
@@ -56,3 +67,4 @@ ScrobbleControls::setShareAction( const QAction* a )
 {
     connect( ui.share, SIGNAL(clicked()), a, SLOT(trigger()));
 }
+

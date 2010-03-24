@@ -34,14 +34,10 @@ public:
 private slots:
     void gotFriends();
     void gotTopArtists();
-    void gotTopTags();
-    void gotPlaylists();
 
 private:
     QTreeWidgetItem* m_friendsItem;
     QTreeWidgetItem* m_artistsItem;
-    QTreeWidgetItem* m_tagsItem;
-    QTreeWidgetItem* m_playlistsItem;
 
     QString m_username;
     bool m_subscriber;

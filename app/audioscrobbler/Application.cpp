@@ -31,11 +31,16 @@
 #include "lib/listener/mac/ITunesListener.h"
 #endif
 #include <lastfm/Audioscrobbler>
-#include <lastfm/AuthenticatedUser>
 #include <QMenu>
-#include "TagDialog.h"
-#include "ShareDialog.h"
+#include <QDebug>
+#include "lib/unicorn/widgets/TagDialog.h"
+#include "lib/unicorn/widgets/ShareDialog.h"
+#include "lib/unicorn/UnicornSettings.h"
 #include "Wizard/FirstRunWizard.h"
+
+#ifdef Q_OS_WIN32
+#include "windows.h"
+#endif
 
 using audioscrobbler::Application;
 
@@ -49,13 +54,29 @@ using audioscrobbler::Application;
     #define AS_TRAY_ICON ":systray_icon_rest_mac.png"
 #endif
 
-Application::Application(int& argc, char** argv) : unicorn::Application(argc, argv)
+Application::Application(int& argc, char** argv) 
+            : unicorn::Application(argc, argv),
+              as( 0 )
 {
-    if( unicorn::GlobalSettings( "Audioscrobbler" ).value( "FirstRun", true )
-        == true ) {
-        (new FirstRunWizard())->exec();
-    }
+    // We do the actual init slightly later so that if this is the second
+    // time we open the app, we don't get another tray icon etc.
+    QTimer::singleShot(0, this, SLOT(init()));
 
+}
+
+void
+Application::init()
+{
+    if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
+    {
+        FirstRunWizard* w = new FirstRunWizard();
+        if( !w->exec() ) {
+            quit();
+            return;
+        }
+    }
+    
+    as = new Audioscrobbler("ass");
 /// tray
     tray = new QSystemTrayIcon(this);
     QIcon trayIcon( AS_TRAY_ICON );
@@ -64,15 +85,15 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
     #endif
 
     #ifdef Q_WS_WIN
-	    connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+        connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
     #endif
-	tray->setIcon(trayIcon);
-	tray->show();
+    tray->setIcon(trayIcon);
+    tray->show();
     connect( this, SIGNAL( aboutToQuit()), tray, SLOT( hide()));
 
 /// tray menu
     QMenu* menu = new QMenu;
-	m_toggle_window_action = menu->addAction( tr("Show Scrobbler"));
+    m_toggle_window_action = menu->addAction( tr("Show Scrobbler"));
     menu->addSeparator();
     m_title_action = menu->addAction(tr("Ready"));
     m_love_action = menu->addAction(tr("Love"));
@@ -90,9 +111,9 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
 #endif
     menu->addSeparator();
     QAction* quit = menu->addAction(tr("Quit Audioscrobbler"));
-    
+
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
-        
+
     m_title_action->setEnabled( false );
     m_submit_scrobbles_toggle->setCheckable(true);
     m_submit_scrobbles_toggle->setChecked(true);
@@ -101,12 +122,12 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
 /// MetadataWindow
     mw = new MetadataWindow;
     ScrobbleControls* sc = mw->scrobbleControls();
+    sc->setEnabled( false );
     sc->setLoveAction( m_love_action );
     sc->setTagAction( m_tag_action );
     sc->setShareAction( m_share_action );
 
-/// scrobbler
-    as = new Audioscrobbler("ass");
+
 
 /// mediator
     mediator = new PlayerMediator(this);
@@ -119,12 +140,12 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
         connect(itunes, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
         itunes->start();
     #endif
-        
+
         QObject* o = new PlayerListener(mediator);
         connect(o, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
         o = new LegacyPlayerListener(mediator);
         connect(o, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
-        
+
     #ifdef QT_DBUS_LIB
         DBusListener* dbus = new DBusListener(mediator);
         connect(dbus, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
@@ -136,14 +157,31 @@ Application::Application(int& argc, char** argv) : unicorn::Application(argc, ar
     }
 
 
-	connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( show()) );
-    connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( setFocus()) );
-    connect( m_toggle_window_action, SIGNAL( triggered()), mw, SLOT( raise()) );
+    connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( onActivateWindow()), Qt::QueuedConnection );
 
-    m_toggle_window_action->trigger();
+    connect( this, SIGNAL(messageReceived(QString)), SLOT(onMessageReceived(QString)) );
+    connect( this, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session) ), 
+                   SLOT(onSessionChanged()));
+
+    if (!arguments().contains("--tray"))
+    {
+        m_toggle_window_action->trigger();
+    }
+
+    // clicking on a system tray message should show the scrobbler
+    connect( tray, SIGNAL(messageClicked()), m_toggle_window_action, SLOT(trigger()));
+
 
 }
 
+
+void
+Application::onSessionChanged()
+{
+    Audioscrobbler* oldAs = as;
+    as = new Audioscrobbler("ass");
+    delete oldAs;
+}
 
 void
 Application::setConnection(PlayerConnection*c)
@@ -190,20 +228,27 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     m_title_action->setText( t.title() + " [" + t.durationString() + ']' );
 
     delete watch;
-    as->submit();
-    as->nowPlaying(t);
-    
+    qDebug() << "********** AS = " << as;
+    if( as ) {
+        as->submit();
+        qDebug() << "************** Now Playing..";
+        as->nowPlaying(t);
+    }
     ScrobblePoint timeout(t.duration()/2);
     watch = new StopWatch(timeout, connection->elapsed());
     watch->resume();
     connect(watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
+
+    tray->showMessage(applicationName(), t.toString());
+
+    mw->scrobbleControls()->setEnabled( true );
 }
 
 void
 Application::onStopWatchTimedOut()
 {
     Q_ASSERT(connection);    
-    as->cache(connection->track());
+    if( as ) as->cache(connection->track());
 }
 
 void
@@ -230,7 +275,9 @@ Application::onStopped()
     Q_ASSERT(connection);
         
     delete watch;
-    as->submit();
+   if( as ) as->submit();
+
+   mw->scrobbleControls()->setEnabled( false );
 }
 
 void 
@@ -276,13 +323,25 @@ Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason )
     m_toggle_window_action->trigger();
 }
 
-void 
-Application::onUserGotInfo()
+void
+Application::onActivateWindow()
 {
-    /*QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    Q_ASSERT( reply );
-
-    bool canBootstrap = AuthenticatedUser::canBootstrap( reply );
-    if( canBootstrap )
-        mw->showBootstrapMessage();*/
+    mw->showNormal();
+    mw->setFocus();
+    mw->raise();
+    mw->activateWindow();
 }
+
+void
+Application::onMessageReceived(const QString& message)
+{
+    if (message != "--tray")
+    {
+        // raise the app
+        m_toggle_window_action->trigger();
+#ifdef Q_OS_WIN32
+		SetForegroundWindow(mw->winId());
+#endif
+    }
+}
+

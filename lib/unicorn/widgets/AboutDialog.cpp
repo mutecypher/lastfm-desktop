@@ -37,14 +37,16 @@ AboutDialog::AboutDialog( QWidget* parent )
            : QDialog( parent )
 {
     QLabel* lauthors;
+    QLabel* lalumni;
 
     Q_ASSERT( qApp->applicationVersion().size() );
 
     QStringList authors, raw_authors;
-    raw_authors << "Max Howell" << "mxcl" << "max@last.fm"
-                << "Jono Cole" << "jonocole" << "jono@last.fm"
-                << "Doug Mansell" << "dougma" << "doug@last.fm"
-                << "Matt Brown" << "irvinebrown" << "mattb@last.fm";
+    raw_authors << "Jono Cole" << "jonocole" << "jono@last.fm"
+                << "Michael Coffey" << "eartle" << "michaelc@last.fm"
+                << "Hannah Donovan" << "han" << "hannah@last.fm";
+
+
     QStringListIterator i( raw_authors );
     while(i.hasNext()) {
         QString name = i.next();
@@ -52,6 +54,20 @@ AboutDialog::AboutDialog( QWidget* parent )
         QString mail = i.next();
         authors << "&lt;<a href='mailto:" + mail + "'>" + mail + "</a>&gt; " 
                  + name + ' '
+                 + "<a href='http://twitter.com/" + twit + "'>@" + twit + "</a>";
+    }
+
+    QStringList alumni, raw_alumni;
+    raw_alumni << "Max Howell" << "mxcl"
+                <<  "Doug Mansell" << "dougma"
+                << "Matt Brown" << "irvinebrown";
+
+
+    QStringListIterator j( raw_alumni );
+    while(j.hasNext()) {
+        QString name = j.next();
+        QString twit = j.next();
+        alumni << name + ' '
                  + "<a href='http://twitter.com/" + twit + "'>@" + twit + "</a>";
     }
     
@@ -62,14 +78,19 @@ AboutDialog::AboutDialog( QWidget* parent )
     v->addWidget( label( "<a href='http://www.last.fm'>www.last.fm</a>" ) );
     v->addWidget( label( "<a href='irc://irc.audioscrobbler.com#audioscrobbler'>irc.audioscrobbler.com</a>" ) );
     v->addSpacing( 10 );
-    v->addWidget( label( QString::fromUtf8("Copyright © 2005-2009 Last.fm Ltd.") ) );
+    v->addWidget( label( QString::fromUtf8("Copyright © 2005-2010 Last.fm Ltd.") ) );
     v->addSpacing( 10 );
+    v->addWidget( new QLabel( "<b>Staff" ) );
     v->addWidget( lauthors = label( authors.join( "<br>" ), Qt::WA_MacMiniSize ) );
+    v->addSpacing( 10 );
+    v->addWidget( new QLabel( "<b>Alumni" ) );
+    v->addWidget( lalumni = label( alumni.join( "<br>" ), Qt::WA_MacMiniSize ) );
 
     v->setSizeConstraint( QLayout::SetFixedSize );
     v->setSpacing( 2 );
 
     lauthors->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse );
+    lalumni->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse );
 
 #ifdef Q_WS_MAC
     foreach (QLabel* l, findChildren<QLabel*>())

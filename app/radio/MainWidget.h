@@ -32,6 +32,7 @@
 #include "lib/unicorn/AnimatedPushButton.h"
 #include "PlaylistMeta.h"
 #include "RadioStationListModel.h"
+#include "../Radio.h"
 
 class SideBySideLayout;
 class NowPlayingState;
@@ -47,26 +48,20 @@ signals:
     void startRadio(RadioStation);
     void widgetChanged( QWidget* );
 
-private slots:
+public slots:
     void onStartRadio(RadioStation rs);
     void onShowMoreRecentStations();
     void onCombo();
-    void onYourTags();
     void onYourFriends();
-    void onYourPlaylists();
     void onBack();
     void onBackDelete();
     void onMoveFinished();
     void onForward();
 
     void onUserGotFriends();
-    void onUserGotTopTags();
-    void onUserGotPlaylists();
     void onUserGotRecentStations();
 
-    void onTagActivated(const QModelIndex& idx);
     void onFriendActivated(const QModelIndex& idx);
-    void onPlaylistActivated(const QModelIndex& idx);
     void onSlideStarted( QLayoutItem* next, QLayoutItem* prev );
 
     void rawrql();
@@ -75,8 +70,6 @@ private:
     SideBySideLayout* m_layout;
     NowPlayingState* m_nowPlaying;
     QStringList m_friends;
-    QStringList m_tags;
-    QList<PlaylistMeta> m_playlists;
     RadioStationListModel m_recentModel;
 
     QStringList m_rawrqlItems;
@@ -143,7 +136,10 @@ public:
     // if nowPlaying is null, there is no now-playing button.
 
     BackForwardControls(const QString& backLabel, const QString& mainLabel, NowPlayingState* nowPlaying, QWidget* child)
+        :m_mainLabel(0)
     {
+        connect(radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
+
         QVBoxLayout* layout = new QVBoxLayout(this);
         layout->setContentsMargins( 0, 0, 0, 0 );
         QHBoxLayout* rowLayout = new QHBoxLayout();
@@ -155,9 +151,11 @@ public:
             rowLayout->addWidget(button, 1, Qt::AlignLeft);
             rowLayout->addStrut( button->sizeHint().height() - 8);
         }
-        if (!mainLabel.isNull()) {
-            rowLayout->addWidget(new QLabel(mainLabel), 1, Qt::AlignCenter);
-        }
+
+        // always create the main label
+        m_mainLabel = new QLabel(mainLabel);
+        rowLayout->addWidget(m_mainLabel, 1, Qt::AlignCenter);
+
         if (nowPlaying) {
             // a button which toggles enable/disabled state (use css to make it visible/invisible)
             QMovie* movie = new QMovie( ":/now_playing.mng" );
@@ -183,9 +181,22 @@ public:
         layout->addWidget(child);
     }
 
+private slots:
+
+    void onTuningIn( const RadioStation& rs)
+    {
+        if ( m_mainLabel && !rs.title().isEmpty() )
+        {
+            m_mainLabel->setText(rs.title());
+        }
+    }
+
 signals:
     void back();
     void forward();
+
+private:
+    QLabel* m_mainLabel;
 };
 
 #endif

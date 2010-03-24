@@ -59,14 +59,20 @@ public:
 		Playing
 	};
 
+    RadioStation station() const { return m_station; }
+    Track currentTrack() const {return m_track;}
+
 	State state() const { return m_state; }
 
     Phonon::AudioOutput* audioOutput() const { return m_audioOutput; }
+
+    void playNext( const RadioStation& station );
 
 public slots:
     void play( const RadioStation& station );
     void skip();
     void stop();
+    void setSupportsDisco( bool supportsDisco );
 
 signals:
     /** emitted up to twice, as first time may not have a title for the station
@@ -75,6 +81,7 @@ signals:
     void trackSpooled( const Track& );
     void buffering( int );
     void stopped();
+    void supportsDisco( bool supportsDisco );
 	
 	/** the error is one of lastfm::ws::Error, 
       * if UnknownError, then data is a fatal error from Phonon */
@@ -95,7 +102,7 @@ private slots:
     void onVolumeChanged(qreal);
 
 	/** we get a "proper" station name from the tune webservice */
-	void setStationNameIfCurrentlyBlank( const QString& );
+    void setStationName( const QString& );
 	
 private:
     /** resets internals to what Stopped means, used by changeState() */

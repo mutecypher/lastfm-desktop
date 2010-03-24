@@ -50,30 +50,21 @@ YouListWidget::YouListWidget(const QString& username, QWidget* parent)
     item = new QTreeWidgetItem(h, QStringList(displayName + "Library"));
     item->setData(0, SourceListModel::SourceType, RqlSource::User);
     item->setData(0, SourceListModel::Arg1, username);
-    item = new QTreeWidgetItem(h, QStringList(displayName + "Loved Tracks"));
-    item->setData(0, SourceListModel::SourceType, RqlSource::Loved);
-    item->setData(0, SourceListModel::Arg1, username);
-    if (!m_subscriber) {
-        item->setDisabled(true);
-        item->setToolTip(0, tr("Loved tracks are playable by subscribers"));
-    }
+
     item = new QTreeWidgetItem(h, QStringList(displayName + "Recommendations"));
     item->setData(0, SourceListModel::SourceType, RqlSource::Rec);
     item->setData(0, SourceListModel::Arg1, username);
+
     item = new QTreeWidgetItem(h, QStringList(displayName + "Neighbourhood"));
     item->setData(0, SourceListModel::SourceType, RqlSource::Neigh);
     item->setData(0, SourceListModel::Arg1, username);
 
     headerItems << (m_friendsItem = new QTreeWidgetItem(QStringList(displayName + "Friends")));
     headerItems << (m_artistsItem = new QTreeWidgetItem(QStringList(displayName + "Artists")));
-    headerItems << (m_tagsItem = new QTreeWidgetItem(QStringList(displayName + "Tags")));
-    headerItems << (m_playlistsItem = new QTreeWidgetItem(QStringList(displayName + "Playlists")));
 
     lastfm::User user(username);
     connect(user.getFriends(), SIGNAL(finished()), SLOT(gotFriends()));
     connect(user.getTopArtists(), SIGNAL(finished()), SLOT(gotTopArtists()));
-    connect(user.getTopTags(), SIGNAL(finished()), SLOT(gotTopTags()));
-    connect(user.getPlaylists(), SIGNAL(finished()), SLOT(gotPlaylists()));
 
     addTopLevelItems( headerItems );
     h->setExpanded( true );
@@ -85,7 +76,7 @@ YouListWidget::gotFriends()
 {
     sender()->deleteLater();
     QNetworkReply* r = (QNetworkReply*)sender();
-    lastfm::XmlQuery lfm(r->readAll());
+    lastfm::XmlQuery lfm( lastfm::ws::parse( r ) );
 
     foreach (lastfm::XmlQuery e, lfm["friends"].children("user")) {
         QString name = e["name"].text();
@@ -94,7 +85,12 @@ YouListWidget::gotFriends()
         item->setData(0, SourceListModel::SourceType, RqlSource::User);
         item->setData(0, SourceListModel::Arg1, name);
         item->setData(0, SourceListModel::ImageUrl, e["image size=small"].text());
+
+        // this will determine the sort order
+        item->setText(0, name.toLower());
     }
+
+    m_friendsItem->sortChildren(0, Qt::AscendingOrder);
 }
 
 void
@@ -109,43 +105,6 @@ YouListWidget::gotTopArtists()
         QTreeWidgetItem* item = new QTreeWidgetItem(m_artistsItem, QStringList(artist));
         item->setData(0, SourceListModel::SourceType, RqlSource::SimArt);
         item->setData(0, SourceListModel::Arg1, artist);
-        item->setData(0, SourceListModel::ImageUrl, e["image size=small"].text());
-    }
-}
-
-void
-YouListWidget::gotTopTags()
-{
-    sender()->deleteLater();
-    QNetworkReply* r = (QNetworkReply*)sender();
-    lastfm::XmlQuery lfm(r->readAll());
-
-    foreach (lastfm::XmlQuery e, lfm["toptags"].children("tag")) {
-        QString tag = e["name"].text();
-        QTreeWidgetItem* item = new QTreeWidgetItem(m_tagsItem, QStringList(tag));
-        item->setData(0, SourceListModel::SourceType, RqlSource::PersonalTag);
-        item->setData(0, SourceListModel::Arg1, tag);
-        item->setData(0, SourceListModel::Arg2, m_username);
-        if (!m_subscriber) {
-            item->setDisabled(true);
-            item->setToolTip(0, tr("Personal tags are playable by subscribers"));
-        }
-    }
-}
-
-void
-YouListWidget::gotPlaylists()
-{
-    sender()->deleteLater();
-    QNetworkReply* r = (QNetworkReply*)sender();
-    lastfm::XmlQuery lfm(r->readAll());
-
-    foreach (lastfm::XmlQuery e, lfm["playlists"].children("playlist")) {
-        QTreeWidgetItem* item = new QTreeWidgetItem(m_playlistsItem, QStringList(e["title"].text()));
-        item->setToolTip(0, e["description"].text());
-        item->setData(0, SourceListModel::SourceType, RqlSource::Playlist);
-        item->setData(0, SourceListModel::Arg1, e["id"].text().toInt());
-        // todo: arg2 could carry the playlist title?
         item->setData(0, SourceListModel::ImageUrl, e["image size=small"].text());
     }
 }

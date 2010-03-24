@@ -34,6 +34,7 @@ Radio::Radio( )
        m_state( Radio::Stopped ),
        m_bErrorRecover( false )
 {
+    initRadio();
 }
 
 
@@ -89,13 +90,39 @@ Radio::play( const RadioStation& station )
     }
 
 	m_station = station;
-    m_tuner = new lastfm::RadioTuner(station);
 
-	connect( m_tuner, SIGNAL(title( QString )), SLOT(setStationNameIfCurrentlyBlank( QString )) );
+    // Make sure the radio station has the radio options from the settings
+    bool ok;
+    m_station.setRep( unicorn::AppSettings().value( "rep", 0.5 ).toDouble( &ok ) );
+    m_station.setMainstr( unicorn::AppSettings().value( "mainstr", 0.5 ).toDouble( &ok ) );
+    m_station.setDisco( unicorn::AppSettings().value( "disco", false ).toBool() );
+
+    m_tuner = new lastfm::RadioTuner( m_station );
+
+    connect( m_tuner, SIGNAL(title( QString )), SLOT(setStationName( QString )) );
+    connect( m_tuner, SIGNAL(supportsDisco( bool )), SLOT(setSupportsDisco( bool )) );
 	connect( m_tuner, SIGNAL(trackAvailable()), SLOT(enqueue()) );
     connect( m_tuner, SIGNAL(error( lastfm::ws::Error )), SLOT(onTunerError( lastfm::ws::Error )) );
 
     changeState( TuningIn );
+}
+
+// play this radio station after the current track has finished
+void
+Radio::playNext( const RadioStation& station )
+{
+    if (m_state == Playing)
+    {
+        m_station = station;
+
+        // Make sure the radio station has the radio options from the settings
+        bool ok;
+        m_station.setRep( unicorn::AppSettings().value( "rep", 0.5 ).toDouble( &ok ) );
+        m_station.setMainstr( unicorn::AppSettings().value( "mainstr", 0.5 ).toDouble( &ok ) );
+        m_station.setDisco( unicorn::AppSettings().value( "disco", false ).toBool() );
+
+        m_tuner->retune( m_station );
+    }
 }
 
 
@@ -112,7 +139,6 @@ Radio::enqueue()
 	
     phononEnqueue();
 }
-
 
 void
 Radio::skip()
@@ -324,13 +350,17 @@ Radio::changeState( Radio::State const newstate )
 
 
 void
-Radio::setStationNameIfCurrentlyBlank( const QString& s )
+Radio::setStationName( const QString& s )
 {
-    if (m_station.title().isEmpty())
-    {
-        m_station.setTitle( s );
-        emit tuningIn( m_station );
-    }
+    m_station.setTitle( s );
+    emit tuningIn( m_station );
+}
+
+
+void
+Radio::setSupportsDisco( bool supportsDiscovery )
+{
+    emit supportsDisco( supportsDiscovery );
 }
 
 void
@@ -342,7 +372,7 @@ Radio::onBuffering( int percent_filled )
 void
 Radio::onMutedChanged(bool muted)
 {
-    Q_UNUSED(muted);
+    unicorn::AppSettings().setValue("Muted", muted);
 }
 
 void
@@ -354,7 +384,7 @@ Radio::onOutputDeviceChanged(const Phonon::AudioOutputDevice& newDevice)
 void
 Radio::onVolumeChanged(qreal vol)
 {
-    unicorn::GlobalSettings().setValue("Volume", vol);
+    unicorn::AppSettings().setValue("Volume", vol);
 }
 
 void
@@ -372,15 +402,17 @@ Radio::initRadio()
 	Phonon::AudioOutput* audioOutput = new Phonon::AudioOutput( Phonon::MusicCategory, this );
 
     // restore the last volume
-    if (unicorn::GlobalSettings().contains("Volume"))
+    if (unicorn::AppSettings().contains("Volume"))
     {
         bool ok;
-        double volume = unicorn::GlobalSettings().value("Volume", 0).toDouble(&ok);
+        double volume = unicorn::AppSettings().value("Volume", 0).toDouble(&ok);
         if (ok)
         {
             audioOutput->setVolume(volume);
         }
     }
+
+    audioOutput->setMuted(unicorn::AppSettings().value("Muted", false).toBool());
 
     qDebug() << audioOutput->name();
     qDebug() << audioOutput->outputDevice().description();

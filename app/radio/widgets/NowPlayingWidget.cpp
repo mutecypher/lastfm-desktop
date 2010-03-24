@@ -36,11 +36,14 @@ NowPlayingWidget::NowPlayingWidget()
 {
     new QVBoxLayout( this );
 
-    ui.cover = new QLabel();
+    ui.cover = new QLabel( this );
     ui.cover->setAlignment( Qt::AlignCenter );
+
+    static_cast<QBoxLayout*>(layout())->addStretch();
+
     layout()->addWidget( ui.cover );
-    
-    ((QBoxLayout*)layout())->addStretch();
+
+    static_cast<QBoxLayout*>(layout())->addStretch();
     
     ui.track = new QLabel();
     layout()->addWidget( ui.track );
@@ -64,7 +67,7 @@ NowPlayingWidget::onTrackSpooled( const Track& t )
     ui.cover->clear();
     TrackImageFetcher* imageFetcher = new TrackImageFetcher( t );
     connect( imageFetcher, SIGNAL( finished( QImage )), SLOT( onImageFinished( QImage )));
-    imageFetcher->start();
+    imageFetcher->startAlbum();
     
     ui.track->setText( t.artist() + " - " + t.title() );
     if (!t.album().isNull()) {
@@ -80,7 +83,11 @@ NowPlayingWidget::onTrackSpooled( const Track& t )
 void 
 NowPlayingWidget::onImageFinished( const QImage& image )
 {
-    ui.cover->setPixmap( QPixmap::fromImage( image ) );
+    QImage sacledImage = image.scaled( 300, 300, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation );
+
+    QImage cropedImage = sacledImage.copy( (sacledImage.width() - 300) / 2, (sacledImage.height() - 300) / 2, 300, 300 );
+
+    ui.cover->setPixmap( QPixmap::fromImage( cropedImage ) );
     sender()->deleteLater();
 }
 

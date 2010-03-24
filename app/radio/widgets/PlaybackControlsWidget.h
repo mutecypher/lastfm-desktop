@@ -20,12 +20,15 @@
 #ifndef PLAYBACK_CONTROLS_WIDGET_H_
 #define PLAYBACK_CONTROLS_WIDGET_H_
 
+#include <lastfm/RadioStation>
+
 #include "lib/unicorn/StylableWidget.h"
 
 class QPushButton;
+class QToolButton;
+class AdvancedOptionsDialog;
 
 namespace lastfm{ class RadioStation; };
-
 namespace Phonon{ class VolumeSlider; };
 
 using lastfm::RadioStation;
@@ -39,29 +42,49 @@ public:
 
 	struct Ui
     {
-        QPushButton* volume;
-        Phonon::VolumeSlider* volumeSlider;
+        QPushButton* radioOptions;
+        AdvancedOptionsDialog* radioOptionsDialog;
+        Phonon::VolumeSlider* volume;
+
         QPushButton* love;
         QPushButton* ban;
         QPushButton* play;
         QPushButton* skip;
+
+        QPushButton* info;
+        QToolButton* cog;
+        QAction* tagAction;
+        QAction* shareAction;
     } 
 	ui;
+
+private:
+    void setButtonsEnabled( bool enabled );
+    void saveRadioOptions();
+    void restoreRadioOptions();
+    void setRadioOptionsChecked();
 
 private slots:
 	void onRadioStopped();
     void onRadioTuningIn( const class RadioStation& );
-	void onPlayClicked();
-    void onVolumeClicked();
+    void onTrackSpooled( const Track& track );
 
-private:
-    void moveVolumeSlider();
-	
+    void onPlayClicked( bool checked );
+    void onRadioOptionsClicked( bool checked );
+    void onRadioOptionsFinished( int result );
+    void onTagClicked();
+    void onShareClicked();
+    void onInfoClicked();
+    void onSpaceKey();
+
+    void onLoveClicked(bool);
+    void onLoveFinished();
+
+    void onBanClicked();
+    void onBanFinished();
+
 signals:
-	void stop();
-    void play();
-    void skip();
-
+    void startRadio(RadioStation);
 };
 
 

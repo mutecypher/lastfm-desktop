@@ -17,47 +17,41 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef LOGIN_DIALOG_H
+#define LOGIN_DIALOG_H
+
 #include "ui_LoginDialog.h"
 #include "lib/DllExportMacro.h"
+#include "lib/unicorn/UnicornSession.h"
 #include <QDialog>
 
 
 class UNICORN_DLLEXPORT LoginDialog : public QDialog
 {
     Q_OBJECT
+private:
+
+    struct
+    {
+        class QLabel* title;
+        class QLabel* description;
+        class QDialogButtonBox* buttonBox;
+    } ui;
 
 public:
-    LoginDialog( const QString& username = "" );
+    LoginDialog( QWidget* parent = 0 );
 
-    QString passwordHash() const { return m_password; }
-    QString username() const { return m_username; }
-    QString sessionKey() const { return m_sessionKey; }
-    bool isSubscriber() const { return m_subscriber; }
+    QString token() const { return m_token; }
     
 private slots:
-    void onEdited();
     void authenticate();
-    void onAuthenticated();
+    void onGotToken();
 	void cancel();
 
 private:
     QPushButton* ok() const { return ui.buttonBox->button( QDialogButtonBox::Ok ); }
 
-#ifdef Q_WS_MAC
-    struct : Ui::LoginDialog 
-	{
-		class QDialog* transient;
-		class QPushButton* cancel;
-		class QProgressBar* progress;
-		class QLabel* text;
-	}
-	ui;
-#else
-	Ui::LoginDialog ui;
-#endif
-
-    QString m_username;
-    QString m_password;
-    QString m_sessionKey;
-    bool m_subscriber;
+    QString m_token;
 };
+
+#endif

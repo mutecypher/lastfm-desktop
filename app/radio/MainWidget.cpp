@@ -45,9 +45,7 @@ MainWidget::MainWidget( QWidget* parent )
     connect(w, SIGNAL(startRadio(RadioStation)), SLOT(onStartRadio(RadioStation)));
     connect(w, SIGNAL(showMoreRecentStations()), SLOT(onShowMoreRecentStations()));
     connect(w, SIGNAL(combo()), SLOT(onCombo()));
-    connect(w, SIGNAL(yourTags()), SLOT(onYourTags()));
     connect(w, SIGNAL(yourFriends()), SLOT(onYourFriends()));
-    connect(w, SIGNAL(yourPlaylists()), SLOT(onYourPlaylists()));
 
     BackForwardControls* ctrl = new BackForwardControls(QString(), QString(), m_nowPlaying, w);
     connect(ctrl, SIGNAL(forward()), SLOT(onForward()));
@@ -107,7 +105,7 @@ MainWidget::onShowMoreRecentStations()
 void
 MainWidget::onCombo()
 {
-    MultiStarterWidget* w = new MultiStarterWidget(false /* simple */, 3);
+    MultiStarterWidget* w = new MultiStarterWidget(3, this);
     connect(w, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
     connect(w, SIGNAL(startRadio(RadioStation)), SLOT(onStartRadio(RadioStation)));
 
@@ -116,34 +114,6 @@ MainWidget::onCombo()
     connect(ctrl, SIGNAL(forward()), SLOT(onForward()));
     m_layout->insertWidget(1, ctrl);
     m_layout->moveForward();
-}
-
-// user clicks "Your Tags" button
-void
-MainWidget::onYourTags()
-{
-    QListView* lv = new QListView();
-    lv->setModel(new QStringListModel(m_tags));
-    lv->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    BackForwardControls* ctrl = new BackForwardControls(tr("Back"), "Your Tags", m_nowPlaying, lv);
-    connect(ctrl, SIGNAL(back()), SLOT(onBackDelete()));
-    connect(ctrl, SIGNAL(forward()), SLOT(onForward()));
-    connect(lv, SIGNAL(activated(QModelIndex)), SLOT(onTagActivated(QModelIndex)));
-    m_layout->insertWidget(1, ctrl);
-    m_layout->moveForward();
-}
-
-// user clicks a tag from the Your Tags list:
-// start user's personal tag radio
-void
-MainWidget::onTagActivated(const QModelIndex& idx)
-{
-    QString t = idx.data().toString();
-    RadioStation rs = RadioStation::userTag(lastfm::ws::Username, t);
-    rs.setTitle(lastfm::ws::Username + "'s " + t + " Tag Radio");
-    emit startRadio(rs);
-    onStartRadio(rs);
 }
 
 // user clicks "Your Friends" button
@@ -170,36 +140,6 @@ MainWidget::onFriendActivated(const QModelIndex& idx)
     QString f = idx.data().toString();
     RadioStation rs = RadioStation::library(User(f));
     rs.setTitle(f + "'s Library");
-    emit startRadio(rs);
-    onStartRadio(rs);
-}
-
-// user clicks "Your Playlists"
-void
-MainWidget::onYourPlaylists()
-{
-    QListView* lv = new QListView();
-    PlaylistModel* model = new PlaylistModel();
-    model->setList(m_playlists);
-    lv->setModel(model);
-    lv->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    BackForwardControls* ctrl = new BackForwardControls(tr("Back"), "Your Playlists", m_nowPlaying, lv);
-    connect(ctrl, SIGNAL(back()), SLOT(onBackDelete()));
-    connect(ctrl, SIGNAL(forward()), SLOT(onForward()));
-    connect(lv, SIGNAL(activated(QModelIndex)), SLOT(onPlaylistActivated(QModelIndex)));
-    m_layout->insertWidget(1, ctrl);
-    m_layout->moveForward();
-}
-
-// user clicks a playlist from the Your Playlists list:
-void
-MainWidget::onPlaylistActivated(const QModelIndex& idx)
-{
-    int playlistId = idx.data(PlaylistModel::PlaylistIdRole).toInt();
-    QString title = idx.data().toString();
-    RadioStation rs = RadioStation::playlist(playlistId);
-    rs.setTitle(title);
     emit startRadio(rs);
     onStartRadio(rs);
 }
@@ -247,31 +187,6 @@ MainWidget::onUserGotFriends()
 }
 
 void
-MainWidget::onUserGotTopTags()
-{
-    sender()->deleteLater();
-    QNetworkReply* r = (QNetworkReply*)sender();
-    XmlQuery lfm = r->readAll();
-    m_tags.clear();
-    foreach (const XmlQuery& e, lfm["toptags"].children("tag")) {
-        m_tags << e["name"].text();
-    }
-}
-
-void 
-MainWidget::onUserGotPlaylists()
-{
-    sender()->deleteLater();
-    QNetworkReply* r = (QNetworkReply*)sender();
-    XmlQuery lfm = r->readAll();
-    m_playlists.clear();
-    foreach (const XmlQuery& e, lfm["playlists"].children("playlist")) {
-        m_playlists << PlaylistMeta(e);
-    }
-}
-
-
-void
 MainWidget::onUserGotRecentStations()
 {
     sender()->deleteLater();
@@ -279,8 +194,6 @@ MainWidget::onUserGotRecentStations()
         RadioStation::list(
             qobject_cast<QNetworkReply*>(sender())));
 }
-
-
 
 void
 MainWidget::rawrql()

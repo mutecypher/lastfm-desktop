@@ -38,9 +38,7 @@ signals:
     void startRadio(RadioStation);
     void showMoreRecentStations();
     void combo();
-    void yourTags();
     void yourFriends();
-    void yourPlaylists();
 
 private:
     RecentStationsWidget* m_recentStationsWidget;

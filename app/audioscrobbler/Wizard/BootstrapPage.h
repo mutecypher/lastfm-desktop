@@ -27,7 +27,7 @@
 #include <QRadioButton>
 #include <QNetworkReply>
 
-#include "lib/unicorn/UpdateInfoFetcher.h"
+#include "lib/unicorn/Updater/PluginList.h"
 
 class BootstrapPage: public QWizardPage
 {
@@ -39,35 +39,30 @@ public:
         new QVBoxLayout( this );
     }
     
-    void fetchInfo()
-    {
-        QNetworkReply* reply = UpdateInfoFetcher::fetchInfo();
-        connect( reply, SIGNAL( finished()), SLOT(updateInfoFetched()));
-    }
-
     void initializePage()
     {
-        fetchInfo();
-    }
+        foreach( QWidget* w, findChildren<QWidget*>()) {
+            layout()->removeWidget( w );
+            delete w;
+        }
+        delete layout();
+        new QVBoxLayout( this );
 
-private slots:
-    void updateInfoFetched() 
-    {
-        QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
-        UpdateInfoFetcher info( reply, this );
-        QLabel* label = new QLabel( tr( "We can import your listening history from the following media players:"));
+        QList<IPluginInfo*> plugins = m_pluginList.bootstrappablePlugins();
+
+        QLabel* label = new QLabel( tr( "We can import your listening history from the following media players:")); 
         label->setWordWrap( true );
         layout()->addWidget(label);
-        foreach( const Plugin& plugin, info.plugins()) {
-            if( plugin.isInstalled() && 
-                plugin.isPluginInstalled() &&
-                plugin.canBootstrap())
-                layout()->addWidget( new QRadioButton( plugin.name(), this ));
+        foreach( IPluginInfo* plugin, plugins ) {
+                layout()->addWidget( new QRadioButton( QString::fromStdString( plugin->name())));
         }
-        layout()->addWidget( new QRadioButton( tr("None"), this ));
+
+        layout()->addWidget( new QRadioButton( tr("None")));
         ((QBoxLayout*)layout())->addStretch();
-        update();
     }
+
+private:
+    PluginList m_pluginList;
 };
 
 #endif //BOOTSTRAP_WIZARD_H

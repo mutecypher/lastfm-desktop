@@ -21,13 +21,56 @@
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "Radio.h"
 #include "ScrobSocket.h"
-
+#include <QDebug>
+#include <QProcess>
+#ifdef Q_OS_MAC
+    #include <CoreServices/CoreServices.h>
+#endif
 using moralistfad::Application;
 
 
 Application::Application( int& argc, char** argv ) 
     : unicorn::Application( argc, argv )
 {
+#ifdef Q_OS_MAC
+        FSRef appRef;
+        LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
+
+        AEDesc desc;
+        const char* data = "tray";
+        AECreateDesc( typeChar, data, sizeof( data ), &desc );
+        
+        LSApplicationParameters params;
+        params.version = 0;
+        params.flags = kLSLaunchAndHide;
+        params.application = &appRef;
+        params.asyncLaunchRefCon = NULL;
+        params.environment = NULL;
+        CFStringRef arg = CFSTR( "--tray" );
+        CFArrayRef args = CFArrayCreate( NULL, ((const void**)&arg), 1, NULL);
+        params.argv = args;
+        
+        AEAddressDesc target;
+        AECreateDesc( typeApplicationBundleID, CFSTR( "fm.last.audioscrobbler" ), 22, &target);
+        
+        AppleEvent event;
+        AECreateAppleEvent ( kCoreEventClass,
+                                  kAEReopenApplication ,
+                                  &target,
+                                  kAutoGenerateReturnID,
+                                  kAnyTransactionID,
+                                  &event );
+
+        AEPutParamDesc( &event, keyAEPropData, &desc );
+        
+        params.initialEvent = &event;
+        
+        LSOpenApplication( &params, NULL );
+        AEDisposeDesc( &desc );
+#elif Q_OS_WIN
+    QProcess* process = new QProcess;
+    process->start( QApplication::applicationDirPath() + "/audioscrobbler.exe", QStringList("--tray") );
+#endif
 }
 
 // lastfmlib invokes this directly, for some errors:
@@ -37,7 +80,8 @@ Application::onWsError( lastfm::ws::Error e )
     switch (e)
     {
         case lastfm::ws::InvalidSessionKey:
-            logout();
+            if(!logout())
+                quit();
             break;
 		default:
 			break;
@@ -65,6 +109,12 @@ Argument argument( const QString& arg )
 }
 
 void
+Application::onMessageReceived( const QString& message )
+{
+    parseArguments( message.split( "\t" ) );
+}
+
+void
 Application::parseArguments( const QStringList& args )
 {
     qDebug() << args;
@@ -76,7 +126,7 @@ Application::parseArguments( const QStringList& args )
         switch (argument( arg ))
         {
             case LastFmUrl:
-                radio->play( RadioStation( QUrl( arg ) ) );
+                radio->play( RadioStation( arg ) );
                 break;
 
             case Skip:

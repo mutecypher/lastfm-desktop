@@ -1,6 +1,5 @@
 /*
    Copyright 2005-2009 Last.fm Ltd. 
-      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -17,42 +16,23 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef SHARE_DIALOG_H
-#define SHARE_DIALOG_H
 
-#include <lastfm/Track>
-#include <QDialogButtonBox>
-#include <QDialog>
+#ifndef SOURCE_SELECTOR_LIST_WIDGET_H
+#define SOURCE_SELECTOR_LIST_WIDGET_H
+
+#include <QListWidget>
 
 
-class ShareDialog : public QDialog
+class SourceSelectorListWidget : public QListWidget
 {
-    Q_OBJECT
+    Q_OBJECT;
 
-    struct {
-        QDialogButtonBox* buttons;
-        class TrackWidget* track;
-        class QLineEdit* edit;
-        class QTextEdit* message;
-        class QPushButton* browseFriends;
-    } ui;
-    
 public:
-    ShareDialog( const Track&, QWidget* parent );
-
-	Track track() const { return m_track; }
-
-    void setupUi();
-
-private slots:
-    void browseFriends();
-    void enableDisableOk();
+    SourceSelectorListWidget();
 
 private:
-    class QPushButton* ok() { return ui.buttons->button( QDialogButtonBox::Ok ); }
-    virtual void accept();
+    QMimeData* mimeData( const QList<QListWidgetItem*> items ) const;
 
-    Track m_track;
 };
 
 #endif

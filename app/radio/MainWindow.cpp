@@ -22,6 +22,7 @@
 #include "widgets/MultiStarterWidget.h"
 #include "widgets/PlaybackControlsWidget.h"
 #include "widgets/NowPlayingWidget.h"
+#include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/qtwin.h"
 #include "lib/unicorn/AnimatedStatusBar.h"
 #include "lib/unicorn/widgets/MessageBar.h"
@@ -38,70 +39,54 @@ MainWindow::MainWindow()
     setUnifiedTitleAndToolBarOnMac( true );
     QtWin::extendFrameIntoClientArea( this );
 
-    AnimatedStatusBar* status = new AnimatedStatusBar( this );
+    QStatusBar* status = new QStatusBar( this );
     addDragHandleWidget( status );
     PlaybackControlsWidget* pcw = new PlaybackControlsWidget( status );
 
-    //FIXME: this code is duplicated in the audioscrobbler app too
-    //In order to compensate for the sizer grip on the bottom right
-    //of the window, an empty QWidget is added as a spacer.
     status->setSizeGripEnabled( false );
-    QSizeGrip* sg = new QSizeGrip( this );
-    sg->move( -sg->width(), -sg->height());
-    if( sg ) {
-        int gripWidth = sg->sizeHint().width();
-        QWidget* w = new QWidget( status );
-        w->setFixedWidth( gripWidth );
-        status->addWidget( w );
-    }
 
-    //Seemingly the only way to get a central widget in a QStatusBar
-    //is to add an empty widget either side with a stretch value.
-    status->addWidget( new QWidget( status), 1 );
-    status->addWidget( pcw );
-    status->addWidget( new QWidget( status), 1 );
-
+    status->addWidget( pcw, 1 );
     setStatusBar( status );
-    status->hide();
-
-    MainWidget* mw;
 
     QWidget* w = new QWidget();
     
     new QVBoxLayout( w );
     w->layout()->setContentsMargins( 0, 0, 0, 0 );
-    w->layout()->addWidget(mw = new MainWidget());
+    w->layout()->addWidget(m_mainWidget = new MainWidget());
 
-    connect( mw, SIGNAL( widgetChanged(QWidget*)), SLOT( onWidgetChanged( QWidget* )));
+    layout()->setSizeConstraint( QLayout::SetFixedSize );
 
     m_messageBar = new MessageBar( w );
 
-    connect(mw, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
+    connect(m_mainWidget, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
 
-    AuthenticatedUser user;
-    connect(user.getFriends(), SIGNAL(finished()), mw, SLOT(onUserGotFriends()));
-    connect(user.getTopTags(), SIGNAL(finished()), mw, SLOT(onUserGotTopTags()));
-    connect(user.getPlaylists(), SIGNAL(finished()), mw, SLOT(onUserGotPlaylists()));
-    connect(user.getRecentStations(), SIGNAL(finished()), mw, SLOT(onUserGotRecentStations()));
-
+    connect(pcw, SIGNAL(startRadio(RadioStation)), m_mainWidget, SLOT(onStartRadio(RadioStation)));
+    
     connect(radio, SIGNAL(stopped()), status, SLOT(hideAnimated()));
     connect(radio, SIGNAL(tuningIn( const RadioStation&)), status, SLOT(showAnimated()));
+    
+    connect( qApp, SIGNAL( sessionChanged( Session, Session )), SLOT( onSessionChanged( Session, Session )));
+   
+    //if we've got this far we must already have a session so use
+    //the current session to start things rolling.
+    onSessionChanged( qobject_cast<unicorn::Application*>(qApp)->currentSession(), Session());
 
     setCentralWidget( w );
 
     finishUi();
 
-    //todo: bury this:
-    menuBar()->addMenu("Normania")->addAction( tr("RQL"), mw, SLOT(rawrql()), QKeySequence(tr("Ctrl+r")) );
+#ifndef NDEBUG
+    menuBar()->addMenu("Normania")->addAction( tr("RQL"), m_mainWidget, SLOT(rawrql()), QKeySequence(tr("Ctrl+r")) );
+#endif
 }
 
 void 
-MainWindow::onWidgetChanged( QWidget* widget )
+MainWindow::onSessionChanged( const unicorn::Session& s, const unicorn::Session& )
 {
-    /*if(!widget->findChildren<NowPlayingWidget*>().isEmpty() )
-        ((AnimatedStatusBar*)statusBar())->showAnimated();
-    else
-        ((AnimatedStatusBar*)statusBar())->hideAnimated();*/
+    User user;
+    qDebug() << "fetching friends and recent stations for" << user;
+    connect(user.getFriends(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotFriends()));
+    connect(user.getRecentStations(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotRecentStations()));
 }
 
 void

@@ -97,6 +97,7 @@ Moose::applicationFolder()
 bool
 Moose::launchWithMediaPlayer()
 {
+    return true;
     CFBooleanRef v = (CFBooleanRef) CFPreferencesCopyAppValue( 
             CFSTR( "LaunchWithMediaPlayer" ), 
             CFSTR( MOOSE_PREFS_PLIST ) );

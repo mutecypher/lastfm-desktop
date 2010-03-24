@@ -26,18 +26,35 @@
 #include <QLabel>
 #include <QSpacerItem>
 #include <QListWidgetItem>
+#include <QDragEnterEvent>
+#include <QDropEvent>
 #include "SourceListWidget.h"
 #include "SourceItemWidget.h"
 #include "lib/unicorn/widgets/ImageButton.h"
 #include "lastfm/ws.h"
 
 
-SourceListWidget::SourceListWidget(bool advanced, QWidget* parent)
+SourceListWidget::SourceListWidget(QWidget* parent)
 : QWidget(parent)
-, m_advanced(advanced)
 , m_layout(0)
 {
-    //m_layout = new QVBoxLayout(this);
+    setAcceptDrops( true );
+}
+
+void SourceListWidget::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("application/x-rql-source")
+        && m_model->rql().count() < 3)
+    {
+        event->acceptProposedAction();
+    }
+}
+
+void SourceListWidget::dropEvent(QDropEvent *event)
+{
+    emit add(event->mimeData()->text(), event->mimeData()->imageData().toString());
+
+    event->acceptProposedAction();
 }
 
 void
@@ -58,7 +75,7 @@ SourceListWidget::setModel(SourceListModel* model)
 void
 SourceListWidget::addPlaceholders()
 {
-    while (m_layout->count() < (m_model->getMaxSize() * 2) - 1) {
+    while (m_layout->count() < m_model->getMaxSize()) {
         addPlaceholder();
     }
 }
@@ -66,15 +83,8 @@ SourceListWidget::addPlaceholders()
 void
 SourceListWidget::addPlaceholder()
 {
-    if (m_layout->itemAt(0)) {
-        QComboBox* combo = new QComboBox();
-        combo->setDisabled(true);
-        m_layout->addWidget(combo);
-        if (!m_advanced) {
-            combo->hide();
-        }
-    }
     QGroupBox* box = new QGroupBox("");
+    box->setAcceptDrops( true );
     m_layout->addWidget(box);
 }
 
@@ -83,11 +93,10 @@ SourceListWidget::onRowsInserted(const QModelIndex& parent, int start, int end)
 {
     Q_UNUSED(parent);
     for (int idx = start; idx <= end; idx++) {
-        QWidget* old = m_layout->itemAt(idx * 2)->widget();
+        QWidget* old = m_layout->itemAt(idx)->widget();
         m_layout->removeWidget(old);
         old->deleteLater();
-        m_layout->insertWidget(idx * 2, createWidget(idx));
-        setOp(idx);
+        m_layout->insertWidget(idx, createWidget(idx));
     }
 }
 
@@ -96,36 +105,8 @@ SourceListWidget::onRowsAboutToBeRemoved(const QModelIndex& parent, int start, i
 {
     Q_UNUSED(parent);
     for (int idx = start; idx <= end; idx++) {
-        bool first = idx == 0;
-        int layoutIdx = idx * 2;
-        if (!first) {
-            // remove any preceding operator control
-            layoutIdx--;
-            m_layout->takeAt(layoutIdx)->widget()->deleteLater();
-        }
-        m_layout->takeAt(layoutIdx)->widget()->deleteLater();
-        if (first) {
-            m_layout->takeAt(0)->widget()->deleteLater();
-        }
+        m_layout->takeAt(idx)->widget()->deleteLater();
         addPlaceholders();
-    }
-}
-
-void
-SourceListWidget::setOp(int sourceIdx)
-{
-    if (sourceIdx > 0) {
-        QComboBox* combo = qobject_cast<QComboBox*>(m_layout->itemAt(sourceIdx * 2 - 1)->widget());
-        combo->setEnabled(true);
-        combo->addItems(QStringList() << "and" << "or" << "not");
-        RqlSource::Type src1 = (RqlSource::Type) m_model->data(m_model->index(sourceIdx-1), SourceListModel::SourceType).toInt();
-        RqlSource::Type src2 = (RqlSource::Type) m_model->data(m_model->index(sourceIdx), SourceListModel::SourceType).toInt();
-        Operator op = defaultOp(src1, src2);
-        switch (op) {
-            case And: combo->setCurrentIndex(0); break;
-            case Or: combo->setCurrentIndex(1); break;
-            case AndNot: combo->setCurrentIndex(2); break;
-        }
     }
 }
 
@@ -150,7 +131,7 @@ SourceListWidget::onDeleteClicked()
     if (source) {
         int idx = m_layout->indexOf(source);
         if (idx != -1) {
-            m_model->removeSource(idx / 2);
+            m_model->removeSource(idx);
         }
     }
 }
@@ -162,54 +143,14 @@ SourceListWidget::defaultOp(RqlSource::Type first, RqlSource::Type second)
     return (first == RqlSource::Tag && second == RqlSource::Tag) ? And : Or;
 }
 
-QString
+QStringList
 SourceListWidget::rql()
 {
-    int count = 0;
-    QString result;
-    foreach (const QString& src, m_model->rql()) {
-        if (count) {
-            // get operator
-            QComboBox* combo = qobject_cast<QComboBox*>(m_layout->itemAt(count * 2 - 1)->widget());
-            switch (combo->currentIndex()) {
-                case 0: result += " and "; break;
-                case 1: result += " or "; break;
-                case 2: result += " not "; break;
-            }
-        }
-        result += src;
-        count++;
-    }
-    return result;
+    return m_model->rql();
 }
 
-QString
-SourceListWidget::stationDescription()
+QStringList
+SourceListWidget::descriptions()
 {
-    int count = 0;
-    QString result;
-    foreach (const QString& src, m_model->descriptions()) {
-        if (count) {
-            // get operator
-            QComboBox* combo = qobject_cast<QComboBox*>(m_layout->itemAt(count * 2 - 1)->widget());
-            switch (combo->currentIndex()) {
-                case 0: result += " and "; break;
-                case 1: result += " or "; break;
-                case 2: result += " not "; break;
-            }
-        }
-        result += src;
-        count++;
-    }
-    return result;
-}
-
-void
-SourceListWidget::updateAdvanced(int checkState)
-{
-    m_advanced = (checkState == Qt::Checked);
-    for (int i = 1; i < m_layout->count(); i += 2) {
-        QComboBox* combo = qobject_cast<QComboBox*>(m_layout->itemAt(i)->widget());
-        combo->setVisible(m_advanced);
-    }
+    return m_model->descriptions();
 }

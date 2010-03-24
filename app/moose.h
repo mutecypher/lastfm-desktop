@@ -42,7 +42,7 @@ namespace moose
 
     static inline QString path()
     {
-        QString path = unicorn::GlobalSettings( applicationName() ).value( "/Path" ).toString();
+        QString path = unicorn::AppSettings().value( "/Path" ).toString();
         if (path.size())
             return path;
 

@@ -38,16 +38,11 @@ YourStationsWidget::YourStationsWidget()
     layout->addWidget(item, 1, 0);
     connect(item, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
 
-    item = new PlayableItemWidget(tr("Your Loved Tracks"), RadioStation::lovedTracks(lastfm::ws::Username));
+    item = new PlayableItemWidget(tr("Your Recommended Radio"), RadioStation::recommendations(lastfm::ws::Username));
     layout->addWidget(item, 1, 1);
     connect(item, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
 
-    item = new PlayableItemWidget(tr("Your Recommended Radio"), RadioStation::recommendations(lastfm::ws::Username));
+    item = new PlayableItemWidget(tr("Your Neighbourhood"), RadioStation::neighbourhood(lastfm::ws::Username));
     layout->addWidget(item, 2, 0);
     connect(item, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
-
-    item = new PlayableItemWidget(tr("Your Neighbourhood"), RadioStation::neighbourhood(lastfm::ws::Username));
-    layout->addWidget(item, 2, 1);
-    connect(item, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
-    
 }
