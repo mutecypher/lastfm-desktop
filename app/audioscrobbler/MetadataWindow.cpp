@@ -53,7 +53,7 @@ MetadataWindow::MetadataWindow()
     pal.setColor( QPalette::Window, QColor( 26, 26, 26, 190 ));
     setPalette( pal );
     setAutoFillBackground( true );
-    setWindowFlags( Qt::CustomizeWindowHint );
+    setWindowFlags( Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
     
     setAttribute( Qt::WA_MacAlwaysShowToolWindow );
     //Enable aero blurry window effect:

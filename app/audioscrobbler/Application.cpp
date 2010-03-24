@@ -58,6 +58,7 @@ Application::Application(int& argc, char** argv)
             : unicorn::Application(argc, argv),
               as( 0 )
 {
+	setQuitOnLastWindowClosed( false );
     // We do the actual init slightly later so that if this is the second
     // time we open the app, we don't get another tray icon etc.
     QTimer::singleShot(0, this, SLOT(init()));
