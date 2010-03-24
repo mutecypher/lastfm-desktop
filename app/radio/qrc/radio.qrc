@@ -40,6 +40,10 @@
 		<file alias="options-on-onhover.png" >options_on_hover.png</file>
 		<file alias="options-on-onpressed.png" >options_on_pressed.png</file>
 		
+		<file alias="scrobbler_rest.png" >scrobble2_rest.png</file>
+		<file alias="scrobbler_hover.png" >scrobble2_hover.png</file>
+		<file alias="scrobbler_pressed.png" >scrobble2_pressed.png</file>
+
 		<file alias="info-rest.png" >info_rest.png</file>
 		<file alias="info-onhover.png" >info_hover.png</file>
 		<file alias="info-onpressed.png" >info_pressed.png</file>

@@ -62,7 +62,7 @@ namespace unicorn
             Q_ASSERT( !username.isEmpty() );
         }
 
-        static const char* subscriptionKey() { return "subscription"; }
+        static const char* subscriptionKey() { return "subscriber"; }
     };
 }
 

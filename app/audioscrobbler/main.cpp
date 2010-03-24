@@ -24,7 +24,6 @@
 #include "Application.h"
 #include "app/moose.h"
 
-
 int main( int argc, char** argv )
 {
     QCoreApplication::setApplicationName( "Audioscrobbler" );

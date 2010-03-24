@@ -388,7 +388,6 @@ PlaybackControlsWidget::onInfoClicked()
     QProcess::startDetached( path );
 #else
     FSRef appRef;
-    CFURLRef appURL;
     LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
     OSStatus status = LSOpenFSRef( &appRef, NULL );
 #endif

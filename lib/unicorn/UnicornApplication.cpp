@@ -213,7 +213,7 @@ unicorn::Application::onUserGotInfo()
     lastfm::UserDetails userInfo( reply );
 
     const char* key = UserSettings::subscriptionKey();
-    UserSettings().setValue( key, userInfo.isSubscriber() );
+    Settings().setValue( key, userInfo.isSubscriber() );
     emit gotUserInfo( userInfo );
 }
 
@@ -268,6 +268,32 @@ static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );
     
+    AEAddressDesc desc;
+
+    OSErr ret;
+    ret = AEGetParamDesc( e, keyAEPropData, typeChar, &desc );
+    
+    if( ret == noErr ) {
+        unsigned int size = AEGetDescDataSize( &desc );
+        char data[size + 1];
+        data[ size ] = 0;
+        ret = AEGetDescData( &desc, data, size );
+        QString dataString( data );
+        if( dataString == "tray" )
+            return unimpErr;
+    }
+
+/*
+    CFStringRef name;
+    CopyProcessName( &psn, &name );
+    
+    char buffer[ CFStringGetLength( name ) + 10 ];
+    CFStringGetCString( name, buffer, sizeof( buffer ), kCFStringEncodingUTF8 );
+    QString processName( buffer );
+    
+    if( processName == "iTunes" ) return unimpErr;
+    
+    qDebug() << "Process Name: " << processName;*/
     switch (id)
     {
         case kAEQuitApplication:
@@ -278,7 +304,7 @@ static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
         {
             foreach (QWidget* w, qApp->topLevelWidgets())
                 if (qobject_cast<QMainWindow*>(w))
-                    w->show(), w->raise();
+                    w->show(), w->raise(), w->activateWindow();
             return noErr;
         }
 

@@ -331,21 +331,21 @@ PlaybackControlsWidget > QToolButton {
 }
 
 PlaybackControlsWidget > QPushButton#info {
-    background-image: url(:/info-rest.png);
+    background-image: url(:/scrobbler_rest.png);
 	height: 29px;
-	width: 18px;
+	width: 29px;
 }
 
 PlaybackControlsWidget > QPushButton#info:hover {
-    background-image: url(:/info-onhover.png);
+    background-image: url(:/scrobbler_hover.png);
 }
 
 PlaybackControlsWidget > QPushButton#info:pressed {
-    background-image: url(:/info-onpressed.png);
+    background-image: url(:/scrobbler_pressed.png);
 }
 
 PlaybackControlsWidget > QPushButton#info:disabled {
-    background-image: url(:/info-disabled.png);
+    /*background-image: url(:/scrobbler_.png);*/
 }
 
 PlaybackControlsWidget > QToolButton#cog {
