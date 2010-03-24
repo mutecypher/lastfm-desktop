@@ -5,9 +5,13 @@ unicorn--mainWindow {
 
 unicorn--MainWindow RestWidget,
 unicorn--MainWindow QWidget#NowScrobbling,
-unicorn--MainWindow StylableWidget,
-ShareDialog {
+unicorn--MainWindow StylableWidget
+{
     background-color: rgba(20,20,20,220);
+}
+
+ShareDialog {
+    background-color: rgb(20, 20, 20);
 }
 
 
