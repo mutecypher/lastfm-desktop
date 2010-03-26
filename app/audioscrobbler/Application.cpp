@@ -33,8 +33,8 @@
 #include <lastfm/Audioscrobbler>
 #include <QMenu>
 #include <QDebug>
-#include "lib/unicorn/widgets/TagDialog.h"
-#include "lib/unicorn/widgets/ShareDialog.h"
+#include "lib/unicorn/dialogs/TagDialog.h"
+#include "lib/unicorn/dialogs/ShareDialog.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include "Wizard/FirstRunWizard.h"
 

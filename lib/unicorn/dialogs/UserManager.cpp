@@ -17,8 +17,8 @@
 
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/UnicornSettings.h"
-#include "lib/unicorn/widgets/LoginDialog.h"
-#include "lib/unicorn/widgets/LoginContinueDialog.h"
+#include "lib/unicorn/dialogs/LoginDialog.h"
+#include "lib/unicorn/dialogs/LoginContinueDialog.h"
 
 using lastfm::UserDetails;
 UserRadioButton::UserRadioButton( const User& user )

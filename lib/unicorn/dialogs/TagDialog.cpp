@@ -17,9 +17,9 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "TagBuckets.h"
+#include "widgets/TagBuckets.h"
 #include "TagDialog.h"
-#include "TagListWidget.h"
+#include "widgets/TagListWidget.h"
 #include "lib/unicorn/widgets/SpinnerLabel.h"
 #include "lib/unicorn/widgets/TrackWidget.h"
 #include "lib/unicorn/widgets/UnicornTabWidget.h"

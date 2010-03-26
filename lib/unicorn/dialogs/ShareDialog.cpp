@@ -37,8 +37,8 @@
 #include "lib/unicorn/widgets/TrackWidget.h"
 
 #include "ShareDialog.h"
-#include "RecipientsWidget.h"
-#include "RecipientWidget.h"
+#include "widgets/RecipientsWidget.h"
+#include "widgets/RecipientWidget.h"
 
 const int kMaxMessage(1000);
 

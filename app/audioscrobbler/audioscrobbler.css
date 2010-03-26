@@ -66,6 +66,11 @@ QScrollArea {
     padding-right:2px;
 }
 
+#data_grid {
+    padding: 15px;
+    margin: 15px;
+}
+
 
 RestWidget QLabel,
 ShareDialog QLabel,
@@ -98,15 +103,15 @@ RestWidget QPushButton:hover {
     text-decoration:
 }
 
-MetadataWindow QLabel[alternate="true"], 
-MetadataWindow DataListWidget[alternate="true"] { 
+MetadataWindow #value,
+MetadataWindow #name,
+MetadataWindow DataListWidget { 
     font-weight: bold;
     border-top: 1px solid #333;
-    border-bottom: 1px solid #333;
+    margin-top: 7px;
 }
 
 MetadataWindow QLabel#name {
-    margin-left:11px;
     padding-top:2px;
     color: #afafaf;
 }
@@ -117,7 +122,6 @@ MetadataWindow QLabel#value,
 MetadataWindow #value > QLabel, 
 MetadataWindow DataListWidget {
     padding-top: 1px;
-    margin-right:11px;
     font-weight: normal;
 }
 
@@ -125,11 +129,15 @@ MetadataWindow QLabel#value { padding: 5px; }
 
 QTextBrowser {
     font-size: 12px;
-    padding: 0px;
-    margin-left: -4px;
-    margin-top: -8px;
-    border:none;
-    background-color: rgb(20,20,20);
+    padding: -8px 0px 0px 0px;
+    margin: 7px 0px 0px -5px;
+    border: none;
+    border-top: 1px solid #333;
+    background-color: transparent;
+}
+QTextBrowser, QLabel#title1, QLabel#title2 {
+
+    color: #e6e6e6;
 }
 
 RecipientsWidget {
@@ -186,8 +194,6 @@ QListView{
 MetadataWindow #artist_image {
     padding: 0px;  
     border: 1px solid #716f6f; 
-    margin:15px; 
-    margin-right: 4px;
     min-width: 85px; 
     min-height: 85px; 
 }
@@ -240,18 +246,7 @@ QStatusBar::item {
     border: none;
 }
 
-QTextBrowser, QLabel#title1, QLabel#title2 {
 
-    color: #e6e6e6;
-}
-
-QTextBrowser {
-    font-size: 12px;
-    padding: 0px;
-    margin: -7px 0px 0px -5px;
-    border:none;
-    background-color: transparent;
-}
 
 QLabel#title1 
 {

@@ -29,8 +29,8 @@
 #include "UnicornApplication.h"
 #include "QMessageBoxBuilder.h"
 #include "UnicornCoreApplication.h"
-#include "widgets/LoginDialog.h"
-#include "widgets/LoginContinueDialog.h"
+#include "dialogs/LoginDialog.h"
+#include "dialogs/LoginContinueDialog.h"
 #include "SignalBlocker.h"
 #include "UnicornSettings.h"
 #include <lastfm/misc.h>
@@ -46,7 +46,7 @@
 #include <QTimer>
 #include <QDebug>
 
-#include "widgets/UserManager.h"
+#include "dialogs/UserManager.h"
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),

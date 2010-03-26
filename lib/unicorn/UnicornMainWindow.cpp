@@ -19,8 +19,8 @@
 */
 #include "UnicornMainWindow.h"
 #include "UnicornCoreApplication.h"
-#include "widgets/AboutDialog.h"
-#include "widgets/UpdateDialog.h"
+#include "dialogs/AboutDialog.h"
+#include "dialogs/UpdateDialog.h"
 #include "UnicornSettings.h"
 #include <lastfm/User>
 #include <QDesktopServices>
