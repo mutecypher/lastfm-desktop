@@ -1,13 +1,39 @@
 @import "unicorn.css";
 unicorn--mainWindow {
-    border-radius: 3px;
 }
 
 unicorn--MainWindow RestWidget,
 unicorn--MainWindow QWidget#NowScrobbling,
 unicorn--MainWindow StylableWidget
 {
-    background-color: rgba(20,20,20,220);
+    background-color: rgba(20,20,20,240);
+}
+
+TitleBar {
+    background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #4c4c4c, stop:1 #3d3d3d);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+TitleBar QLabel {
+    margin-right: 20px;
+}
+
+TitleBar QPushButton, 
+TitleBar QPushButton:clicked {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    background-color: transparent;
+    background-clip: margin;
+    background-origin: margin;
+    background-image: url(:/close.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    min-width: 20px;
+    min-height:20px;
+    max-height: 20px;
+    max-width: 20px;
 }
 
 ShareDialog {
@@ -204,6 +230,10 @@ QPushButton#share:hover {
 
 QPushButton#share:pressed {
     background-image: url(:/share-onpress.png);
+}
+
+QStatusBar {
+    background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #4c4c4c, stop:1 #3d3d3d);
 }
 
 QStatusBar::item {

@@ -46,23 +46,48 @@
 #include <QDesktopServices>
 #include <QAbstractTextDocumentLayout>
 
+
+TitleBar::TitleBar( const QString& title )
+{
+    QHBoxLayout* layout = new QHBoxLayout( this );
+    layout->setContentsMargins( 0, 0, 0, 0 );
+    QPushButton* pb;
+    layout->addWidget( pb = new QPushButton( "" ));
+    connect( pb, SIGNAL(clicked()), SIGNAL( closeClicked()));
+    pb->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
+    pb->setFlat( true );
+    QLabel* l;
+    layout->addWidget( l = new QLabel( title ));
+    l->setAlignment( Qt::AlignCenter );
+}
+
 MetadataWindow::MetadataWindow()
 {
+    setWindowTitle( "Audioscrobbler" );
     setAttribute( Qt::WA_TranslucentBackground );
     QPalette pal(palette());
-    pal.setColor( QPalette::Window, QColor( 26, 26, 26, 190 ));
+    pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ));
     setPalette( pal );
     setAutoFillBackground( true );
-    setWindowFlags( Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
+    setWindowFlags( Qt::CustomizeWindowHint );
     
     setAttribute( Qt::WA_MacAlwaysShowToolWindow );
+
     //Enable aero blurry window effect:
     QtWin::extendFrameIntoClientArea( this );
     
     setCentralWidget(new QWidget);
 
-    QStackedLayout* stackLayout = new QStackedLayout( centralWidget());
+    new QVBoxLayout( centralWidget());
+    centralWidget()->layout()->setSpacing( 0 );
+    centralWidget()->layout()->setContentsMargins( 0, 0, 0, 0 );
+    
+    TitleBar* titleBar;
+    qobject_cast<QBoxLayout*>(centralWidget()->layout())->addWidget( titleBar = new TitleBar("Audioscrobbler"), 0, Qt::AlignBottom );
+    connect( titleBar, SIGNAL( closeClicked()), SLOT( close()));
 
+    QStackedLayout* stackLayout = new QStackedLayout();
+    qobject_cast<QVBoxLayout*>(centralWidget()->layout())->addLayout( stackLayout );
     stackLayout->addWidget( stack.rest = new RestWidget());
 
 
@@ -196,32 +221,37 @@ MetadataWindow::MetadataWindow()
     vs->setStretchFactor(ui.bio, 1);
 
     // status bar and scrobble controls
+    QStatusBar* statusBar = new QStatusBar( this );
     {
-        QStatusBar* status = new QStatusBar( this );
-        status->setContentsMargins( 0, 0, 0, 0 );
-        addDragHandleWidget( status );
+        statusBar->setContentsMargins( 0, 0, 0, 0 );
+        addDragHandleWidget( statusBar );
 
 #ifdef Q_WS_WIN
-        status->setSizeGripEnabled( false );
+        statusBar->setSizeGripEnabled( false );
 #else
         //FIXME: this code is duplicated in the radio too
         //In order to compensate for the sizer grip on the bottom right
         //of the window, an empty QWidget is added as a spacer.
-        QSizeGrip* sg = status->findChild<QSizeGrip *>();
+        QSizeGrip* sg = statusBar->findChild<QSizeGrip *>();
         if( sg ) {
             int gripWidth = sg->sizeHint().width();
-            QWidget* w = new QWidget( status );
+            QWidget* w = new QWidget( statusBar );
             w->setFixedWidth( gripWidth );
-            status->addWidget( w );
+            statusBar->addWidget( w );
         }
 #endif
         //Seemingly the only way to get a central widget in a QStatusBar
         //is to add an empty widget either side with a stretch value.
-        status->addWidget( new QWidget( status), 1 );
-        status->addWidget( ui.sc = new ScrobbleControls());
-        status->addWidget( new QWidget( status), 1 );
-        setStatusBar( status );
+        statusBar->addWidget( new QWidget( statusBar), 1 );
+        statusBar->addWidget( ui.sc = new ScrobbleControls());
+        statusBar->addWidget( new QWidget( statusBar), 1 );
+        setStatusBar( statusBar );
     }
+    addDragHandleWidget( ui.now_playing_source );
+    addDragHandleWidget( titleBar );
+    addDragHandleWidget( stack.rest );
+    addDragHandleWidget( stack.nowScrobbling );
+    addDragHandleWidget( statusBar );
 
     v->setSpacing(0);
     v->setMargin(0);
@@ -432,6 +462,6 @@ MetadataWindow::onPaused()
 void
 MetadataWindow::setCurrentWidget( QWidget* w )
 {
-    ((QStackedLayout*)centralWidget()->layout())->setCurrentWidget( w );
+    centralWidget()->findChild<QStackedLayout*>()->setCurrentWidget( w );
 }
 

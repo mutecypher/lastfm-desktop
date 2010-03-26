@@ -84,3 +84,11 @@ private:
     void setCurrentWidget( QWidget* );
 };
 
+class TitleBar : public StylableWidget {
+Q_OBJECT
+public:
+    TitleBar(const QString&);
+
+signals:
+    void closeClicked();
+};
