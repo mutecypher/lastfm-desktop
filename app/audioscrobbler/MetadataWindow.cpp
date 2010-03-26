@@ -69,9 +69,14 @@ MetadataWindow::MetadataWindow()
     pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ));
     setPalette( pal );
     setAutoFillBackground( true );
-    setWindowFlags( Qt::CustomizeWindowHint );
     
     setAttribute( Qt::WA_MacAlwaysShowToolWindow );
+	
+#ifdef Q_OS_MAC
+	setWindowFlags( Qt::CustomizeWindowHint );
+#else
+	setWindowFlags( Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint );
+#endif	
 
     //Enable aero blurry window effect:
     QtWin::extendFrameIntoClientArea( this );
@@ -81,10 +86,12 @@ MetadataWindow::MetadataWindow()
     new QVBoxLayout( centralWidget());
     centralWidget()->layout()->setSpacing( 0 );
     centralWidget()->layout()->setContentsMargins( 0, 0, 0, 0 );
-    
+
+#ifdef Q_OS_MAC   
     TitleBar* titleBar;
     qobject_cast<QBoxLayout*>(centralWidget()->layout())->addWidget( titleBar = new TitleBar("Audioscrobbler"), 0, Qt::AlignBottom );
     connect( titleBar, SIGNAL( closeClicked()), SLOT( close()));
+#endif
 
     QStackedLayout* stackLayout = new QStackedLayout();
     qobject_cast<QVBoxLayout*>(centralWidget()->layout())->addLayout( stackLayout );
@@ -248,7 +255,9 @@ MetadataWindow::MetadataWindow()
         setStatusBar( statusBar );
     }
     addDragHandleWidget( ui.now_playing_source );
+#ifdef Q_OS_MAC
     addDragHandleWidget( titleBar );
+#endif
     addDragHandleWidget( stack.rest );
     addDragHandleWidget( stack.nowScrobbling );
     addDragHandleWidget( statusBar );
