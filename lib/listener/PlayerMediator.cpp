@@ -70,7 +70,7 @@ PlayerMediator::assess( PlayerConnection* connection )
     if (!m_active)
         goto set_active;
     
-    if (m_active->state() == Stopped)
+    if (m_active->state() == Stopped || m_active->state() == Paused)
     {
         switch (connection->state())
         {

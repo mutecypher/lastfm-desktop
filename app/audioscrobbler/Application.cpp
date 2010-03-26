@@ -205,9 +205,14 @@ Application::setConnection(PlayerConnection*c)
     connect(c, SIGNAL(stopped()), mw, SLOT(onStopped()));
     connection = c;
 
-    if(c->state() == Playing){
+    if(c->state() == Playing || c->state() == Paused){
         onTrackStarted(c->track(), Track());
         mw->onTrackStarted(c->track(), Track());
+    }
+
+    if( c->state() == Paused ) {
+        onPaused();
+        mw->onPaused();
     }
 }
 
