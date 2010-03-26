@@ -1,0 +1,67 @@
+#ifndef HTTP_IMAGE_WIDGET_H_
+#define HTTP_IMAGE_WIDGET_H_
+
+#include <QLabel>
+#include <QUrl>
+#include <lastfm.h>
+#include <QPainter>
+#include <QMouseEvent>
+
+class HttpImageWidget : public QLabel {
+Q_OBJECT
+public:
+    HttpImageWidget( QWidget* parent = 0 )
+    :QLabel( parent ), m_mouseDown( false ){}
+
+    void loadUrl( const QUrl& url, bool gradient = false )
+    {
+        m_gradient = gradient;
+        clear();
+        connect( lastfm::nam()->get(QNetworkRequest(url)), SIGNAL(finished()), SLOT(onUrlLoaded()));
+    }
+
+    
+protected:
+    virtual void mousePressEvent( QMouseEvent* event )
+    {
+        m_mouseDown = true;
+    }
+
+    virtual void mouseReleaseEvent( QMouseEvent* event )
+    {
+        if( m_mouseDown &&
+            contentsRect().contains( event->pos() )) emit clicked();
+        
+        m_mouseDown = false;
+    }
+
+private slots:
+    void onUrlLoaded()
+    {
+        QPixmap px;
+        px.loadFromData(static_cast<QNetworkReply*>(sender())->readAll());
+        
+        if( m_gradient ) {
+            QLinearGradient g(QPoint(), px.rect().bottomLeft());
+            g.setColorAt( 0.0, QColor(0, 0, 0, 0.11*255));
+            g.setColorAt( 1.0, QColor(0, 0, 0, 0.88*255));
+
+            QPainter p(&px);
+            p.setCompositionMode(QPainter::CompositionMode_Multiply);
+            p.fillRect(px.rect(), g);
+            p.end();
+        }
+
+        setFixedSize( px.size());
+        setPixmap(px);
+    }
+
+signals:
+    void clicked();
+
+private:
+    bool m_mouseDown;
+    bool m_gradient;
+};
+
+#endif
