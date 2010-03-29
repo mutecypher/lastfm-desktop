@@ -31,6 +31,7 @@
 #include "UnicornCoreApplication.h"
 #include "dialogs/LoginDialog.h"
 #include "dialogs/LoginContinueDialog.h"
+#include "dialogs/WelcomeDialog.h"
 #include "SignalBlocker.h"
 #include "UnicornSettings.h"
 #include <lastfm/misc.h>
@@ -140,6 +141,7 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
 
                 if ( lc.exec() == QDialog::Accepted )
                 {
+                    WelcomeDialog( User(lc.session().username())).exec();
                     changeSession( lc.session());
 
                     m_signingIn = false;

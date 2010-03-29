@@ -19,6 +19,7 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/dialogs/LoginDialog.h"
 #include "lib/unicorn/dialogs/LoginContinueDialog.h"
+#include "lib/unicorn/dialogs/WelcomeDialog.h"
 
 using lastfm::UserDetails;
 UserRadioButton::UserRadioButton( const User& user )
@@ -228,10 +229,13 @@ UserManager::onUserAdded()
 
     const unicorn::Session& s = lcd->session();
     
-    UserRadioButton* urb = new UserRadioButton( User( s.username()));
-    
-    if( ui.groupBox->layout()->count() <= 1 ) urb->click();
+    User user( s.username());
+    UserRadioButton* urb = new UserRadioButton( user );
+
     add( urb );
+    if( ui.groupBox->layout()->count() <= 1 ) urb->click();
+
+    WelcomeDialog( user ).exec();
 }
 
 void 

@@ -72,8 +72,8 @@ public:
     virtual bool isPlatformSupported() const = 0;
 
 #ifdef QT_VERSION
-    bool isAppInstalled() const;
-    bool isInstalled() const;
+    virtual bool isAppInstalled() const;
+    virtual bool isInstalled() const;
     bool canBootstrap() const;
 #endif //QT_VERSION
 };

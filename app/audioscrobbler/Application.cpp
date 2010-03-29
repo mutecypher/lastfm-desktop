@@ -1,4 +1,3 @@
-
 /*
    Copyright 2005-2009 Last.fm Ltd. 
       - Primarily authored by Max Howell, Jono Cole and Doug Mansell
@@ -68,6 +67,7 @@ Application::Application(int& argc, char** argv)
 void
 Application::init()
 {
+
     if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
     {
         FirstRunWizard* w = new FirstRunWizard();
@@ -171,8 +171,6 @@ Application::init()
 
     // clicking on a system tray message should show the scrobbler
     connect( tray, SIGNAL(messageClicked()), m_toggle_window_action, SLOT(trigger()));
-
-
 }
 
 

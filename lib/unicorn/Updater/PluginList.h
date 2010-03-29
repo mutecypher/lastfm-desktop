@@ -10,6 +10,8 @@ public:
     QList<IPluginInfo*> availablePlugins() const;
     QList<IPluginInfo*> installedPlugins() const;
     QList<IPluginInfo*> bootstrappablePlugins() const;
+
+    PluginList supportedList() const;
 };
 
 #endif //PLUGIN_LIST_H_
