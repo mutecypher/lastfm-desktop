@@ -133,7 +133,7 @@ else
                 EXTRA_QMAKE_FLAGS='NOOP=""'
             fi
 
-            qmake -config debug -spec macx-g++ -recursive Last.fm.pro "CONFIG -= release" "$EXTRA_QMAKE_FLAGS" || die "Configure failed."
+            qmake -config debug -spec macx-g++ -recursive Last.fm.pro "CONFIG -= app_bundle release" "$EXTRA_QMAKE_FLAGS" || die "Configure failed."
             BUILD_CMD='make'        
         fi;;
             
