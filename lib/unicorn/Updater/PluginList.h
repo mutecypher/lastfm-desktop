@@ -12,6 +12,7 @@ public:
     QList<IPluginInfo*> bootstrappablePlugins() const;
 
     PluginList supportedList() const;
+    QString availableDescription() const;
 };
 
 #endif //PLUGIN_LIST_H_

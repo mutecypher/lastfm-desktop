@@ -31,6 +31,7 @@ using unicorn::Session;
 RestWidget::RestWidget( QWidget* p )
            :StylableWidget( p )
 {
+    setAutoFillBackground( true );
     QPushButton* b;
     QVBoxLayout* l = new QVBoxLayout( this );
     l->addWidget( ui.welcomeLabel = new QLabel( tr("Hi, %1.\nListen to some music to scrobble it to your Last.fm profile." ).arg( lastfm::ws::Username )), 0, Qt::AlignBottom);

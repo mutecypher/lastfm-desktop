@@ -35,6 +35,8 @@
 #include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/dialogs/ShareDialog.h"
 #include "lib/unicorn/UnicornSettings.h"
+#include "lib/unicorn/QMessageBoxBuilder.h"
+#include "lib/unicorn/UnicornSettings.h"
 #include "Wizard/FirstRunWizard.h"
 
 #ifdef Q_OS_WIN32
@@ -349,3 +351,61 @@ Application::onMessageReceived(const QString& message)
     }
 }
 
+void 
+Application::quit()
+{
+    if( unicorn::AppSettings().value( "quitDontAsk", false ).toBool()) {
+        actuallyQuit();
+        return;
+    }
+
+    QDialog* d = new QDialog( mw );
+    
+    if( mw->isVisible()) d->setWindowFlags( Qt::Sheet );
+    
+    QGridLayout* grid = new QGridLayout( d );
+    QLabel* icon = new QLabel(d);
+    icon->setPixmap( style()->standardPixmap( QStyle::SP_MessageBoxWarning, 0, icon ));
+    QSizePolicy labelSP( QSizePolicy::Minimum, QSizePolicy::Preferred );
+    labelSP.setHeightForWidth( true );
+    QLabel* title = new QLabel( tr("%1 is about to quit.").arg(applicationName()));
+    QLabel* text = new QLabel( tr("Tracks played in %1 will not be scrobbled if you continue." )
+                  .arg( PluginList().availableDescription()));
+
+    title->setWordWrap( false );
+    title->setSizePolicy( labelSP );
+    text->setWordWrap( true );
+    text->setSizePolicy( labelSP );
+    
+
+    QDialogButtonBox* bb = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
+    bb->button(QDialogButtonBox::Ok)->setText( tr( "Quit" ));
+    bb->button(QDialogButtonBox::Cancel)->setDefault( true );
+    QCheckBox* dontAsk = new QCheckBox( tr( "Don't ask me again" ));
+   
+    grid->addWidget( icon, 0, 0, 2, 1, Qt::AlignTop );
+    grid->addWidget( title, 0, 1, 1, 1, Qt::AlignTop );
+    grid->addWidget( text, 1, 1, 1, 1, Qt::AlignCenter );
+    grid->addWidget( dontAsk, 2, 1, 1, 2, Qt::AlignLeft );
+    grid->addWidget( bb, 3, 1, 1, 2 );
+    
+    connect( bb, SIGNAL( accepted()), d, SLOT( accept()));
+    connect( d, SIGNAL( accepted()), this, SLOT( actuallyQuit()));
+    connect( bb, SIGNAL( rejected()), d, SLOT( reject()));
+    connect( d, SIGNAL( rejected()), d, SLOT( deleteLater()));
+    d->setFixedSize( d->sizeHint());
+    d->open();
+}
+
+void 
+Application::actuallyQuit()
+{
+    QDialog* d = qobject_cast<QDialog*>( sender());
+    if( d ) {
+        QCheckBox* dontAskCB = d->findChild<QCheckBox*>();
+        if( dontAskCB ) {
+            unicorn::AppSettings().setValue( "quitDontAsk", ( dontAskCB->checkState() == Qt::Checked ));
+        }
+    }
+    QCoreApplication::quit();
+}

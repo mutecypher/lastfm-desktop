@@ -1,4 +1,5 @@
 #include "PluginList.h"
+#include <QStringList>
 
 QList<IPluginInfo*> 
 PluginList::availablePlugins() const
@@ -45,3 +46,20 @@ PluginList::supportedList() const
     return that;
 }
 
+QString
+PluginList::availableDescription() const
+{
+    QStringList mediaPlayers;
+    
+    foreach( IPluginInfo* i, supportedList() )
+    {
+        mediaPlayers << QString::fromStdString( i->name() );
+    }
+
+    QString ret = mediaPlayers.takeLast();
+    
+    if( mediaPlayers.count() > 0 )
+        ret = mediaPlayers.join( ", " ) + " or " + ret;
+
+    return ret;
+}

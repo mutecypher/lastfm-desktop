@@ -79,7 +79,8 @@ ShareDialog QCheckBox  { color: #cccccc; font-weight: bold; }
 
 ShareDialog QLabel[xerror="true"] { color: #d51007; }
 
-MetadataWindow QLabel,
+MetadataWindow RestWidget QLabel,
+MetadataWindow QWidget#NowScrobbling QLabel,
 MetadataWindow QListView,
 MetadataWindow DataListWidget
 MetadataWindow RestWidget QPushButton {
@@ -103,15 +104,17 @@ RestWidget QPushButton:hover {
     text-decoration:
 }
 
-MetadataWindow #value,
-MetadataWindow #name,
+QWidget#NowScrobbling #value,
+QWidget#NowScrobbling #name,
 MetadataWindow DataListWidget { 
     font-weight: bold;
     border-top: 1px solid #333;
     margin-top: 7px;
+    margin-bottom: 0px;
 }
 
 MetadataWindow QLabel#name {
+    margin-top: 4px;
     padding-top:2px;
     color: #afafaf;
 }
@@ -121,7 +124,7 @@ DataListWidget QLabel { padding: 0px; margin: 0px; }
 MetadataWindow QLabel#value,
 MetadataWindow #value > QLabel, 
 MetadataWindow DataListWidget {
-    padding-top: 1px;
+    padding-top 1px;
     font-weight: normal;
 }
 
@@ -297,7 +300,7 @@ ScrobbleStatus#now_playing {
     background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #c2dfe7, stop:1 #8ba2a8 );
 }
 
-ScrobbleStatus QLabel {
+QWidget#NowScrobbling ScrobbleStatus QLabel {
     padding: 3 5 5 5;
     border: none;
     font-size: 11px;
