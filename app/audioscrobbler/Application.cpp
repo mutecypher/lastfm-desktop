@@ -69,7 +69,6 @@ Application::Application(int& argc, char** argv)
 void
 Application::init()
 {
-
     if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
     {
         FirstRunWizard* w = new FirstRunWizard();
@@ -124,6 +123,8 @@ Application::init()
 
 /// MetadataWindow
     mw = new MetadataWindow;
+    installHotKey( Qt::ControlModifier | Qt::MetaModifier, 1, m_toggle_window_action, SLOT( trigger()));
+
     ScrobbleControls* sc = mw->scrobbleControls();
     sc->setEnabled( false );
     sc->setLoveAction( m_love_action );
@@ -359,9 +360,14 @@ Application::quit()
         return;
     }
 
-    QDialog* d = new QDialog( mw );
-    
-    if( mw->isVisible()) d->setWindowFlags( Qt::Sheet );
+    QDialog* d;
+    if( mw->isVisible()) {
+        d = new QDialog( mw );
+        d->setWindowFlags( Qt::Sheet );
+    } else {
+        d = new QDialog();
+        d->setWindowFlags( Qt::Dialog );
+    }
     
     QGridLayout* grid = new QGridLayout( d );
     QLabel* icon = new QLabel(d);

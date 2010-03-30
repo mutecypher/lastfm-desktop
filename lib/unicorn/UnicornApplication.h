@@ -121,6 +121,7 @@ namespace unicorn
         Session currentSession() { return m_currentSession; }
 
         static unicorn::Application* instance(){ return (unicorn::Application*)qApp; }
+        void installHotKey( Qt::KeyboardModifiers, quint32, QObject* receiver, const char* slot );
 
     public slots:
         bool logout()
@@ -139,10 +140,17 @@ namespace unicorn
     private:
         void initiateLogin( bool forceLogout = false ) throw( StubbornUserException );
         void translate();
+        void setupHotKeys();
+        void onHotKeyEvent(quint32 id);
+
         QString m_styleSheet;
         Session m_currentSession;
         Bus m_bus;
         bool m_signingIn;
+#ifdef __APPLE__
+        static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
+        QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
+#endif
 
     private slots:
         void onUserGotInfo();
