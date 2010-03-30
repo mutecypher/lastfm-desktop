@@ -68,6 +68,10 @@ namespace audioscrobbler
     signals:
         void trackStarted( const Track&, const Track& );
 
+    public slots:
+        void quit();
+        void actuallyQuit();
+
     private slots:
         void init();
 
@@ -89,6 +93,6 @@ namespace audioscrobbler
         void onActivateWindow();
 
         void onMessageReceived(const QString& message);
-
+        
     };
 }

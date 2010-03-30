@@ -26,6 +26,7 @@
 #include "lib/unicorn/widgets/DataListWidget.h"
 #include "lib/unicorn/widgets/MessageBar.h"
 #include "lib/unicorn/StylableWidget.h"
+#include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/qtwin.h"
 
 #include <lastfm/Artist>
@@ -121,13 +122,16 @@ MetadataWindow::MetadataWindow()
     // listeners, scrobbles, tags:
     {
         QLabel* label;
-        QGridLayout* grid = new QGridLayout();
+        QWidget* gridWidget = new QWidget();
+        QGridLayout* grid = new QGridLayout(gridWidget);
         grid->setSpacing( 0 );
 
         {
             QVBoxLayout* v2 = new QVBoxLayout();
-            grid->addWidget(ui.artist_image = new QLabel, 0, 0, Qt::AlignTop | Qt::AlignLeft );
+            grid->addWidget(ui.artist_image = new HttpImageWidget, 0, 0, Qt::AlignTop | Qt::AlignLeft );
             ui.artist_image->setObjectName("artist_image");
+            ui.artist_image->setCursor( Qt::PointingHandCursor );
+            connect( ui.artist_image, SIGNAL(clicked()), SLOT(onArtistImageClicked()));
             v2->addWidget(ui.title = new QLabel);
             v2->addWidget(ui.album = new QLabel);
             v2->addStretch();
@@ -219,8 +223,9 @@ MetadataWindow::MetadataWindow()
         ui.bio->setOpenLinks( false );
 
         grid->setRowStretch( 6, 1 );
+        gridWidget->setObjectName( "data_grid" );
 
-        vs->addLayout(grid, 1);
+        vs->addWidget(gridWidget, 1);
         vs->addStretch();
     }
     connect(ui.bio->document()->documentLayout(), SIGNAL( documentSizeChanged(QSizeF)), SLOT( onBioChanged(QSizeF)));
@@ -369,8 +374,7 @@ MetadataWindow::onArtistGotInfo()
     root->setFrameFormat(f);
 
     QUrl url = lfm["artist"]["image size=large"].text();
-    QNetworkReply* reply = lastfm::nam()->get(QNetworkRequest(url));
-    connect(reply, SIGNAL(finished()), SLOT(onArtistImageDownloaded()));
+    ui.artist_image->loadUrl( url, true );
 }
 
 
@@ -423,25 +427,6 @@ MetadataWindow::onTrackGotTopFans()
 }
 
 void
-MetadataWindow::onArtistImageDownloaded()
-{
-    QPixmap px;
-    px.loadFromData(static_cast<QNetworkReply*>(sender())->readAll());
-
-    QLinearGradient g(QPoint(), px.rect().bottomLeft());
-    g.setColorAt( 0.0, QColor(0, 0, 0, 0.11*255));
-    g.setColorAt( 1.0, QColor(0, 0, 0, 0.88*255));
-
-    QPainter p(&px);
-    p.setCompositionMode(QPainter::CompositionMode_Multiply);
-    p.fillRect(px.rect(), g);
-    p.end();
-
-    ui.artist_image->setFixedSize( px.size());
-    ui.artist_image->setPixmap(px);
-}
-
-void
 MetadataWindow::onStopped()
 {
     setCurrentWidget( stack.rest );
@@ -474,3 +459,8 @@ MetadataWindow::setCurrentWidget( QWidget* w )
     centralWidget()->findChild<QStackedLayout*>()->setCurrentWidget( w );
 }
 
+void 
+MetadataWindow::onArtistImageClicked()
+{
+    QDesktopServices::openUrl( m_currentTrack.artist().www() );
+}

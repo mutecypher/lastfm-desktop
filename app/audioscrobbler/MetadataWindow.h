@@ -33,8 +33,7 @@ class MetadataWindow : public unicorn::MainWindow
 
     struct{
         class ScrobbleStatus* now_playing_source;
-        class QLabel* artist_image;
-        class QLabel* album_image;
+        class HttpImageWidget* artist_image;
         class QLabel* title;
         class QLabel* album;
         class DataListWidget* topFans;
@@ -76,8 +75,9 @@ private slots:
     void onTrackGotTopFans();
 
     void onAnchorClicked( const QUrl& link );
-    void onArtistImageDownloaded();
     void onBioChanged( const QSizeF& );
+
+    void onArtistImageClicked();
     
 private:
     Track m_currentTrack;

@@ -1,4 +1,3 @@
-
 /*
    Copyright 2005-2009 Last.fm Ltd. 
       - Primarily authored by Max Howell, Jono Cole and Doug Mansell
@@ -33,8 +32,10 @@
 #include <lastfm/Audioscrobbler>
 #include <QMenu>
 #include <QDebug>
-#include "lib/unicorn/widgets/TagDialog.h"
-#include "lib/unicorn/widgets/ShareDialog.h"
+#include "lib/unicorn/dialogs/TagDialog.h"
+#include "lib/unicorn/dialogs/ShareDialog.h"
+#include "lib/unicorn/UnicornSettings.h"
+#include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include "Wizard/FirstRunWizard.h"
 
@@ -122,6 +123,8 @@ Application::init()
 
 /// MetadataWindow
     mw = new MetadataWindow;
+    installHotKey( Qt::ControlModifier | Qt::MetaModifier, 1, m_toggle_window_action, SLOT( trigger()));
+
     ScrobbleControls* sc = mw->scrobbleControls();
     sc->setEnabled( false );
     sc->setLoveAction( m_love_action );
@@ -171,8 +174,6 @@ Application::init()
 
     // clicking on a system tray message should show the scrobbler
     connect( tray, SIGNAL(messageClicked()), m_toggle_window_action, SLOT(trigger()));
-
-
 }
 
 
@@ -205,9 +206,14 @@ Application::setConnection(PlayerConnection*c)
     connect(c, SIGNAL(stopped()), mw, SLOT(onStopped()));
     connection = c;
 
-    if(c->state() == Playing){
+    if(c->state() == Playing || c->state() == Paused){
         onTrackStarted(c->track(), Track());
         mw->onTrackStarted(c->track(), Track());
+    }
+
+    if( c->state() == Paused ) {
+        onPaused();
+        mw->onPaused();
     }
 }
 
@@ -346,3 +352,66 @@ Application::onMessageReceived(const QString& message)
     }
 }
 
+void 
+Application::quit()
+{
+    if( unicorn::AppSettings().value( "quitDontAsk", false ).toBool()) {
+        actuallyQuit();
+        return;
+    }
+
+    QDialog* d;
+    if( mw->isVisible()) {
+        d = new QDialog( mw );
+        d->setWindowFlags( Qt::Sheet );
+    } else {
+        d = new QDialog();
+        d->setWindowFlags( Qt::Dialog );
+    }
+    
+    QGridLayout* grid = new QGridLayout( d );
+    QLabel* icon = new QLabel(d);
+    icon->setPixmap( style()->standardPixmap( QStyle::SP_MessageBoxWarning, 0, icon ));
+    QSizePolicy labelSP( QSizePolicy::Minimum, QSizePolicy::Preferred );
+    labelSP.setHeightForWidth( true );
+    QLabel* title = new QLabel( tr("%1 is about to quit.").arg(applicationName()));
+    QLabel* text = new QLabel( tr("Tracks played in %1 will not be scrobbled if you continue." )
+                  .arg( PluginList().availableDescription()));
+
+    title->setWordWrap( false );
+    title->setSizePolicy( labelSP );
+    text->setWordWrap( true );
+    text->setSizePolicy( labelSP );
+    
+
+    QDialogButtonBox* bb = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
+    bb->button(QDialogButtonBox::Ok)->setText( tr( "Quit" ));
+    bb->button(QDialogButtonBox::Cancel)->setDefault( true );
+    QCheckBox* dontAsk = new QCheckBox( tr( "Don't ask me again" ));
+   
+    grid->addWidget( icon, 0, 0, 2, 1, Qt::AlignTop );
+    grid->addWidget( title, 0, 1, 1, 1, Qt::AlignTop );
+    grid->addWidget( text, 1, 1, 1, 1, Qt::AlignCenter );
+    grid->addWidget( dontAsk, 2, 1, 1, 2, Qt::AlignLeft );
+    grid->addWidget( bb, 3, 1, 1, 2 );
+    
+    connect( bb, SIGNAL( accepted()), d, SLOT( accept()));
+    connect( d, SIGNAL( accepted()), this, SLOT( actuallyQuit()));
+    connect( bb, SIGNAL( rejected()), d, SLOT( reject()));
+    connect( d, SIGNAL( rejected()), d, SLOT( deleteLater()));
+    d->setFixedSize( d->sizeHint());
+    d->open();
+}
+
+void 
+Application::actuallyQuit()
+{
+    QDialog* d = qobject_cast<QDialog*>( sender());
+    if( d ) {
+        QCheckBox* dontAskCB = d->findChild<QCheckBox*>();
+        if( dontAskCB ) {
+            unicorn::AppSettings().setValue( "quitDontAsk", ( dontAskCB->checkState() == Qt::Checked ));
+        }
+    }
+    QCoreApplication::quit();
+}

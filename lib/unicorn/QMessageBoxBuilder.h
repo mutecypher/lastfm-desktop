@@ -22,6 +22,7 @@
 
 #include <lib/DllExportMacro.h>
 #include <QtGui/QMessageBox>
+#include <QAbstractButton>
 
 
 class UNICORN_DLLEXPORT QMessageBoxBuilder
@@ -39,6 +40,14 @@ public:
     QMessageBoxBuilder& setIcon( QMessageBox::Icon x ) { box.setIcon( x ); return *this; }
     /** the default is a single OK button */
     QMessageBoxBuilder& setButtons( QMessageBox::StandardButtons buttons ) { box.setStandardButtons( buttons ); return *this; }
+
+    QMessageBoxBuilder& setButtonText( QMessageBox::StandardButton aButton, const QString& text )
+    {
+        box.button( aButton )->setText( text );
+        return *this;
+    }
+
+    QMessageBoxBuilder& addButton( QAbstractButton* b, QMessageBox::ButtonRole r ){ box.addButton( b, r ); return *this; }
 
     int exec();
 	

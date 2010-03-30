@@ -29,8 +29,9 @@
 #include "UnicornApplication.h"
 #include "QMessageBoxBuilder.h"
 #include "UnicornCoreApplication.h"
-#include "widgets/LoginDialog.h"
-#include "widgets/LoginContinueDialog.h"
+#include "dialogs/LoginDialog.h"
+#include "dialogs/LoginContinueDialog.h"
+#include "dialogs/WelcomeDialog.h"
 #include "SignalBlocker.h"
 #include "UnicornSettings.h"
 #include <lastfm/misc.h>
@@ -46,7 +47,7 @@
 #include <QTimer>
 #include <QDebug>
 
-#include "widgets/UserManager.h"
+#include "dialogs/UserManager.h"
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
@@ -59,6 +60,8 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
 #endif    
     
     CoreApplication::init();
+
+    setupHotKeys();
 
 #ifdef __APPLE__
     AEEventHandlerUPP h = NewAEEventHandlerUPP( appleEventHandler );
@@ -140,6 +143,7 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
 
                 if ( lc.exec() == QDialog::Accepted )
                 {
+                    WelcomeDialog( User(lc.session().username())).exec();
                     changeSession( lc.session());
 
                     m_signingIn = false;
@@ -261,8 +265,68 @@ unicorn::Application::changeSession( const Session& newSession, bool announce )
     emit sessionChanged( currentSession(), oldSession );
 }
 
+void 
+unicorn::Application::installHotKey( Qt::KeyboardModifiers modifiers, quint32 virtualKey, QObject* receiver, const char* slot )
+{
+#ifdef __APPLE__
+    EventHotKeyID hotKeyID;
+
+    hotKeyID.signature='htk1';
+    quint32 id = m_hotKeyMap.size() + 1;
+    m_hotKeyMap[id] = QPair<QObject*, const char*>( receiver, slot );
+    hotKeyID.id=id;
+
+    UInt32 appleMod=0;
+    if( modifiers.testFlag( Qt::ShiftModifier ))
+        appleMod |= shiftKey;
+    if( modifiers.testFlag( Qt::ControlModifier ))
+        appleMod |= controlKey;
+    if( modifiers.testFlag( Qt::AltModifier ))
+        appleMod |= optionKey;
+    if( modifiers.testFlag( Qt::MetaModifier ))
+        appleMod |= cmdKey;
+
+    EventHotKeyRef hkRef;
+
+    RegisterEventHotKey( virtualKey, appleMod, hotKeyID, GetApplicationEventTarget(), 0, &hkRef );
+#endif
+}
+
+
+void 
+unicorn::Application::setupHotKeys()
+{
+#ifdef __APPLE__
+    EventTypeSpec eventType;
+    eventType.eventClass=kEventClassKeyboard;
+    eventType.eventKind=kEventHotKeyPressed;
+
+    using unicorn::Application;
+    InstallApplicationEventHandler(&Application::hotkeyEventHandler, 1, &eventType, this, NULL);
+#endif
+}
+
+void 
+unicorn::Application::onHotKeyEvent(quint32 id)
+{
+    QPair< QObject*, const char*> method = m_hotKeyMap[id];
+    QObject* receiver = method.first;
+    const char* slot = method.second;
+    QTimer::singleShot( 0, receiver, slot );
+}
 
 #ifdef __APPLE__
+#include <iostream>
+OSStatus /* static */
+unicorn::Application::hotkeyEventHandler( EventHandlerCallRef, EventRef event, void* data )
+{
+    unicorn::Application* self = (unicorn::Application*)data;
+    EventHotKeyID hkId;
+    GetEventParameter( event, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(hkId), NULL, &hkId);
+    self->onHotKeyEvent( hkId.id );
+    return noErr;
+}
+
 static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
 {
     OSType id = typeWildCard;
@@ -283,17 +347,6 @@ static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
             return unimpErr;
     }
 
-/*
-    CFStringRef name;
-    CopyProcessName( &psn, &name );
-    
-    char buffer[ CFStringGetLength( name ) + 10 ];
-    CFStringGetCString( name, buffer, sizeof( buffer ), kCFStringEncodingUTF8 );
-    QString processName( buffer );
-    
-    if( processName == "iTunes" ) return unimpErr;
-    
-    qDebug() << "Process Name: " << processName;*/
     switch (id)
     {
         case kAEQuitApplication:
