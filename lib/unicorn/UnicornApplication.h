@@ -147,11 +147,14 @@ namespace unicorn
         Session m_currentSession;
         Bus m_bus;
         bool m_signingIn;
+		QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
 #ifdef __APPLE__
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
-        QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
 #endif
-
+#ifdef WIN32
+        static bool winEventFilter ( void* );
+#endif
+	
     private slots:
         void onUserGotInfo();
         void onSigningInQuery( const QString& );

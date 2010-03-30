@@ -6,8 +6,9 @@
 #include <lastfm.h>
 #include <QPainter>
 #include <QMouseEvent>
+#include "lib/DllExportMacro.h"
 
-class HttpImageWidget : public QLabel {
+class UNICORN_DLLEXPORT HttpImageWidget : public QLabel {
 Q_OBJECT
 public:
     HttpImageWidget( QWidget* parent = 0 )

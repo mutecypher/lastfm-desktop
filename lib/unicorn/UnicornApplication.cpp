@@ -24,6 +24,9 @@
     static pascal OSErr appleEventHandler( const AppleEvent*, AppleEvent*, long );
     #include <QMainWindow>
     extern void qt_mac_set_menubar_icons( bool );
+#elif defined WIN32
+	#include <windows.h>
+    #include <QAbstractEventDispatcher>
 #endif
 
 #include "UnicornApplication.h"
@@ -268,12 +271,14 @@ unicorn::Application::changeSession( const Session& newSession, bool announce )
 void 
 unicorn::Application::installHotKey( Qt::KeyboardModifiers modifiers, quint32 virtualKey, QObject* receiver, const char* slot )
 {
+    qDebug() << "Installing HotKey";
+	quint32 id = m_hotKeyMap.size() + 1;
+    m_hotKeyMap[id] = QPair<QObject*, const char*>( receiver, slot );
+	
 #ifdef __APPLE__
     EventHotKeyID hotKeyID;
 
     hotKeyID.signature='htk1';
-    quint32 id = m_hotKeyMap.size() + 1;
-    m_hotKeyMap[id] = QPair<QObject*, const char*>( receiver, slot );
     hotKeyID.id=id;
 
     UInt32 appleMod=0;
@@ -289,6 +294,18 @@ unicorn::Application::installHotKey( Qt::KeyboardModifiers modifiers, quint32 vi
     EventHotKeyRef hkRef;
 
     RegisterEventHotKey( virtualKey, appleMod, hotKeyID, GetApplicationEventTarget(), 0, &hkRef );
+#elif defined WIN32
+	quint32 winMod = 0;
+    if( modifiers.testFlag( Qt::ShiftModifier ))
+        winMod |= MOD_SHIFT;
+    if( modifiers.testFlag( Qt::ControlModifier ))
+        winMod |= MOD_CONTROL;
+    if( modifiers.testFlag( Qt::AltModifier ))
+        winMod |= MOD_ALT;
+    if( modifiers.testFlag( Qt::MetaModifier ))
+        winMod |= MOD_WIN;
+		
+	RegisterHotKey( NULL, id, winMod, virtualKey);
 #endif
 }
 
@@ -303,6 +320,8 @@ unicorn::Application::setupHotKeys()
 
     using unicorn::Application;
     InstallApplicationEventHandler(&Application::hotkeyEventHandler, 1, &eventType, this, NULL);
+#elif defined WIN32
+    QAbstractEventDispatcher::instance()->setEventFilter( winEventFilter );
 #endif
 }
 
@@ -364,5 +383,20 @@ static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
         default:
             return unimpErr;
     }
+}
+#endif
+
+#ifdef WIN32
+bool /* static */
+unicorn::Application::winEventFilter ( void* message )
+{
+	MSG* msg = (MSG*)message;
+	if( msg->message == WM_HOTKEY )
+	{
+		qDebug() << "Filtered WM_HOTKEY";
+        qobject_cast<unicorn::Application*>(qApp)->onHotKeyEvent( msg->wParam );
+		return true;
+	}
+	return false;
 }
 #endif

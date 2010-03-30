@@ -123,7 +123,12 @@ Application::init()
 
 /// MetadataWindow
     mw = new MetadataWindow;
-    installHotKey( Qt::ControlModifier | Qt::MetaModifier, 1, m_toggle_window_action, SLOT( trigger()));
+#ifdef Q_WS_MAC
+    const int sKeyCode = 1;
+#elif defined Q_WS_WIN
+    const int sKeyCode = 83;
+#endif
+    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action, SLOT( trigger()));
 
     ScrobbleControls* sc = mw->scrobbleControls();
     sc->setEnabled( false );
