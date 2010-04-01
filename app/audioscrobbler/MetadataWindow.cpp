@@ -305,9 +305,13 @@ MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
                                                                                 .arg(t.artist())
                                                                                 .arg(t.www().toString())
                                                                                 .arg(t.title()));
-    QString album("from <a class='title' href=\"%1\">%2</a>");
-    ui.album->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( t.album().www().toString())
+    if( !t.album().isNull() ) {
+        QString album("from <a class='title' href=\"%1\">%2</a>");
+        ui.album->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( t.album().www().toString())
                                                                                .arg( t.album().title()));
+    } else {
+        ui.album->clear();
+    }
 
     ui.onTour->hide();
     ui.onTourBlank->hide();

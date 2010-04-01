@@ -31,6 +31,7 @@
 #include <QListWidget>
 #include <QDebug>
 #include <QCheckBox>
+#include <QDesktopWidget>
 
 #include <lastfm/User>
 
@@ -43,14 +44,14 @@
 const int kMaxMessage(1000);
 
 ShareDialog::ShareDialog( const Track& t, QWidget* parent )
-    : QWidget( parent, Qt::Window )
+    : unicorn::Dialog( parent, Qt::Window )
 {
     m_track = t;
 
     setupUi();
     setWindowTitle( tr("Share") );    
     enableDisableOk();
-    
+
     connect( ui.buttons, SIGNAL(accepted()), this, SLOT(accept()) );
     connect( ui.buttons, SIGNAL(rejected()), this, SLOT(close()) );
 }

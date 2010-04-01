@@ -22,17 +22,17 @@
 
 #include <lastfm/Track>
 #include <QModelIndex>
-#include <QDialog>
+#include "UnicornDialog.h"
 
 #include "lib/DllExportMacro.h"
 
-namespace Unicorn
+namespace unicorn
 {
     class TabWidget;
 }
 
 
-class UNICORN_DLLEXPORT TagDialog : public QDialog
+class UNICORN_DLLEXPORT TagDialog : public unicorn::Dialog
 {
     Q_OBJECT
 
@@ -58,7 +58,7 @@ private:
         class TagListWidget* suggestedTags;
         class TagListWidget* yourTags;
         class QDialogButtonBox* buttons;
-        Unicorn::TabWidget* tabs;
+        unicorn::TabWidget* tabs;
         
         void setupUi( QWidget* parent );
     } ui;

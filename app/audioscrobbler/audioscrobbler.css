@@ -1,7 +1,4 @@
 @import "unicorn.css";
-unicorn--mainWindow {
-}
-
 unicorn--MainWindow RestWidget,
 unicorn--MainWindow QWidget#NowScrobbling,
 unicorn--MainWindow StylableWidget
@@ -16,6 +13,9 @@ TitleBar {
 }
 
 TitleBar QLabel {
+    font-weight: bold;
+    font-size: 11px;
+    color: #cccccc;
     margin-right: 20px;
 }
 
@@ -34,6 +34,11 @@ TitleBar QPushButton:clicked {
     min-height:20px;
     max-height: 20px;
     max-width: 20px;
+}
+
+RestWidget,
+QWidget#NowScrobbling {
+    min-height: 195px;
 }
 
 ShareDialog {
@@ -73,9 +78,10 @@ QScrollArea {
 
 
 RestWidget QLabel,
-ShareDialog QLabel,
-ShareDialog QRadioButton,
-ShareDialog QCheckBox  { color: #cccccc; font-weight: bold; }
+ShareDialog TrackWidget QLabel,
+ShareDialog > QLabel,
+ShareDialog > QRadioButton,
+ShareDialog > QCheckBox  { color: #cccccc; font-weight: bold; }
 
 ShareDialog QLabel[xerror="true"] { color: #d51007; }
 

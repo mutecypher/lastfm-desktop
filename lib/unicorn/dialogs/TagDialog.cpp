@@ -29,7 +29,7 @@
 
 
 TagDialog::TagDialog( const Track& track, QWidget *parent )
-        : QDialog( parent, Qt::Dialog )
+        : unicorn::Dialog( parent, Qt::Dialog )
 {
     m_track = track;
     

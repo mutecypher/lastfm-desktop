@@ -26,7 +26,7 @@
 
 class StylableWidget: public QFrame{
 public:
-    StylableWidget( QWidget* parent = 0 ):QFrame( parent ){}
+    StylableWidget( QWidget* parent = 0, Qt::WindowFlags f = 0 ): QFrame( parent, f ), hasInit( false ){}
 
 protected:
     void paintEvent(QPaintEvent*)
@@ -36,6 +36,17 @@ protected:
         QPainter p(this);
         style()->drawPrimitive(QStyle::PE_Frame, &opt, &p, this);
     }
+    
+    void showEvent(QShowEvent* e )
+    {
+        if( hasInit )
+            return QFrame::showEvent( e );
+        
+        hasInit = true;
+    }
+
+private:
+    bool hasInit;
 };
 
 #endif

@@ -22,11 +22,11 @@
 
 #include <lastfm/Track>
 #include <QDialogButtonBox>
-#include <QDialog>
+#include "UnicornDialog.h"
 
 #include "lib/DllExportMacro.h"
 
-class UNICORN_DLLEXPORT ShareDialog : public QWidget
+class UNICORN_DLLEXPORT ShareDialog : public unicorn::Dialog
 {
     Q_OBJECT
 

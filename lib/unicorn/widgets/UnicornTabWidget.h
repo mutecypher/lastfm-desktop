@@ -25,7 +25,7 @@
 #include <QTabBar>
 
 #include <QDebug>
-namespace Unicorn
+namespace unicorn
 {
     class TabBar : public QTabBar
     {

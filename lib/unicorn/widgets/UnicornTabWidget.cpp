@@ -17,15 +17,15 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "UnicornTabWidget.h"
+#include "unicornTabWidget.h"
 #include <QMouseEvent>
 #include <QPainter>
 #include <QTabBar>
 #include <QHBoxLayout>
 
-const uint Unicorn::TabBar::k_startTearDistance = 30;
+const uint unicorn::TabBar::k_startTearDistance = 30;
 
-Unicorn::TabBar::TabBar()
+unicorn::TabBar::TabBar()
         :m_spacing( 0 ),
          m_leftMargin( 5 ),
          m_active( ":/DockWindow/tab/active.png" )
@@ -69,14 +69,14 @@ Unicorn::TabBar::TabBar()
 
 
 QSize
-Unicorn::TabBar::sizeHint() const
+unicorn::TabBar::sizeHint() const
 {
     return QSize( minimumWidth(), 33 );
 }
 
 
 void
-Unicorn::TabBar::mousePressEvent( QMouseEvent* e )
+unicorn::TabBar::mousePressEvent( QMouseEvent* e )
 {
     if (e->button() != Qt::LeftButton) {
         e->ignore();
@@ -95,7 +95,7 @@ Unicorn::TabBar::mousePressEvent( QMouseEvent* e )
 
 
 void 
-Unicorn::TabBar::mouseReleaseEvent( QMouseEvent* )
+unicorn::TabBar::mouseReleaseEvent( QMouseEvent* )
 {
     m_mouseDownPos = QPoint();
 }
@@ -103,7 +103,7 @@ Unicorn::TabBar::mouseReleaseEvent( QMouseEvent* )
 
 #include <QApplication>
 void 
-Unicorn::TabBar::mouseMoveEvent( QMouseEvent* e )
+unicorn::TabBar::mouseMoveEvent( QMouseEvent* e )
 {
     if( !m_tearable )
         return;
@@ -145,7 +145,7 @@ Unicorn::TabBar::mouseMoveEvent( QMouseEvent* e )
 
 
 void
-Unicorn::TabBar::tabInserted( int )
+unicorn::TabBar::tabInserted( int )
 {
     int w = 0;
     for (int i = 0; i < count(); ++i)
@@ -155,14 +155,14 @@ Unicorn::TabBar::tabInserted( int )
 
 
 void
-Unicorn::TabBar::tabRemoved( int i )
+unicorn::TabBar::tabRemoved( int i )
 {
     tabInserted( i );
 }
 
 
 void 
-Unicorn::TabBar::addWidget( QWidget* wi )
+unicorn::TabBar::addWidget( QWidget* wi )
 {
     layout()->addWidget( wi );
     int w = 0;
@@ -173,7 +173,7 @@ Unicorn::TabBar::addWidget( QWidget* wi )
 
 
 void
-Unicorn::TabBar::paintEvent( QPaintEvent* e )
+unicorn::TabBar::paintEvent( QPaintEvent* e )
 {
     QPainter p( this );
     
@@ -213,14 +213,14 @@ Unicorn::TabBar::paintEvent( QPaintEvent* e )
 
 
 void 
-Unicorn::TabBar::setSpacing( int spacing )
+unicorn::TabBar::setSpacing( int spacing )
 {
     m_spacing = spacing;
 }
 
 
 bool 
-Unicorn::TabBar::eventFilter( QObject* o, QEvent* e )
+unicorn::TabBar::eventFilter( QObject* o, QEvent* e )
 {
     if( e->type() != QEvent::Close )
         return false;
@@ -239,7 +239,7 @@ Unicorn::TabBar::eventFilter( QObject* o, QEvent* e )
 
 
 
-Unicorn::TabWidget::TabWidget()
+unicorn::TabWidget::TabWidget()
 {
     QVBoxLayout* v = new QVBoxLayout( this );
     v->addWidget( m_bar = new TabBar );
@@ -262,7 +262,7 @@ Unicorn::TabWidget::TabWidget()
 
 
 void
-Unicorn::TabWidget::addTab( const QString& title, QWidget* w )
+unicorn::TabWidget::addTab( const QString& title, QWidget* w )
 {
     m_bar->addTab( title );
     setMinimumWidth( m_bar->minimumWidth());
@@ -272,7 +272,7 @@ Unicorn::TabWidget::addTab( const QString& title, QWidget* w )
 
 
 void 
-Unicorn::TabWidget::addTab( QWidget* w )
+unicorn::TabWidget::addTab( QWidget* w )
 {
     Q_ASSERT( !w->windowTitle().isEmpty());
     addTab( w->windowTitle(), w );
@@ -280,14 +280,14 @@ Unicorn::TabWidget::addTab( QWidget* w )
 
 
 void 
-Unicorn::TabWidget::setTabEnabled( int index, bool b )
+unicorn::TabWidget::setTabEnabled( int index, bool b )
 {
     m_bar->setTabEnabled( index, b );
 }
 
 
 QWidget* 
-Unicorn::TabWidget::widget( int index ) const
+unicorn::TabWidget::widget( int index ) const
 {
     return m_stack->widget( index );
 }

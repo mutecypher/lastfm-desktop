@@ -60,11 +60,14 @@ Application::Application(int& argc, char** argv)
               as( 0 )
 {
 	setQuitOnLastWindowClosed( false );
+
+
     // We do the actual init slightly later so that if this is the second
     // time we open the app, we don't get another tray icon etc.
     QTimer::singleShot(0, this, SLOT(init()));
 
 }
+
 
 void
 Application::init()
@@ -366,8 +369,8 @@ Application::quit()
     }
 
     QDialog* d;
-    if( mw->isVisible()) {
-        d = new QDialog( mw );
+    if( activeWindow() && activeWindow()->isVisible()) {
+        d = new QDialog( activeWindow() );
         d->setWindowFlags( Qt::Sheet );
     } else {
         d = new QDialog();
@@ -391,6 +394,7 @@ Application::quit()
 
     QDialogButtonBox* bb = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
     bb->button(QDialogButtonBox::Ok)->setText( tr( "Quit" ));
+    bb->button(QDialogButtonBox::Cancel)->setAutoDefault( true );
     bb->button(QDialogButtonBox::Cancel)->setDefault( true );
     QCheckBox* dontAsk = new QCheckBox( tr( "Don't ask me again" ));
    
@@ -399,7 +403,9 @@ Application::quit()
     grid->addWidget( text, 1, 1, 1, 1, Qt::AlignCenter );
     grid->addWidget( dontAsk, 2, 1, 1, 2, Qt::AlignLeft );
     grid->addWidget( bb, 3, 1, 1, 2 );
-    
+
+    d->setTabOrder( bb, dontAsk );
+
     connect( bb, SIGNAL( accepted()), d, SLOT( accept()));
     connect( d, SIGNAL( accepted()), this, SLOT( actuallyQuit()));
     connect( bb, SIGNAL( rejected()), d, SLOT( reject()));
