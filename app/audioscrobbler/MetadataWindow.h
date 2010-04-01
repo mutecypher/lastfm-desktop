@@ -82,6 +82,7 @@ private slots:
 private:
     Track m_currentTrack;
     void setCurrentWidget( QWidget* );
+
 };
 
 class TitleBar : public StylableWidget {

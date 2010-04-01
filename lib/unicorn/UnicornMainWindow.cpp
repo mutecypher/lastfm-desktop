@@ -24,6 +24,7 @@
 #include "UnicornSettings.h"
 #include <lastfm/User>
 #include <QDesktopServices>
+#include <QDesktopWidget>
 #include <QMenuBar>
 #include <QShortcut>
 #include <QMouseEvent>
@@ -39,15 +40,12 @@ unicorn::MainWindow::MainWindow()
     new QShortcut( QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_L), this, SLOT(openLog()) );
     connect( qApp, SIGNAL(gotUserInfo( const lastfm::UserDetails& )), SLOT(onGotUserInfo( const lastfm::UserDetails& )) );
     connect( qApp, SIGNAL(sessionChanged( unicorn::Session, unicorn::Session )), SLOT(onSessionChanged( unicorn::Session )));
-
-    QVariant v = unicorn::AppSettings().value( SETTINGS_POSITION_KEY );
-    if (v.isValid()) move( v.toPoint() ); //if null, let Qt decide
+    connect( qApp->desktop(), SIGNAL( resized(int)), SLOT( cleverlyPosition()));
 }
 
 
 unicorn::MainWindow::~MainWindow()
 {
-    unicorn::UserSettings().setValue( SETTINGS_POSITION_KEY, pos() );
 }
 
 
@@ -71,6 +69,9 @@ unicorn::MainWindow::finishUi()
 #endif
 
     ui.update = new UpdateDialog( this );
+
+
+    cleverlyPosition();
 }
 
 
@@ -178,4 +179,47 @@ unicorn::MainWindow::onSessionChanged( const Session& session )
 {
     ui.account->findChild<QAction*>("UserBlurb")->deleteLater();
     ui.account->setTitle( session.username());
+}
+
+
+void 
+unicorn::MainWindow::moveEvent( QMoveEvent* )
+{
+    AppSettings s;
+    s.beginGroup( metaObject()->className());
+        s.setValue( "geometry", frameGeometry());
+    s.endGroup();
+}
+
+
+void
+unicorn::MainWindow::cleverlyPosition()
+{
+    AppSettings s;
+    s.beginGroup( metaObject()->className());
+        QRect geo = s.value( "geometry", QRect()).toRect();
+    s.endGroup();
+
+    if( geo.isValid())
+    {
+        move( geo.topLeft());
+        resize( geo.size());
+        
+        int screenNum = qApp->desktop()->screenNumber( this );
+        QRect screenRect = qApp->desktop()->availableGeometry( screenNum );
+        if( !screenRect.contains( frameGeometry(), true)) {
+            QRect diff;
+            
+            if( screenRect.contains( frameGeometry(), false )) {
+                diff = frameGeometry().intersected( screenRect );
+            } else {
+                diff = QRect( QPoint( 0, 0 ),  pos() - screenRect.topLeft());
+            }
+
+            int xDir = (diff.left() == screenRect.left() ? 1 : -1 );
+            int yDir = (diff.top() == screenRect.top() ? 1 : -1 );
+            QPoint adjust = QPoint((frameGeometry().width() - diff.width() ) * xDir, (frameGeometry().height() - diff.height()) * yDir);
+            move( pos() + adjust );
+        }
+    }
 }
