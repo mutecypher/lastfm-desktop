@@ -83,6 +83,10 @@ ShareDialog > QLabel,
 ShareDialog > QRadioButton,
 ShareDialog > QCheckBox  { color: #cccccc; font-weight: bold; }
 
+ShareDialog > QRadioButton:disabled {
+    color: #888888;
+}
+
 ShareDialog QLabel[xerror="true"] { color: #d51007; }
 
 MetadataWindow RestWidget QLabel,
