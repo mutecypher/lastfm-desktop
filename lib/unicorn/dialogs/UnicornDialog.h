@@ -68,15 +68,11 @@ private slots:
             } else {
                 QPoint diffVector = frameGeometry().center() - screenRect.center();
                 diff.setSize( QSize( diffVector.x(), diffVector.y())  );
-                diff.normalized();
+                diff = diff.normalized();
             }
             int xDir = (diff.left() == screenRect.left() ? 1 : -1 );
             int yDir = (diff.top() == screenRect.top() ? 1 : -1 );
             QPoint adjust = QPoint((frameGeometry().width() - diff.width() ) * xDir, (frameGeometry().height() - diff.height()) * yDir);
-            qDebug() << "ScreenRect:" << screenRect;
-            qDebug() << "geometry" << frameGeometry();
-            qDebug() << "diff" << diff;
-            qDebug() << "adjust" << adjust;
             move( pos() + adjust );
         }
     }

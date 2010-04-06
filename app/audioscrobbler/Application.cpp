@@ -135,7 +135,9 @@ Application::init()
 
     ScrobbleControls* sc = mw->scrobbleControls();
     sc->setEnabled( false );
-    sc->setLoveAction( m_love_action );
+    m_love_action->setEnabled( false );
+    m_tag_action->setEnabled( false );
+    m_share_action->setEnabled( false );   sc->setLoveAction( m_love_action );
     sc->setTagAction( m_tag_action );
     sc->setShareAction( m_share_action );
 
@@ -257,6 +259,9 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     tray->showMessage(applicationName(), t.toString());
 
     mw->scrobbleControls()->setEnabled( true );
+    m_love_action->setEnabled( true );
+    m_tag_action->setEnabled( true );
+    m_share_action->setEnabled( true );
 }
 
 void
@@ -293,6 +298,9 @@ Application::onStopped()
    if( as ) as->submit();
 
    mw->scrobbleControls()->setEnabled( false );
+   m_love_action->setEnabled( false );
+   m_tag_action->setEnabled( false );
+   m_share_action->setEnabled( false );
 }
 
 void 
