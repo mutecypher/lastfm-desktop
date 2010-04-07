@@ -68,7 +68,6 @@ Application::Application(int& argc, char** argv)
 
 }
 
-
 void
 Application::init()
 {

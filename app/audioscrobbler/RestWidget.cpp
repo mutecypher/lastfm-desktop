@@ -19,6 +19,7 @@
 */
 
 #include "RestWidget.h"
+#include "ScrobbleMeter.h"
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
@@ -34,8 +35,11 @@ RestWidget::RestWidget( QWidget* p )
     setAutoFillBackground( true );
     QPushButton* b;
     QVBoxLayout* l = new QVBoxLayout( this );
+    l->addStretch();
     l->addWidget( ui.welcomeLabel = new QLabel( tr("Hi, %1.\nListen to some music to scrobble it to your Last.fm profile." ).arg( lastfm::ws::Username )), 0, Qt::AlignBottom);
     l->addWidget( b = new QPushButton( tr( "Switch users?" )), 0, Qt::AlignTop);
+    l->addWidget( new ScrobbleMeter(), Qt::AlignTop );
+    l->addStretch();
     b->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
     
     connect( qApp, SIGNAL(sessionChanged(unicorn::Session, unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));

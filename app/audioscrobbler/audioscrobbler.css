@@ -1,4 +1,12 @@
 @import "unicorn.css";
+
+ScrobbleMeter {
+    color: white;
+    background-color: black;
+    border: solid 1px white;
+    height: 30px;
+}
+
 unicorn--MainWindow RestWidget,
 unicorn--MainWindow QWidget#NowScrobbling,
 unicorn--MainWindow StylableWidget
@@ -75,7 +83,6 @@ QScrollArea {
     padding: 15px;
     margin: 15px;
 }
-
 
 RestWidget QLabel,
 ShareDialog TrackWidget QLabel,
