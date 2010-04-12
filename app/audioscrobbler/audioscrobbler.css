@@ -101,7 +101,6 @@ MetadataWindow QListView,
 MetadataWindow DataListWidget
 MetadataWindow RestWidget QPushButton {
     color: #cccccc;
-    padding: 1px 3px 1px 5px;
     margin: 0px;
     font-size: 11px;
     font-weight: bold;
@@ -115,17 +114,40 @@ ScrobbleMeter{
     border: 1px solid white;
 }
 
+RestWidget {
+    padding: 5px;
+}
+
+RestWidget #title {
+    font-size: 20pt;
+}
+
+RestWidget #avatar {
+    border: 1px solid white;
+    min-height: 64px;
+    max-width: 64px;
+    min-width: 64px;
+    max-width: 64px;
+}
+
 RestWidget QPushButton {
     border: none;
     background-color: transparent;
     color: #59bee5;
-    margin-left: 14px;
     padding: 0px;
+    margin: 0px;
 }
 
-RestWidget QPushButton:hover {
-    text-decoration:
+RestWidget QFrame#ScrobbleDetails {
+    border: 1px solid white;
+    border-radius: 7px;
 }
+
+RestWidget QFrame#ScrobbleDetails QLabel {
+    text-align: center;
+}
+
+
 
 QWidget#NowScrobbling #value,
 QWidget#NowScrobbling #name,
@@ -224,45 +246,18 @@ MetadataWindow #artist_image {
     min-height: 85px; 
 }
 
-QPushButton#love {
-    background-image: url(:/love-rest.png);
-}
+QPushButton#love { background-image: url(:/love-rest.png); }
+QPushButton#love:hover { background-image: url(:/love-onhover.png); }
+QPushButton#love:pressed { background-image: url(:/love-onpress.png); }
+QPushButton#love:checked { background-image: url(:/love-isloved.png); } 
 
-QPushButton#love:hover {
-    background-image: url(:/love-onhover.png);
-}
+QPushButton#tag { background-image: url(:/tag-rest.png); } 
+QPushButton#tag:hover { background-image: url(:/tag-onhover.png); } 
+QPushButton#tag:pressed { background-image: url(:/tag-onpress.png); } 
 
-QPushButton#love:pressed {
-    background-image: url(:/love-onpress.png);
-}
-
-QPushButton#love:checked {
-    background-image: url(:/love-isloved.png);
-}
-
-QPushButton#tag {
-    background-image: url(:/tag-rest.png);
-}
-
-QPushButton#tag:hover {
-    background-image: url(:/tag-onhover.png);
-}
-
-QPushButton#tag:pressed {
-    background-image: url(:/tag-onpress.png);
-}
-
-QPushButton#share {
-    background-image: url(:/share-rest.png);
-}
-
-QPushButton#share:hover {
-    background-image: url(:/share-onhover.png);
-}
-
-QPushButton#share:pressed {
-    background-image: url(:/share-onpress.png);
-}
+QPushButton#share { background-image: url(:/share-rest.png); } 
+QPushButton#share:hover { background-image: url(:/share-onhover.png); }
+QPushButton#share:pressed { background-image: url(:/share-onpress.png); }
 
 QStatusBar {
     background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #4c4c4c, stop:1 #3d3d3d);

@@ -55,6 +55,7 @@ Session::Session( const QString& username )
         : d( 0 )
 {
     Settings s;
+    s.setValue( "Username", username );
     if( !s.childGroups().contains( username, Qt::CaseInsensitive )) return;
     s.beginGroup( username );
     bool subscriber = s.value( "Subscriber" ).toBool();

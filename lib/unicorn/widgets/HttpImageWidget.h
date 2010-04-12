@@ -14,6 +14,7 @@ public:
     HttpImageWidget( QWidget* parent = 0 )
     :QLabel( parent ), m_mouseDown( false ){}
 
+public slots:
     void loadUrl( const QUrl& url, bool gradient = false )
     {
         m_gradient = gradient;

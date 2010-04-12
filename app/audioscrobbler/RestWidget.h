@@ -39,5 +39,7 @@ protected:
     struct {
         class QLabel* welcomeLabel;
         class ScrobbleMeter* scrobbleMeter;
+        class QLabel* since;
+        class HttpImageWidget* avatar;
     } ui;
 };

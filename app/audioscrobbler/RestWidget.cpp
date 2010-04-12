@@ -25,6 +25,7 @@
 #include <QPushButton>
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/UnicornSession.h"
+#include "lib/unicorn/widgets/HttpImageWidget.h"
 
 #include "ScrobbleMeter.h"
 #include <lastfm/ws.h>
@@ -36,33 +37,51 @@ RestWidget::RestWidget( QWidget* p )
            :StylableWidget( p )
 {
     setAutoFillBackground( true );
-    QPushButton* b;
     QVBoxLayout* l = new QVBoxLayout( this );
+    QHBoxLayout* userDetails = new QHBoxLayout();
+    userDetails->addWidget( ui.avatar = new HttpImageWidget());
+    ui.avatar->setObjectName( "avatar" );
+    ui.avatar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
+    userDetails->addWidget( ui.welcomeLabel = new QLabel(), 0, Qt::AlignTop );
+    ui.welcomeLabel->setObjectName( "title" );
+
+    l->addLayout( userDetails );
+    QFrame* scrobbleDetails = new QFrame();
+    scrobbleDetails->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+    scrobbleDetails->setObjectName( "ScrobbleDetails" );
+
+    new QVBoxLayout( scrobbleDetails );
+    qobject_cast<QVBoxLayout*>(scrobbleDetails->layout())->addWidget( ui.scrobbleMeter = new ScrobbleMeter(), 0, Qt::AlignHCenter );
+    scrobbleDetails->layout()->addWidget( ui.since = new QLabel()); 
+    ui.since->setAlignment( Qt::AlignCenter );
+
+    l->addWidget( scrobbleDetails, Qt::AlignTop );
     l->addStretch();
-    l->addWidget( ui.welcomeLabel = new QLabel( tr("Hi, %1.\nListen to some music to scrobble it to your Last.fm profile." ).arg( lastfm::ws::Username )), 0, Qt::AlignBottom);
-    l->addWidget( b = new QPushButton( tr( "Switch users?" )), 0, Qt::AlignTop);
-    l->addWidget( ui.scrobbleMeter = new ScrobbleMeter(), Qt::AlignTop );
-    l->addStretch();
-    b->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
     
     connect( qApp, SIGNAL(sessionChanged(unicorn::Session, unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));
     connect( qApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
     connect( qApp, SIGNAL(scrobblerStatus(int)), SLOT(onScrobblerStatus(int)));
-    connect( b, SIGNAL(clicked()), qApp, SLOT( manageUsers()));
-    b->setCursor( Qt::PointingHandCursor );
 }
 
 void 
 RestWidget::onSessionChanged( const Session& session )
 {
-    ui.welcomeLabel->setText( tr("Hi, %1.\nListen to some music to scrobble it to your Last.fm profile." ).arg( session.username() ));
+    ui.welcomeLabel->setText( tr("%1's Profile" ).arg( session.username() ));
+    ui.since->clear(); 
     ui.scrobbleMeter->clear();
+    ui.avatar->clear();
 }
 
 void 
 RestWidget::onGotUserInfo( const lastfm::UserDetails& userdetails )
 {
     ui.scrobbleMeter->setCount( userdetails.scrobbleCount() );
+    int const daysRegistered = userdetails.dateRegistered().daysTo( QDateTime::currentDateTime());
+    int const weeksRegistered = daysRegistered / 7;
+    QString sinceText = tr("Scrobbles since %1" ).arg( userdetails.dateRegistered().toString( "d MMM yyyy"));
+    sinceText += "\n(" + tr( "That's about %1 tracks a week" ).arg( userdetails.scrobbleCount() / weeksRegistered ) + ")";
+    ui.since->setText( sinceText );
+    ui.avatar->loadUrl( userdetails.mediumImageUrl());
 }
 
 void 

@@ -177,7 +177,7 @@ Application::init()
 
     //We're not going to catch the first session change as it happened in the unicorn application before
     //we could connect to the signal!
-    onSessionChanged();
+    emit sessionChanged( unicorn::Session(), unicorn::Session());
 
     if (!arguments().contains("--tray"))
     {
