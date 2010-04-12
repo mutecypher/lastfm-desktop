@@ -23,6 +23,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QDesktopServices>
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/UnicornSession.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
@@ -82,6 +83,7 @@ RestWidget::onGotUserInfo( const lastfm::UserDetails& userdetails )
     sinceText += "\n(" + tr( "That's about %1 tracks a week" ).arg( userdetails.scrobbleCount() / weeksRegistered ) + ")";
     ui.since->setText( sinceText );
     ui.avatar->loadUrl( userdetails.mediumImageUrl());
+    ui.avatar->setHref( userdetails.www());
 }
 
 void 

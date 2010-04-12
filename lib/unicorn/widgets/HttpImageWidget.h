@@ -3,6 +3,7 @@
 
 #include <QLabel>
 #include <QUrl>
+#include <QDesktopServices>
 #include <lastfm.h>
 #include <QPainter>
 #include <QMouseEvent>
@@ -22,6 +23,18 @@ public slots:
         connect( lastfm::nam()->get(QNetworkRequest(url)), SIGNAL(finished()), SLOT(onUrlLoaded()));
     }
 
+    void setHref( const QUrl& url )
+    {
+        m_href = url;
+        if( m_href.isValid()) {
+            setCursor( Qt::PointingHandCursor );
+            connect( this, SIGNAL(clicked()), SLOT(onClick()));
+        } else {
+            setCursor( Qt::ArrowCursor );
+            disconnect( this, SIGNAL( clicked()), this, SLOT(onClick()));
+        }
+    }
+
     
 protected:
     virtual void mousePressEvent( QMouseEvent* event )
@@ -38,6 +51,11 @@ protected:
     }
 
 private slots:
+    void onClick()
+    {
+        QDesktopServices::openUrl( m_href);
+    }
+
     void onUrlLoaded()
     {
         QPixmap px;
@@ -64,6 +82,7 @@ signals:
 private:
     bool m_mouseDown;
     bool m_gradient;
+    QUrl m_href;
 };
 
 #endif
