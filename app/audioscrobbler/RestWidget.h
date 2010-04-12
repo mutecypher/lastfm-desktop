@@ -21,6 +21,7 @@
 #include "lib/unicorn/StylableWidget.h"
 
 namespace unicorn{ class Session; }
+namespace lastfm{ class UserDetails; } 
 
 class RestWidget : public StylableWidget
 {
@@ -31,9 +32,12 @@ public:
 
 protected slots:
     void onSessionChanged( const unicorn::Session& );
+    void onGotUserInfo( const lastfm::UserDetails& );
+    void onScrobblerStatus( int );
 
 protected:
     struct {
         class QLabel* welcomeLabel;
+        class ScrobbleMeter* scrobbleMeter;
     } ui;
 };

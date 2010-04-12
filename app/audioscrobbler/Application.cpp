@@ -80,7 +80,6 @@ Application::init()
         }
     }
     
-    as = new Audioscrobbler("ass");
 /// tray
     tray = new QSystemTrayIcon(this);
     QIcon trayIcon( AS_TRAY_ICON );
@@ -176,6 +175,10 @@ Application::init()
     connect( this, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session) ), 
                    SLOT(onSessionChanged()));
 
+    //We're not going to catch the first session change as it happened in the unicorn application before
+    //we could connect to the signal!
+    onSessionChanged();
+
     if (!arguments().contains("--tray"))
     {
         m_toggle_window_action->trigger();
@@ -191,6 +194,7 @@ Application::onSessionChanged()
 {
     Audioscrobbler* oldAs = as;
     as = new Audioscrobbler("ass");
+    connect( as, SIGNAL(status(int)), SIGNAL(scrobblerStatus(int)));
     delete oldAs;
 }
 
@@ -294,12 +298,12 @@ Application::onStopped()
     Q_ASSERT(connection);
         
     delete watch;
-   if( as ) as->submit();
+    if( as ) as->submit();
 
-   mw->scrobbleControls()->setEnabled( false );
-   m_love_action->setEnabled( false );
-   m_tag_action->setEnabled( false );
-   m_share_action->setEnabled( false );
+    mw->scrobbleControls()->setEnabled( false );
+    m_love_action->setEnabled( false );
+    m_tag_action->setEnabled( false );
+    m_share_action->setEnabled( false );
 }
 
 void 

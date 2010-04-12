@@ -26,7 +26,10 @@
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/UnicornSession.h"
 
+#include "ScrobbleMeter.h"
 #include <lastfm/ws.h>
+#include <lastfm/User>
+#include <lastfm/Audioscrobbler>
 
 using unicorn::Session;
 RestWidget::RestWidget( QWidget* p )
@@ -38,11 +41,13 @@ RestWidget::RestWidget( QWidget* p )
     l->addStretch();
     l->addWidget( ui.welcomeLabel = new QLabel( tr("Hi, %1.\nListen to some music to scrobble it to your Last.fm profile." ).arg( lastfm::ws::Username )), 0, Qt::AlignBottom);
     l->addWidget( b = new QPushButton( tr( "Switch users?" )), 0, Qt::AlignTop);
-    l->addWidget( new ScrobbleMeter(), Qt::AlignTop );
+    l->addWidget( ui.scrobbleMeter = new ScrobbleMeter(), Qt::AlignTop );
     l->addStretch();
     b->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
     
     connect( qApp, SIGNAL(sessionChanged(unicorn::Session, unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));
+    connect( qApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
+    connect( qApp, SIGNAL(scrobblerStatus(int)), SLOT(onScrobblerStatus(int)));
     connect( b, SIGNAL(clicked()), qApp, SLOT( manageUsers()));
     b->setCursor( Qt::PointingHandCursor );
 }
@@ -51,4 +56,19 @@ void
 RestWidget::onSessionChanged( const Session& session )
 {
     ui.welcomeLabel->setText( tr("Hi, %1.\nListen to some music to scrobble it to your Last.fm profile." ).arg( session.username() ));
+    ui.scrobbleMeter->clear();
+}
+
+void 
+RestWidget::onGotUserInfo( const lastfm::UserDetails& userdetails )
+{
+    ui.scrobbleMeter->setCount( userdetails.scrobbleCount() );
+}
+
+void 
+RestWidget::onScrobblerStatus( int status ) 
+{
+    if( status == Audioscrobbler::TracksScrobbled ) {
+        ui.scrobbleMeter->incrementCount();
+    }
 }

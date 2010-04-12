@@ -67,6 +67,7 @@ namespace audioscrobbler
         
     signals:
         void trackStarted( const Track&, const Track& );
+        void scrobblerStatus( int );
 
     public slots:
         void quit();
