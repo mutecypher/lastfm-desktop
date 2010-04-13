@@ -12,7 +12,9 @@ Session::Session()
     //use the Username setting or the first username if there have been any logged in previously
     QString username = s.value( "Username", QString()).toString();
 
-    if( username.isEmpty() && !s.childGroups().isEmpty()) {
+    QStringList groups = s.childGroups();
+    if( (username.isEmpty()||!groups.contains(username, Qt::CaseInsensitive ))
+        && !groups.isEmpty()) {
         foreach( QString child, s.childGroups()) {
             if( child == "com" ) continue;
             username = child;

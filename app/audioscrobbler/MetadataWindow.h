@@ -52,6 +52,10 @@ class MetadataWindow : public unicorn::MainWindow
         class ScrobbleControls* sc;
 
         class MessageBar* message_bar;
+        struct {
+            class QPushButton* profile;
+            class QPushButton* nowScrobbling;
+        } nav;
     } ui;
 
 public:
@@ -78,6 +82,9 @@ private slots:
     void onBioChanged( const QSizeF& );
 
     void onArtistImageClicked();
+
+    void showProfile();
+    void showNowScrobbling();
     
 private:
     Track m_currentTrack;

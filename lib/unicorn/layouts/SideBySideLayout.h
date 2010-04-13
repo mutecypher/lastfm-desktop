@@ -66,6 +66,7 @@ signals:
 public slots:
     void moveForward();
     void moveBackward();
+    void moveToWidget( QWidget* w );
 
 private slots:
     void onFrameChanged( int frame );

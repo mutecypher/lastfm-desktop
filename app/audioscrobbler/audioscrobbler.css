@@ -1,17 +1,21 @@
 @import "unicorn.css";
 
 ScrobbleMeter {
-    color: white;
+    margin: 1px 3px 1px 5px;
     background-color: black;
-    border: solid 1px white;
-    height: 30px;
+    color: white;
+    font-size: 22pt;
+    border: 1px solid white;
 }
 
 unicorn--MainWindow RestWidget,
 unicorn--MainWindow QWidget#NowScrobbling,
-unicorn--MainWindow StylableWidget
-{
+unicorn--MainWindow StylableWidget,
+unicorn--MainWindow QWidget#navigation {
     background-color: rgba(20,20,20,240);
+}
+
+unicorn--MainWindow QWidget#navigation QPushButton{
 }
 
 TitleBar {
@@ -28,7 +32,7 @@ TitleBar QLabel {
 }
 
 TitleBar QPushButton, 
-TitleBar QPushButton:clicked {
+TitleBar QPushButton:pressed {
     margin: 0px;
     padding: 0px;
     border: none;
@@ -104,14 +108,6 @@ MetadataWindow RestWidget QPushButton {
     margin: 0px;
     font-size: 11px;
     font-weight: bold;
-}
-
-ScrobbleMeter{
-    margin: 1px 3px 1px 5px;
-    background-color: black;
-    color: white;
-    font-size: 22pt;
-    border: 1px solid white;
 }
 
 RestWidget {
@@ -318,7 +314,7 @@ ScrobbleStatus#now_playing {
     background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #c2dfe7, stop:1 #8ba2a8 );
 }
 
-QWidget#NowScrobbling ScrobbleStatus QLabel {
+ScrobbleStatus QLabel {
     padding: 3 5 5 5;
     border: none;
     font-size: 11px;

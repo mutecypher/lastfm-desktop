@@ -28,6 +28,8 @@
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/qtwin.h"
+#include "lib/unicorn/layouts/SideBySideLayout.h"
+#include "lib/listener/PlayerConnection.h"
 
 #include <lastfm/Artist>
 #include <lastfm/XmlQuery>
@@ -94,20 +96,34 @@ MetadataWindow::MetadataWindow()
     connect( titleBar, SIGNAL( closeClicked()), SLOT( close()));
 #endif
 
-    QStackedLayout* stackLayout = new QStackedLayout();
-    qobject_cast<QVBoxLayout*>(centralWidget()->layout())->addLayout( stackLayout );
+    SideBySideLayout* stackLayout = new SideBySideLayout();
+    QWidget* nav;
+    centralWidget()->layout()->addWidget( nav = new StylableWidget());
+    nav->setObjectName( "navigation" );
+   
+    centralWidget()->layout()->addWidget(ui.now_playing_source = new ScrobbleStatus());
+    ui.now_playing_source->setObjectName("now_playing");
+    ui.now_playing_source->setFixedHeight( 22 );
+    qobject_cast<QBoxLayout*>(centralWidget()->layout())->addLayout( stackLayout );
     stackLayout->addWidget( stack.rest = new RestWidget());
 
+    {
+        QHBoxLayout* nl = new QHBoxLayout( nav );
+        nl->addWidget( ui.nav.profile = new QPushButton( tr( "Profile" )), 0, Qt::AlignLeft );
+        nl->addWidget( ui.nav.nowScrobbling = new QPushButton( tr( "Now Scrobbling" )),0, Qt::AlignRight);
+        connect( ui.nav.profile, SIGNAL( clicked()), SLOT( showProfile()));
+        connect( ui.nav.nowScrobbling, SIGNAL( clicked()), SLOT( showNowScrobbling()));
+    }
+    
 
     stack.nowScrobbling = new QWidget( centralWidget() );
     stack.nowScrobbling->setObjectName( "NowScrobbling" );
     QVBoxLayout* v = new QVBoxLayout( stack.nowScrobbling );
     stackLayout->addWidget( stack.nowScrobbling );
+    setCurrentWidget( stack.rest );
+
     setMinimumWidth( 410 );
 
-    v->addWidget(ui.now_playing_source = new ScrobbleStatus());
-    ui.now_playing_source->setObjectName("now_playing");
-    ui.now_playing_source->setFixedHeight( 22 );
     QVBoxLayout* vs;
     {
         QWidget* scrollWidget;
@@ -262,6 +278,7 @@ MetadataWindow::MetadataWindow()
     addDragHandleWidget( ui.now_playing_source );
 #ifdef Q_OS_MAC
     addDragHandleWidget( titleBar );
+    addDragHandleWidget( nav );
 #endif
     addDragHandleWidget( stack.rest );
     addDragHandleWidget( stack.nowScrobbling );
@@ -449,7 +466,6 @@ MetadataWindow::onStopped()
 void
 MetadataWindow::onResumed()
 {
-
 }
 
 void
@@ -460,7 +476,30 @@ MetadataWindow::onPaused()
 void
 MetadataWindow::setCurrentWidget( QWidget* w )
 {
-    centralWidget()->findChild<QStackedLayout*>()->setCurrentWidget( w );
+    if( w == stack.nowScrobbling ) {
+        ui.nav.profile->setVisible( true );
+        ui.nav.nowScrobbling->setVisible( false );
+    } else if( w == stack.rest ) {
+        ui.nav.profile->setVisible( false );
+        PlayerConnection* connection = qobject_cast<audioscrobbler::Application*>(qApp)->currentConnection();
+        if( connection && connection->state() != Stopped )
+            ui.nav.nowScrobbling->setVisible( true );
+        else
+            ui.nav.nowScrobbling->setVisible( false );
+    }
+    centralWidget()->findChild<SideBySideLayout*>()->moveToWidget( w );
+}
+
+void
+MetadataWindow::showProfile()
+{
+    setCurrentWidget( stack.rest );
+}
+
+void 
+MetadataWindow::showNowScrobbling()
+{
+    setCurrentWidget( stack.nowScrobbling );
 }
 
 void 

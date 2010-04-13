@@ -196,6 +196,32 @@ SideBySideLayout::moveBackward()
 }
 
 
+void
+SideBySideLayout::moveToWidget( QWidget* w )
+{
+    int index = -1;
+    foreach( QLayoutItem* i, m_itemList ) 
+    {
+        if( i->widget() == w ) {
+            index = m_itemList.indexOf( i );
+            break;
+        }
+    }
+
+    int currentIndex = m_itemList.indexOf( m_currentItem );
+    if( index == -1 || currentIndex == index ) return;
+
+    if( index > currentIndex )
+    {
+        for( int i = 0; i < index - currentIndex; i++ )
+            moveForward();
+    } else {
+        for( int i = 0; i < currentIndex - index; i++ )
+            moveBackward();
+    }
+}
+
+
 void 
 SideBySideLayout::onFrameChanged( int frame )
 {
