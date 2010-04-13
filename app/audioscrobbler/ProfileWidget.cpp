@@ -18,7 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "RestWidget.h"
+#include "ProfileWidget.h"
 #include "ScrobbleMeter.h"
 #include <QVBoxLayout>
 #include <QLabel>
@@ -34,7 +34,7 @@
 #include <lastfm/Audioscrobbler>
 
 using unicorn::Session;
-RestWidget::RestWidget( QWidget* p )
+ProfileWidget::ProfileWidget( QWidget* p )
            :StylableWidget( p )
 {
     setAutoFillBackground( true );
@@ -65,7 +65,7 @@ RestWidget::RestWidget( QWidget* p )
 }
 
 void 
-RestWidget::onSessionChanged( const Session& session )
+ProfileWidget::onSessionChanged( const Session& session )
 {
     ui.welcomeLabel->setText( tr("%1's Profile" ).arg( session.username() ));
     ui.since->clear(); 
@@ -74,7 +74,7 @@ RestWidget::onSessionChanged( const Session& session )
 }
 
 void 
-RestWidget::onGotUserInfo( const lastfm::UserDetails& userdetails )
+ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userdetails )
 {
     ui.scrobbleMeter->setCount( userdetails.scrobbleCount() );
     int const daysRegistered = userdetails.dateRegistered().daysTo( QDateTime::currentDateTime());
@@ -87,7 +87,7 @@ RestWidget::onGotUserInfo( const lastfm::UserDetails& userdetails )
 }
 
 void 
-RestWidget::onScrobblerStatus( int status ) 
+ProfileWidget::onScrobblerStatus( int status ) 
 {
     if( status == Audioscrobbler::TracksScrobbled ) {
         ui.scrobbleMeter->incrementCount();

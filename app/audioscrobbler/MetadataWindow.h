@@ -21,47 +21,42 @@
 #include "lib/unicorn/StylableWidget.h"
 #include <lastfm/Track>
 
+class QPushButton;
+class ScrobbleStatus;
+class ScrobbleControls;
+class FirstRunWizard;
+class MessageBar;
+class ProfileWidget;
+
 class MetadataWindow : public unicorn::MainWindow
 {
     Q_OBJECT
 
     struct{ 
-        class FirstRunWizard* firstrun;
-        class RestWidget* rest;
+        FirstRunWizard* firstrun;
+        ProfileWidget* profile;
         QWidget* nowScrobbling;
     } stack;
 
     struct{
-        class ScrobbleStatus* now_playing_source;
-        class HttpImageWidget* artist_image;
-        class QLabel* title;
-        class QLabel* album;
-        class DataListWidget* topFans;
-        class QLabel* onTour;
-        class QLabel* onTourBlank;
-        class DataListWidget* similarArtists;
-        class QLabel* artistScrobbles;
-        class QLabel* albumScrobbles;
-        class QLabel* trackScrobbles;
-        class DataListWidget* tags;
-        class QTextBrowser* bio;
+        ScrobbleStatus* now_playing_source;
 
-        class QPushButton* love;
-        class QPushButton* tag;
-        class QPushButton* share;
-        class ScrobbleControls* sc;
+        QPushButton* love;
+        QPushButton* tag;
+        QPushButton* share;
+        ScrobbleControls* sc;
+        MessageBar* message_bar;
 
-        class MessageBar* message_bar;
         struct {
-            class QPushButton* profile;
-            class QPushButton* nowScrobbling;
+            QPushButton* profile;
+            QPushButton* nowScrobbling;
         } nav;
     } ui;
 
 public:
     MetadataWindow();
     const Track& currentTrack() const{ return m_currentTrack; }
-    class ScrobbleControls* scrobbleControls() const{ return ui.sc; }
+    ScrobbleControls* scrobbleControls() const{ return ui.sc; }
 
 public slots:
     void onTrackStarted(const Track&, const Track&);
@@ -70,18 +65,6 @@ public slots:
     void onResumed();
 
 private slots:
-    void onArtistGotInfo();
-    void onArtistGotEvents();
-
-    void onAlbumGotInfo();
-
-    void onTrackGotInfo();
-    void onTrackGotTopFans();
-
-    void onAnchorClicked( const QUrl& link );
-    void onBioChanged( const QSizeF& );
-
-    void onArtistImageClicked();
 
     void showProfile();
     void showNowScrobbling();

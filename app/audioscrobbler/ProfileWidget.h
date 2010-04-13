@@ -17,18 +17,20 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef PROFILE_WIDGET_H_
+#define PROFILE_WIDGET_H_
 
 #include "lib/unicorn/StylableWidget.h"
 
 namespace unicorn{ class Session; }
 namespace lastfm{ class UserDetails; } 
 
-class RestWidget : public StylableWidget
+class ProfileWidget : public StylableWidget
 {
     Q_OBJECT
 
 public:
-    RestWidget( QWidget* p = 0 );
+    ProfileWidget( QWidget* p = 0 );
 
 protected slots:
     void onSessionChanged( const unicorn::Session& );
@@ -43,3 +45,5 @@ protected:
         class HttpImageWidget* avatar;
     } ui;
 };
+
+#endif //PROFILE_WIDGET_H_
