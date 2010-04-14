@@ -84,11 +84,11 @@ MetadataWindow::MetadataWindow()
 #endif
 
     SideBySideLayout* stackLayout = new SideBySideLayout();
+    centralWidget()->layout()->addWidget(ui.now_playing_source = new ScrobbleStatus());
     QWidget* nav;
     centralWidget()->layout()->addWidget( nav = new StylableWidget());
     nav->setObjectName( "navigation" );
    
-    centralWidget()->layout()->addWidget(ui.now_playing_source = new ScrobbleStatus());
     ui.now_playing_source->setObjectName("now_playing");
     ui.now_playing_source->setFixedHeight( 22 );
     qobject_cast<QBoxLayout*>(centralWidget()->layout())->addLayout( stackLayout );

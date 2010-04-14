@@ -15,7 +15,20 @@ unicorn--MainWindow QWidget#navigation {
     background-color: rgba(20,20,20,240);
 }
 
+unicorn--MainWindow QWidget#navigation {
+    padding: 0px;
+    margin: 0px;
+}
+
 unicorn--MainWindow QWidget#navigation QPushButton{
+    background: qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
+                                 stop:0 #515050, stop:1 #242424 );
+    border-radius: 3px;
+    color: white;
+    border-width: 2px;
+    padding:3px 5px;
+    margin: 0px;
+    font-size: 12pt;
 }
 
 TitleBar {
