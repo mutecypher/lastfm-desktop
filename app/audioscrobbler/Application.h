@@ -50,6 +50,7 @@ namespace audioscrobbler
         QPointer<MetadataWindow> mw;
         
         QAction* m_submit_scrobbles_toggle;
+        QAction* m_artist_action;
         QAction* m_title_action;
         QAction* m_love_action;
         QAction* m_tag_action;

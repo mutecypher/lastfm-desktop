@@ -59,6 +59,8 @@ public:
 
     QDataStream& write( QDataStream& out ) const
     {
+        if( !d ) return out;
+
         QMap<QString, QString> data;
         data[ "username" ] = d->username;
         data[ "sessionkey" ] = d->sessionKey;

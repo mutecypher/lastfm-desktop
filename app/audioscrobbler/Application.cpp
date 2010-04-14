@@ -46,6 +46,8 @@
 using audioscrobbler::Application;
 
 #define ELLIPSIS QString::fromUtf8("…")
+#define CONTROL_KEY_CHAR QString::fromUtf8("⌃")
+#define APPLE_KEY_CHAR QString::fromUtf8("⌘")
 
 #ifdef Q_WS_X11
     #define AS_TRAY_ICON ":16x16.png"
@@ -71,14 +73,14 @@ Application::Application(int& argc, char** argv)
 void
 Application::init()
 {
-    if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
+    /*if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
     {
         FirstRunWizard* w = new FirstRunWizard();
         if( !w->exec() ) {
             quit();
             return;
         }
-    }
+    }*/
     
 /// tray
     tray = new QSystemTrayIcon(this);
@@ -97,7 +99,9 @@ Application::init()
 /// tray menu
     QMenu* menu = new QMenu;
     m_toggle_window_action = menu->addAction( tr("Show Scrobbler"));
+    m_toggle_window_action->setShortcut( Qt::CTRL + Qt::META + Qt::Key_S );
     menu->addSeparator();
+    m_artist_action = menu->addAction( "" );
     m_title_action = menu->addAction(tr("Ready"));
     m_love_action = menu->addAction(tr("Love"));
     connect( m_love_action, SIGNAL(triggered()), SLOT(onLoveTriggered()));
@@ -117,6 +121,7 @@ Application::init()
 
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
 
+    m_artist_action->setEnabled( false );
     m_title_action->setEnabled( false );
     m_submit_scrobbles_toggle->setCheckable(true);
     m_submit_scrobbles_toggle->setChecked(true);
@@ -244,7 +249,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
         qWarning() << "Can't start null track!";
         return;
     }
-    
+    m_artist_action->setText( t.artist()); 
     m_title_action->setText( t.title() + " [" + t.durationString() + ']' );
 
     delete watch;
@@ -301,6 +306,8 @@ Application::onStopped()
     if( as ) as->submit();
 
     mw->scrobbleControls()->setEnabled( false );
+    m_artist_action->setText( "" );
+    m_title_action->setText( tr( "Ready" ));
     m_love_action->setEnabled( false );
     m_tag_action->setEnabled( false );
     m_share_action->setEnabled( false );
