@@ -16,7 +16,7 @@ Session::Session()
     if( (username.isEmpty()||!groups.contains(username, Qt::CaseInsensitive ))
         && !groups.isEmpty()) {
         foreach( QString child, s.childGroups()) {
-            if( child == "com" ) continue;
+            if( child == "com" || !s.contains( child + "/SessionKey") ) continue;
             username = child;
             break;
         }
