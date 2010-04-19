@@ -115,8 +115,6 @@ MetadataWindow::MetadataWindow()
     QStatusBar* statusBar = new QStatusBar( this );
     {
         statusBar->setContentsMargins( 0, 0, 0, 0 );
-        addDragHandleWidget( statusBar );
-
 #ifdef Q_WS_WIN
         statusBar->setSizeGripEnabled( false );
 #else
@@ -139,14 +137,14 @@ MetadataWindow::MetadataWindow()
         setStatusBar( statusBar );
     }
 
-addDragHandleWidget( ui.now_playing_source );
 #ifdef Q_OS_MAC
+    addDragHandleWidget( ui.now_playing_source );
     addDragHandleWidget( titleBar );
     addDragHandleWidget( nav );
-#endif
-    addDragHandleWidget( stack.profile );
+	addDragHandleWidget( stack.profile );
     addDragHandleWidget( stack.nowScrobbling );
     addDragHandleWidget( statusBar );
+#endif
 
     setWindowTitle(tr("Last.fm Audioscrobbler"));
     setUnifiedTitleAndToolBarOnMac( true );
@@ -163,6 +161,7 @@ MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
 {
     setCurrentWidget( stack.nowScrobbling );
     ui.now_playing_source->onTrackStarted( t, previous );
+    m_currentTrack = t;
 }
 
 
@@ -171,6 +170,7 @@ MetadataWindow::onStopped()
 {
     setCurrentWidget( stack.profile );
     ui.now_playing_source->onTrackStopped();
+    m_currentTrack = Track();
 }
 
 
