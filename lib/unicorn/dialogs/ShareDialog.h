@@ -31,9 +31,6 @@ class UNICORN_DLLEXPORT ShareDialog : public unicorn::Dialog
     Q_OBJECT
 
     struct {
-        class QRadioButton* trackShare;
-        class QRadioButton* albumShare;
-        class QRadioButton* artistShare;
         class TrackWidget* track;
         class RecipientsWidget* recipients;
         class QPlainTextEdit* message;
@@ -45,13 +42,12 @@ class UNICORN_DLLEXPORT ShareDialog : public unicorn::Dialog
 public:
     ShareDialog( const Track&, QWidget* parent );
 
-	Track track() const { return m_track; }
+    Track track() const { return m_track; }
 
     void setupUi();
 
 private slots:
     void enableDisableOk();
-    void onRadioButtonsClicked( bool checked );
     void accept();
     void onMessageChanged();
 

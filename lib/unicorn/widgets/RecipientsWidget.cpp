@@ -41,17 +41,17 @@ RecipientsWidget::RecipientsWidget(QWidget* parent)
 
     layout()->setContentsMargins( 1, 1, 1, 1 );
 
-    layout()->addItem( new QWidgetItem( ui.userSearch = new UserSearch( this ) ) );
-    ui.userSearch->setFrame( false );
+    layout()->addItem( new QWidgetItem( ui.searchBox = new UserSearch( this ) ) );
+    ui.searchBox->setFrame( false );
     setFocusPolicy( Qt::StrongFocus );
-    setFocusProxy( ui.userSearch );
+    setFocusProxy( ui.searchBox );
 
-    connect( ui.userSearch, SIGNAL(editingFinished()), SLOT(onRecipientSelected()) );
-    connect( ui.userSearch->completer()->popup(), SIGNAL(clicked(QModelIndex)), SLOT(onRecipientSelected()));
-    connect( ui.userSearch, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
+    connect( ui.searchBox, SIGNAL(editingFinished()), SLOT(onRecipientSelected()) );
+    connect( ui.searchBox->completer()->popup(), SIGNAL(clicked(QModelIndex)), SLOT(onRecipientSelected()));
+    connect( ui.searchBox, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
 
-    connect( ui.userSearch, SIGNAL(commaPressed()), SLOT(onRecipientSelected()) );
-    connect( ui.userSearch, SIGNAL(deletePressed()), SLOT(onDeletePressed()) );
+    connect( ui.searchBox, SIGNAL(commaPressed()), SLOT(onRecipientSelected()) );
+    connect( ui.searchBox, SIGNAL(deletePressed()), SLOT(onDeletePressed()) );
 }
 
 void
@@ -68,7 +68,7 @@ RecipientsWidget::onTextChanged( const QString& text )
 void
 RecipientsWidget::onRecipientSelected()
 {
-    addRecipient( ui.userSearch->text() );
+    addRecipient( ui.searchBox->text() );
 }
 
 void
@@ -78,7 +78,7 @@ RecipientsWidget::onRecipientDeleted( RecipientWidget* recipient )
     layout()->removeWidget( recipient );
     recipient->deleteLater();
 
-    ui.userSearch->setFocus( Qt::OtherFocusReason );
+    ui.searchBox->setFocus( Qt::OtherFocusReason );
 }
 
 void
@@ -102,7 +102,7 @@ RecipientsWidget::addRecipient( const QString& text )
     // create the widget
     RecipientWidget* recipient = new RecipientWidget( text, this );
 
-    if ( !ui.userSearch->text().isEmpty() // don't add empty recipients
+    if ( !ui.searchBox->text().isEmpty() // don't add empty recipients
         && !recipientsContain( text ) // don't add duplicates
         && m_recipients.count() < 10 ) // limit to 10
     {
@@ -114,7 +114,7 @@ RecipientsWidget::addRecipient( const QString& text )
 
         // clear the line edit a little bit later because the QCompleter
         // will set the text to be what was selected after this
-        QTimer::singleShot(1, ui.userSearch, SLOT(clear()));
+        QTimer::singleShot(1, ui.searchBox, SLOT(clear()));
 
         emit changed();
     }

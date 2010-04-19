@@ -27,7 +27,7 @@ class UNICORN_DLLEXPORT RecipientsWidget : public StylableWidget
 private:
     struct
     {
-        class UserSearch* userSearch;
+        class SearchBox* searchBox;
     } ui;
 
 public:

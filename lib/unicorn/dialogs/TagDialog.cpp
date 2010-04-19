@@ -23,6 +23,9 @@
 #include "lib/unicorn/widgets/SpinnerLabel.h"
 #include "lib/unicorn/widgets/TrackWidget.h"
 #include "lib/unicorn/widgets/UnicornTabWidget.h"
+#include "lib/unicorn/widgets/RecipientsWidget.h"
+#include "lib/unicorn/widgets/DataListWidget.h"
+
 #include <lastfm/User>
 #include <QtCore>
 #include <QtGui>
@@ -34,158 +37,78 @@ TagDialog::TagDialog( const Track& track, QWidget *parent )
     m_track = track;
     
     setupUi();
-    
-    {
-        QNetworkReply* r;
-        follow( r = track.getTopTags() );
-        ui.suggestedTags->setTagsRequest( r );
-        follow( r = track.getTags() );
-        connect( r, SIGNAL(finished( WsReply* )), ui.appliedTags->ui.track, SLOT(onGotTags( WsReply* )) );
-        follow( r = track.artist().getTags() );
-        connect( r, SIGNAL(finished( WsReply* )), ui.appliedTags->ui.artist, SLOT(onGotTags( WsReply* )) );
-        follow( r = track.album().getTags() );
-        connect( r, SIGNAL(finished( WsReply* )), ui.appliedTags->ui.album, SLOT(onGotTags( WsReply* )) );
-    }
-    
-    
+
     setWindowTitle( tr("Tag") );
     
-    QNetworkReply* r = User().getTopTags();
-    ui.yourTags->setTagsRequest( r );
-    follow( r );
+    connect( User().getTopTags(), SIGNAL(finished()), SLOT(onUserGotTopTags()) );
+    connect( m_track.getTopTags(), SIGNAL(finished()), SLOT(onTrackGotTopTags()) );
 	
     ui.buttons->button( QDialogButtonBox::Ok )->setText( tr("Tag") );
 
-
-    connect( ui.suggestedTags, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int)), SLOT( onTagListItemDoubleClicked( QTreeWidgetItem*, int)));
-    connect( ui.yourTags, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int)), SLOT( onTagListItemDoubleClicked( QTreeWidgetItem*, int)));
-    connect( ui.appliedTags, SIGNAL(suggestedTagsRequest( WsReply* )), ui.suggestedTags, SLOT(setTagsRequest( WsReply* )) ); 
-    connect( ui.appliedTags, SIGNAL(suggestedTagsRequest( WsReply* )), SLOT(follow( WsReply* )) ); 
-    
     connect( ui.buttons, SIGNAL(accepted()), SLOT(accept()) );
     connect( ui.buttons, SIGNAL(rejected()), SLOT(reject()) );
 }
 
+void
+TagDialog::onUserGotTopTags()
+{
+    XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
+
+    foreach(const XmlQuery& e, lfm["toptags"].children("tag").mid(0, 5))
+    {
+        ui.yourTags->addItem( e["name"].text(), QUrl(e["url"].text()));
+    }
+}
+
+void
+TagDialog::onTrackGotTopTags()
+{
+    XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
+
+    foreach(const XmlQuery& e, lfm["toptags"].children("tag").mid(0, 5))
+    {
+        ui.popularTags->addItem( e["name"].text(), QUrl(e["url"].text()));
+    }
+}
+
+void
+TagDialog::onTagBoxToggled( bool )
+{
+    ui.popularTagsBox->isChecked() ? ui.popularTags->show() : ui.popularTags->hide();
+    ui.yourTagsBox->isChecked() ? ui.yourTags->show() : ui.yourTags->hide();
+}
 
 void
 TagDialog::setupUi()
-{
-    QLabel* l1, *l2;
-    
-    QVBoxLayout* v = new QVBoxLayout;
-    v->addWidget( l1 = new QLabel( tr( "Suggested Tags" )));
-    v->addWidget( ui.suggestedTags = new TagListWidget );
-    v->addSpacing( 8 );
-    v->addWidget( l2 = new QLabel( tr( "Your Tags" )));
-    v->addWidget( ui.yourTags = new TagListWidget );
-    v->setSpacing( 4 );
+{   
+    QVBoxLayout* v = new QVBoxLayout( this );
 
-    for (int x = 0; x < v->count(); ++x)
+    v->addWidget( new QLabel( tr("Add tags") ) );
+    v->addWidget( new QLabel( tr("Choose something to tag:") ) );
+
+    v->addWidget( ui.track = new TrackWidget( m_track ) );
+
+    v->addWidget( new QLabel( tr("Tags") ) );
+
+    v->addWidget( ui.tagsWidget = new RecipientsWidget( this ) );
+
     {
-        QWidget* w = v->itemAt( x )->widget();
-        if (w) w->setAttribute( Qt::WA_MacSmallSize );
+        v->addWidget( ui.popularTagsBox = new QGroupBox( tr("Popular tags"), this ) );
+        ui.popularTagsBox->setCheckable( true );
+        QVBoxLayout* layout = new QVBoxLayout();
+        layout->addWidget( ui.popularTags = new DataListWidget );
+        ui.popularTagsBox->setLayout( layout );
+        connect(ui.popularTagsBox, SIGNAL(toggled(bool)), SLOT(onTagBoxToggled(bool)));
     }
 
-    QHBoxLayout* h = new QHBoxLayout;
-    h->addLayout( v );
-    h->addSpacing( 12 );
-    h->addWidget( ui.appliedTags = new TagBuckets( m_track ) );
-    
-    v = new QVBoxLayout( this );
-    v->addWidget( ui.track = new TrackWidget( m_track ) );
-    v->addSpacing( 10 );
-    v->addLayout( h );
+    {
+        v->addWidget( ui.yourTagsBox = new QGroupBox( tr("Your tags"), this ) );
+        ui.yourTagsBox->setCheckable( true );
+        QVBoxLayout* layout = new QVBoxLayout();
+        layout->addWidget( ui.yourTags = new DataListWidget );
+        ui.yourTagsBox->setLayout( layout );
+        connect(ui.yourTagsBox, SIGNAL(toggled(bool)), SLOT(onTagBoxToggled(bool)));
+    }
+
     v->addWidget( ui.buttons = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );
-    
-    ui.suggestedTags->setDragEnabled( true );
-    ui.yourTags->setDragEnabled( true );
-    ui.track->layout()->addWidget( ui.spinner = new SpinnerLabel );
-    ui.spinner->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum );
-}
-
-
-void
-TagDialog::follow( QNetworkReply* r )
-{
-    r->setParent( this );
-    connect( r, SIGNAL(finished()), SLOT(onWsFinished()) );
-    m_activeRequests += r;
-    ui.spinner->show();
-}
-
-
-void
-TagDialog::accept()
-{
-    m_track.addTags( ui.appliedTags->ui.track->newTags() );
-    m_track.artist().addTags( ui.appliedTags->ui.artist->newTags() );
-    m_track.album().addTags( ui.appliedTags->ui.album->newTags() );
-
-    foreach (QString tag, ui.appliedTags->ui.track->deletedTags())
-        m_track.removeTag( tag );
-    
-    QDialog::accept();
-}
-
-
-void
-TagDialog::onWsFinished( QNetworkReply *r )
-{
-    m_activeRequests.removeAll( r );
-    ui.spinner->setVisible( m_activeRequests.size() );
-}
-
-
-void
-TagDialog::onTagActivated( QTreeWidgetItem *item )
-{
-}
-
-
-void
-TagDialog::onAddClicked()
-{
-//    if (currentTagListWidget()->add( ui.edit->text() ))
-//    {
-//        ui.edit->clear();
-//    }
-//    else
-//        QApplication::beep(); //TODO visually highlight the already entered one
-}
-
-
-void 
-TagDialog::removeCurrentTag()
-{
-//    QShortcut* sc = qobject_cast<QShortcut*>(sender());
-//    if( !sc )
-//        return;
-//    QTreeWidget* list = qobject_cast<QTreeWidget*>(sc->parentWidget());
-//    if( !list )
-//        return;
-//    
-//    if( list->hasFocus())
-//        delete list->currentItem();
-}
-
-
-void
-TagDialog::onTagListItemDoubleClicked( QTreeWidgetItem* item, int)
-{
-    TagListWidget* w = qobject_cast< TagListWidget*>( sender());
-    if( !w )
-        return;
-    
-    QModelIndex i = w->indexFromItem( item, 0 );
-    
-    QStyleOptionViewItem options;
-    options.initFrom( this );
-    options.showDecorationSelected = true;
-    options.state = QStyle::State_Selected;
-    options.rect = w->visualItemRect( item );
-    
-//TODO    DelegateDragHint* d = new DelegateDragHint( w->itemDelegate( i ), i, options, w );
-//TODO    d->setMimeData( PlayableMimeData::createFromTag( Tag( item->text(0)) ) );
-    
-//TODO    d->dragTo( ui.appliedTags->currentBucket());
 }

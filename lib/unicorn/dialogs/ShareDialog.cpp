@@ -60,26 +60,8 @@ ShareDialog::ShareDialog( const Track& t, QWidget* parent )
 void
 ShareDialog::setupUi()
 {
-    // the radio buttons layout
-    QVBoxLayout* radioButtons = new QVBoxLayout;
-
-    radioButtons->addWidget( ui.trackShare = new QRadioButton( tr("Track"), this ) );
-    radioButtons->addWidget( ui.albumShare = new QRadioButton( tr("Album"), this ) );
-    radioButtons->addWidget( ui.artistShare = new QRadioButton( tr("Artist"), this ) );
-
-    connect( ui.artistShare, SIGNAL(clicked(bool)), SLOT(onRadioButtonsClicked(bool)) );
-    connect( ui.albumShare, SIGNAL(clicked(bool)), SLOT(onRadioButtonsClicked(bool)) );
-    connect( ui.trackShare, SIGNAL(clicked(bool)), SLOT(onRadioButtonsClicked(bool)) );
-
-    if ( m_track.album().isNull() ) ui.albumShare->setEnabled( false );
-
-    // Default to artist sharing
-    ui.trackShare->setChecked( true );
-
     QHBoxLayout* h1 = new QHBoxLayout;
-    h1->addLayout( radioButtons );
     h1->addWidget( ui.track = new TrackWidget( m_track ), Qt::AlignLeft );
-    ui.track->setCoverHeight( radioButtons->sizeHint().height() );
 
     QVBoxLayout* v1 = new QVBoxLayout;
     
@@ -126,15 +108,6 @@ ShareDialog::setupUi()
 }
 
 void
-ShareDialog::onRadioButtonsClicked( bool )
-{
-    // change the share desription to what we are now sharing
-    if ( ui.artistShare->isChecked() ) ui.track->setType( TrackWidget::Artist );
-    else if ( ui.albumShare->isChecked() ) ui.track->setType( TrackWidget::Album );
-    else if ( ui.trackShare->isChecked() ) ui.track->setType( TrackWidget::Track );
-}
-
-void
 ShareDialog::enableDisableOk()
 {
     ok()->setEnabled( ui.recipients->recipients().count() > 0
@@ -169,9 +142,12 @@ ShareDialog::accept()
     QString const message = ui.message->toPlainText();
     bool isPublic = ui.isPublic->isChecked();
 
-    if ( ui.artistShare->isChecked() ) m_track.artist().share( recipients, message, isPublic );
-    else if ( ui.albumShare->isChecked() )  m_track.album().share( recipients, message, isPublic );
-    else m_track.share( recipients, message, isPublic );
+    if ( ui.track->type() == TrackWidget::Artist )
+        m_track.artist().share( recipients, message, isPublic );
+    else if ( ui.track->type() == TrackWidget::Album )
+        m_track.album().share( recipients, message, isPublic );
+    else
+        m_track.share( recipients, message, isPublic );
 
     //TODO feedback on success etc, do via that bar thing you planned
     //QDialog::accept();
