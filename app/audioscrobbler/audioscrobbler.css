@@ -194,7 +194,7 @@ MetadataWindow QLabel#name {
     color: #afafaf;
 }
 
-DataListWidget QLabel { padding: 0px; margin: 0px; }
+DataListWidget QLabel{ padding: 0px; margin: 0px; padding-left: 5px;}
 
 MetadataWindow QLabel#value,
 MetadataWindow #value > QLabel, 
@@ -303,14 +303,14 @@ QLabel#title1
 {
     font-size: 18px;
     font-weight:bold;
-    padding:12px 10px 0px 10px;
+    padding:12px 10px 0px 5px;
 }
 
 QLabel#title2
 {
     font-size: 12px;
     font-weight: bold;
-    padding:12px 10px 0px 10px;
+    padding:12px 10px 0px 5px;
 }
 
 QScrollBar {

@@ -181,7 +181,6 @@ UserManager::UserManager( QWidget* parent )
 
 UserManager::~UserManager()
 {
-    disconnect( this );
 }
 
 void 
