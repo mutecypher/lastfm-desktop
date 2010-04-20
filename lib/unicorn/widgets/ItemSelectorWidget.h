@@ -18,32 +18,39 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
-#include <QHBoxLayout>
+#include "lib/unicorn/StylableWidget.h"
+#include "lib/DllExportMacro.h"
 
-#include "RecipientWidget.h"
-
-RecipientWidget::RecipientWidget( const QString& recipient, QWidget* parent )
-    :StylableWidget(parent)
+class UNICORN_DLLEXPORT ItemSelectorWidget : public StylableWidget
 {
-    new QHBoxLayout( this );
+    Q_OBJECT
+private:
+    struct
+    {
+        class SearchBox* searchBox;
+    } ui;
 
-    layout()->setContentsMargins( 0, 0, 0, 0 );
-    layout()->addWidget( ui.recipient = new QLabel( recipient, this ) );
-    layout()->addWidget( ui.deleteButton = new QPushButton( tr("delete"), this ) );
+public:
+    explicit ItemSelectorWidget(QWidget* parent = 0);
 
-    connect( ui.deleteButton, SIGNAL(clicked()), this, SLOT(onDeleteClicked()));
-}
+    QStringList items() const;
 
-QString
-RecipientWidget::recipient() const
-{
-    return ui.recipient->text();
-}
+signals:
+    void changed();
 
-void
-RecipientWidget::onDeleteClicked()
-{
-    emit deleted( this );
-}
+private slots:
+    void onItemSelected();
+    void onDeletePressed();
+    void onItemDeleted( class SelectedItemWidget* recipient );
 
+    void onCompleterActivated( const QString& text );
+    void onTextChanged( const QString& text );
+
+private:
+    void addItem( const QString& text );
+    bool itemsContain( const QString& text );
+
+private:
+    QList<class SelectedItemWidget*> m_items;
+    bool m_clearText;
+};

@@ -23,7 +23,7 @@
 #include "lib/unicorn/widgets/SpinnerLabel.h"
 #include "lib/unicorn/widgets/TrackWidget.h"
 #include "lib/unicorn/widgets/UnicornTabWidget.h"
-#include "lib/unicorn/widgets/RecipientsWidget.h"
+#include "lib/unicorn/widgets/ItemSelectorWidget.h"
 #include "lib/unicorn/widgets/DataListWidget.h"
 
 #include <lastfm/User>
@@ -90,7 +90,7 @@ TagDialog::setupUi()
 
     v->addWidget( new QLabel( tr("Tags") ) );
 
-    v->addWidget( ui.tagsWidget = new RecipientsWidget( this ) );
+    v->addWidget( ui.tagsWidget = new ItemSelectorWidget( this ) );
 
     {
         v->addWidget( ui.popularTagsBox = new QGroupBox( tr("Popular tags"), this ) );

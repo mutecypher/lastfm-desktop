@@ -38,8 +38,8 @@
 #include "lib/unicorn/widgets/TrackWidget.h"
 
 #include "ShareDialog.h"
-#include "../widgets/RecipientsWidget.h"
-#include "../widgets/RecipientWidget.h"
+#include "../widgets/ItemSelectorWidget.h"
+#include "../widgets/SelectedItemWidget.h"
 
 const int kMaxMessage(1000);
 
@@ -66,7 +66,7 @@ ShareDialog::setupUi()
     QVBoxLayout* v1 = new QVBoxLayout;
     
     v1->addWidget( new QLabel( tr("To") ) );
-    v1->addWidget( ui.recipients = new RecipientsWidget(this) );
+    v1->addWidget( ui.recipients = new ItemSelectorWidget(this) );
     v1->addWidget( new QLabel( tr("Type friends or emails (up to 10), separated by commas.") ) );
     v1->setSpacing( 0 );
 
@@ -110,7 +110,7 @@ ShareDialog::setupUi()
 void
 ShareDialog::enableDisableOk()
 {
-    ok()->setEnabled( ui.recipients->recipients().count() > 0
+    ok()->setEnabled( ui.recipients->items().count() > 0
                       && ui.message->toPlainText().length() <= kMaxMessage );
 }
 
@@ -138,7 +138,7 @@ ShareDialog::onMessageChanged()
 void
 ShareDialog::accept()
 {
-    QStringList recipients( ui.recipients->recipients() );
+    QStringList recipients( ui.recipients->items() );
     QString const message = ui.message->toPlainText();
     bool isPublic = ui.isPublic->isChecked();
 

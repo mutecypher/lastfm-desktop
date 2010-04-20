@@ -32,7 +32,7 @@ class UNICORN_DLLEXPORT ShareDialog : public unicorn::Dialog
 
     struct {
         class TrackWidget* track;
-        class RecipientsWidget* recipients;
+        class ItemSelectorWidget* recipients;
         class QPlainTextEdit* message;
         class QCheckBox* isPublic;
         class QLabel* characterLimit;

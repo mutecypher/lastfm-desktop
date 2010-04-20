@@ -18,32 +18,32 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QLabel>
-#include <QPushButton>
+#include <QDebug>
+#include <QHBoxLayout>
 
-#include "lib/unicorn/StylableWidget.h"
-#include "lib/DllExportMacro.h"
+#include "SelectedItemWidget.h"
 
-class UNICORN_DLLEXPORT RecipientWidget : public StylableWidget
+SelectedItemWidget::SelectedItemWidget( const QString& item, QWidget* parent )
+    :StylableWidget(parent)
 {
-    Q_OBJECT
-private:
-    struct
-    {
-        QLabel* recipient;
-        QPushButton* deleteButton;
-    } ui;
+    new QHBoxLayout( this );
 
-public:
-    explicit RecipientWidget(const QString& recipient, QWidget* parent = 0);
+    layout()->setContentsMargins( 0, 0, 0, 0 );
+    layout()->addWidget( ui.item = new QLabel( item, this ) );
+    layout()->addWidget( ui.deleteButton = new QPushButton( tr("delete"), this ) );
 
-    QString recipient() const;
+    connect( ui.deleteButton, SIGNAL(clicked()), this, SLOT(onDeleteClicked()));
+}
 
-    bool operator==(const RecipientWidget& that) const { return ui.recipient->text() == that.ui.recipient->text();}
+QString
+SelectedItemWidget::text() const
+{
+    return ui.item->text();
+}
 
-signals:
-    void deleted( RecipientWidget* deleted );
+void
+SelectedItemWidget::onDeleteClicked()
+{
+    emit deleted( this );
+}
 
-private slots:
-    void onDeleteClicked();
-};

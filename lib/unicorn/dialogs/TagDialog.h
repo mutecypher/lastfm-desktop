@@ -53,7 +53,7 @@ private:
     struct Ui
     {
         class TrackWidget* track;
-        class RecipientsWidget* tagsWidget;
+        class ItemSelectorWidget* tagsWidget;
         class QGroupBox* popularTagsBox;
         class DataListWidget* popularTags;
         class QGroupBox* yourTagsBox;

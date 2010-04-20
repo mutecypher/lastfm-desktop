@@ -29,12 +29,12 @@
 
 #include "lib/unicorn/layouts/flowlayout.h"
 
-#include "RecipientsWidget.h"
-#include "RecipientWidget.h"
+#include "ItemSelectorWidget.h"
+#include "SelectedItemWidget.h"
 
 #include <lastfm/User>
 
-RecipientsWidget::RecipientsWidget(QWidget* parent)
+ItemSelectorWidget::ItemSelectorWidget(QWidget* parent)
     :StylableWidget(parent), m_clearText( false )
 {
     new FlowLayout( this, 0, 0, 0 );
@@ -46,16 +46,16 @@ RecipientsWidget::RecipientsWidget(QWidget* parent)
     setFocusPolicy( Qt::StrongFocus );
     setFocusProxy( ui.searchBox );
 
-    connect( ui.searchBox, SIGNAL(editingFinished()), SLOT(onRecipientSelected()) );
-    connect( ui.searchBox->completer()->popup(), SIGNAL(clicked(QModelIndex)), SLOT(onRecipientSelected()));
+    connect( ui.searchBox, SIGNAL(editingFinished()), SLOT(onItemSelected()) );
+    connect( ui.searchBox->completer()->popup(), SIGNAL(clicked(QModelIndex)), SLOT(onItemSelected()));
     connect( ui.searchBox, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
 
-    connect( ui.searchBox, SIGNAL(commaPressed()), SLOT(onRecipientSelected()) );
+    connect( ui.searchBox, SIGNAL(commaPressed()), SLOT(onItemSelected()) );
     connect( ui.searchBox, SIGNAL(deletePressed()), SLOT(onDeletePressed()) );
 }
 
 void
-RecipientsWidget::onTextChanged( const QString& text )
+ItemSelectorWidget::onTextChanged( const QString& text )
 {
     //QFontMetrics fm(font());
 
@@ -66,51 +66,51 @@ RecipientsWidget::onTextChanged( const QString& text )
 }
 
 void
-RecipientsWidget::onRecipientSelected()
+ItemSelectorWidget::onItemSelected()
 {
-    addRecipient( ui.searchBox->text() );
+    addItem( ui.searchBox->text() );
 }
 
 void
-RecipientsWidget::onRecipientDeleted( RecipientWidget* recipient )
+ItemSelectorWidget::onItemDeleted( SelectedItemWidget* item )
 {
-    m_recipients.removeAt( m_recipients.indexOf( recipient ) );
-    layout()->removeWidget( recipient );
-    recipient->deleteLater();
+    m_items.removeAt( m_items.indexOf( item ) );
+    layout()->removeWidget( item );
+    item->deleteLater();
 
     ui.searchBox->setFocus( Qt::OtherFocusReason );
 }
 
 void
-RecipientsWidget::onDeletePressed()
+ItemSelectorWidget::onDeletePressed()
 {
-    if ( m_recipients.count() > 0 )
+    if ( m_items.count() > 0 )
     {
-        onRecipientDeleted( m_recipients.takeLast() );
+        onItemDeleted( m_items.takeLast() );
     }
 }
 
 void
-RecipientsWidget::onCompleterActivated( const QString& text )
+ItemSelectorWidget::onCompleterActivated( const QString& text )
 {
-    addRecipient( text );
+    addItem( text );
 }
 
 void
-RecipientsWidget::addRecipient( const QString& text )
+ItemSelectorWidget::addItem( const QString& text )
 {
     // create the widget
-    RecipientWidget* recipient = new RecipientWidget( text, this );
+    SelectedItemWidget* item = new SelectedItemWidget( text, this );
 
     if ( !ui.searchBox->text().isEmpty() // don't add empty recipients
-        && !recipientsContain( text ) // don't add duplicates
-        && m_recipients.count() < 10 ) // limit to 10
+        && !itemsContain( text ) // don't add duplicates
+        && m_items.count() < 10 ) // limit to 10
     {
         // make sure we get told when the widget is deleted
-        connect( recipient, SIGNAL(deleted(RecipientWidget*)), SLOT(onRecipientDeleted(RecipientWidget*)) );
+        connect( item, SIGNAL(deleted(SelectedItemWidget*)), SLOT(onItemDeleted(SelectedItemWidget*)) );
 
-        m_recipients.append( recipient );
-        dynamic_cast<FlowLayout*>(layout())->insertWidget( layout()->count() - 1 , recipient );
+        m_items.append( item );
+        dynamic_cast<FlowLayout*>(layout())->insertWidget( layout()->count() - 1 , item );
 
         // clear the line edit a little bit later because the QCompleter
         // will set the text to be what was selected after this
@@ -120,16 +120,16 @@ RecipientsWidget::addRecipient( const QString& text )
     }
     else
     {
-        recipient->deleteLater();
+        item->deleteLater();
     }
 }
 
 bool
-RecipientsWidget::recipientsContain( const QString& text )
+ItemSelectorWidget::itemsContain( const QString& text )
 {
-    foreach (const RecipientWidget* recipient, m_recipients)
+    foreach (const SelectedItemWidget* item, m_items)
     {
-        if ( recipient->recipient() == text )
+        if ( item->text() == text )
             return true;
     }
 
@@ -137,15 +137,15 @@ RecipientsWidget::recipientsContain( const QString& text )
 }
 
 QStringList
-RecipientsWidget::recipients() const
+ItemSelectorWidget::items() const
 {
-    QStringList recipients;
+    QStringList items;
 
-    foreach (const RecipientWidget* recipient, m_recipients)
+    foreach (const SelectedItemWidget* item, m_items)
     {
-        recipients << recipient->recipient();
+        items << item->text();
     }
 
-    return recipients;
+    return items;
 }
 

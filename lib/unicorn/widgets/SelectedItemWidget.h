@@ -18,39 +18,32 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QLabel>
+#include <QPushButton>
+
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/DllExportMacro.h"
 
-class UNICORN_DLLEXPORT RecipientsWidget : public StylableWidget
+class UNICORN_DLLEXPORT SelectedItemWidget : public StylableWidget
 {
     Q_OBJECT
 private:
     struct
     {
-        class SearchBox* searchBox;
+        QLabel* item;
+        QPushButton* deleteButton;
     } ui;
 
 public:
-    explicit RecipientsWidget(QWidget* parent = 0);
+    explicit SelectedItemWidget(const QString& recipient, QWidget* parent = 0);
 
-    QStringList recipients() const;
+    QString text() const;
+
+    bool operator==(const SelectedItemWidget& that) const { return ui.item->text() == that.ui.item->text();}
 
 signals:
-    void changed();
+    void deleted( SelectedItemWidget* deleted );
 
 private slots:
-    void onRecipientSelected();
-    void onDeletePressed();
-    void onRecipientDeleted( class RecipientWidget* recipient );
-
-    void onCompleterActivated( const QString& text );
-    void onTextChanged( const QString& text );
-
-private:
-    void addRecipient( const QString& text );
-    bool recipientsContain( const QString& text );
-
-private:
-    QList<class RecipientWidget*> m_recipients;
-    bool m_clearText;
+    void onDeleteClicked();
 };
