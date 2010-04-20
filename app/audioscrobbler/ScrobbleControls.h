@@ -23,6 +23,9 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
+namespace unicorn{ class Session; };
+namespace lastfm{ class UserDetails; };
+
 class QPushButton;
 class ScrobbleControls : public StylableWidget
 {
@@ -35,6 +38,13 @@ public:
     void setLoveAction( const QAction* a );
     void setTagAction( const QAction* a );
     void setShareAction( const QAction* a );
+
+protected slots:
+    void toggleProfile( bool );
+    void onSessionChanged();
+    void onUserGotInfo( const lastfm::UserDetails& user );
+    void onImageDownloaded();
+    void onRosterUpdated();
 
 protected:
     struct {

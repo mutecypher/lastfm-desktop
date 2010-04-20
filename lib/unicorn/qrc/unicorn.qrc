@@ -2,5 +2,7 @@
  <qresource prefix="lastfm">
      <file>spinner.mng</file>
      <file>as.svg</file>
+     <file>default_user.png</file>
+     <file>default_user_small.png</file>
  </qresource>
  </RCC> 

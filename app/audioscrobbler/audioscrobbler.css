@@ -16,16 +16,17 @@ unicorn--MainWindow QWidget#navigation {
 }
 
 unicorn--MainWindow QWidget#navigation {
-    padding: 0px;
+    background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #484848, stop:1 #3d3d3d );
+    padding-top: -2px;
     margin: 0px;
 }
 
 unicorn--MainWindow QWidget#navigation QPushButton{
-    background: qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
-                                 stop:0 #515050, stop:1 #242424 );
-    border-radius: 3px;
+    background: qlineargradient( x1:0, y1:0, x2:0, y2:1, 
+                                 stop:0 #5d5d5d, stop:1 #464646 );
     color: white;
-    border-width: 2px;
+    border:1px solid #353535;
+    border-top:2px solid qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #353535, stop:0.1 #858585);
     padding:3px 5px;
     margin: 0px;
     font-size: 12pt;
@@ -61,7 +62,7 @@ TitleBar QPushButton:pressed {
     max-width: 20px;
 }
 
-ProfileWidget,
+unicorn--MainWindow ProfileWidget,
 QWidget#NowScrobbling {
     min-height: 195px;
 }
@@ -80,6 +81,30 @@ QStatusBar QPushButton {
     margin: 5px 15px;
     height: 29px;
     width: 40;
+}
+
+QToolButton {
+    border: 1px solid #141414;
+    background-image: url(:lastfm/default_user_small.png);
+    background-color: white;
+    padding:-1px -2px -2px -1px;
+}
+
+QToolButton[popupMode="1"] {
+    padding-right: 9px;
+}
+
+QToolButton::menu-button {
+    border: 1px solid #141414;
+    padding-left: 3px;
+    width: 7px;
+    background-color: rgba( 255, 255, 255, 200 );
+}
+
+QToolButton::menu-arrow {
+    color: black;
+    left: -3px;
+    margin: 0px;
 }
 
 QScrollArea,
@@ -123,8 +148,8 @@ MetadataWindow ProfileWidget QPushButton {
     font-weight: bold;
 }
 
-ProfileWidget {
-    padding: 5px;
+unicorn--MainWindow ProfileWidget {
+    border: 8px solid red;
 }
 
 ProfileWidget #title {
