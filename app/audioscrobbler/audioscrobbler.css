@@ -223,29 +223,29 @@ QTextBrowser, QLabel#title1, QLabel#title2 {
     color: #e6e6e6;
 }
 
-RecipientsWidget {
+ItemSelectorWidget {
 	background: #FFFFFF;
 	border: 1px solid #BBBBBB;
 	border-color: black;
 	padding: 0;
 }
 
-RecipientsWidget:edit-focus {
+ItemSelectorWidget:edit-focus {
 	border-color: blue;
 }
 
-RecipientWidget {
+SelectedItemWidget {
 	background-color: #dddddd;
 	margin: 1px;
 	padding: 2px;
 	border: 0px;
 }
 
-RecipientWidget:hover {
+SelectedItemWidget:hover {
 	background: #cccccc;
 }
 
-RecipientWidget QLabel {
+SelectedItemWidget QLabel {
 	background-color: transparent;
 	color: black;
 	font-weight: normal;
@@ -254,7 +254,7 @@ RecipientWidget QLabel {
 	border: 0;
 }
 
-RecipientWidget QPushButton {
+SelectedItemWidget QPushButton {
 	background-color: transparent;
 	background-image: url(:/delete.png);
 	background-repeat: no-repeat;
