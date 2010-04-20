@@ -43,12 +43,17 @@ protected slots:
 
     }
 
+    void manageUsers()
+    {
+        QTimer::singleShot( 0, qApp, SLOT( manageUsers()));
+    }
+
     void refresh()
     {
         clear();
         QActionGroup* ag = new QActionGroup( this );
         foreach( User u, unicorn::Settings().userRoster() ) {
-            QAction* a = ag->addAction( u.name());
+            QAction* a = ag->addAction( new QAction( u.name(), this ));
             addAction( a );
             if( u == User()) a->setChecked( true );
             a->setCheckable( true );
@@ -58,7 +63,7 @@ protected slots:
 
         addSeparator();
         QAction* a = addAction( "Manage Users" );
-        connect( a, SIGNAL( triggered()), qApp, SLOT( manageUsers()));
+        connect( a, SIGNAL( triggered()), SLOT( manageUsers()));
 
         onSessionChanged( qobject_cast<unicorn::Application*>(qApp)->currentSession());
     }
