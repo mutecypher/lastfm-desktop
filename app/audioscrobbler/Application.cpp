@@ -37,6 +37,7 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/UnicornSettings.h"
+#include "lib/unicorn/widgets/UserMenu.h"
 #include "Wizard/FirstRunWizard.h"
 
 #ifdef Q_OS_WIN32
@@ -98,6 +99,7 @@ Application::init()
 
 /// tray menu
     QMenu* menu = new QMenu;
+    (menu->addMenu( new UserMenu()))->setText( "Users");
     m_toggle_window_action = menu->addAction( tr("Show Scrobbler"));
     m_toggle_window_action->setShortcut( Qt::CTRL + Qt::META + Qt::Key_S );
     menu->addSeparator();
