@@ -34,14 +34,21 @@
 
 #include <lastfm/User>
 
-ItemSelectorWidget::ItemSelectorWidget(QWidget* parent)
+ItemSelectorWidget::ItemSelectorWidget(Type type, QWidget* parent)
     :StylableWidget(parent), m_clearText( false )
 {
     new FlowLayout( this, 0, 0, 0 );
 
     layout()->setContentsMargins( 1, 1, 1, 1 );
 
-    layout()->addItem( new QWidgetItem( ui.searchBox = new UserSearch( this ) ) );
+    if (type == User)
+    {
+        layout()->addItem( new QWidgetItem( ui.searchBox = new UserSearch( this ) ) );
+    }
+    else
+    {
+        layout()->addItem( new QWidgetItem( ui.searchBox = new TagSearch( this ) ) );
+    }
     ui.searchBox->setFrame( false );
     setFocusPolicy( Qt::StrongFocus );
     setFocusProxy( ui.searchBox );

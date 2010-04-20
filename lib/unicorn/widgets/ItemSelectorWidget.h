@@ -31,7 +31,13 @@ private:
     } ui;
 
 public:
-    explicit ItemSelectorWidget(QWidget* parent = 0);
+    enum Type
+    {
+        Tag,
+        User
+    }
+
+    explicit ItemSelectorWidget(Type type, QWidget* parent = 0);
 
     QStringList items() const;
 
