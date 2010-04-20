@@ -26,7 +26,6 @@
 #include <QToolButton>
 #include <QAction>
 #include <lastfm/User>
-#include "lib/unicorn/widgets/UserComboSelector.h"
 #include "lib/unicorn/widgets/UserMenu.h"
 
 ScrobbleControls::ScrobbleControls()
@@ -36,7 +35,6 @@ ScrobbleControls::ScrobbleControls()
 
     QToolButton* tb = new QToolButton();
     tb->setIconSize( QSize( 32, 32 ));
-    tb->setIcon( QIcon( QPixmap( "/Users/jono/Downloads/gravatar.jpeg" )));
     tb->setCheckable( true );
 
     if( unicorn::Settings().userRoster().count() > 1 ) {
@@ -49,7 +47,6 @@ ScrobbleControls::ScrobbleControls()
     connect( qApp, SIGNAL( gotUserInfo( lastfm::UserDetails )), SLOT( onUserGotInfo( lastfm::UserDetails )));
     connect( qApp, SIGNAL( rosterUpdated()), SLOT( onRosterUpdated()));
     layout()->addWidget(tb);
-    //layout()->addWidget( new UserComboSelector() );
     
     layout()->addWidget(ui.love = new QPushButton(tr("love")));
     ui.love->setObjectName("love");
