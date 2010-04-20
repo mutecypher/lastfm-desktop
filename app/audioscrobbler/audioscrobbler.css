@@ -148,10 +148,6 @@ MetadataWindow ProfileWidget QPushButton {
     font-weight: bold;
 }
 
-unicorn--MainWindow ProfileWidget {
-    border: 8px solid red;
-}
-
 ProfileWidget #title {
     font-size: 20pt;
 }
