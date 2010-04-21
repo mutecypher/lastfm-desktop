@@ -26,6 +26,7 @@
 #include "ScrobbleInfoWidget.h"
 
 #include "lib/unicorn/widgets/MessageBar.h"
+#include "lib/unicorn/widgets/GhostWidget.h"
 #include "lib/unicorn/widgets/UserToolButton.h"
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/qtwin.h"
@@ -113,12 +114,8 @@ MetadataWindow::MetadataWindow()
         //In order to compensate for the sizer grip on the bottom right
         //of the window, an empty QWidget is added as a spacer.
         QSizeGrip* sg = statusBar->findChild<QSizeGrip *>();
-        if( sg ) {
-            int gripWidth = sg->sizeHint().width();
-            QWidget* w = new QWidget( statusBar );
-            w->setFixedWidth( gripWidth );
-            statusBar->addWidget( w );
-        }
+        if( sg )
+            statusBar->addWidget( new GhostWidget( sg ) );
 #endif
         ui.userButton = new UserToolButton();
         statusBar->addWidget( ui.userButton );
@@ -129,6 +126,7 @@ MetadataWindow::MetadataWindow()
         statusBar->addWidget( new QWidget( statusBar), 1 );
         statusBar->addWidget( ui.sc = new ScrobbleControls());
         statusBar->addWidget( new QWidget( statusBar), 1 );
+        statusBar->addWidget( new GhostWidget( ui.userButton ));
         setStatusBar( statusBar );
     }
 
