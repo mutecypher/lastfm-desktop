@@ -41,6 +41,9 @@ public:
 private:
     struct
     {
+        class QRadioButton* trackShare;
+        class QRadioButton* albumShare;
+        class QRadioButton* artistShare;
         class QLabel* image;
         class QLabel* description;
         class QPixmap artistImage;
@@ -50,15 +53,17 @@ private:
 public:
     TrackWidget( const lastfm::Track& track );
 
-    void setType( Type type );
-    void setCoverHeight( int height );
+    Type type() const;
     
 private slots:
     void onCoverDownloaded( const class QImage& );
     void onArtistDownloaded( const class QImage& );
 
+    void onRadioButtonsClicked( bool );
+
 private:
     const lastfm::Track& m_track;
+
     class TrackImageFetcher* m_fetcherAlbum;
     class TrackImageFetcher* m_fetcherArtist;
 };

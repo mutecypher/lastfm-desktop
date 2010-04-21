@@ -67,7 +67,8 @@ QWidget#NowScrobbling {
     min-height: 195px;
 }
 
-ShareDialog {
+ShareDialog,
+TagDialog {
     background-color: rgb(20, 20, 20);
 }
 
@@ -126,12 +127,16 @@ QScrollArea {
     margin: 15px;
 }
 
-ShareDialog TrackWidget QLabel,
+TrackWidget QLabel,
 ShareDialog > QLabel,
-ShareDialog > QRadioButton,
-ShareDialog > QCheckBox  { color: #cccccc; font-weight: bold; }
+TagDialog > QLabel,
+TrackWidget > QRadioButton,
+ShareDialog > QCheckBox ,
+ShareDialog QGroupBox,
+TagDialog QGroupBox { color: #cccccc; font-weight: bold; }
 
-ShareDialog > QRadioButton:disabled {
+ShareDialog > QRadioButton:disabled ,
+TagDialog > QRadioButton:disabled {
     color: #888888;
 }
 
@@ -218,29 +223,29 @@ QTextBrowser, QLabel#title1, QLabel#title2 {
     color: #e6e6e6;
 }
 
-RecipientsWidget {
+ItemSelectorWidget {
 	background: #FFFFFF;
 	border: 1px solid #BBBBBB;
 	border-color: black;
 	padding: 0;
 }
 
-RecipientsWidget:edit-focus {
+ItemSelectorWidget:edit-focus {
 	border-color: blue;
 }
 
-RecipientWidget {
+SelectedItemWidget {
 	background-color: #dddddd;
 	margin: 1px;
 	padding: 2px;
 	border: 0px;
 }
 
-RecipientWidget:hover {
+SelectedItemWidget:hover {
 	background: #cccccc;
 }
 
-RecipientWidget QLabel {
+SelectedItemWidget QLabel {
 	background-color: transparent;
 	color: black;
 	font-weight: normal;
@@ -249,7 +254,7 @@ RecipientWidget QLabel {
 	border: 0;
 }
 
-RecipientWidget QPushButton {
+SelectedItemWidget QPushButton {
 	background-color: transparent;
 	background-image: url(:/delete.png);
 	background-repeat: no-repeat;

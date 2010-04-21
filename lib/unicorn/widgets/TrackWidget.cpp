@@ -23,14 +23,27 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QStackedWidget>
+#include <QRadioButton>
 
 
 TrackWidget::TrackWidget( const lastfm::Track& track )
     :m_track( track )
 {    
+    // the radio buttons layout
+    QVBoxLayout* radioButtons = new QVBoxLayout;
+
+    radioButtons->addWidget( ui.trackShare = new QRadioButton( tr("Track"), this ) );
+    radioButtons->addWidget( ui.albumShare = new QRadioButton( tr("Album"), this ) );
+    radioButtons->addWidget( ui.artistShare = new QRadioButton( tr("Artist"), this ) );
+
+    connect( ui.artistShare, SIGNAL(clicked(bool)), SLOT(onRadioButtonsClicked(bool)) );
+    connect( ui.albumShare, SIGNAL(clicked(bool)), SLOT(onRadioButtonsClicked(bool)) );
+    connect( ui.trackShare, SIGNAL(clicked(bool)), SLOT(onRadioButtonsClicked(bool)) );
+
     QHBoxLayout* h = new QHBoxLayout( this );
-    h->addWidget( ui.image = new QLabel );
-    h->addWidget( ui.description = new QLabel );
+    h->addLayout( radioButtons );
+    h->addWidget( ui.image = new QLabel, Qt::AlignLeft );
+    h->addWidget( ui.description = new QLabel, Qt::AlignLeft );
 
     ui.image->setScaledContents( true );
 
@@ -44,37 +57,47 @@ TrackWidget::TrackWidget( const lastfm::Track& track )
     connect( m_fetcherArtist, SIGNAL(finished( QImage )), SLOT(onArtistDownloaded( QImage )) );
     m_fetcherArtist->startArtist();
 
-    setType( Track );
+    // default the track being selected
+    ui.trackShare->setChecked( true );
+    onRadioButtonsClicked( true );
 
-    setCoverHeight( ui.description->sizeHint().height() );
+    // we sometimes don't know the album name so disable the ablum option in that case
+    if ( m_track.album().isNull() ) ui.albumShare->setEnabled( false );
+
+    ui.image->setFixedSize( radioButtons->sizeHint().height(), radioButtons->sizeHint().height() );
 }
 
 void
-TrackWidget::setCoverHeight( int height )
+TrackWidget::onRadioButtonsClicked( bool )
 {
-    ui.image->setFixedSize( height, height );
-}
+    // change the share desription to what we are now sharing
 
-void
-TrackWidget::setType( Type type )
-{
-    m_type = type;
-
-    switch ( m_type )
+    if ( ui.artistShare->isChecked() )
     {
-        case Artist:
-            ui.description->setText( m_track.artist().name() + "\n" );
-            ui.image->setPixmap( ui.artistImage );
-            break;
-        case Album:
-            ui.description->setText( m_track.album().title() + "\n" + m_track.artist().name() );
-            ui.image->setPixmap( ui.albumImage );
-            break;
-        case Track:
-            ui.description->setText(  m_track.title() + " (" + m_track.durationString() + ")\n" + m_track.artist().name() );
-            ui.image->setPixmap( ui.artistImage );
-            break;
+        ui.description->setText( m_track.artist().name() + "\n" );
+        ui.image->setPixmap( ui.artistImage );
     }
+    else if ( ui.albumShare->isChecked() )
+    {
+        ui.description->setText( m_track.album().title() + "\n" + m_track.artist().name() );
+        ui.image->setPixmap( ui.albumImage );
+    }
+    else if ( ui.trackShare->isChecked() )
+    {
+        ui.description->setText(  m_track.title() + " (" + m_track.durationString() + ")\n" + m_track.artist().name() );
+        ui.image->setPixmap( ui.artistImage );
+    }
+}
+
+TrackWidget::Type
+TrackWidget::type() const
+{
+    if ( ui.artistShare->isChecked() )
+        return Artist;
+    else if ( ui.albumShare->isChecked() )
+        return Album;
+
+    return Track;
 }
 
 void
@@ -82,7 +105,7 @@ TrackWidget::onCoverDownloaded( const QImage& image )
 {
     ui.albumImage = QPixmap::fromImage( image );
 
-    setType( m_type );
+    onRadioButtonsClicked( true );
 
     sender()->deleteLater();
 }
@@ -92,7 +115,7 @@ TrackWidget::onArtistDownloaded( const QImage& image )
 {
     ui.artistImage = QPixmap::fromImage( image );
 
-    setType( m_type );
+    onRadioButtonsClicked( true );
 
     sender()->deleteLater();
 }

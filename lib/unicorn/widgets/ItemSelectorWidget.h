@@ -21,36 +21,42 @@
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/DllExportMacro.h"
 
-class UNICORN_DLLEXPORT RecipientsWidget : public StylableWidget
+class UNICORN_DLLEXPORT ItemSelectorWidget : public StylableWidget
 {
     Q_OBJECT
 private:
     struct
     {
-        class UserSearch* userSearch;
+        class SearchBox* searchBox;
     } ui;
 
 public:
-    explicit RecipientsWidget(QWidget* parent = 0);
+    enum Type
+    {
+        Tag,
+        User
+    };
 
-    QStringList recipients() const;
+    explicit ItemSelectorWidget(Type type, QWidget* parent = 0);
+
+    QStringList items() const;
 
 signals:
     void changed();
 
 private slots:
-    void onRecipientSelected();
+    void onItemSelected();
     void onDeletePressed();
-    void onRecipientDeleted( class RecipientWidget* recipient );
+    void onItemDeleted( class SelectedItemWidget* recipient );
 
     void onCompleterActivated( const QString& text );
     void onTextChanged( const QString& text );
 
 private:
-    void addRecipient( const QString& text );
-    bool recipientsContain( const QString& text );
+    void addItem( const QString& text );
+    bool itemsContain( const QString& text );
 
 private:
-    QList<class RecipientWidget*> m_recipients;
+    QList<class SelectedItemWidget*> m_items;
     bool m_clearText;
 };

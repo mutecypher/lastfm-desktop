@@ -41,38 +41,36 @@ public:
 
 	Track track() const { return m_track; }
 
+private:
+    void setupUi();
+
 private slots:
-    void onWsFinished( QNetworkReply* );
-    void onTagActivated( class QTreeWidgetItem *item );
-    void onAddClicked();
-    void onTagListItemDoubleClicked( QTreeWidgetItem*, int);
-    void follow( QNetworkReply* );
-    void removeCurrentTag();
+    void onUserGotTopTags();
+    void onTrackGotTopTags();
+    void onTagBoxToggled(bool);
+
+    void onAddTagFinished();
+
+    void onAccepted();
 
 private:
     struct Ui
     {
         class TrackWidget* track;
-        class SpinnerLabel* spinner;
-        class TagBuckets* appliedTags;
-        class TagListWidget* suggestedTags;
-        class TagListWidget* yourTags;
+        class ItemSelectorWidget* tagsWidget;
+        class QGroupBox* popularTagsBox;
+        class DataListWidget* popularTags;
+        class QGroupBox* yourTagsBox;
+        class DataListWidget* yourTags;
         class QDialogButtonBox* buttons;
-        unicorn::TabWidget* tabs;
         
         void setupUi( QWidget* parent );
     } ui;
-
-    void setupUi();
-    
-    virtual void accept();
     
     Track m_track;
     QStringList m_originalTags;
     QStringList m_publicTags;
     QStringList m_userTags;
-
-    QList<QNetworkReply*> m_activeRequests;
 };
 
 #endif
