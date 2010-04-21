@@ -27,6 +27,8 @@ class ScrobbleControls;
 class FirstRunWizard;
 class MessageBar;
 class ProfileWidget;
+class SlideOverLayout;
+class UserToolButton;
 
 class MetadataWindow : public unicorn::MainWindow
 {
@@ -40,10 +42,8 @@ class MetadataWindow : public unicorn::MainWindow
 
     struct{
         ScrobbleStatus* now_playing_source;
+        UserToolButton* userButton;
 
-        QPushButton* love;
-        QPushButton* tag;
-        QPushButton* share;
         ScrobbleControls* sc;
         MessageBar* message_bar;
 
@@ -52,6 +52,8 @@ class MetadataWindow : public unicorn::MainWindow
             QPushButton* nowScrobbling;
         } nav;
     } ui;
+
+    SlideOverLayout* layout;
 
 public:
     MetadataWindow();
@@ -66,8 +68,7 @@ public slots:
 
 private slots:
 
-    void showProfile();
-    void showNowScrobbling();
+    void toggleProfile( bool );
     
 private:
     Track m_currentTrack;

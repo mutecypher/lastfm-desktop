@@ -18,33 +18,24 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCROBBLE_CONTROLS_H
-#define SCROBBLE_CONTROLS_H
+#ifndef USER_TOOL_BUTTON_H
+#define USER_TOOL_BUTTON_H
 
-#include "lib/unicorn/StylableWidget.h"
+#include <QToolButton>
 
-namespace unicorn{ class Session; };
 namespace lastfm{ class UserDetails; };
 
-class QPushButton;
-class ScrobbleControls : public StylableWidget
+class UserToolButton : public QToolButton
 {
     Q_OBJECT
 public:
-    ScrobbleControls();
+    UserToolButton();
 
-    void setEnabled( bool enabled );
-    
-    void setLoveAction( const QAction* a );
-    void setTagAction( const QAction* a );
-    void setShareAction( const QAction* a );
-
-protected:
-    struct {
-        QPushButton* love;
-        QPushButton* tag;
-        QPushButton* share;
-    } ui;
+protected slots:
+    void onSessionChanged();
+    void onUserGotInfo( const lastfm::UserDetails& user );
+    void onImageDownloaded();
+    void onRosterUpdated();
 };
 
-#endif //SCROBBLE_CONTROLS_H
+#endif //USER_TOOL_BUTTON_H

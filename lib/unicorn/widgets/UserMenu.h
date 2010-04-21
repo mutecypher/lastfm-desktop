@@ -45,6 +45,10 @@ protected slots:
 
     void manageUsers()
     {
+        //This is required so that the menu popup call can be completed 
+        //in the event loop before the manage users dialog is displayed.
+        //(The manageUsers method may emit a signal which causes the menu
+        // to be destroyed)
         QTimer::singleShot( 0, qApp, SLOT( manageUsers()));
     }
 

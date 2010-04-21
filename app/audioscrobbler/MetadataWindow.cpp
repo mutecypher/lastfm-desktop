@@ -26,9 +26,9 @@
 #include "ScrobbleInfoWidget.h"
 
 #include "lib/unicorn/widgets/MessageBar.h"
+#include "lib/unicorn/widgets/UserToolButton.h"
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/qtwin.h"
-#include "lib/unicorn/layouts/SideBySideLayout.h"
 #include "lib/unicorn/layouts/SlideOverLayout.h"
 #include "lib/listener/PlayerConnection.h"
 
@@ -53,6 +53,7 @@ TitleBar::TitleBar( const QString& title )
 }
 
 MetadataWindow::MetadataWindow()
+               :layout( new SlideOverLayout())
 {
     setWindowTitle( "Audioscrobbler" );
     setAttribute( Qt::WA_TranslucentBackground );
@@ -84,31 +85,18 @@ MetadataWindow::MetadataWindow()
     connect( titleBar, SIGNAL( closeClicked()), SLOT( close()));
 #endif
 
-    SlideOverLayout* stackLayout = new SlideOverLayout();
-    //QWidget* nav;
-    //centralWidget()->layout()->addWidget( nav = new StylableWidget());
-    //nav->setObjectName( "navigation" );
-    
     centralWidget()->layout()->addWidget(ui.now_playing_source = new ScrobbleStatus());
 
     stack.nowScrobbling = new ScrobbleInfoWidget( centralWidget() );
     stack.nowScrobbling->setObjectName( "NowScrobbling" );
-    stackLayout->addWidget( stack.nowScrobbling );
+    layout->addWidget( stack.nowScrobbling );
 
     ui.now_playing_source->setObjectName("now_playing");
     ui.now_playing_source->setFixedHeight( 22 );
-    qobject_cast<QBoxLayout*>(centralWidget()->layout())->addLayout( stackLayout );
-    stackLayout->addWidget( stack.profile = new ProfileWidget());
+    qobject_cast<QBoxLayout*>(centralWidget()->layout())->addLayout( layout );
+    layout->addWidget( stack.profile = new ProfileWidget());
 
     setCurrentWidget( stack.profile );
-
-    /*{
-        QHBoxLayout* nl = new QHBoxLayout( nav );
-        nl->addWidget( ui.nav.profile = new QPushButton( tr( "Profile" )), 0, Qt::AlignLeft );
-        nl->addWidget( ui.nav.nowScrobbling = new QPushButton( tr( "Now Scrobbling" )),0, Qt::AlignRight);
-        connect( ui.nav.profile, SIGNAL( clicked()), SLOT( showProfile()));
-        connect( ui.nav.nowScrobbling, SIGNAL( clicked()), SLOT( showNowScrobbling()));
-    }*/
 
 
     setMinimumWidth( 410 );
@@ -134,6 +122,10 @@ MetadataWindow::MetadataWindow()
             statusBar->addWidget( w );
         }
 #endif
+        ui.userButton = new UserToolButton();
+        statusBar->addWidget( ui.userButton );
+        ui.userButton->setChecked( true );
+        connect( ui.userButton, SIGNAL(toggled( bool )), SLOT(toggleProfile( bool )));
         //Seemingly the only way to get a central widget in a QStatusBar
         //is to add an empty widget either side with a stretch value.
         statusBar->addWidget( new QWidget( statusBar), 1 );
@@ -164,7 +156,8 @@ addDragHandleWidget( ui.now_playing_source );
 void
 MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
 {
-    setCurrentWidget( stack.nowScrobbling );
+    ui.userButton->setChecked( false );
+    toggleProfile( false );
     ui.now_playing_source->onTrackStarted( t, previous );
 }
 
@@ -191,30 +184,16 @@ MetadataWindow::onPaused()
 
 void
 MetadataWindow::setCurrentWidget( QWidget* w )
-{ /*
-    if( w == stack.nowScrobbling ) {
-        ui.nav.profile->setVisible( true );
-        ui.nav.nowScrobbling->setVisible( false );
-    } else if( w == stack.profile ) {
-        ui.nav.profile->setVisible( false );
-        PlayerConnection* connection = qobject_cast<audioscrobbler::Application*>(qApp)->currentConnection();
-        if( connection && connection->state() != Stopped )
-            ui.nav.nowScrobbling->setVisible( true );
-        else
-            ui.nav.nowScrobbling->setVisible( false );
-    } */
+{
     centralWidget()->findChild<SlideOverLayout*>()->revealWidget( w );
 }
 
 void
-MetadataWindow::showProfile()
+MetadataWindow::toggleProfile( bool show )
 {
-    setCurrentWidget( stack.profile );
-}
-
-void 
-MetadataWindow::showNowScrobbling()
-{
-    setCurrentWidget( stack.nowScrobbling );
+    if( show )
+        setCurrentWidget( stack.profile );
+    else
+        setCurrentWidget( stack.nowScrobbling );
 }
 
