@@ -181,14 +181,27 @@ unicorn::MainWindow::onSessionChanged( const Session& session )
     ui.account->setTitle( session.username());
 }
 
-
 void 
-unicorn::MainWindow::moveEvent( QMoveEvent* )
+unicorn::MainWindow::storeGeometry() const
 {
     AppSettings s;
     s.beginGroup( metaObject()->className());
         s.setValue( "geometry", frameGeometry());
     s.endGroup();
+}
+
+
+void 
+unicorn::MainWindow::moveEvent( QMoveEvent* )
+{
+    storeGeometry();
+}
+
+
+void
+unicorn::MainWindow::resizeEvent( QResizeEvent* )
+{
+    storeGeometry();
 }
 
 

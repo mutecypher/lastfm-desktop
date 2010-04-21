@@ -17,4 +17,5 @@ GhostWidget::eventFilter( QObject* obj, QEvent* event )
         setFixedSize( re->size());
         qDebug() << "Ghost size: " << re->size();
     }
+    return false;
 }

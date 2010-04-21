@@ -87,10 +87,13 @@ namespace unicorn
             
         } ui;
 
+        void storeGeometry() const;
+
         virtual bool eventFilter( QObject*, QEvent* );
         virtual void hideEvent( QHideEvent* );
         virtual void showEvent( QShowEvent* );
         virtual void moveEvent( QMoveEvent* );
+        virtual void resizeEvent( QResizeEvent* );
 
     private:
         QMap<QWidget*, QPoint> m_dragHandleMouseDownPos;
