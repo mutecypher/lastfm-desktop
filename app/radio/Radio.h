@@ -56,7 +56,8 @@ public:
         Stopped,
 		TuningIn,
         Buffering,
-		Playing
+		Playing,
+        Paused
 	};
 
     RadioStation station() const { return m_station; }
@@ -72,6 +73,7 @@ public slots:
     void play( const RadioStation& station );
     void skip();
     void stop();
+    void pause();
     void setSupportsDisco( bool supportsDisco );
 
 signals:

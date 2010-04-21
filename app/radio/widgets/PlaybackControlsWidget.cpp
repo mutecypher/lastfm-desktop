@@ -352,12 +352,16 @@ PlaybackControlsWidget::onBanFinished()
 void
 PlaybackControlsWidget::onPlayClicked( bool checked )
 {
-    if ( !checked )
-		radio->stop();
-    else
-    {
+    if ( !checked ) {
+		//radio->stop();
+        radio->pause();
+        onRadioStopped();
+    } else {
+        if( radio->state() != Radio::Paused )
+            emit startRadio( RadioStation( "" ) );
+        else
+            onRadioTuningIn(RadioStation());
         radio->play( RadioStation( "" ) );
-        emit startRadio( RadioStation( "" ) );
     }
 }
 
