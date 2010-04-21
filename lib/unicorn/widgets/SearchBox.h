@@ -41,6 +41,10 @@ class UNICORN_DLLEXPORT SearchBox : public HelpTextLineEdit
 public:
     SearchBox(QWidget *parent = 0);
 
+signals:
+    void commaPressed();
+    void deletePressed();
+
 private slots:
     void onTextEdited(const QString& text);
     void onSearchFinished();
@@ -48,6 +52,8 @@ private slots:
 protected:
     virtual QNetworkReply* startSearch(const QString& term) = 0;
     virtual QStringList handleSearchResponse(XmlQuery& lfm) = 0;
+
+    void keyPressEvent( QKeyEvent* event );
 
     QCompleter* m_completer;
     bool m_searching;
@@ -80,13 +86,6 @@ public:
     UserSearch(QWidget *parent = 0);
     virtual QNetworkReply* startSearch(const QString& term);
     virtual QStringList handleSearchResponse(XmlQuery& lfm);
-
-private:
-    void keyPressEvent( QKeyEvent* event );
-
-signals:
-    void commaPressed();
-    void deletePressed();
 
 public slots:
      void finishEdit(){ emit editingFinished(); }

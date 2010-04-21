@@ -55,6 +55,26 @@ SearchBox::onTextEdited(const QString& text)
 }
 
 void
+SearchBox::keyPressEvent( QKeyEvent* event )
+{
+    if ( event->key() == Qt::Key_Backspace )
+    {
+        if ( text().isEmpty() )
+        {
+            emit deletePressed();
+            return;
+        }
+    }
+    else if ( event->text() == "," )
+    {
+        emit commaPressed();
+        return;
+    }
+
+    QLineEdit::keyPressEvent( event );
+}
+
+void
 SearchBox::onSearchFinished()
 {
     sender()->deleteLater();
@@ -181,22 +201,3 @@ UserSearch::handleSearchResponse(XmlQuery& lfm)
     return QStringList();
 }
 
-void
-UserSearch::keyPressEvent( QKeyEvent* event )
-{
-    if ( event->key() == Qt::Key_Backspace )
-    {
-        if ( text().isEmpty() )
-        {
-            emit deletePressed();
-            return;
-        }
-    }
-    else if ( event->text() == "," )
-    {
-        emit commaPressed();
-        return;
-    }
-
-    QLineEdit::keyPressEvent( event );
-}

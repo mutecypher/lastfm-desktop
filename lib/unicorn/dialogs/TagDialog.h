@@ -49,6 +49,10 @@ private slots:
     void onTrackGotTopTags();
     void onTagBoxToggled(bool);
 
+    void onAddTagFinished();
+
+    void onAccepted();
+
 private:
     struct Ui
     {

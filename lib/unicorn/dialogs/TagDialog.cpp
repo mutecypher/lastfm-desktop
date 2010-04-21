@@ -45,7 +45,7 @@ TagDialog::TagDialog( const Track& track, QWidget *parent )
 	
     ui.buttons->button( QDialogButtonBox::Ok )->setText( tr("Tag") );
 
-    connect( ui.buttons, SIGNAL(accepted()), SLOT(accept()) );
+    connect( ui.buttons, SIGNAL(accepted()), SLOT(onAccepted()) );
     connect( ui.buttons, SIGNAL(rejected()), SLOT(reject()) );
 }
 
@@ -79,6 +79,30 @@ TagDialog::onTagBoxToggled( bool )
 }
 
 void
+TagDialog::onAccepted()
+{
+    // call the ws for tagging
+    QNetworkReply* reply;
+
+    if (ui.track->type() == TrackWidget::Track)
+        reply = m_track.addTags( ui.tagsWidget->items() );
+    else if (ui.track->type() == TrackWidget::Album)
+        reply = m_track.album().addTags( ui.tagsWidget->items() );
+    else
+        reply = m_track.artist().addTags( ui.tagsWidget->items() );
+
+    connect( reply, SIGNAL(finished()), SLOT(onAddTagFinished()));
+}
+
+void
+TagDialog::onAddTagFinished()
+{
+    // TODO: parse and see if it was sucessful
+
+    QDialog::accept();
+}
+
+void
 TagDialog::setupUi()
 {   
     QVBoxLayout* v = new QVBoxLayout( this );
@@ -90,7 +114,7 @@ TagDialog::setupUi()
 
     v->addWidget( new QLabel( tr("Tags") ) );
 
-    v->addWidget( ui.tagsWidget = new ItemSelectorWidget( this ) );
+    v->addWidget( ui.tagsWidget = new ItemSelectorWidget( ItemSelectorWidget::Tag, this ) );
 
     {
         v->addWidget( ui.popularTagsBox = new QGroupBox( tr("Popular tags"), this ) );

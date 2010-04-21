@@ -66,7 +66,7 @@ ShareDialog::setupUi()
     QVBoxLayout* v1 = new QVBoxLayout;
     
     v1->addWidget( new QLabel( tr("To") ) );
-    v1->addWidget( ui.recipients = new ItemSelectorWidget(this) );
+    v1->addWidget( ui.recipients = new ItemSelectorWidget(ItemSelectorWidget::User, this) );
     v1->addWidget( new QLabel( tr("Type friends or emails (up to 10), separated by commas.") ) );
     v1->setSpacing( 0 );
 

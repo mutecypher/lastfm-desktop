@@ -42,8 +42,8 @@ TrackWidget::TrackWidget( const lastfm::Track& track )
 
     QHBoxLayout* h = new QHBoxLayout( this );
     h->addLayout( radioButtons );
-    h->addWidget( ui.image = new QLabel );
-    h->addWidget( ui.description = new QLabel );
+    h->addWidget( ui.image = new QLabel, Qt::AlignLeft );
+    h->addWidget( ui.description = new QLabel, Qt::AlignLeft );
 
     ui.image->setScaledContents( true );
 

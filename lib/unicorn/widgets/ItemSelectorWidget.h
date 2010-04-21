@@ -35,7 +35,7 @@ public:
     {
         Tag,
         User
-    }
+    };
 
     explicit ItemSelectorWidget(Type type, QWidget* parent = 0);
 
