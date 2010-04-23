@@ -67,8 +67,8 @@ public slots:
     void onResumed();
 
 private slots:
-
     void toggleProfile( bool );
+    void showNowScrobbling();
     
 private:
     Track m_currentTrack;

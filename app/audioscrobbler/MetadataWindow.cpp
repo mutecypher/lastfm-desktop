@@ -87,6 +87,7 @@ MetadataWindow::MetadataWindow()
 #endif
 
     centralWidget()->layout()->addWidget(ui.now_playing_source = new ScrobbleStatus());
+    connect( ui.now_playing_source, SIGNAL( clicked()), SLOT( showNowScrobbling()));
 
     stack.nowScrobbling = new ScrobbleInfoWidget( centralWidget() );
     stack.nowScrobbling->setObjectName( "NowScrobbling" );
@@ -195,3 +196,9 @@ MetadataWindow::toggleProfile( bool show )
         setCurrentWidget( stack.nowScrobbling );
 }
 
+void 
+MetadataWindow::showNowScrobbling()
+{
+    ui.userButton->setChecked( false );
+    toggleProfile( false );
+}
