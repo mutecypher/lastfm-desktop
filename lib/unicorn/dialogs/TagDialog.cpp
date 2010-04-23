@@ -32,7 +32,7 @@
 
 
 TagDialog::TagDialog( const Track& track, QWidget *parent )
-        : unicorn::Dialog( parent, Qt::Dialog )
+        : unicorn::Dialog( parent, Qt::Tool )
 {
     m_track = track;
     
@@ -72,10 +72,13 @@ TagDialog::onTrackGotTopTags()
 }
 
 void
-TagDialog::onTagBoxToggled( bool )
+TagDialog::onTagBoxToggled( bool toggled )
 {
-    ui.popularTagsBox->isChecked() ? ui.popularTags->show() : ui.popularTags->hide();
-    ui.yourTagsBox->isChecked() ? ui.yourTags->show() : ui.yourTags->hide();
+    QGroupBox* gb = qobject_cast< QGroupBox* >( sender());
+    Q_ASSERT( gb );
+
+    gb->findChild<QWidget*>()->setVisible( toggled );
+    gb->setFlat( !toggled );
 }
 
 void

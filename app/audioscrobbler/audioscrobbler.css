@@ -67,12 +67,6 @@ QWidget#NowScrobbling {
     min-height: 195px;
 }
 
-ShareDialog,
-TagDialog {
-    background-color: rgb(20, 20, 20);
-}
-
-
 QStatusBar QPushButton {
     color: transparent;
     background-color: transparent;
@@ -127,17 +121,15 @@ QScrollArea {
     margin: 15px;
 }
 
-TrackWidget QLabel,
-ShareDialog > QLabel,
-TagDialog > QLabel,
-TrackWidget > QRadioButton,
-ShareDialog > QCheckBox ,
-ShareDialog QGroupBox,
-TagDialog QGroupBox { color: #cccccc; font-weight: bold; }
+TagDialog QGroupBox::flat {
+    background: transparent;
+    border: none;
+    margin: 0px;
+    padding: 0px;
+}
 
-ShareDialog > QRadioButton:disabled ,
-TagDialog > QRadioButton:disabled {
-    color: #888888;
+TagDialog QGroupBox DataListWidget {
+    border: none;
 }
 
 ShareDialog QLabel[xerror="true"] { color: #d51007; }
@@ -235,14 +227,13 @@ ItemSelectorWidget:edit-focus {
 }
 
 SelectedItemWidget {
-	background-color: #dddddd;
-	margin: 1px;
-	padding: 2px;
-	border: 0px;
+	margin: -2px 1px;
+	padding: -2px 2px;
+	border: 1px solid black;
 }
 
 SelectedItemWidget:hover {
-	background: #cccccc;
+/*	background: #cccccc;*/
 }
 
 SelectedItemWidget QLabel {
