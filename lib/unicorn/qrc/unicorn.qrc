@@ -4,5 +4,8 @@
      <file>as.svg</file>
      <file>default_user.png</file>
      <file>default_user_small.png</file>
+     <file>profile_hover.png</file>
+     <file>profile_on.png</file>
+     <file>profile_off.png</file>
  </qresource>
  </RCC> 

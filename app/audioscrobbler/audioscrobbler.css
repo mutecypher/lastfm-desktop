@@ -79,10 +79,9 @@ QStatusBar QPushButton {
 }
 
 QToolButton {
-    border: 1px solid #141414;
-    background-image: url(:lastfm/default_user_small.png);
-    background-color: white;
+    border: none;
     padding:-1px -2px -2px -1px;
+    margin: 0px;
 }
 
 QToolButton[popupMode="1"] {
