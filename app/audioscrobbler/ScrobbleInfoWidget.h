@@ -14,11 +14,14 @@ class ScrobbleInfoWidget : public StylableWidget
 public:
     ScrobbleInfoWidget( QWidget* p = 0 );
 
+public slots:
+    void onTrackGotInfo(const XmlQuery& lfm);
+
 protected slots:
     void onArtistGotInfo();
     void onArtistGotEvents();
     void onAlbumGotInfo();
-    void onTrackGotInfo();
+
     void onTrackGotTopFans();
 
     void onAnchorClicked( const QUrl& link );
@@ -26,6 +29,9 @@ protected slots:
 
     void onTrackStarted(const Track&, const Track&);
     void onStopped();
+
+signals:
+    void lovedStateChanged(bool loved);
 
 protected:
     struct {

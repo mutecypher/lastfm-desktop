@@ -11,6 +11,7 @@
         <file alias="love-isloved.png">love_isloved_31x29.png</file>
         <file alias="love-onpress.png">love_pressed_31x29.png</file>
         <file alias="love-rest.png">love_rest_31x29.png</file>
+		<file alias="love-disabled.png">love_inactive_31x29.png</file>
         <file alias="tag-rest.png">tag_29x29_rest.png</file>
         <file alias="tag-onhover.png">tag_29x29_hover.png</file>
         <file alias="tag-onpress.png">tag_29x29_pressed.png</file>

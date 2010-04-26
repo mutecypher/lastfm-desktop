@@ -92,6 +92,8 @@ MetadataWindow::MetadataWindow()
     stack.nowScrobbling->setObjectName( "NowScrobbling" );
     layout->addWidget( stack.nowScrobbling );
 
+    connect(stack.nowScrobbling, SIGNAL(lovedStateChanged(bool)), qApp, SLOT(changeLovedState(bool)));
+
     ui.now_playing_source->setObjectName("now_playing");
     ui.now_playing_source->setFixedHeight( 22 );
     qobject_cast<QBoxLayout*>(centralWidget()->layout())->addLayout( layout );

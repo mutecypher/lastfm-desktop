@@ -20,6 +20,7 @@
 #include "Application.h"
 #include "MetadataWindow.h"
 #include "ScrobbleControls.h"
+#include "ScrobbleInfoFetcher.h"
 #include "StopWatch.h"
 #include "lib/listener/DBusListener.h"
 #include "lib/listener/PlayerConnection.h"
@@ -30,6 +31,7 @@
 #include "lib/listener/mac/ITunesListener.h"
 #endif
 #include <lastfm/Audioscrobbler>
+#include <lastfm/XmlQuery>
 #include <QMenu>
 #include <QDebug>
 #include "lib/unicorn/dialogs/TagDialog.h"
@@ -106,7 +108,8 @@ Application::init()
     m_artist_action = menu->addAction( "" );
     m_title_action = menu->addAction(tr("Ready"));
     m_love_action = menu->addAction(tr("Love"));
-    connect( m_love_action, SIGNAL(triggered()), SLOT(onLoveTriggered()));
+    m_love_action->setCheckable( true );
+    connect( m_love_action, SIGNAL(triggered(bool)), SLOT(changeLovedState(bool)));
     m_tag_action = menu->addAction(tr("Tag")+ELLIPSIS);
     connect( m_tag_action, SIGNAL(triggered()), SLOT(onTagTriggered()));
     m_share_action = menu->addAction(tr("Share")+ELLIPSIS);
@@ -129,6 +132,9 @@ Application::init()
     m_submit_scrobbles_toggle->setChecked(true);
     tray->setContextMenu(menu);
 
+/// ScrobbleInfoFetcher
+    fetcher = new ScrobbleInfoFetcher;
+
 /// MetadataWindow
     mw = new MetadataWindow;
 #ifdef Q_WS_MAC
@@ -140,12 +146,14 @@ Application::init()
 
     ScrobbleControls* sc = mw->scrobbleControls();
     sc->setEnabled( false );
-    m_love_action->setEnabled( false );
-    m_tag_action->setEnabled( false );
-    m_share_action->setEnabled( false );   sc->setLoveAction( m_love_action );
     sc->setTagAction( m_tag_action );
     sc->setShareAction( m_share_action );
 
+    connect(qApp, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
+
+    connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), SLOT(onTrackGotInfo(XmlQuery)));
+    connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotInfo(XmlQuery)));
+    connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), sc, SLOT(onTrackGotInfo(XmlQuery)));
 
 
 /// mediator
@@ -224,6 +232,7 @@ Application::setConnection(PlayerConnection*c)
     connect(c, SIGNAL(resumed()), mw, SLOT(onResumed()));
     connect(c, SIGNAL(paused()), mw, SLOT(onPaused()));
     connect(c, SIGNAL(stopped()), mw, SLOT(onStopped()));
+    connect(c, SIGNAL(trackStarted(Track,Track)), fetcher, SLOT(onTrackStarted(Track,Track)));
     connection = c;
 
     if(c->state() == Playing || c->state() == Paused){
@@ -272,6 +281,12 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     m_love_action->setEnabled( true );
     m_tag_action->setEnabled( true );
     m_share_action->setEnabled( true );
+}
+
+void
+Application::onTrackGotInfo(const XmlQuery& lfm)
+{
+    m_love_action->setChecked(lfm["track"]["userloved"].text() == "1");
 }
 
 void
@@ -330,10 +345,19 @@ Application::onShareTriggered()
 }
 
 void 
-Application::onLoveTriggered()
+Application::changeLovedState(bool loved)
 {
-    MutableTrack t( mw->currentTrack());
-    t.love();
+    emit lovedStateChanged(loved);
+
+    if (loved)
+    {
+        MutableTrack t( mw->currentTrack());
+        t.love();
+    }
+    else
+    {
+        // TODO: unlove!
+    }
 }
 
 PlayerConnection*

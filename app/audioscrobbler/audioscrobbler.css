@@ -133,7 +133,7 @@ TagDialog > QLabel,
 TrackWidget > QRadioButton,
 ShareDialog > QCheckBox ,
 ShareDialog QGroupBox,
-TagDialog QGroupBox { color: #cccccc; font-weight: bold; }
+TagDialog QGroupBox { color: #cccccc; }
 
 ShareDialog > QRadioButton:disabled ,
 TagDialog > QRadioButton:disabled {
@@ -186,7 +186,7 @@ ProfileWidget QFrame#ScrobbleDetails QLabel {
 
 QWidget#NowScrobbling #value,
 QWidget#NowScrobbling #name,
-MetadataWindow DataListWidget { 
+MetadataWindow > DataListWidget { 
     font-weight: bold;
     border-top: 1px solid #333;
     margin-top: 7px;
@@ -285,6 +285,8 @@ QPushButton#love { background-image: url(:/love-rest.png); }
 QPushButton#love:hover { background-image: url(:/love-onhover.png); }
 QPushButton#love:pressed { background-image: url(:/love-onpress.png); }
 QPushButton#love:checked { background-image: url(:/love-isloved.png); } 
+QPushButton#love:pressed { background-image: url(:/love-onpress.png); }
+QPushButton#love:disabled { background-image: url(:/love-disabled.png); } 
 
 QPushButton#tag { background-image: url(:/tag-rest.png); } 
 QPushButton#tag:hover { background-image: url(:/tag-onhover.png); } 

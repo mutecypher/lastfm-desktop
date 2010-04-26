@@ -33,6 +33,10 @@ ScrobbleControls::ScrobbleControls()
 
     layout()->addWidget(ui.love = new QPushButton(tr("love")));
     ui.love->setObjectName("love");
+    ui.love->setCheckable( true );
+
+    connect(ui.love, SIGNAL(clicked(bool)), qApp, SLOT(changeLovedState(bool)));
+    connect(qApp, SIGNAL(lovedStateChanged(bool)), ui.love, SLOT(setChecked(bool)));
     
     layout()->addWidget(ui.tag = new QPushButton(tr("tag")));
     ui.tag->setObjectName("tag");
@@ -50,9 +54,9 @@ ScrobbleControls::setEnabled( bool enabled )
 }
 
 void
-ScrobbleControls::setLoveAction( const QAction* a )
+ScrobbleControls::onTrackGotInfo(const XmlQuery& lfm)
 {
-    connect( ui.love, SIGNAL(clicked()), a, SLOT(trigger()));
+    ui.love->setChecked(lfm["track"]["userloved"].text() == "1");
 }
 
 void
