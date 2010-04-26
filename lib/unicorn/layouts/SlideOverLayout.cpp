@@ -209,13 +209,14 @@ SlideOverLayout::revealWidget( QWidget* w )
 
     if( m_itemList[ index ] == m_itemList[ 0 ])
     {
+        m_timeLine->stop();
         m_itemList[ 0 ]->widget()->show();
         m_timeLine->setStartFrame( 0 );
         m_timeLine->setEndFrame( geometry().height());
         m_timeLine->start();
         return;
     }
-
+    m_timeLine->stop();
     m_timeLine->setDirection( QTimeLine::Forward );
     m_timeLine->setStartFrame( geometry().height());
     m_timeLine->setEndFrame( 0 );

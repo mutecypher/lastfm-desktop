@@ -21,17 +21,18 @@
 #ifndef STYLABLE_WIDGET_H_
 #define STYLABLE_WIDGET_H_
 #include <QFrame>
-#include <QStyleOption>
+#include <QStyleOptionFrameV3>
 #include <QPainter>
 
 class StylableWidget: public QFrame{
+Q_OBJECT
 public:
-    StylableWidget( QWidget* parent = 0, Qt::WindowFlags f = 0 ): QFrame( parent, f ), hasInit( false ){}
+    StylableWidget( QWidget* parent = 0, Qt::WindowFlags f = 0 ): QFrame( parent, f ), hasInit( false ){ setAutoFillBackground( true );}
 
 protected:
     void paintEvent(QPaintEvent*)
     {
-        QStyleOption opt;
+        QStyleOptionFrameV3 opt;
         opt.init(this);
         QPainter p(this);
         style()->drawPrimitive(QStyle::PE_Frame, &opt, &p, this);

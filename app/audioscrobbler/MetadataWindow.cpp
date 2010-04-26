@@ -63,8 +63,6 @@ MetadataWindow::MetadataWindow()
     setPalette( pal );
     setAutoFillBackground( true );
     
-    setAttribute( Qt::WA_MacAlwaysShowToolWindow );
-	
 #ifdef Q_OS_MAC
 	setWindowFlags( Qt::CustomizeWindowHint );
 #else
@@ -95,7 +93,10 @@ MetadataWindow::MetadataWindow()
 
     ui.now_playing_source->setObjectName("now_playing");
     ui.now_playing_source->setFixedHeight( 22 );
-    qobject_cast<QBoxLayout*>(centralWidget()->layout())->addLayout( layout );
+    QWidget* slideOverWidget = new StylableWidget();
+    slideOverWidget->setObjectName( "slideOverContainer" );
+    slideOverWidget->setLayout( layout );
+    centralWidget()->layout()->addWidget( slideOverWidget );
     layout->addWidget( stack.profile = new ProfileWidget());
 
     setCurrentWidget( stack.profile );
@@ -103,32 +104,34 @@ MetadataWindow::MetadataWindow()
 
     setMinimumWidth( 410 );
 
-
-    // status bar and scrobble controls
-    QStatusBar* statusBar = new QStatusBar( this );
+    StylableWidget* statusBar = new StylableWidget( this );
+    statusBar->setObjectName( "StatusBar" );
     {
         statusBar->setContentsMargins( 0, 0, 0, 0 );
-#ifdef Q_WS_WIN
-        statusBar->setSizeGripEnabled( false );
-#else
+        ui.userButton = new UserToolButton();
+        ui.userButton->setChecked( true );
+        connect( ui.userButton, SIGNAL(toggled( bool )), SLOT(toggleProfile( bool )));
+
+        QHBoxLayout* sb = new QHBoxLayout( statusBar );
+        QSizeGrip* sg = new QSizeGrip( this );
+
+        sb->addWidget( ui.userButton );
+#ifndef Q_WS_WIN
         //FIXME: this code is duplicated in the radio too
         //In order to compensate for the sizer grip on the bottom right
         //of the window, an empty QWidget is added as a spacer.
-        QSizeGrip* sg = statusBar->findChild<QSizeGrip *>();
         if( sg )
-            statusBar->addWidget( new GhostWidget( sg ) );
+            sb->addWidget( new GhostWidget( sg ) );
 #endif
-        ui.userButton = new UserToolButton();
-        statusBar->addWidget( ui.userButton );
-        ui.userButton->setChecked( true );
-        connect( ui.userButton, SIGNAL(toggled( bool )), SLOT(toggleProfile( bool )));
-        //Seemingly the only way to get a central widget in a QStatusBar
-        //is to add an empty widget either side with a stretch value.
-        statusBar->addWidget( new QWidget( statusBar), 1 );
-        statusBar->addWidget( ui.sc = new ScrobbleControls());
-        statusBar->addWidget( new QWidget( statusBar), 1 );
-        statusBar->addWidget( new GhostWidget( ui.userButton ));
-        setStatusBar( statusBar );
+
+        sb->addWidget( new QWidget(), 1 );
+        sb->addWidget( ui.sc = new ScrobbleControls());
+        sb->addWidget( new QWidget(), 1 );
+        sb->addWidget( new GhostWidget( ui.userButton ));
+#ifndef Q_WS_WIN
+        sb->addWidget( sg, 0 , Qt::AlignBottom | Qt::AlignRight );
+#endif
+        centralWidget()->layout()->addWidget( statusBar );
     }
 
 #ifdef Q_OS_MAC

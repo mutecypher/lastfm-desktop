@@ -4,7 +4,9 @@
 #include <QWidget>
 #include "lib/unicorn/StylableWidget.h"
 
-class GhostWidget : public StylableWidget{
+class GhostWidget : public StylableWidget 
+{
+    Q_OBJECT
 public:
     GhostWidget( QWidget* origin, QWidget* parent = 0 );
 
