@@ -22,6 +22,7 @@
 #include <QApplication>
 
 #include <QToolButton>
+#include <QPainter>
 #include <lastfm/User>
 #include "lib/unicorn/widgets/UserMenu.h"
 
@@ -29,7 +30,8 @@ using namespace lastfm;
 
 UserToolButton::UserToolButton()
 {
-    setIconSize( QSize( 32, 32 ));
+    setMouseTracking( true );
+    setIconSize( QSize( 40, 40 ));
     setCheckable( true );
 
     if( unicorn::Settings().userRoster().count() > 1 ) {
@@ -62,8 +64,42 @@ UserToolButton::onImageDownloaded()
     QNetworkReply* reply = qobject_cast<QNetworkReply*>( sender());
     Q_ASSERT( reply);
 
-    QImage img = QImage::fromData( reply->readAll());    
-    setIcon( QIcon(QPixmap::fromImage( img)));
+    QPixmap pm;
+    if( !pm.loadFromData( reply->readAll()) )
+        pm = QPixmap(":lastfm/default_user_small.png");
+
+    QPixmap on( ":lastfm/profile_on.png" );
+    QPixmap off( ":lastfm/profile_off.png" );
+    QPixmap hover( ":lastfm/profile_hover.png" );
+
+    QIcon icon;
+
+    {
+        QPainter p( &on );
+        p.setRenderHint( QPainter::SmoothPixmapTransform );
+        p.setCompositionMode( QPainter::CompositionMode_DestinationOver );
+        qDebug() << "On rect: " << on.rect();
+        p.drawPixmap( on.rect().adjusted( 5, 5, -5, -5 ), pm, pm.rect());
+    }
+    icon.addPixmap( on, QIcon::Normal, QIcon::On );
+
+    {
+        QPainter p( &off );
+        p.setRenderHint( QPainter::SmoothPixmapTransform );
+        p.setCompositionMode( QPainter::CompositionMode_DestinationOver );
+        p.drawPixmap( off.rect().adjusted( 5, 5, -5, -5 ), pm, pm.rect());
+    }
+    icon.addPixmap( off, QIcon::Normal, QIcon::Off );
+
+     {
+        QPainter p( &hover );
+        p.setRenderHint( QPainter::SmoothPixmapTransform );
+        p.setCompositionMode( QPainter::CompositionMode_DestinationOver );
+        p.drawPixmap( hover.rect().adjusted( 5, 5, -5, -5 ), pm, pm.rect());
+    }
+    icon.addPixmap( hover, QIcon::Active );
+
+    setIcon( icon );
 }
 
 void 

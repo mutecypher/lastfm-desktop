@@ -31,8 +31,13 @@ Q_OBJECT
 public:
     ScrobbleStatus( QWidget* parent = 0 );
 
+signals:
+    void clicked();
+
 protected:
-    virtual void paintEvent ( class QPaintEvent* );
+    virtual void paintEvent( class QPaintEvent* );
+    virtual void mousePressEvent( class QMouseEvent* );
+    virtual void mouseReleaseEvent( class QMouseEvent* );
 
 private:
     struct {
@@ -48,6 +53,7 @@ private:
 
     QPointer<StopWatch> m_stopWatch;
     QTimer* m_timer;
+    bool m_mouseDown;
 
 public slots:
     void onTrackStarted( const Track&, const Track& );

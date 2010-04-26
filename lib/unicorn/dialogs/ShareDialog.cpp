@@ -44,7 +44,7 @@
 const int kMaxMessage(1000);
 
 ShareDialog::ShareDialog( const Track& t, QWidget* parent )
-    : unicorn::Dialog( parent, Qt::Window )
+    : unicorn::Dialog( parent, Qt::Tool )
 {
     m_track = t;
 
@@ -60,6 +60,7 @@ ShareDialog::ShareDialog( const Track& t, QWidget* parent )
 void
 ShareDialog::setupUi()
 {
+
     QHBoxLayout* h1 = new QHBoxLayout;
     h1->addWidget( ui.track = new TrackWidget( m_track ), Qt::AlignLeft );
 

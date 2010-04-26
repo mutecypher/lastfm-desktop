@@ -136,11 +136,11 @@ unicorn::MainWindow::eventFilter( QObject* o, QEvent* event )
     {
         case QEvent::MouseButtonPress:
             m_dragHandleMouseDownPos[ obj ] = e->globalPos() - pos();
-            return true;
+            return false;
 
         case QEvent::MouseButtonRelease:
             m_dragHandleMouseDownPos[ obj ] = QPoint();
-            return true;
+            return false;
             
         case QEvent::MouseMove:
             if (m_dragHandleMouseDownPos.contains( obj ) && !m_dragHandleMouseDownPos[ obj ].isNull()) {

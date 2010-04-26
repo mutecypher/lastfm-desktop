@@ -58,6 +58,8 @@ Dir.chdir File.dirname(ARGV[0]) do
       when ".ui"  then forms     << path
       when ".qrc" then resources << path
       when ".cpp" then sources   << path
+      when ".mm"  then sources   << path if Platform::IMPL == :macosx
+      when ".m"   then sources   << path if Platform::IMPL == :macosx
     end
   end
 end

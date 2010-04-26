@@ -25,11 +25,13 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QTimer>
+#include <QMouseEvent>
 
 ScrobbleStatus::ScrobbleStatus( QWidget* parent )   
                :StylableWidget( parent ),
                 m_stopWatch( 0 ),
-                m_timer( 0 )
+                m_timer( 0 ),
+                m_mouseDown( false )
 {
     new QHBoxLayout( this );
     
@@ -127,4 +129,19 @@ ScrobbleStatus::onTrackStopped()
     ui.title->setText("");
     ui.playerStatus->setText("");
     ui.as->clear();
+}
+
+void 
+ScrobbleStatus::mousePressEvent( QMouseEvent* event )
+{
+    m_mouseDown = true;
+}
+
+void 
+ScrobbleStatus::mouseReleaseEvent( QMouseEvent* event )
+{
+    if( m_mouseDown &&
+        contentsRect().contains( event->pos() )) emit clicked();
+    
+    m_mouseDown = false;
 }

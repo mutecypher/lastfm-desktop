@@ -34,6 +34,7 @@ SearchBox::SearchBox(QWidget* parent)
 : HelpTextLineEdit( tr(""), parent )
 , m_searching(false)
 {
+    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
     setAttribute( Qt::WA_MacShowFocusRect, false );
     m_completer = new QCompleter(this);
     m_completer->setCaseSensitivity(Qt::CaseInsensitive);
