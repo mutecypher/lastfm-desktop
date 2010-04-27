@@ -23,9 +23,11 @@
 
 #include <QToolButton>
 
+#include "lib/DllExportMacro.h"
+
 namespace lastfm{ class UserDetails; };
 
-class UserToolButton : public QToolButton
+class UNICORN_DLLEXPORT UserToolButton : public QToolButton
 {
     Q_OBJECT
 public:

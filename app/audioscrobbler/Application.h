@@ -25,6 +25,7 @@
 class PlayerMediator;
 class PlayerConnection;
 class MetadataWindow;
+class ScrobbleInfoFetcher;
 class StopWatch;
 class QAction;
 
@@ -48,6 +49,7 @@ namespace audioscrobbler
         QPointer<PlayerConnection> connection;
         QPointer<StopWatch> watch;
         QPointer<MetadataWindow> mw;
+        QPointer<ScrobbleInfoFetcher> fetcher;
         
         QAction* m_submit_scrobbles_toggle;
         QAction* m_artist_action;
@@ -70,9 +72,15 @@ namespace audioscrobbler
         void trackStarted( const Track&, const Track& );
         void scrobblerStatus( int );
 
+        void lovedStateChanged(bool loved);
+
     public slots:
         void quit();
         void actuallyQuit();
+
+        void changeLovedState(bool loved);
+
+        void onTrackGotInfo(const XmlQuery& lfm);
 
     private slots:
         void init();
@@ -80,8 +88,7 @@ namespace audioscrobbler
         void onTrayActivated(QSystemTrayIcon::ActivationReason);
         void onStopWatchTimedOut();
         void setConnection(PlayerConnection*);
-        
-        void onLoveTriggered();
+
         void onTagTriggered();
         void onShareTriggered();
         
@@ -95,6 +102,6 @@ namespace audioscrobbler
         void onActivateWindow();
 
         void onMessageReceived(const QString& message);
-        
+
     };
 }

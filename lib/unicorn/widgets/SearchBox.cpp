@@ -46,8 +46,10 @@ SearchBox::SearchBox(QWidget* parent)
 void
 SearchBox::onTextEdited(const QString& text)
 {
-    if (!m_searching && text.length()) {
-        QNetworkReply* reply = startSearch(text);
+    QString trimmedText = text.trimmed();
+
+    if (!m_searching && trimmedText.length()) {
+        QNetworkReply* reply = startSearch(trimmedText);
         if (reply) {
             m_searching = true;
             connect(reply, SIGNAL(finished()), SLOT(onSearchFinished()));
@@ -94,7 +96,7 @@ SearchBox::onSearchFinished()
 
     m_searching = false;
     // possibly a search pending:
-    if (text() != searchTerm) {
+    if (text().trimmed() != searchTerm) {
         onTextEdited(text());
     }
 }

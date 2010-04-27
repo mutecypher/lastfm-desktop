@@ -23,6 +23,8 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
+#include <lastfm/XmlQuery>
+
 namespace unicorn{ class Session; };
 namespace lastfm{ class UserDetails; };
 
@@ -35,9 +37,11 @@ public:
 
     void setEnabled( bool enabled );
     
-    void setLoveAction( const QAction* a );
     void setTagAction( const QAction* a );
     void setShareAction( const QAction* a );
+
+public slots:
+    void onTrackGotInfo(const XmlQuery& lfm);
 
 protected:
     struct {

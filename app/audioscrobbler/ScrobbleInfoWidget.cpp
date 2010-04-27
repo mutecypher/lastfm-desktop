@@ -187,7 +187,6 @@ ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
     }
 
     connect(t.album().getInfo( lastfm::ws::Username , lastfm::ws::SessionKey ), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
-    connect(t.getInfo( lastfm::ws::Username , lastfm::ws::SessionKey ), SIGNAL(finished()), SLOT(onTrackGotInfo()));
 
     ui.topFans->clear();
     connect(t.getTopFans(), SIGNAL(finished()), SLOT(onTrackGotTopFans()));
@@ -281,10 +280,8 @@ ScrobbleInfoWidget::onAlbumGotInfo()
 }
 
 void
-ScrobbleInfoWidget::onTrackGotInfo()
+ScrobbleInfoWidget::onTrackGotInfo(const XmlQuery& lfm)
 {
-    XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
-
     int scrobbles = lfm["track"]["playcount"].text().toInt();
     int listeners = lfm["track"]["listeners"].text().toInt();
     int userListens = lfm["track"]["userplaycount"].text().toInt();

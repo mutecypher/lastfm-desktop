@@ -60,6 +60,8 @@ public:
     const Track& currentTrack() const{ return m_currentTrack; }
     ScrobbleControls* scrobbleControls() const{ return ui.sc; }
 
+    QObject* nowScrobbling() const { return stack.nowScrobbling;}
+
 public slots:
     void onTrackStarted(const Track&, const Track&);
     void onStopped();

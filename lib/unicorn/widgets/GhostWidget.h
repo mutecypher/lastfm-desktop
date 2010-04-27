@@ -3,10 +3,9 @@
 
 #include <QWidget>
 #include "lib/unicorn/StylableWidget.h"
+#include "lib/DllExportMacro.h"
 
-class GhostWidget : public StylableWidget 
-{
-    Q_OBJECT
+class UNICORN_DLLEXPORT GhostWidget : public StylableWidget{
 public:
     GhostWidget( QWidget* origin, QWidget* parent = 0 );
 
