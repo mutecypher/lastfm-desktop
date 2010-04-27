@@ -32,12 +32,24 @@ public:
 
 signals:
     void trackGotInfo(const XmlQuery& lfm);
+    void albumGotInfo(const XmlQuery& lfm);
+    void artistGotInfo(const XmlQuery& lfm);
+    void artistGotEvents(const XmlQuery& lfm);
+    void trackGotTopFans(const XmlQuery& lfm);
+
+    void trackGotUserloved(bool userloved);
+
+    void finished();
 
 private slots:
     void onTrackStarted( const Track& t, const Track& oldTrack );
 
     void onTrackGotInfo();
+    void onAlbumGotInfo();
+    void onArtistGotInfo();
+    void onArtistGotEvents();
+    void onTrackGotTopFans();
 
 private:
-
+    class QList<class QNetworkReply* > m_replies;
 };

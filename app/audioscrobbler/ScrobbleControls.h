@@ -40,8 +40,7 @@ public:
     void setTagAction( const QAction* a );
     void setShareAction( const QAction* a );
 
-public slots:
-    void onTrackGotInfo(const XmlQuery& lfm);
+    class QPushButton* loveButton() const { return ui.love; }
 
 protected:
     struct {

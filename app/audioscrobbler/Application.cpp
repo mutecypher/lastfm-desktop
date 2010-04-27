@@ -149,11 +149,18 @@ Application::init()
     sc->setTagAction( m_tag_action );
     sc->setShareAction( m_share_action );
 
-    connect(qApp, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
+    // make the love buttons
+    connect(this, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
+    connect(this, SIGNAL(lovedStateChanged(bool)), sc->loveButton(), SLOT(setChecked(bool)));
 
-    connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), SLOT(onTrackGotInfo(XmlQuery)));
+    connect(fetcher, SIGNAL(trackGotUserloved(bool)), m_love_action, SLOT(setChecked(bool)));
+    connect(fetcher, SIGNAL(trackGotUserloved(bool)), sc->loveButton(), SLOT(setChecked(bool)));
+
     connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotInfo(XmlQuery)));
-    connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), sc, SLOT(onTrackGotInfo(XmlQuery)));
+    connect(fetcher, SIGNAL(albumGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onAlbumGotInfo(XmlQuery)));
+    connect(fetcher, SIGNAL(artistGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onArtistGotInfo(XmlQuery)));
+    connect(fetcher, SIGNAL(trackGotTopFans(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotTopFans(XmlQuery)));
+    connect(fetcher, SIGNAL(artistGotEvents(XmlQuery)), mw->nowScrobbling(), SLOT(onArtistGotEvents(XmlQuery)));
 
 
 /// mediator
@@ -281,12 +288,6 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     m_love_action->setEnabled( true );
     m_tag_action->setEnabled( true );
     m_share_action->setEnabled( true );
-}
-
-void
-Application::onTrackGotInfo(const XmlQuery& lfm)
-{
-    m_love_action->setChecked(lfm["track"]["userloved"].text() == "1");
 }
 
 void

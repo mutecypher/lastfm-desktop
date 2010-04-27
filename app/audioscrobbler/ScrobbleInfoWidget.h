@@ -16,14 +16,12 @@ public:
 
 public slots:
     void onTrackGotInfo(const XmlQuery& lfm);
+    void onAlbumGotInfo(const XmlQuery& lfm);
+    void onArtistGotInfo(const XmlQuery& lfm);
+    void onArtistGotEvents(const XmlQuery& lfm);
+    void onTrackGotTopFans(const XmlQuery& lfm);
 
 protected slots:
-    void onArtistGotInfo();
-    void onArtistGotEvents();
-    void onAlbumGotInfo();
-
-    void onTrackGotTopFans();
-
     void onAnchorClicked( const QUrl& link );
     void onBioChanged( const QSizeF& );
 

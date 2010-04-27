@@ -80,8 +80,6 @@ namespace audioscrobbler
 
         void changeLovedState(bool loved);
 
-        void onTrackGotInfo(const XmlQuery& lfm);
-
     private slots:
         void init();
 

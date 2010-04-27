@@ -181,24 +181,17 @@ ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
         ui.onTour->setEnabled( false );
         ui.similarArtists->clear();
         ui.tags->clear();
-
-        connect(t.artist().getInfo( lastfm::ws::Username , lastfm::ws::SessionKey ), SIGNAL(finished()), SLOT(onArtistGotInfo()));
-        connect(t.artist().getEvents( 1 ), SIGNAL(finished()), SLOT(onArtistGotEvents()));
     }
 
-    connect(t.album().getInfo( lastfm::ws::Username , lastfm::ws::SessionKey ), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
-
     ui.topFans->clear();
-    connect(t.getTopFans(), SIGNAL(finished()), SLOT(onTrackGotTopFans()));
 
+    ui.trackScrobbles->clear();
 }
 
 
 void
-ScrobbleInfoWidget::onArtistGotInfo()
+ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
 {
-    XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
-
     int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
     int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
     int userListens = lfm["artist"]["stats"]["userplaycount"].text().toInt();
@@ -255,10 +248,8 @@ ScrobbleInfoWidget::onStopped()
 
 
 void
-ScrobbleInfoWidget::onArtistGotEvents()
+ScrobbleInfoWidget::onArtistGotEvents(const XmlQuery& lfm)
 {
-    XmlQuery lfm = lastfm::ws::parse( static_cast<QNetworkReply*>(sender()) );
-
     if (lfm["events"].children("event").count() > 0)
     {
         // Display an on tour notification
@@ -268,10 +259,8 @@ ScrobbleInfoWidget::onArtistGotEvents()
 }
 
 void
-ScrobbleInfoWidget::onAlbumGotInfo()
+ScrobbleInfoWidget::onAlbumGotInfo(const XmlQuery& lfm)
 {
-    XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
-
     int scrobbles = lfm["album"]["playcount"].text().toInt();
     int listeners = lfm["album"]["listeners"].text().toInt();
     int userListens = lfm["album"]["userplaycount"].text().toInt();
@@ -290,10 +279,8 @@ ScrobbleInfoWidget::onTrackGotInfo(const XmlQuery& lfm)
 }
 
 void
-ScrobbleInfoWidget::onTrackGotTopFans()
+ScrobbleInfoWidget::onTrackGotTopFans(const XmlQuery& lfm)
 {
-    XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
-
     foreach(const XmlQuery& e, lfm["topfans"].children("user").mid(0, 5))
     {
         ui.topFans->addItem(e["name"].text(), QUrl(e["url"].text()));

@@ -18,6 +18,9 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QList>
+#include <QNetworkReply>
+
 #include <lastfm/ws.h>
 
 #include "ScrobbleInfoFetcher.h"
@@ -30,13 +33,110 @@ ScrobbleInfoFetcher::ScrobbleInfoFetcher(QObject* parent)
 void
 ScrobbleInfoFetcher::onTrackStarted( const Track& t, const Track& oldTrack )
 {
-    connect(t.getInfo( lastfm::ws::Username , lastfm::ws::SessionKey ), SIGNAL(finished()), SLOT(onTrackGotInfo()));
+/// close any outstanding replies from the last track
+    foreach (QNetworkReply* reply, m_replies) reply->close();
+    m_replies.clear();
+
+/// make some requests for the new track
+    {
+        // track.getInfo
+        QNetworkReply* reply = t.getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
+        m_replies.append(reply);
+        connect(reply, SIGNAL(finished()), SLOT(onTrackGotInfo()));
+    }
+    {
+        // album.getInfo
+        QNetworkReply* reply = t.album().getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
+        m_replies.append(reply);
+        connect(reply, SIGNAL(finished()), SLOT(onAlbumGotInfo()));
+    }
+    {
+        // artist.getInfo
+        QNetworkReply* reply = t.artist().getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
+        m_replies.append(reply);
+        connect(reply, SIGNAL(finished()), SLOT(onArtistGotInfo()));
+    }
+    {
+        // artist.getInfo
+        QNetworkReply* reply = t.artist().getEvents( 1 );
+        m_replies.append(reply);
+        connect(reply, SIGNAL(finished()), SLOT(onArtistGotEvents()));
+    }
+    {
+        // artist.getInfo
+        QNetworkReply* reply = t.getTopFans();
+        m_replies.append(reply);
+        connect(reply, SIGNAL(finished()), SLOT(onTrackGotTopFans()));
+    }
 }
 
 
 void
 ScrobbleInfoFetcher::onTrackGotInfo()
 {
-    XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
+    QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
+    bool removed = m_replies.removeOne(reply);
+
+    XmlQuery lfm = reply->readAll();
     emit trackGotInfo(lfm);
+    emit trackGotUserloved(lfm["track"]["userloved"].text() == "1");
+
+    if (m_replies.count() == 0)
+        emit finished();
+}
+
+
+void
+ScrobbleInfoFetcher::onAlbumGotInfo()
+{
+    QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
+    bool removed = m_replies.removeOne(reply);
+
+    XmlQuery lfm = reply->readAll();
+    emit albumGotInfo(lfm);
+
+    if (m_replies.count() == 0)
+        emit finished();
+}
+
+
+void
+ScrobbleInfoFetcher::onArtistGotInfo()
+{
+    QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
+    bool removed = m_replies.removeOne(reply);
+
+    XmlQuery lfm = reply->readAll();
+    emit artistGotInfo(lfm);
+
+    if (m_replies.count() == 0)
+        emit finished();
+}
+
+
+void
+ScrobbleInfoFetcher::onArtistGotEvents()
+{
+    QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
+    bool removed = m_replies.removeOne(reply);
+
+    XmlQuery lfm = reply->readAll();
+    emit artistGotEvents(lfm);
+
+    if (m_replies.count() == 0)
+        emit finished();
+}
+
+
+void
+ScrobbleInfoFetcher::onTrackGotTopFans()
+{
+    QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
+    bool removed = m_replies.removeOne(reply);
+
+    XmlQuery lfm = reply->readAll();
+    emit trackGotTopFans(lfm);
+
+    if (m_replies.count() == 0)
+        emit finished();
 }
