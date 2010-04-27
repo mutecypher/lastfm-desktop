@@ -2,8 +2,7 @@ TEMPLATE = app
 TARGET = radio
 VERSION = 2.0.0
 QT = core gui xml network phonon
-CONFIG += lastfm
-LIBS += -lunicorn
+CONFIG += lastfm unicorn
 win32:LIBS += user32.lib
 
 win32:release {

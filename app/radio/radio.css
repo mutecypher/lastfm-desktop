@@ -1,4 +1,5 @@
 @import "../../lib/unicorn/unicorn.css";
+@import "unicorn.css";
 
 YourStationsWidget, RecentStationsWidget,
 QuickStartWidget, MoreStationsWidget, AdvancedOptionsDialog {

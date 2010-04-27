@@ -21,6 +21,9 @@ macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
     CSS_PATH=$$_PRO_FILE_PWD_/$$TARGET$$quote(.css)
     exists( $$CSS_PATH ) {
         QMAKE_POST_LINK += echo Copying css file..; cp $$CSS_PATH $$BUNDLE_DIR/Contents/Resources;
+        unicorn {
+            QMAKE_POST_LINK += echo Copying unicorn.css; cp $$ROOT_DIR/lib/unicorn/unicorn.css $$BUNDLE_DIR/Contents/Resources;
+        }
     }
 
     ## install_name_tool / copy frameworks, dylibs etc
