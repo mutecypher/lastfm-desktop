@@ -23,8 +23,9 @@
 #include <QFrame>
 #include <QStyleOptionFrameV3>
 #include <QPainter>
+#include "lib/DllExportMacro.h"
 
-class StylableWidget: public QFrame{
+class UNICORN_DLLEXPORT StylableWidget: public QFrame{
 Q_OBJECT
 public:
     StylableWidget( QWidget* parent = 0, Qt::WindowFlags f = 0 ): QFrame( parent, f ), hasInit( false ){ setAutoFillBackground( true );}
