@@ -46,9 +46,8 @@ public:
 
 QuickStartWidget::QuickStartWidget()
 {
-    QVBoxLayout* layout = new QVBoxLayout(this);
-
-    QHBoxLayout* h1 = new QHBoxLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout( this );
+    QHBoxLayout* h1 = new QHBoxLayout();
     QPushButton* button = new AAQPushButton(tr("Play"));
     h1->addWidget(m_edit = new HelpTextLineEdit( tr("Type an artist or tag"), this ) );
     h1->addWidget(button);

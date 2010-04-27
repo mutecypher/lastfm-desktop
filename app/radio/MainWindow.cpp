@@ -26,6 +26,7 @@
 #include "lib/unicorn/qtwin.h"
 #include "lib/unicorn/AnimatedStatusBar.h"
 #include "lib/unicorn/widgets/MessageBar.h"
+#include "lib/unicorn/StylableWidget.h"
 #include <lastfm/RadioStation>
 #include <QLineEdit>
 #include <QSizeGrip>
@@ -48,11 +49,9 @@ MainWindow::MainWindow()
     status->addWidget( pcw, 1 );
     setStatusBar( status );
 
-    QWidget* w = new QWidget();
+    QWidget* w = new StylableWidget();
     
-    new QVBoxLayout( w );
-    w->layout()->setContentsMargins( 0, 0, 0, 0 );
-    w->layout()->addWidget(m_mainWidget = new MainWidget());
+    setCentralWidget( m_mainWidget = new MainWidget() );
 
     layout()->setSizeConstraint( QLayout::SetFixedSize );
 
@@ -71,7 +70,6 @@ MainWindow::MainWindow()
     //the current session to start things rolling.
     onSessionChanged( qobject_cast<unicorn::Application*>(qApp)->currentSession(), Session());
 
-    setCentralWidget( w );
 
     finishUi();
 

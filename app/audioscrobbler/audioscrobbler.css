@@ -1,4 +1,4 @@
-@import "unicorn.css";
+@import "../../lib/unicorn/unicorn.css";
 
 ScrobbleMeter {
     margin: 1px 3px 1px 5px;
@@ -63,7 +63,6 @@ QWidget#NowScrobbling {
     min-height: 195px;
 }
 
-QStatusBar QPushButton,
 #StatusBar QPushButton {
     color: transparent;
     background-color: transparent;
@@ -76,17 +75,12 @@ QStatusBar QPushButton,
     width: 40;
 }
 
-QStatusBar,
 #StatusBar {
     background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #4c4c4c, stop:1 #3d3d3d);
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
     border: 1px solid #808080;
     border-top: none;
-}
-
-QStatusBar::item {
-    border: none;
 }
 
 #StatusBar {
@@ -146,8 +140,6 @@ TagDialog QGroupBox::flat {
 TagDialog QGroupBox DataListWidget {
     border: none;
 }
-
-ShareDialog QLabel[xerror="true"] { color: #d51007; }
 
 MetadataWindow ProfileWidget .QLabel,
 MetadataWindow QWidget#NowScrobbling QLabel,
@@ -287,20 +279,6 @@ MetadataWindow #artist_image {
     min-height: 85px; 
 }
 
-QPushButton#love { background-image: url(:/love-rest.png); }
-QPushButton#love:hover { background-image: url(:/love-onhover.png); }
-QPushButton#love:pressed { background-image: url(:/love-onpress.png); }
-QPushButton#love:checked { background-image: url(:/love-isloved.png); } 
-QPushButton#love:pressed { background-image: url(:/love-onpress.png); }
-QPushButton#love:disabled { background-image: url(:/love-disabled.png); } 
-
-QPushButton#tag { background-image: url(:/tag-rest.png); } 
-QPushButton#tag:hover { background-image: url(:/tag-onhover.png); } 
-QPushButton#tag:pressed { background-image: url(:/tag-onpress.png); } 
-
-QPushButton#share { background-image: url(:/share-rest.png); } 
-QPushButton#share:hover { background-image: url(:/share-onhover.png); }
-QPushButton#share:pressed { background-image: url(:/share-onpress.png); }
 
 
 QLabel#title1 
@@ -340,8 +318,6 @@ QLabel#title2
 }
 
 QSizeGrip {
-    /*margin-right: 12px;
-    magin-bottom: 12px;*/
     color: #808080;
 }
 

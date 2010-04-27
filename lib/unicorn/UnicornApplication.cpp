@@ -71,14 +71,16 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     AEInstallEventHandler( kCoreEventClass, kAEReopenApplication, h, 0, false );
 #endif
 
-    #ifdef Q_WS_MAC
-        #define CSS_PATH "/../Resources/"
-    #else
-        #define CSS_PATH "/"
-    #endif
+#ifdef Q_WS_MAC
+    #define CSS_PATH "/../Resources/"
+#else
+    #define CSS_PATH "/"
+#endif
+
     if( !styleSheet().isEmpty() ) {
         QString cssPath = QUrl( styleSheet() ).toLocalFile();
         cssPath = QDir::currentPath() + cssPath;
+        m_cssDir = QFileInfo( cssPath ).path();
         QFile cssFile( cssPath );
         cssFile.open( QIODevice::ReadOnly );
         m_styleSheet = cssFile.readAll();
@@ -88,9 +90,18 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     if( styleSheet().isEmpty()) {
         QString cssFileName = QFileInfo(applicationFilePath()).baseName() + ".css";
         QFile stylesheetFile( applicationDirPath() + CSS_PATH + cssFileName );
+        m_cssDir = applicationDirPath() + CSS_PATH;
         stylesheetFile.open( QIODevice::ReadOnly );
         m_styleSheet = stylesheetFile.readAll();
         setStyleSheet( m_styleSheet );
+    }
+
+    QRegExp rx( "@import\\s*\"([^\"]*)\";" );
+    int pos = 0;
+    while( (pos = rx.indexIn( m_styleSheet, pos )) != -1 ) {
+        QFile f( m_cssDir + "/" +  rx.cap( 1 ));
+        loadStyleSheet( f );
+        pos += rx.matchedLength();
     }
 
     translate();
@@ -107,6 +118,14 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
 
     initiateLogin();
 
+}
+
+void 
+unicorn::Application::loadStyleSheet( QFile& file )
+{
+    file.open( QIODevice::ReadOnly );
+    m_styleSheet += file.readAll();
+    setStyleSheet( m_styleSheet );
 }
 
 void

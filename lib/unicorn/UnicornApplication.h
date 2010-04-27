@@ -142,12 +142,14 @@ namespace unicorn
         void translate();
         void setupHotKeys();
         void onHotKeyEvent(quint32 id);
+        void loadStyleSheet( QFile& );
 
         QString m_styleSheet;
         Session m_currentSession;
         Bus m_bus;
         bool m_signingIn;
 		QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
+        QString m_cssDir;
 #ifdef __APPLE__
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
 #endif

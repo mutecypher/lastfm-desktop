@@ -1,0 +1,17 @@
+QPushButton#love { background-image: url(:/love-rest.png); }
+QPushButton#love:hover { background-image: url(:/love-onhover.png); }
+QPushButton#love:pressed { background-image: url(:/love-onpress.png); }
+QPushButton#love:checked { background-image: url(:/love-isloved.png); } 
+QPushButton#love:pressed { background-image: url(:/love-onpress.png); }
+QPushButton#love:disabled { background-image: url(:/love-disabled.png); } 
+
+QPushButton#tag { background-image: url(:/tag-rest.png); } 
+QPushButton#tag:hover { background-image: url(:/tag-onhover.png); } 
+QPushButton#tag:pressed { background-image: url(:/tag-onpress.png); } 
+
+QPushButton#share { background-image: url(:/share-rest.png); } 
+QPushButton#share:hover { background-image: url(:/share-onhover.png); }
+QPushButton#share:pressed { background-image: url(:/share-onpress.png); }
+
+ShareDialog QLabel[xerror="true"] { color: #d51007; }
+

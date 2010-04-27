@@ -64,7 +64,6 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
                        :StylableWidget( parent )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
-    setLayout(layout);
 
     layout->addWidget( ui.radioOptions = new QPushButton( tr( "radio options" ) ));
     ui.radioOptions->setObjectName( "radioOptions" );
@@ -87,7 +86,7 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     connect(ui.radioOptionsDialog, SIGNAL(finished(int)), SLOT(onRadioOptionsFinished(int)));
 
     {
-        QHBoxLayout* volumeLayout = new QHBoxLayout( this );
+        QHBoxLayout* volumeLayout = new QHBoxLayout();
         volumeLayout->setObjectName( "volumeLayout" );
 
         QLabel* volumeLeft = new QLabel( "Volume Down", this );
@@ -116,7 +115,7 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
 
     {
         // add the control buttons
-        QHBoxLayout* controlsLayout = new QHBoxLayout( this );
+        QHBoxLayout* controlsLayout = new QHBoxLayout();
         controlsLayout->setObjectName( "controls" );
         controlsLayout->setContentsMargins( 0, 0, 0, 0 );
         controlsLayout->setSpacing( 0 );

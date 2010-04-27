@@ -1,13 +1,9 @@
-MainWidget,
-ShareDialog {
-    background: #1a1a1a; /*qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
-                                 stop:0 #211f20, stop:1 #383840 );*/
-}
+@import "../../lib/unicorn/unicorn.css";
 
 YourStationsWidget, RecentStationsWidget,
 QuickStartWidget, MoreStationsWidget, AdvancedOptionsDialog {
     background: #242424;
-    border-radius: 3px;
+    border-radius: 6px;
     border-style: solid;
     border-width: 5px;
     background-origin: contents;
@@ -31,23 +27,23 @@ RecentStationsWidget > QListView::item {
 YourStationsWidget > .QLabel,
 RecentStationsWidget > .QLabel,
 QuickStartWidget > .QLabel,
-MoreStationsWidget > .QLabel ,
-ShareDialog QLabel,
-ShareDialog QRadioButton,
-ShareDialog QCheckBox
+MoreStationsWidget > .QLabel
 {
     font-weight: bold;
     color: white;
 }
-
-ShareDialog QLabel[xerror="true"] { color: #d51007; }
 
 QuickStartWidget > QLineEdit {
     top: 10px;
     position: relative;
 }
 
-BackForwardControls {
+BackForwardControls
+{
+    background-color: #1a1a1a; 
+    /*qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
+                                 stop:0 #211f20, stop:1 #383840 );*/
+    border: none;
     margin: 0px;
     padding: 0px;
 }
@@ -57,6 +53,7 @@ BackForwardControls #BackForwardsRow {
                                  stop:0 #727070, stop:1 #353434 );
     padding:0px;
     margin:0px;
+    border: none;
 }
 
 QuickStartWidget QPushButton,
@@ -156,6 +153,10 @@ MoreStationsWidget QPushButton#combos { background-image: url(:/combo_rest_26x27
 MoreStationsWidget QPushButton#combos:hover { background-image: url(:/combo_hover_26x27.png); }
 MoreStationsWidget QPushButton#combos:pressed { background-image: url(:/combo_pressed_26x27.png); }
 
+PlaybackControlsWidget {
+    border: none;
+}
+
 PlaybackControlsWidget > QLabel {
     color: transparent;
     background-color: transparent;
@@ -242,26 +243,6 @@ PlaybackControlsWidget > QPushButton#radioOptions:checked:hover {
 
 PlaybackControlsWidget > QPushButton#radioOptions:checked:pressed {
     background-image: url(:/options-on-onpressed.png);
-}
-
-PlaybackControlsWidget > QPushButton#love {
-    background-image: url(:/love-rest.png);
-}
-
-PlaybackControlsWidget >  QPushButton#love:hover {
-    background-image: url(:/love-onhover.png);
-}
-
-PlaybackControlsWidget >  QPushButton#love:pressed {
-    background-image: url(:/love-onpress.png);
-}
-
-PlaybackControlsWidget > QPushButton#love:checked {
-    background-image: url(:/love-isloved.png);
-}
-
-PlaybackControlsWidget > QPushButton#love:disabled {
-    background-image: url(:/love-disabled.png);
 }
 
 PlaybackControlsWidget > QPushButton#ban {
