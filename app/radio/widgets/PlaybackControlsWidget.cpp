@@ -165,7 +165,11 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     connect( ui.play, SIGNAL( clicked(bool)), SLOT( onPlayClicked(bool)) );
     connect( ui.skip, SIGNAL( clicked()), radio, SLOT(skip()));
     connect( ui.info, SIGNAL( clicked()), SLOT(onInfoClicked()));
-    connect( ui.radioOptions, SIGNAL( clicked(bool)), SLOT(onRadioOptionsClicked(bool)));
+    connect( ui.radioOptions, SIGNAL( clicked(bool)), SLOT(onRadioOptionsClicked(bool)) );
+
+    // send and recieve love state changes on the playbus
+    connect( qApp, SIGNAL(busLovedStateChanged(bool)), ui.love, SLOT(setChecked(bool)) );
+    connect( ui.love, SIGNAL(clicked(bool)), qApp, SLOT(sendBusLovedStateChanged(bool)) );
 
     setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
 
@@ -316,6 +320,7 @@ PlaybackControlsWidget::onLoveFinished()
     if ( lfm.attribute( "status" ) == "ok" )
     {
         // TODO: show some feedback
+        emit lovedStateChanged(true);
     }
     else
     {

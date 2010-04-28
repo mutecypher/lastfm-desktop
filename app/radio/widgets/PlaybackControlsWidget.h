@@ -85,6 +85,8 @@ private slots:
 
 signals:
     void startRadio(RadioStation);
+
+    void lovedStateChanged(bool loved);
 };
 
 

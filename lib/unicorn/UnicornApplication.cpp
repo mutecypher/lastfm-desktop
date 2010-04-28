@@ -109,6 +109,7 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     connect( &m_bus, SIGNAL( signingInQuery( QString )), SLOT( onSigningInQuery( QString )));
     connect( &m_bus, SIGNAL( sessionQuery( QString )), SLOT( onBusSessionQuery( QString )));
     connect( &m_bus, SIGNAL( sessionChanged( Session )), SLOT( onBusSessionChanged( Session )));
+    connect( &m_bus, SIGNAL( lovedStateChanged(bool)), SIGNAL( busLovedStateChanged(bool)));
 
     m_bus.board();
 
@@ -285,6 +286,13 @@ unicorn::Application::changeSession( const Session& newSession, bool announce )
         m_bus.changeSession( currentSession());
 
     emit sessionChanged( currentSession(), oldSession );
+}
+
+void
+unicorn::Application::sendBusLovedStateChanged( bool loved )
+{
+    QByteArray message = loved ? "LOVED=true" : "LOVED=false";
+    m_bus.sendMessage(message);
 }
 
 void 
