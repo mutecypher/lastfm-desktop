@@ -37,8 +37,8 @@ TagDialog::TagDialog( const Track& track, QWidget *parent )
     m_track = track;
     
     setupUi();
-
     setWindowTitle( tr("Tag") );
+    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
     
     connect( User().getTopTags(), SIGNAL(finished()), SLOT(onUserGotTopTags()) );
     connect( m_track.getTopTags(), SIGNAL(finished()), SLOT(onTrackGotTopTags()) );
@@ -47,6 +47,8 @@ TagDialog::TagDialog( const Track& track, QWidget *parent )
 
     connect( ui.buttons, SIGNAL(accepted()), SLOT(onAccepted()) );
     connect( ui.buttons, SIGNAL(rejected()), SLOT(reject()) );
+
+    resize( width(), sizeHint().height());
 }
 
 void
@@ -58,6 +60,13 @@ TagDialog::onUserGotTopTags()
     {
         ui.yourTags->addItem( e["name"].text(), QUrl(e["url"].text()));
     }
+
+    ui.yourTagsBox->setEnabled( true );
+    if( restoreState( ui.popularTagsBox, "yourTagsToggled", true ).toBool()) {
+        ui.yourTagsBox->setChecked( true );
+    }
+
+    resize( width(), sizeHint().height());
 }
 
 void
@@ -69,6 +78,13 @@ TagDialog::onTrackGotTopTags()
     {
         ui.popularTags->addItem( e["name"].text(), QUrl(e["url"].text()));
     }
+    
+    ui.popularTagsBox->setEnabled( true );
+    if( restoreState( ui.popularTagsBox, "popularTagsToggled", true ).toBool()) {
+        ui.popularTagsBox->setChecked( true );
+    }
+
+    resize( width(), sizeHint().height());
 }
 
 void
@@ -77,8 +93,14 @@ TagDialog::onTagBoxToggled( bool toggled )
     QGroupBox* gb = qobject_cast< QGroupBox* >( sender());
     Q_ASSERT( gb );
 
+    if( gb == ui.popularTagsBox )
+        saveState( ui.popularTagsBox, "popularTagsToggled", toggled );
+    else if( gb == ui.yourTagsBox )
+        saveState( ui.yourTagsBox, "yourTagsToggled", toggled );
+    
     gb->findChild<QWidget*>()->setVisible( toggled );
-    gb->setFlat( !toggled );
+
+    resize( width(), sizeHint().height());
 }
 
 void
@@ -122,8 +144,12 @@ TagDialog::setupUi()
     {
         v->addWidget( ui.popularTagsBox = new QGroupBox( tr("Popular tags"), this ) );
         ui.popularTagsBox->setCheckable( true );
+        ui.popularTagsBox->setChecked( false );
+        ui.popularTagsBox->setEnabled( false );
         QVBoxLayout* layout = new QVBoxLayout();
+        layout->setContentsMargins( 0, 0, 0, 0 );
         layout->addWidget( ui.popularTags = new DataListWidget );
+        ui.popularTags->setHidden( true );
         ui.popularTagsBox->setLayout( layout );
         connect(ui.popularTagsBox, SIGNAL(toggled(bool)), SLOT(onTagBoxToggled(bool)));
     }
@@ -131,11 +157,17 @@ TagDialog::setupUi()
     {
         v->addWidget( ui.yourTagsBox = new QGroupBox( tr("Your tags"), this ) );
         ui.yourTagsBox->setCheckable( true );
+        ui.yourTagsBox->setChecked( false );
+        ui.yourTagsBox->setEnabled( false );
         QVBoxLayout* layout = new QVBoxLayout();
         layout->addWidget( ui.yourTags = new DataListWidget );
+        ui.yourTags->setHidden( true );
+        layout->setContentsMargins( 0, 0, 0, 0 );
         ui.yourTagsBox->setLayout( layout );
         connect(ui.yourTagsBox, SIGNAL(toggled(bool)), SLOT(onTagBoxToggled(bool)));
     }
+    
+    v->addStretch();
 
     v->addWidget( ui.buttons = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );
 }

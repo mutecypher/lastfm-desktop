@@ -19,11 +19,11 @@
 */
 
 #include "lib/DllExportMacro.h"
-#include <QFrame>
+#include "lib/unicorn/StylableWidget.h"
 
 class QUrl;
 
-class UNICORN_DLLEXPORT DataListWidget : public QFrame
+class UNICORN_DLLEXPORT DataListWidget : public StylableWidget 
 {
     Q_OBJECT
 

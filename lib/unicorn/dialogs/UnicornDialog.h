@@ -24,10 +24,26 @@ public:
         m_firstShow = false;
 
         cleverlyPosition();
-        return setVisible( visible );
+        return QDialog::setVisible( visible );
     }
 
 protected:
+    void saveState( const QObject* object, const QString& key, const QVariant& value ) const
+    {
+        AppSettings s;
+        s.beginGroup( QString( metaObject()->className()));
+        s.beginGroup( QString( object->metaObject()->className()));
+        s.setValue( key, value );
+    }
+
+    QVariant restoreState( const QObject* object, const QString& key, const QVariant& defaultValue = QVariant() ) const
+    {
+        AppSettings s;
+        s.beginGroup( QString( metaObject()->className()));
+        s.beginGroup( QString( object->metaObject()->className()));
+        return s.value( key, defaultValue );
+    }
+
     virtual void moveEvent( QMoveEvent* event )
     {
         using unicorn::MainWindow;
@@ -37,7 +53,7 @@ protected:
         AppSettings s;
         s.beginGroup( QString( metaObject()->className() ));
             s.setValue( "position", (pos() - mw->pos()));
-        s.endGroup();
+        return QDialog::moveEvent( event );
     }
 
 private slots:
