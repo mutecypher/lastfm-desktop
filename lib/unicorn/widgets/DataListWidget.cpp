@@ -94,7 +94,7 @@ protected:
 };
 
 DataListWidget::DataListWidget(QWidget* parent)
-    :QFrame(parent)
+    :StylableWidget(parent)
 {
     new FlowLayout( this, 0, 0, 0 );
     layout()->setContentsMargins( 0, 3, 0, 7 );
@@ -105,6 +105,7 @@ DataListWidget::clear()
 {
     foreach( QObject* c, findChildren<QWidget*>())
         c->deleteLater();
+
 }
 
 void 

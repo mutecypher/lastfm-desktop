@@ -131,17 +131,6 @@ QScrollArea {
     margin: 15px;
 }
 
-TagDialog QGroupBox::flat {
-    background: transparent;
-    border: none;
-    margin: 0px;
-    padding: 0px;
-}
-
-TagDialog QGroupBox DataListWidget {
-    border: none;
-}
-
 MetadataWindow ProfileWidget .QLabel,
 MetadataWindow QWidget#NowScrobbling QLabel,
 MetadataWindow QListView,
@@ -221,52 +210,6 @@ QTextBrowser {
 QTextBrowser, QLabel#title1, QLabel#title2 {
 
     color: #e6e6e6;
-}
-
-ItemSelectorWidget {
-	background: #FFFFFF;
-	border: 1px solid #BBBBBB;
-	border-color: black;
-	padding: 0;
-}
-
-ItemSelectorWidget:edit-focus {
-	border-color: blue;
-}
-
-SelectedItemWidget {
-	margin: -2px 1px;
-	padding: -2px 2px;
-	border: 1px solid black;
-}
-
-SelectedItemWidget:hover {
-/*	background: #cccccc;*/
-}
-
-SelectedItemWidget QLabel {
-	background-color: transparent;
-	color: black;
-	font-weight: normal;
-	margin: 1px;
-	padding: 0;
-	border: 0;
-}
-
-SelectedItemWidget QPushButton {
-	background-color: transparent;
-	background-image: url(:/delete.png);
-	background-repeat: no-repeat;
-    background-position: left;
-	background-origin: margin;
-	color: transparent;
-    border: none;
-    text-align: left;
-    padding: 0px 0px; 
-    margin: 0px 0px;
-	height: 15px;
-    min-width: 15px;
-	max-width: 15px;
 }
 
 QListView{
