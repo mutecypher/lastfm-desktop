@@ -15,9 +15,11 @@
         <file alias="tag-rest.png">tag_29x29_rest.png</file>
         <file alias="tag-onhover.png">tag_29x29_hover.png</file>
         <file alias="tag-onpress.png">tag_29x29_pressed.png</file>
+		<file alias="tag-disabled.png">tag_29x29_disabled.png</file>
         <file alias="share-rest.png">share_29x29_rest.png</file>
         <file alias="share-onhover.png">share_29x29_hover.png</file>
         <file alias="share-onpress.png">share_29x29_pressed.png</file>
+		<file alias="share-disabled.png">share_29x29_disabled.png</file>
 		<file alias="delete.png">delete.png</file>
         <file>close.png</file>
     </qresource>
