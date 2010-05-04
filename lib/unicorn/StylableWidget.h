@@ -34,6 +34,7 @@ protected:
     void paintEvent(QPaintEvent*)
     {
         QStyleOptionFrameV3 opt;
+        setFrameStyle( QFrame::NoFrame );
         opt.init(this);
         QPainter p(this);
         style()->drawPrimitive(QStyle::PE_Frame, &opt, &p, this);

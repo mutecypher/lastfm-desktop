@@ -44,7 +44,10 @@ TitleBar::TitleBar( const QString& title )
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
     QPushButton* pb;
-    layout->addWidget( pb = new QPushButton( "" ));
+    layout->addWidget( pb = new QPushButton( "Close" ));
+#ifdef Q_OS_MAC
+    pb->setShortcut( Qt::CTRL + Qt::Key_H );
+#endif
     connect( pb, SIGNAL(clicked()), SIGNAL( closeClicked()));
     pb->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
     pb->setFlat( true );
@@ -84,7 +87,29 @@ MetadataWindow::MetadataWindow()
     connect( titleBar, SIGNAL( closeClicked()), SLOT( close()));
 #endif
 
-    centralWidget()->layout()->addWidget(ui.now_playing_source = new ScrobbleStatus());
+    ui.now_playing_source = new ScrobbleStatus();
+    ui.now_playing_source->setContentsMargins( 0, 0, 0, 0 );
+    QWidget* hb = new StylableWidget();
+    hb->setObjectName( "ScrobbleStatusRow" );
+    new QHBoxLayout( hb );
+    hb->layout()->setContentsMargins( 0, 0, 0, 0 );
+    hb->layout()->setSpacing( 0 );
+    ui.profileToggle = new QPushButton( "profile" );
+    ui.profileToggle->setObjectName( "ProfileToggle" );
+    ui.infoToggle = new QPushButton( "info" );
+    ui.infoToggle->setObjectName( "InfoToggle" );
+
+    ui.profileToggle->setCheckable( true );
+    ui.profileToggle->setChecked( true );
+    ui.infoToggle->setCheckable( true );
+    ui.profileToggle->setAutoExclusive( true );
+    ui.infoToggle->setAutoExclusive( true );
+    connect( ui.profileToggle, SIGNAL( toggled( bool )), SLOT( toggleProfile( bool )));
+    hb->layout()->addWidget(ui.profileToggle);
+    hb->layout()->addWidget(ui.infoToggle);
+    hb->layout()->addWidget( ui.now_playing_source );
+
+    centralWidget()->layout()->addWidget(hb);
     connect( ui.now_playing_source, SIGNAL( clicked()), SLOT( showNowScrobbling()));
 
     stack.nowScrobbling = new ScrobbleInfoWidget( centralWidget() );
@@ -110,14 +135,14 @@ MetadataWindow::MetadataWindow()
     statusBar->setObjectName( "StatusBar" );
     {
         statusBar->setContentsMargins( 0, 0, 0, 0 );
-        ui.userButton = new UserToolButton();
-        ui.userButton->setChecked( true );
-        connect( ui.userButton, SIGNAL(toggled( bool )), SLOT(toggleProfile( bool )));
 
+        /*ui.userButton = new UserToolButton();
+        ui.userButton->setChecked( true );
+        connect( ui.userButton, SIGNAL(toggled( bool )), SLOT(toggleProfile( bool )));*/
         QHBoxLayout* sb = new QHBoxLayout( statusBar );
         QSizeGrip* sg = new QSizeGrip( this );
 
-        sb->addWidget( ui.userButton );
+        //sb->addWidget( ui.userButton );
 #ifndef Q_WS_WIN
         //FIXME: this code is duplicated in the radio too
         //In order to compensate for the sizer grip on the bottom right
@@ -129,7 +154,7 @@ MetadataWindow::MetadataWindow()
         sb->addWidget( new QWidget(), 1 );
         sb->addWidget( ui.sc = new ScrobbleControls());
         sb->addWidget( new QWidget(), 1 );
-        sb->addWidget( new GhostWidget( ui.userButton ));
+        //sb->addWidget( new GhostWidget( ui.userButton ));
 #ifndef Q_WS_WIN
         sb->addWidget( sg, 0 , Qt::AlignBottom | Qt::AlignRight );
 #endif
@@ -158,7 +183,8 @@ MetadataWindow::MetadataWindow()
 void
 MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
 {
-    ui.userButton->setChecked( false );
+    //ui.userButton->setChecked( false );
+    ui.infoToggle->setChecked( true );
     toggleProfile( false );
     ui.now_playing_source->onTrackStarted( t, previous );
     m_currentTrack = t;
@@ -204,6 +230,7 @@ MetadataWindow::toggleProfile( bool show )
 void 
 MetadataWindow::showNowScrobbling()
 {
-    ui.userButton->setChecked( false );
+    //ui.userButton->setChecked( false );
+    ui.infoToggle->setChecked( true );
     toggleProfile( false );
 }
