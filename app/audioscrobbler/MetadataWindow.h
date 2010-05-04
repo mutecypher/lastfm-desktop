@@ -21,7 +21,7 @@
 #include "lib/unicorn/StylableWidget.h"
 #include <lastfm/Track>
 
-class QPushButton;
+class QAbstractButton;
 class ScrobbleStatus;
 class ScrobbleControls;
 class FirstRunWizard;
@@ -46,10 +46,12 @@ class MetadataWindow : public unicorn::MainWindow
 
         ScrobbleControls* sc;
         MessageBar* message_bar;
+        QAbstractButton* profileToggle;
+        QAbstractButton* infoToggle;
 
         struct {
-            QPushButton* profile;
-            QPushButton* nowScrobbling;
+            QAbstractButton* profile;
+            QAbstractButton* nowScrobbling;
         } nav;
     } ui;
 
