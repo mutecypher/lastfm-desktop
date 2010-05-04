@@ -37,7 +37,6 @@ using unicorn::Session;
 ProfileWidget::ProfileWidget( QWidget* p )
            :StylableWidget( p )
 {
-    setAutoFillBackground( true );
     QVBoxLayout* l = new QVBoxLayout( this );
     QHBoxLayout* userDetails = new QHBoxLayout();
     userDetails->addWidget( ui.avatar = new HttpImageWidget());

@@ -64,7 +64,6 @@ MetadataWindow::MetadataWindow()
     QPalette pal(palette());
     pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ));
     setPalette( pal );
-    setAutoFillBackground( true );
     
 #ifdef Q_OS_MAC
 	setWindowFlags( Qt::CustomizeWindowHint );

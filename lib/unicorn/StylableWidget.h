@@ -28,13 +28,12 @@
 class UNICORN_DLLEXPORT StylableWidget: public QFrame{
 Q_OBJECT
 public:
-    StylableWidget( QWidget* parent = 0, Qt::WindowFlags f = 0 ): QFrame( parent, f ), hasInit( false ){ setAutoFillBackground( true );}
+    StylableWidget( QWidget* parent = 0, Qt::WindowFlags f = 0 ): QFrame( parent, f ), hasInit( false ){ setFrameStyle( QFrame::NoFrame ); setAutoFillBackground( true ); }
 
 protected:
     void paintEvent(QPaintEvent*)
     {
         QStyleOptionFrameV3 opt;
-        setFrameStyle( QFrame::NoFrame );
         opt.init(this);
         QPainter p(this);
         style()->drawPrimitive(QStyle::PE_Frame, &opt, &p, this);
