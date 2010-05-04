@@ -147,8 +147,7 @@ QToolButton::menu-arrow {
 
 QScrollArea,
 QScrollArea > QWidget,
-QScrollArea > QWidget > QWidget,
-QListView {
+QScrollArea > QWidget > QWidget {
     background-color: transparent;
     padding: 0px;
     margin: 0px;
