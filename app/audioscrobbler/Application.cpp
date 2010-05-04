@@ -149,19 +149,27 @@ Application::init()
     sc->setTagAction( m_tag_action );
     sc->setShareAction( m_share_action );
 
-    // make the love buttons
+    // make the love buttons sychronised
     connect(this, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
     connect(this, SIGNAL(lovedStateChanged(bool)), sc->loveButton(), SLOT(setChecked(bool)));
 
+    // tell the radio that the scrobbler's love state has changed
+    connect(this, SIGNAL(lovedStateChanged(bool)), SLOT(sendBusLovedStateChanged(bool)));
+
+    // update the love buttons if love was pressed in the radio
+    connect(this, SIGNAL(busLovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
+    connect(this, SIGNAL(busLovedStateChanged(bool)), sc->loveButton(), SLOT(setChecked(bool)));
+
+    // get the loved status from the fetcher to the love buttons
     connect(fetcher, SIGNAL(trackGotUserloved(bool)), m_love_action, SLOT(setChecked(bool)));
     connect(fetcher, SIGNAL(trackGotUserloved(bool)), sc->loveButton(), SLOT(setChecked(bool)));
 
+    // tell everyone that is interested that data about the current track has been fetched
     connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotInfo(XmlQuery)));
     connect(fetcher, SIGNAL(albumGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onAlbumGotInfo(XmlQuery)));
     connect(fetcher, SIGNAL(artistGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onArtistGotInfo(XmlQuery)));
     connect(fetcher, SIGNAL(trackGotTopFans(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotTopFans(XmlQuery)));
     connect(fetcher, SIGNAL(artistGotEvents(XmlQuery)), mw->nowScrobbling(), SLOT(onArtistGotEvents(XmlQuery)));
-
 
 /// mediator
     mediator = new PlayerMediator(this);

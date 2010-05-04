@@ -70,13 +70,18 @@ namespace unicorn
 
             void onMessage( const QByteArray& message )
             {
-                if( message.contains( "SESSIONCHANGED" ))
+                if( message.startsWith( "SESSIONCHANGED" ))
                 {
                     QByteArray sessionData = message.right( message.size() - 18);
                     QDataStream ds( sessionData );
                     Session newSession;
                     ds >> newSession;
                     emit sessionChanged( newSession );
+                }
+                else if( message.startsWith( "LOVED=" ))
+                {
+                    QByteArray sessionData = message.right( message.size() - 6);
+                    emit lovedStateChanged( sessionData == "true" );
                 }
             }
 
@@ -93,6 +98,7 @@ namespace unicorn
             void sessionQuery( const QString& uuid );
             void sessionChanged( const Session );
             void rosterUpdated();
+            void lovedStateChanged(bool loved);
     };
 
     class UNICORN_DLLEXPORT Application : public QtSingleApplication
@@ -136,6 +142,7 @@ namespace unicorn
 
         void manageUsers();
         void changeSession( const unicorn::Session& newSession, bool announce = true );
+        void sendBusLovedStateChanged(bool loved);
 
     private:
         void initiateLogin( bool forceLogout = false ) throw( StubbornUserException );
@@ -167,6 +174,7 @@ namespace unicorn
         void gotUserInfo( const lastfm::UserDetails& );
         void sessionChanged( const unicorn::Session& newSession, const unicorn::Session& oldSession );
         void rosterUpdated();
+        void busLovedStateChanged(bool loved);
     };
 }
 
