@@ -41,7 +41,6 @@ ScrobbleInfoWidget::ScrobbleInfoWidget( QWidget* p )
     ui.setupUi( this );
 
     connect( qApp, SIGNAL( trackStarted( Track, Track)), SLOT( onTrackStarted( Track, Track )));
-    connect( qApp, SIGNAL( stopped()), SLOT( onStopped()));
     
     connect(ui.bioText->document()->documentLayout(), SIGNAL( documentSizeChanged(QSizeF)), SLOT( onBioChanged(QSizeF)));
     connect(ui.bioText, SIGNAL(anchorClicked(QUrl)), SLOT(onAnchorClicked(QUrl)));
