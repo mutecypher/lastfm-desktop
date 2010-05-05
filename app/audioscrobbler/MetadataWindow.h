@@ -22,6 +22,7 @@
 #include <lastfm/Track>
 
 class QAbstractButton;
+class QTabBar;
 class ScrobbleStatus;
 class ScrobbleControls;
 class FirstRunWizard;
@@ -44,10 +45,10 @@ class MetadataWindow : public unicorn::MainWindow
         ScrobbleStatus* now_playing_source;
         UserToolButton* userButton;
 
+        QTabBar* tabBar;
+
         ScrobbleControls* sc;
         MessageBar* message_bar;
-        QAbstractButton* profileToggle;
-        QAbstractButton* infoToggle;
 
         struct {
             QAbstractButton* profile;
@@ -72,11 +73,17 @@ public slots:
 
 private slots:
     void toggleProfile( bool );
+    void onTabChanged( int );
     void showNowScrobbling();
     
 private:
     Track m_currentTrack;
     void setCurrentWidget( QWidget* );
+
+    enum {
+        TAB_PROFILE,
+        TAB_INFO
+    };
 
 };
 
