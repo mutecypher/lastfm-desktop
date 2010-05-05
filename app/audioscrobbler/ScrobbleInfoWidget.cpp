@@ -20,7 +20,6 @@ ScrobbleInfoWidget::ScrobbleInfoWidget( QWidget* p )
 {
 
     connect( qApp, SIGNAL( trackStarted( Track, Track)), SLOT( onTrackStarted( Track, Track )));
-    connect( qApp, SIGNAL( stopped()), SLOT( onStopped()));
     
     QVBoxLayout* v = new QVBoxLayout( this );
 
