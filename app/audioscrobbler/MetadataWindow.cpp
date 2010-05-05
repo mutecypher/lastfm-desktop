@@ -93,19 +93,11 @@ MetadataWindow::MetadataWindow()
     new QHBoxLayout( hb );
     hb->layout()->setContentsMargins( 0, 0, 0, 0 );
     hb->layout()->setSpacing( 0 );
-    ui.profileToggle = new QPushButton( "profile" );
-    ui.profileToggle->setObjectName( "ProfileToggle" );
-    ui.infoToggle = new QPushButton( "info" );
-    ui.infoToggle->setObjectName( "InfoToggle" );
 
-    ui.profileToggle->setCheckable( true );
-    ui.profileToggle->setChecked( true );
-    ui.infoToggle->setCheckable( true );
-    ui.profileToggle->setAutoExclusive( true );
-    ui.infoToggle->setAutoExclusive( true );
-    connect( ui.profileToggle, SIGNAL( toggled( bool )), SLOT( toggleProfile( bool )));
-    hb->layout()->addWidget(ui.profileToggle);
-    hb->layout()->addWidget(ui.infoToggle);
+    hb->layout()->addWidget( ui.tabBar = new QTabBar());
+    ui.tabBar->insertTab( TAB_PROFILE, tr( "Profile" ) );
+    ui.tabBar->insertTab( TAB_INFO, tr( "Info" ) );
+    connect( ui.tabBar, SIGNAL( currentChanged( int )), SLOT( onTabChanged( int )));
     hb->layout()->addWidget( ui.now_playing_source );
 
     centralWidget()->layout()->addWidget(hb);
@@ -183,7 +175,7 @@ void
 MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
 {
     //ui.userButton->setChecked( false );
-    ui.infoToggle->setChecked( true );
+    ui.tabBar->setCurrentIndex( TAB_INFO );
     toggleProfile( false );
     ui.now_playing_source->onTrackStarted( t, previous );
     m_currentTrack = t;
@@ -227,9 +219,19 @@ MetadataWindow::toggleProfile( bool show )
 }
 
 void 
+MetadataWindow::onTabChanged( int index )
+{
+    if( index == 0 ) {
+        toggleProfile( true );
+    } else {
+        toggleProfile( false );
+    }
+}
+
+void 
 MetadataWindow::showNowScrobbling()
 {
     //ui.userButton->setChecked( false );
-    ui.infoToggle->setChecked( true );
+    ui.tabBar->setCurrentIndex( TAB_INFO );
     toggleProfile( false );
 }
