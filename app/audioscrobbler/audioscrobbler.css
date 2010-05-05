@@ -166,13 +166,14 @@ QScrollArea {
 
 MetadataWindow ProfileWidget .QLabel,
 MetadataWindow QWidget#NowScrobbling QLabel,
+MetadataWindow QWidget#NowScrobbling QGroupBox,
 MetadataWindow QListView,
 MetadataWindow DataListWidget
 MetadataWindow ProfileWidget QPushButton {
     color: #cccccc;
     margin: 0px;
     font-size: 11px;
-    font-weight: bold;
+    font-weight: normal;
 }
 
 ProfileWidget #title {
