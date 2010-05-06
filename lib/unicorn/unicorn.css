@@ -27,7 +27,6 @@ TagDialog QGroupBox::indicator::unchecked {
 
 TagDialog QGroupBox::title {
     subcontrol-origin: content;
-    padding: 0px;
     margin: 0px;
     padding: 0px 3px;
 }
