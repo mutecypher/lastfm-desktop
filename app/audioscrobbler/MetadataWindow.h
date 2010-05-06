@@ -21,7 +21,8 @@
 #include "lib/unicorn/StylableWidget.h"
 #include <lastfm/Track>
 
-class QPushButton;
+class QAbstractButton;
+class QTabBar;
 class ScrobbleStatus;
 class ScrobbleControls;
 class FirstRunWizard;
@@ -44,12 +45,14 @@ class MetadataWindow : public unicorn::MainWindow
         ScrobbleStatus* now_playing_source;
         UserToolButton* userButton;
 
+        QTabBar* tabBar;
+
         ScrobbleControls* sc;
         MessageBar* message_bar;
 
         struct {
-            QPushButton* profile;
-            QPushButton* nowScrobbling;
+            QAbstractButton* profile;
+            QAbstractButton* nowScrobbling;
         } nav;
     } ui;
 
@@ -70,11 +73,17 @@ public slots:
 
 private slots:
     void toggleProfile( bool );
+    void onTabChanged( int );
     void showNowScrobbling();
     
 private:
     Track m_currentTrack;
     void setCurrentWidget( QWidget* );
+
+    enum {
+        TAB_PROFILE,
+        TAB_INFO
+    };
 
 };
 

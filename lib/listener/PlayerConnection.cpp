@@ -46,6 +46,16 @@ struct FatalError : public Error
 };
 
 
+void PlayerConnection::forceTrackStarted( const Track& t )
+{
+    emit trackStarted( m_track, t );
+}
+
+void PlayerConnection::forcePaused()
+{
+    emit paused();
+}
+
 void
 PlayerConnection::handleCommand( PlayerCommand command, Track t )
 {

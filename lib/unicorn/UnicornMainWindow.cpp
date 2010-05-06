@@ -63,6 +63,13 @@ unicorn::MainWindow::finishUi()
     QMenu* help = menuBar()->addMenu( tr("Help") );
     QAction* about = help->addAction( tr("About"), this, SLOT(about()) );
     QAction* c4u = help->addAction( tr("Check for Updates"), this, SLOT(checkForUpdates()) );
+
+#ifndef NDEBUG
+    QMenu* debug = menuBar()->addMenu( tr("Debug") );
+    QAction* rss = debug->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()) );
+    rss->setShortcut( Qt::CTRL + Qt::Key_R );
+#endif
+
 #ifdef __APPLE__
     about->setMenuRole( QAction::AboutRole );
     c4u->setMenuRole( QAction::ApplicationSpecificRole );
@@ -85,7 +92,8 @@ unicorn::MainWindow::onGotUserInfo( const lastfm::UserDetails& details )
         a->setEnabled( false );
         a->setObjectName( "UserBlurb" );
         ui.account->insertAction( ui.profile, a );
-    } }
+    }
+}
 
 
 void
@@ -213,26 +221,26 @@ unicorn::MainWindow::cleverlyPosition()
         QRect geo = s.value( "geometry", QRect()).toRect();
     s.endGroup();
 
-    if( geo.isValid())
-    {
-        move( geo.topLeft());
-        resize( geo.size());
-        
-        int screenNum = qApp->desktop()->screenNumber( this );
-        QRect screenRect = qApp->desktop()->availableGeometry( screenNum );
-        if( !screenRect.contains( frameGeometry(), true)) {
-            QRect diff;
-            
-            if( screenRect.contains( frameGeometry(), false )) {
-                diff = frameGeometry().intersected( screenRect );
-            } else {
-                diff = QRect( QPoint( 0, 0 ),  pos() - screenRect.topLeft());
-            }
+    if( !geo.isValid())
+        return;
 
-            int xDir = (diff.left() == screenRect.left() ? 1 : -1 );
-            int yDir = (diff.top() == screenRect.top() ? 1 : -1 );
-            QPoint adjust = QPoint((frameGeometry().width() - diff.width() ) * xDir, (frameGeometry().height() - diff.height()) * yDir);
-            move( pos() + adjust );
-        }
+    move( geo.topLeft());
+    resize( geo.size());
+    
+    int screenNum = qApp->desktop()->screenNumber( this );
+    QRect screenRect = qApp->desktop()->availableGeometry( screenNum );
+    if( !screenRect.contains( frameGeometry(), true)) {
+        QRect diff;
+
+        diff = screenRect.intersected( frameGeometry() );
+
+        if (diff.left() == screenRect.left() )
+            move( diff.left(), pos().y());
+        if( diff.right() == screenRect.right())
+            move( diff.right() - width(), pos().y());
+        if( diff.top() == screenRect.top())
+            move( pos().x(), diff.top());
+        if( diff.bottom() == screenRect.bottom())
+            move( pos().x(), diff.bottom() - height());
     }
 }

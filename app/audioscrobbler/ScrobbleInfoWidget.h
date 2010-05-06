@@ -1,11 +1,37 @@
+/*
+   Copyright 2005-2009 Last.fm Ltd.
+      - Primarily authored by Jono Cole and Doug Mansell
+
+   This file is part of the Last.fm Desktop Application Suite.
+
+   lastfm-desktop is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   lastfm-desktop is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef SCROBBLE_INFO_WIDGET_H_
 #define SCROBBLE_INFO_WIDGET_H_
-#include "lib/unicorn/StylableWidget.h"
+
 #include <lastfm/Track>
 
+#include "ui_ScrobbleInfoWidget.h"
+
+#include "lib/unicorn/StylableWidget.h"
+
+
+class DataListWidget;
 class HttpImageWidget;
 class QLabel;
-class DataListWidget;
+class QGroupBox;
 class QTextBrowser;
 
 class ScrobbleInfoWidget : public StylableWidget
@@ -31,21 +57,8 @@ protected slots:
 signals:
     void lovedStateChanged(bool loved);
 
-protected:
-    struct {
-        HttpImageWidget* artist_image;
-        QLabel* title;
-        QLabel* album;
-        DataListWidget* topFans;
-        QLabel* onTour;
-        QLabel* onTourBlank;
-        DataListWidget* similarArtists;
-        QLabel* artistScrobbles;
-        QLabel* albumScrobbles;
-        QLabel* trackScrobbles;
-        DataListWidget* tags;
-        QTextBrowser* bio;
-    } ui;
+private:
+    Ui_ScrobbleInfoWidget ui;
 };
 
 #endif //SCROBBLE_INFO_WIDGET_H_

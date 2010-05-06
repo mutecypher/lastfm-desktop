@@ -6,7 +6,7 @@
 #include <QDesktopWidget>
 #include "../UnicornMainWindow.h"
 #include "../UnicornSettings.h"
-
+#include <math.h>
 namespace unicorn {
 class Dialog : public QDialog
 {
@@ -79,17 +79,16 @@ private slots:
         if( !screenRect.contains( frameGeometry(), true)) {
             QRect diff;
 
-            if( screenRect.contains( frameGeometry(), false )) {
-                diff = frameGeometry().intersected( screenRect );
-            } else {
-                QPoint diffVector = frameGeometry().center() - screenRect.center();
-                diff.setSize( QSize( diffVector.x(), diffVector.y())  );
-                diff = diff.normalized();
-            }
-            int xDir = (diff.left() == screenRect.left() ? 1 : -1 );
-            int yDir = (diff.top() == screenRect.top() ? 1 : -1 );
-            QPoint adjust = QPoint((frameGeometry().width() - diff.width() ) * xDir, (frameGeometry().height() - diff.height()) * yDir);
-            move( pos() + adjust );
+            diff = screenRect.intersected( frameGeometry() );
+
+            if (diff.left() == screenRect.left() )
+                move( diff.left(), pos().y());
+            if( diff.right() == screenRect.right())
+                move( diff.right() - width(), pos().y());
+            if( diff.top() == screenRect.top())
+                move( pos().x(), diff.top());
+            if( diff.bottom() == screenRect.bottom())
+                move( pos().x(), diff.bottom() - height());
         }
     }
 

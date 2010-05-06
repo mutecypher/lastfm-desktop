@@ -21,6 +21,38 @@ unicorn--MainWindow QWidget#navigation {
     background-color: rgba(20,20,20,240);
 }
 
+unicorn--MainWindow #ScrobbleStatusRow {
+    padding: 0px;
+    margin: 0px;
+    padding-left: 4px;
+    border: none;
+    background: rgba( 20, 20, 20, 240 );
+    border-left: 1px solid #808080;
+}
+
+#ScrobbleStatusRow > QPushButton,
+#ScrobbleStatusRow > QPushButton:flat {
+    qproperty-flat: true;
+    border: 1px solid palette( dark );
+    background-color: palette( button );
+    padding: 0px 3px;
+}
+
+#ScrobbleStatusRow > QPushButton:on {
+    background-color: palette( highlight );
+}
+
+#ScrobbleStatusRow > #ProfileToggle {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+#ScrobbleStatusRow > #InfoToggle {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+
 unicorn--MainWindow #slideOverContainer {
     border-left: 1px solid #808080;
     border-right: 1px solid #808080;
@@ -38,7 +70,7 @@ TitleBar {
 TitleBar QLabel {
     font-weight: bold;
     font-size: 11px;
-    color: #cccccc;
+    color: transparent;
     margin-right: 20px;
 }
 
@@ -47,6 +79,7 @@ TitleBar QPushButton:pressed {
     margin: 0px;
     padding: 0px;
     border: none;
+    color: transparent;
     background-color: transparent;
     background-clip: margin;
     background-origin: margin;
@@ -114,8 +147,7 @@ QToolButton::menu-arrow {
 
 QScrollArea,
 QScrollArea > QWidget,
-QScrollArea > QWidget > QWidget,
-QListView {
+QScrollArea > QWidget > QWidget {
     background-color: transparent;
     padding: 0px;
     margin: 0px;
@@ -132,14 +164,44 @@ QScrollArea {
 }
 
 MetadataWindow ProfileWidget .QLabel,
-MetadataWindow QWidget#NowScrobbling QLabel,
+ScrobbleInfoWidget QLabel,
+ScrobbleInfoWidget QGroupBox,
 MetadataWindow QListView,
 MetadataWindow DataListWidget
 MetadataWindow ProfileWidget QPushButton {
     color: #cccccc;
     margin: 0px;
     font-size: 11px;
-    font-weight: bold;
+    font-weight: normal;
+}
+
+ScrobbleInfoWidget QGroupBox::indicator {
+    image: url(:/lastfm/down_arrow.png);
+}
+
+ScrobbleInfoWidget QGroupBox::indicator::unchecked {
+    image: url(:/lastfm/right_arrow.png);
+}
+
+ScrobbleInfoWidget QGroupBox::title {
+	border-top: 1px solid white;
+	border-bottom: 1px solid white;
+    margin: 5px 0px;
+    padding: 3px 3px;
+}
+
+ScrobbleInfoWidget QGroupBox {
+	font-weight: bold;
+	border: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+ScrobbleInfoWidget QGroupBox DataListWidget {
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    margin-top:1.4ex;
 }
 
 ProfileWidget #title {
@@ -204,16 +266,11 @@ QTextBrowser {
     padding: -8px 0px 0px 0px;
     margin: 7px 0px 0px -5px;
     border: none;
-    border-top: 1px solid #333;
     background-color: transparent;
 }
 QTextBrowser, QLabel#title1, QLabel#title2 {
 
     color: #e6e6e6;
-}
-
-QListView{
-	background-color: white;
 }
 
 MetadataWindow #artist_image {
@@ -223,17 +280,13 @@ MetadataWindow #artist_image {
     min-height: 85px; 
 }
 
-
-
-QLabel#title1 
-{
+QLabel#title1 {
     font-size: 18px;
     font-weight:bold;
     padding:12px 10px 0px 5px;
 }
 
-QLabel#title2
-{
+QLabel#title2 {
     font-size: 12px;
     font-weight: bold;
     padding:12px 10px 0px 5px;
@@ -268,15 +321,15 @@ QSizeGrip {
 ScrobbleStatus#now_playing {
     margin: 0px;
     padding: 0px;
+    margin-left: 4px;
     color: #262626;
     background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #c2dfe7, stop:1 #8ba2a8 );
     border: none;
-    border-left: 1px solid #808080;
     border-right: 1px solid #808080;
-    /*border-top: 1px solid #d9eaef;*/
 }
 
 ScrobbleStatus QLabel {
+    margin: 0;
     padding: 3 5 5 5;
     border: none;
     font-size: 11px;
@@ -285,6 +338,7 @@ ScrobbleStatus QLabel {
 }
 
 ScrobbleStatus QLabel#player_status {
+    margin: 0;
     color: #676767;
 }
 

@@ -77,32 +77,7 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     #define CSS_PATH "/"
 #endif
 
-    if( !styleSheet().isEmpty() ) {
-        QString cssPath = QUrl( styleSheet() ).toLocalFile();
-        cssPath = QDir::currentPath() + cssPath;
-        m_cssDir = QFileInfo( cssPath ).path();
-        QFile cssFile( cssPath );
-        cssFile.open( QIODevice::ReadOnly );
-        m_styleSheet = cssFile.readAll();
-        cssFile.close();
-    }
-    
-    if( styleSheet().isEmpty()) {
-        QString cssFileName = QFileInfo(applicationFilePath()).baseName() + ".css";
-        QFile stylesheetFile( applicationDirPath() + CSS_PATH + cssFileName );
-        m_cssDir = applicationDirPath() + CSS_PATH;
-        stylesheetFile.open( QIODevice::ReadOnly );
-        m_styleSheet = stylesheetFile.readAll();
-        setStyleSheet( m_styleSheet );
-    }
-
-    QRegExp rx( "@import\\s*\"([^\"]*)\";" );
-    int pos = 0;
-    while( (pos = rx.indexIn( m_styleSheet, pos )) != -1 ) {
-        QFile f( m_cssDir + "/" +  rx.cap( 1 ));
-        loadStyleSheet( f );
-        pos += rx.matchedLength();
-    }
+    refreshStyleSheet();
 
     translate();
 
@@ -293,6 +268,44 @@ unicorn::Application::sendBusLovedStateChanged( bool loved )
 {
     QByteArray message = loved ? "LOVED=true" : "LOVED=false";
     m_bus.sendMessage(message);
+}
+
+void
+unicorn::Application::refreshStyleSheet()
+{
+    m_styleSheet.clear();
+
+    if ( m_cssFileName.isNull() )
+    {
+        // This is the first time we are loading the stylesheet
+
+        if( !styleSheet().isEmpty() ) {
+            m_cssFileName = QDir::currentPath() + QUrl( styleSheet() ).toLocalFile();
+            m_cssDir = QFileInfo( m_cssFileName ).path();
+        }
+
+        if( styleSheet().isEmpty()) {
+            m_cssFileName = applicationDirPath() + CSS_PATH + QFileInfo(applicationFilePath()).baseName() + ".css";
+            m_cssDir = applicationDirPath() + CSS_PATH;
+        }
+    }
+
+    if ( !m_cssFileName.isNull() )
+    {
+        QFile cssFile( m_cssFileName );
+        cssFile.open( QIODevice::ReadOnly );
+        m_styleSheet = cssFile.readAll();
+        setStyleSheet( m_styleSheet );
+        cssFile.close();
+    }
+
+    QRegExp rx( "@import\\s*\"([^\"]*)\";" );
+    int pos = 0;
+    while( (pos = rx.indexIn( m_styleSheet, pos )) != -1 ) {
+        QFile f( m_cssDir + "/" +  rx.cap( 1 ));
+        loadStyleSheet( f );
+        pos += rx.matchedLength();
+    }
 }
 
 void 

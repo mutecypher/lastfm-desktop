@@ -8,10 +8,12 @@ QPushButton#love:disabled { background-image: url(:/love-disabled.png); }
 QPushButton#tag { background-image: url(:/tag-rest.png); } 
 QPushButton#tag:hover { background-image: url(:/tag-onhover.png); } 
 QPushButton#tag:pressed { background-image: url(:/tag-onpress.png); } 
+QPushButton#tag:disabled { background-image: url(:/tag-disabled.png); } 
 
 QPushButton#share { background-image: url(:/share-rest.png); } 
 QPushButton#share:hover { background-image: url(:/share-onhover.png); }
 QPushButton#share:pressed { background-image: url(:/share-onpress.png); }
+QPushButton#share:disabled { background-image: url(:/share-disabled.png); }
 
 ShareDialog QLabel[xerror="true"] { color: #d51007; }
 
@@ -25,7 +27,6 @@ TagDialog QGroupBox::indicator::unchecked {
 
 TagDialog QGroupBox::title {
     subcontrol-origin: content;
-    padding: 0px;
     margin: 0px;
     padding: 0px 3px;
 }
