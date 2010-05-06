@@ -143,6 +143,7 @@ namespace unicorn
         void manageUsers();
         void changeSession( const unicorn::Session& newSession, bool announce = true );
         void sendBusLovedStateChanged(bool loved);
+        void refreshStyleSheet();
 
     private:
         void initiateLogin( bool forceLogout = false ) throw( StubbornUserException );
@@ -157,6 +158,7 @@ namespace unicorn
         bool m_signingIn;
 		QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
         QString m_cssDir;
+        QString m_cssFileName;
 #ifdef __APPLE__
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
 #endif
