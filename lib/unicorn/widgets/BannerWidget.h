@@ -6,7 +6,9 @@
 #include <QMatrix>
 #include <QRect>
 
-class BannerWidget : QAbstractButton {
+#include "lib/DllExportMacro.h"
+
+class UNICORN_DLLEXPORT BannerWidget : QAbstractButton {
 Q_OBJECT
 public:
     BannerWidget( const QString& text, QWidget* parent );
