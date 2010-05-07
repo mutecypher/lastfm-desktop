@@ -232,8 +232,10 @@ void
 Application::setConnection(PlayerConnection*c)
 {
     if(connection){
+        // disconnect from all the objects that we connect to below
         disconnect(connection, 0, this, 0);
         disconnect(connection, 0, mw, 0);
+		disconnect(connection, 0, fetcher, 0);
         if(watch)
             connection->setElapsed(watch->elapsed());
     }
@@ -251,13 +253,11 @@ Application::setConnection(PlayerConnection*c)
     connection = c;
 
     if(c->state() == Playing || c->state() == Paused){
-        onTrackStarted(c->track(), Track());
-        mw->onTrackStarted(c->track(), Track());
+        c->forceTrackStarted(Track());
     }
 
     if( c->state() == Paused ) {
-        onPaused();
-        mw->onPaused();
+        c->forcePaused();
     }
 }
 

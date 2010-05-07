@@ -74,6 +74,9 @@ public:
     
     /** only pass the track for CommandStart */
     void handleCommand( PlayerCommand, Track = Track() );    
+
+    void forceTrackStarted( const Track& );
+    void forcePaused();
     
 signals:
     void trackStarted( const Track&, const Track& );
