@@ -100,4 +100,10 @@ SelectedItemWidget QPushButton {
 	max-width: 15px;
 }
 
+BannerWidget {
+    color: white;
+    background-color: qlineargradient( x1:0, y1:1, x2:0, y2:0, stop:0 #b30000, stop:0.49 #c00000, stop:0.50 #d55353, stop:1 #df4646 );
+    font-weight: bold;
+    font-size: 12px;
+}
 

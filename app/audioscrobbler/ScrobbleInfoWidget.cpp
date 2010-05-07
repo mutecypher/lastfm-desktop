@@ -35,13 +35,16 @@
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/DataListWidget.h"
 
+#include "lib/unicorn/widgets/BannerWidget.h"
+
 ScrobbleInfoWidget::ScrobbleInfoWidget( QWidget* p )
                    :StylableWidget( p )
 {
     ui.setupUi( this );
 
+    ui.bruce = new BannerWidget( tr("On Tour"), ui.artistImage );
+
     connect( qApp, SIGNAL( trackStarted( Track, Track)), SLOT( onTrackStarted( Track, Track )));
-    
     connect(ui.bioText->document()->documentLayout(), SIGNAL( documentSizeChanged(QSizeF)), SLOT( onBioChanged(QSizeF)));
     connect(ui.bioText, SIGNAL(anchorClicked(QUrl)), SLOT(onAnchorClicked(QUrl)));
 }

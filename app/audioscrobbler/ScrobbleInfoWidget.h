@@ -27,7 +27,6 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
-
 class DataListWidget;
 class HttpImageWidget;
 class QLabel;
@@ -58,7 +57,11 @@ signals:
     void lovedStateChanged(bool loved);
 
 private:
-    Ui_ScrobbleInfoWidget ui;
+    class : public Ui_ScrobbleInfoWidget
+    {
+    public:
+         class BannerWidget* bruce;
+    } ui;
 };
 
 #endif //SCROBBLE_INFO_WIDGET_H_
