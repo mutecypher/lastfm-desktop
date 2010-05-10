@@ -61,9 +61,6 @@ MetadataWindow::MetadataWindow()
 {
     setWindowTitle( "Audioscrobbler" );
     setAttribute( Qt::WA_TranslucentBackground );
-    QPalette pal(palette());
-    pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ));
-    setPalette( pal );
     
 #ifdef Q_OS_MAC
 	setWindowFlags( Qt::CustomizeWindowHint );
