@@ -18,8 +18,8 @@ protected:
     void resizeEvent( class QResizeEvent* e );
     bool eventFilter( QObject* obj, QEvent* event );
 
-    QMatrix matrix;
-    QRect textRect;
+    QMatrix m_transformMatrix;
+    QRect m_textRect;
 };
 
 #endif //BANNER_WIDGET_H

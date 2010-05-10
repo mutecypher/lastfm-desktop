@@ -175,8 +175,8 @@
   <customwidget>
    <class>HttpImageWidget</class>
    <extends>QWidget</extends>
-   <header>lib\unicorn\widgets\httpimagewidget.h</header>
-  </customwidget>
+   <header>lib/unicorn/widgets/httpimagewidget.h</header>
+ </customwidget>
  </customwidgets>
  <resources/>
  <connections/>
