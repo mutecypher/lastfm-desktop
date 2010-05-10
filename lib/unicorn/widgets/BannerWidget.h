@@ -15,6 +15,9 @@ protected:
     void paintEvent( class QPaintEvent* e );
     void resizeEvent( class QResizeEvent* e );
     bool eventFilter( QObject* obj, QEvent* event );
+
+    QMatrix m_transformMatrix;
+    QRect m_textRect;
 };
 
 #endif //BANNER_WIDGET_H
