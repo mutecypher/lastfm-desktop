@@ -71,24 +71,6 @@ static QString scrobblerStatusText( int const i )
 {
     using lastfm::Audioscrobbler;
     
-    #define tr QObject::tr
-    switch (i)
-    {
-        case Audioscrobbler::ErrorBadSession: return tr( "Your session expired, it is being renewed." );
-        case Audioscrobbler::ErrorBannedClientVersion: return tr( "Your client too old, you must upgrade." );
-        case Audioscrobbler::ErrorInvalidSessionKey: return tr( "Your username or password is incorrect" );
-        case Audioscrobbler::ErrorBadTime: return tr( "Your timezone or date are incorrect" );
-        case Audioscrobbler::ErrorThreeHardFailures: return tr( "The submissions server is down" );
-
-        case Audioscrobbler::Connecting: return tr( "Connecting to Last.fm..." );
-        case Audioscrobbler::Scrobbling: return tr( "Scrobbling..." );
-
-        case Audioscrobbler::TracksScrobbled:
-        case Audioscrobbler::Handshaken:
-            return tr( "Ready" );
-    }
-    #undef tr
-
     return "";
 }
 
@@ -96,6 +78,7 @@ static QString scrobblerStatusText( int const i )
 void
 DiagnosticsDialog::scrobbleActivity( int msg )
 {
+    /*
     m_delay->add( scrobblerStatusText( msg ) );
 
     if (msg == Audioscrobbler::TracksScrobbled)
@@ -122,6 +105,7 @@ DiagnosticsDialog::scrobbleActivity( int msg )
             ui.subs_light->setColor( Qt::red );
             break;
     }
+    */
 }
 
 
