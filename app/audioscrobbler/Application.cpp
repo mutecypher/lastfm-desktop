@@ -224,7 +224,7 @@ Application::onSessionChanged()
 {
     Audioscrobbler* oldAs = as;
     as = new Audioscrobbler("ass");
-    connect( as, SIGNAL(status(int)), SIGNAL(scrobblerStatus(int)));
+    connect( as, SIGNAL(scrobblesSubmitted(int)), SIGNAL(scrobblesSubmitted(int)));
     delete oldAs;
 }
 

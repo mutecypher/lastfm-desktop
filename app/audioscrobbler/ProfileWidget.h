@@ -35,7 +35,7 @@ public:
 protected slots:
     void onSessionChanged( const unicorn::Session& );
     void onGotUserInfo( const lastfm::UserDetails& );
-    void onScrobblerStatus( int );
+    void onScrobblesSubmitted( int numTracks );
 
 protected:
     struct {
