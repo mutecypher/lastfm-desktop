@@ -70,7 +70,7 @@ DiagnosticsDialog::DiagnosticsDialog( QWidget *parent )
 static QString scrobblerStatusText( int const i )
 {
     using lastfm::Audioscrobbler;
-    
+    /*
     #define tr QObject::tr
     switch (i)
     {
@@ -88,7 +88,7 @@ static QString scrobblerStatusText( int const i )
             return tr( "Ready" );
     }
     #undef tr
-
+	*/
     return "";
 }
 
@@ -96,6 +96,7 @@ static QString scrobblerStatusText( int const i )
 void
 DiagnosticsDialog::scrobbleActivity( int msg )
 {
+    /*
     m_delay->add( scrobblerStatusText( msg ) );
 
     if (msg == Audioscrobbler::TracksScrobbled)
@@ -122,6 +123,7 @@ DiagnosticsDialog::scrobbleActivity( int msg )
             ui.subs_light->setColor( Qt::red );
             break;
     }
+    */
 }
 
 

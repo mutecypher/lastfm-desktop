@@ -70,7 +70,7 @@ namespace audioscrobbler
         
     signals:
         void trackStarted( const Track&, const Track& );
-        void scrobblerStatus( int );
+        void scrobblesSubmitted( int numTracks );
 
         void lovedStateChanged(bool loved);
 

@@ -60,7 +60,7 @@ ProfileWidget::ProfileWidget( QWidget* p )
     
     connect( qApp, SIGNAL(sessionChanged(unicorn::Session, unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));
     connect( qApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
-    connect( qApp, SIGNAL(scrobblerStatus(int)), SLOT(onScrobblerStatus(int)));
+    connect( qApp, SIGNAL(scrobblesSubmitted(int)), SLOT(onScrobblesSubmitted(int)));
 }
 
 void 
@@ -86,9 +86,7 @@ ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userdetails )
 }
 
 void 
-ProfileWidget::onScrobblerStatus( int status ) 
+ProfileWidget::onScrobblesSubmitted( int numTracks )
 {
-    if( status == Audioscrobbler::TracksScrobbled ) {
-        ui.scrobbleMeter->incrementCount();
-    }
+    ui.scrobbleMeter + numTracks;
 }

@@ -12,16 +12,16 @@ public:
     :QLabel( p ),
      m_count( 0 ) { } 
 
+    void operator+( int count )
+    {
+        m_count += count;
+        setText( QString::number( m_count ));
+    }
+
 public slots:
     void setCount( const quint32 count )
     {
         m_count = count;
-        setText( QString::number( m_count ));
-    }
-    
-    void incrementCount()
-    {
-        m_count++;
         setText( QString::number( m_count ));
     }
 
