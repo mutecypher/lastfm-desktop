@@ -22,6 +22,7 @@
 #include "ScrobbleMeter.h"
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QListWidget>
 #include <QPushButton>
 #include <QDesktopServices>
 #include "lib/unicorn/UnicornApplication.h"
@@ -32,6 +33,7 @@
 #include <lastfm/ws.h>
 #include <lastfm/User>
 #include <lastfm/Audioscrobbler>
+#include <lastfm/Track>
 
 using unicorn::Session;
 ProfileWidget::ProfileWidget( QWidget* p )
@@ -55,12 +57,15 @@ ProfileWidget::ProfileWidget( QWidget* p )
     scrobbleDetails->layout()->addWidget( ui.since = new QLabel()); 
     ui.since->setAlignment( Qt::AlignCenter );
 
+    ui.recentTracks = new QListWidget( this );
+
     l->addWidget( scrobbleDetails, Qt::AlignTop );
+    l->addWidget( ui.recentTracks, Qt::AlignTop );
     l->addStretch();
     
     connect( qApp, SIGNAL(sessionChanged(unicorn::Session, unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));
     connect( qApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
-    connect( qApp, SIGNAL(scrobblesSubmitted(int)), SLOT(onScrobblesSubmitted(int)));
+    connect( qApp, SIGNAL(scrobblesSubmitted(QList<lastfm::Track>, int)), SLOT(onScrobblesSubmitted(QList<lastfm::Track>, int)));
 }
 
 void 
@@ -86,7 +91,12 @@ ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userdetails )
 }
 
 void 
-ProfileWidget::onScrobblesSubmitted( int numTracks )
+ProfileWidget::onScrobblesSubmitted( const QList<lastfm::Track>& tracks, int succeeded )
 {
-    ui.scrobbleMeter + numTracks;
+    *ui.scrobbleMeter += succeeded;
+
+    foreach ( lastfm::Track track, tracks )
+    {
+        ui.recentTracks->insertItem( 0, track.toString() );
+    }
 }

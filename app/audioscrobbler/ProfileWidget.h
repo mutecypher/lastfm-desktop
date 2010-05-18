@@ -23,6 +23,7 @@
 #include "lib/unicorn/StylableWidget.h"
 
 namespace unicorn{ class Session; }
+namespace lastfm{ class Track; }
 namespace lastfm{ class UserDetails; } 
 
 class ProfileWidget : public StylableWidget
@@ -35,7 +36,7 @@ public:
 protected slots:
     void onSessionChanged( const unicorn::Session& );
     void onGotUserInfo( const lastfm::UserDetails& );
-    void onScrobblesSubmitted( int numTracks );
+    void onScrobblesSubmitted( const QList<lastfm::Track>& tracks, int succeeded );
 
 protected:
     struct {
@@ -43,6 +44,7 @@ protected:
         class ScrobbleMeter* scrobbleMeter;
         class QLabel* since;
         class HttpImageWidget* avatar;
+        class QListWidget* recentTracks;
     } ui;
 };
 

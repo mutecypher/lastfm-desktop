@@ -37,6 +37,7 @@
 #include "lib/unicorn/widgets/BannerWidget.h"
 #include "lib/unicorn/widgets/LfmListViewWidget.h"
 #include <QDebug>
+#include <lastfm/User>
 
 
 ScrobbleInfoWidget::ScrobbleInfoWidget( QWidget* p )

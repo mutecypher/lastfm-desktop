@@ -225,7 +225,7 @@ Application::onSessionChanged()
 {
     Audioscrobbler* oldAs = as;
     as = new Audioscrobbler("ass");
-    connect( as, SIGNAL(scrobblesSubmitted(int)), SIGNAL(scrobblesSubmitted(int)));
+    connect( as, SIGNAL(scrobblesSubmitted(QList<lastfm::Track>, int)), SIGNAL(scrobblesSubmitted(QList<lastfm::Track>, int)));
     delete oldAs;
 }
 
