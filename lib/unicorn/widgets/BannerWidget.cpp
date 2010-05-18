@@ -12,7 +12,6 @@ BannerWidget::BannerWidget( const QString& pText, QWidget* parent )
     setText( QString( " " ) + pText + " " );
     parent->installEventFilter( this );
     move( 0, 0 );
-    setCursor( QCursor( Qt::PointingHandCursor) );
 }
 
 void 

@@ -8,7 +8,7 @@
 
 #include "lib/DllExportMacro.h"
 
-class UNICORN_DLLEXPORT BannerWidget : QAbstractButton {
+class UNICORN_DLLEXPORT BannerWidget : public QAbstractButton {
 Q_OBJECT
 public:
     BannerWidget( const QString& text, QWidget* parent );

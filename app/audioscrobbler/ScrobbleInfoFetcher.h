@@ -36,6 +36,7 @@ signals:
     void artistGotInfo(const XmlQuery& lfm);
     void artistGotEvents(const XmlQuery& lfm);
     void trackGotTopFans(const XmlQuery& lfm);
+    void trackGotTags(const XmlQuery& lfm);
 
     void trackGotUserloved(bool userloved);
 
@@ -49,6 +50,7 @@ private slots:
     void onArtistGotInfo();
     void onArtistGotEvents();
     void onTrackGotTopFans();
+    void onTrackGotTags();
 
 private:
     class QList<class QNetworkReply* > m_replies;

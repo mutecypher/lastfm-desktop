@@ -45,6 +45,7 @@ public slots:
     void onArtistGotInfo(const XmlQuery& lfm);
     void onArtistGotEvents(const XmlQuery& lfm);
     void onTrackGotTopFans(const XmlQuery& lfm);
+    void onTrackGotTags(const XmlQuery& lfm);
 
 protected slots:
     void onAnchorClicked( const QUrl& link );
@@ -60,8 +61,13 @@ private:
     class : public Ui_ScrobbleInfoWidget
     {
     public:
-         class BannerWidget* bruce;
+         class BannerWidget* onTourBanner;
     } ui;
+
+    struct {
+        class LfmListModel* similarArtists;
+        class LfmListModel* listeningNow;
+    } model;
 };
 
 #endif //SCROBBLE_INFO_WIDGET_H_

@@ -81,7 +81,7 @@ ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userdetails )
     QString sinceText = tr("Scrobbles since %1" ).arg( userdetails.dateRegistered().toString( "d MMM yyyy"));
     sinceText += "\n(" + tr( "That's about %1 tracks a week" ).arg( userdetails.scrobbleCount() / weeksRegistered ) + ")";
     ui.since->setText( sinceText );
-    ui.avatar->loadUrl( userdetails.mediumImageUrl());
+    ui.avatar->loadUrl( userdetails.imageUrl( lastfm::Medium ));
     ui.avatar->setHref( userdetails.www());
 }
 
