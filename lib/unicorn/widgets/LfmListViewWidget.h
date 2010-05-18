@@ -4,8 +4,9 @@
 #include <QStyledItemDelegate>
 #include <QPainter>
 #include <QUrl>
+#include "lib/DllExportMacro.h"
 
-class LfmDelegate :public QStyledItemDelegate {
+class UNICORN_DLLEXPORT LfmDelegate :public QStyledItemDelegate {
 public:
     LfmDelegate( QObject* parent = 0 ):QStyledItemDelegate(parent){}
     virtual void paint( QPainter* p, const QStyleOptionViewItem& opt, const QModelIndex& index ) const
@@ -74,7 +75,7 @@ class Artist;
 using lastfm::User;
 using lastfm::Artist;
 
-class LfmListModel : public QAbstractListModel {
+class UNICORN_DLLEXPORT LfmListModel : public QAbstractListModel {
     Q_OBJECT
 public:
      LfmListModel( QObject* parent=0 ):QAbstractListModel( parent ){}
@@ -91,6 +92,7 @@ public:
 
      void clear()
      {
+        if( m_items.isEmpty()) return;
         beginRemoveRows( QModelIndex(), 0, rowCount() -1 );
             m_items.clear();
         endRemoveRows();

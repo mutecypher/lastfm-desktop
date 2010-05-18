@@ -4,10 +4,11 @@
 #include <QLabel>
 #include <QUrl>
 #include <QDesktopServices>
-#include <lastfm.h>
 #include <QPainter>
 #include <QMouseEvent>
 #include "lib/DllExportMacro.h"
+
+#include <lastfm/ws.h>
 
 class UNICORN_DLLEXPORT HttpImageWidget : public QLabel {
 Q_OBJECT

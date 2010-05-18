@@ -1,5 +1,4 @@
 #include "LfmListViewWidget.h"
-#include <lastfm.h>
 #include <lastfm/User>
 #include <lastfm/Artist>
 
