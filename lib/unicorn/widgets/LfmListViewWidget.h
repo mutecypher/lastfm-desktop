@@ -4,11 +4,21 @@
 #include <QStyledItemDelegate>
 #include <QPainter>
 #include <QUrl>
+#include <QAbstractItemView>
+#include <QEvent>
 #include "lib/DllExportMacro.h"
 
+#include <QDebug>
+
 class UNICORN_DLLEXPORT LfmDelegate :public QStyledItemDelegate {
+Q_OBJECT
 public:
-    LfmDelegate( QObject* parent = 0 ):QStyledItemDelegate(parent){}
+    LfmDelegate( QAbstractItemView* parent ):QStyledItemDelegate(parent)
+    {
+        m_viewSize = parent->size();
+        parent->installEventFilter( this );
+    }
+
     virtual void paint( QPainter* p, const QStyleOptionViewItem& opt, const QModelIndex& index ) const
     {
         p->eraseRect( opt.rect );
@@ -35,8 +45,23 @@ public:
     {
         QFontMetrics fm( opt.font );
         int textWidth = fm.width( index.data().toString());
-        return QSize( 55 + textWidth, 40 );
+        return QSize( m_viewSize.width() / 2, 40 );
     }
+
+    bool eventFilter( QObject* obj, QEvent* event )
+    {
+        if( event->type() == QEvent::Resize ) {
+            QWidget* view = qobject_cast< QWidget* >(obj );
+            
+            if( !view ) return false;
+
+            m_viewSize = view->size();
+            emit sizeHintChanged( QModelIndex() );
+        }
+        return false;
+    }
+
+    QSize m_viewSize;
 };
 
 class LfmItem : public QObject {
@@ -94,7 +119,10 @@ public:
      {
         if( m_items.isEmpty()) return;
         beginRemoveRows( QModelIndex(), 0, rowCount() -1 );
-            m_items.clear();
+            foreach( LfmItem* item, m_items ) {
+                item->deleteLater();
+                m_items.removeAll( item );
+            }
         endRemoveRows();
      }
      
