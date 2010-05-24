@@ -22,16 +22,19 @@
 #include "ScrobbleMeter.h"
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QListView>
 #include <QPushButton>
 #include <QDesktopServices>
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/UnicornSession.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
+#include "lib/unicorn/widgets/LfmListViewWidget.h"
 
 #include "ScrobbleMeter.h"
 #include <lastfm/ws.h>
 #include <lastfm/User>
 #include <lastfm/Audioscrobbler>
+#include <lastfm/Track>
 
 using unicorn::Session;
 ProfileWidget::ProfileWidget( QWidget* p )
@@ -55,12 +58,18 @@ ProfileWidget::ProfileWidget( QWidget* p )
     scrobbleDetails->layout()->addWidget( ui.since = new QLabel()); 
     ui.since->setAlignment( Qt::AlignCenter );
 
+    ui.recentTracks = new QListView( this );
+    m_recentTracksModel = new LfmListModel( ui.recentTracks );
+    ui.recentTracks->setModel( m_recentTracksModel );
+
     l->addWidget( scrobbleDetails, Qt::AlignTop );
+    l->addWidget( ui.recentTracks, Qt::AlignTop );
     l->addStretch();
     
     connect( qApp, SIGNAL(sessionChanged(unicorn::Session, unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));
     connect( qApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
-    connect( qApp, SIGNAL(scrobblesSubmitted(int)), SLOT(onScrobblesSubmitted(int)));
+    connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+    connect( qApp, SIGNAL(scrobblesSubmitted(QList<lastfm::Track>, int)), SLOT(onScrobblesSubmitted(QList<lastfm::Track>, int)));
 }
 
 void 
@@ -81,12 +90,22 @@ ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userdetails )
     QString sinceText = tr("Scrobbles since %1" ).arg( userdetails.dateRegistered().toString( "d MMM yyyy"));
     sinceText += "\n(" + tr( "That's about %1 tracks a week" ).arg( userdetails.scrobbleCount() / weeksRegistered ) + ")";
     ui.since->setText( sinceText );
-    ui.avatar->loadUrl( userdetails.mediumImageUrl());
+    ui.avatar->loadUrl( userdetails.imageUrl( lastfm::Medium ));
     ui.avatar->setHref( userdetails.www());
 }
 
-void 
-ProfileWidget::onScrobblesSubmitted( int numTracks )
+void
+ProfileWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
-    ui.scrobbleMeter + numTracks;
+    foreach ( lastfm::Track track, tracks )
+        m_recentTracksModel->addCachedTrack( track );
+}
+
+void 
+ProfileWidget::onScrobblesSubmitted( const QList<lastfm::Track>& tracks, int succeeded )
+{
+    *ui.scrobbleMeter += succeeded;
+
+    foreach ( lastfm::Track track, tracks )
+        m_recentTracksModel->addScrobbledTrack( track );
 }

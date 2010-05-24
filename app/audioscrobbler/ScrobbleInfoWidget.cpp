@@ -34,15 +34,30 @@
 #include "Application.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/DataListWidget.h"
-
 #include "lib/unicorn/widgets/BannerWidget.h"
+#include "lib/unicorn/widgets/LfmListViewWidget.h"
+#include <QDebug>
+#include <lastfm/User>
+
 
 ScrobbleInfoWidget::ScrobbleInfoWidget( QWidget* p )
                    :StylableWidget( p )
 {
     ui.setupUi( this );
+    
+    ui.onTourBanner = new BannerWidget( tr("On Tour"), ui.contents );
+    ui.onTourBanner->setCursor( QCursor( Qt::PointingHandCursor) );
+    ui.onTourBanner->hide();
 
-    ui.bruce = new BannerWidget( tr("On Tour"), ui.artistImage );
+    ui.similarArtists->setAttribute( Qt::WA_MacShowFocusRect, false );
+    ui.listeningNow->setAttribute( Qt::WA_MacShowFocusRect, false );
+
+    ui.similarArtists->setModel( model.similarArtists = new LfmListModel());
+    ui.listeningNow->setModel( model.listeningNow = new LfmListModel());
+    
+    ui.similarArtists->setItemDelegate( new LfmDelegate( ui.similarArtists ));
+    ui.listeningNow->setItemDelegate( new LfmDelegate( ui.listeningNow ));
+
 
     connect( qApp, SIGNAL( trackStarted( Track, Track)), SLOT( onTrackStarted( Track, Track )));
     connect(ui.bioText->document()->documentLayout(), SIGNAL( documentSizeChanged(QSizeF)), SLOT( onBioChanged(QSizeF)));
@@ -56,19 +71,19 @@ ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
     QString title = QString("<a class='title' href=\"%1\">%2</a> ") + QChar(em_dash) + " <a class='title' href=\"%3\">%4</a>";
     const unicorn::Application* uApp = qobject_cast<unicorn::Application*>(qApp);
 
-    ui.title->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg(t.artist().www().toString())
+    ui.title1->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg(t.artist().www().toString())
                                                                                 .arg(t.artist())
                                                                                 .arg(t.www().toString())
                                                                                 .arg(t.title()));
     if( !t.album().isNull() )
     {
         QString album("from <a class='title' href=\"%1\">%2</a>");
-        ui.album->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( t.album().www().toString())
+        ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( t.album().www().toString())
                                                                                .arg( t.album().title()));
     }
     else
     {
-        ui.album->clear();
+        ui.title2->clear();
     }
 
     if (t.artist() != previous.artist())
@@ -77,9 +92,16 @@ ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
         ui.artistImage->clear();
         ui.artistImage->setHref( QUrl());
         ui.bioText->clear();
-        //ui.yourTags->clear();
+        ui.onTourBanner->hide();
+        model.similarArtists->clear();
     }
-
+    if( t != previous )
+    {
+        //ui.listeningNow->model()->clear();
+        ui.topTags->clear();
+        ui.yourTags->clear();
+        model.listeningNow->clear();
+    }
     //ui.topFans->clear();
 
     //ui.trackScrobbles->clear();
@@ -89,19 +111,30 @@ ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
 void
 ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
 {
+    QString xmltext = lfm.text();
+    qDebug() << "Loading image Url:" << xmltext;
+
     int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
     int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
     int userListens = lfm["artist"]["stats"]["userplaycount"].text().toInt();
 
-    foreach(const XmlQuery& e, lfm["artist"]["similar"].children("artist"))
+    model.similarArtists->clear();
+
+    foreach(const XmlQuery& e, lfm["artist"]["similar"].children("artist").mid(0,4))
     {
-        //ui.similarArtists->addItem( e["name"].text(), QUrl(e["url"].text()));
+        #if 0
+        QListWidgetItem* lwi = new QListWidgetItem( e["name"].text());
+        lwi->setData( Qt::DecorationRole, QUrl( e["image size=small"].text()));
+        #endif
+        model.similarArtists->addArtist( Artist( e ));
     }
 
+    /*
     foreach(const XmlQuery& e, lfm["artist"]["tags"].children("tag"))
     {
-        //ui.tags->addItem( e["name"].text(), QUrl(e["url"].text()));
+        ui.tags->addItem( e["name"].text(), QUrl(e["url"].text()));
     }
+    */
 
     //ui.artistScrobbles->setText(QString("%L1").arg(scrobbles) + " plays (" + QString("%L1").arg(listeners) + " listeners)" + "\n" + QString("%L1").arg(userListens) + " plays in your library");
 
@@ -120,7 +153,7 @@ ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
 
     QTextFrame* root = ui.bioText->document()->rootFrame();
     QTextFrameFormat f = root->frameFormat();
-    f.setMargin(12);
+    f.setMargin(0);
     root->setFrameFormat(f);
 
     QUrl url = lfm["artist"]["image size=large"].text();
@@ -135,9 +168,10 @@ ScrobbleInfoWidget::onStopped()
     //ui.bio->clear();
     ui.artistImage->clear();
     ui.artistImage->setHref(QUrl());
-    ui.title->clear();
+    ui.title1->clear();
     //ui.tags->clear();
-    ui.album->clear();
+    ui.title2->clear();
+    ui.onTourBanner->hide();
     //ui.artistScrobbles->clear();
     //ui.albumScrobbles->clear();
     //ui.trackScrobbles->clear();
@@ -150,8 +184,7 @@ ScrobbleInfoWidget::onArtistGotEvents(const XmlQuery& lfm)
     if (lfm["events"].children("event").count() > 0)
     {
         // Display an on tour notification
-        //ui.onTour->show();
-        //ui.onTourBlank->show();
+        ui.onTourBanner->show();
     }
 }
 
@@ -172,15 +205,35 @@ ScrobbleInfoWidget::onTrackGotInfo(const XmlQuery& lfm)
     int listeners = lfm["track"]["listeners"].text().toInt();
     int userListens = lfm["track"]["userplaycount"].text().toInt();
 
-    ui.yourScrobbles->setText(QString("%L1").arg(scrobbles) + " plays (" + QString("%L1").arg(listeners) + " listeners)" + "\n" + QString("%L1").arg(userListens) + " plays in your library");;
+    ui.yourScrobbles->setText( QString("%L1").arg(userListens));
+    ui.totalScrobbles->setText( QString("%L1").arg(scrobbles));
+
+    foreach(const XmlQuery& e, lfm["track"]["toptags"].children("tag").mid(0, 5 ))
+    {
+        ui.topTags->addItem( e["name"].text(), e["url"].text());
+    }
 }
 
 void
 ScrobbleInfoWidget::onTrackGotTopFans(const XmlQuery& lfm)
 {
-    foreach(const XmlQuery& e, lfm["topfans"].children("user").mid(0, 5))
+    model.listeningNow->clear();
+
+    foreach(const XmlQuery& e, lfm["topfans"].children("user").mid(0, 4))
     {
         //ui.topFans->addItem(e["name"].text(), QUrl(e["url"].text()));
+        User u(e);
+        model.listeningNow->addUser(u);
+    }
+}
+
+
+void 
+ScrobbleInfoWidget::onTrackGotTags( const XmlQuery& lfm )
+{
+    foreach(const XmlQuery& e, lfm["tags"].children("tag").mid(0, 5))
+    {
+        ui.yourTags->addItem(e["name"].text(), e["url"].text());
     }
 }
 
@@ -194,5 +247,5 @@ ScrobbleInfoWidget::onAnchorClicked( const QUrl& link )
 void
 ScrobbleInfoWidget::onBioChanged( const QSizeF& size )
 {
-    ui.bio->setMinimumHeight( size.toSize().height() );
+    ui.bioText->setFixedHeight( size.toSize().height() );
 }

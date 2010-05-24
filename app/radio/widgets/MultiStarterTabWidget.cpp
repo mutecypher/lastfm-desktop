@@ -131,10 +131,10 @@ MultiStarterTabWidget::onUserGotFriends()
     item->setData(SourceListModel::Arg1, you.name());
     item->setData(SourceListModel::Sort, " ");
 
-    item->setData(SourceListModel::ImageUrl, you.smallImageUrl());
+    item->setData(SourceListModel::ImageUrl, you.imageUrl(lastfm::Small));
 
     // get the icon image
-    QNetworkReply* reply = lastfm::nam()->get(QNetworkRequest(you.smallImageUrl()));
+    QNetworkReply* reply = lastfm::nam()->get(QNetworkRequest(you.imageUrl(lastfm::Small)));
     connect(reply, SIGNAL(finished()), SLOT(onImageGetFinished()));
 
     doPopulateModel("friends", "user", "name", "realname", "");

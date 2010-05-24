@@ -39,11 +39,11 @@ UserRadioButton::UserRadioButton( const User& user )
     m_image->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::MinimumExpanding );
     
     installEventFilter( this );
-    if( user.mediumImageUrl().isEmpty()) {
+    if( user.imageUrl( lastfm::Medium ).isEmpty()) {
         QNetworkReply* reply = UserDetails::getInfo( user.name() );
         connect( reply, SIGNAL(finished()), SLOT( onUserDetailsFetched()));
     } else {
-        QNetworkReply* reply = lastfm::nam()->get( QNetworkRequest( user.mediumImageUrl()));
+        QNetworkReply* reply = lastfm::nam()->get( QNetworkRequest( user.imageUrl(lastfm::Medium)));
         connect( reply, SIGNAL(finished()), SLOT( onImageLoaded()));
     }
     QGridLayout* gl = new QGridLayout();
@@ -76,7 +76,7 @@ UserRadioButton::onUserDetailsFetched()
     if( user == User())
         m_loggedIn->setText( "(" + tr( "currently logged in" ) + ")" );
 
-    reply = lastfm::nam()->get( QNetworkRequest( user.mediumImageUrl()));
+    reply = lastfm::nam()->get( QNetworkRequest( user.imageUrl(lastfm::Medium)));
     connect( reply, SIGNAL(finished()), SLOT( onImageLoaded()));
 
     m_userName = user.name();

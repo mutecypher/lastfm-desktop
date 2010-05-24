@@ -12,10 +12,11 @@ public:
     :QLabel( p ),
      m_count( 0 ) { } 
 
-    void operator+( int count )
+    ScrobbleMeter& operator+=( const quint32 count )
     {
         m_count += count;
         setText( QString::number( m_count ));
+        return *this;
     }
 
 public slots:

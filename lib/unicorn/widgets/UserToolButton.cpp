@@ -54,7 +54,7 @@ UserToolButton::onSessionChanged()
 void 
 UserToolButton::onUserGotInfo( const UserDetails& user )
 {
-    connect( lastfm::nam()->get(QNetworkRequest( user.mediumImageUrl())), SIGNAL( finished()),
+    connect( lastfm::nam()->get(QNetworkRequest( user.imageUrl( lastfm::Medium))), SIGNAL( finished()),
                                                                           SLOT( onImageDownloaded()));
 }
 

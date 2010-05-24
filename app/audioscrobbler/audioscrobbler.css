@@ -28,30 +28,8 @@ unicorn--MainWindow #ScrobbleStatusRow {
     border: none;
     background: rgba( 20, 20, 20, 240 );
     border-left: 1px solid #808080;
+    border-right: 1px solid #808080;
 }
-
-#ScrobbleStatusRow > QPushButton,
-#ScrobbleStatusRow > QPushButton:flat {
-    qproperty-flat: true;
-    border: 1px solid palette( dark );
-    background-color: palette( button );
-    padding: 0px 3px;
-}
-
-#ScrobbleStatusRow > QPushButton:on {
-    background-color: palette( highlight );
-}
-
-#ScrobbleStatusRow > #ProfileToggle {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-}
-
-#ScrobbleStatusRow > #InfoToggle {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-}
-
 
 unicorn--MainWindow #slideOverContainer {
     border-left: 1px solid #808080;
@@ -177,20 +155,22 @@ MetadataWindow ProfileWidget QPushButton {
 
 ScrobbleInfoWidget QGroupBox::indicator {
     image: url(:/lastfm/down_arrow.png);
+    subcontrol-position: right;
 }
 
 ScrobbleInfoWidget QGroupBox::indicator::unchecked {
+    subcontrol-position: right;
     image: url(:/lastfm/right_arrow.png);
 }
 
 ScrobbleInfoWidget QGroupBox::title {
 	subcontrol-origin: margin;
 	subcontrol-position: top left;
-	border-top-origin: margin;
 	border-top: 1px solid white;
 	border-bottom: 1px solid white;
     margin: 0px 0px;
-    padding: 0px 0px;
+    min-width: 0px;
+    padding-right: 99999px;
 }
 
 ScrobbleInfoWidget QGroupBox {
@@ -200,6 +180,22 @@ ScrobbleInfoWidget QGroupBox {
 	margin-top: 3ex;
 }
 
+ScrobbleInfoWidget QListView,
+ProfileWidget QListView  {
+    background-color: transparent;
+    border: none;
+    qproperty-flow: TopToBottom;
+    qproperty-viewMode: IconMode;
+    font-size: 14pt;
+}
+
+ProfileWidget QListView  {
+    qproperty-viewMode: ListMode;
+	qproperty-iconSize: 0px 0px;
+	qproperty-selectionMode: NoSelection;
+
+}
+
 ProfileWidget #title {
     font-size: 20pt;
 }
@@ -207,7 +203,6 @@ ProfileWidget #title {
 ProfileWidget #avatar {
     border: 1px solid white;
     min-height: 64px;
-    max-width: 64px;
     min-width: 64px;
     max-width: 64px;
 }
@@ -229,17 +224,6 @@ ProfileWidget QFrame#ScrobbleDetails QLabel {
     text-align: center;
 }
 
-
-
-QWidget#NowScrobbling #value,
-QWidget#NowScrobbling #name,
-MetadataWindow > DataListWidget { 
-    font-weight: bold;
-    border-top: 1px solid #333;
-    margin-top: 7px;
-    margin-bottom: 0px;
-}
-
 MetadataWindow QLabel#name {
     margin-top: 4px;
     padding-top:2px;
@@ -247,10 +231,10 @@ MetadataWindow QLabel#name {
 }
 
 DataListWidget QLabel{ padding: 0px; margin: 0px; padding-left: 5px;}
+DataListWidget { padding: 0px; margin: 0px; margin-bottom: -4px; }
 
 MetadataWindow QLabel#value,
-MetadataWindow #value > QLabel, 
-MetadataWindow DataListWidget {
+MetadataWindow #value > QLabel {
     padding-top 1px;
     font-weight: normal;
 }
@@ -258,18 +242,16 @@ MetadataWindow DataListWidget {
 MetadataWindow QLabel#value { padding: 5px; }
 
 QTextBrowser {
-    font-size: 12px;
-    padding: -8px 0px 0px 0px;
-    margin: 7px 0px 0px -5px;
+    font-size: 10px;
     border: none;
     background-color: transparent;
 }
 QTextBrowser, QLabel#title1, QLabel#title2 {
-
     color: #e6e6e6;
+	qproperty-wordWrap: true;
 }
 
-MetadataWindow #artist_image {
+MetadataWindow #artistImage {
     padding: 0px;  
     border: 1px solid #716f6f; 
     min-width: 85px; 
@@ -317,11 +299,13 @@ QSizeGrip {
 ScrobbleStatus#now_playing {
     margin: 0px;
     padding: 0px;
-    margin-left: 4px;
     color: #262626;
     background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #c2dfe7, stop:1 #8ba2a8 );
     border: none;
-    border-right: 1px solid #808080;
+    border: 1px solid #808080;
+    border-right: none;
+    /*border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;*/
 }
 
 ScrobbleStatus QLabel {
@@ -354,6 +338,10 @@ QComboBox::item:!selected {
  * The following css will affect rich text in QLabel / QTextBrowser etc
  */
 
+p {
+    line-height: 30px;
+}
+
 a {
     color: #4c7699;
     text-decoration: none;
@@ -367,4 +355,3 @@ a.title {
 a.title :hover {
     color: #4c7699
 }
-

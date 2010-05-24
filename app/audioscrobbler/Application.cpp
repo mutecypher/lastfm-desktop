@@ -166,10 +166,12 @@ Application::init()
 
     // tell everyone that is interested that data about the current track has been fetched
     connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotInfo(XmlQuery)));
+    connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
     connect(fetcher, SIGNAL(albumGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onAlbumGotInfo(XmlQuery)));
     connect(fetcher, SIGNAL(artistGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onArtistGotInfo(XmlQuery)));
     connect(fetcher, SIGNAL(trackGotTopFans(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotTopFans(XmlQuery)));
     connect(fetcher, SIGNAL(artistGotEvents(XmlQuery)), mw->nowScrobbling(), SLOT(onArtistGotEvents(XmlQuery)));
+    connect(fetcher, SIGNAL(trackGotTags(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotTags(XmlQuery)));
 
 /// mediator
     mediator = new PlayerMediator(this);
@@ -224,7 +226,8 @@ Application::onSessionChanged()
 {
     Audioscrobbler* oldAs = as;
     as = new Audioscrobbler("ass");
-    connect( as, SIGNAL(scrobblesSubmitted(int)), SIGNAL(scrobblesSubmitted(int)));
+    connect( as, SIGNAL(scrobblesSubmitted(QList<lastfm::Track>, int)), SIGNAL(scrobblesSubmitted(QList<lastfm::Track>, int)));
+    connect( as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
     delete oldAs;
 }
 
@@ -296,6 +299,13 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     m_love_action->setEnabled( true );
     m_tag_action->setEnabled( true );
     m_share_action->setEnabled( true );
+}
+
+void
+Application::onTrackGotInfo(const XmlQuery& lfm)
+{
+    Q_ASSERT(connection);
+    MutableTrack( connection->track() ).setFromLfm( lfm );
 }
 
 void

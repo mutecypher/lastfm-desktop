@@ -37,6 +37,7 @@
 #include <QPushButton>
 #include <QStatusBar>
 #include <QSizeGrip>
+#include <QTimer>
 
 
 TitleBar::TitleBar( const QString& title )
@@ -164,6 +165,7 @@ MetadataWindow::MetadataWindow()
     resize(20, 500);
 
     ui.message_bar = new MessageBar( centralWidget());
+
     finishUi();
 }
 

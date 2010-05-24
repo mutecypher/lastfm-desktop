@@ -18,6 +18,9 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef DATA_LIST_WIDGET_H_
+#define DATA_LIST_WIDGET_H_
+
 #include "lib/DllExportMacro.h"
 #include "lib/unicorn/StylableWidget.h"
 
@@ -33,3 +36,5 @@ public:
     void addItem( const QString&, const QUrl& );
 
 };
+
+#endif //DATA_LIST_WIDGET_H_
