@@ -180,7 +180,8 @@ ScrobbleInfoWidget QGroupBox {
 	margin-top: 3ex;
 }
 
-ScrobbleInfoWidget QListView {
+ScrobbleInfoWidget QListView,
+ProfileWidget QListView  {
     background-color: transparent;
     border: none;
     qproperty-flow: TopToBottom;
@@ -188,6 +189,12 @@ ScrobbleInfoWidget QListView {
     font-size: 14pt;
 }
 
+ProfileWidget QListView  {
+    qproperty-viewMode: ListMode;
+	qproperty-iconSize: 0px 0px;
+	qproperty-selectionMode: NoSelection;
+
+}
 
 ProfileWidget #title {
     font-size: 20pt;
@@ -241,6 +248,7 @@ QTextBrowser {
 }
 QTextBrowser, QLabel#title1, QLabel#title2 {
     color: #e6e6e6;
+	qproperty-wordWrap: true;
 }
 
 MetadataWindow #artistImage {

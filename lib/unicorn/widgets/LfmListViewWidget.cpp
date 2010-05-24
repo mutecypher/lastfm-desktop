@@ -1,6 +1,27 @@
+/*
+   Copyright 2005-2009 Last.fm Ltd.
+      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
+
+   This file is part of the Last.fm Desktop Application Suite.
+
+   lastfm-desktop is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   lastfm-desktop is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "LfmListViewWidget.h"
 #include <lastfm/User>
 #include <lastfm/Artist>
+#include <lastfm/Track>
 
 #include <iostream>
 
@@ -33,7 +54,7 @@ LfmListModel::addUser( const User& user )
 
     beginInsertRows( QModelIndex(), rowCount(), rowCount());
     m_items << item;
-        connect( item, SIGNAL(updated()), SLOT( itemUpdated()));
+    connect( item, SIGNAL(updated()), SLOT( itemUpdated()));
     endInsertRows();
 }
 
@@ -48,8 +69,31 @@ LfmListModel::addArtist( const Artist& artist )
 
     beginInsertRows( QModelIndex(), rowCount(), rowCount());
     m_items << item;
-        connect( item, SIGNAL(updated()), SLOT( itemUpdated()));
+    connect( item, SIGNAL(updated()), SLOT( itemUpdated()));
     endInsertRows();   
+}
+
+void
+LfmListModel::addCachedTrack( const Track& track )
+{
+    LfmItem* item = new LfmItem();
+    item->description = track.toString();
+    item->link = track.www();
+    item->loadImage( track.imageUrl( lastfm::Small, true ));
+
+    beginInsertRows( QModelIndex(), rowCount(), rowCount());
+    m_items.insert( 0, item );
+    connect( item, SIGNAL(updated()), SLOT( itemUpdated()));
+    if ( m_items.count() > 5 )
+        m_items.removeAt( 5 );
+    endInsertRows();
+}
+
+void
+LfmListModel::addScrobbledTrack( const Track& track )
+{
+    // do nothing as the track will already
+    // be in the list from when it was cached
 }
 
 
@@ -75,6 +119,7 @@ LfmListModel::data( const QModelIndex & index, int role ) const
 
         case Qt::UserRole:
             return item.link;
+
     }
     return QVariant();
 }

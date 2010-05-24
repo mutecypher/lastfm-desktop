@@ -22,12 +22,13 @@
 #include "ScrobbleMeter.h"
 #include <QVBoxLayout>
 #include <QLabel>
-#include <QListWidget>
+#include <QListView>
 #include <QPushButton>
 #include <QDesktopServices>
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/UnicornSession.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
+#include "lib/unicorn/widgets/LfmListViewWidget.h"
 
 #include "ScrobbleMeter.h"
 #include <lastfm/ws.h>
@@ -57,7 +58,9 @@ ProfileWidget::ProfileWidget( QWidget* p )
     scrobbleDetails->layout()->addWidget( ui.since = new QLabel()); 
     ui.since->setAlignment( Qt::AlignCenter );
 
-    ui.recentTracks = new QListWidget( this );
+    ui.recentTracks = new QListView( this );
+    m_recentTracksModel = new LfmListModel( ui.recentTracks );
+    ui.recentTracks->setModel( m_recentTracksModel );
 
     l->addWidget( scrobbleDetails, Qt::AlignTop );
     l->addWidget( ui.recentTracks, Qt::AlignTop );
@@ -65,6 +68,7 @@ ProfileWidget::ProfileWidget( QWidget* p )
     
     connect( qApp, SIGNAL(sessionChanged(unicorn::Session, unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));
     connect( qApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
+    connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
     connect( qApp, SIGNAL(scrobblesSubmitted(QList<lastfm::Track>, int)), SLOT(onScrobblesSubmitted(QList<lastfm::Track>, int)));
 }
 
@@ -90,13 +94,18 @@ ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userdetails )
     ui.avatar->setHref( userdetails.www());
 }
 
+void
+ProfileWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
+{
+    foreach ( lastfm::Track track, tracks )
+        m_recentTracksModel->addCachedTrack( track );
+}
+
 void 
 ProfileWidget::onScrobblesSubmitted( const QList<lastfm::Track>& tracks, int succeeded )
 {
     *ui.scrobbleMeter += succeeded;
 
     foreach ( lastfm::Track track, tracks )
-    {
-        ui.recentTracks->insertItem( 0, track.toString() );
-    }
+        m_recentTracksModel->addScrobbledTrack( track );
 }
