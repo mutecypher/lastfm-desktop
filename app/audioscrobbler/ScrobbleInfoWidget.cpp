@@ -90,9 +90,9 @@ ScrobbleInfoWidget::setupUi()
         ui.title2->setObjectName( "title2" );
         vl->addStretch();
         
-        layout->addLayout( vl );
+        layout->addLayout( vl , 1);
         layout->addStretch();
-        layout->addWidget( ui.artistImage = new HttpImageWidget());
+        layout->addWidget( ui.artistImage = new HttpImageWidget(), 1);
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
      }
