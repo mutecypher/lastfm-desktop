@@ -70,6 +70,7 @@ namespace audioscrobbler
         
     signals:
         void trackStarted( const Track&, const Track& );
+        void scrobblesCached( const QList<lastfm::Track>& tracks );
         void scrobblesSubmitted( const QList<lastfm::Track>& tracks, int numTracks );
 
         void lovedStateChanged(bool loved);
@@ -79,6 +80,8 @@ namespace audioscrobbler
         void actuallyQuit();
 
         void changeLovedState(bool loved);
+
+        void onTrackGotInfo(const XmlQuery& );
 
     private slots:
         void init();

@@ -1,3 +1,23 @@
+/*
+   Copyright 2005-2009 Last.fm Ltd.
+      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
+
+   This file is part of the Last.fm Desktop Application Suite.
+
+   lastfm-desktop is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   lastfm-desktop is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef LFM_LIST_VIEW_WIDGET_H
 #define LFM_LIST_VIEW_WIDGET_H
 
@@ -96,9 +116,11 @@ protected slots:
 namespace lastfm {
 class User;
 class Artist;
+class Track;
 }
 using lastfm::User;
 using lastfm::Artist;
+using lastfm::Track;
 
 class UNICORN_DLLEXPORT LfmListModel : public QAbstractListModel {
     Q_OBJECT
@@ -107,6 +129,8 @@ public:
      
      void addUser( const User& );
      void addArtist( const Artist& );
+     void addCachedTrack( const Track& );
+     void addScrobbledTrack( const Track& );
 
      int rowCount ( const QModelIndex & parent = QModelIndex() ) const
      {

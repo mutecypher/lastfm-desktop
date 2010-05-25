@@ -158,7 +158,8 @@ ScrobbleInfoWidget QPushButton {
 }
 
 
-ScrobbleInfoWidget QListView {
+ScrobbleInfoWidget QListView,
+ProfileWidget QListView  {
     background-color: transparent;
     border: none;
     qproperty-flow: TopToBottom;
@@ -209,6 +210,13 @@ DataBox #contents QLabel {
 #listeners #header QLabel#icon { background-image: url(:/header_listeners.png); }
 #bio #header QLabel#icon { background-image: url(:/header_bio.png); }
 #similarArtists #header QLabel#icon { background-image: url(:/header_simartists.png); }
+
+ProfileWidget QListView  {
+    qproperty-viewMode: ListMode;
+	qproperty-iconSize: 0px 0px;
+	qproperty-selectionMode: NoSelection;
+
+}
 
 ProfileWidget #title {
     font-size: 20pt;
@@ -262,6 +270,7 @@ QTextBrowser {
 }
 QTextBrowser, QLabel#title1, QLabel#title2 {
     color: #e6e6e6;
+	qproperty-wordWrap: true;
 }
 
 MetadataWindow #artistImage {
