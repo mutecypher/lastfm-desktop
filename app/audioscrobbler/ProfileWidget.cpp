@@ -29,6 +29,7 @@
 #include "lib/unicorn/UnicornSession.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/LfmListViewWidget.h"
+#include "lib/unicorn/widgets/DataBox.h"
 
 #include "ScrobbleMeter.h"
 #include <lastfm/ws.h>
@@ -62,8 +63,11 @@ ProfileWidget::ProfileWidget( QWidget* p )
     m_recentTracksModel = new LfmListModel( ui.recentTracks );
     ui.recentTracks->setModel( m_recentTracksModel );
 
+    DataBox* recentTrackBox = new DataBox( tr( "Recently scrobbled tracks" ), ui.recentTracks );
+    recentTrackBox->setObjectName( "recentTracks" );
+
     l->addWidget( scrobbleDetails, Qt::AlignTop );
-    l->addWidget( ui.recentTracks, Qt::AlignTop );
+    l->addWidget( recentTrackBox, Qt::AlignTop );
     l->addStretch();
     
     connect( qApp, SIGNAL(sessionChanged(unicorn::Session, unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));

@@ -80,37 +80,4 @@ protected:
     } model;
 };
 
-#include <QHBoxLayout>
-#include "lib/unicorn/StylableWidget.h"
-#include <QLabel>
-class DataBox: public StylableWidget {
-Q_OBJECT
-public:
-    DataBox( const QString& title, QWidget* child, QWidget* p = 0 )
-        :StylableWidget( p )
-    { 
-        StylableWidget* w = new StylableWidget();
-        w->setObjectName( "header" );
-        new QHBoxLayout( w );
-        w->layout()->setContentsMargins( 0, 0, 0, 0 );
-        w->layout()->setSpacing( 0 );
-        QLabel* icon;
-        w->layout()->addWidget( icon = new QLabel());
-        icon->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
-        icon->setObjectName( "icon" );
-        w->layout()->addWidget( new QLabel( title ));
-
-        new QVBoxLayout( this );
-        layout()->addWidget( w );
-        QWidget* cw = new StylableWidget();
-        cw->setObjectName( "contents" );
-        new QVBoxLayout( cw );
-        cw->layout()->setContentsMargins( 0, 0, 0, 0 );
-        cw->layout()->setSpacing( 0 );
-        cw->layout()->addWidget( child );
-        layout()->addWidget( cw );
-        layout()->setContentsMargins( 0, 0, 0, 0 );
-        layout()->setSpacing( 0 );
-    }
-};
 #endif //SCROBBLE_INFO_WIDGET_H_
