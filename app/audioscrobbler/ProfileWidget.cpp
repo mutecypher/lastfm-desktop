@@ -70,6 +70,9 @@ ProfileWidget::ProfileWidget( QWidget* p )
     connect( qApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
     connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
     connect( qApp, SIGNAL(scrobblesSubmitted(QList<lastfm::Track>, int)), SLOT(onScrobblesSubmitted(QList<lastfm::Track>, int)));
+
+    m_path = lastfm::dir::runtimeData().filePath( lastfm::ws::Username + "_recent_tracks.xml" );
+    m_recentTracksModel->read( m_path );
 }
 
 void 
@@ -79,6 +82,9 @@ ProfileWidget::onSessionChanged( const Session& session )
     ui.since->clear(); 
     ui.scrobbleMeter->clear();
     ui.avatar->clear();
+
+    m_path = lastfm::dir::runtimeData().filePath( session.username() + "_recent_tracks.xml" );
+    m_recentTracksModel->read( m_path );
 }
 
 void 
@@ -99,6 +105,8 @@ ProfileWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
     foreach ( lastfm::Track track, tracks )
         m_recentTracksModel->addCachedTrack( track );
+
+    m_recentTracksModel->write( m_path );
 }
 
 void 
@@ -108,4 +116,6 @@ ProfileWidget::onScrobblesSubmitted( const QList<lastfm::Track>& tracks, int suc
 
     foreach ( lastfm::Track track, tracks )
         m_recentTracksModel->addScrobbledTrack( track );
+
+    m_recentTracksModel->write( m_path );
 }
