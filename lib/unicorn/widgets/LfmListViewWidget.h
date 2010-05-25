@@ -21,6 +21,8 @@
 #ifndef LFM_LIST_VIEW_WIDGET_H
 #define LFM_LIST_VIEW_WIDGET_H
 
+
+#include <lastfm/AbstractType>
 #include <QStyledItemDelegate>
 #include <QPainter>
 #include <QUrl>
@@ -29,6 +31,9 @@
 #include "lib/DllExportMacro.h"
 
 #include <QDebug>
+
+namespace lastfm { class AbstractType; };
+using lastfm::AbstractType;
 
 class UNICORN_DLLEXPORT LfmDelegate :public QStyledItemDelegate {
 Q_OBJECT
@@ -87,30 +92,24 @@ public:
 class LfmItem : public QObject {
     Q_OBJECT
 public:
-    LfmItem(QObject* p = 0):QObject(p){};
-    LfmItem(const LfmItem& that):QObject(that.parent()){ *this = that; }
+    LfmItem(AbstractType* type, QObject* parent = 0)
+        :QObject( parent ), m_type( type )
+    {;}
 
-    LfmItem& operator=( const LfmItem& that ) {
-        description = that.description;
-        link = that.link;
-        icon = that.icon;
-        return *this;
-    }
+    ~LfmItem() { delete m_type; }
 
-    QString description;
-    QUrl link;
-    QIcon icon;
-
-    bool operator==( const LfmItem& that ) const { return this->description == that.description; }
+    bool operator==( const LfmItem& that ) const { return this->m_type->toString() == that.m_type->toString(); }
 
     void loadImage( const QUrl& url );
+
+    QIcon m_icon;
+    AbstractType* m_type;
 
 signals:
     void updated();
 
 protected slots:
     void onImageLoaded();
-
 };
 
 namespace lastfm {
@@ -125,30 +124,33 @@ using lastfm::Track;
 class UNICORN_DLLEXPORT LfmListModel : public QAbstractListModel {
     Q_OBJECT
 public:
-     LfmListModel( QObject* parent=0 ):QAbstractListModel( parent ){}
-     
-     void addUser( const User& );
-     void addArtist( const Artist& );
-     void addCachedTrack( const Track& );
-     void addScrobbledTrack( const Track& );
+    LfmListModel( QObject* parent=0 ):QAbstractListModel( parent ){}
 
-     int rowCount ( const QModelIndex & parent = QModelIndex() ) const
-     {
-        return m_items.length();
-     }
+    void addUser( const User& );
+    void addArtist( const Artist& );
+    void addCachedTrack( const Track& );
+    void addScrobbledTrack( const Track& );
 
-     QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    void read(QString path);
+    void write(QString path) const;
 
-     void clear()
-     {
-        if( m_items.isEmpty()) return;
-        beginRemoveRows( QModelIndex(), 0, rowCount() -1 );
-            foreach( LfmItem* item, m_items ) {
-                item->deleteLater();
-                m_items.removeAll( item );
-            }
-        endRemoveRows();
-     }
+    int rowCount ( const QModelIndex & parent = QModelIndex() ) const
+    {
+    return m_items.length();
+    }
+
+    QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+
+    void clear()
+    {
+    if( m_items.isEmpty()) return;
+    beginRemoveRows( QModelIndex(), 0, rowCount() -1 );
+        foreach( LfmItem* item, m_items ) {
+            item->deleteLater();
+            m_items.removeAll( item );
+        }
+    endRemoveRows();
+    }
      
 protected slots:
     void itemUpdated();

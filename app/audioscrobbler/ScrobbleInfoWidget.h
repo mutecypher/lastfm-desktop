@@ -23,8 +23,6 @@
 
 #include <lastfm/Track>
 
-#include "ui_ScrobbleInfoWidget.h"
-
 #include "lib/unicorn/StylableWidget.h"
 
 class DataListWidget;
@@ -57,11 +55,23 @@ protected slots:
 signals:
     void lovedStateChanged(bool loved);
 
-private:
-    class : public Ui_ScrobbleInfoWidget
-    {
-    public:
+protected:
+    void setupUi();
+
+    struct {
          class BannerWidget* onTourBanner;
+         class QScrollArea* scrollArea;
+         class QWidget* contents;
+         class QListView* listeningNow;
+         class QTextBrowser* bioText;
+         class QListView* similarArtists;
+         class QLabel* title1;
+         class QLabel* title2;
+         class HttpImageWidget* artistImage;
+         class QLabel* yourScrobbles;
+         class QLabel* totalScrobbles;
+         class DataListWidget* yourTags;
+         class DataListWidget* topTags;
     } ui;
 
     struct {

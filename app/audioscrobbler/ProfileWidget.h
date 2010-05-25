@@ -49,6 +49,7 @@ protected:
     } ui;
 
     class LfmListModel* m_recentTracksModel;
+    QString m_path;
 };
 
 #endif //PROFILE_WIDGET_H_
