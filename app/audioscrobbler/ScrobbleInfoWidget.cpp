@@ -27,6 +27,7 @@
 #include <QNetworkReply>
 #include <QApplication>
 #include <QScrollArea>
+#include <QListView>
 #include <QAbstractTextDocumentLayout>
 #include <QTextFrame>
 #include <lastfm/XmlQuery>
@@ -40,10 +41,13 @@
 #include <lastfm/User>
 
 
+
 ScrobbleInfoWidget::ScrobbleInfoWidget( QWidget* p )
                    :StylableWidget( p )
 {
-    ui.setupUi( this );
+    //ui.setupUi( this );
+    
+    setupUi();
     
     ui.onTourBanner = new BannerWidget( tr("On Tour"), ui.contents );
     ui.onTourBanner->setCursor( QCursor( Qt::PointingHandCursor) );
@@ -62,6 +66,113 @@ ScrobbleInfoWidget::ScrobbleInfoWidget( QWidget* p )
     connect( qApp, SIGNAL( trackStarted( Track, Track)), SLOT( onTrackStarted( Track, Track )));
     connect(ui.bioText->document()->documentLayout(), SIGNAL( documentSizeChanged(QSizeF)), SLOT( onBioChanged(QSizeF)));
     connect(ui.bioText, SIGNAL(anchorClicked(QUrl)), SLOT(onAnchorClicked(QUrl)));
+}
+
+void 
+ScrobbleInfoWidget::setupUi()
+{
+    ui.scrollArea = new QScrollArea( this );
+    
+    ui.contents = new QWidget();
+    QVBoxLayout* layout = new QVBoxLayout( ui.contents );
+    
+    ui.scrollArea->setWidget( ui.contents );
+    ui.scrollArea->setWidgetResizable( true );
+
+    QWidget* titleBox = new QWidget();
+    {
+        QHBoxLayout* layout = new QHBoxLayout( titleBox );
+        
+        QVBoxLayout* vl = new QVBoxLayout();
+        vl->addWidget( ui.title1 = new QLabel());
+        ui.title1->setObjectName( "title1" );
+        vl->addWidget( ui.title2 = new QLabel());
+        ui.title2->setObjectName( "title2" );
+        vl->addStretch();
+        
+        layout->addLayout( vl );
+        layout->addStretch();
+        layout->addWidget( ui.artistImage = new HttpImageWidget());
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 0 );
+     }
+    layout->addWidget(titleBox);
+
+    QWidget* scrobbles = new QWidget();
+    {
+        QGridLayout* layout = new QGridLayout( scrobbles );
+        QLabel* label,* label_2;
+        layout->addWidget( label = new QLabel( tr( "Yours:" )), 0, 0 );
+        layout->addWidget( label_2 = new QLabel( tr( "Total:" )), 1, 0 );
+        label->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
+        label_2->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
+
+        layout->addWidget( ui.yourScrobbles = new QLabel(), 0, 1 );
+        layout->addWidget( ui.totalScrobbles = new QLabel(), 1, 1 );
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 0 );
+     }
+    DataBox* scrobBox = new DataBox( tr( "Scrobbles for this track" ), scrobbles );
+    scrobBox->setObjectName( "scrobbles" );
+    layout->addWidget( scrobBox );
+
+    QWidget* tags = new QWidget();
+    {
+        QGridLayout* layout = new QGridLayout( tags );
+        QLabel* label,* label_2;
+        layout->addWidget( label = new QLabel( tr( "Yours:" )), 0, 0 );
+        layout->addWidget( label_2 = new QLabel( tr( "Popular:" )), 1, 0 );
+        label->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
+        label_2->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
+
+        layout->addWidget( ui.yourTags = new DataListWidget(), 0, 1 );
+        layout->addWidget( ui.topTags = new DataListWidget(), 1, 1 );
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 0 );
+     }
+    DataBox* tagsBox = new DataBox( tr( "Tags for this track" ), tags );
+    tagsBox->setObjectName( "tags" );
+    layout->addWidget( tagsBox );
+
+    QWidget* listeners = new QWidget();
+    {
+        QVBoxLayout* layout = new QVBoxLayout( listeners );
+        layout->addWidget( new QLabel( tr( "People listening to this track right now:" )) );
+        layout->addWidget( ui.listeningNow = new QListView() );
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 0 );
+     }
+    DataBox* listenersBox = new DataBox( tr( "Listeners" ), listeners );
+    listenersBox->setObjectName( "listeners" );
+    layout->addWidget( listenersBox );
+    
+    QWidget* bio = new QWidget();
+    {
+        QVBoxLayout* layout = new QVBoxLayout( bio );
+        layout->addWidget( ui.bioText = new QTextBrowser() );
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 0 );
+     }
+    DataBox* bioBox = new DataBox( tr( "Artist biography" ), bio );
+    bioBox->setObjectName( "bio" );
+    layout->addWidget( bioBox );
+
+    QWidget* simart = new QWidget();
+    {
+        QVBoxLayout* layout = new QVBoxLayout( simart );
+        layout->addWidget( ui.similarArtists = new QListView() );
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 0 );
+    }
+    DataBox* simartBox = new DataBox( tr( "People who listen to this artist also like" ), simart );
+    simartBox->setObjectName( "similarArtists" );
+    layout->addWidget( simartBox );
+    
+    layout->addStretch(1);
+
+    new QVBoxLayout( this );
+    this->layout()->setContentsMargins( 0, 0, 0, 0 );
+    this->layout()->addWidget( ui.scrollArea );
 }
 
 void 
