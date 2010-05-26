@@ -52,6 +52,8 @@ protected slots:
     void onTrackStarted(const Track&, const Track&);
     void onStopped();
 
+    void listItemClicked( const QModelIndex& );
+
 signals:
     void lovedStateChanged(bool loved);
 

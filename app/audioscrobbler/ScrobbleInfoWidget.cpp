@@ -28,6 +28,7 @@
 #include <QApplication>
 #include <QScrollArea>
 #include <QListView>
+#include <QDesktopServices>
 #include <QAbstractTextDocumentLayout>
 #include <QTextFrame>
 #include <lastfm/XmlQuery>
@@ -51,11 +52,14 @@ ScrobbleInfoWidget::ScrobbleInfoWidget( QWidget* p )
     setupUi();
     
     ui.onTourBanner = new BannerWidget( tr("On Tour"), ui.contents );
-    ui.onTourBanner->setCursor( QCursor( Qt::PointingHandCursor) );
+    ui.onTourBanner->setCursor( Qt::PointingHandCursor );
     ui.onTourBanner->hide();
 
     ui.similarArtists->setAttribute( Qt::WA_MacShowFocusRect, false );
     ui.listeningNow->setAttribute( Qt::WA_MacShowFocusRect, false );
+
+    ui.listeningNow->setSpacing( 3 );
+    ui.similarArtists->setSpacing( 3 );
 
     ui.similarArtists->setModel( model.similarArtists = new LfmListModel());
     ui.listeningNow->setModel( model.listeningNow = new LfmListModel());
@@ -63,6 +67,8 @@ ScrobbleInfoWidget::ScrobbleInfoWidget( QWidget* p )
     ui.similarArtists->setItemDelegate( new LfmDelegate( ui.similarArtists ));
     ui.listeningNow->setItemDelegate( new LfmDelegate( ui.listeningNow ));
 
+    connect( ui.similarArtists, SIGNAL( clicked( QModelIndex )), SLOT( listItemClicked( QModelIndex )));
+    connect( ui.listeningNow, SIGNAL( clicked( QModelIndex )), SLOT( listItemClicked( QModelIndex )));
 
     connect( qApp, SIGNAL( trackStarted( Track, Track)), SLOT( onTrackStarted( Track, Track )));
     connect(ui.bioText->document()->documentLayout(), SIGNAL( documentSizeChanged(QSizeF)), SLOT( onBioChanged(QSizeF)));
@@ -87,7 +93,9 @@ ScrobbleInfoWidget::setupUi()
         QVBoxLayout* vl = new QVBoxLayout();
         vl->addWidget( ui.title1 = new QLabel());
         ui.title1->setObjectName( "title1" );
+        ui.title1->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
         vl->addWidget( ui.title2 = new QLabel());
+        ui.title2->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
         ui.title2->setObjectName( "title2" );
         vl->addStretch();
         
@@ -96,7 +104,7 @@ ScrobbleInfoWidget::setupUi()
         layout->addWidget( ui.artistImage = new HttpImageWidget(), 1);
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
-     }
+    }
     layout->addWidget(titleBox);
 
     QWidget* scrobbles = new QWidget();
@@ -112,7 +120,7 @@ ScrobbleInfoWidget::setupUi()
         layout->addWidget( ui.totalScrobbles = new QLabel(), 1, 1 );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
-     }
+    }
     DataBox* scrobBox = new DataBox( tr( "Scrobbles for this track" ), scrobbles );
     scrobBox->setObjectName( "scrobbles" );
     layout->addWidget( scrobBox );
@@ -130,7 +138,7 @@ ScrobbleInfoWidget::setupUi()
         layout->addWidget( ui.topTags = new DataListWidget(), 1, 1 );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
-     }
+    }
     DataBox* tagsBox = new DataBox( tr( "Tags for this track" ), tags );
     tagsBox->setObjectName( "tags" );
     layout->addWidget( tagsBox );
@@ -139,10 +147,10 @@ ScrobbleInfoWidget::setupUi()
     {
         QVBoxLayout* layout = new QVBoxLayout( listeners );
         layout->addWidget( new QLabel( tr( "People listening to this track right now:" )) );
-        layout->addWidget( ui.listeningNow = new QListView() );
+        layout->addWidget( ui.listeningNow = new LfmListView() );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
-     }
+    }
     DataBox* listenersBox = new DataBox( tr( "Listeners" ), listeners );
     listenersBox->setObjectName( "listeners" );
     layout->addWidget( listenersBox );
@@ -153,7 +161,7 @@ ScrobbleInfoWidget::setupUi()
         layout->addWidget( ui.bioText = new QTextBrowser() );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
-     }
+    }
     DataBox* bioBox = new DataBox( tr( "Artist biography" ), bio );
     bioBox->setObjectName( "bio" );
     layout->addWidget( bioBox );
@@ -161,7 +169,7 @@ ScrobbleInfoWidget::setupUi()
     QWidget* simart = new QWidget();
     {
         QVBoxLayout* layout = new QVBoxLayout( simart );
-        layout->addWidget( ui.similarArtists = new QListView() );
+        layout->addWidget( ui.similarArtists = new LfmListView() );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
     }
@@ -360,4 +368,11 @@ void
 ScrobbleInfoWidget::onBioChanged( const QSizeF& size )
 {
     ui.bioText->setFixedHeight( size.toSize().height() );
+}
+
+void
+ScrobbleInfoWidget::listItemClicked( const QModelIndex& i )
+{
+    const QUrl& url = i.data( LfmListModel::WwwRole ).toUrl();
+    QDesktopServices::openUrl( url );
 }

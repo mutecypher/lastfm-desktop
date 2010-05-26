@@ -165,7 +165,7 @@ ProfileWidget QListView  {
     qproperty-flow: TopToBottom;
     qproperty-viewMode: IconMode;
     font-size: 14pt;
-    max-height: 100px;
+    max-height: 120px;
 }
 
 DataBox {

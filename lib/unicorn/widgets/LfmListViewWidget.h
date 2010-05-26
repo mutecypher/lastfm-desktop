@@ -29,6 +29,7 @@
 #include <QAbstractItemView>
 #include <QEvent>
 #include "lib/DllExportMacro.h"
+#include <QListView>
 
 #include <QDebug>
 
@@ -46,7 +47,6 @@ public:
 
     virtual void paint( QPainter* p, const QStyleOptionViewItem& opt, const QModelIndex& index ) const
     {
-        p->eraseRect( opt.rect );
         if( index.data(Qt::DecorationRole).type() == QVariant::Icon ) {
             QIcon icon = index.data(Qt::DecorationRole).value<QIcon>();
             QRect iconRect = opt.rect.translated( 3, 3 );
@@ -59,18 +59,17 @@ public:
             iconRect.translate( ( iconRect.width() - iconSize.width()) / 2.0f,
                                 ( iconRect.height() - iconSize.height()) /2.0f );
             iconRect.setSize( iconSize );
-            p->drawRect( iconRect);
+            p->drawRect( iconRect );
         }
         p->drawText( opt.rect.adjusted( 46, 3, -5, -5 ), index.data().toString());
-        if( opt.state & QStyle::State_Selected )
-            p->drawRect( opt.rect.adjusted( 0, 0, -1, -1 ) );
     }
 
     virtual QSize sizeHint( const QStyleOptionViewItem& opt, const QModelIndex& index ) const 
     {
         QFontMetrics fm( opt.font );
         int textWidth = fm.width( index.data().toString());
-        return QSize( m_viewSize.width() / 2, 40 );
+        int spacing = qobject_cast<QListView*>(parent())->spacing();
+        return QSize( (m_viewSize.width() / 2)-(spacing*2), 40 );
     }
 
     bool eventFilter( QObject* obj, QEvent* event )
@@ -124,6 +123,9 @@ using lastfm::Track;
 class UNICORN_DLLEXPORT LfmListModel : public QAbstractListModel {
     Q_OBJECT
 public:
+    enum DataRole { WwwRole = Qt::UserRole,
+                    CursorRole };
+
     LfmListModel( QObject* parent=0 ):QAbstractListModel( parent ){}
 
     void addUser( const User& );
@@ -158,6 +160,19 @@ protected slots:
 protected:
     QList<LfmItem*> m_items;
 
+};
+
+#include <QListView>
+class UNICORN_DLLEXPORT LfmListView : public QListView {
+   Q_OBJECT
+public:
+   LfmListView(QWidget *parent = 0);
+
+protected:
+   virtual void mouseMoveEvent(QMouseEvent *event);
+
+private:
+   int m_lastRow;
 };
 
 

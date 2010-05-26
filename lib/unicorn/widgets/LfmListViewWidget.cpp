@@ -121,7 +121,10 @@ LfmListModel::data( const QModelIndex & index, int role ) const
         case Qt::DecorationRole:
             return item.m_icon;
 
-        case Qt::UserRole:
+        case CursorRole:
+            return Qt::PointingHandCursor;
+
+        case WwwRole:
             return item.m_type->www();
 
     }
@@ -181,4 +184,45 @@ LfmListModel::write( QString path ) const
         stream << "<?xml version='1.0' encoding='utf-8'?>\n";
         stream << xml.toString( 2 );
     }
+}
+
+LfmListView::LfmListView(QWidget *parent):
+   QListView(parent),
+   m_lastRow(-1)
+{
+   setMouseTracking(true);
+}
+
+#include <QMouseEvent>
+void LfmListView::mouseMoveEvent(QMouseEvent *event)
+{
+   QAbstractItemModel *m(model());
+
+   if (m)
+   {
+      QModelIndex index = indexAt(event->pos());
+      if (index.isValid())
+      {
+         // When the index is valid, compare it to the last row.
+         // Only do something when the the mouse has moved to a new row.
+         if (index.row() != m_lastRow)
+         {
+            m_lastRow = index.row();
+            // Request the data for the CursorRole.
+            QVariant data = m->data(index, LfmListModel::CursorRole );
+
+            Qt::CursorShape shape = Qt::ArrowCursor;
+            if (!data.isNull())
+               shape = static_cast<Qt::CursorShape>(data.toInt());
+            setCursor(shape);
+         }
+      }
+      else
+      {
+         if (m_lastRow != -1)
+            setCursor(Qt::ArrowCursor);
+         m_lastRow = -1;
+      }
+   }
+   QListView::mouseMoveEvent(event);
 }
