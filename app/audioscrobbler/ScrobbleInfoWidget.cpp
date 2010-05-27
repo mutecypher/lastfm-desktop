@@ -94,9 +94,12 @@ ScrobbleInfoWidget::setupUi()
         vl->addWidget( ui.title1 = new QLabel());
         ui.title1->setObjectName( "title1" );
         ui.title1->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
+        ui.title1->setOpenExternalLinks( true );
+
         vl->addWidget( ui.title2 = new QLabel());
         ui.title2->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
         ui.title2->setObjectName( "title2" );
+        ui.title2->setOpenExternalLinks( true );
         vl->addStretch();
         
         layout->addLayout( vl , 1);
