@@ -107,6 +107,7 @@ LfmListModel::itemUpdated()
     LfmItem* item = static_cast<LfmItem*>(sender());
     int index = m_items.indexOf( item );
     emit dataChanged( createIndex( index, 0), createIndex( index, 0));
+    emit layoutChanged();
 }
 
 
@@ -149,9 +150,12 @@ LfmListModel::read( QString path )
         // TODO: recognise all the other AbstractType classes
         if (n.nodeName() == "track")
         {
+            emit layoutAboutToBeChanged();
             Track* track = new Track( n.toElement() );
             LfmItem* item = new LfmItem( track );
+            item->loadImage( track->imageUrl( lastfm::Small, true ));
             m_items << item;
+            emit layoutChanged();
         }
     }
 }

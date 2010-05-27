@@ -216,7 +216,8 @@ ProfileWidget QListView  {
     qproperty-viewMode: ListMode;
 	qproperty-iconSize: 0px 0px;
 	qproperty-selectionMode: NoSelection;
-
+	qproperty-verticalScrollBarPolicy: ScrollBarAlwaysOff;
+	qproperty-horizontalScrollBarPolicy: ScrollBarAlwaysOff;
 }
 
 ProfileWidget #title {
@@ -316,6 +317,7 @@ QLabel#title2 {
 }
 
 QSizeGrip {
+	margin: 0px 2px 2px 0px;
     color: #808080;
 }
 

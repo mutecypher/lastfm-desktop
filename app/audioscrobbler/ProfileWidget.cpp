@@ -77,8 +77,16 @@ ProfileWidget::ProfileWidget( QWidget* p )
     connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
     connect( qApp, SIGNAL(scrobblesSubmitted(QList<lastfm::Track>, int)), SLOT(onScrobblesSubmitted(QList<lastfm::Track>, int)));
 
+    connect( m_recentTracksModel, SIGNAL(layoutChanged()), SLOT(onRecentTracksChanged()));
+
     m_path = lastfm::dir::runtimeData().filePath( lastfm::ws::Username + "_recent_tracks.xml" );
     m_recentTracksModel->read( m_path );
+}
+
+void
+ProfileWidget::onRecentTracksChanged()
+{
+    ui.recentTracks->setFixedHeight( ui.recentTracks->sizeHint().height() );
 }
 
 void 

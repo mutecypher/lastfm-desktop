@@ -38,6 +38,7 @@ protected slots:
     void onGotUserInfo( const lastfm::UserDetails& );
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
     void onScrobblesSubmitted( const QList<lastfm::Track>& tracks, int succeeded );
+    void onRecentTracksChanged();
 
 protected:
     struct {
