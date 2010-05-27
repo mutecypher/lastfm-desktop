@@ -45,10 +45,11 @@ public:
         layout()->addWidget( w );
         QWidget* cw = new StylableWidget();
         cw->setObjectName( "contents" );
-        new QVBoxLayout( cw );
-        cw->layout()->setContentsMargins( 0, 0, 0, 0 );
-        cw->layout()->setSpacing( 0 );
-        cw->layout()->addWidget( child );
+        QVBoxLayout* v = new QVBoxLayout( cw );
+        v->setContentsMargins( 0, 0, 0, 0 );
+        v->setSpacing( 0 );
+        v->addWidget( child, Qt::AlignTop );
+        v->addStretch();
         layout()->addWidget( cw );
         layout()->setContentsMargins( 0, 0, 0, 0 );
         layout()->setSpacing( 0 );
