@@ -38,16 +38,17 @@
 #include <QStatusBar>
 #include <QSizeGrip>
 #include <QTimer>
+#include <QMenuBar>
 
 
 TitleBar::TitleBar( const QString& title )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
-    QPushButton* pb;
-    layout->addWidget( pb = new QPushButton( "Close" ));
+    QPushButton* pb = new QPushButton( "Close" );
 #ifdef Q_OS_MAC
     pb->setShortcut( Qt::CTRL + Qt::Key_H );
+    layout->addWidget( pb );
 #endif
     connect( pb, SIGNAL(clicked()), SIGNAL( closeClicked()));
     pb->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
@@ -55,6 +56,10 @@ TitleBar::TitleBar( const QString& title )
     QLabel* l;
     layout->addWidget( l = new QLabel( title ));
     l->setAlignment( Qt::AlignCenter );
+#ifndef Q_OS_MAC
+    pb->setShortcut( Qt::CTRL + Qt::Key_H );
+    layout->addWidget( pb );
+#endif
 }
 
 MetadataWindow::MetadataWindow()
@@ -63,14 +68,7 @@ MetadataWindow::MetadataWindow()
     setWindowTitle( "Audioscrobbler" );
     setAttribute( Qt::WA_TranslucentBackground );
     
-#ifdef Q_OS_MAC
-	setWindowFlags( Qt::CustomizeWindowHint );
-#else
-	setWindowFlags( Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint );
-#endif	
-
-    //Enable aero blurry window effect:
-    QtWin::extendFrameIntoClientArea( this );
+    setWindowFlags( Qt::CustomizeWindowHint | Qt::FramelessWindowHint );
     
     setCentralWidget(new QWidget);
 
@@ -78,11 +76,9 @@ MetadataWindow::MetadataWindow()
     centralWidget()->layout()->setSpacing( 0 );
     centralWidget()->layout()->setContentsMargins( 0, 0, 0, 0 );
 
-#ifdef Q_OS_MAC   
     TitleBar* titleBar;
     qobject_cast<QBoxLayout*>(centralWidget()->layout())->addWidget( titleBar = new TitleBar("Audioscrobbler"), 0, Qt::AlignBottom );
     connect( titleBar, SIGNAL( closeClicked()), SLOT( close()));
-#endif
 
     ui.now_playing_source = new ScrobbleStatus();
     ui.now_playing_source->setContentsMargins( 0, 0, 0, 0 );
@@ -132,27 +128,23 @@ MetadataWindow::MetadataWindow()
         QSizeGrip* sg = new QSizeGrip( this );
 
         //sb->addWidget( ui.userButton );
-#ifndef Q_WS_WIN
         //FIXME: this code is duplicated in the radio too
         //In order to compensate for the sizer grip on the bottom right
         //of the window, an empty QWidget is added as a spacer.
         if( sg )
             sb->addWidget( new GhostWidget( sg ) );
-#endif
 
         sb->addWidget( new QWidget(), 1 );
         sb->addWidget( ui.sc = new ScrobbleControls());
         sb->addWidget( new QWidget(), 1 );
         //sb->addWidget( new GhostWidget( ui.userButton ));
-#ifndef Q_WS_WIN
         sb->addWidget( sg, 0 , Qt::AlignBottom | Qt::AlignRight );
-#endif
         centralWidget()->layout()->addWidget( statusBar );
     }
 
+    addDragHandleWidget( titleBar );
 #ifdef Q_OS_MAC
     addDragHandleWidget( ui.now_playing_source );
-    addDragHandleWidget( titleBar );
     //addDragHandleWidget( nav );
     addDragHandleWidget( stack.profile );
     addDragHandleWidget( stack.nowScrobbling );
@@ -167,6 +159,8 @@ MetadataWindow::MetadataWindow()
     ui.message_bar = new MessageBar( centralWidget());
 
     finishUi();
+
+    menuBar()->hide();
 }
 
 
