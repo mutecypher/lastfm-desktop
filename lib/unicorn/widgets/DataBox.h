@@ -37,7 +37,7 @@ public:
         w->layout()->setSpacing( 0 );
         QLabel* icon;
         w->layout()->addWidget( icon = new QLabel());
-        icon->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
+        icon->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
         icon->setObjectName( "icon" );
 		
         w->layout()->addWidget( new QLabel( title ));
@@ -46,10 +46,11 @@ public:
         layout()->addWidget( w );
         QWidget* cw = new StylableWidget();
         cw->setObjectName( "contents" );
-        new QVBoxLayout( cw );
-        cw->layout()->setContentsMargins( 0, 0, 0, 0 );
-        cw->layout()->setSpacing( 0 );
-        cw->layout()->addWidget( child );
+        QVBoxLayout* v = new QVBoxLayout( cw );
+        v->setContentsMargins( 0, 0, 0, 0 );
+        v->setSpacing( 0 );
+        v->addWidget( child );
+        v->addStretch( 1 );
         layout()->addWidget( cw );
         layout()->setContentsMargins( 0, 0, 0, 0 );
         layout()->setSpacing( 0 );
