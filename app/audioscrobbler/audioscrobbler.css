@@ -165,8 +165,9 @@ ProfileWidget QListView  {
     qproperty-flow: TopToBottom;
     qproperty-viewMode: IconMode;
     font-size: 14pt;
-    max-height: 120px;
 }
+
+ScrobbleInfoWidget QListView { max-height: 120px; }
 
 DataBox {
     padding: 0px;
@@ -198,7 +199,7 @@ DataBox #header QLabel {
 DataBox #contents > QWidget {
     padding: 0px;
     margin: 0px;
-    padding-top: 10px;
+    /*padding-top: 10px;*/
 }
 
 DataBox #contents QLabel {

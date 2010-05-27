@@ -37,8 +37,9 @@ public:
         w->layout()->setSpacing( 0 );
         QLabel* icon;
         w->layout()->addWidget( icon = new QLabel());
-        icon->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
+        icon->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
         icon->setObjectName( "icon" );
+
         w->layout()->addWidget( new QLabel( title ));
 
         new QVBoxLayout( this );

@@ -60,15 +60,17 @@ ProfileWidget::ProfileWidget( QWidget* p )
     ui.since->setAlignment( Qt::AlignCenter );
 
     ui.recentTracks = new QListView( this );
+    ui.recentTracks->setAttribute( Qt::WA_MacShowFocusRect, false );
+
+    ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
     m_recentTracksModel = new LfmListModel( ui.recentTracks );
     ui.recentTracks->setModel( m_recentTracksModel );
 
     DataBox* recentTrackBox = new DataBox( tr( "Recently scrobbled tracks" ), ui.recentTracks );
     recentTrackBox->setObjectName( "recentTracks" );
 
-    l->addWidget( scrobbleDetails, Qt::AlignTop );
-    l->addWidget( recentTrackBox, Qt::AlignTop );
-    l->addStretch();
+    l->addWidget( scrobbleDetails );
+    l->addWidget( recentTrackBox );
     
     connect( qApp, SIGNAL(sessionChanged(unicorn::Session, unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));
     connect( qApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
