@@ -29,6 +29,9 @@
 #include <QShortcut>
 #include <QMouseEvent>
 
+#ifdef WIN32
+#include <Objbase.h>
+#endif
 
 #define SETTINGS_POSITION_KEY "MainWindowPosition"
 
@@ -41,6 +44,9 @@ unicorn::MainWindow::MainWindow()
     connect( qApp, SIGNAL(gotUserInfo( const lastfm::UserDetails& )), SLOT(onGotUserInfo( const lastfm::UserDetails& )) );
     connect( qApp, SIGNAL(sessionChanged( unicorn::Session, unicorn::Session )), SLOT(onSessionChanged( unicorn::Session )));
     connect( qApp->desktop(), SIGNAL( resized(int)), SLOT( cleverlyPosition()));
+#ifdef WIN32
+    taskBarCreatedMessage = RegisterWindowMessage(L"TaskbarButtonCreated");
+#endif
 }
 
 
@@ -80,6 +86,74 @@ unicorn::MainWindow::finishUi()
 
     cleverlyPosition();
 }
+
+#ifdef WIN32
+bool      
+unicorn::MainWindow::winEvent(MSG* message, long* result)
+{
+    if ( message->message == taskBarCreatedMessage)
+    {
+
+
+        HRESULT hr = CoCreateInstance(CLSID_TaskbarList,
+                                      0,
+                                      CLSCTX_INPROC_SERVER,
+                                      IID_PPV_ARGS( &taskbar));
+        if (hr == S_OK)
+        {
+            m_thumbButtonActions.clear();
+            addWinThumbBarButtons( m_thumbButtonActions );
+
+            Q_ASSERT_X( m_thumbButtonActions.count() <= 7, "winEvent", "More than 7 thumb buttons" );
+
+            if ( m_thumbButtonActions.count() > 0 )
+                updateThumbButtons();
+
+            *result = hr;
+            return true;
+        }
+    }
+    else if ( message->message == WM_COMMAND )
+    {
+        if ( HIWORD(message->wParam) == THBN_CLICKED )
+        {
+            QAction* action = m_thumbButtonActions[LOWORD(message->wParam)];
+
+            if ( action->isCheckable() )
+                action->toggle();
+            else
+                action->trigger();
+        }
+    }
+
+    return false;
+}
+
+
+void
+unicorn::MainWindow::updateThumbButtons()
+{
+    THUMBBUTTON buttons[7];
+
+    for ( int i(0) ; i < m_thumbButtonActions.count() ; ++i )
+    {
+        buttons[i].dwMask = THB_ICON|THB_TOOLTIP|THB_FLAGS;
+        buttons[i].iId = i;
+        buttons[i].hIcon = m_thumbButtonActions[i]->isChecked() ?
+            m_thumbButtonActions[i]->icon().pixmap( QSize(16, 16), QIcon::Normal, QIcon::On ).toWinHICON():
+            m_thumbButtonActions[i]->icon().pixmap( QSize(16, 16), QIcon::Normal, QIcon::Off ).toWinHICON();
+        wcscpy(buttons[i].szTip, m_thumbButtonActions[i]->text().utf16());
+        buttons[i].dwFlags = THBF_ENABLED;
+
+        connect( m_thumbButtonActions[i], SIGNAL(changed()), SLOT(updateThumbButtons()));
+    }
+
+    if (sender())
+        taskbar->ThumbBarUpdateButtons(winId(), m_thumbButtonActions.count(), buttons);
+    else
+        taskbar->ThumbBarAddButtons(winId(), m_thumbButtonActions.count(), buttons);
+}
+#endif // WIN32
 
 
 void

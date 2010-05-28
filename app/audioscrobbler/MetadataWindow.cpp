@@ -228,3 +228,16 @@ MetadataWindow::showNowScrobbling()
     ui.tabBar->setCurrentIndex( TAB_INFO );
     toggleProfile( false );
 }
+
+void
+MetadataWindow::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
+{
+    QAction* love = new QAction( "Love" , this );
+    love->setCheckable( true );
+    QIcon loveIcon;
+    loveIcon.addFile( ":/love-rest.png", QSize( 16, 16), QIcon::Normal, QIcon::On );
+    loveIcon.addFile( ":/love-isloved.png", QSize( 16, 16), QIcon::Normal, QIcon::Off );
+    love->setIcon( loveIcon );
+    thumbButtonActions.append( love );
+}
+

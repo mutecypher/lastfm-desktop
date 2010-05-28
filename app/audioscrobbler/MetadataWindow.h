@@ -79,6 +79,7 @@ private slots:
 private:
     Track m_currentTrack;
     void setCurrentWidget( QWidget* );
+    void addWinThumbBarButtons( QList<QAction*>& );
 
     enum {
         TAB_PROFILE,
