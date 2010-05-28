@@ -25,7 +25,7 @@
 
 #ifdef WIN32
     #include "windows.h"
-    #include "shfolder.h"
+    #include "shlobj.h"
 #endif
 
 
