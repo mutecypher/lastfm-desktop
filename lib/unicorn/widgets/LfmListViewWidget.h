@@ -120,13 +120,13 @@ using lastfm::User;
 using lastfm::Artist;
 using lastfm::Track;
 
-class UNICORN_DLLEXPORT LfmListModel : public QAbstractListModel {
+class UNICORN_DLLEXPORT LfmListModel : public QAbstractItemModel {
     Q_OBJECT
 public:
     enum DataRole { WwwRole = Qt::UserRole,
                     CursorRole };
 
-    LfmListModel( QObject* parent=0 ):QAbstractListModel( parent ){}
+    LfmListModel( QObject* parent=0 ):QAbstractItemModel( parent ){}
 
     void addUser( const User& );
     void addArtist( const Artist& );
@@ -136,9 +136,18 @@ public:
     void read(QString path);
     void write(QString path) const;
 
-    int rowCount ( const QModelIndex & parent = QModelIndex() ) const
+    int rowCount( const QModelIndex & parent = QModelIndex() ) const
     {
-    return m_items.length();
+        return m_items.length();
+    }
+
+    int columnCount( const QModelIndex & parent = QModelIndex() ) const { return 1; }
+
+    QModelIndex parent( const QModelIndex& child ) const { return QModelIndex() ;}
+
+    QModelIndex index ( int row, int column, const QModelIndex & parent ) const
+    {
+        return createIndex(row, column);
     }
 
     QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
