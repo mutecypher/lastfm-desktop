@@ -80,6 +80,8 @@ LfmListModel::addArtist( const Artist& a_artist )
 void
 LfmListModel::addCachedTrack( const Track& a_track )
 {
+    MutableTrack( a_track ).setExtra( "scrobbleStatus", "cached" );
+
     Track* track = new Track;
     *track = a_track;
     LfmItem* item = new LfmItem( track );
@@ -94,10 +96,9 @@ LfmListModel::addCachedTrack( const Track& a_track )
 }
 
 void
-LfmListModel::addScrobbledTrack( const Track& track )
+LfmListModel::addScrobbledTrack( const Track& a_track )
 {
-    // do nothing as the track will already
-    // be in the list from when it was cached
+    MutableTrack( a_track ).setExtra( "scrobbleStatus", "scrobbled" );
 }
 
 
