@@ -142,7 +142,10 @@ Application::init()
 #elif defined Q_WS_WIN
     const int sKeyCode = 83;
 #endif
+
+#ifndef Q_OS_LINUX
     installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action, SLOT( trigger()));
+#endif
 
     ScrobbleControls* sc = mw->scrobbleControls();
     sc->setEnabled( false );
