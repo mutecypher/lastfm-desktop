@@ -456,6 +456,10 @@ MultiStarterWidget QLabel#sliderDescription {
     color: #808080;
 }
 
+MultiStarterTabWidget > QLabel{
+    color: #000000;
+}
+
 YouListWidget {
     border: none;
     background-color: white;
