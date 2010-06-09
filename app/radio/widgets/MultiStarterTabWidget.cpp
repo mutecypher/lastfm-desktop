@@ -63,7 +63,7 @@ MultiStarterTabWidget::MultiStarterTabWidget(int maxSources, RqlSource::Type typ
     QVBoxLayout* v1 = new QVBoxLayout(this);
     switch (type)
     {
-    case RqlSource::Art:
+    case RqlSource::SimArt:
         v1->addWidget(new QLabel( tr("Choose up to three artists and press play.") ), 0, Qt::AlignCenter);
         break;
     case RqlSource::User:
@@ -246,7 +246,7 @@ MultiStarterTabWidget::onPlayClicked()
             switch (m_type)
             {
                 case RqlSource::User:
-                case RqlSource::Art: rql += " or "; break;
+                case RqlSource::SimArt: rql += " or "; break;
                 case RqlSource::Tag: rql += " and "; break;
             }
         }
@@ -266,7 +266,7 @@ MultiStarterTabWidget::onPlayClicked()
 
                 switch (m_type) {
                     case RqlSource::User:
-                    case RqlSource::Art: description += " or "; break;
+                    case RqlSource::SimArt: description += " or "; break;
                     case RqlSource::Tag: description += " and "; break;
                 }
             }

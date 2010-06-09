@@ -63,7 +63,7 @@ MultiStarterWidget::MultiStarterWidget(int maxSources, QWidget *parent)
 
     lastfm::User you;
 
-    tabWidget->addTab(m_artists = new MultiStarterTabWidget(maxSources, RqlSource::Art, new ArtistSearch(), this), tr("Multi-artist"));
+    tabWidget->addTab(m_artists = new MultiStarterTabWidget(maxSources, RqlSource::SimArt, new ArtistSearch(), this), tr("Multi-artist"));
     connect(m_artists, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
     connect(you.getTopArtists(), SIGNAL(finished()), m_artists, SLOT(onUserGotTopArtists()));
 
