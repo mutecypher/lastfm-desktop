@@ -18,24 +18,26 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ProfileWidget.h"
-#include "ScrobbleMeter.h"
+
 #include <QVBoxLayout>
 #include <QLabel>
-#include <QListView>
 #include <QPushButton>
 #include <QDesktopServices>
+
+#include <lastfm/ws.h>
+#include <lastfm/User>
+#include <lastfm/Audioscrobbler>
+#include <lastfm/Track>
+
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/UnicornSession.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/LfmListViewWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"
 
+#include "ProfileWidget.h"
 #include "ScrobbleMeter.h"
-#include <lastfm/ws.h>
-#include <lastfm/User>
-#include <lastfm/Audioscrobbler>
-#include <lastfm/Track>
+#include "RecentTracksWidget.h"
 
 using unicorn::Session;
 ProfileWidget::ProfileWidget( QWidget* p )
@@ -59,12 +61,8 @@ ProfileWidget::ProfileWidget( QWidget* p )
     scrobbleDetails->layout()->addWidget( ui.since = new QLabel()); 
     ui.since->setAlignment( Qt::AlignCenter );
 
-    ui.recentTracks = new QListView( this );
-    ui.recentTracks->setAttribute( Qt::WA_MacShowFocusRect, false );
-
+    ui.recentTracks = new RecentTracksWidget( this );
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
-    m_recentTracksModel = new LfmListModel( ui.recentTracks );
-    ui.recentTracks->setModel( m_recentTracksModel );
 
     DataBox* recentTrackBox = new DataBox( tr( "Recently scrobbled tracks" ), ui.recentTracks );
     recentTrackBox->setObjectName( "recentTracks" );
@@ -77,16 +75,8 @@ ProfileWidget::ProfileWidget( QWidget* p )
     connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
     connect( qApp, SIGNAL(scrobblesSubmitted(QList<lastfm::Track>, int)), SLOT(onScrobblesSubmitted(QList<lastfm::Track>, int)));
 
-    connect( m_recentTracksModel, SIGNAL(layoutChanged()), SLOT(onRecentTracksChanged()));
-
     m_path = lastfm::dir::runtimeData().filePath( lastfm::ws::Username + "_recent_tracks.xml" );
-    m_recentTracksModel->read( m_path );
-}
-
-void
-ProfileWidget::onRecentTracksChanged()
-{
-    ui.recentTracks->setFixedHeight( ui.recentTracks->sizeHint().height() );
+    ui.recentTracks->read( m_path );
 }
 
 void 
@@ -98,7 +88,7 @@ ProfileWidget::onSessionChanged( const Session& session )
     ui.avatar->clear();
 
     m_path = lastfm::dir::runtimeData().filePath( session.username() + "_recent_tracks.xml" );
-    m_recentTracksModel->read( m_path );
+    ui.recentTracks->read( m_path );
 }
 
 void 
@@ -118,9 +108,9 @@ void
 ProfileWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
     foreach ( lastfm::Track track, tracks )
-        m_recentTracksModel->addCachedTrack( track );
+        ui.recentTracks->addCachedTrack( track );
 
-    m_recentTracksModel->write( m_path );
+    ui.recentTracks->write( m_path );
 }
 
 void 
@@ -129,7 +119,7 @@ ProfileWidget::onScrobblesSubmitted( const QList<lastfm::Track>& tracks, int suc
     *ui.scrobbleMeter += succeeded;
 
     foreach ( lastfm::Track track, tracks )
-        m_recentTracksModel->addScrobbledTrack( track );
+        ui.recentTracks->addScrobbledTrack( track );
 
-    m_recentTracksModel->write( m_path );
+    ui.recentTracks->write( m_path );
 }

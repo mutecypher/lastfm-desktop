@@ -160,7 +160,9 @@ MetadataWindow::MetadataWindow()
 
     finishUi();
 
+#ifdef NDEBUG
     menuBar()->hide();
+#endif
 }
 
 

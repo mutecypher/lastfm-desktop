@@ -143,7 +143,7 @@ QScrollArea {
 
 MetadataWindow ProfileWidget .QLabel,
 ScrobbleInfoWidget QLabel,
-MetadataWindow QListView,
+MetadataWindow QAbstractItemView,
 MetadataWindow DataListWidget
 MetadataWindow ProfileWidget QPushButton {
     color: #cccccc;
@@ -157,9 +157,8 @@ ScrobbleInfoWidget QPushButton {
     border: none;
 }
 
-
 ScrobbleInfoWidget QListView,
-ProfileWidget QListView  {
+ProfileWidget QTreeView  {
     background-color: transparent;
     border: none;
     qproperty-flow: TopToBottom;
@@ -212,12 +211,15 @@ DataBox #contents QLabel {
 #bio #header QLabel#icon { background-image: url(:/header_bio.png); }
 #similarArtists #header QLabel#icon { background-image: url(:/header_simartists.png); }
 
-ProfileWidget QListView  {
+ProfileWidget QTreeView  {
     qproperty-viewMode: ListMode;
-	qproperty-iconSize: 0px 0px;
+	qproperty-iconSize: 32px 32px;
 	qproperty-selectionMode: NoSelection;
 	qproperty-verticalScrollBarPolicy: ScrollBarAlwaysOff;
 	qproperty-horizontalScrollBarPolicy: ScrollBarAlwaysOff;
+	qproperty-itemsExpandable: false;
+	qproperty-rootIsDecorated: false;
+	qproperty-headerHidden: true;
 }
 
 ProfileWidget #title {

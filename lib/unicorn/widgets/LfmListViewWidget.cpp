@@ -77,30 +77,6 @@ LfmListModel::addArtist( const Artist& a_artist )
     endInsertRows();   
 }
 
-void
-LfmListModel::addCachedTrack( const Track& a_track )
-{
-    MutableTrack( a_track ).setExtra( "scrobbleStatus", "cached" );
-
-    Track* track = new Track;
-    *track = a_track;
-    LfmItem* item = new LfmItem( track );
-    item->loadImage( track->imageUrl( lastfm::Small, true ));
-
-    beginInsertRows( QModelIndex(), rowCount(), rowCount());
-    m_items.insert( 0, item );
-    connect( item, SIGNAL(updated()), SLOT( itemUpdated()));
-    if ( m_items.count() > 5 )
-        m_items.removeAt( 5 );
-    endInsertRows();
-}
-
-void
-LfmListModel::addScrobbledTrack( const Track& a_track )
-{
-    MutableTrack( a_track ).setExtra( "scrobbleStatus", "scrobbled" );
-}
-
 
 void
 LfmListModel::itemUpdated()
@@ -116,6 +92,7 @@ QVariant
 LfmListModel::data( const QModelIndex & index, int role ) const
 {
     const LfmItem& item = *(m_items[index.row()]);
+
     switch( role ) {
         case Qt::DisplayRole:
             return item.m_type->toString();
@@ -133,69 +110,41 @@ LfmListModel::data( const QModelIndex & index, int role ) const
     return QVariant();
 }
 
-void
-LfmListModel::read( QString path )
-{
-    m_items.clear();
 
-    QFile file( path );
-    file.open( QFile::Text | QFile::ReadOnly );
-    QTextStream stream( &file );
-    stream.setCodec( "UTF-8" );
-
-    QDomDocument xml;
-    xml.setContent( stream.readAll() );
-
-    for (QDomNode n = xml.documentElement().firstChild(); !n.isNull(); n = n.nextSibling())
-    {
-        // TODO: recognise all the other AbstractType classes
-        if (n.nodeName() == "track")
-        {
-            emit layoutAboutToBeChanged();
-            Track* track = new Track( n.toElement() );
-            LfmItem* item = new LfmItem( track );
-            item->loadImage( track->imageUrl( lastfm::Small, true ));
-            m_items << item;
-            emit layoutChanged();
-        }
-    }
-}
-
-
-void
-LfmListModel::write( QString path ) const
-{
-    if (m_items.isEmpty())
-    {
-        QFile::remove( path );
-    }
-    else
-    {
-        QDomDocument xml;
-        QDomElement e = xml.createElement( "recent_tracks" );
-        e.setAttribute( "product", QCoreApplication::applicationName() );
-        e.setAttribute( "version", "2" );
-
-        foreach (LfmItem* item, m_items)
-            e.appendChild( item->m_type->toDomElement( xml ) );
-
-        xml.appendChild( e );
-
-        QFile file( path );
-        file.open( QIODevice::WriteOnly | QIODevice::Text );
-
-        QTextStream stream( &file );
-        stream.setCodec( "UTF-8" );
-        stream << "<?xml version='1.0' encoding='utf-8'?>\n";
-        stream << xml.toString( 2 );
-    }
-}
 
 LfmListView::LfmListView(QWidget *parent):
    QListView(parent),
    m_lastRow(-1)
 {
    setMouseTracking(true);
+}
+
+QVariant
+LfmTrackListModel::data( const QModelIndex & index, int role ) const
+{
+    if ( index.column() == 0 )
+        return LfmListModel::data( index, role );
+    else if ( index.column() == 1 )
+    {
+        const Track& track = *static_cast<lastfm::Track*>(m_items[index.row()]->m_type);
+        switch( role ) {
+            case Qt::DecorationRole:
+                if ( track.isLoved() )
+                    return QIcon(":/love-isloved.png");
+        }
+
+    }
+    else if ( index.column() == 2 )
+    {
+        const Track& track = *static_cast<lastfm::Track*>(m_items[index.row()]->m_type);
+        switch( role ) {
+            case Qt::DisplayRole:
+                return track.extra("scrobbleStatus");
+
+        }
+    }
+
+    return QVariant();
 }
 
 #include <QMouseEvent>
