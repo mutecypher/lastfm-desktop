@@ -75,7 +75,7 @@ QWidget#NowScrobbling {
     border: none;
     margin: 5px 15px;
     padding: 0px;
-    height: 29px;
+    height: 25px;
     width: 40;
 }
 
@@ -83,7 +83,8 @@ QWidget#NowScrobbling {
     background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #4c4c4c, stop:1 #3d3d3d);
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
-    border-top: 1px solid #141414;
+    border: 1px solid #2d2d2d;
+    border-top: 2px solid qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #0e0e0e, stop:1 #686868);
 }
 
 #StatusBar {
@@ -325,8 +326,6 @@ ScrobbleStatus#now_playing {
     border: none;
     border: 1px solid #808080;
     border-right: none;
-    /*border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;*/
 }
 
 ScrobbleStatus QLabel {
