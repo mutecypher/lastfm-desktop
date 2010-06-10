@@ -36,8 +36,8 @@ template <typename D> struct OneDialogPointer : public QPointer<D>
     OneDialogPointer& operator=( QDialog* d )
     {
         QPointer<D>::operator=( (D*)d );
-    	d->setAttribute( Qt::WA_DeleteOnClose ); \
-    	d->setWindowFlags( Qt::Dialog | Qt::WindowMinimizeButtonHint ); \
+    	d->setAttribute( Qt::WA_DeleteOnClose ); 
+    	d->setWindowFlags( Qt::Dialog | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint ); 
     	d->setModal( false );
         return *this;
     }
