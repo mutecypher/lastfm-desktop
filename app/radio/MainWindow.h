@@ -41,7 +41,7 @@ public slots:
     void onRadioError(int code, const QVariant& data);
 
 protected slots:
-    void onSessionChanged( const Session& s, const Session& );
+    void onSessionChanged( const unicorn::Session& s, const unicorn::Session& );
 
 private:
     class MainWidget* m_mainWidget;

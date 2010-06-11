@@ -41,6 +41,7 @@ MainWindow::MainWindow()
     QtWin::extendFrameIntoClientArea( this );
 
     QStatusBar* status = new QStatusBar( this );
+
     addDragHandleWidget( status );
     PlaybackControlsWidget* pcw = new PlaybackControlsWidget( status );
 
@@ -61,10 +62,10 @@ MainWindow::MainWindow()
 
     connect(pcw, SIGNAL(startRadio(RadioStation)), m_mainWidget, SLOT(onStartRadio(RadioStation)));
     
-    connect(radio, SIGNAL(stopped()), status, SLOT(hideAnimated()));
-    connect(radio, SIGNAL(tuningIn( const RadioStation&)), status, SLOT(showAnimated()));
+ //   connect(radio, SIGNAL(stopped()), status, SLOT(hideAnimated()));
+ //   connect(radio, SIGNAL(tuningIn( const RadioStation&)), status, SLOT(showAnimated()));
     
-    connect( qApp, SIGNAL( sessionChanged( Session, Session )), SLOT( onSessionChanged( Session, Session )));
+    connect( qApp, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session )), SLOT( onSessionChanged( unicorn::Session, unicorn::Session )));
    
     //if we've got this far we must already have a session so use
     //the current session to start things rolling.
@@ -81,6 +82,7 @@ MainWindow::MainWindow()
 void 
 MainWindow::onSessionChanged( const unicorn::Session& s, const unicorn::Session& )
 {
+    qDebug() << "session changed and the app noticed it!";
     User user;
     qDebug() << "fetching friends and recent stations for" << user;
     connect(user.getFriends(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotFriends()));
