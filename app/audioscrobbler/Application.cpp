@@ -302,6 +302,9 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     m_love_action->setEnabled( true );
     m_tag_action->setEnabled( true );
     m_share_action->setEnabled( true );
+
+    // make sure that if the love state changes we update all the buttons
+    connect( t.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(lovedStateChanged(bool)) );
 }
 
 void
@@ -369,17 +372,12 @@ Application::onShareTriggered()
 void 
 Application::changeLovedState(bool loved)
 {
-    emit lovedStateChanged(loved);
+    MutableTrack track( mw->currentTrack() );
 
     if (loved)
-    {
-        MutableTrack t( mw->currentTrack());
-        t.love();
-    }
+        track.love();
     else
-    {
-        // TODO: unlove!
-    }
+        track.unlove();
 }
 
 PlayerConnection*
