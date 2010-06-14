@@ -24,24 +24,48 @@
 #include <QFile>
 #include <QLabel>
 
+#include <lastfm/misc.h>
+
 #include "RecentTracksWidget.h"
 #include "RecentTrackWidget.h"
 
-RecentTracksWidget::RecentTracksWidget( QWidget* parent )
+RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
     :QWidget( parent )
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
+
+    setUsername( username );
 }
 
 void
-RecentTracksWidget::read( QString path )
+RecentTracksWidget::onTrackChanged()
+{
+    write();
+}
+
+void RecentTracksWidget::setUsername( QString username )
+{
+    QString path = lastfm::dir::runtimeData().filePath( username + "_recent_tracks.xml" );
+
+    if ( m_path != path )
+    {
+        m_path = path;
+        read();
+    }
+}
+
+void
+RecentTracksWidget::read()
 {
     foreach ( RecentTrackWidget* trackWidget, m_tracks )
+    {
         layout()->removeWidget( trackWidget );
+        trackWidget->deleteLater();
+    }
     m_tracks.clear();
 
 
-    QFile file( path );
+    QFile file( m_path );
     file.open( QFile::Text | QFile::ReadOnly );
     QTextStream stream( &file );
     stream.setCodec( "UTF-8" );
@@ -56,7 +80,6 @@ RecentTracksWidget::read( QString path )
         {
             Track* track = new Track( n.toElement() );
             RecentTrackWidget* item = new RecentTrackWidget( *track );
-            //item->loadImage( track->imageUrl( lastfm::Small, true ));
             layout()->addWidget( item );
             m_tracks << item;
         }
@@ -65,11 +88,11 @@ RecentTracksWidget::read( QString path )
 
 
 void
-RecentTracksWidget::write( QString path ) const
+RecentTracksWidget::write() const
 {
     if (m_tracks.isEmpty())
     {
-        QFile::remove( path );
+        QFile::remove( m_path );
     }
     else
     {
@@ -83,7 +106,7 @@ RecentTracksWidget::write( QString path ) const
 
         xml.appendChild( e );
 
-        QFile file( path );
+        QFile file( m_path );
         file.open( QIODevice::WriteOnly | QIODevice::Text );
 
         QTextStream stream( &file );
@@ -101,7 +124,6 @@ RecentTracksWidget::addCachedTrack( const Track& a_track )
     Track* track = new Track;
     *track = a_track;
     RecentTrackWidget* trackWidget = new RecentTrackWidget( *track );
-    //item->loadImage( track->imageUrl( lastfm::Small, true ));
 
     m_tracks.insert( 0, trackWidget );
     static_cast<QBoxLayout*>(layout())->insertWidget( 0, trackWidget );
@@ -112,6 +134,8 @@ RecentTracksWidget::addCachedTrack( const Track& a_track )
         m_tracks[5]->deleteLater();
         m_tracks.removeAt( 5 );
     }
+
+    connect( a_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
 }
 
 void

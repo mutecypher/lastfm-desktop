@@ -29,12 +29,20 @@ public:
 
     Track track() const { return m_track;}
 
+private slots:
+    void onLoveToggled( bool loved );
+
+    void onLoveClicked();
+    void onTagClicked();
+    void onShareClicked();
+
 private:
     struct
     {
         class QLabel* title;
         class QLabel* albumArt;
         class QLabel* love;
+        class QToolButton* cog;
     } ui;
 
     Track m_track;

@@ -21,6 +21,9 @@
         <file alias="share-onpress.png">share_29x29_pressed.png</file>
 		<file alias="share-disabled.png">share_29x29_disabled.png</file>
 		<file alias="delete.png">delete.png</file>
+		<file alias="cog-rest.png" >cog_button_rest.png</file>
+        <file alias="cog-onpress.png" >cog_button_press.png</file>
+		<file alias="cog-onhover.png" >cog_button_hover.png</file>
 		<file>header_bio.png</file>
 		<file>header_listeners.png</file>
 		<file>header_scrobbles.png</file>

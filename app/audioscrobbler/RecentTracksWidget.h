@@ -28,19 +28,19 @@ class RecentTracksWidget : public QWidget
 {
     Q_OBJECT
 public:
-    RecentTracksWidget( QWidget* parent = 0 );
+    RecentTracksWidget( QString username, QWidget* parent = 0 );
 
-    void read( QString path );
-    void write( QString path ) const;
+    void setUsername( QString username );
+    void read();
+    void write() const;
 
     void addCachedTrack( const Track& a_track );
     void addScrobbledTrack( const Track& a_track );
 
+private slots:
+    void onTrackChanged();
+
 private:
-    struct
-    {
-
-    } ui;
-
+    QString m_path;
     QList<class RecentTrackWidget*> m_tracks;
 };
