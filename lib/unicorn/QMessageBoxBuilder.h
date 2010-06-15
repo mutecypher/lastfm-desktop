@@ -23,11 +23,71 @@
 #include <lib/DllExportMacro.h>
 #include <QtGui/QMessageBox>
 #include <QAbstractButton>
+#include <QPushButton>
 
+#include <QDialogButtonBox>
+#include <QBoxLayout>
+#include <QCheckBox>
+#include <QStyle>
+#include <QDebug>
+#include <QLabel>
+
+namespace unicorn {
+    class MessageBox : public QDialog {
+    public:
+        MessageBox( QWidget* parent );
+        void setStandardButtons( QMessageBox::StandardButtons b )
+        { 
+            buttons->setStandardButtons( QDialogButtonBox::StandardButtons((int)b) ); 
+        }
+
+        void setIcon( QMessageBox::Icon x )
+        { 
+            QPixmap pm;
+            switch( x ) {
+                case QMessageBox::NoIcon:
+                    break;
+                case QMessageBox::Information:
+                    pm = style()->standardPixmap( QStyle::SP_MessageBoxInformation );
+                    break;
+                case QMessageBox::Warning:
+                    pm = style()->standardPixmap( QStyle::SP_MessageBoxWarning );
+                    break;
+                case QMessageBox::Critical:
+                    pm = style()->standardPixmap( QStyle::SP_MessageBoxCritical );
+                    break;
+                case QMessageBox::Question:
+                    pm = style()->standardPixmap( QStyle::SP_MessageBoxQuestion );
+                    break;
+            }
+            icon->setPixmap( pm );
+        }
+
+        QAbstractButton* button( QMessageBox::StandardButton b )
+        {
+            QAbstractButton* ret = buttons->button( QDialogButtonBox::StandardButton((int)b) );
+            return ret;
+        }
+
+        void addButton( QAbstractButton* b, QMessageBox::ButtonRole r )
+        {
+            buttons->addButton( b, QDialogButtonBox::ButtonRole((int)r));
+        }
+
+        void setText( QString t )
+        {
+            label->setText( t );
+        }
+
+    protected:
+        QLabel *icon, *label;
+        QDialogButtonBox* buttons;
+    };
+};
 
 class UNICORN_DLLEXPORT QMessageBoxBuilder
 {
-    QMessageBox box;
+    unicorn::MessageBox box;
 
 public:
     /** Try not to use 0! */

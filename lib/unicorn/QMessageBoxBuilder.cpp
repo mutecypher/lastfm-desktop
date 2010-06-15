@@ -20,6 +20,20 @@
 #include "QMessageBoxBuilder.h"
 #include <QApplication>
 
+#include <QGridLayout>
+#include <QLabel>
+
+unicorn::MessageBox::MessageBox( QWidget* parent )
+        :QDialog( parent )
+{
+    QGridLayout* l = new QGridLayout( this );
+    
+    l->addWidget( icon = new QLabel, 0, 0, 2, 1, Qt::AlignTop | Qt::AlignLeft );
+    l->addWidget( label = new QLabel, 0, 1, 1, 1 );
+    l->setRowStretch( 1, 100 );
+    l->setRowMinimumHeight( 2, 6 );
+    l->addWidget( buttons = new QDialogButtonBox, 2, 0, 1, 2 );
+}
 
 QMessageBoxBuilder& 
 QMessageBoxBuilder::setTitle( const QString& title )
@@ -36,7 +50,7 @@ QMessageBoxBuilder::setTitle( const QString& title )
 QMessageBoxBuilder&
 QMessageBoxBuilder::setText( const QString& text )
 {
-#ifdef Q_WS_MAC
+#ifdef Q_WS_MAC_
     box.setInformativeText( text );
 #else
     box.setText( text );
