@@ -257,6 +257,10 @@ void
 PlaybackControlsWidget::onTrackSpooled( const Track& track )
 {
     ui.love->setChecked( track.isLoved() );
+
+    // make sure any changes to the love status of the
+    // track are reflected in the love button
+    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui.love, SLOT(setChecked(bool)));
 }
 
 void
@@ -299,15 +303,16 @@ PlaybackControlsWidget::setButtonsEnabled( bool enabled )
 void
 PlaybackControlsWidget::onLoveClicked(bool checked)
 {
+    MutableTrack track( radio->currentTrack() );
     if ( checked )
     {
         // The button has been checked so love the track!
-        QNetworkReply* loveReply = MutableTrack( radio->currentTrack() ).love();
-        connect(loveReply, SIGNAL(finished()), SLOT(onLoveFinished()));
+        track.love();
     }
     else
     {
         // The button has been unchecked so unlove the track
+        track.unlove();
     }
 }
 

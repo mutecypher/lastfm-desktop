@@ -141,7 +141,7 @@ public:
         return m_items.length();
     }
 
-    int columnCount( const QModelIndex & parent = QModelIndex() ) const { return 1; }
+    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const { return 1; }
 
     QModelIndex parent( const QModelIndex& child ) const { return QModelIndex() ;}
 
@@ -169,6 +169,17 @@ protected slots:
 protected:
     QList<LfmItem*> m_items;
 
+};
+
+class UNICORN_DLLEXPORT LfmTrackListModel : public LfmListModel
+{
+    Q_OBJECT
+public:
+    LfmTrackListModel( QObject* parent=0 ):LfmListModel( parent ){}
+
+    int columnCount( const QModelIndex & parent = QModelIndex() ) const { return 3; }
+
+    QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
 };
 
 #include <QListView>
