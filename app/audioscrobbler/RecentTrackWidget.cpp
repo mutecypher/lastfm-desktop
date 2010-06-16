@@ -22,31 +22,40 @@
 #include <QIcon>
 #include <QLabel>
 #include <QMenu>
+#include <QMouseEvent>
+#include <QTimer>
 #include <QToolButton>
 
-#include <lib/unicorn/dialogs/ShareDialog.h>
-#include <lib/unicorn/dialogs/TagDialog.h>
+#include "lib/unicorn/dialogs/ShareDialog.h"
+#include "lib/unicorn/dialogs/TagDialog.h"
+#include "lib/unicorn/widgets/GhostWidget.h"
+#include "lib/unicorn/widgets/HttpImageWidget.h"
 
 #include "RecentTrackWidget.h"
 
 RecentTrackWidget::RecentTrackWidget( Track& track )
-    :QWidget(), m_track( track )
+    :StylableWidget(), m_track( track )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
 
-    layout->addWidget( ui.albumArt = new QLabel("art") );
-    ui.albumArt->hide();
+    layout->setContentsMargins( 0, 0, 0, 0 );
+    layout->addWidget( ui.albumArt = new HttpImageWidget(), 0, Qt::AlignTop );
+    ui.albumArt->setObjectName( "art" );
+    ui.albumArt->loadUrl( track.imageUrl( lastfm::Small, true) );
+    ui.albumArt->setHref( track.www() );
 
-    layout->addWidget( ui.title = new QLabel( m_track.toString() ) );
+    layout->addWidget( ui.title = new QLabel( track.toString() ), 1, Qt::AlignTop );
+    ui.title->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
 
-    layout->addStretch( 1 );
-
-    layout->addWidget( ui.love = new QLabel("love") );
+    layout->addWidget( ui.love = new QLabel("love"), 0, Qt::AlignTop );
     ui.love->setObjectName( "love" );
     ui.love->setVisible( track.isLoved() );
 
-    layout->addWidget( ui.cog = new QToolButton() );
+    layout->addWidget( ui.cog = new QToolButton(), 0, Qt::AlignTop );
     ui.cog->setObjectName( "cog" );
+    layout->addWidget( ui.ghostCog = new GhostWidget( ui.cog ) );
+    ui.cog->hide();
+    ui.ghostCog->show();
 
     QMenu* cogMenu = new QMenu( this );
     QAction* loveAction = cogMenu->addAction( QIcon(":/love-rest.png"), "Love", this, SLOT(onLoveClicked()) );
@@ -58,10 +67,72 @@ RecentTrackWidget::RecentTrackWidget( Track& track )
 
     ui.cog->setMenu( cogMenu );
 
+    layout->addWidget( ui.timestamp = new QLabel(), 0, Qt::AlignTop );
+    m_timestampTimer = new QTimer( this );
+    connect( m_timestampTimer, SIGNAL(timeout()), SLOT(updateTimestamp()));
+    updateTimestamp();
+
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onLoveToggled(bool)));
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), loveAction, SLOT(setChecked(bool)));
 }
 
+void
+RecentTrackWidget::enterEvent( class QEvent* )
+{
+    ui.cog->show();
+    ui.ghostCog->hide();
+}
+
+void
+RecentTrackWidget::leaveEvent( class QEvent* )
+{
+    ui.cog->hide();
+    ui.ghostCog->show();
+}
+
+void
+RecentTrackWidget::resizeEvent(QResizeEvent* )
+{
+    QFontMetrics fm( ui.title->font() );
+    ui.title->setText( fm.elidedText ( m_track.toString(), Qt::ElideRight, ui.title->width() - 2 ) );
+}
+
+void
+RecentTrackWidget::updateTimestamp()
+{
+    QDateTime now = QDateTime::currentDateTime();
+
+    if ( m_track.timestamp().daysTo( now ) > 1 )
+    {
+        ui.timestamp->setText(m_track.timestamp().toString( "ddd h:ssap" ));
+        m_timestampTimer->start( 24 * 60 * 60 * 1000 );
+    }
+    else if ( m_track.timestamp().daysTo( now ) == 1 )
+    {
+        ui.timestamp->setText(m_track.timestamp().toString( "Yesterday h:ssap" ));
+        m_timestampTimer->start( 24 * 60 * 60 * 1000 );
+    }
+    else if ( (m_track.timestamp().secsTo( now ) / (60 * 60) ) > 1 )
+    {
+        ui.timestamp->setText( QString::number( (m_track.timestamp().secsTo( now ) / (60 * 60) ) ) + " hours ago" );
+        m_timestampTimer->start( 60 * 60 * 1000 );
+    }
+    else if ( (m_track.timestamp().secsTo( now ) / (60 * 60) ) == 1 )
+    {
+        ui.timestamp->setText( "1 hour ago" );
+        m_timestampTimer->start( 60 * 60 * 1000 );
+    }
+    else if ( (m_track.timestamp().secsTo( now ) / 60 ) == 1 )
+    {
+        ui.timestamp->setText( "1 minute ago" );
+        m_timestampTimer->start( 60 * 60 * 1000 );
+    }
+    else
+    {
+        ui.timestamp->setText( QString::number( (m_track.timestamp().secsTo( now ) / 60 ) ) + " minutes ago" );
+        m_timestampTimer->start( 60 * 1000 );
+    }
+}
 
 void
 RecentTrackWidget::onLoveClicked()

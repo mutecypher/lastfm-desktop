@@ -19,15 +19,23 @@
 */
 
 #include <QWidget>
+
 #include <lastfm/Track>
 
-class RecentTrackWidget : public QWidget
+#include "lib/unicorn/StylableWidget.h"
+
+class RecentTrackWidget : public StylableWidget
 {
     Q_OBJECT
 public:
     RecentTrackWidget( Track& track );
 
     Track track() const { return m_track;}
+
+private:
+    void enterEvent( class QEvent* event );
+    void leaveEvent( class QEvent* event );
+    void resizeEvent( class QResizeEvent* event );
 
 private slots:
     void onLoveToggled( bool loved );
@@ -36,14 +44,19 @@ private slots:
     void onTagClicked();
     void onShareClicked();
 
+    void updateTimestamp();
+
 private:
     struct
     {
         class QLabel* title;
-        class QLabel* albumArt;
+        class HttpImageWidget* albumArt;
         class QLabel* love;
         class QToolButton* cog;
+        class GhostWidget* ghostCog;
+        class QLabel* timestamp;
     } ui;
 
     Track m_track;
+    class QTimer* m_timestampTimer;
 };
