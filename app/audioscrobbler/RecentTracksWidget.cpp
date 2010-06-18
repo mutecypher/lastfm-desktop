@@ -35,6 +35,8 @@ const int kNumRecentTracks(10);
 RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
     :StylableWidget( parent )
 {
+    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setSpacing( 0 );
 
@@ -125,9 +127,7 @@ RecentTracksWidget::addCachedTrack( const Track& a_track )
 {
     MutableTrack( a_track ).setExtra( "scrobbleStatus", "cached" );
 
-    Track* track = new Track;
-    *track = a_track;
-    RecentTrackWidget* trackWidget = new RecentTrackWidget( *track );
+    RecentTrackWidget* trackWidget = new RecentTrackWidget( a_track );
 
     m_tracks.insert( 0, trackWidget );
     static_cast<QBoxLayout*>(layout())->insertWidget( 0, trackWidget );

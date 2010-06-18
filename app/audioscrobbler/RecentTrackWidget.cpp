@@ -33,22 +33,29 @@
 
 #include "RecentTrackWidget.h"
 
-RecentTrackWidget::RecentTrackWidget( Track& track )
+RecentTrackWidget::RecentTrackWidget( const Track& track )
     :StylableWidget(), m_track( track )
 {
-    QHBoxLayout* layout = new QHBoxLayout( this );
+    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
 
+    QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
+
     layout->addWidget( ui.albumArt = new HttpImageWidget(), 0, Qt::AlignTop );
     ui.albumArt->setObjectName( "art" );
     ui.albumArt->loadUrl( track.imageUrl( lastfm::Small, true) );
     ui.albumArt->setHref( track.www() );
+
+    // hide this row until the album art image has loaded
+    hide();
+    connect( ui.albumArt, SIGNAL(loaded()), SLOT(show()));
 
     layout->addWidget( ui.title = new QLabel( track.toString() ), 1, Qt::AlignTop );
     ui.title->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
 
     layout->addWidget( ui.love = new QLabel("love"), 0, Qt::AlignTop );
     ui.love->setObjectName( "love" );
+    //ui.love->setHoverText( tr("A loved track") );
     ui.love->setVisible( track.isLoved() );
 
     layout->addWidget( ui.cog = new QToolButton(), 0, Qt::AlignTop );
@@ -109,7 +116,7 @@ RecentTrackWidget::updateTimestamp()
     }
     else if ( m_track.timestamp().daysTo( now ) == 1 )
     {
-        ui.timestamp->setText(m_track.timestamp().toString( "Yesterday h:ssap" ));
+        ui.timestamp->setText( "Yesterday " + m_track.timestamp().toString( "h:ssap" ));
         m_timestampTimer->start( 24 * 60 * 60 * 1000 );
     }
     else if ( (m_track.timestamp().secsTo( now ) / (60 * 60) ) > 1 )
@@ -125,7 +132,7 @@ RecentTrackWidget::updateTimestamp()
     else if ( (m_track.timestamp().secsTo( now ) / 60 ) == 1 )
     {
         ui.timestamp->setText( "1 minute ago" );
-        m_timestampTimer->start( 60 * 60 * 1000 );
+        m_timestampTimer->start( 60 * 1000 );
     }
     else
     {

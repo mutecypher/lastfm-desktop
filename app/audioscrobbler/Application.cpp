@@ -62,7 +62,8 @@ using audioscrobbler::Application;
 
 Application::Application(int& argc, char** argv) 
             : unicorn::Application(argc, argv),
-              as( 0 )
+              as( 0 ),
+              state( Unknown )
 {
 	setQuitOnLastWindowClosed( false );
 
@@ -167,10 +168,6 @@ Application::init()
     connect(this, SIGNAL(busLovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
     connect(this, SIGNAL(busLovedStateChanged(bool)), sc->loveButton(), SLOT(setChecked(bool)));
 
-    // get the loved status from the fetcher to the love buttons
-    connect(fetcher, SIGNAL(trackGotUserloved(bool)), m_love_action, SLOT(setChecked(bool)));
-    connect(fetcher, SIGNAL(trackGotUserloved(bool)), sc->loveButton(), SLOT(setChecked(bool)));
-
     // tell everyone that is interested that data about the current track has been fetched
     connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotInfo(XmlQuery)));
     connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
@@ -274,6 +271,8 @@ Application::setConnection(PlayerConnection*c)
 void
 Application::onTrackStarted(const Track& t, const Track& oldtrack)
 {
+    state = Playing;
+
     Q_ASSERT(connection);
     
     //TODO move to playerconnection
@@ -308,7 +307,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     m_share_action->setEnabled( true );
 
     // make sure that if the love state changes we update all the buttons
-    connect( t.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(lovedStateChanged(bool)) );
+    connect( t.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(lovedStateChanged(bool)) );    
 }
 
 void
@@ -328,6 +327,12 @@ Application::onStopWatchTimedOut()
 void
 Application::onPaused()
 {
+    // We can sometimes get a stopped before a play when the
+    // media player is playing before the scrobbler is started
+    if ( state == Unknown ) return;
+
+    state = Paused;
+
     Q_ASSERT(connection);
     Q_ASSERT(watch);
     if(watch) watch->pause();
@@ -336,6 +341,12 @@ Application::onPaused()
 void
 Application::onResumed()
 {
+    // We can sometimes get a stopped before a play when the
+    // media player is playing before the scrobbler is started
+    if ( state == Unknown ) return;
+
+    state = Playing;
+
     Q_ASSERT(watch);
     Q_ASSERT(connection);    
 
@@ -345,6 +356,12 @@ Application::onResumed()
 void
 Application::onStopped()
 {
+    // We can sometimes get a stopped before a play when the
+    // media player is playing before the scrobbler is started
+    if ( state == Unknown ) return;
+
+    state = Stopped;
+
     Q_ASSERT(watch);
     Q_ASSERT(connection);
         
