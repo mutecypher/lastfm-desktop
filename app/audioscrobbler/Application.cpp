@@ -96,6 +96,10 @@ Application::init()
     #ifdef Q_WS_WIN
         connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
     #endif
+
+    #ifdef Q_WS_X11
+        connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+    #endif
     tray->setIcon(trayIcon);
     tray->show();
     connect( this, SIGNAL( aboutToQuit()), tray, SLOT( hide()));

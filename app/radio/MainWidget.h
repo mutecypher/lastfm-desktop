@@ -30,6 +30,7 @@
 #include <QLabel>
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/AnimatedPushButton.h"
+#include "lib/unicorn/UnicornSession.h"
 #include "PlaylistMeta.h"
 #include "RadioStationListModel.h"
 #include "../Radio.h"
@@ -47,7 +48,8 @@ public:
 signals:
     void startRadio(RadioStation);
     void widgetChanged( QWidget* );
-
+    void sessionChanged( const unicorn::Session&, const unicorn::Session& );
+    
 public slots:
     void onStartRadio(RadioStation rs);
     void onShowMoreRecentStations();
@@ -179,6 +181,21 @@ public:
         }
 
         layout->addWidget(child);
+    }
+
+public slots:
+    void onSessionChanged( const unicorn::Session &newSession, const unicorn::Session &oldSession )
+    {
+        QString lblText( m_mainLabel->text() );
+        if( lblText.startsWith( newSession.username() ) )
+        {
+            lblText.replace( QString( newSession.username() + "'s" ), QString( "Your" ) );
+        }
+        else
+        {
+            lblText.replace( QString( "Your" ), QString( oldSession.username() + "'s" ) );
+        }
+        m_mainLabel->setText( lblText );
     }
 
 private slots:

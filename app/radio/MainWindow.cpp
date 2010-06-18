@@ -65,8 +65,10 @@ MainWindow::MainWindow()
  //   connect(radio, SIGNAL(stopped()), status, SLOT(hideAnimated()));
  //   connect(radio, SIGNAL(tuningIn( const RadioStation&)), status, SLOT(showAnimated()));
     
-    connect( qApp, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session )), SLOT( onSessionChanged( unicorn::Session, unicorn::Session )));
-   
+    connect( qApp, SIGNAL( sessionChanged( const unicorn::Session&, const unicorn::Session& ) ), 
+             SLOT( onSessionChanged( const unicorn::Session&, const unicorn::Session& ) ) );
+    connect( qApp, SIGNAL( sessionChanged( const unicorn::Session&, const unicorn::Session& ) ), 
+             m_mainWidget, SIGNAL( sessionChanged( const unicorn::Session&, const unicorn::Session& ) ) );
     //if we've got this far we must already have a session so use
     //the current session to start things rolling.
     onSessionChanged( qobject_cast<unicorn::Application*>(qApp)->currentSession(), Session());
