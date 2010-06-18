@@ -73,7 +73,6 @@ private slots:
             p.end();
         }
 
-        setFixedSize( px.size());
         setPixmap(px);
     }
 
