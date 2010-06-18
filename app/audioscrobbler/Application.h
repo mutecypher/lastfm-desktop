@@ -41,6 +41,14 @@ namespace audioscrobbler
     class Application : public unicorn::Application
     {
         Q_OBJECT
+
+        enum State
+        {
+            Unknown,
+            Stopped,
+            Paused,
+            Playing
+        } state;
         
         // we delete these so QPointers
         QPointer<QSystemTrayIcon> tray;
