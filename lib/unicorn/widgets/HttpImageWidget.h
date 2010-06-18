@@ -74,10 +74,13 @@ private slots:
         }
 
         setPixmap(px);
+
+        emit loaded();
     }
 
 signals:
     void clicked();
+    void loaded();
 
 private:
     bool m_mouseDown;

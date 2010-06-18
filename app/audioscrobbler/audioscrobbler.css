@@ -208,6 +208,7 @@ DataBox #contents QLabel {
 RecentTrackWidget {
 	border-top: 1px solid #cccccc;
 	padding: 0px 0px;
+	min-height: 34;
 }
 
 RecentTrackWidget:hover {
@@ -325,8 +326,10 @@ QTextBrowser, QLabel#title1, QLabel#title2 {
 MetadataWindow #artistImage {
     padding: 0px;  
     border: 1px solid #716f6f; 
-    min-width: 85px; 
-    min-height: 85px; 
+    min-width: 99px; 
+    min-height: 76px; 
+	max-width: 99px; 
+    max-height: 76px; 
 }
 
 QLabel#title1 {
