@@ -1,6 +1,6 @@
 /*
    Copyright 2005-2009 Last.fm Ltd.
-      - Primarily authored by Jono Cole and Doug Mansell
+      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -18,38 +18,31 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QObject>
+#include <QWidget>
+#include <QList>
 
-#include <lastfm/Track>
-#include <lastfm/XmlQuery>
+#include "lib/unicorn/StylableWidget.h"
 
+namespace lastfm { class Track; };
+using lastfm::Track;
 
-class ScrobbleInfoFetcher : public QObject
+class RecentTracksWidget : public StylableWidget
 {
     Q_OBJECT
 public:
-    ScrobbleInfoFetcher(QObject* parent = 0);
+    RecentTracksWidget( QString username, QWidget* parent = 0 );
 
-signals:
-    void trackGotInfo(const XmlQuery& lfm);
-    void albumGotInfo(const XmlQuery& lfm);
-    void artistGotInfo(const XmlQuery& lfm);
-    void artistGotEvents(const XmlQuery& lfm);
-    void trackGotTopFans(const XmlQuery& lfm);
-    void trackGotTags(const XmlQuery& lfm);
+    void setUsername( QString username );
+    void read();
+    void write() const;
 
-    void finished();
+    void addCachedTrack( const Track& a_track );
+    void addScrobbledTrack( const Track& a_track );
 
 private slots:
-    void onTrackStarted( const Track& t, const Track& oldTrack );
-
-    void onTrackGotInfo();
-    void onAlbumGotInfo();
-    void onArtistGotInfo();
-    void onArtistGotEvents();
-    void onTrackGotTopFans();
-    void onTrackGotTags();
+    void onTrackChanged();
 
 private:
-    class QList<class QNetworkReply* > m_replies;
+    QString m_path;
+    QList<class RecentTrackWidget*> m_tracks;
 };

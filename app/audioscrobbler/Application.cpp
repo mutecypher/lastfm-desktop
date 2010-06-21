@@ -62,7 +62,8 @@ using audioscrobbler::Application;
 
 Application::Application(int& argc, char** argv) 
             : unicorn::Application(argc, argv),
-              as( 0 )
+              as( 0 ),
+              state( Unknown )
 {
 	setQuitOnLastWindowClosed( false );
 
@@ -93,6 +94,10 @@ Application::init()
     #endif
 
     #ifdef Q_WS_WIN
+        connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+    #endif
+
+    #ifdef Q_WS_X11
         connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
     #endif
     tray->setIcon(trayIcon);
@@ -142,7 +147,10 @@ Application::init()
 #elif defined Q_WS_WIN
     const int sKeyCode = 83;
 #endif
+
+#ifndef Q_OS_LINUX
     installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action, SLOT( trigger()));
+#endif
 
     ScrobbleControls* sc = mw->scrobbleControls();
     sc->setEnabled( false );
@@ -159,10 +167,6 @@ Application::init()
     // update the love buttons if love was pressed in the radio
     connect(this, SIGNAL(busLovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
     connect(this, SIGNAL(busLovedStateChanged(bool)), sc->loveButton(), SLOT(setChecked(bool)));
-
-    // get the loved status from the fetcher to the love buttons
-    connect(fetcher, SIGNAL(trackGotUserloved(bool)), m_love_action, SLOT(setChecked(bool)));
-    connect(fetcher, SIGNAL(trackGotUserloved(bool)), sc->loveButton(), SLOT(setChecked(bool)));
 
     // tell everyone that is interested that data about the current track has been fetched
     connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotInfo(XmlQuery)));
@@ -267,6 +271,8 @@ Application::setConnection(PlayerConnection*c)
 void
 Application::onTrackStarted(const Track& t, const Track& oldtrack)
 {
+    state = Playing;
+
     Q_ASSERT(connection);
     
     //TODO move to playerconnection
@@ -299,6 +305,9 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     m_love_action->setEnabled( true );
     m_tag_action->setEnabled( true );
     m_share_action->setEnabled( true );
+
+    // make sure that if the love state changes we update all the buttons
+    connect( t.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(lovedStateChanged(bool)) );    
 }
 
 void
@@ -318,6 +327,12 @@ Application::onStopWatchTimedOut()
 void
 Application::onPaused()
 {
+    // We can sometimes get a stopped before a play when the
+    // media player is playing before the scrobbler is started
+    if ( state == Unknown ) return;
+
+    state = Paused;
+
     Q_ASSERT(connection);
     Q_ASSERT(watch);
     if(watch) watch->pause();
@@ -326,6 +341,12 @@ Application::onPaused()
 void
 Application::onResumed()
 {
+    // We can sometimes get a stopped before a play when the
+    // media player is playing before the scrobbler is started
+    if ( state == Unknown ) return;
+
+    state = Playing;
+
     Q_ASSERT(watch);
     Q_ASSERT(connection);    
 
@@ -335,6 +356,12 @@ Application::onResumed()
 void
 Application::onStopped()
 {
+    // We can sometimes get a stopped before a play when the
+    // media player is playing before the scrobbler is started
+    if ( state == Unknown ) return;
+
+    state = Stopped;
+
     Q_ASSERT(watch);
     Q_ASSERT(connection);
         
@@ -366,17 +393,12 @@ Application::onShareTriggered()
 void 
 Application::changeLovedState(bool loved)
 {
-    emit lovedStateChanged(loved);
+    MutableTrack track( mw->currentTrack() );
 
     if (loved)
-    {
-        MutableTrack t( mw->currentTrack());
-        t.love();
-    }
+        track.love();
     else
-    {
-        // TODO: unlove!
-    }
+        track.unlove();
 }
 
 PlayerConnection*

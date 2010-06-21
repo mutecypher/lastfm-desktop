@@ -41,12 +41,13 @@ MainWindow::MainWindow()
     QtWin::extendFrameIntoClientArea( this );
 
     QStatusBar* status = new QStatusBar( this );
+
     addDragHandleWidget( status );
-    m_pcw = new PlaybackControlsWidget( status );
+    PlaybackControlsWidget* pcw = new PlaybackControlsWidget( status );
 
     status->setSizeGripEnabled( false );
 
-    status->addWidget( m_pcw, 1 );
+    status->addWidget( pcw, 1 );
     setStatusBar( status );
 
     QWidget* w = new StylableWidget();
@@ -57,15 +58,17 @@ MainWindow::MainWindow()
 
     m_messageBar = new MessageBar( w );
 
-    connect( m_mainWidget, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
+    connect(m_mainWidget, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
 
-    connect( m_pcw, SIGNAL(startRadio(RadioStation)), m_mainWidget, SLOT(onStartRadio(RadioStation)));
+    connect(pcw, SIGNAL(startRadio(RadioStation)), m_mainWidget, SLOT(onStartRadio(RadioStation)));
     
-    connect( radio, SIGNAL(stopped()), status, SLOT(hideAnimated()));
-    connect( radio, SIGNAL(tuningIn( const RadioStation&)), status, SLOT(showAnimated()));
+ //   connect(radio, SIGNAL(stopped()), status, SLOT(hideAnimated()));
+ //   connect(radio, SIGNAL(tuningIn( const RadioStation&)), status, SLOT(showAnimated()));
     
-    connect( qApp, SIGNAL( sessionChanged( Session, Session )), SLOT( onSessionChanged( Session, Session )));
-   
+    connect( qApp, SIGNAL( sessionChanged( const unicorn::Session&, const unicorn::Session& ) ), 
+             SLOT( onSessionChanged( const unicorn::Session&, const unicorn::Session& ) ) );
+    connect( qApp, SIGNAL( sessionChanged( const unicorn::Session&, const unicorn::Session& ) ), 
+             m_mainWidget, SIGNAL( sessionChanged( const unicorn::Session&, const unicorn::Session& ) ) );
     //if we've got this far we must already have a session so use
     //the current session to start things rolling.
     onSessionChanged( qobject_cast<unicorn::Application*>(qApp)->currentSession(), Session());
@@ -81,6 +84,7 @@ MainWindow::MainWindow()
 void 
 MainWindow::onSessionChanged( const unicorn::Session& s, const unicorn::Session& )
 {
+    qDebug() << "session changed and the app noticed it!";
     User user;
     qDebug() << "fetching friends and recent stations for" << user;
     connect(user.getFriends(), SIGNAL(finished()), m_mainWidget, SLOT(onUserGotFriends()));
@@ -115,31 +119,4 @@ MainWindow::onRadioError(int code, const QVariant& data)
             m_messageBar->show("Sorry, an unexpected error occurred.");
             break;
     }
-}
-
-void
-MainWindow::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
-{
-    QAction* love = new QAction( tr("Love"), this);
-    love->setIcon( QIcon( ":/love-rest.png" ) );
-    love->setCheckable( true );
-    connect( love, SIGNAL(triggered(bool)), m_pcw, SLOT(onLoveClicked(bool)));
-
-    QAction* ban = new QAction( tr("Ban"), this);
-    ban->setIcon( QIcon( ":/ban-rest.png" ) );
-    connect( ban, SIGNAL(triggered()), m_pcw, SLOT(onBanClicked()));
-
-    QAction* play = new QAction( tr("Play"), this);
-    play->setIcon( QIcon( ":/play-rest.png" ) );
-    play->setCheckable( true );
-    connect( play, SIGNAL(triggered(bool)), m_pcw, SLOT(onPlayClicked(bool)));
-
-    QAction* skip = new QAction( tr("Skip"), this);
-    skip->setIcon( QIcon( ":/skip-rest.png" ) );
-    //connect( skip, SIGNAL(triggered(bool)), m_pcw, SLOT(onBanClicked()));
-
-    thumbButtonActions.append( love );
-    thumbButtonActions.append( ban );
-    thumbButtonActions.append( play );
-    thumbButtonActions.append( skip );
 }

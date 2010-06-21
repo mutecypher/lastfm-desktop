@@ -17,7 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "unicornTabWidget.h"
+#include "UnicornTabWidget.h"
 #include <QMouseEvent>
 #include <QPainter>
 #include <QTabBar>

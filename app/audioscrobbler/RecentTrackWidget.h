@@ -1,6 +1,6 @@
 /*
    Copyright 2005-2009 Last.fm Ltd.
-      - Primarily authored by Jono Cole and Doug Mansell
+      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -18,38 +18,45 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QObject>
+#include <QWidget>
 
 #include <lastfm/Track>
-#include <lastfm/XmlQuery>
 
+#include "lib/unicorn/StylableWidget.h"
 
-class ScrobbleInfoFetcher : public QObject
+class RecentTrackWidget : public StylableWidget
 {
     Q_OBJECT
 public:
-    ScrobbleInfoFetcher(QObject* parent = 0);
+    RecentTrackWidget( const Track& track );
 
-signals:
-    void trackGotInfo(const XmlQuery& lfm);
-    void albumGotInfo(const XmlQuery& lfm);
-    void artistGotInfo(const XmlQuery& lfm);
-    void artistGotEvents(const XmlQuery& lfm);
-    void trackGotTopFans(const XmlQuery& lfm);
-    void trackGotTags(const XmlQuery& lfm);
-
-    void finished();
-
-private slots:
-    void onTrackStarted( const Track& t, const Track& oldTrack );
-
-    void onTrackGotInfo();
-    void onAlbumGotInfo();
-    void onArtistGotInfo();
-    void onArtistGotEvents();
-    void onTrackGotTopFans();
-    void onTrackGotTags();
+    Track track() const { return m_track;}
 
 private:
-    class QList<class QNetworkReply* > m_replies;
+    void enterEvent( class QEvent* event );
+    void leaveEvent( class QEvent* event );
+    void resizeEvent( class QResizeEvent* event );
+
+private slots:
+    void onLoveToggled( bool loved );
+
+    void onLoveClicked();
+    void onTagClicked();
+    void onShareClicked();
+
+    void updateTimestamp();
+
+private:
+    struct
+    {
+        class QLabel* title;
+        class HttpImageWidget* albumArt;
+        class QLabel* love;
+        class QToolButton* cog;
+        class GhostWidget* ghostCog;
+        class QLabel* timestamp;
+    } ui;
+
+    Track m_track;
+    class QTimer* m_timestampTimer;
 };
