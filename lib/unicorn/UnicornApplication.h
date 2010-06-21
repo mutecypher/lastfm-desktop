@@ -160,6 +160,7 @@ namespace unicorn
         void setupHotKeys();
         void onHotKeyEvent(quint32 id);
         void loadStyleSheet( QFile& );
+        class QMainWindow* findMainWindow();
 
         QString m_styleSheet;
         Session m_currentSession;
@@ -169,6 +170,7 @@ namespace unicorn
         QString m_cssDir;
         QString m_cssFileName;
 #ifdef __APPLE__
+        static short appleEventHandler( const AppleEvent*, AppleEvent*, long );
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
 #endif
 #ifdef WIN32
