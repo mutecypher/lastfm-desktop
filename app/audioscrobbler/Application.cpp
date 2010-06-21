@@ -109,6 +109,7 @@ Application::init()
     (menu->addMenu( new UserMenu()))->setText( "Users");
     m_toggle_window_action = menu->addAction( tr("Show Scrobbler"));
     m_toggle_window_action->setShortcut( Qt::CTRL + Qt::META + Qt::Key_S );
+    m_toggle_window_action->setCheckable( true );
     menu->addSeparator();
     m_artist_action = menu->addAction( "" );
     m_title_action = menu->addAction(tr("Ready"));
@@ -149,7 +150,7 @@ Application::init()
 #endif
 
 #ifndef Q_OS_LINUX
-    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action, SLOT( trigger()));
+    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action, SLOT( toggle()));
 #endif
 
     ScrobbleControls* sc = mw->scrobbleControls();
@@ -205,7 +206,7 @@ Application::init()
     }
 
 
-    connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( onActivateWindow()), Qt::QueuedConnection );
+    connect( m_toggle_window_action, SIGNAL( toggled( bool )), SLOT( toggleWindow( bool )), Qt::QueuedConnection );
 
     connect( this, SIGNAL(messageReceived(QString)), SLOT(onMessageReceived(QString)) );
     connect( this, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session) ), 
@@ -424,12 +425,16 @@ Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason )
 }
 
 void
-Application::onActivateWindow()
+Application::toggleWindow( bool show )
 {
-    mw->showNormal();
-    mw->setFocus();
-    mw->raise();
-    mw->activateWindow();
+    if( show ) {
+        mw->showNormal();
+        mw->setFocus();
+        mw->raise();
+        mw->activateWindow();
+    } else {
+       mw->hide();
+    }
 }
 
 void
