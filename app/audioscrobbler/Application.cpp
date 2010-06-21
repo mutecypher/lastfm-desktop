@@ -427,55 +427,30 @@ Application::onMessageReceived(const QString& message)
 void 
 Application::quit()
 {
+    if( activeWindow())
+        activeWindow()->raise();
+
     if( unicorn::AppSettings().value( "quitDontAsk", false ).toBool()) {
         actuallyQuit();
         return;
     }
 
-    QDialog* d;
-    if( activeWindow() && activeWindow()->isVisible()) {
-        d = new QDialog( activeWindow() );
-        d->setWindowFlags( Qt::Sheet );
-    } else {
-        d = new QDialog();
-        d->setWindowFlags( Qt::Dialog );
+    bool dontAsk = false;
+    int result = 1;
+    if( !unicorn::AppSettings().value( "quitDontAsk", false ).toBool())
+      result =
+          QMessageBoxBuilder( activeWindow()).setTitle( tr("%1 is about to quit.").arg(applicationName()))
+                                             .setText( tr("Tracks played in %1 will not be scrobbled if you continue." )
+                                                       .arg( PluginList().availableDescription()) )
+                                             .dontAskAgain()
+                                             .setIcon( QMessageBox::Question )
+                                             .setButtons( QMessageBox::Yes | QMessageBox::No )
+                                             .exec(&dontAsk);
+    if( result == QMessageBox::Yes ) {
+        unicorn::AppSettings().setValue( "quitDontAsk", dontAsk );
+        QCoreApplication::quit();
     }
     
-    QGridLayout* grid = new QGridLayout( d );
-    QLabel* icon = new QLabel(d);
-    icon->setPixmap( style()->standardPixmap( QStyle::SP_MessageBoxWarning, 0, icon ));
-    QSizePolicy labelSP( QSizePolicy::Minimum, QSizePolicy::Preferred );
-    labelSP.setHeightForWidth( true );
-    QLabel* title = new QLabel( tr("%1 is about to quit.").arg(applicationName()));
-    QLabel* text = new QLabel( tr("Tracks played in %1 will not be scrobbled if you continue." )
-                  .arg( PluginList().availableDescription()));
-
-    title->setWordWrap( false );
-    title->setSizePolicy( labelSP );
-    text->setWordWrap( true );
-    text->setSizePolicy( labelSP );
-    
-
-    QDialogButtonBox* bb = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
-    bb->button(QDialogButtonBox::Ok)->setText( tr( "Quit" ));
-    bb->button(QDialogButtonBox::Cancel)->setAutoDefault( true );
-    bb->button(QDialogButtonBox::Cancel)->setDefault( true );
-    QCheckBox* dontAsk = new QCheckBox( tr( "Don't ask me again" ));
-   
-    grid->addWidget( icon, 0, 0, 2, 1, Qt::AlignTop );
-    grid->addWidget( title, 0, 1, 1, 1, Qt::AlignTop );
-    grid->addWidget( text, 1, 1, 1, 1, Qt::AlignCenter );
-    grid->addWidget( dontAsk, 2, 1, 1, 2, Qt::AlignLeft );
-    grid->addWidget( bb, 3, 1, 1, 2 );
-
-    d->setTabOrder( bb, dontAsk );
-
-    connect( bb, SIGNAL( accepted()), d, SLOT( accept()));
-    connect( d, SIGNAL( accepted()), this, SLOT( actuallyQuit()));
-    connect( bb, SIGNAL( rejected()), d, SLOT( reject()));
-    connect( d, SIGNAL( rejected()), d, SLOT( deleteLater()));
-    d->setFixedSize( d->sizeHint());
-    d->open();
 }
 
 void 
