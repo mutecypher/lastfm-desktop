@@ -24,16 +24,58 @@
 #include <QLabel>
 
 unicorn::MessageBox::MessageBox( QWidget* parent )
-        :QDialog( parent )
+        :QDialog( parent ? ( parent->isVisible() ? parent : 0 ) : 0 ),
+         m_clickedButton( QDialogButtonBox::NoButton )
 {
+    setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
+    setSizeGripEnabled( false );
+    //setFixedWidth( 500 );
+
+    setWindowFlags( Qt::Dialog );
+
     QGridLayout* l = new QGridLayout( this );
-    
-    l->addWidget( icon = new QLabel, 0, 0, 2, 1, Qt::AlignTop | Qt::AlignLeft );
-    l->addWidget( label = new QLabel, 0, 1, 1, 1 );
-    l->setRowStretch( 1, 100 );
-    l->setRowMinimumHeight( 2, 6 );
-    l->addWidget( buttons = new QDialogButtonBox, 2, 0, 1, 2 );
+
+    l->addWidget( icon = new QLabel, 0, 0, 3, 1, Qt::AlignTop | Qt::AlignLeft );
+    l->addWidget( label = new QLabel, 0, 1, 1, 1, Qt::AlignTop );
+    label->setAlignment( Qt::AlignLeft | Qt::AlignTop );
+    l->addWidget( informativeText = new QLabel, 1, 1, 1, 1, Qt::AlignTop );
+
+    label->setWordWrap( true );
+    informativeText->setWordWrap( true );
+    informativeText->setAttribute( Qt::WA_MacSmallSize );
+
+    QFont f = label->font();
+    f.setBold( true ); 
+    label->setFont( f );
+
+    l->setColumnStretch( 1, 1 );
+    l->setRowStretch( 3, 1 );
+
+    l->addWidget( checkbox = new QCheckBox( tr( "Don't ask this again" )), 2, 1, 1, 1 );
+    checkbox->setVisible( false );
+    l->addWidget( buttons = new QDialogButtonBox, 3, 0, 1, 2 );
+    buttons->setStandardButtons( QDialogButtonBox::Ok );
+    connect( buttons, SIGNAL( clicked(QAbstractButton*)), SLOT( onButtonClicked(QAbstractButton*)));
 }
+
+
+void
+unicorn::MessageBox::onButtonClicked(QAbstractButton* b)
+{
+    m_clickedButton = int(buttons->standardButton( b ));
+    switch( buttons->buttonRole( b )) {
+        case QDialogButtonBox::AcceptRole:
+        case QDialogButtonBox::YesRole:
+            accept();
+            break;
+
+        case QDialogButtonBox::RejectRole:
+        case QDialogButtonBox::NoRole:
+            reject();
+            break;
+    }
+}
+
 
 QMessageBoxBuilder& 
 QMessageBoxBuilder::setTitle( const QString& title )
@@ -50,7 +92,7 @@ QMessageBoxBuilder::setTitle( const QString& title )
 QMessageBoxBuilder&
 QMessageBoxBuilder::setText( const QString& text )
 {
-#ifdef Q_WS_MAC_
+#ifdef Q_WS_MAC
     box.setInformativeText( text );
 #else
     box.setText( text );
@@ -60,10 +102,15 @@ QMessageBoxBuilder::setText( const QString& text )
 
 
 int
-QMessageBoxBuilder::exec()
+QMessageBoxBuilder::exec( bool* dontAskAgain )
 {
     QApplication::setOverrideCursor( Qt::ArrowCursor );
+    box.activateWindow();
     int const r = box.exec();
     QApplication::restoreOverrideCursor();
-    return r;
+    
+    if( dontAskAgain )
+        *dontAskAgain = box.isDontShowAgainChecked();
+
+    return box.clickedButton();
 }
