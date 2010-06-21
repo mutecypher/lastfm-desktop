@@ -29,10 +29,16 @@
 #include "RecentTracksWidget.h"
 #include "RecentTrackWidget.h"
 
+
+const int kNumRecentTracks(10);
+
 RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
-    :QWidget( parent )
+    :StylableWidget( parent )
 {
+    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+
     QVBoxLayout* layout = new QVBoxLayout( this );
+    layout->setSpacing( 0 );
 
     setUsername( username );
 }
@@ -121,18 +127,16 @@ RecentTracksWidget::addCachedTrack( const Track& a_track )
 {
     MutableTrack( a_track ).setExtra( "scrobbleStatus", "cached" );
 
-    Track* track = new Track;
-    *track = a_track;
-    RecentTrackWidget* trackWidget = new RecentTrackWidget( *track );
+    RecentTrackWidget* trackWidget = new RecentTrackWidget( a_track );
 
     m_tracks.insert( 0, trackWidget );
     static_cast<QBoxLayout*>(layout())->insertWidget( 0, trackWidget );
 
-    if ( m_tracks.count() > 5 )
+    if ( m_tracks.count() > kNumRecentTracks )
     {
-        layout()->removeWidget( m_tracks[5] );
-        m_tracks[5]->deleteLater();
-        m_tracks.removeAt( 5 );
+        layout()->removeWidget( m_tracks[kNumRecentTracks] );
+        m_tracks[kNumRecentTracks]->deleteLater();
+        m_tracks.removeAt( kNumRecentTracks );
     }
 
     connect( a_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));

@@ -91,7 +91,7 @@ LfmListModel::itemUpdated()
 QVariant 
 LfmListModel::data( const QModelIndex & index, int role ) const
 {
-    if( index.row() >= m_items.count()) return QVariant();
+    if( index.row() > m_items.count()) return QVariant();
 
     const LfmItem& item = *(m_items[index.row()]);
 

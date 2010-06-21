@@ -21,10 +21,12 @@
 #include <QWidget>
 #include <QList>
 
+#include "lib/unicorn/StylableWidget.h"
+
 namespace lastfm { class Track; };
 using lastfm::Track;
 
-class RecentTracksWidget : public QWidget
+class RecentTracksWidget : public StylableWidget
 {
     Q_OBJECT
 public:

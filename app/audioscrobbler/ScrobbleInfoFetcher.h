@@ -38,8 +38,6 @@ signals:
     void trackGotTopFans(const XmlQuery& lfm);
     void trackGotTags(const XmlQuery& lfm);
 
-    void trackGotUserloved(bool userloved);
-
     void finished();
 
 private slots:
