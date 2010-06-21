@@ -58,6 +58,11 @@ unicorn::MainWindow::finishUi()
     ui.account->addAction( tr("Log &Out"), qApp, SLOT(logout()) );
     QAction* quit = ui.account->addAction( tr("&Quit"), qApp, SLOT(quit()) );
     quit->setMenuRole( QAction::QuitRole );
+#ifdef Q_OS_WIN
+    quit->setShortcut( Qt::Alt + Qt::Key_F4 );
+#else
+    quit->setShortcut( Qt::CTRL + Qt::Key_Q );
+#endif
 
     menuBar()->insertMenu( menuBar()->actions().first(), ui.account );
     QMenu* help = menuBar()->addMenu( tr("Help") );
