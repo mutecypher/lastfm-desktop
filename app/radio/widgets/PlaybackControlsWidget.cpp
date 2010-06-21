@@ -152,8 +152,10 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     QMenu* cogMenu = new QMenu(this);
     ui.tagAction = cogMenu->addAction(QIcon(":/tag-small.png"), "Tag", this, SLOT(onTagClicked()));
     ui.tagAction->setObjectName("tag");
+    ui.tagAction->setShortcut( Qt::CTRL + Qt::Key_T );
     ui.shareAction = cogMenu->addAction(QIcon(":/share-small.png"), "Share", this, SLOT(onShareClicked()));
     ui.shareAction->setObjectName("share");
+    ui.shareAction->setShortcut( Qt::CTRL + Qt::Key_S );
     ui.cog->setMenu(cogMenu);
 
 	connect( radio, SIGNAL(stopped()), SLOT(onRadioStopped()) );
@@ -175,6 +177,12 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
 
     // make the space button check and uncheck the play button
     new QShortcut( QKeySequence(Qt::Key_Space), this, SLOT(onSpaceKey()) );
+
+    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_Right ), this, SLOT( onSkipTriggered() ) );
+
+    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ), this, SLOT( onLoveTriggered() ) );
+
+    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_B ), this, SLOT( onBanClicked() ) );
 
     setButtonsEnabled( false );
 }
@@ -303,6 +311,7 @@ PlaybackControlsWidget::setButtonsEnabled( bool enabled )
 void
 PlaybackControlsWidget::onLoveClicked(bool checked)
 {
+    qDebug() << "love clicked: " << checked;
     MutableTrack track( radio->currentTrack() );
     if ( checked )
     {
@@ -380,6 +389,19 @@ PlaybackControlsWidget::onSpaceKey()
     }
     else
         radio->stop();
+}
+
+void
+PlaybackControlsWidget::onSkipTriggered()
+{
+    radio->skip();
+}
+
+void
+PlaybackControlsWidget::onLoveTriggered()
+{
+    ui.love->setChecked( !ui.love->isChecked() );
+    onLoveClicked( ui.love->isChecked() );
 }
 
 void

@@ -76,6 +76,8 @@ private slots:
     void onShareClicked();
     void onInfoClicked();
     void onSpaceKey();
+    void onSkipTriggered();
+    void onLoveTriggered();
 
     void onLoveClicked(bool);
     void onLoveFinished();
