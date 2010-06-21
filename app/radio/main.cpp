@@ -86,6 +86,7 @@ int main( int argc, char** argv )
         ScrobSocket* scrobsock = new ScrobSocket("ass");
         scrobsock->connect(radio, SIGNAL(trackSpooled(Track)), SLOT(start(Track)));
         scrobsock->connect(radio, SIGNAL(stopped()), SLOT(stop()));
+        scrobsock->connect(&app, SIGNAL(aboutToQuit()), scrobsock, SLOT(stop()));
 
       #ifdef Q_WS_MAC
         AEEventHandlerUPP h = NewAEEventHandlerUPP( appleEventHandler );
