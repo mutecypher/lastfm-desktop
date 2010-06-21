@@ -23,11 +23,95 @@
 #include <lib/DllExportMacro.h>
 #include <QtGui/QMessageBox>
 #include <QAbstractButton>
+#include <QPushButton>
 
+#include <QDialogButtonBox>
+#include <QBoxLayout>
+#include <QCheckBox>
+#include <QStyle>
+#include <QDebug>
+#include <QLabel>
+#include <QDebug>
+
+namespace unicorn {
+    class MessageBox : public QDialog {
+        Q_OBJECT
+    public:
+        MessageBox( QWidget* parent );
+        void setStandardButtons( QMessageBox::StandardButtons b )
+        { 
+            buttons->setStandardButtons( QDialogButtonBox::StandardButtons(int(b) )); 
+        }
+
+        void setIcon( QMessageBox::Icon x )
+        { 
+            QPixmap pm;
+            switch( x ) {
+                case QMessageBox::NoIcon:
+                    break;
+                case QMessageBox::Information:
+                    pm = style()->standardPixmap( QStyle::SP_MessageBoxInformation );
+                    break;
+                case QMessageBox::Warning:
+                    pm = style()->standardPixmap( QStyle::SP_MessageBoxWarning );
+                    break;
+                case QMessageBox::Critical:
+                    pm = style()->standardPixmap( QStyle::SP_MessageBoxCritical );
+                    break;
+                case QMessageBox::Question:
+                    pm = style()->standardPixmap( QStyle::SP_MessageBoxQuestion );
+                    break;
+            }
+            icon->setPixmap( pm );
+        }
+
+        QAbstractButton* button( QMessageBox::StandardButton b )
+        {
+            QAbstractButton* ret = buttons->button( QDialogButtonBox::StandardButton(int(b) ));
+            return ret;
+        }
+
+        void addButton( QAbstractButton* b, QMessageBox::ButtonRole r )
+        {
+            buttons->addButton( b, QDialogButtonBox::ButtonRole(int(r)));
+        }
+
+        void setText( const QString& t )
+        {
+            label->setText( t );
+        }
+
+        void setInformativeText( const QString& t )
+        {
+            informativeText->setText( t );
+        }
+
+        void setCheckBox( bool b )
+        {
+            checkbox->setVisible( b );
+        }
+
+        bool isDontShowAgainChecked() const
+        {
+            return checkbox->isChecked();
+        }
+
+        int clickedButton() const { return m_clickedButton; }
+
+    private slots:
+        void onButtonClicked(class QAbstractButton*);
+
+    protected:
+        QLabel *icon, *label, *informativeText;
+        QDialogButtonBox* buttons;
+        QCheckBox* checkbox;
+        int m_clickedButton;
+    };
+};
 
 class UNICORN_DLLEXPORT QMessageBoxBuilder
 {
-    QMessageBox box;
+    unicorn::MessageBox box;
 
 public:
     /** Try not to use 0! */
@@ -47,14 +131,18 @@ public:
         return *this;
     }
 
+    QMessageBoxBuilder& dontAskAgain(){ box.setCheckBox( true ); return *this; }
+
     QMessageBoxBuilder& addButton( QAbstractButton* b, QMessageBox::ButtonRole r ){ box.addButton( b, r ); return *this; }
 
-    int exec();
+    int exec( bool* dontAskAgain = 0 );
 	
 	QMessageBoxBuilder& sheet()
 	{
 	#ifdef Q_WS_MAC
-		box.setWindowFlags( Qt::Sheet | (box.windowFlags() & ~Qt::Drawer) );
+        qDebug() << "Sheetorizing";
+        if( box.parentWidget())
+            box.setWindowFlags( Qt::Sheet | ( box.windowFlags() & ~Qt::Drawer ) );
 	#endif
 		return *this;
 	}
