@@ -216,6 +216,20 @@ Radio::clear()
 
 
 void
+Radio::mute()
+{
+    if( m_audioOutput->volume() > 0 )
+    {
+        m_prevVolume = m_audioOutput->volume();
+        m_audioOutput->setVolume( 0 );
+    }
+    else
+    {
+        m_audioOutput->setVolume( m_prevVolume );
+    }
+}
+
+void
 Radio::onPhononStateChanged( Phonon::State newstate, Phonon::State oldstate )
 {
     qDebug() << oldstate << " -> " << newstate;
@@ -435,6 +449,7 @@ Radio::initRadio()
         if (ok)
         {
             audioOutput->setVolume(volume);
+            m_prevVolume = volume; //give it a initial value just in case
         }
     }
 

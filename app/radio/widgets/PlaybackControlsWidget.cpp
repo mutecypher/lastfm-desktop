@@ -184,6 +184,8 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
 
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_B ), this, SLOT( onBanClicked() ) );
 
+    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ), this, SLOT( onMuteTriggered() ) );
+
     setButtonsEnabled( false );
 }
 
@@ -439,4 +441,10 @@ PlaybackControlsWidget::onShareClicked()
     // open the share dialog
     ShareDialog* sd = new ShareDialog( radio->currentTrack(), window() );
     sd->show();
+}
+
+void
+PlaybackControlsWidget::onMuteTriggered()
+{
+    radio->mute();
 }
