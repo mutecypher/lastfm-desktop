@@ -156,7 +156,7 @@ Application::init()
 #endif
     //although the shortcuts are actually set on the ScrobbleControls widget,
     //setting it here adds the shortkey text to the trayicon menu
-    //and it's no problem since, for some reason, they shortcuts don't trigger the actions.
+    //and it's no problem since, for some reason, the shortcuts don't trigger the actions.
     m_tag_action->setShortcut( Qt::CTRL + Qt::Key_T );
     m_share_action->setShortcut( Qt::CTRL + Qt::Key_S );
     m_love_action->setShortcut( Qt::CTRL + Qt::Key_L );
