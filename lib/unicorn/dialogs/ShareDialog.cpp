@@ -84,6 +84,7 @@ ShareDialog::setupUi()
     QHBoxLayout* h2 = new QHBoxLayout;
     h2->addWidget( ui.isPublic = new QCheckBox( tr("Include in my recent activity"), this ) );
     ui.isPublic->setChecked( true );
+    ui.isPublic->setFocusPolicy( Qt::StrongFocus );
     h2->addWidget( ui.characterLimit = new QLabel( this ), 0, Qt::AlignRight );
     updateCharacterLimit();
     
@@ -102,10 +103,7 @@ ShareDialog::setupUi()
     foreach (QLabel* l, findChildren<QLabel*>())
         l->setAttribute( Qt::WA_MacSmallSize );
 #endif
-
-    //tab order
-    setTabOrder( ui.recipients, ui.message );
-    setTabOrder( ui.message, ui.buttons );
+    setTabOrders();
 }
 
 void
@@ -127,6 +125,16 @@ ShareDialog::updateCharacterLimit()
         ui.characterLimit->setProperty( "xerror", QVariant( false ) );
 
     ui.characterLimit->setStyle(QApplication::style());
+}
+
+void
+ShareDialog::setTabOrders()
+{
+    setTabOrder( ui.track, ui.recipients );
+    setTabOrder( ui.recipients, ui.message );
+    setTabOrder( ui.message, ui.isPublic );
+    setTabOrder( ui.isPublic, ui.buttons->button( QDialogButtonBox::Ok ) );
+    setTabOrder( ui.buttons->button( QDialogButtonBox::Ok ), ui.buttons->button( QDialogButtonBox::Cancel ) );
 }
 
 void
