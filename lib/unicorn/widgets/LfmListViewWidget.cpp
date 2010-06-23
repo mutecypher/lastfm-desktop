@@ -76,12 +76,13 @@ LfmListModel::addArtist( const Artist& a_artist )
     connect( item, SIGNAL(updated()), SLOT( itemUpdated()));
     endInsertRows();   
 }
+
+void
 LfmListModel::itemUpdated()
 {
     LfmItem* item = static_cast<LfmItem*>(sender());
     int index = m_items.indexOf( item );
     emit dataChanged( createIndex( index, 0), createIndex( index, 0));
-    emit layoutChanged();
 }
 
 
@@ -118,33 +119,6 @@ LfmListView::LfmListView(QWidget *parent):
    setMouseTracking(true);
 }
 
-QVariant
-LfmTrackListModel::data( const QModelIndex & index, int role ) const
-{
-    if ( index.column() == 0 )
-        return LfmListModel::data( index, role );
-    else if ( index.column() == 1 )
-    {
-        const Track& track = *static_cast<lastfm::Track*>(m_items[index.row()]->m_type);
-        switch( role ) {
-            case Qt::DecorationRole:
-                if ( track.isLoved() )
-                    return QIcon(":/love-isloved.png");
-        }
-
-    }
-    else if ( index.column() == 2 )
-    {
-        const Track& track = *static_cast<lastfm::Track*>(m_items[index.row()]->m_type);
-        switch( role ) {
-            case Qt::DisplayRole:
-                return track.extra("scrobbleStatus");
-
-        }
-    }
-
-    return QVariant();
-}
 
 #include <QMouseEvent>
 void LfmListView::mouseMoveEvent(QMouseEvent *event)

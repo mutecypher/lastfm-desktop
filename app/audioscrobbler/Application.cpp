@@ -114,11 +114,23 @@ Application::init()
     m_title_action = menu->addAction(tr("Ready"));
     m_love_action = menu->addAction(tr("Love"));
     m_love_action->setCheckable( true );
+    QIcon loveIcon;
+    loveIcon.addFile( ":/love-isloved.png", QSize( 16, 16), QIcon::Normal, QIcon::On );
+    loveIcon.addFile( ":/love-rest.png", QSize( 16, 16), QIcon::Normal, QIcon::Off );
+    m_love_action->setIcon( loveIcon );
+    m_love_action->setEnabled( false );
     connect( m_love_action, SIGNAL(triggered(bool)), SLOT(changeLovedState(bool)));
+
     m_tag_action = menu->addAction(tr("Tag")+ELLIPSIS);
+    m_tag_action->setIcon( QIcon( ":/tag-rest.png" ) );
+    m_tag_action->setEnabled( false );
     connect( m_tag_action, SIGNAL(triggered()), SLOT(onTagTriggered()));
+
     m_share_action = menu->addAction(tr("Share")+ELLIPSIS);
+    m_share_action->setIcon( QIcon( ":/share-rest.png" ) );
+    m_share_action->setEnabled( false );
     connect( m_share_action, SIGNAL(triggered()), SLOT(onShareTriggered()));
+
     menu->addSeparator();
     m_submit_scrobbles_toggle = menu->addAction(tr("Submit Scrobbles"));
 #ifdef Q_WS_MAC
@@ -142,6 +154,9 @@ Application::init()
 
 /// MetadataWindow
     mw = new MetadataWindow;
+    mw->addWinThumbBarButton( m_love_action );
+    mw->addWinThumbBarButton( m_tag_action );
+    mw->addWinThumbBarButton( m_share_action );
 #ifdef Q_WS_MAC
     const int sKeyCode = 1;
 #elif defined Q_WS_WIN
@@ -380,14 +395,18 @@ void
 Application::onTagTriggered()
 {
     TagDialog* td = new TagDialog( mw->currentTrack(), mw );
+    td->raise();
     td->show();
+    td->activateWindow();
 }
 
 void 
 Application::onShareTriggered()
 {
     ShareDialog* sd = new ShareDialog( mw->currentTrack(), mw );
+    sd->raise();
     sd->show();
+    sd->activateWindow();
 }
 
 void 

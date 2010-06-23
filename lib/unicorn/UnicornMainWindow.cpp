@@ -29,7 +29,7 @@
 #include <QShortcut>
 #include <QMouseEvent>
 
-#ifdef WIN32
+#ifdef Q_OS_WIN32
 #include <Objbase.h>
 #endif
 
@@ -44,7 +44,7 @@ unicorn::MainWindow::MainWindow()
     connect( qApp, SIGNAL(gotUserInfo( const lastfm::UserDetails& )), SLOT(onGotUserInfo( const lastfm::UserDetails& )) );
     connect( qApp, SIGNAL(sessionChanged( unicorn::Session, unicorn::Session )), SLOT(onSessionChanged( unicorn::Session )));
     connect( qApp->desktop(), SIGNAL( resized(int)), SLOT( cleverlyPosition()));
-#ifdef WIN32
+#ifdef Q_OS_WIN32
     taskBarCreatedMessage = RegisterWindowMessage(L"TaskbarButtonCreated");
 #endif
 }
@@ -76,7 +76,7 @@ unicorn::MainWindow::finishUi()
     rss->setShortcut( Qt::CTRL + Qt::Key_R );
 #endif
 
-#ifdef __APPLE__
+#ifdef Q_OS_MAC
     about->setMenuRole( QAction::AboutRole );
     c4u->setMenuRole( QAction::ApplicationSpecificRole );
 #endif
@@ -87,7 +87,7 @@ unicorn::MainWindow::finishUi()
     cleverlyPosition();
 }
 
-#ifdef WIN32
+#ifdef Q_OS_WIN32
 bool      
 unicorn::MainWindow::winEvent(MSG* message, long* result)
 {
@@ -106,6 +106,13 @@ unicorn::MainWindow::winEvent(MSG* message, long* result)
 
             Q_ASSERT_X( m_thumbButtonActions.count() <= 7, "winEvent", "More than 7 thumb buttons" );
 
+            // make sure we update the thumb buttons everytime they change state
+            foreach ( QAction* button, m_thumbButtonActions )
+            {
+                connect( button, SIGNAL(changed()), SLOT(updateThumbButtons()));
+                connect( button, SIGNAL(toggled()), SLOT(updateThumbButtons()));
+            }
+
             if ( m_thumbButtonActions.count() > 0 )
                 updateThumbButtons();
 
@@ -114,17 +121,8 @@ unicorn::MainWindow::winEvent(MSG* message, long* result)
         }
     }
     else if ( message->message == WM_COMMAND )
-    {
         if ( HIWORD(message->wParam) == THBN_CLICKED )
-        {
-            QAction* action = m_thumbButtonActions[LOWORD(message->wParam)];
-
-            if ( action->isCheckable() )
-                action->toggle();
-            else
-                action->trigger();
-        }
-    }
+            m_thumbButtonActions[LOWORD(message->wParam)]->trigger();
 
     return false;
 }
@@ -143,9 +141,8 @@ unicorn::MainWindow::updateThumbButtons()
             m_thumbButtonActions[i]->icon().pixmap( QSize(16, 16), QIcon::Normal, QIcon::On ).toWinHICON():
             m_thumbButtonActions[i]->icon().pixmap( QSize(16, 16), QIcon::Normal, QIcon::Off ).toWinHICON();
         wcscpy(buttons[i].szTip, m_thumbButtonActions[i]->text().utf16());
-        buttons[i].dwFlags = THBF_ENABLED;
 
-        connect( m_thumbButtonActions[i], SIGNAL(changed()), SLOT(updateThumbButtons()));
+        buttons[i].dwFlags = m_thumbButtonActions[i]->isEnabled() ? THBF_ENABLED : THBF_DISABLED;
     }
 
     if (sender())
@@ -153,7 +150,7 @@ unicorn::MainWindow::updateThumbButtons()
     else
         taskbar->ThumbBarAddButtons(winId(), m_thumbButtonActions.count(), buttons);
 }
-#endif // WIN32
+#endif // Q_OS_WIN32
 
 
 void

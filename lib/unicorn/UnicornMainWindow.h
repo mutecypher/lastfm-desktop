@@ -27,7 +27,7 @@
 #include <QDialog>
 #include <QMap>
 
-#ifdef WIN32
+#ifdef Q_OS_WIN32
 #include <windows.h>
 #include <shobjidl.h>
 #endif
@@ -93,7 +93,7 @@ namespace unicorn
             
         } ui;
 
-#ifdef WIN32
+#ifdef Q_OS_WIN32
         bool canUseTaskBar;
         UINT taskBarCreatedMessage;
         ITaskbarList3* taskbar;
@@ -112,7 +112,7 @@ namespace unicorn
         QList<QAction*> m_thumbButtonActions;
 
     private:
-#ifdef WIN32
+#ifdef Q_OS_WIN32
         bool winEvent(MSG* message, long* result);
 #endif
 
@@ -122,7 +122,7 @@ namespace unicorn
         void onGotUserInfo( const lastfm::UserDetails& );
         void onSessionChanged( const unicorn::Session& );
         void cleverlyPosition();
-#ifdef WIN32
+#ifdef Q_OS_WIN32
         void updateThumbButtons();
 #endif
     

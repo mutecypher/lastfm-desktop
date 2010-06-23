@@ -78,7 +78,6 @@ public slots:
     void onSpaceKey();
 
     void onLoveClicked(bool);
-    void onLoveFinished();
 
     void onBanClicked();
     void onBanFinished();
