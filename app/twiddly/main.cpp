@@ -20,9 +20,9 @@
 */
 #include "IPod.h"
 #include "app/twiddly.h"
+#include "TwiddlyApplication.h"
 #include "app/client/Settings.h"
 #include "lib/unicorn/UnicornCoreApplication.h"
-#include "lib/unicorn/UniqueApplication.h"
 #include "plugins/iTunes/ITunesExceptions.h"
 #include <lastfm/misc.h>
 #include <QtCore>
@@ -35,10 +35,8 @@
 void writeXml( const QDomDocument&, const QString& path );
 void logException( QString );
 
-UniqueApplication gMoose( moose::id() );
 
-
-/** @maintainer Max Howell <max@last.fm>
+/**
   *
   * Fake params: --device ipod --connection usb --pid 4611 --vid 1452 --serial 000000C8B035
   */
@@ -56,16 +54,12 @@ main( int argc, char** argv )
     QCoreApplication::setApplicationName( twiddly::applicationName() );
     QCoreApplication::setApplicationVersion( "2" );
 
-    UniqueApplication uapp( twiddly::id() );
-	bool const b = QByteArray(argv[0]) != "--bootstrap-needed?";
-    if (b) uapp.init1();
+    TwiddlyApplication app( argc, argv );
 
-	char* argv2[2];
-	argv2[0] = qstrdup( argv[0] );
-	argv2[1] = qstrdup( argv[1] );
+    if ( app.sendMessage( "" ) )
+        return 0;
 
-    unicorn::CoreApplication app( argc, argv );
-    if (b) uapp.init2( &app );
+    return app.exec();
     
     try
     {
@@ -73,9 +67,6 @@ main( int argc, char** argv )
         {
             return AutomaticIPod::PlayCountsDatabase().isBootstrapNeeded();
         }        
-
-        if (uapp.isAlreadyRunning())
-            throw "Twiddly already running!";
 
         QDateTime start_time = QDateTime::currentDateTime();
         QTime time;
@@ -87,7 +78,7 @@ main( int argc, char** argv )
         }
         else // twiddle!
         {
-            gMoose.forward( "--twiddling" );
+            app.sendBusMessage( "--twiddling" );
 
             IPod* ipod = IPod::fromCommandLineArguments( app.arguments() );
 
@@ -187,5 +178,5 @@ logException( QString message )
     
     // we do this because LfmApp splits on spaces in parseMessage()
     message.replace( ' ', '_' );
-    gMoose.forward( "container://Notification/Twiddly/Error/" + message );
+    static_cast<TwiddlyApplication*>(qApp)->sendBusMessage( QString( "container://Notification/Twiddly/Error/" + message ).toAscii() );
 }

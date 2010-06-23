@@ -19,13 +19,13 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "PlayCountsDatabase.h"
+#include "TwiddlyApplication.h"
 #include "IPod.h"
 #include "ITunesLibrary.h"
 #include "app/client/Settings.h"
 #include "common/qt/msleep.cpp"
 #include "common/c++/fileCreationTime.cpp"
 #include "lib/unicorn/UnicornSettings.h"
-#include "lib/unicorn/UniqueApplication.h"
 #include "lib/unicorn/mac/AppleScript.h"
 #include <lastfm/misc.h>
 #include <QSqlDatabase>
@@ -34,7 +34,7 @@
 #include <QTemporaryFile>
 #include <iostream>
 
-extern UniqueApplication gMoose;
+extern unicorn::Application gMoose;
 
 
 /** @author Max Howell <max@last.fm>
@@ -279,8 +279,8 @@ AutomaticIPod::PlayCountsDatabase::bootstrap()
 {
     qDebug() << "Starting bootstrapping...";
     
-    gMoose.forward( "container://Notification/Twiddly/Bootstrap/Started" );
-    
+    static_cast<TwiddlyApplication*>(qApp)->sendBusMessage( "container://Notification/Twiddly/Bootstrap/Started" );
+
     beginTransaction();    
     
     QSqlQuery query( m_db );
@@ -348,5 +348,5 @@ AutomaticIPod::PlayCountsDatabase::bootstrap()
 
     endTransaction();
 
-    gMoose.forward( "container://Notification/Twiddly/Bootstrap/Finished" );
+    static_cast<TwiddlyApplication*>(qApp)->sendBusMessage( "container://Notification/Twiddly/Bootstrap/Finished" );
 }

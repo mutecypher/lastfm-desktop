@@ -1,13 +1,27 @@
 LIBS += -lunicorn -llastfm
-QT = core xml sql
+QT = core xml sql gui
 CONFIG += lastfm
 
 include( $$ROOT_DIR/admin/include.qmake )
 
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
-SOURCES = main.cpp PlayCountsDatabase.cpp IPod.cpp $$ROOT_DIR/common/c++/Logger.cpp
+SOURCES = main.cpp \
+          TwiddlyApplication.cpp \
+          PlayCountsDatabase.cpp \
+          IPod.cpp \
+          $$ROOT_DIR/common/c++/Logger.cpp
 
-mac:SOURCES += ITunesLibrary_mac.cpp
+HEADERS = TwiddlyApplication.h \
+          PlayCountsDatabase.h \
+          IPod.h \
+          $$ROOT_DIR/common/c++/Logger.h
+
+
+
+mac {
+    SOURCES += ITunesLibrary_mac.cpp
+    HEADERS += ITunesLibrary_mac.h
+}
 
 win32 {
     # Would prefer to refer to ITunesTrack.cpp and ITunesComWrapper.cpp in-situ
@@ -34,6 +48,12 @@ win32 {
                ITunesComWrapper.cpp \
                $$ROOT_DIR/plugins/scrobsub/EncodingUtils.cpp \
                $$ROOT_DIR/lib/3rdparty/iTunesCOMAPI/iTunesCOMInterface_i.c
+
+    HEADERS += ITunesLibrary_win.h \
+               ITunesTrack.h \
+               ITunesComWrapper.h \
+               $$ROOT_DIR/plugins/scrobsub/EncodingUtils.h \
+               $$ROOT_DIR/lib/3rdparty/iTunesCOMAPI/iTunesCOMInterface_i.h
 
     LIBS += -lcomsuppw
 
