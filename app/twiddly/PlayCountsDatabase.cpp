@@ -34,8 +34,6 @@
 #include <QTemporaryFile>
 #include <iostream>
 
-extern unicorn::Application gMoose;
-
 
 /** @author Max Howell <max@last.fm>
   * @brief automatically log sql errors */

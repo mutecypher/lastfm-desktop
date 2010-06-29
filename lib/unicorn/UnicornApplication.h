@@ -172,10 +172,10 @@ namespace unicorn
 #endif
 #ifdef WIN32
         static bool winEventFilter ( void* );
-#endif    
+#endif
     protected:
         Bus m_bus;
-
+	
     private slots:
         void onUserGotInfo();
         void onSigningInQuery( const QString& );
