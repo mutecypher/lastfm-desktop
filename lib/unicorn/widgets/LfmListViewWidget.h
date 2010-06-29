@@ -120,13 +120,13 @@ using lastfm::User;
 using lastfm::Artist;
 using lastfm::Track;
 
-class UNICORN_DLLEXPORT LfmListModel : public QAbstractItemModel {
+class UNICORN_DLLEXPORT LfmListModel : public QAbstractListModel {
     Q_OBJECT
 public:
     enum DataRole { WwwRole = Qt::UserRole,
                     CursorRole };
 
-    LfmListModel( QObject* parent=0 ):QAbstractItemModel( parent ){}
+    LfmListModel( QObject* parent=0 ):QAbstractListModel( parent ){}
 
     void addUser( const User& );
     void addArtist( const Artist& );
@@ -136,18 +136,9 @@ public:
     void read(QString path);
     void write(QString path) const;
 
-    int rowCount( const QModelIndex & parent = QModelIndex() ) const
+    int rowCount ( const QModelIndex & parent = QModelIndex() ) const
     {
         return m_items.length();
-    }
-
-    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const { return 1; }
-
-    QModelIndex parent( const QModelIndex& child ) const { return QModelIndex() ;}
-
-    QModelIndex index ( int row, int column, const QModelIndex & parent ) const
-    {
-        return createIndex(row, column);
     }
 
     QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
@@ -171,16 +162,6 @@ protected:
 
 };
 
-class UNICORN_DLLEXPORT LfmTrackListModel : public LfmListModel
-{
-    Q_OBJECT
-public:
-    LfmTrackListModel( QObject* parent=0 ):LfmListModel( parent ){}
-
-    int columnCount( const QModelIndex & parent = QModelIndex() ) const { return 3; }
-
-    QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-};
 
 #include <QListView>
 class UNICORN_DLLEXPORT LfmListView : public QListView {

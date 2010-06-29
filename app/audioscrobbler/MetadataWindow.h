@@ -65,6 +65,8 @@ public:
 
     QObject* nowScrobbling() const { return stack.nowScrobbling;}
 
+    void addWinThumbBarButton( QAction* );
+
 public slots:
     void onTrackStarted(const Track&, const Track&);
     void onStopped();
@@ -78,7 +80,10 @@ private slots:
     
 private:
     Track m_currentTrack;
+    QList<QAction*> m_buttons;
+
     void setCurrentWidget( QWidget* );
+    void addWinThumbBarButtons( QList<QAction*>& );
 
     enum {
         TAB_PROFILE,

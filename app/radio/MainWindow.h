@@ -44,7 +44,11 @@ protected slots:
     void onSessionChanged( const unicorn::Session& s, const unicorn::Session& );
 
 private:
+    void addWinThumbBarButtons( QList<QAction*>& );
+
+private:
     class MainWidget* m_mainWidget;
+    class PlaybackControlsWidget* m_pcw;
     MessageBar* m_messageBar;
 };
 
