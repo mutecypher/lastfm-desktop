@@ -43,6 +43,7 @@ public:
 
 private:
     void setupUi();
+    void setTabOrders();
 
 private slots:
     void onUserGotTopTags();

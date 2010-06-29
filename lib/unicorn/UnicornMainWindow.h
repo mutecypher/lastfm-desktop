@@ -63,7 +63,7 @@ namespace unicorn
 {
     class Session;
 
-    class UNICORN_DLLEXPORT MainWindow : public QMainWindow
+    class UNICORN_DLLEXPORT MainWindow : public ::QMainWindow
     {
         Q_OBJECT
 

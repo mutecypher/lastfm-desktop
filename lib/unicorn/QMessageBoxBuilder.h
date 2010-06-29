@@ -31,14 +31,16 @@
 #include <QStyle>
 #include <QDebug>
 #include <QLabel>
+#include <QDebug>
 
 namespace unicorn {
     class MessageBox : public QDialog {
+        Q_OBJECT
     public:
         MessageBox( QWidget* parent );
         void setStandardButtons( QMessageBox::StandardButtons b )
         { 
-            buttons->setStandardButtons( QDialogButtonBox::StandardButtons((int)b) ); 
+            buttons->setStandardButtons( QDialogButtonBox::StandardButtons(int(b) )); 
         }
 
         void setIcon( QMessageBox::Icon x )
@@ -65,23 +67,45 @@ namespace unicorn {
 
         QAbstractButton* button( QMessageBox::StandardButton b )
         {
-            QAbstractButton* ret = buttons->button( QDialogButtonBox::StandardButton((int)b) );
+            QAbstractButton* ret = buttons->button( QDialogButtonBox::StandardButton(int(b) ));
             return ret;
         }
 
         void addButton( QAbstractButton* b, QMessageBox::ButtonRole r )
         {
-            buttons->addButton( b, QDialogButtonBox::ButtonRole((int)r));
+            buttons->addButton( b, QDialogButtonBox::ButtonRole(int(r)));
         }
 
-        void setText( QString t )
+        void setText( const QString& t )
         {
             label->setText( t );
         }
 
+        void setInformativeText( const QString& t )
+        {
+            informativeText->setText( t );
+        }
+
+        void setCheckBox( bool b )
+        {
+            checkbox->setVisible( b );
+        }
+
+        bool isDontShowAgainChecked() const
+        {
+            return checkbox->isChecked();
+        }
+
+        int clickedButton() const { return m_clickedButton; }
+
+    private slots:
+        void onButtonClicked(class QAbstractButton*);
+
     protected:
-        QLabel *icon, *label;
+        QLabel *icon, *label, *informativeText;
         QDialogButtonBox* buttons;
+        QCheckBox* checkbox;
+        int m_clickedButton;
     };
 };
 
@@ -107,14 +131,18 @@ public:
         return *this;
     }
 
+    QMessageBoxBuilder& dontAskAgain(){ box.setCheckBox( true ); return *this; }
+
     QMessageBoxBuilder& addButton( QAbstractButton* b, QMessageBox::ButtonRole r ){ box.addButton( b, r ); return *this; }
 
-    int exec();
+    int exec( bool* dontAskAgain = 0 );
 	
 	QMessageBoxBuilder& sheet()
 	{
 	#ifdef Q_WS_MAC
-		box.setWindowFlags( Qt::Sheet | (box.windowFlags() & ~Qt::Drawer) );
+        qDebug() << "Sheetorizing";
+        if( box.parentWidget())
+            box.setWindowFlags( Qt::Sheet | ( box.windowFlags() & ~Qt::Drawer ) );
 	#endif
 		return *this;
 	}

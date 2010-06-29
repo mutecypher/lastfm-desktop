@@ -72,6 +72,7 @@ public slots:
     void play( const RadioStation& station );
     void skip();
     void stop();
+    void mute();
     void setSupportsDisco( bool supportsDisco );
 
 signals:
@@ -121,6 +122,8 @@ private:
 	Track m_track;
 	RadioStation m_station;
     bool m_bErrorRecover;
+
+    double m_prevVolume;
 };
 
 
