@@ -60,20 +60,29 @@ namespace unicorn
 
             void changeSession( const Session& s )
             {
-                QByteArray ba("");
-                QDataStream ds( &ba, QIODevice::WriteOnly | QIODevice::Truncate);
-                ds << QByteArray( "SESSIONCHANGED" );
+                qDebug() << "Session change, let's spread the message through the bus!";
+                QByteArray ba; 
+                QDataStream ds( &ba, QIODevice::WriteOnly | QIODevice::Truncate );
+
+                ds << QString( "SESSIONCHANGED" );
                 ds << s;
+                                
                 sendMessage( ba );
             }
         private slots:
 
             void onMessage( const QByteArray& message )
             {
-                if( message.startsWith( "SESSIONCHANGED" ))
+                qDebug() << "Message received";
+                qDebug() << "Message: " << message;
+                QDataStream ds( message );
+                QString stringMessage;
+
+                ds >> stringMessage;
+        
+                if( stringMessage == "SESSIONCHANGED" )
                 {
-                    QByteArray sessionData = message.right( message.size() - 18);
-                    QDataStream ds( sessionData );
+                    qDebug() << "and it's a session change alert";
                     Session newSession;
                     ds >> newSession;
                     emit sessionChanged( newSession );
@@ -154,7 +163,6 @@ namespace unicorn
 
         QString m_styleSheet;
         Session m_currentSession;
-        Bus m_bus;
         bool m_signingIn;
 		QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
         QString m_cssDir;
@@ -165,6 +173,8 @@ namespace unicorn
 #ifdef WIN32
         static bool winEventFilter ( void* );
 #endif
+    protected:
+        Bus m_bus;
 	
     private slots:
         void onUserGotInfo();

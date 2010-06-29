@@ -105,6 +105,7 @@ ScrobbleInfoWidget::setupUi()
         layout->addLayout( vl , 1);
         layout->addStretch();
         layout->addWidget( ui.artistImage = new HttpImageWidget(), 1);
+        ui.artistImage->setObjectName("artistImage");
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
     }
@@ -194,15 +195,15 @@ ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
     QString title = QString("<a class='title' href=\"%1\">%2</a> ") + QChar(em_dash) + " <a class='title' href=\"%3\">%4</a>";
     const unicorn::Application* uApp = qobject_cast<unicorn::Application*>(qApp);
 
-    ui.title1->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg(t.artist().www().toString())
-                                                                                .arg(t.artist())
-                                                                                .arg(t.www().toString())
-                                                                                .arg(t.title()));
+    ui.title1->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg(t.artist().www().toString(),
+                                                                                      t.artist(),
+                                                                                      t.www().toString(),
+                                                                                      t.title()));
     if( !t.album().isNull() )
     {
         QString album("from <a class='title' href=\"%1\">%2</a>");
-        ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( t.album().www().toString())
-                                                                               .arg( t.album().title()));
+        ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( t.album().www().toString(),
+                                                                                          t.album().title()));
     }
     else
     {

@@ -137,7 +137,7 @@ QScrollArea {
 
 MetadataWindow ProfileWidget .QLabel,
 ScrobbleInfoWidget QLabel,
-MetadataWindow QListView,
+MetadataWindow QAbstractItemView,
 MetadataWindow DataListWidget
 MetadataWindow ProfileWidget QPushButton {
     color: #cccccc;
@@ -151,9 +151,8 @@ ScrobbleInfoWidget QPushButton {
     border: none;
 }
 
-
 ScrobbleInfoWidget QListView,
-ProfileWidget QListView  {
+ProfileWidget QTreeView  {
     background-color: transparent;
     border: none;
     qproperty-flow: TopToBottom;
@@ -206,12 +205,67 @@ DataBox #contents QLabel {
 #bio #header QLabel#icon { background-image: url(:/header_bio.png); }
 #similarArtists #header QLabel#icon { background-image: url(:/header_simartists.png); }
 
-ProfileWidget QListView  {
-    qproperty-viewMode: ListMode;
-	qproperty-iconSize: 0px 0px;
-	qproperty-selectionMode: NoSelection;
-	qproperty-verticalScrollBarPolicy: ScrollBarAlwaysOff;
-	qproperty-horizontalScrollBarPolicy: ScrollBarAlwaysOff;
+RecentTrackWidget {
+	border-top: 1px solid #cccccc;
+	padding: 0px 0px;
+	min-height: 34;
+}
+
+RecentTrackWidget:hover {
+	background-color: rgba( 0, 0, 2, 230 );
+}
+
+RecentTrackWidget QLabel {
+	margin: 0px 0px;
+}
+
+RecentTrackWidget HttpImageWidget#art {
+	max-width: 32;
+	max-height: 32;
+	qproperty-scaledContents: true;
+	margin: 0px 0px;
+}
+
+RecentTrackWidget QLabel#love {
+	color: transparent;
+	padding: 0px 0px;
+	qproperty-pixmap: url(:/love-isloved.png);
+	qproperty-scaledContents: true;
+	background-repeat: none;
+    background-position: left bottom;
+	max-width: 15;
+	max-height: 15;
+}
+
+RecentTrackWidget QLabel#love {
+	color: transparent;
+	padding: 0px 0px;
+	qproperty-pixmap: url(:/love-isloved.png);
+	background-repeat: none;
+    background-position: left bottom;
+	width: 15;
+	height: 15;
+}
+
+RecentTrackWidget QToolButton#cog {
+    qproperty-icon: url(:/cog-rest.png);
+	qproperty-iconSize: 48px 29px;
+	qproperty-popupMode: InstantPopup;
+	width: 24px;
+	height: 17px;
+	margin: 0px 0px;
+}
+
+RecentTrackWidget QToolButton::menu-indicator {
+    image: none;
+}
+
+RecentTrackWidget QToolButton#cog:pressed {
+    qproperty-icon: url(:/cog-onpress.png);
+}
+
+RecentTrackWidget QToolButton#cog:hover {
+    qproperty-icon: url(:/cog-onhover.png);
 }
 
 ProfileWidget #title {
@@ -272,8 +326,10 @@ QTextBrowser, QLabel#title1, QLabel#title2 {
 MetadataWindow #artistImage {
     padding: 0px;  
     border: 1px solid #716f6f; 
-    min-width: 85px; 
-    min-height: 85px; 
+    min-width: 99px; 
+    min-height: 76px; 
+	max-width: 99px; 
+    max-height: 76px; 
 }
 
 QLabel#title1 {

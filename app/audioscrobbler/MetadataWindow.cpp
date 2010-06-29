@@ -160,7 +160,9 @@ MetadataWindow::MetadataWindow()
 
     finishUi();
 
+#ifdef NDEBUG
     menuBar()->hide();
+#endif
 }
 
 
@@ -228,3 +230,17 @@ MetadataWindow::showNowScrobbling()
     ui.tabBar->setCurrentIndex( TAB_INFO );
     toggleProfile( false );
 }
+
+void
+MetadataWindow::addWinThumbBarButton( QAction* thumbButtonAction )
+{
+    m_buttons.append( thumbButtonAction );
+}
+
+void
+MetadataWindow::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
+{
+    foreach ( QAction* button, m_buttons )
+        thumbButtonActions.append( button );
+}
+

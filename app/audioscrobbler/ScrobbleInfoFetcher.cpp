@@ -94,7 +94,6 @@ ScrobbleInfoFetcher::onTrackGotInfo()
 
     XmlQuery lfm = reply->readAll();
     emit trackGotInfo(lfm);
-    emit trackGotUserloved(lfm["track"]["userloved"].text() == "1");
 
     if (m_replies.count() == 0)
         emit finished();

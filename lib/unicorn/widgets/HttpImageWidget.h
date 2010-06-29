@@ -73,12 +73,14 @@ private slots:
             p.end();
         }
 
-        setFixedSize( px.size());
         setPixmap(px);
+
+        emit loaded();
     }
 
 signals:
     void clicked();
+    void loaded();
 
 private:
     bool m_mouseDown;

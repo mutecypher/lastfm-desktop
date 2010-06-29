@@ -128,7 +128,7 @@ mkdir -p $bundlePath/Contents/plugins
 plugins="imageformats phonon_backend"
 
 for plugin in $plugins; do
-    cp -R -P `qmake --version |sed -n 's/^.*in \(\/.*$\)/\1/p'`/../plugins/$plugin $bundlePath/Contents/plugins
+    cp -R -P /Developer/Applications/Qt/plugins/$plugin $bundlePath/Contents/plugins
     for i in $bundlePath/Contents/plugins/$plugin/*; do
         fixFrameworks $i
         echo -n P

@@ -157,7 +157,11 @@ Radio::skip()
     if (q.size())
 	{
 		Phonon::MediaSource source = q.takeFirst();
-		m_mediaObject->setQueue( q );
+#ifdef Q_WS_X11
+        m_mediaObject->clearQueue();
+#else
+        m_mediaObject->setQueue( q );
+#endif
 		m_mediaObject->setCurrentSource( source );
 		m_mediaObject->play();
 	}
@@ -391,7 +395,29 @@ void
 Radio::onFinished()
 {
     // the play queue has come to a natural end
+#ifdef Q_WS_X11
+    qDebug() << "finished";
+    for(;;)
+    {
+        Track t = m_tuner->takeNextTrack();
+        if (t.isNull()) break;
+
+        // Invalid urls won't trigger the correct phonon
+        // state changes, so we must filter them.
+        if (!t.url().isValid()) continue;
+        
+        m_track = t;
+        Phonon::MediaSource ms( t.url() );
+
+
+        m_mediaObject->clearQueue();
+        m_mediaObject->setCurrentSource( ms );
+        m_mediaObject->play();
+        break;
+    }
+#else
     qDebug() << ".";
+#endif
 }
 
 
@@ -450,7 +476,9 @@ Radio::initRadio()
     connect( mediaObject, SIGNAL(stateChanged( Phonon::State, Phonon::State )), SLOT(onPhononStateChanged( Phonon::State, Phonon::State )) );
     connect( mediaObject, SIGNAL(bufferStatus(int)), SLOT(onBuffering(int)));
     connect( mediaObject, SIGNAL(currentSourceChanged( Phonon::MediaSource )), SLOT(onPhononCurrentSourceChanged( Phonon::MediaSource )) );
+#ifndef Q_WS_X11
     connect( mediaObject, SIGNAL(aboutToFinish()), SLOT(phononEnqueue()) ); // this fires when the whole queue is about to finish
+#endif
     connect( mediaObject, SIGNAL(finished()), SLOT(onFinished()));
     connect( mediaObject, SIGNAL(tick(qint64)), SIGNAL(tick(qint64)));
     connect( audioOutput, SIGNAL(mutedChanged(bool)), SLOT(onMutedChanged(bool)));
