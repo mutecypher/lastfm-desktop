@@ -58,8 +58,6 @@ main( int argc, char** argv )
 
     if ( app.sendMessage( "" ) )
         return 0;
-
-    return app.exec();
     
     try
     {

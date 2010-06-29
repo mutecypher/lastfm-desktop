@@ -49,11 +49,9 @@ win32 {
                $$ROOT_DIR/plugins/scrobsub/EncodingUtils.cpp \
                $$ROOT_DIR/lib/3rdparty/iTunesCOMAPI/iTunesCOMInterface_i.c
 
-    HEADERS += ITunesLibrary_win.h \
-               ITunesTrack.h \
+    HEADERS += ITunesTrack.h \
                ITunesComWrapper.h \
                $$ROOT_DIR/plugins/scrobsub/EncodingUtils.h \
-               $$ROOT_DIR/lib/3rdparty/iTunesCOMAPI/iTunesCOMInterface_i.h
 
     LIBS += -lcomsuppw
 
