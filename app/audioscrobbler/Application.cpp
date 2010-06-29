@@ -42,6 +42,8 @@
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "Wizard/FirstRunWizard.h"
 
+#include <QShortcut>
+
 #ifdef Q_OS_WIN32
 #include "windows.h"
 #endif
@@ -167,12 +169,17 @@ Application::init()
 #ifndef Q_OS_LINUX
     installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action, SLOT( toggle()));
 #endif
+    //although the shortcuts are actually set on the ScrobbleControls widget,
+    //setting it here adds the shortkey text to the trayicon menu
+    //and it's no problem since, for some reason, the shortcuts don't trigger the actions.
+    m_tag_action->setShortcut( Qt::CTRL + Qt::Key_T );
+    m_share_action->setShortcut( Qt::CTRL + Qt::Key_S );
+    m_love_action->setShortcut( Qt::CTRL + Qt::Key_L );
 
     ScrobbleControls* sc = mw->scrobbleControls();
     sc->setEnabled( false );
     sc->setTagAction( m_tag_action );
     sc->setShareAction( m_share_action );
-
     // make the love buttons sychronised
     connect(this, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
     connect(this, SIGNAL(lovedStateChanged(bool)), sc->loveButton(), SLOT(setChecked(bool)));

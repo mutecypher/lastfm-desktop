@@ -28,6 +28,7 @@
 #include <QApplication>
 #include "PlayBus.h"
 #include <QDebug>
+#include <QMainWindow>
 
 namespace lastfm{ class UserDetails; }
 class QNetworkReply;
@@ -160,7 +161,7 @@ namespace unicorn
         void setupHotKeys();
         void onHotKeyEvent(quint32 id);
         void loadStyleSheet( QFile& );
-        class QMainWindow* findMainWindow();
+        QMainWindow* findMainWindow();
 
         QString m_styleSheet;
         Session m_currentSession;
