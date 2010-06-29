@@ -32,13 +32,12 @@ struct IPodScrobble : public MutableTrack
     IPodScrobble( const Track& that ) : MutableTrack( that )
     {}
 
-	QString uniqueId() const { return d->extras["uniqueId"]; }
-    int playCount() const { return d->extras["playCount"].toInt(); }
+    QString uniqueId() const { return extra( "uniqueId" ); }
+    int playCount() const { return extra( "playCount" ).toInt(); }
 
-    void setPlayCount( int const i ) { d->extras["playCount"] = QString::number( i ); }
-    void setMediaDeviceId( const QString& id ) { d->extras["deviceId"] = id; }
-    void setUniqueId( const QString& id ) { d->extras["uniqueId"] = id; }
-    void setTimestamp( const class QDateTime& t ) { d->time = t; }
+    void setPlayCount( int const i ) { setExtra( "playCount", QString::number( i ) ); }
+    void setMediaDeviceId( const QString& id ) { setExtra( "deviceId", id ); }
+    void setUniqueId( const QString& id ) { setExtra( "uniqueId", id ); }
 };
 
 #endif
