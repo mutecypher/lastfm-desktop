@@ -62,6 +62,12 @@ protected:
     struct {
         class QGroupBox* groupBox;
     } ui;
+
+private:
+    void setTabOrders();
+
+private:
+    QPushButton* m_addUserButton;
 };
 
 #endif //USER_MANAGER_H_

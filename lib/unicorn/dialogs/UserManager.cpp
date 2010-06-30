@@ -59,6 +59,8 @@ UserRadioButton::UserRadioButton( const User& user )
     connect( remove, SIGNAL(clicked()), SLOT(removeMe()));
     QVBoxLayout* vl = new QVBoxLayout(this);
     vl->addLayout( l );
+//    setFocusProxy( remove );
+    remove->setFocusPolicy( Qt::NoFocus );
 }
 
 void 
@@ -168,14 +170,14 @@ UserManager::UserManager( QWidget* parent )
     QHBoxLayout* actionButtons = new QHBoxLayout();
     QDialogButtonBox* bb;
     actionButtons->addWidget( bb = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ));
-    
-    connect( bb->addButton( tr( "Add new user" ), QDialogButtonBox::ActionRole ),
-             SIGNAL(clicked()),
-             SLOT(onAddUserClicked()));
+
+    m_addUserButton = bb->addButton( tr( "Add new user" ), QDialogButtonBox::ActionRole );
+    connect( m_addUserButton, SIGNAL( clicked() ), SLOT( onAddUserClicked() ) );
 
     connect( bb, SIGNAL( accepted()), SLOT( onAccept()));
     connect( bb, SIGNAL( rejected()), SLOT( reject()));
     layout->addLayout( actionButtons );
+    setTabOrders();
 }
 
 
@@ -252,3 +254,20 @@ UserManager::add( UserRadioButton* urb, bool announce )
     connect( urb, SIGNAL( destroyed(QObject*)), SIGNAL( rosterUpdated()));
 }
 
+void
+UserManager::setTabOrders()
+{
+    QList<QAbstractButton *> buttons = m_buttonGroup->buttons();
+
+    for( int i = buttons.count()-1; i > 0; i-- )
+    {
+        setTabOrder( buttons[ i ], buttons[ i-1 ] );
+    }
+    if( buttons.count() > 0 )
+    {
+        setTabOrder( buttons[ 0 ], m_addUserButton );
+    }
+    setTabOrder( m_addUserButton, m_buttonGroup->button( QDialogButtonBox::Ok ) );
+    setTabOrder( m_buttonGroup->button( QDialogButtonBox::Ok ), m_buttonGroup->button( QDialogButtonBox::Cancel ) );
+
+ }
