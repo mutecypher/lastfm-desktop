@@ -165,7 +165,6 @@ namespace unicorn
 
         QString m_styleSheet;
         Session m_currentSession;
-        Bus m_bus;
         bool m_signingIn;
 		QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
         QString m_cssDir;
@@ -177,6 +176,8 @@ namespace unicorn
 #ifdef WIN32
         static bool winEventFilter ( void* );
 #endif
+    protected:
+        Bus m_bus;
 	
     private slots:
         void onUserGotInfo();

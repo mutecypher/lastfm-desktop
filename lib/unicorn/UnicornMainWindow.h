@@ -26,6 +26,12 @@
 #include <QPointer>
 #include <QDialog>
 #include <QMap>
+
+#ifdef Q_OS_WIN32
+#include <windows.h>
+#include <shobjidl.h>
+#endif
+
 class AboutDialog;
 class UpdateDialog;
 class QNetworkReply;
@@ -87,6 +93,12 @@ namespace unicorn
             
         } ui;
 
+#ifdef Q_OS_WIN32
+        bool canUseTaskBar;
+        UINT taskBarCreatedMessage;
+        ITaskbarList3* taskbar;
+#endif
+
         void storeGeometry() const;
 
         virtual bool eventFilter( QObject*, QEvent* );
@@ -95,13 +107,24 @@ namespace unicorn
         virtual void moveEvent( QMoveEvent* );
         virtual void resizeEvent( QResizeEvent* );
 
+        virtual void addWinThumbBarButtons( QList<QAction*>& ) {;}
+
+        QList<QAction*> m_thumbButtonActions;
+
     private:
+#ifdef Q_OS_WIN32
+        bool winEvent(MSG* message, long* result);
+#endif
+
         QMap<QWidget*, QPoint> m_dragHandleMouseDownPos;
 
     private slots:
         void onGotUserInfo( const lastfm::UserDetails& );
         void onSessionChanged( const unicorn::Session& );
         void cleverlyPosition();
+#ifdef Q_OS_WIN32
+        void updateThumbButtons();
+#endif
     
     signals:
         void hidden( bool );   

@@ -311,37 +311,17 @@ PlaybackControlsWidget::setButtonsEnabled( bool enabled )
 }
 
 void
-PlaybackControlsWidget::onLoveClicked(bool checked)
+PlaybackControlsWidget::onLoveClicked( bool checked )
 {
     qDebug() << "love clicked: " << checked;
     MutableTrack track( radio->currentTrack() );
+
     if ( checked )
-    {
-        // The button has been checked so love the track!
         track.love();
-    }
     else
-    {
-        // The button has been unchecked so unlove the track
         track.unlove();
-    }
-}
 
-void
-PlaybackControlsWidget::onLoveFinished()
-{
-    // check that the command was succesful
-    lastfm::XmlQuery lfm(lastfm::ws::parse(static_cast<QNetworkReply*>(sender())));
-
-    if ( lfm.attribute( "status" ) == "ok" )
-    {
-        // TODO: show some feedback
-        emit lovedStateChanged(true);
-    }
-    else
-    {
-        // TODO: error!
-    }
+    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui.love, SLOT(setChecked(bool)));
 }
 
 void

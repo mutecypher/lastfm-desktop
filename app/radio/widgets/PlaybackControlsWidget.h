@@ -64,7 +64,7 @@ private:
     void restoreRadioOptions();
     void setRadioOptionsChecked();
 
-private slots:
+public slots:
 	void onRadioStopped();
     void onRadioTuningIn( const class RadioStation& );
     void onTrackSpooled( const Track& track );
@@ -81,7 +81,6 @@ private slots:
     void onMuteTriggered();
 
     void onLoveClicked(bool);
-    void onLoveFinished();
 
     void onBanClicked();
     void onBanFinished();
