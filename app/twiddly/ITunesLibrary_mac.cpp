@@ -149,7 +149,7 @@ ITunesLibrary::Track::lastfmTrack() const
     t.setDuration( (uint) s.readLine().toFloat() );
     t.setAlbum( s.readLine() );
     t.setPlayCount( s.readLine().toInt() );
-    t.setTimestamp( qDateTimeFromScriptString( s.readLine() ) );
+    t.setTimeStamp( qDateTimeFromScriptString( s.readLine() ) );
 
     QFileInfo fileinfo( s.readLine() );
     t.setUrl( QUrl::fromLocalFile( fileinfo.absolutePath() ) );
