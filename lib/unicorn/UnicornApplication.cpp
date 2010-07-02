@@ -393,7 +393,9 @@ unicorn::Application::findMainWindow()
     QMainWindow* ret = 0;
     foreach (QWidget* w, qApp->topLevelWidgets())
         if (ret = qobject_cast<QMainWindow*>(w))
-            return ret;
+            break;
+
+    return ret;
 }
 
 #ifdef __APPLE__
