@@ -54,6 +54,7 @@ private slots:
 private:
     class QPushButton* ok() { return ui.buttons->button( QDialogButtonBox::Ok ); }
     void updateCharacterLimit();
+    void setTabOrders();
 
     Track m_track;
 };

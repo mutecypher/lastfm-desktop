@@ -21,7 +21,6 @@
     // first to prevent compilation errors with Qt 4.5.0-beta1
     #include <Carbon/Carbon.h>
     #include <ApplicationServices/ApplicationServices.h>
-    static pascal OSErr appleEventHandler( const AppleEvent*, AppleEvent*, long );
     #include <QMainWindow>
     extern void qt_mac_set_menubar_icons( bool );
 #elif defined WIN32
@@ -251,6 +250,20 @@ unicorn::Application::onBusSessionChanged( const Session& session )
 void 
 unicorn::Application::changeSession( const Session& newSession, bool announce )
 {
+    if( newSession.username() != m_currentSession.username() &&
+        Settings().value( "changeSessionConfirmation", true ).toBool()) {
+        bool dontAskAgain = false;
+        int result = QMessageBoxBuilder( findMainWindow() ).setTitle( tr( "Changing User" ) )
+           .setText( tr( "%1 will be logged into the Scrobbler and Last.fm Radio. All music will now be scrobbled to this account. Do you want to continue?" ).arg( newSession.username() ))
+           .setIcon( QMessageBox::Information )
+           .setButtons( QMessageBox::Yes | QMessageBox::Cancel )
+           .dontAskAgain()
+           .exec( &dontAskAgain );
+
+        Settings().setValue( "changeSessionConfirmation", !dontAskAgain );
+        if( result != QMessageBox::Ok )
+            return;
+    }
     Session oldSession = currentSession();
     m_currentSession = newSession;
     lastfm::ws::Username = m_currentSession.username();
@@ -374,6 +387,15 @@ unicorn::Application::onHotKeyEvent(quint32 id)
     QTimer::singleShot( 0, receiver, slot );
 }
 
+QMainWindow*  
+unicorn::Application::findMainWindow()
+{
+    QMainWindow* ret = 0;
+    foreach (QWidget* w, qApp->topLevelWidgets())
+        if (ret = qobject_cast<QMainWindow*>(w))
+            return ret;
+}
+
 #ifdef __APPLE__
 #include <iostream>
 OSStatus /* static */
@@ -386,7 +408,8 @@ unicorn::Application::hotkeyEventHandler( EventHandlerCallRef, EventRef event, v
     return noErr;
 }
 
-static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
+pascal OSErr /* static */
+unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long )
 {
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );
@@ -414,9 +437,10 @@ static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
 
         case kAEReopenApplication:
         {
-            foreach (QWidget* w, qApp->topLevelWidgets())
-                if (qobject_cast<QMainWindow*>(w))
-                    w->show(), w->raise(), w->activateWindow();
+            QMainWindow* mw = qobject_cast<unicorn::Application*>(qApp)->findMainWindow();
+            if( mw ) {
+                mw->show(), mw->raise(), mw->activateWindow();
+            }
             return noErr;
         }
 

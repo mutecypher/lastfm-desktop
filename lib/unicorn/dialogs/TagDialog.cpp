@@ -172,4 +172,13 @@ TagDialog::setupUi()
     v->addStretch();
 
     v->addWidget( ui.buttons = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );
+    setTabOrders();
+}
+
+void
+TagDialog::setTabOrders()
+{
+    setTabOrder( ui.track, ui.tagsWidget );
+    setTabOrder( ui.tagsWidget, ui.buttons->button( QDialogButtonBox::Ok ) );
+    setTabOrder( ui.buttons->button( QDialogButtonBox::Ok ), ui.buttons->button( QDialogButtonBox::Cancel ) );
 }

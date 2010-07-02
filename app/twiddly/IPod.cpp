@@ -18,13 +18,13 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "lib/unicorn/mac/AppleScript.h"
 #include "IPod.h"
 #include "IPodScrobble.h"
 #include "ITunesLibrary.h"
 #include "PlayCountsDatabase.h"
 #include "common/qt/msleep.cpp"
 #include "plugins/iTunes/ITunesExceptions.h"
-#include "lib/unicorn/mac/AppleScript.h"
 #include <lastfm/misc.h>
 #include <lastfm/Track>
 #include <QtCore>

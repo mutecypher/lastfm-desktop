@@ -26,6 +26,7 @@
 #include <QToolButton>
 #include <QAction>
 
+#include <QShortcut>
 ScrobbleControls::ScrobbleControls()
 {
     new QHBoxLayout( this );
@@ -42,6 +43,9 @@ ScrobbleControls::ScrobbleControls()
     
     layout()->addWidget(ui.share = new QPushButton(tr("share")));
     ui.share->setObjectName("share");
+    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ), ui.share, SLOT( click() ) );
+    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ), ui.tag, SLOT( click() ) );
+    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ), ui.love, SLOT( toggle() ) );
 }
 
 void
@@ -56,6 +60,7 @@ void
 ScrobbleControls::setTagAction( const QAction* a )
 {
     connect( ui.tag, SIGNAL(clicked()), a, SLOT(trigger()));
+
 }
 
 void
@@ -63,4 +68,3 @@ ScrobbleControls::setShareAction( const QAction* a )
 {
     connect( ui.share, SIGNAL(clicked()), a, SLOT(trigger()));
 }
-

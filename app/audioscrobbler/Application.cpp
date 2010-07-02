@@ -42,6 +42,8 @@
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "Wizard/FirstRunWizard.h"
 
+#include <QShortcut>
+
 #ifdef Q_OS_WIN32
 #include "windows.h"
 #endif
@@ -103,6 +105,7 @@ Application::init()
     (menu->addMenu( new UserMenu()))->setText( "Users");
     m_toggle_window_action = menu->addAction( tr("Show Scrobbler"));
     m_toggle_window_action->setShortcut( Qt::CTRL + Qt::META + Qt::Key_S );
+    m_toggle_window_action->setCheckable( true );
     menu->addSeparator();
     m_artist_action = menu->addAction( "" );
     m_title_action = menu->addAction(tr("Ready"));
@@ -158,14 +161,19 @@ Application::init()
 #endif
 
 #ifndef Q_OS_LINUX
-    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action, SLOT( trigger()));
+    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action, SLOT( toggle()));
 #endif
+    //although the shortcuts are actually set on the ScrobbleControls widget,
+    //setting it here adds the shortkey text to the trayicon menu
+    //and it's no problem since, for some reason, the shortcuts don't trigger the actions.
+    m_tag_action->setShortcut( Qt::CTRL + Qt::Key_T );
+    m_share_action->setShortcut( Qt::CTRL + Qt::Key_S );
+    m_love_action->setShortcut( Qt::CTRL + Qt::Key_L );
 
     ScrobbleControls* sc = mw->scrobbleControls();
     sc->setEnabled( false );
     sc->setTagAction( m_tag_action );
     sc->setShareAction( m_share_action );
-
     // make the love buttons sychronised
     connect(this, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
     connect(this, SIGNAL(lovedStateChanged(bool)), sc->loveButton(), SLOT(setChecked(bool)));
@@ -214,7 +222,7 @@ Application::init()
     }
 
 
-    connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( onActivateWindow()), Qt::QueuedConnection );
+    connect( m_toggle_window_action, SIGNAL( toggled( bool )), SLOT( toggleWindow( bool )), Qt::QueuedConnection );
 
     connect( this, SIGNAL(messageReceived(QString)), SLOT(onMessageReceived(QString)) );
     connect( this, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session) ), 
@@ -434,12 +442,16 @@ Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason )
 }
 
 void
-Application::onActivateWindow()
+Application::toggleWindow( bool show )
 {
-    mw->showNormal();
-    mw->setFocus();
-    mw->raise();
-    mw->activateWindow();
+    if( show ) {
+        mw->showNormal();
+        mw->setFocus();
+        mw->raise();
+        mw->activateWindow();
+    } else {
+       mw->hide();
+    }
 }
 
 void
@@ -485,55 +497,30 @@ Application::onMessageReceived(const QString& message)
 void 
 Application::quit()
 {
+    if( activeWindow())
+        activeWindow()->raise();
+
     if( unicorn::AppSettings().value( "quitDontAsk", false ).toBool()) {
         actuallyQuit();
         return;
     }
 
-    QDialog* d;
-    if( activeWindow() && activeWindow()->isVisible()) {
-        d = new QDialog( activeWindow() );
-        d->setWindowFlags( Qt::Sheet );
-    } else {
-        d = new QDialog();
-        d->setWindowFlags( Qt::Dialog );
+    bool dontAsk = false;
+    int result = 1;
+    if( !unicorn::AppSettings().value( "quitDontAsk", false ).toBool())
+      result =
+          QMessageBoxBuilder( activeWindow()).setTitle( tr("%1 is about to quit.").arg(applicationName()))
+                                             .setText( tr("Tracks played in %1 will not be scrobbled if you continue." )
+                                                       .arg( PluginList().availableDescription()) )
+                                             .dontAskAgain()
+                                             .setIcon( QMessageBox::Question )
+                                             .setButtons( QMessageBox::Yes | QMessageBox::No )
+                                             .exec(&dontAsk);
+    if( result == QMessageBox::Yes ) {
+        unicorn::AppSettings().setValue( "quitDontAsk", dontAsk );
+        QCoreApplication::quit();
     }
     
-    QGridLayout* grid = new QGridLayout( d );
-    QLabel* icon = new QLabel(d);
-    icon->setPixmap( style()->standardPixmap( QStyle::SP_MessageBoxWarning, 0, icon ));
-    QSizePolicy labelSP( QSizePolicy::Minimum, QSizePolicy::Preferred );
-    labelSP.setHeightForWidth( true );
-    QLabel* title = new QLabel( tr("%1 is about to quit.").arg(applicationName()));
-    QLabel* text = new QLabel( tr("Tracks played in %1 will not be scrobbled if you continue." )
-                  .arg( PluginList().availableDescription()));
-
-    title->setWordWrap( false );
-    title->setSizePolicy( labelSP );
-    text->setWordWrap( true );
-    text->setSizePolicy( labelSP );
-    
-
-    QDialogButtonBox* bb = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
-    bb->button(QDialogButtonBox::Ok)->setText( tr( "Quit" ));
-    bb->button(QDialogButtonBox::Cancel)->setAutoDefault( true );
-    bb->button(QDialogButtonBox::Cancel)->setDefault( true );
-    QCheckBox* dontAsk = new QCheckBox( tr( "Don't ask me again" ));
-   
-    grid->addWidget( icon, 0, 0, 2, 1, Qt::AlignTop );
-    grid->addWidget( title, 0, 1, 1, 1, Qt::AlignTop );
-    grid->addWidget( text, 1, 1, 1, 1, Qt::AlignCenter );
-    grid->addWidget( dontAsk, 2, 1, 1, 2, Qt::AlignLeft );
-    grid->addWidget( bb, 3, 1, 1, 2 );
-
-    d->setTabOrder( bb, dontAsk );
-
-    connect( bb, SIGNAL( accepted()), d, SLOT( accept()));
-    connect( d, SIGNAL( accepted()), this, SLOT( actuallyQuit()));
-    connect( bb, SIGNAL( rejected()), d, SLOT( reject()));
-    connect( d, SIGNAL( rejected()), d, SLOT( deleteLater()));
-    d->setFixedSize( d->sizeHint());
-    d->open();
 }
 
 void 

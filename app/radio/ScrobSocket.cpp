@@ -65,6 +65,7 @@ ScrobSocket::onConnected()
     {
         qDebug() << m_msgQueue.head().trimmed();
         write( m_msgQueue.takeFirst().toUtf8());
+        flush();
     }
 }
 
