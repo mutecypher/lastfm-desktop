@@ -59,7 +59,6 @@ UserRadioButton::UserRadioButton( const User& user )
     connect( remove, SIGNAL(clicked()), SLOT(removeMe()));
     QVBoxLayout* vl = new QVBoxLayout(this);
     vl->addLayout( l );
-//    setFocusProxy( remove );
     remove->setFocusPolicy( Qt::NoFocus );
 }
 
@@ -235,6 +234,8 @@ UserManager::onUserAdded()
 
     add( urb );
     if( ui.groupBox->layout()->count() <= 1 ) urb->click();
+    
+    setTabOrders();
 
     WelcomeDialog( user ).exec();
 }
@@ -257,15 +258,13 @@ UserManager::add( UserRadioButton* urb, bool announce )
 void
 UserManager::setTabOrders()
 {
-    QList<QAbstractButton *> buttons = m_buttonGroup->buttons();
-
-    for( int i = buttons.count()-1; i > 0; i-- )
+    if( m_buttonGroup->buttons().count() )
     {
-        setTabOrder( buttons[ i ], buttons[ i-1 ] );
-    }
-    if( buttons.count() > 0 )
-    {
-        setTabOrder( buttons[ 0 ], m_addUserButton );
+        if( m_buttonGroup->checkedButton() )
+        {
+            qDebug() << "button: " << qobject_cast<UserRadioButton *>( m_buttonGroup->checkedButton() )->user();
+            setTabOrder( m_buttonGroup->checkedButton(), m_addUserButton );
+        }
     }
     setTabOrder( m_addUserButton, m_buttonGroup->button( QDialogButtonBox::Ok ) );
     setTabOrder( m_buttonGroup->button( QDialogButtonBox::Ok ), m_buttonGroup->button( QDialogButtonBox::Cancel ) );
