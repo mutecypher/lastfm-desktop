@@ -5,6 +5,7 @@
 #include <QStandardItemModel>
 #include <lastfm/User>
 #include "lib/DllExportMacro.h"
+#include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/UnicornSession.h"
 

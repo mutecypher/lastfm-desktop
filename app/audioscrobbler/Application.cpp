@@ -66,12 +66,6 @@ Application::Application(int& argc, char** argv)
               state( Unknown )
 {
 	setQuitOnLastWindowClosed( false );
-
-
-    // We do the actual init slightly later so that if this is the second
-    // time we open the app, we don't get another tray icon etc.
-    QTimer::singleShot(0, this, SLOT(init()));
-
 }
 
 void
@@ -230,13 +224,10 @@ Application::init()
     //we could connect to the signal!
     changeSession( unicorn::Session());
 
-    if (!arguments().contains("--tray"))
-    {
-        m_toggle_window_action->trigger();
-    }
-
     // clicking on a system tray message should show the scrobbler
     connect( tray, SIGNAL(messageClicked()), m_toggle_window_action, SLOT(trigger()));
+
+    onMessageReceived( arguments().join(";") );
 }
 
 
@@ -454,7 +445,34 @@ Application::onActivateWindow()
 void
 Application::onMessageReceived(const QString& message)
 {
-    if (message != "--tray")
+    QStringList arguments = message.split(";");
+
+    int pos = arguments.indexOf( "--twiddled" );
+
+    if ( pos >= 0 )
+    {
+        QFile iPodScrobblesFile( arguments[ pos + 1 ] );
+
+        if ( iPodScrobblesFile.open( QIODevice::ReadOnly | QIODevice::Text ) )
+        {
+            QDomDocument iPodScrobblesDoc;
+            iPodScrobblesDoc.setContent( &iPodScrobblesFile );
+            QDomNodeList tracks = iPodScrobblesDoc.elementsByTagName( "track" );
+
+            for ( int i(0) ; i < tracks.count() ; ++i )
+            {
+                lastfm::Track track( tracks.at(i).toElement() );
+
+                int playcount = track.extra("playCount").toInt();
+
+                for ( int j(0) ; j < playcount ; ++j )
+                    as->cache( track );
+            }
+        }
+
+        iPodScrobblesFile.remove();
+    }
+    else if ( !arguments.contains( "--tray" ) )
     {
         // raise the app
         m_toggle_window_action->trigger();
