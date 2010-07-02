@@ -435,15 +435,27 @@ Application::onScrobbleIpodTriggered()
     qApp->setOverrideCursor( Qt::WaitCursor );
     QList<Track> tracks = iPod.tracksToScrobble();
     qApp->restoreOverrideCursor();
+
     qDebug() << tracks.count() << " new tracks to scrobble.";
+
     if( tracks.count() )
         as->cache( tracks );
     else if( !iPod.error().isEmpty() )
     {
+        QMessageBoxBuilder( mw )
+                .setIcon( QMessageBox::Critical )
+                .setTitle( tr( "Scrobble iPod" ) )
+                .setText( iPod.error() )
+                .exec();
         qDebug() << iPod.error();
     }
     else
     {
+        QMessageBoxBuilder( mw )
+                .setIcon( QMessageBox::Critical )
+                .setTitle( tr( "Scrobble iPod" ) )
+                .setText( tr( "No tracks to scrobble since your last sync." ) )
+                .exec();
         qDebug() << "No tracks to scrobble";
     }
 }
