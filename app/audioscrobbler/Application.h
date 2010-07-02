@@ -66,6 +66,7 @@ namespace audioscrobbler
         QAction* m_tag_action;
         QAction* m_share_action;
         QAction* m_toggle_window_action;
+        QAction* m_scrobble_ipod_action;
         
     public:
         Application(int& argc, char** argv);
@@ -100,7 +101,11 @@ namespace audioscrobbler
 
         void onTagTriggered();
         void onShareTriggered();
-        
+
+#ifdef Q_WS_X11
+        void onScrobbleIpodTriggered();
+#endif
+
         void onTrackStarted(const Track&, const Track&);
         void onPaused();
         void onResumed();

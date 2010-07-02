@@ -18,6 +18,9 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Application.h"
+#ifdef Q_WS_X11
+#include "MediaDevices/IpodDevice.h"
+#endif
 #include "MetadataWindow.h"
 #include "ScrobbleControls.h"
 #include "ScrobbleInfoFetcher.h"
@@ -43,6 +46,7 @@
 #include "Wizard/FirstRunWizard.h"
 
 #include <QShortcut>
+#include <QFileDialog>
 
 #ifdef Q_OS_WIN32
 #include "windows.h"
@@ -135,6 +139,12 @@ Application::init()
 #else
     menu->addAction(tr("Options")+ELLIPSIS);
 #endif
+
+#ifdef Q_WS_X11
+    m_scrobble_ipod_action = menu->addAction( tr( "Scrobble iPod..." ) );
+    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), SLOT( onScrobbleIpodTriggered() ) );
+#endif
+
     menu->addSeparator();
     QAction* quit = menu->addAction(tr("Quit Audioscrobbler"));
 
@@ -407,6 +417,29 @@ Application::onShareTriggered()
     sd->show();
     sd->activateWindow();
 }
+
+#ifdef Q_WS_X11
+void
+Application::onScrobbleIpodTriggered()
+{
+    IpodDevice iPod;
+    QString path;
+
+    path = QFileDialog::getExistingDirectory( mw, tr( "Where is your iPod mounted?" ), "/" );
+    if ( path.isEmpty() )
+        return;
+    iPod.setMountPath( path );
+
+    qApp->setOverrideCursor( Qt::WaitCursor );
+    QList<Track> tracks = iPod.tracksToScrobble();
+    qApp->restoreOverrideCursor();
+    qDebug() << tracks.count() << " new tracks to scrobble.";
+    if( tracks.count() )
+        as->cache( tracks );
+    else
+        qDebug() << "No tracks to scrobble";
+}
+#endif
 
 void 
 Application::changeLovedState(bool loved)
