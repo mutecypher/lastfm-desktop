@@ -32,8 +32,13 @@ int main( int argc, char** argv )
     try
     {
         audioscrobbler::Application app( argc, argv );
-        if ( app.sendMessage( app.arguments().contains("--tray") ? "--tray" : "" ) )
+
+        qDebug() << app.arguments();
+
+        if ( app.sendMessage( app.arguments().join(";") ) )
             return 0;
+
+        app.init();
         return app.exec();
     }
     catch (unicorn::Application::StubbornUserException&)

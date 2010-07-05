@@ -18,6 +18,9 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Application.h"
+#ifdef Q_WS_X11
+#include "MediaDevices/IpodDevice.h"
+#endif
 #include "MetadataWindow.h"
 #include "ScrobbleControls.h"
 #include "ScrobbleInfoFetcher.h"
@@ -43,6 +46,7 @@
 #include "Wizard/FirstRunWizard.h"
 
 #include <QShortcut>
+#include <QFileDialog>
 
 #ifdef Q_OS_WIN32
 #include "windows.h"
@@ -68,12 +72,6 @@ Application::Application(int& argc, char** argv)
               state( Unknown )
 {
 	setQuitOnLastWindowClosed( false );
-
-
-    // We do the actual init slightly later so that if this is the second
-    // time we open the app, we don't get another tray icon etc.
-    QTimer::singleShot(0, this, SLOT(init()));
-
 }
 
 void
@@ -141,6 +139,12 @@ Application::init()
 #else
     menu->addAction(tr("Options")+ELLIPSIS);
 #endif
+
+#ifdef Q_WS_X11
+    m_scrobble_ipod_action = menu->addAction( tr( "Scrobble iPod..." ) );
+    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), SLOT( onScrobbleIpodTriggered() ) );
+#endif
+
     menu->addSeparator();
     QAction* quit = menu->addAction(tr("Quit Audioscrobbler"));
 
@@ -238,13 +242,10 @@ Application::init()
     //we could connect to the signal!
     changeSession( unicorn::Session());
 
-    if (!arguments().contains("--tray"))
-    {
-        m_toggle_window_action->trigger();
-    }
-
     // clicking on a system tray message should show the scrobbler
     connect( tray, SIGNAL(messageClicked()), m_toggle_window_action, SLOT(trigger()));
+
+    onMessageReceived( arguments().join(";") );
 }
 
 
@@ -417,6 +418,29 @@ Application::onShareTriggered()
     sd->activateWindow();
 }
 
+#ifdef Q_WS_X11
+void
+Application::onScrobbleIpodTriggered()
+{
+    IpodDevice iPod;
+    QString path;
+
+    path = QFileDialog::getExistingDirectory( mw, tr( "Where is your iPod mounted?" ), "/" );
+    if ( path.isEmpty() )
+        return;
+    iPod.setMountPath( path );
+
+    qApp->setOverrideCursor( Qt::WaitCursor );
+    QList<Track> tracks = iPod.tracksToScrobble();
+    qApp->restoreOverrideCursor();
+    qDebug() << tracks.count() << " new tracks to scrobble.";
+    if( tracks.count() )
+        as->cache( tracks );
+    else
+        qDebug() << "No tracks to scrobble";
+}
+#endif
+
 void 
 Application::changeLovedState(bool loved)
 {
@@ -466,7 +490,34 @@ Application::toggleWindow( bool show )
 void
 Application::onMessageReceived(const QString& message)
 {
-    if (message != "--tray")
+    QStringList arguments = message.split(";");
+
+    int pos = arguments.indexOf( "--twiddled" );
+
+    if ( pos >= 0 )
+    {
+        QFile iPodScrobblesFile( arguments[ pos + 1 ] );
+
+        if ( iPodScrobblesFile.open( QIODevice::ReadOnly | QIODevice::Text ) )
+        {
+            QDomDocument iPodScrobblesDoc;
+            iPodScrobblesDoc.setContent( &iPodScrobblesFile );
+            QDomNodeList tracks = iPodScrobblesDoc.elementsByTagName( "track" );
+
+            for ( int i(0) ; i < tracks.count() ; ++i )
+            {
+                lastfm::Track track( tracks.at(i).toElement() );
+
+                int playcount = track.extra("playCount").toInt();
+
+                for ( int j(0) ; j < playcount ; ++j )
+                    as->cache( track );
+            }
+        }
+
+        iPodScrobblesFile.remove();
+    }
+    else if ( !arguments.contains( "--tray" ) )
     {
         // raise the app
         m_toggle_window_action->trigger();

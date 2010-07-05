@@ -23,7 +23,7 @@
 #include <QSettings>
 #include <QString>
 #include "lib/DllExportMacro.h"
-#include "UnicornApplication.h"
+
 
 namespace lastfm{ class User; }
 namespace unicorn
@@ -34,35 +34,26 @@ namespace unicorn
     class UNICORN_DLLEXPORT Settings : public QSettings
     {
     public:
-        Settings() : QSettings( unicorn::organizationName() )
+        Settings() : QSettings( unicorn::organizationName(), "" )
         {}
         
         QList<lastfm::User> userRoster() const;
 
     };
 
-    class AppSettings : public QSettings
+    class UNICORN_DLLEXPORT AppSettings : public QSettings
     {
     public:
-        AppSettings( QString appname = qApp->applicationName() ) : QSettings( unicorn::organizationName(), appname )
-        {}
+        AppSettings( QString appname = "" );
     };
 
 
     /** Clearly no use until a username() has been assigned. But this is
       * automatic if you use unicorn::Application anyway. */
-    class UserSettings : public QSettings
+    class UNICORN_DLLEXPORT UserSettings : public QSettings
     {
     public:
-        UserSettings()
-        {
-            QString const username = Application::instance()->currentSession().username();
-            beginGroup( username );
-            // it shouldn't be possible, since unicorn::Application enforces
-            // assignment of the username parameter before anything else
-            Q_ASSERT( !username.isEmpty() );
-        }
-
+        UserSettings();
         static const char* subscriptionKey() { return "subscriber"; }
     };
 }
