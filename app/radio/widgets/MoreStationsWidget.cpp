@@ -33,11 +33,13 @@ MoreStationsWidget::MoreStationsWidget()
 
     w = new QPushButton(tr("Your Friends"));
     w->setObjectName("friends");
+    w->setToolTip( tr( "Your Friends Stations" ) );
     connect(w, SIGNAL(clicked()), SIGNAL(friends()));
     layout->addWidget(w, 1, 0);
 
     w = new QPushButton(tr("Start a combo station"));
     w->setObjectName("combos");
+    w->setToolTip( tr( "Start a combo station" ) );
     connect(w, SIGNAL(clicked()), SIGNAL(combo()));
     layout->addWidget(w, 1, 1);
 }
