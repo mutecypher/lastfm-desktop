@@ -182,6 +182,7 @@ MetadataWindow::onStopped()
 {
     setCurrentWidget( stack.profile );
     ui.now_playing_source->onTrackStopped();
+    ui.tabBar->setCurrentIndex( TAB_PROFILE );
     m_currentTrack = Track();
 }
 
