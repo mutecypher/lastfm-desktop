@@ -19,7 +19,7 @@
 */
 #include "Application.h"
 #ifdef Q_WS_X11
-#include "MediaDevices/IpodDevice.h"
+#include "MediaDevices/IpodDevice_linux.h"
 #endif
 #include "MetadataWindow.h"
 #include "ScrobbleControls.h"

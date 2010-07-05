@@ -1,4 +1,4 @@
-#include "IpodDevice.h"
+#include "IpodDevice_linux.h"
 
 #include <QApplication>
 #include <QByteArray>
