@@ -35,14 +35,17 @@ YourStationsWidget::YourStationsWidget()
     layout->addWidget(new QLabel(tr("Your Stations")), 0, 0, 1, 2, Qt::AlignCenter);
 
     item = new PlayableItemWidget(tr("Your Library"), RadioStation::library(lastfm::ws::Username));
+    item->setToolTip( tr( "Your Library" ) );
     layout->addWidget(item, 1, 0);
     connect(item, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
 
     item = new PlayableItemWidget(tr("Your Recommended Radio"), RadioStation::recommendations(lastfm::ws::Username));
+    item->setToolTip( tr( "Your Recommended Radio" ) );
     layout->addWidget(item, 1, 1);
     connect(item, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
 
     item = new PlayableItemWidget(tr("Your Neighbourhood"), RadioStation::neighbourhood(lastfm::ws::Username));
+    item->setToolTip( tr( "Your Neighbourhood" ) );
     layout->addWidget(item, 2, 0);
     connect(item, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
 }
