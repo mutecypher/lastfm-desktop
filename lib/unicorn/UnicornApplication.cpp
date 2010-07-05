@@ -141,7 +141,7 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
                 if ( lc.exec() == QDialog::Accepted )
                 {
                     WelcomeDialog( User(lc.session().username())).exec();
-                    changeSession( lc.session());
+                    changeSession( lc.session()         );
 
                     m_signingIn = false;
                 }
@@ -250,7 +250,7 @@ unicorn::Application::onBusSessionChanged( const Session& session )
 void 
 unicorn::Application::changeSession( const Session& newSession, bool announce )
 {
-    if( newSession.username() != m_currentSession.username() &&
+    if( !m_signingIn && newSession.username() != m_currentSession.username() &&
         Settings().value( "changeSessionConfirmation", true ).toBool()) {
         bool dontAskAgain = false;
         int result = QMessageBoxBuilder( findMainWindow() ).setTitle( tr( "Changing User" ) )
@@ -261,7 +261,7 @@ unicorn::Application::changeSession( const Session& newSession, bool announce )
            .exec( &dontAskAgain );
 
         Settings().setValue( "changeSessionConfirmation", !dontAskAgain );
-        if( result != QMessageBox::Ok )
+        if( result != QMessageBox::Yes )
             return;
     }
     Session oldSession = currentSession();

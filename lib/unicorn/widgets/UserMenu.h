@@ -43,6 +43,11 @@ protected slots:
         QMetaObject::invokeMethod( qApp, "changeSession", 
                                          Q_ARG( unicorn::Session, s));
 
+        //Refresh the user list to be certain that 
+        //the correct current user is checked.
+        //(ie. the user change could be cancelled after confirmation.)
+        refresh();
+
     }
 
     void manageUsers()
