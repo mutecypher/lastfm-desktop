@@ -43,9 +43,10 @@ ScrobbleInfoFetcher::onTrackStarted( const Track& t, const Track& oldTrack )
     if( t != oldTrack ) {
         {
             // track.getInfo
-            QNetworkReply* reply = t.getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
-            m_replies.append(reply);
-            connect(reply, SIGNAL(finished()), SLOT(onTrackGotInfo()));
+            t.getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
+            connect( t.signalProxy(), SIGNAL(gotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)) ) ;
+            //m_replies.append(reply);
+            //connect(reply, SIGNAL(finished()), SLOT(onTrackGotInfo()));
         }
         {
         // track.getTopFans
@@ -75,6 +76,7 @@ ScrobbleInfoFetcher::onTrackStarted( const Track& t, const Track& oldTrack )
             connect(reply, SIGNAL(finished()), SLOT(onArtistGotEvents()));
         }
     }
+
     if( t.album() != oldTrack.album() ) {
         {
             // album.getInfo

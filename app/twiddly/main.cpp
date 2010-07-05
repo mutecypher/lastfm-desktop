@@ -28,6 +28,7 @@
 #include <QtCore>
 #include <QtXml>
 #include <iostream>
+#include "common/c++/Logger.h"
 
 // until breakpad can be installed more easily
 #undef NDEBUG
@@ -51,13 +52,20 @@ main( int argc, char** argv )
                                        HANDLER_ALL );
 #endif
 
-    QCoreApplication::setApplicationName( twiddly::applicationName() );
-    QCoreApplication::setApplicationVersion( "2" );
+    TwiddlyApplication::setApplicationName( twiddly::applicationName() );
+    TwiddlyApplication::setApplicationVersion( "2" );
 
     TwiddlyApplication app( argc, argv );
 
-    if ( app.sendMessage( "" ) )
-        return 0;
+    // Make sure the logger exists in this binary
+#ifdef Q_OS_WIN
+    QString bytes = TwiddlyApplication::log( TwiddlyApplication::applicationName() ).absoluteFilePath();
+    const wchar_t* path = bytes.utf16();
+#else
+    QByteArray bytes = TwiddlyApplication::log( TwiddlyApplication::applicationName() ).absoluteFilePath().toLocal8Bit();
+    const char* path = bytes.data();
+#endif
+    new Logger( path );
     
     try
     {
@@ -108,8 +116,8 @@ main( int argc, char** argv )
             ipod->settings().setType( currentType );
             //------------------------------------------------------------------
 
-            if (ipod->scrobbles().count())
-            {
+//            if (ipod->scrobbles().count())
+//            {
                 // create a unique storage location for the XML
                 QDir dir = ipod->saveDir().filePath( "scrobbles" );
                 QString filename = QDateTime::currentDateTime().toString( "yyyyMMddhhmmss" ) + ".xml";
@@ -121,7 +129,7 @@ main( int argc, char** argv )
                 writeXml( xml, path );
 
 				QProcess::startDetached( moose::path(), QStringList() << "--twiddled" << path );
-            }
+//            }
 
             // do last so we don't record a sync if we threw and thus it "didn't" happen
             ipod->settings().setLastSync( start_time );
@@ -157,6 +165,8 @@ writeXml( const QDomDocument& xml, const QString& path )
     // we write to a temporary file, and then do an atomic move
     // this prevents the client from potentially reading a corrupt XML file
     QTemporaryFile f;
+
+    f.setAutoRemove( false );
     
     if (!f.open())
         throw "Couldn't write XML";

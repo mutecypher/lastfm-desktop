@@ -18,6 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "UnicornMainWindow.h"
+#include "UnicornApplication.h"
 #include "UnicornCoreApplication.h"
 #include "dialogs/AboutDialog.h"
 #include "dialogs/UpdateDialog.h"
@@ -115,7 +116,7 @@ unicorn::MainWindow::winEvent(MSG* message, long* result)
             foreach ( QAction* button, m_thumbButtonActions )
             {
                 connect( button, SIGNAL(changed()), SLOT(updateThumbButtons()));
-                connect( button, SIGNAL(toggled()), SLOT(updateThumbButtons()));
+                connect( button, SIGNAL(toggled(bool)), SLOT(updateThumbButtons()));
             }
 
             if ( m_thumbButtonActions.count() > 0 )

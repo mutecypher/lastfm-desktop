@@ -19,9 +19,9 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "lib/unicorn/UnicornApplication.h"
+#include "lib/unicorn/UnicornCoreApplication.h"
 
-class TwiddlyApplication : public unicorn::Application
+class TwiddlyApplication : public unicorn::CoreApplication
 {
     Q_OBJECT
 public:

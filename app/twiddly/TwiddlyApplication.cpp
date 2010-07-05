@@ -22,13 +22,13 @@
 #include "TwiddlyApplication.h"
 
 TwiddlyApplication::TwiddlyApplication( int& argc, char** argv )
-    :unicorn::Application( argc, argv )
+    :unicorn::CoreApplication( argc, argv )
 {
 }
 
 void
 TwiddlyApplication::sendBusMessage( const QByteArray& msg )
 {
-    m_bus.sendMessage( msg );
+    //m_bus.sendMessage( msg );
 }
 

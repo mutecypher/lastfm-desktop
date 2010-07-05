@@ -4,9 +4,11 @@
 #include <QMenu>
 #include <lastfm/User>
 #include "lib/DllExportMacro.h"
+#include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/UnicornSession.h"
 #include <QDebug>
+#include <QTimer>
 
 class UNICORN_DLLEXPORT UserMenu : public QMenu
 {
