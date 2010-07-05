@@ -33,8 +33,8 @@
 
 #include "RecentTrackWidget.h"
 
-RecentTrackWidget::RecentTrackWidget( const Track& track )
-    :StylableWidget(), m_track( track )
+RecentTrackWidget::RecentTrackWidget( const Track& track, QWidget* parent )
+    :StylableWidget(parent), m_track( track )
 {
     setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
 
@@ -49,6 +49,7 @@ RecentTrackWidget::RecentTrackWidget( const Track& track )
     // hide this row until the album art image has loaded
     hide();
     connect( ui.albumArt, SIGNAL(loaded()), SLOT(show()));
+    connect( ui.albumArt, SIGNAL(loaded()), SIGNAL(loaded()));
 
     layout->addWidget( ui.title = new QLabel( track.toString() ), 1, Qt::AlignTop );
     ui.title->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );

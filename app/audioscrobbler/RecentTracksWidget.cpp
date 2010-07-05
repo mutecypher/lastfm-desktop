@@ -26,6 +26,8 @@
 
 #include <lastfm/misc.h>
 
+#include "lib/unicorn/layouts/AnimatedListLayout.h"
+
 #include "RecentTracksWidget.h"
 #include "RecentTrackWidget.h"
 
@@ -37,8 +39,10 @@ RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
 {
     setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
 
-    QVBoxLayout* layout = new QVBoxLayout( this );
+    AnimatedListLayout* layout = new AnimatedListLayout( this );
     layout->setSpacing( 0 );
+
+    connect( layout, SIGNAL(moveFinished()), SLOT(onMoveFinished()));
 
     setUsername( username );
 }
@@ -61,14 +65,20 @@ void RecentTracksWidget::setUsername( QString username )
 }
 
 void
+RecentTracksWidget::onItemLoaded()
+{
+
+}
+
+void
 RecentTracksWidget::read()
 {
-    foreach ( RecentTrackWidget* trackWidget, m_tracks )
+    for ( int i(0) ; i < layout()->count() ; ++i )
     {
-        layout()->removeWidget( trackWidget );
-        trackWidget->deleteLater();
+        QLayoutItem* item = layout()->takeAt( i );
+        delete item->widget();
+        delete item;
     }
-    m_tracks.clear();
 
 
     QFile file( m_path );
@@ -79,15 +89,16 @@ RecentTracksWidget::read()
     QDomDocument xml;
     xml.setContent( stream.readAll() );
 
-    for (QDomNode n = xml.documentElement().firstChild(); !n.isNull(); n = n.nextSibling())
+    for (QDomNode n = xml.documentElement().lastChild(); !n.isNull(); n = n.previousSibling())
     {
         // TODO: recognise all the other AbstractType classes
         if (n.nodeName() == "track")
         {
             Track* track = new Track( n.toElement() );
-            RecentTrackWidget* item = new RecentTrackWidget( *track );
+            RecentTrackWidget* item = new RecentTrackWidget( *track, this );
             layout()->addWidget( item );
-            m_tracks << item;
+
+            connect( item, SIGNAL(loaded()), SLOT(onItemLoaded()));
         }
     }
 }
@@ -96,7 +107,7 @@ RecentTracksWidget::read()
 void
 RecentTracksWidget::write() const
 {
-    if (m_tracks.isEmpty())
+    if ( layout()->count() == 0 )
     {
         QFile::remove( m_path );
     }
@@ -107,8 +118,8 @@ RecentTracksWidget::write() const
         e.setAttribute( "product", QCoreApplication::applicationName() );
         e.setAttribute( "version", "2" );
 
-        foreach ( RecentTrackWidget* trackWidget, m_tracks )
-            e.appendChild( trackWidget->track().toDomElement( xml ) );
+        for ( int i(0) ; i < layout()->count() ; ++i )
+            e.appendChild( static_cast<RecentTrackWidget*>(layout()->itemAt(i)->widget())->track().toDomElement( xml ) );
 
         xml.appendChild( e );
 
@@ -127,19 +138,24 @@ RecentTracksWidget::addCachedTrack( const Track& a_track )
 {
     MutableTrack( a_track ).setExtra( "scrobbleStatus", "cached" );
 
-    RecentTrackWidget* trackWidget = new RecentTrackWidget( a_track );
+    RecentTrackWidget* item = new RecentTrackWidget( a_track, this );
+    layout()->addWidget( item );
 
-    m_tracks.insert( 0, trackWidget );
-    static_cast<QBoxLayout*>(layout())->insertWidget( 0, trackWidget );
+    connect( item, SIGNAL(loaded()), SLOT(onItemLoaded()));
+    connect( a_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
+}
 
-    if ( m_tracks.count() > kNumRecentTracks )
+void
+RecentTracksWidget::onMoveFinished()
+{
+    while ( layout()->count() > kNumRecentTracks )
     {
-        layout()->removeWidget( m_tracks[kNumRecentTracks] );
-        m_tracks[kNumRecentTracks]->deleteLater();
-        m_tracks.removeAt( kNumRecentTracks );
+        QLayoutItem* item = layout()->takeAt( layout()->count() - 1 );
+        delete item->widget();
+        delete item;
     }
 
-    connect( a_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
+    write();
 }
 
 void

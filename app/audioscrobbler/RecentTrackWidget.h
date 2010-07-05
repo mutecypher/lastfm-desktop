@@ -28,9 +28,12 @@ class RecentTrackWidget : public StylableWidget
 {
     Q_OBJECT
 public:
-    RecentTrackWidget( const Track& track );
+    RecentTrackWidget( const Track& track, QWidget* parent = 0 );
 
     Track track() const { return m_track;}
+
+signals:
+    void loaded();
 
 private:
     void enterEvent( class QEvent* event );

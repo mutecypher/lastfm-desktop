@@ -41,8 +41,9 @@ public:
 
 private slots:
     void onTrackChanged();
+    void onItemLoaded();
+    void onMoveFinished();
 
 private:
     QString m_path;
-    QList<class RecentTrackWidget*> m_tracks;
 };
