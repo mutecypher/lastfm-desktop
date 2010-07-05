@@ -140,7 +140,6 @@ public:
 	QMessageBoxBuilder& sheet()
 	{
 	#ifdef Q_WS_MAC
-        qDebug() << "Sheetorizing";
         if( box.parentWidget())
             box.setWindowFlags( Qt::Sheet | ( box.windowFlags() & ~Qt::Drawer ) );
 	#endif
