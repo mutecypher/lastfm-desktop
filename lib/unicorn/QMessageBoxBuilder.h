@@ -34,10 +34,10 @@
 #include <QDebug>
 
 namespace unicorn {
-    class MessageBox : public QDialog {
+    class UNICORN_DLLEXPORT MessageDialog : public QDialog {
         Q_OBJECT
     public:
-        MessageBox( QWidget* parent );
+        MessageDialog( QWidget* parent );
         void setStandardButtons( QMessageBox::StandardButtons b )
         { 
             buttons->setStandardButtons( QDialogButtonBox::StandardButtons(int(b) )); 
@@ -111,7 +111,7 @@ namespace unicorn {
 
 class UNICORN_DLLEXPORT QMessageBoxBuilder
 {
-    unicorn::MessageBox box;
+    unicorn::MessageDialog box;
 
 public:
     /** Try not to use 0! */

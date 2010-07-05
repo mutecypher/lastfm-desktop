@@ -23,7 +23,7 @@
 #include <QGridLayout>
 #include <QLabel>
 
-unicorn::MessageBox::MessageBox( QWidget* parent )
+unicorn::MessageDialog::MessageDialog( QWidget* parent )
         :QDialog( parent ? ( parent->isVisible() ? parent : 0 ) : 0 ),
          m_clickedButton( QDialogButtonBox::NoButton )
 {
@@ -60,7 +60,7 @@ unicorn::MessageBox::MessageBox( QWidget* parent )
 
 
 void
-unicorn::MessageBox::onButtonClicked(QAbstractButton* b)
+unicorn::MessageDialog::onButtonClicked(QAbstractButton* b)
 {
     m_clickedButton = int(buttons->standardButton( b ));
     switch( buttons->buttonRole( b )) {

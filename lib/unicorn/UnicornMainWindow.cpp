@@ -66,7 +66,7 @@ unicorn::MainWindow::finishUi()
     QAction* quit = ui.account->addAction( tr("&Quit"), qApp, SLOT(quit()) );
     quit->setMenuRole( QAction::QuitRole );
 #ifdef Q_OS_WIN
-    quit->setShortcut( Qt::Alt + Qt::Key_F4 );
+    quit->setShortcut( Qt::ALT + Qt::Key_F4 );
 #else
     quit->setShortcut( Qt::CTRL + Qt::Key_Q );
 #endif
