@@ -35,14 +35,18 @@ ScrobbleControls::ScrobbleControls()
     layout()->addWidget(ui.love = new QPushButton(tr("love")));
     ui.love->setObjectName("love");
     ui.love->setCheckable( true );
+    ui.love->setToolTip( tr( "Love" ) );
 
     connect(ui.love, SIGNAL(clicked(bool)), qApp, SLOT(changeLovedState(bool)));
     
     layout()->addWidget(ui.tag = new QPushButton(tr("tag")));
     ui.tag->setObjectName("tag");
-    
+    ui.tag->setToolTip( tr( "Tag" ) );
+
     layout()->addWidget(ui.share = new QPushButton(tr("share")));
     ui.share->setObjectName("share");
+    ui.share->setToolTip( tr( "Share" ) );
+
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ), ui.share, SLOT( click() ) );
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ), ui.tag, SLOT( click() ) );
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ), ui.love, SLOT( toggle() ) );
