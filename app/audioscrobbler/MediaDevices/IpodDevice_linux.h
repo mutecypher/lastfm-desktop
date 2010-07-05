@@ -1,7 +1,7 @@
 #ifndef IPODDEVICE_H
 #define IPODDEVICE_H
 
-#include "MediaDevice.h"
+#include "MediaDevice_linux.h"
 
 typedef struct _Itdb_iTunesDB Itdb_iTunesDB;
 typedef struct _Itdb_Track Itdb_Track;

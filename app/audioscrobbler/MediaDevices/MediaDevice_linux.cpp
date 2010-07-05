@@ -1,4 +1,4 @@
-#include "MediaDevice.h"
+#include "MediaDevice_linux.h"
 #include <lastfm/misc.h>
 
 #include <QSqlQuery>

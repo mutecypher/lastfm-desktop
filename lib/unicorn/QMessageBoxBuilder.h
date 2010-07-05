@@ -45,24 +45,24 @@ namespace unicorn {
 
         void setIcon( QMessageBox::Icon x )
         { 
-            QPixmap pm;
+            QIcon pm;
             switch( x ) {
                 case QMessageBox::NoIcon:
                     break;
                 case QMessageBox::Information:
-                    pm = style()->standardPixmap( QStyle::SP_MessageBoxInformation );
+                    pm = style()->standardIcon( QStyle::SP_MessageBoxInformation );
                     break;
                 case QMessageBox::Warning:
-                    pm = style()->standardPixmap( QStyle::SP_MessageBoxWarning );
+                    pm = style()->standardIcon( QStyle::SP_MessageBoxWarning );
                     break;
                 case QMessageBox::Critical:
-                    pm = style()->standardPixmap( QStyle::SP_MessageBoxCritical );
+                    pm = style()->standardIcon( QStyle::SP_MessageBoxCritical );
                     break;
                 case QMessageBox::Question:
-                    pm = style()->standardPixmap( QStyle::SP_MessageBoxQuestion );
+                    pm = style()->standardIcon( QStyle::SP_MessageBoxQuestion );
                     break;
             }
-            icon->setPixmap( pm );
+            icon->setPixmap( pm.pixmap( 32, 32 ) );
         }
 
         QAbstractButton* button( QMessageBox::StandardButton b )

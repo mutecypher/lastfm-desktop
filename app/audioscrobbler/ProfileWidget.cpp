@@ -47,6 +47,7 @@ ProfileWidget::ProfileWidget( QWidget* p )
     QHBoxLayout* userDetails = new QHBoxLayout();
     userDetails->addWidget( ui.avatar = new HttpImageWidget());
     ui.avatar->setObjectName( "avatar" );
+    ui.avatar->setToolTip( tr( "Visit Last.fm profile" ) );
     ui.avatar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
     userDetails->addWidget( ui.welcomeLabel = new QLabel(), 0, Qt::AlignTop );
     ui.welcomeLabel->setObjectName( "title" );

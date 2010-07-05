@@ -1,4 +1,4 @@
-#include "IpodDevice.h"
+#include "IpodDevice_linux.h"
 
 #include <QApplication>
 #include <QByteArray>
@@ -93,7 +93,7 @@ IpodDevice::tracksToScrobble()
                 tracks += lstTrack;
             }
 
-//            commit( iTrack );
+            commit( iTrack );
         }
     }
     return tracks;

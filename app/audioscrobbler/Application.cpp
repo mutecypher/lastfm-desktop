@@ -19,7 +19,7 @@
 */
 #include "Application.h"
 #ifdef Q_WS_X11
-#include "MediaDevices/IpodDevice.h"
+#include "MediaDevices/IpodDevice_linux.h"
 #endif
 #include "MetadataWindow.h"
 #include "ScrobbleControls.h"
@@ -424,20 +424,50 @@ Application::onScrobbleIpodTriggered()
 {
     IpodDevice iPod;
     QString path;
+    QFileDialog dialog( 0, tr( "Where is your iPod mounted?" ), "/" );
+    dialog.setOption( QFileDialog::ShowDirsOnly, true );
+    dialog.setFileMode( QFileDialog::Directory );
 
-    path = QFileDialog::getExistingDirectory( mw, tr( "Where is your iPod mounted?" ), "/" );
+    //The following lines are to make sure the QFileDialog looks native.
+    QString backgroundColor( "transparent" );
+    dialog.setStyleSheet( "QDockWidget QFrame{ background-color: " + backgroundColor + "; }" );
+
+    if( dialog.exec() )
+    {
+        path = dialog.selectedFiles()[ 0 ];
+    }
+
     if ( path.isEmpty() )
         return;
+
     iPod.setMountPath( path );
 
     qApp->setOverrideCursor( Qt::WaitCursor );
     QList<Track> tracks = iPod.tracksToScrobble();
     qApp->restoreOverrideCursor();
+
     qDebug() << tracks.count() << " new tracks to scrobble.";
+
     if( tracks.count() )
         as->cache( tracks );
+    else if( !iPod.error().isEmpty() )
+    {
+        QMessageBoxBuilder( mw )
+                .setIcon( QMessageBox::Critical )
+                .setTitle( tr( "Scrobble iPod" ) )
+                .setText( iPod.error() )
+                .exec();
+        qDebug() << iPod.error();
+    }
     else
+    {
+        QMessageBoxBuilder( mw )
+                .setIcon( QMessageBox::Warning )
+                .setTitle( tr( "Scrobble iPod" ) )
+                .setText( tr( "No tracks to scrobble since your last sync." ) )
+                .exec();
         qDebug() << "No tracks to scrobble";
+    }
 }
 #endif
 
