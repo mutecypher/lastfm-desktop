@@ -471,7 +471,7 @@ Application::onScrobbleIpodTriggered()
     else
     {
         QMessageBoxBuilder( mw )
-                .setIcon( QMessageBox::Critical )
+                .setIcon( QMessageBox::Warning )
                 .setTitle( tr( "Scrobble iPod" ) )
                 .setText( tr( "No tracks to scrobble since your last sync." ) )
                 .exec();
