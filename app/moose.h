@@ -130,24 +130,6 @@ namespace moose
 #endif
     }
 
-    static inline QString path()
-    {
-        #ifdef __APPLE__
-            return "/Applications/Last.fm.app/Contents/MacOS/Last.fm";
-        #endif
-        #ifdef WIN32
-            QString path = unicorn::Settings().value( "Path" ).toString();
-            if (path.size())
-                return path;
-
-            path = HklmSettings().value( "Path" ).toString();
-            if (path.size())
-                return path;
-
-            return lastfm::dir::programFiles().filePath( "Last.fm/Last.fm.exe" );
-        #endif
-    }
-
     static inline QDir dir()
     {
         return QFileInfo( path() ).absoluteDir();
