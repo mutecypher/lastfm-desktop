@@ -76,7 +76,7 @@ namespace moose
              argList << i.value();
         }
 
-#ifdef Q_OS_WIN
+#ifndef Q_OS_MAC
         QProcess::startDetached( moose::path(), argList);
 #else
         FSRef appRef;

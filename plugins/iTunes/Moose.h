@@ -23,6 +23,7 @@
 
 #include <cstdio>
 #include "common/c++/string.h"
+#include "common/c++/logger.h"
 
 #ifdef WIN32
     #define UNICORN_HKEY L"Software\\Last.fm\\" 
@@ -31,6 +32,9 @@
     #define MOOSE_PLUGIN_HKEY_A MOOSE_HKEY_A "\\Plugins\\itw"
 #else
     #define MOOSE_PREFS_PLIST "fm.last.Audioscrobbler"
+    #include <CoreServices/CoreServices.h>
+    #include <ApplicationServices/ApplicationServices.h>
+    #include <sys/syslimits.h>
 #endif
 
 
@@ -98,9 +102,16 @@ namespace Moose
     inline std::string 
     Moose::twiddlyPath()
     {
-        //return applicationFolder() + "../Resources/twiddly";
-		//return applicationFolder() + "iPodScrobbler";
-		return "~/Projects/lastfm-desktop/_bin/iPodScrobbler.app/Contents/MacOS/iPodScrobbler";
+        FSRef appRef;
+        LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
+        
+        char path[PATH_MAX];
+        FSRefMakePath( &appRef, (unsigned char*)path, PATH_MAX );
+        
+        std::string ret( path );
+        ret.append( "/Contents/Resources/iPodScrobbler" );
+        
+		return ret;
     }
 #else
     inline std::wstring
