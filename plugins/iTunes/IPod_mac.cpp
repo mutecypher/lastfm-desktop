@@ -27,7 +27,7 @@
 
 
 IPod* //static
-IPod::newFromUsbDevice( io_object_t device, bool isIPhone /* = false */ )
+IPod::newFromUsbDevice( io_object_t device, deviceType type /* = unknown */ )
 {
     IPod* ipod = new IPod();
 
@@ -53,10 +53,10 @@ IPod::newFromUsbDevice( io_object_t device, bool isIPhone /* = false */ )
     
     try
     {
-        if( isIPhone )
+        if( type != unknown )
         {
             //IPhone
-            ipod->m_type = iPhone;
+            ipod->m_type = type;
         }
         else if( ipod->isOldIpod( device ) )
         {
@@ -78,7 +78,8 @@ IPod::newFromUsbDevice( io_object_t device, bool isIPhone /* = false */ )
     }
     
     if( ipod->m_type == iTouch ||
-        ipod->m_type == iPhone )
+        ipod->m_type == iPhone ||
+        ipod->m_type == iPad)
     {
         if( ipod->waitForIpodBackup() )
         {
