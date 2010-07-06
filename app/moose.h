@@ -22,6 +22,12 @@
 
 #include "lib/unicorn/UnicornSettings.h"
 #include <lastfm/misc.h>
+#ifdef Q_OS_MAC
+    #include <ApplicationServices/ApplicationServices.h>
+
+    //This macro clashes with Qt headers
+    #undef check
+#endif
 
 
 namespace moose
