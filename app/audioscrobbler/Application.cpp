@@ -37,6 +37,7 @@
 #include <lastfm/XmlQuery>
 #include <QMenu>
 #include <QDebug>
+#include "lib/unicorn/dialogs/AboutDialog.h"
 #include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/dialogs/ShareDialog.h"
 #include "lib/unicorn/UnicornSettings.h"
@@ -47,6 +48,7 @@
 
 #include <QShortcut>
 #include <QFileDialog>
+#include <QDesktopServices>
 
 #ifdef Q_OS_WIN32
 #include "windows.h"
@@ -146,6 +148,17 @@ Application::init()
 #endif
 
     menu->addSeparator();
+    QMenu* helpMenu = menu->addMenu( tr( "Help" ) );
+
+    m_faq_action    = helpMenu->addAction( tr( "FAQ" ) );
+    m_forums_action = helpMenu->addAction( tr( "Forums" ) );
+    m_about_action  = helpMenu->addAction( tr( "About" ) );
+
+    connect( faqAction, SIGNAL( triggered() ), SLOT( onFaqTriggered() ) );
+    connect( forumsAction, SIGNAL( triggered() ), SLOT( onForumsTriggered() ) );
+    connect( aboutAction, SIGNAL( triggered() ), SLOT( onAboutTriggered() ) );
+    menu->addSeparator();
+
     QAction* quit = menu->addAction(tr("Quit Audioscrobbler"));
 
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
@@ -246,6 +259,7 @@ Application::init()
     connect( tray, SIGNAL(messageClicked()), m_toggle_window_action, SLOT(trigger()));
 
     onMessageReceived( arguments().join(";") );
+
 }
 
 
@@ -486,6 +500,25 @@ Application::onScrobbleIpodTriggered()
     }
 }
 #endif
+
+void
+Application::onFaqTriggered()
+{
+    QDesktopServices::openUrl( "http://" + tr( "www.last.fm" ) + "/help/faq/" );
+}
+
+void
+Application::onForumsTriggered()
+{
+    QDesktopServices::openUrl( "http://" + tr( "www.last.fm" ) + "/forum/34905/" );
+}
+
+void
+Application::onAboutTriggered()
+{
+    if ( m_aboutDialog ) m_aboutDialog = new AboutDialog( mw );
+    m_aboutDialog->show();
+}
 
 void 
 Application::changeLovedState(bool loved)
