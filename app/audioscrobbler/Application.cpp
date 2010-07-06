@@ -424,21 +424,28 @@ Application::onScrobbleIpodTriggered()
 {
     IpodDevice iPod;
     QString path;
-    QFileDialog dialog( 0, tr( "Where is your iPod mounted?" ), "/" );
-    dialog.setOption( QFileDialog::ShowDirsOnly, true );
-    dialog.setFileMode( QFileDialog::Directory );
 
-    //The following lines are to make sure the QFileDialog looks native.
-    QString backgroundColor( "transparent" );
-    dialog.setStyleSheet( "QDockWidget QFrame{ background-color: " + backgroundColor + "; }" );
+    path = unicorn::UserSettings().value( "device/mountpath", "" ).toString();
 
-    if( dialog.exec() )
+    if ( path.isEmpty() || !QFile::exists( path ) )
     {
-        path = dialog.selectedFiles()[ 0 ];
-    }
+        QFileDialog dialog( 0, tr( "Where is your iPod mounted?" ), "/" );
+        dialog.setOption( QFileDialog::ShowDirsOnly, true );
+        dialog.setFileMode( QFileDialog::Directory );
 
-    if ( path.isEmpty() )
-        return;
+        //The following lines are to make sure the QFileDialog looks native.
+        QString backgroundColor( "transparent" );
+        dialog.setStyleSheet( "QDockWidget QFrame{ background-color: " + backgroundColor + "; }" );
+
+        if ( dialog.exec() )
+        {
+            path = dialog.selectedFiles()[ 0 ];
+        }
+
+        if ( path.isEmpty() )
+            return;
+
+    }
 
     iPod.setMountPath( path );
 
@@ -448,9 +455,11 @@ Application::onScrobbleIpodTriggered()
 
     qDebug() << tracks.count() << " new tracks to scrobble.";
 
-    if( tracks.count() )
+    if ( tracks.count() )
+    {
         as->cache( tracks );
-    else if( !iPod.error().isEmpty() )
+    }
+    else if ( !iPod.error().isEmpty() )
     {
         QMessageBoxBuilder( mw )
                 .setIcon( QMessageBox::Critical )
@@ -467,6 +476,13 @@ Application::onScrobbleIpodTriggered()
                 .setText( tr( "No tracks to scrobble since your last sync." ) )
                 .exec();
         qDebug() << "No tracks to scrobble";
+    }
+
+    //if the iPod mount path was correct we check if we have to update the configuration file
+    if ( tracks.count() || iPod.error().isEmpty() )
+    {
+        if ( unicorn::UserSettings().value( "device/mountpath", "" ).toString() != path )
+            unicorn::UserSettings().setValue( "device/mountpath", path );
     }
 }
 #endif

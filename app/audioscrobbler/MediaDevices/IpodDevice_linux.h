@@ -19,6 +19,7 @@ private:
     void open();
     void setTrackInfo( Track& lstTrack, Itdb_Track* iTrack );
     uint previousPlayCount( Itdb_Track* iTrack ) const;
+    QDateTime previousPlayTime( Itdb_Track* track ) const;
 
 private:
     Itdb_iTunesDB* m_itdb;
