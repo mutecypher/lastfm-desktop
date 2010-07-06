@@ -140,6 +140,8 @@ Application::init()
     connect( m_scrobble_ipod_action, SIGNAL( triggered() ), SLOT( onScrobbleIpodTriggered() ) );
 #endif
 
+    menu->addSeparator();
+
 
     menu->addSeparator();
     m_submit_scrobbles_toggle = menu->addAction(tr("Submit Scrobbles"));
@@ -156,9 +158,9 @@ Application::init()
     m_forums_action = helpMenu->addAction( tr( "Forums" ) );
     m_about_action  = helpMenu->addAction( tr( "About" ) );
 
-    connect( faqAction, SIGNAL( triggered() ), SLOT( onFaqTriggered() ) );
-    connect( forumsAction, SIGNAL( triggered() ), SLOT( onForumsTriggered() ) );
-    connect( aboutAction, SIGNAL( triggered() ), SLOT( onAboutTriggered() ) );
+    connect( m_faq_action, SIGNAL( triggered() ), SLOT( onFaqTriggered() ) );
+    connect( m_forums_action, SIGNAL( triggered() ), SLOT( onForumsTriggered() ) );
+    connect( m_about_action, SIGNAL( triggered() ), SLOT( onAboutTriggered() ) );
     menu->addSeparator();
 
     QAction* quit = menu->addAction(tr("Quit Audioscrobbler"));
