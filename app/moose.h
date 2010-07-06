@@ -20,8 +20,6 @@
 #ifndef MOOSE_H
 #define MOOSE_H
 
-#include <ApplicationServices/ApplicationServices.h>
-
 #include "lib/unicorn/UnicornSettings.h"
 #include <lastfm/misc.h>
 
@@ -111,7 +109,7 @@ namespace moose
         #ifdef __APPLE__
             return "/Applications/Last.fm.app/Contents/MacOS/Last.fm";
         #endif
-        #ifdef WIN32    
+        #ifdef WIN32
             QString path = unicorn::Settings().value( "Path" ).toString();
             if (path.size())
                 return path;

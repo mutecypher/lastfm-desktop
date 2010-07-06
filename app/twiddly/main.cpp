@@ -52,6 +52,11 @@ main( int argc, char** argv )
                                        HANDLER_ALL );
 #endif
 
+    TwiddlyApplication::setApplicationName( twiddly::applicationName() );
+    TwiddlyApplication::setApplicationVersion( "2" );
+
+    TwiddlyApplication app( argc, argv );
+
     // Make sure the logger exists in this binary
 #ifdef Q_OS_WIN
     QString bytes = TwiddlyApplication::log( TwiddlyApplication::applicationName() ).absoluteFilePath();
@@ -61,11 +66,6 @@ main( int argc, char** argv )
     const char* path = bytes.data();
 #endif
     new Logger( path );
-
-    TwiddlyApplication::setApplicationName( twiddly::applicationName() );
-    TwiddlyApplication::setApplicationVersion( "2" );
-
-    TwiddlyApplication app( argc, argv );
     
     try
     {
@@ -116,8 +116,8 @@ main( int argc, char** argv )
             ipod->settings().setType( currentType );
             //------------------------------------------------------------------
 
-//            if (ipod->scrobbles().count())
-//            {
+            if (ipod->scrobbles().count())
+            {
                 // create a unique storage location for the XML
                 QDir dir = ipod->saveDir().filePath( "scrobbles" );
                 QString filename = QDateTime::currentDateTime().toString( "yyyyMMddhhmmss" ) + ".xml";
@@ -128,11 +128,8 @@ main( int argc, char** argv )
                 xml.documentElement().setAttribute( "uid", ipod->uid() );
                 writeXml( xml, path );
 
-                QMap<QString, QString> args;
-                args["twiddled"] = path;
-
-                moose::startAudioscrobbler( args );
-//            }
+				QProcess::startDetached( moose::path(), QStringList() << "--twiddled" << path );
+            }
 
             // do last so we don't record a sync if we threw and thus it "didn't" happen
             ipod->settings().setLastSync( start_time );
