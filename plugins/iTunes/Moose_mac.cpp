@@ -140,7 +140,7 @@ Moose::exec( const std::string& command, const std::string& args )
     // file descriptors from iTunes
     setFileDescriptorsCloseOnExec();
     
-    std::string s = "\"" + command + "\" " + args + " &";
+    std::string s = "" + command + " " + args + " &";
 
     LOG( 3, "Launching `" << s << "'" )
     return ( std::system( s.c_str() ) >= 0 );

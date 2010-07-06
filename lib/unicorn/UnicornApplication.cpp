@@ -413,6 +413,8 @@ unicorn::Application::hotkeyEventHandler( EventHandlerCallRef, EventRef event, v
 pascal OSErr /* static */
 unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long )
 {
+    qDebug() << "yeah";
+
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );
     
@@ -427,8 +429,17 @@ unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long 
         data[ size ] = 0;
         ret = AEGetDescData( &desc, data, size );
         QString dataString( data );
+
+        qDebug() << dataString;
+
         if( dataString == "tray" )
             return unimpErr;
+        else if ( dataString.startsWith( "--twiddled" ) )
+        {
+            emit qobject_cast<unicorn::Application*>(qApp)->messageReceived( dataString );
+            return unimpErr;
+        }
+
     }
 
     switch (id)
