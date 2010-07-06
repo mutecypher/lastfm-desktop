@@ -149,6 +149,7 @@ public:
         if (!backLabel.isNull()) {
             QPushButton* button = new QPushButton(backLabel);
             button->setObjectName("back");
+            button->setToolTip( tr( "Go back" ) );
             connect(button, SIGNAL(clicked()), SIGNAL(back()));
             rowLayout->addWidget(button, 1, Qt::AlignLeft);
             rowLayout->addStrut( button->sizeHint().height() - 8);
@@ -164,6 +165,7 @@ public:
             QPushButton* button = new AnimatedPushButton( movie, tr("Now Playing"));
             button->setObjectName( "NowPlayingButton" );
             button->setVisible(nowPlaying->isPlaying());
+            button->setToolTip( tr( "Go to the Now Playing view" ) );
             connect(button, SIGNAL(clicked()), SIGNAL(forward()));
             connect(nowPlaying, SIGNAL(playingStateChange(bool)), button, SLOT(setVisible(bool)));
             rowLayout->addWidget(button, 1, Qt::AlignRight);

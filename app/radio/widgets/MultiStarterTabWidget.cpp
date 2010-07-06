@@ -57,6 +57,7 @@ MultiStarterTabWidget::MultiStarterTabWidget(int maxSources, RqlSource::Type typ
     QVBoxLayout* rightside = new QVBoxLayout;
     rightside->addWidget(m_sourceList);
     rightside->addWidget(m_playButton = new QPushButton(tr("Play combo")));
+    m_playButton->setToolTip( tr( "Play combo station" ) );
 
     layout->addLayout(rightside);
 
