@@ -98,7 +98,9 @@ namespace Moose
     inline std::string 
     Moose::twiddlyPath()
     {
-        return applicationFolder() + "../Resources/twiddly";
+        //return applicationFolder() + "../Resources/twiddly";
+		//return applicationFolder() + "iPodScrobbler";
+		return "~/Projects/lastfm-desktop/_bin/iPodScrobbler.app/Contents/MacOS/iPodScrobbler";
     }
 #else
     inline std::wstring

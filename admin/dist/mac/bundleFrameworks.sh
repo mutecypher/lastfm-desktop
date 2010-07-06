@@ -125,10 +125,15 @@ echo
 echo ======= Copying image plugins ===========
 mkdir -p $bundlePath/Contents/plugins
 
-plugins="imageformats phonon_backend"
+plugins="imageformats phonon_backend sqldrivers"
 
 for plugin in $plugins; do
-    cp -R -P `qmake --version |sed -n 's/^.*in \(\/.*$\)/\1/p'`/../plugins/$plugin $bundlePath/Contents/plugins
+    if [ -d /Developer/Applications/Qt/plugins/ ]; then
+        pluginDir=/Developer/Applications/Qt/plugins
+    else
+        pluginDir=`qmake --version |sed -n 's/^.*in \(\/.*$\)/\1/p'`/../plugins
+    fi
+    cp -R -P $pluginDir/$plugin $bundlePath/Contents/plugins
     for i in $bundlePath/Contents/plugins/$plugin/*; do
         fixFrameworks $i
         echo -n P
