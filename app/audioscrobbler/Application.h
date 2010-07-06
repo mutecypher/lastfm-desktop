@@ -70,6 +70,7 @@ namespace audioscrobbler
         QAction* m_share_action;
         QAction* m_toggle_window_action;
         QAction* m_scrobble_ipod_action;
+        QAction* m_visit_profile_action;
         QAction* m_faq_action;
         QAction* m_forums_action;
         QAction* m_about_action;
@@ -112,6 +113,7 @@ namespace audioscrobbler
         void onScrobbleIpodTriggered();
 #endif
 
+        void onVisitProfileTriggered();
         void onFaqTriggered();
         void onForumsTriggered();
         void onAboutTriggered();

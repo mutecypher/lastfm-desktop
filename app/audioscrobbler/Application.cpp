@@ -142,8 +142,11 @@ Application::init()
 
     menu->addSeparator();
 
+    m_visit_profile_action = menu->addAction( tr( "Visit Last.fm profile" ) );
+    connect( m_visit_profile_action, SIGNAL( triggered() ), SLOT( onVisitProfileTriggered() ) );
 
     menu->addSeparator();
+
     m_submit_scrobbles_toggle = menu->addAction(tr("Submit Scrobbles"));
 #ifdef Q_WS_MAC
     menu->addAction(tr("Preferences")+ELLIPSIS);
@@ -504,6 +507,14 @@ Application::onScrobbleIpodTriggered()
     }
 }
 #endif
+
+
+void
+Application::onVisitProfileTriggered()
+{
+    QDesktopServices::openUrl( User().www() );
+}
+
 
 void
 Application::onFaqTriggered()
