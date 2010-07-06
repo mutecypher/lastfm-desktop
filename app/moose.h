@@ -20,6 +20,8 @@
 #ifndef MOOSE_H
 #define MOOSE_H
 
+#include <QProcess>
+
 #include "lib/unicorn/UnicornSettings.h"
 #include <lastfm/misc.h>
 
@@ -38,6 +40,24 @@ namespace moose
     static inline const char* id() { return "Lastfm-F396D8C8-9595-4f48-A319-48DCB827AD8F"; }
     /** passed to QCoreApplication::setApplicationName() */
     static inline const char* applicationName() { return "Last.fm"; }
+
+    static inline QString path()
+    {
+        #ifdef __APPLE__
+            return "/Applications/Last.fm.app/Contents/MacOS/Last.fm";
+        #endif
+        #ifdef WIN32
+            QString path = unicorn::Settings().value( "Path" ).toString();
+            if (path.size())
+                return path;
+
+            path = HklmSettings().value( "Path" ).toString();
+            if (path.size())
+                return path;
+
+            return lastfm::dir::programFiles().filePath( "Last.fm/Last.fm.exe" );
+        #endif
+    }
 
     static inline void startAudioscrobbler( const QMap<QString, QString>& argMap )
     {
@@ -102,24 +122,6 @@ namespace moose
         LSOpenApplication( &params, NULL );
         AEDisposeDesc( &desc );
 #endif
-    }
-
-    static inline QString path()
-    {
-        #ifdef __APPLE__
-            return "/Applications/Last.fm.app/Contents/MacOS/Last.fm";
-        #endif
-        #ifdef WIN32
-            QString path = unicorn::Settings().value( "Path" ).toString();
-            if (path.size())
-                return path;
-
-            path = HklmSettings().value( "Path" ).toString();
-            if (path.size())
-                return path;
-
-            return lastfm::dir::programFiles().filePath( "Last.fm/Last.fm.exe" );
-        #endif
     }
 
     static inline QDir dir()

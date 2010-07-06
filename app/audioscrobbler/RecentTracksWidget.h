@@ -41,7 +41,6 @@ public:
 
 private slots:
     void onTrackChanged();
-    void onItemLoaded();
     void onMoveFinished();
 
 private:

@@ -245,7 +245,7 @@ Application::init()
     // clicking on a system tray message should show the scrobbler
     connect( tray, SIGNAL(messageClicked()), m_toggle_window_action, SLOT(trigger()));
 
-    onMessageReceived( arguments().join(";") );
+    emit messageReceived( arguments().join(";") );
 }
 
 
@@ -545,7 +545,7 @@ Application::onMessageReceived(const QString& message)
             }
         }
 
-        iPodScrobblesFile.remove();
+        //iPodScrobblesFile.remove();
     }
     else if ( !arguments.contains( "--tray" ) )
     {

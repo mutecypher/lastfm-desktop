@@ -33,8 +33,6 @@ int main( int argc, char** argv )
     {
         audioscrobbler::Application app( argc, argv );
 
-        qDebug() << app.arguments();
-
         if ( app.sendMessage( app.arguments().join(";") ) )
             return 0;
 
