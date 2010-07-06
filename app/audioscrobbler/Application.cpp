@@ -134,17 +134,19 @@ Application::init()
     m_share_action->setEnabled( false );
     connect( m_share_action, SIGNAL(triggered()), SLOT(onShareTriggered()));
 
+#ifdef Q_WS_X11
+    menu->addSeparator();
+    m_scrobble_ipod_action = menu->addAction( tr( "Scrobble iPod..." ) );
+    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), SLOT( onScrobbleIpodTriggered() ) );
+#endif
+
+
     menu->addSeparator();
     m_submit_scrobbles_toggle = menu->addAction(tr("Submit Scrobbles"));
 #ifdef Q_WS_MAC
     menu->addAction(tr("Preferences")+ELLIPSIS);
 #else
     menu->addAction(tr("Options")+ELLIPSIS);
-#endif
-
-#ifdef Q_WS_X11
-    m_scrobble_ipod_action = menu->addAction( tr( "Scrobble iPod..." ) );
-    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), SLOT( onScrobbleIpodTriggered() ) );
 #endif
 
     menu->addSeparator();
