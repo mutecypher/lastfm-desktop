@@ -28,6 +28,7 @@ class MetadataWindow;
 class ScrobbleInfoFetcher;
 class StopWatch;
 class QAction;
+class AboutDialog;
 
 namespace audioscrobbler
 {
@@ -58,6 +59,8 @@ namespace audioscrobbler
         QPointer<StopWatch> watch;
         QPointer<MetadataWindow> mw;
         QPointer<ScrobbleInfoFetcher> fetcher;
+
+        AboutDialog* m_aboutDialog;
         
         QAction* m_submit_scrobbles_toggle;
         QAction* m_artist_action;
@@ -67,6 +70,10 @@ namespace audioscrobbler
         QAction* m_share_action;
         QAction* m_toggle_window_action;
         QAction* m_scrobble_ipod_action;
+        QAction* m_visit_profile_action;
+        QAction* m_faq_action;
+        QAction* m_forums_action;
+        QAction* m_about_action;
         
     public:
         Application(int& argc, char** argv);
@@ -105,6 +112,11 @@ namespace audioscrobbler
 #ifdef Q_WS_X11
         void onScrobbleIpodTriggered();
 #endif
+
+        void onVisitProfileTriggered();
+        void onFaqTriggered();
+        void onForumsTriggered();
+        void onAboutTriggered();
 
         void onTrackStarted(const Track&, const Track&);
         void onPaused();

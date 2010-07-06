@@ -37,6 +37,7 @@
 #include <lastfm/XmlQuery>
 #include <QMenu>
 #include <QDebug>
+#include "lib/unicorn/dialogs/AboutDialog.h"
 #include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/dialogs/ShareDialog.h"
 #include "lib/unicorn/UnicornSettings.h"
@@ -47,6 +48,7 @@
 
 #include <QShortcut>
 #include <QFileDialog>
+#include <QDesktopServices>
 
 #ifdef Q_OS_WIN32
 #include "windows.h"
@@ -132,7 +134,19 @@ Application::init()
     m_share_action->setEnabled( false );
     connect( m_share_action, SIGNAL(triggered()), SLOT(onShareTriggered()));
 
+#ifdef Q_WS_X11
     menu->addSeparator();
+    m_scrobble_ipod_action = menu->addAction( tr( "Scrobble iPod..." ) );
+    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), SLOT( onScrobbleIpodTriggered() ) );
+#endif
+
+    menu->addSeparator();
+
+    m_visit_profile_action = menu->addAction( tr( "Visit Last.fm profile" ) );
+    connect( m_visit_profile_action, SIGNAL( triggered() ), SLOT( onVisitProfileTriggered() ) );
+
+    menu->addSeparator();
+
     m_submit_scrobbles_toggle = menu->addAction(tr("Submit Scrobbles"));
 #ifdef Q_WS_MAC
     menu->addAction(tr("Preferences")+ELLIPSIS);
@@ -140,12 +154,18 @@ Application::init()
     menu->addAction(tr("Options")+ELLIPSIS);
 #endif
 
-#ifdef Q_WS_X11
-    m_scrobble_ipod_action = menu->addAction( tr( "Scrobble iPod..." ) );
-    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), SLOT( onScrobbleIpodTriggered() ) );
-#endif
-
     menu->addSeparator();
+    QMenu* helpMenu = menu->addMenu( tr( "Help" ) );
+
+    m_faq_action    = helpMenu->addAction( tr( "FAQ" ) );
+    m_forums_action = helpMenu->addAction( tr( "Forums" ) );
+    m_about_action  = helpMenu->addAction( tr( "About" ) );
+
+    connect( m_faq_action, SIGNAL( triggered() ), SLOT( onFaqTriggered() ) );
+    connect( m_forums_action, SIGNAL( triggered() ), SLOT( onForumsTriggered() ) );
+    connect( m_about_action, SIGNAL( triggered() ), SLOT( onAboutTriggered() ) );
+    menu->addSeparator();
+
     QAction* quit = menu->addAction(tr("Quit Audioscrobbler"));
 
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
@@ -424,21 +444,28 @@ Application::onScrobbleIpodTriggered()
 {
     IpodDevice iPod;
     QString path;
-    QFileDialog dialog( 0, tr( "Where is your iPod mounted?" ), "/" );
-    dialog.setOption( QFileDialog::ShowDirsOnly, true );
-    dialog.setFileMode( QFileDialog::Directory );
 
-    //The following lines are to make sure the QFileDialog looks native.
-    QString backgroundColor( "transparent" );
-    dialog.setStyleSheet( "QDockWidget QFrame{ background-color: " + backgroundColor + "; }" );
+    path = unicorn::UserSettings().value( "device/mountpath", "" ).toString();
 
-    if( dialog.exec() )
+    if ( path.isEmpty() || !QFile::exists( path ) )
     {
-        path = dialog.selectedFiles()[ 0 ];
-    }
+        QFileDialog dialog( 0, tr( "Where is your iPod mounted?" ), "/" );
+        dialog.setOption( QFileDialog::ShowDirsOnly, true );
+        dialog.setFileMode( QFileDialog::Directory );
 
-    if ( path.isEmpty() )
-        return;
+        //The following lines are to make sure the QFileDialog looks native.
+        QString backgroundColor( "transparent" );
+        dialog.setStyleSheet( "QDockWidget QFrame{ background-color: " + backgroundColor + "; }" );
+
+        if ( dialog.exec() )
+        {
+            path = dialog.selectedFiles()[ 0 ];
+        }
+
+        if ( path.isEmpty() )
+            return;
+
+    }
 
     iPod.setMountPath( path );
 
@@ -448,9 +475,11 @@ Application::onScrobbleIpodTriggered()
 
     qDebug() << tracks.count() << " new tracks to scrobble.";
 
-    if( tracks.count() )
+    if ( tracks.count() )
+    {
         as->cache( tracks );
-    else if( !iPod.error().isEmpty() )
+    }
+    else if ( !iPod.error().isEmpty() )
     {
         QMessageBoxBuilder( mw )
                 .setIcon( QMessageBox::Critical )
@@ -468,8 +497,42 @@ Application::onScrobbleIpodTriggered()
                 .exec();
         qDebug() << "No tracks to scrobble";
     }
+
+    //if the iPod mount path was correct we check if we have to update the configuration file
+    if ( tracks.count() || iPod.error().isEmpty() )
+    {
+        if ( unicorn::UserSettings().value( "device/mountpath", "" ).toString() != path )
+            unicorn::UserSettings().setValue( "device/mountpath", path );
+    }
 }
 #endif
+
+
+void
+Application::onVisitProfileTriggered()
+{
+    QDesktopServices::openUrl( User().www() );
+}
+
+
+void
+Application::onFaqTriggered()
+{
+    QDesktopServices::openUrl( "http://" + tr( "www.last.fm" ) + "/help/faq/" );
+}
+
+void
+Application::onForumsTriggered()
+{
+    QDesktopServices::openUrl( "http://" + tr( "www.last.fm" ) + "/forum/34905/" );
+}
+
+void
+Application::onAboutTriggered()
+{
+    if ( m_aboutDialog ) m_aboutDialog = new AboutDialog( mw );
+    m_aboutDialog->show();
+}
 
 void 
 Application::changeLovedState(bool loved)
@@ -545,7 +608,7 @@ Application::onMessageReceived(const QString& message)
             }
         }
 
-        //iPodScrobblesFile.remove();
+        iPodScrobblesFile.remove();
     }
     else if ( !arguments.contains( "--tray" ) )
     {

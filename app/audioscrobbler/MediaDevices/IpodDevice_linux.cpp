@@ -76,19 +76,27 @@ IpodDevice::tracksToScrobble()
             continue;
 
         int newPlayCount = iTrack->playcount - previousPlayCount( iTrack );
-        if ( iTrack->playcount > 0 && newPlayCount > 0 )
+        QDateTime time;
+        time.setTime_t( iTrack->time_played );
+
+        if ( time.toTime_t() == 0 )
+            continue;
+
+        QDateTime prevPlayTime = previousPlayTime( iTrack );
+
+        //this logic takes into account that sometimes the itdb track play count is not
+        //updated correctly (or libgpod doesn't get it right),
+        //so we rely on the track play time too, which seems to be right most of the time
+        if ( ( iTrack->playcount > 0 && newPlayCount > 0 ) || time > prevPlayTime )
         {
-            QDateTime time;
-            time.setTime_t( iTrack->time_played );
-
-            if( time.toString() == "Thu Jan 1 01:00:00 1970" )
-                continue;
-
             Track lstTrack;
             setTrackInfo( lstTrack, iTrack );
+
+            if ( newPlayCount == 0 )
+                newPlayCount++;
+
             //add the track to the list as many times as the updated playcount.
-            qDebug() << "new playcount: " << newPlayCount;
-            for( int i = 0; i < newPlayCount; i++ )
+            for ( int i = 0; i < newPlayCount; i++ )
             {
                 tracks += lstTrack;
             }
@@ -127,9 +135,24 @@ IpodDevice::previousPlayCount( Itdb_Track* track ) const
     QString sql = "SELECT playcount FROM " + tableName() + " WHERE id=" + QString::number( track->id );
 
     query.exec( sql );
+
     if( query.next() )
         return query.value( 0 ).toUInt();
     return 0;
+}
+
+QDateTime
+IpodDevice::previousPlayTime( Itdb_Track* track ) const
+{
+    QSqlDatabase db = database();
+    QSqlQuery query( db );
+    QString sql = "SELECT lastplaytime FROM " + tableName() + " WHERE id=" + QString::number( track->id );
+
+    query.exec( sql );
+
+    if( query.next() )
+        return QDateTime::fromTime_t( query.value( 0 ).toUInt() );
+    return QDateTime::fromTime_t( 0 );
 }
 
 void
