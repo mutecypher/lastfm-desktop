@@ -47,7 +47,8 @@
             enum deviceType { unknown = 0,
                    iPod,
                    iTouch,
-                   iPhone };
+                   iPhone,
+                   iPad };
 
             bool isManualMode() const{ return m_manualMode; }
             bool isMobileScrobblerInstalled() const { return m_mobileScrobblerInstalled; }
@@ -84,7 +85,7 @@
                 static bool getUsbSerial( io_object_t device, std::string* serialOut );
                 static bool getFireWireSerial( io_object_t device, std::string* serialOut );
 
-                static IPod* newFromUsbDevice( io_object_t device, bool isIPhone = true );
+                static IPod* newFromUsbDevice( io_object_t device, deviceType type = unknown );
                 static IPod* newFromFireWireDevice( io_object_t device );
                 static io_object_t getBaseDevice( io_object_t device );
                 

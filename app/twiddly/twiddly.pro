@@ -2,6 +2,7 @@ TARGET = iPodScrobbler
 LIBS += -lunicorn -llastfm
 QT = core xml sql
 CONFIG += lastfm
+CONFIG -= app_bundle
 
 include( $$ROOT_DIR/admin/include.qmake )
 

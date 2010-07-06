@@ -68,6 +68,7 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     layout->addWidget( ui.radioOptions = new QPushButton( tr( "radio options" ) ));
     ui.radioOptions->setObjectName( "radioOptions" );
     ui.radioOptions->setCheckable( true );
+    ui.radioOptions->setToolTip( tr( "Radio options" ) );
 
     ui.radioOptionsDialog = new AdvancedOptionsDialog( this );
 
@@ -123,17 +124,21 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
         controlsLayout->addWidget( ui.love = new QPushButton( tr( "love" ) ));
         ui.love->setObjectName( "love" );
         ui.love->setCheckable( true );
+        ui.love->setToolTip( tr( "Love current track" ) );
 
         controlsLayout->addWidget( ui.ban = new QPushButton( tr( "ban" ) ));
         ui.ban->setObjectName( "ban" );
+        ui.ban->setToolTip( tr( "Ban current track" ) );
 
         controlsLayout->addWidget( ui.play = new QPushButton( tr( "play" ) ));
         ui.play->setObjectName( "play" );
         ui.play->setCheckable( true );
         ui.play->setChecked( false );
+        ui.play->setToolTip( tr( "Play" ) );
 
         controlsLayout->addWidget( ui.skip = new QPushButton( tr( "skip" ) ));
         ui.skip->setObjectName( "skip" );
+        ui.skip->setToolTip( tr( "Skip current track" ) );
 
         layout->addLayout( controlsLayout );
     }
@@ -143,19 +148,23 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
 
     layout->addWidget( ui.info = new QPushButton( tr( "info" ) ));
     ui.info->setObjectName( "info" );
+    ui.info->setToolTip( tr( "Launch audioscrobbler application" ) );
 
     layout->addWidget( ui.cog = new QToolButton( this ));
     ui.cog->setObjectName( "cog" );
     ui.cog->setAutoRaise( true );
     ui.cog->setPopupMode( QToolButton::InstantPopup );
+    ui.cog->setToolTip( tr( "More actions..." ) );
 
     QMenu* cogMenu = new QMenu(this);
     ui.tagAction = cogMenu->addAction(QIcon(":/tag-small.png"), "Tag", this, SLOT(onTagClicked()));
     ui.tagAction->setObjectName("tag");
     ui.tagAction->setShortcut( Qt::CTRL + Qt::Key_T );
+    ui.tagAction->setToolTip( tr( "Tag" ) );
     ui.shareAction = cogMenu->addAction(QIcon(":/share-small.png"), "Share", this, SLOT(onShareClicked()));
     ui.shareAction->setObjectName("share");
     ui.shareAction->setShortcut( Qt::CTRL + Qt::Key_S );
+    ui.shareAction->setToolTip( tr( "Share" ) );
     ui.cog->setMenu(cogMenu);
 
 	connect( radio, SIGNAL(stopped()), SLOT(onRadioStopped()) );
@@ -248,6 +257,7 @@ PlaybackControlsWidget::onRadioStopped()
 {
     // make sure the play/stop button is in the correct state
     ui.play->setChecked( false );
+    ui.play->setToolTip( tr( "Play" ) );
 
     // when the radio is stopped we can only use the play and volue controls
     setButtonsEnabled( false );
@@ -258,7 +268,7 @@ PlaybackControlsWidget::onRadioTuningIn( const RadioStation& )
 {
     // make sure the play/stop button is in the correct state
     ui.play->setChecked( true );
-
+    ui.play->setToolTip( tr( "Stop" ) );
     // when the radio is playing we can use all the controls
     setButtonsEnabled( true );
 }

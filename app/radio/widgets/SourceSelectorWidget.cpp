@@ -39,6 +39,7 @@ SourceSelectorWidget::SourceSelectorWidget(QLineEdit* edit, QWidget* parent)
     grid->addWidget(m_edit, 0, 0);
 
     m_button = new QPushButton(tr("Add"));
+    m_button->setToolTip( tr( "Add source" ) );
     grid->addWidget(m_button, 0, 1);
     grid->setColumnStretch(0, 3);
     onTextChanged(m_edit->text());
