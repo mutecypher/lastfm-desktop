@@ -109,7 +109,7 @@ namespace Moose
         FSRefMakePath( &appRef, (unsigned char*)path, PATH_MAX );
         
         std::string ret( path );
-        ret.append( "/Contents/Resources/iPodScrobbler" );
+        ret.append( "/Contents/MacOS/iPodScrobbler" );
         
 		return ret;
     }
