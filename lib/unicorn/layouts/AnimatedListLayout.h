@@ -31,6 +31,8 @@ public:
     AnimatedListLayout( class QWidget* parent = 0 );
     ~AnimatedListLayout();
 
+    void setAnimated( bool animated );
+
     Qt::Orientations expandingDirections() const;
     bool hasHeightForWidth() const;
     int count() const;
@@ -56,6 +58,7 @@ private:
     QList<QLayoutItem *> m_itemList;
     QList<QLayoutItem *> m_newItemList;
     class QTimeLine* m_timeLine;
+    bool m_animated;
 };
 
 #endif // ANIMATED_LIST_LAYOUT_H
