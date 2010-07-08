@@ -91,7 +91,7 @@ RecentTracksWidget::read()
         if (n.nodeName() == "track")
         {
             Track* track = new Track( n.toElement() );
-            RecentTrackWidget* item = new RecentTrackWidget( *track, this );
+            RecentTrackWidget* item = new RecentTrackWidget( *track );
             layout()->addWidget( item );
 
             connect( track->signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
@@ -136,7 +136,7 @@ RecentTracksWidget::addCachedTrack( const Track& a_track )
 {
     MutableTrack( a_track ).setExtra( "scrobbleStatus", "cached" );
 
-    RecentTrackWidget* item = new RecentTrackWidget( a_track, this );
+    RecentTrackWidget* item = new RecentTrackWidget( a_track );
     layout()->addWidget( item );
 
     connect( a_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));

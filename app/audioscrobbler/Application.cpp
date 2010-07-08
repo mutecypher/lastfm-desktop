@@ -597,6 +597,8 @@ Application::onMessageReceived(const QString& message)
             iPodScrobblesDoc.setContent( &iPodScrobblesFile );
             QDomNodeList tracks = iPodScrobblesDoc.elementsByTagName( "track" );
 
+            QList<lastfm::Track> scrobbles;
+
             for ( int i(0) ; i < tracks.count() ; ++i )
             {
                 lastfm::Track track( tracks.at(i).toElement() );
@@ -604,8 +606,11 @@ Application::onMessageReceived(const QString& message)
                 int playcount = track.extra("playCount").toInt();
 
                 for ( int j(0) ; j < playcount ; ++j )
-                    as->cache( track );
+                    scrobbles << track;
             }
+
+
+            as->cache( scrobbles );
         }
 
         iPodScrobblesFile.remove();
