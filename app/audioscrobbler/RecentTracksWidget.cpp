@@ -69,6 +69,8 @@ RecentTracksWidget::read()
 {
     qDebug() << m_path;
 
+    static_cast<AnimatedListLayout*>(layout())->setAnimated( false );
+
     for ( int i(0) ; i < layout()->count() ; ++i )
     {
         QLayoutItem* item = layout()->takeAt( i );
@@ -97,6 +99,8 @@ RecentTracksWidget::read()
             connect( track->signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
         }
     }
+
+    static_cast<AnimatedListLayout*>(layout())->setAnimated( true );
 }
 
 
