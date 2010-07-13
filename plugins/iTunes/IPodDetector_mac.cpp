@@ -161,11 +161,13 @@ IPodDetector::setupDetection()
     CFRunLoopAddSource(CFRunLoopGetCurrent(), notificationRunLoopSource, kCFRunLoopDefaultMode);
     
     //Dictionary for matching iPhone / iPod connections
+    CFMutableDictionaryRef iPadConnectMatch = IOServiceNameMatching( "iPad" ); 
     CFMutableDictionaryRef iPhoneConnectMatch = IOServiceNameMatching( "iPhone" ); 
     CFMutableDictionaryRef iPodConnectMatch = IOServiceNameMatching( "iPod" ); 
     CFMutableDictionaryRef iPodMiniConnectMatch = IOServiceNameMatching( "iPod mini" ); 
         
     //Dictionaries for matching iPhone / iPod disconnections
+    CFMutableDictionaryRef iPadDisconnectMatch = IOServiceNameMatching( "iPad" ); 
     CFMutableDictionaryRef iPhoneDisconnectMatch = IOServiceNameMatching( "iPhone" ); 
     CFMutableDictionaryRef iPodDisconnectMatch = IOServiceNameMatching( "iPod" ); 
     CFMutableDictionaryRef iPodMiniDisconnectMatch = IOServiceNameMatching( "iPod mini" );
@@ -180,6 +182,8 @@ IPodDetector::setupDetection()
     
     //These iterators will be used to check the current state of already
     //plugged in devices before the notifications start coming in.
+    io_iterator_t iPadAddedIter;
+    io_iterator_t iPadRemovedIter;
     io_iterator_t iPhoneAddedIter;
     io_iterator_t iPhoneRemovedIter;
     io_iterator_t iPodAddedIter;
@@ -192,6 +196,20 @@ IPodDetector::setupDetection()
     io_iterator_t deviceNodeRemovedIter;
             
     //Add the notifications for connected / disconnected
+    ioResult = IOServiceAddMatchingNotification( notificationObject, 
+                                                 kIOMatchedNotification,
+                                                 iPadConnectMatch, 
+                                                 onIPadDetected, 
+                                                 this, 
+                                                 &iPadAddedIter );
+
+    
+    if( ioResult != kIOReturnSuccess )
+    {
+        LOG( 3, "Could not add iPad connected notification: " << mach_error_string( ioResult ) );
+        return false;
+    }
+
     ioResult = IOServiceAddMatchingNotification( notificationObject, 
                                                  kIOMatchedNotification,
                                                  iPhoneConnectMatch, 
@@ -244,7 +262,20 @@ IPodDetector::setupDetection()
         LOG( 3, "Could not add firewire connected notification: " << mach_error_string( ioResult ) );
         return false;
     }
-    
+
+    ioResult = IOServiceAddMatchingNotification( notificationObject, 
+                                                 kIOTerminatedNotification,
+                                                 iPadDisconnectMatch, 
+                                                 onDeviceRemoved, 
+                                                 this, 
+                                                 &iPadRemovedIter );
+                                                 
+    if( ioResult != kIOReturnSuccess )
+    {
+        LOG( 3, "Could not add iPhone disconnected notification: " << mach_error_string( ioResult ) );
+        return false;
+    }
+     
     ioResult = IOServiceAddMatchingNotification( notificationObject, 
                                                  kIOTerminatedNotification,
                                                  iPhoneDisconnectMatch, 
@@ -326,10 +357,12 @@ IPodDetector::setupDetection()
     // Check if there are any devices already plugged in / disconnected
     // and 'arm' the notification mechanism
     onIPhoneDetected( this, iPhoneAddedIter );
+    onIPadDetected( this, iPadAddedIter );
     onUsbIPodDetected( this, iPodAddedIter );
     onUsbIPodDetected( this, iPodMiniAddedIter );
     onFireWireDetected( this, fireWireAddedIter );
     onDeviceRemoved( this, iPhoneRemovedIter );
+    onDeviceRemoved( this, iPadRemovedIter );
     onDeviceRemoved( this, iPodRemovedIter );
     onDeviceRemoved( this, iPodMiniRemovedIter );
     onFireWireRemoved( this, fireWireRemovedIter );
@@ -348,7 +381,7 @@ IPodDetector::onUsbIPodDetected( void* param, io_iterator_t newIterator )
     
     while( ioUsbDeviceNub = IOIteratorNext( newIterator ) )
     {
-        IPod* iPod = IPod::newFromUsbDevice( ioUsbDeviceNub, false );
+        IPod* iPod = IPod::newFromUsbDevice( ioUsbDeviceNub );
         if( iPod )
         {
             ipd->notifyIfUnknownIPod( iPod );
@@ -382,6 +415,47 @@ IPodDetector::onUsbIPodDetected( void* param, io_iterator_t newIterator )
 
 
 void //static
+IPodDetector::onIPadDetected( void* param, io_iterator_t newIterator )
+{
+    IPodDetector* ipd = static_cast<IPodDetector*>( param );
+    io_object_t ioUsbDeviceNub;
+    
+    while( ioUsbDeviceNub = IOIteratorNext( newIterator ) )
+    {
+        
+        IPod* iPod = IPod::newFromUsbDevice( ioUsbDeviceNub, IPod::iPad );
+        
+        if( iPod )
+        {
+            ipd->notifyIfUnknownIPod( iPod );
+            
+            if( iPod->isMobileScrobblerInstalled() )
+            {  
+                LOG( 3, "Mobile Scrobbler detected on iPad - client scrobbling not needed." );
+                delete iPod;
+                IOObjectRelease( ioUsbDeviceNub );
+                continue;
+            }
+            
+            ipd->m_ipodMap[ iPod->serial() ] = iPod;
+            
+            if( iPod->isManualMode() )
+            {
+                LOG( 3, "iPad detected in manual mode" );
+                ipd->startTwiddlyWithIpodSerial( iPod->serial(), "manualMode" );
+            }
+            else
+            {
+                LOG( 3, "iPad detected in automatic mode" );
+                ipd->startSyncTimer( iPod );  
+            }
+        }
+        IOObjectRelease( ioUsbDeviceNub );
+    }
+}
+
+
+void //static
 IPodDetector::onIPhoneDetected( void* param, io_iterator_t newIterator )
 {
     IPodDetector* ipd = static_cast<IPodDetector*>( param );
@@ -389,7 +463,8 @@ IPodDetector::onIPhoneDetected( void* param, io_iterator_t newIterator )
     
     while( ioUsbDeviceNub = IOIteratorNext( newIterator ) )
     {
-        IPod* iPod = IPod::newFromUsbDevice( ioUsbDeviceNub, true );
+
+        IPod* iPod = IPod::newFromUsbDevice( ioUsbDeviceNub, IPod::iPhone );
         
         if( iPod )
         {
@@ -407,12 +482,12 @@ IPodDetector::onIPhoneDetected( void* param, io_iterator_t newIterator )
             
             if( iPod->isManualMode() )
             {
-                LOG( 3, "iPhone detected in manual mode!" );
+                LOG( 3, "iPhone detected in manual mode" );
                 ipd->startTwiddlyWithIpodSerial( iPod->serial(), "manualMode" );
             }
             else
             {
-                LOG( 3, "iPhone detected in automatic mode!" );
+                LOG( 3, "iPhone detected in automatic mode" );
                 ipd->startSyncTimer( iPod );  
             }
         }
@@ -558,7 +633,7 @@ IPodDetector::onDeviceNodeAdded( void* param, io_iterator_t newIterator )
 
         if( ipd->m_ipodMap.find( serialNo ) == ipd->m_ipodMap.end() )
         {
-            LOG( 3, "Error: something's gone wrong - cannot find iPod in the map!" );
+            LOG( 3, "Error: something's gone wrong - cannot find iPod in the map" );
             IOObjectRelease( device );
             continue;
         }

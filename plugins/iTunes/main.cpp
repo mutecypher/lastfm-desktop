@@ -207,9 +207,9 @@ static void cleanup()
 #if TARGET_OS_MAC
 static bool isClientInstalled()
 {
-    struct stat st;
-    std::string path = Moose::applicationFolder() + "Last.fm";
-    return stat( path.c_str(), &st ) == 0;
+	FSRef appRef;
+	OSStatus status = LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
+	return status != kLSApplicationNotFoundErr;
 }
 
 

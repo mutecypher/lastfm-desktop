@@ -73,6 +73,7 @@ IPod::device() const
         case iPod:   return _( "ipod" );
         case iTouch: return _( "itouch" );
         case iPhone: return _( "iphone" );
+        case iPad:   return _( "ipad" );            
         default:     return _( "unknown" );
     }
 

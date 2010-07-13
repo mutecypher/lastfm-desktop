@@ -102,10 +102,10 @@ ITunesTrack::~ITunesTrack()
 #ifndef WIN32
 static void splitTheseFourCommaSeparatedParts( const std::string& in, std::string out[] )
 {
-    uint first = 0;
+    unsigned int first = 0;
     for (int x = 0; x < 3; ++x)
     {   
-        uint const second = in.find( ',', first );
+        unsigned int const second = in.find( ',', first );
 
         if (second == std::string::npos)
             throw PlayCountException();

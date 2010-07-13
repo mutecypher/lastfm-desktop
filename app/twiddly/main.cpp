@@ -116,8 +116,8 @@ main( int argc, char** argv )
             ipod->settings().setType( currentType );
             //------------------------------------------------------------------
 
-//            if (ipod->scrobbles().count())
-//            {
+            if (ipod->scrobbles().count())
+            {
                 // create a unique storage location for the XML
                 QDir dir = ipod->saveDir().filePath( "scrobbles" );
                 QString filename = QDateTime::currentDateTime().toString( "yyyyMMddhhmmss" ) + ".xml";
@@ -129,7 +129,7 @@ main( int argc, char** argv )
                 writeXml( xml, path );
 
 				QProcess::startDetached( moose::path(), QStringList() << "--twiddled" << path );
-//            }
+            }
 
             // do last so we don't record a sync if we threw and thus it "didn't" happen
             ipod->settings().setLastSync( start_time );

@@ -122,6 +122,7 @@ private:
 
     /// callbacks
     static void* threadEntry( void* param );
+    static void onIPadDetected( void*, io_iterator_t newIterator );
     static void onIPhoneDetected( void*, io_iterator_t newIterator );
     static void onUsbIPodDetected( void*, io_iterator_t newIterator );
     static void onDeviceRemoved( void*, io_iterator_t newIterator );
