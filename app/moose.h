@@ -58,7 +58,7 @@ namespace moose
 
 #ifdef Q_OS_WIN
         QProcess::startDetached( moose::path(), argList);
-#else
+#elif Q_OS_MAC
         FSRef appRef;
         LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
 
