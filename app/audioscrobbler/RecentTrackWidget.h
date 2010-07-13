@@ -49,6 +49,8 @@ private slots:
 
     void updateTimestamp();
 
+    void onGotInfo( const XmlQuery& lfm );
+
 private:
     struct
     {

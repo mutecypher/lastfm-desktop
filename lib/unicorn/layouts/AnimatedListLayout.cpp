@@ -18,6 +18,8 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "AnimatedListLayout.h"
+
+#include <QDebug>
 #include <QWidget>
 #include <QLayoutItem>
 #include <QTimeLine>
@@ -44,7 +46,7 @@ AnimatedListLayout::~AnimatedListLayout()
 void 
 AnimatedListLayout::addItem( QLayoutItem* item )
 {    
-    m_newItemList.push_back( item );
+    m_newItemList.prepend( item );
 
     connect( item->widget(), SIGNAL(loaded()), SLOT(onItemLoaded()));
 }
@@ -55,10 +57,10 @@ AnimatedListLayout::onItemLoaded()
     int cumHeight(0);
 
     while ( m_newItemList.count() > 0 &&
-            m_newItemList.front()->widget()->isVisible() )
+            !m_newItemList.last()->widget()->isHidden() )
     {
-        QLayoutItem* item = m_newItemList.takeFirst();
-        m_itemList.push_front( item );
+        QLayoutItem* item = m_newItemList.takeLast();
+        m_itemList.prepend( item );
         cumHeight += item->sizeHint().height();
     }
 
@@ -89,17 +91,22 @@ AnimatedListLayout::hasHeightForWidth() const
 int
 AnimatedListLayout::count() const
 {
-    return m_itemList.count();
+    return m_newItemList.count() + m_itemList.count();
 }
 
 
 QLayoutItem* 
 AnimatedListLayout::itemAt( int index ) const
 {
-    if( index >= m_itemList.count() || index < 0 || m_itemList.isEmpty() )
+    int totalCount = m_newItemList.count() + m_itemList.count();
+
+    if( index >= totalCount || index < 0 || totalCount == 0 )
         return 0;
     
-    return m_itemList.at( index );
+    if ( index < m_newItemList.count() )
+        return m_newItemList.at( index );
+
+    return m_itemList.at( index - m_newItemList.count() );
 }
 
 
@@ -160,10 +167,15 @@ AnimatedListLayout::sizeHint() const
 QLayoutItem* 
 AnimatedListLayout::takeAt( int index )
 {
-    if( index >= m_itemList.count() || index < 0 || m_itemList.isEmpty() )
+    int totalCount = m_newItemList.count() + m_itemList.count();
+
+    if( index >= totalCount || index < 0 || totalCount == 0 )
         return 0;
-    
-    return m_itemList.takeAt( index );
+
+    if ( index < m_newItemList.count() )
+        return m_newItemList.takeAt( index );
+
+    return m_itemList.takeAt( index - m_newItemList.count());
 }
 
 

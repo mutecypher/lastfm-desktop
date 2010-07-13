@@ -18,11 +18,14 @@ HEADERS = TwiddlyApplication.h \
           IPod.h \
           $$ROOT_DIR/common/c++/Logger.h
 
-
-
 mac {
     SOURCES += ITunesLibrary_mac.cpp
     HEADERS += ITunesLibrary_mac.h
+}
+
+exists(/Developer/Applications/Qt) | mac:release {
+    DESTDIR = $$DESTDIR/audioscrobbler.app/Contents/MacOS
+    QMAKE_POST_LINK += $$ROOT_DIR/admin/dist/mac/bundleFrameworks.sh $$DESTDIR/$$TARGET
 }
 
 win32 {

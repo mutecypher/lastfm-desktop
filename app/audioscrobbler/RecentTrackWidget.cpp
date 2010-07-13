@@ -33,6 +33,8 @@
 
 #include "RecentTrackWidget.h"
 
+#include <lastfm/ws.h>
+
 RecentTrackWidget::RecentTrackWidget( const Track& track, QWidget* parent )
     :StylableWidget(parent), m_track( track )
 {
@@ -43,13 +45,26 @@ RecentTrackWidget::RecentTrackWidget( const Track& track, QWidget* parent )
 
     layout->addWidget( ui.albumArt = new HttpImageWidget(), 0, Qt::AlignTop );
     ui.albumArt->setObjectName( "art" );
-    ui.albumArt->loadUrl( track.imageUrl( lastfm::Small, true) );
     ui.albumArt->setHref( track.www() );
 
     // hide this row until the album art image has loaded
     hide();
-    connect( ui.albumArt, SIGNAL(loaded()), SLOT(show()));
-    connect( ui.albumArt, SIGNAL(loaded()), SIGNAL(loaded()));
+
+    QUrl imageUrl = track.imageUrl( lastfm::Small, true);
+    if ( !imageUrl.isEmpty() )
+    {
+        ui.albumArt->loadUrl( track.imageUrl( lastfm::Small, true) );
+        connect( ui.albumArt, SIGNAL(loaded()), SLOT(show()));
+        connect( ui.albumArt, SIGNAL(loaded()), SIGNAL(loaded()));
+    }
+    else
+    {
+        // The track doesn't know where its image is
+        // so try to find it from track.getInfo
+
+        track.getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
+        connect( track.signalProxy(), SIGNAL(gotInfo(XmlQuery)), SLOT(onGotInfo(XmlQuery)));
+    }
 
     layout->addWidget( ui.title = new QLabel( track.toString() ), 1, Qt::AlignTop );
     ui.title->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
@@ -82,6 +97,17 @@ RecentTrackWidget::RecentTrackWidget( const Track& track, QWidget* parent )
 
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onLoveToggled(bool)));
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), loveAction, SLOT(setChecked(bool)));
+}
+
+void
+RecentTrackWidget::onGotInfo( const XmlQuery& )
+{
+    // The track should now know where its image is
+    // if it has one that is
+
+    ui.albumArt->loadUrl( m_track.imageUrl( lastfm::Small, true) );
+    connect( ui.albumArt, SIGNAL(loaded()), SLOT(show()));
+    connect( ui.albumArt, SIGNAL(loaded()), SIGNAL(loaded()));
 }
 
 void

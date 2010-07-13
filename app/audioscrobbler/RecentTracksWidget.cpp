@@ -65,14 +65,10 @@ void RecentTracksWidget::setUsername( QString username )
 }
 
 void
-RecentTracksWidget::onItemLoaded()
-{
-
-}
-
-void
 RecentTracksWidget::read()
 {
+    qDebug() << m_path;
+
     for ( int i(0) ; i < layout()->count() ; ++i )
     {
         QLayoutItem* item = layout()->takeAt( i );
@@ -98,7 +94,7 @@ RecentTracksWidget::read()
             RecentTrackWidget* item = new RecentTrackWidget( *track, this );
             layout()->addWidget( item );
 
-            connect( item, SIGNAL(loaded()), SLOT(onItemLoaded()));
+            connect( track->signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
         }
     }
 }
@@ -107,6 +103,8 @@ RecentTracksWidget::read()
 void
 RecentTracksWidget::write() const
 {
+    qDebug() << m_path;
+
     if ( layout()->count() == 0 )
     {
         QFile::remove( m_path );
@@ -141,7 +139,6 @@ RecentTracksWidget::addCachedTrack( const Track& a_track )
     RecentTrackWidget* item = new RecentTrackWidget( a_track, this );
     layout()->addWidget( item );
 
-    connect( item, SIGNAL(loaded()), SLOT(onItemLoaded()));
     connect( a_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
 }
 
@@ -155,7 +152,7 @@ RecentTracksWidget::onMoveFinished()
         delete item;
     }
 
-    write();
+   write();
 }
 
 void
