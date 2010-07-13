@@ -38,6 +38,7 @@
 #include "UnicornSettings.h"
 #include <lastfm/misc.h>
 #include <lastfm/User>
+#include <lastfm/InternetConnectionMonitor>
 #include <lastfm/ws.h>
 #include <lastfm/XmlQuery>
 #include <QDir>
@@ -53,14 +54,15 @@
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
-                      m_signingIn( true )
+                      m_signingIn( true ),
+                      m_icm( 0 )
 {
     addLibraryPath(applicationDirPath());
 
 #ifdef Q_WS_MAC
     qt_mac_set_menubar_icons( false );
 #endif    
-    
+
     CoreApplication::init();
 
     setupHotKeys();
@@ -79,6 +81,10 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     refreshStyleSheet();
 
     translate();
+
+    m_icm = new lastfm::InternetConnectionMonitor( this );
+    connect( m_icm, SIGNAL( up( QString ) ), this, SIGNAL( internetConnectionUp() ) );
+    connect( m_icm, SIGNAL( down( QString ) ), this, SIGNAL( internetConnectionDown() ) );
 
     connect( &m_bus, SIGNAL( signingInQuery( QString )), SLOT( onSigningInQuery( QString )));
     connect( &m_bus, SIGNAL( sessionQuery( QString )), SLOT( onBusSessionQuery( QString )));
