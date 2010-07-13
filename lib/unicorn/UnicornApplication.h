@@ -30,7 +30,11 @@
 #include <QDebug>
 #include <QMainWindow>
 
-namespace lastfm{ class UserDetails; }
+namespace lastfm{
+    class UserDetails;
+    class InternetConnectionMonitor;
+}
+
 class QNetworkReply;
 
 namespace unicorn
@@ -178,6 +182,7 @@ namespace unicorn
 #endif
     protected:
         Bus m_bus;
+        lastfm::InternetConnectionMonitor* m_icm;
 	
     private slots:
         void onUserGotInfo();
@@ -190,6 +195,8 @@ namespace unicorn
         void sessionChanged( const unicorn::Session& newSession, const unicorn::Session& oldSession );
         void rosterUpdated();
         void busLovedStateChanged(bool loved);
+        void internetConnectionUp();
+        void internetConnectionDown();
     };
 }
 
