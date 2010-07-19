@@ -23,6 +23,7 @@
 
 class QAbstractButton;
 class QTabBar;
+class QLabel;
 class ScrobbleStatus;
 class ScrobbleControls;
 class FirstRunWizard;
@@ -97,6 +98,12 @@ Q_OBJECT
 public:
     TitleBar(const QString&);
 
+private slots:
+    void onConnectionUp();
+    void onConnectionDown();
 signals:
     void closeClicked();
+
+private:
+    QLabel* m_inetStatus;
 };
