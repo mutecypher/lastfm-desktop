@@ -5,6 +5,7 @@
 
 typedef struct _Itdb_iTunesDB Itdb_iTunesDB;
 typedef struct _Itdb_Track Itdb_Track;
+typedef struct _Itdb_Playlist Itdb_Playlist;
 
 class IpodDevice: public MediaDevice
 {
@@ -23,6 +24,7 @@ private:
 
 private:
     Itdb_iTunesDB* m_itdb;
+    Itdb_Playlist* m_mpl;
     QString m_tableName;
     QString m_ipodModel;
 };
