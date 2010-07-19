@@ -75,7 +75,7 @@ function fixLocalLibs {
     else
         local bin=$1
     fi
-    #echo Fixing Local Lib for $bin
+    echo Fixing Local Lib for $bin
 
     local libs=`otool -L $bin | sed -n '/^[^\/]*$/ s/^[[:space:]]*\(.*\) (com.*/\1/p'`
     local extralibs=`otool -L $bin | sed -n '/\/opt.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'|grep -v framework`
@@ -83,7 +83,7 @@ function fixLocalLibs {
     local lib
     local cpPath
     for lib in $libs; do
-        #echo for lib $lib in libs
+        echo for lib $lib in libs
         local libPath=$lib
         if [ ! -e $lib ]; then
             cpPath=`locateLib $lib`
@@ -110,16 +110,31 @@ function locateLib {
     return 1
 }
 
-bundlePath=$1
-rootdir=`dirname $1`
+if [ -d $1 ]; then
+    bundlePath=$1
+else
+    bundlePath=$(echo $1 | sed -E "s|^(.*)\.app.*$|\1\.app|g")
+fi
+
+rootdir=`dirname $bundlePath`
 binPath=$bundlePath/Contents/MacOS
 
 echo =========== Fix Local Libs ==============
-fixLocalLibs $bundlePath
+if [ -d $1 ]; then
+    fixLocalLibs $bundlePath
+else
+    fixLocalLibs $1
+fi
+
 echo
 
 echo =========== Fix Frameworks ==============
-fixFrameworks $bundlePath
+if [ -d $1 ]; then
+    fixFrameworks $bundlePath
+else
+    fixFrameworks $1
+fi
+
 echo
 
 echo ======= Copying image plugins ===========
