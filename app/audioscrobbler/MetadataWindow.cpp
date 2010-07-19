@@ -53,14 +53,34 @@ TitleBar::TitleBar( const QString& title )
     connect( pb, SIGNAL(clicked()), SIGNAL( closeClicked()));
     pb->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
     pb->setFlat( true );
+    layout->addWidget( m_inetStatus = new QLabel( "Online", this ) );
+    m_inetStatus->setStyleSheet( "color: #cccccc" );
+    connect( qApp, SIGNAL( internetConnectionDown() ), this, SLOT( onConnectionDown() ) );
+    connect( qApp, SIGNAL( internetConnectionUp() ), this, SLOT( onConnectionUp() ) );
     QLabel* l;
-    layout->addWidget( l = new QLabel( title ));
+    layout->addWidget( l = new QLabel( title, this ));
     l->setAlignment( Qt::AlignCenter );
+
+
+    m_inetStatus->setAlignment( Qt::AlignLeft );
 #ifndef Q_OS_MAC
     pb->setShortcut( Qt::CTRL + Qt::Key_H );
     layout->addWidget( pb );
 #endif
 }
+
+void
+TitleBar::onConnectionUp()
+{
+    m_inetStatus->setText( "Online" );
+}
+
+void
+TitleBar::onConnectionDown()
+{
+    m_inetStatus->setText( "Offline" );
+}
+
 
 MetadataWindow::MetadataWindow()
                :layout( new SlideOverLayout())
@@ -92,6 +112,14 @@ MetadataWindow::MetadataWindow()
     ui.tabBar->insertTab( TAB_PROFILE, tr( "Profile" ) );
     ui.tabBar->insertTab( TAB_INFO, tr( "Info" ) );
     connect( ui.tabBar, SIGNAL( currentChanged( int )), SLOT( onTabChanged( int )));
+
+    //HACK: on KDE, the tab bar seems to inherit the app background color resulting in
+    //a dark font color over dark background.
+    if ( ui.tabBar->palette().color( ui.tabBar->backgroundRole() ).name() ==  "#e0dfde" )
+    {
+        ui.tabBar->setStyleSheet( "color: #cccccc" );
+    }
+
     hb->layout()->addWidget( ui.now_playing_source );
 
     centralWidget()->layout()->addWidget(hb);
