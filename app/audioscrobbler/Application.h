@@ -22,13 +22,13 @@
 #include <QPointer>
 #include <QSystemTrayIcon>
 
-class PlayerMediator;
-class PlayerConnection;
+class AboutDialog;
 class MetadataWindow;
+class PlayerConnection;
+class PlayerMediator;
+class QAction;
 class ScrobbleInfoFetcher;
 class StopWatch;
-class QAction;
-class AboutDialog;
 
 namespace audioscrobbler
 {
@@ -74,6 +74,7 @@ namespace audioscrobbler
         QAction* m_faq_action;
         QAction* m_forums_action;
         QAction* m_about_action;
+        QAction* m_prefs_action;
         
     public:
         Application(int& argc, char** argv);
@@ -117,6 +118,7 @@ namespace audioscrobbler
         void onFaqTriggered();
         void onForumsTriggered();
         void onAboutTriggered();
+        void onPrefsTriggered();
 
         void onTrackStarted(const Track&, const Track&);
         void onPaused();
