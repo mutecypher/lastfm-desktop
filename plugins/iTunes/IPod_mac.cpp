@@ -37,7 +37,7 @@ IPod::newFromUsbDevice( io_object_t device, deviceType type /* = unknown */ )
     if( strncmp( className, kIOUSBDeviceClassName, sizeof( kIOUSBDeviceClassName ) ) != 0 )
     {
         usbDevice = getBaseDevice( device );
-        if( usbDevice == NULL )
+        if( NULL == usbDevice )
         {
             LOG( 3, "Error could not find base USBDevice for device class: " << className );
             return NULL;
@@ -494,6 +494,7 @@ IPod::getBaseDevice( io_object_t device )
         }
         
         if( strncmp( deviceName, "iPod", 4 ) == 0 ||
+            strncmp( deviceName, "iPad", 4 ) == 0 ||
             strncmp( deviceName, "iPod mini", 9 ) == 0 ||
             strncmp( deviceName, "IOFireWireSBP2LUN", 17 ) == 0 )
         {
@@ -541,6 +542,10 @@ IPod::isMobileScrobblerPlist( const char* path ) const
     std::ifstream fin( path );
     fin.seekg( 0, std::ios_base::end );
     int length = fin.tellg();
+ 
+    if( length < 29 )
+        return false;   
+    
     fin.seekg( 0, std::ios_base::beg );
     char* buffer = new char[ length ];
     fin.read( buffer, length );
