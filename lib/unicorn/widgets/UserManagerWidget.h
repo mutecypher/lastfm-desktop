@@ -1,15 +1,18 @@
-#ifndef USER_MANAGER_H_
-#define USER_MANAGER_H_
+#ifndef USER_MANAGER_WIDGET_H_
+#define USER_MANAGER_WIDGET_H_
 
 
 
-#include <QDialog>
+#include <QWidget>
 #include <QRadioButton>
 #include "lib/DllExportMacro.h"
 
 namespace lastfm{ class User; }
-class QLabel;
+
+class QAbstractButton;
+class QButtonGroup;
 class QFrame;
+class QLabel;
 class QPushButton;
 
 class UserRadioButton : public QRadioButton
@@ -38,12 +41,14 @@ protected:
 };
 
 
-class UNICORN_DLLEXPORT UserManager : public QDialog
+class UNICORN_DLLEXPORT UserManagerWidget : public QWidget
 {
 Q_OBJECT
 public:
-    UserManager( QWidget* parent = 0 );
-    ~UserManager();
+    UserManagerWidget( QWidget* parent = 0 );
+    ~UserManagerWidget();
+
+    QAbstractButton* checkedButton() const;
 
 signals:
     void rosterUpdated();
@@ -52,12 +57,9 @@ protected slots:
     void onAddUserClicked();
     void onLoginDialogAccepted();
     void onUserAdded();
-    void onAccept();
 
 protected:
     void add( UserRadioButton*, bool = true );
-
-    class QButtonGroup* m_buttonGroup;
 
     struct {
         class QGroupBox* groupBox;
@@ -67,7 +69,8 @@ private:
     void setTabOrders();
 
 private:
+    QButtonGroup* m_buttonGroup;
     QPushButton* m_addUserButton;
 };
 
-#endif //USER_MANAGER_H_
+#endif //USER_MANAGER_WIDGET_H_
