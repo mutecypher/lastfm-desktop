@@ -449,6 +449,7 @@ Application::onScrobbleIpodTriggered()
 
     if ( path.isEmpty() || !QFile::exists( path ) )
     {
+        path = "";
         QFileDialog dialog( 0, tr( "Where is your iPod mounted?" ), "/" );
         dialog.setOption( QFileDialog::ShowDirsOnly, true );
         dialog.setFileMode( QFileDialog::Directory );

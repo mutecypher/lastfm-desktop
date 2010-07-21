@@ -33,6 +33,7 @@ extern "C"
 
 IpodDevice::IpodDevice()
     : m_itdb( 0 )
+    , m_mpl( 0 )
 {}
 
 
@@ -41,6 +42,7 @@ IpodDevice::~IpodDevice()
     if ( m_itdb )
     {
         itdb_free( m_itdb );
+        itdb_playlist_free( m_mpl );
     }
 }
 
@@ -53,6 +55,8 @@ IpodDevice::open()
 
     m_itdb = itdb_new();
     itdb_set_mountpoint( m_itdb, mountpath );
+    m_mpl = itdb_playlist_new( "iPod", false );
+    itdb_playlist_set_mpl( m_mpl );
     GError* err = 0;
     m_itdb = itdb_parse( mountpath, &err );
 
