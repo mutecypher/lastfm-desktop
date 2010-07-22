@@ -189,9 +189,14 @@ MetadataWindow::MetadataWindow()
 void
 MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
 {
-    //ui.userButton->setChecked( false );
-    ui.tabBar->setCurrentIndex( TAB_INFO );
-    toggleProfile( false );
+    if ( m_currentTrack.isNull() )
+    {
+        // We are starting form a stopped state
+        // so switch to the info view
+        ui.tabBar->setCurrentIndex( TAB_INFO );
+        toggleProfile( false );
+    }
+
     ui.now_playing_source->onTrackStarted( t, previous );
     m_currentTrack = t;
 }
@@ -210,6 +215,10 @@ MetadataWindow::onStopped()
 void
 MetadataWindow::onResumed()
 {
+    // Switch back to the info view when you resume. We never
+    // actually stop with iTunes so this is more consistent.
+    ui.tabBar->setCurrentIndex( TAB_INFO );
+    toggleProfile( false );
 }
 
 
