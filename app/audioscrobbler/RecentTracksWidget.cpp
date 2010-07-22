@@ -69,6 +69,8 @@ RecentTracksWidget::read()
 {
     qDebug() << m_path;
 
+    static_cast<AnimatedListLayout*>(layout())->setAnimated( false );
+
     for ( int i(0) ; i < layout()->count() ; ++i )
     {
         QLayoutItem* item = layout()->takeAt( i );
@@ -91,12 +93,14 @@ RecentTracksWidget::read()
         if (n.nodeName() == "track")
         {
             Track* track = new Track( n.toElement() );
-            RecentTrackWidget* item = new RecentTrackWidget( *track, this );
+            RecentTrackWidget* item = new RecentTrackWidget( *track );
             layout()->addWidget( item );
 
             connect( track->signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
         }
     }
+
+    static_cast<AnimatedListLayout*>(layout())->setAnimated( true );
 }
 
 
@@ -136,7 +140,7 @@ RecentTracksWidget::addCachedTrack( const Track& a_track )
 {
     MutableTrack( a_track ).setExtra( "scrobbleStatus", "cached" );
 
-    RecentTrackWidget* item = new RecentTrackWidget( a_track, this );
+    RecentTrackWidget* item = new RecentTrackWidget( a_track );
     layout()->addWidget( item );
 
     connect( a_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));

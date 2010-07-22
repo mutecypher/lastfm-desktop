@@ -11,21 +11,21 @@ require "#{cwd}/platform.rb"
 def find_sources()
   Find.find( '.' ) do |path|
     if File.directory?( path )
-      excludes = ['.svn', 'tests', '_build']
+      excludes = ['.svn', 'tests', '_build' ] 
       case Platform::IMPL
         when :macosx then excludes << 'win' << 'linux'
         when :mswin, :cygwin then excludes << 'mac' << 'linux'
         when :linux, :freebsd then excludes << 'win' << 'mac'
         else excludes << 'win' << 'mac' << 'linux'
       end
-      Find.prune if excludes.include?( File.basename( path ) )
+      Find.prune if excludes.include?( File.basename( path ) ) or (path != "." and not Dir["#{path}/*.pro"].empty? )
     elsif File.file?( path )
       case Platform::IMPL
         when :macosx then next if /_(linux|win)\.(cpp|h)$/.match( path )
         when :mswin, :cygwin then next if /_(mac|linux)\.(cpp|h)$/.match( path )
         when :linux, :freebsd then next if /_(mac|win)\.(cpp|h)$/.match( path )
       end
-      yield( path, File.extname( path ) )
+      yield( path, File.extname( path ) ) unless File.basename(path) == 'EXAMPLE.cpp' 
     end
   end
 end

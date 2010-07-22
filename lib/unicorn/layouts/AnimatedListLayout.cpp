@@ -25,7 +25,7 @@
 #include <QTimeLine>
 
 AnimatedListLayout::AnimatedListLayout( QWidget* parent )
-           : QLayout( parent ), m_timeLine( new QTimeLine( 1500, this ) )
+           : QLayout( parent ), m_timeLine( new QTimeLine( 1500, this ) ), m_animated( true )
 {
     m_timeLine->setUpdateInterval( 20 );
     m_timeLine->setEasingCurve( QEasingCurve::OutBounce );
@@ -42,13 +42,46 @@ AnimatedListLayout::~AnimatedListLayout()
         delete l;
 }
 
+void
+AnimatedListLayout::setAnimated( bool animated )
+{
+    m_animated = animated;
+
+    if ( !m_animated )
+    {
+        // we are no longer animating so stop any current animation
+        // and move all the items over
+
+        m_timeLine->stop();
+
+        foreach ( QLayoutItem* item, m_newItemList )
+            m_itemList.prepend( m_newItemList.takeLast() );
+
+        doLayout( geometry() );
+    }
+}
+
 
 void 
 AnimatedListLayout::addItem( QLayoutItem* item )
 {    
-    m_newItemList.prepend( item );
+    if ( m_animated )
+    {
+        m_newItemList.prepend( item );
 
-    connect( item->widget(), SIGNAL(loaded()), SLOT(onItemLoaded()));
+        // make suer we don't draw the item in the list until
+        // it has been added properly
+        QRect itemRect = contentsRect();
+        itemRect.setHeight( 2 );
+        itemRect.translate( -3, -3);
+        item->setGeometry( itemRect );
+
+        connect( item->widget(), SIGNAL(loaded()), SLOT(onItemLoaded()));
+    }
+    else
+    {
+        m_itemList.prepend( item );
+    }
 }
 
 void
@@ -157,8 +190,8 @@ AnimatedListLayout::sizeHint() const
 {
     QSize sh( geometry().width() , 0);
 
-    for ( int i(0) ; i < m_itemList.count() && i < 10 ; ++i )
-        sh = sh += QSize( 0, m_itemList[i]->sizeHint().height() );
+    for ( int i(0) ; i < count() && i < 10 ; ++i )
+        sh = sh += QSize( 0, itemAt(i)->sizeHint().height() );
     
     return sh;
 }
