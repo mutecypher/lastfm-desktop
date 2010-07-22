@@ -14,6 +14,7 @@ class QButtonGroup;
 class QFrame;
 class QLabel;
 class QPushButton;
+class QVBoxLayout;
 
 class UserRadioButton : public QRadioButton
 {
@@ -52,6 +53,7 @@ public:
 
 signals:
     void rosterUpdated();
+    void userChanged();
 
 protected slots:
     void onAddUserClicked();
@@ -63,6 +65,8 @@ protected:
 
     struct {
         class QGroupBox* groupBox;
+        class QVBoxLayout* usersLayout;
+        class QPushButton* addUserButton;
     } ui;
 
 private:
@@ -70,7 +74,6 @@ private:
 
 private:
     QButtonGroup* m_buttonGroup;
-    QPushButton* m_addUserButton;
 };
 
 #endif //USER_MANAGER_WIDGET_H_

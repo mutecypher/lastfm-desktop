@@ -18,43 +18,32 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SETTINGS_DIALOG_H
-#define SETTINGS_DIALOG_H
+#ifndef ACCOUNT_SETTINGS_WIDGET_H_
+#define ACCOUNT_SETTINGS_WIDGET_H_
 
-#include "lib/unicorn/dialogs/UnicornDialog.h"
+#include "SettingsWidget.h"
 
-#include <QObject>
 
-#define PAGE_LIST_WIDTH 145
-
-class SettingsDialog : public unicorn::Dialog
+class AccountSettingsWidget: public SettingsWidget
 {
 Q_OBJECT
 public:
-    SettingsDialog( QWidget *parent = 0 );
+    AccountSettingsWidget( QWidget* parent = 0 );
 
-signals:
-    void saveNeeded();
+public slots:
+    virtual void saveSettings();
 
 private:
     void setupUi();
-
-private slots:
-    void onAccepted();
-    void onSettingsChanged();
-    void onApplyButtonClicked();
+    void populateLanguages();
 
 private:
     struct Ui
     {
-        class QDialogButtonBox* buttons;
-        class QListWidget* pageList;
-        class QStackedWidget* pageStack;
-        class AccountSettingsWidget* accountSettings;
-        class IpodSettingsWidget* ipodSettings;
-        class ScrobbleSettingsWidget* scrobbleSettings;
-    }ui;
+        class UserManagerWidget* users;
+        class QComboBox* languages;
+    } ui;
 
 };
 
-#endif // SETTINGS_DIALOG_H
+#endif //ACCOUNT_SETTINGS_WIDGET_H_

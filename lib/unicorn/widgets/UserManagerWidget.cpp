@@ -151,30 +151,34 @@ UserManagerWidget::UserManagerWidget( QWidget* parent )
     layout->setSpacing( 10 );
     layout->addWidget( new QLabel( tr( "Users authenticated with this application" )));
 
-    layout->addWidget( ui.groupBox = new QGroupBox());
-    new QVBoxLayout( ui.groupBox );
+    layout->addWidget( ui.groupBox = new QGroupBox() );
+
+    ui.usersLayout = new QVBoxLayout( ui.groupBox );
+
     ui.groupBox->setTitle( tr( "Log me in as:" ));
 
+    ui.usersLayout->addStretch( 1 );
+    ui.groupBox->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
+
+    QHBoxLayout* buttonLayout = new QHBoxLayout();
+
+    ui.addUserButton = new QPushButton( tr( "Add new user" ), this );
+
+    buttonLayout->addWidget( ui.addUserButton );
+    buttonLayout->addStretch( 1 );
+
+    ui.usersLayout->addLayout( buttonLayout );
+
     QList<lastfm::User> roster = unicorn::Settings().userRoster();
-    
+
     foreach( lastfm::User u, roster ) {
         UserRadioButton* b = new UserRadioButton( u );
         add( b, false );
     }
 
-    qobject_cast<QBoxLayout*>(ui.groupBox->layout())->addStretch();
-    ui.groupBox->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
+    connect( ui.addUserButton, SIGNAL( clicked() ), SLOT( onAddUserClicked() ) );
+    connect( m_buttonGroup, SIGNAL( buttonClicked( int ) ), this, SIGNAL( userChanged() ) );
 
-    QHBoxLayout* buttonLayout = new QHBoxLayout();
-
-    m_addUserButton = new QPushButton( tr( "Add new user" ), this );
-
-    buttonLayout->addWidget( m_addUserButton );
-    buttonLayout->addStretch( 1 );
-
-    connect( m_addUserButton, SIGNAL( clicked() ), SLOT( onAddUserClicked() ) );
-
-    layout->addLayout( buttonLayout );
     setTabOrders();
 }
 
@@ -231,10 +235,7 @@ UserManagerWidget::onUserAdded()
 void 
 UserManagerWidget::add( UserRadioButton* urb, bool announce )
 {
-    // The user is added 1 widget from last 
-    // (the last widget being the stretch)
-    qobject_cast<QBoxLayout*>(ui.groupBox->layout())->insertWidget( ui.groupBox->layout()->count() - 1, 
-                                                                    urb);
+    ui.usersLayout->insertWidget( ui.usersLayout->count() - 2, urb );
     m_buttonGroup->addButton( urb );
 
     if( announce )
@@ -251,7 +252,7 @@ UserManagerWidget::setTabOrders()
         if( m_buttonGroup->checkedButton() )
         {
             qDebug() << "button: " << qobject_cast<UserRadioButton *>( m_buttonGroup->checkedButton() )->user();
-            setTabOrder( m_buttonGroup->checkedButton(), m_addUserButton );
+            setTabOrder( m_buttonGroup->checkedButton(), ui.addUserButton );
         }
     }
  }

@@ -18,6 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "AccountSettingsWidget.h"
 #include "IpodSettingsWidget.h"
 #include "SettingsDialog.h"
 #include "ScrobbleSettingsWidget.h"
@@ -52,12 +53,13 @@ SettingsDialog::setupUi()
     ui.pageList->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::MinimumExpanding ) );
     ui.pageList->setFixedWidth( PAGE_LIST_WIDTH );
 
-//    ui.pageList->addItem( tr( "Account" ) );
+    ui.pageList->addItem( tr( "Account" ) );
     ui.pageList->setStyleSheet( "color: black;" );
     ui.pageList->addItem( tr( "Scrobbling" ) );
     ui.pageList->addItem( tr( "iPod" ) );
     ui.pageList->setCurrentRow( 0 );
 
+    ui.pageStack->addWidget( ui.accountSettings = new AccountSettingsWidget( this ) );
     ui.pageStack->addWidget( ui.scrobbleSettings = new ScrobbleSettingsWidget( this ) );
     ui.pageStack->addWidget( ui.ipodSettings = new IpodSettingsWidget( this ) );
     ui.pageStack->setCurrentIndex( 0 );
@@ -77,10 +79,13 @@ SettingsDialog::setupUi()
 
     ui.buttons->button( QDialogButtonBox::Apply )->setEnabled( false );
 
-    connect( this, SIGNAL( saveChanges() ), ui.scrobbleSettings, SLOT( saveSettings() ) );
-    connect( this, SIGNAL( saveChanges() ), ui.ipodSettings, SLOT( saveSettings() ) );
+    connect( this, SIGNAL( saveNeeded() ), ui.scrobbleSettings, SLOT( saveSettings() ) );
+    connect( this, SIGNAL( saveNeeded() ), ui.ipodSettings, SLOT( saveSettings() ) );
+    connect( this, SIGNAL( saveNeeded() ), ui.accountSettings, SLOT( saveSettings() ) );
+
     connect( ui.scrobbleSettings, SIGNAL( settingsChanged() ), this, SLOT( onSettingsChanged() ) );
     connect( ui.ipodSettings, SIGNAL( settingsChanged() ), this, SLOT( onSettingsChanged() ) );
+    connect( ui.accountSettings, SIGNAL( settingsChanged() ), this, SLOT( onSettingsChanged() ) );
 
     connect( ui.buttons, SIGNAL( accepted() ), this, SLOT( onAccepted() ) );
     connect( ui.buttons, SIGNAL( rejected() ), this, SLOT( reject() ) );
@@ -90,7 +95,7 @@ SettingsDialog::setupUi()
 void
 SettingsDialog::onAccepted()
 {
-    emit saveChanges();
+    emit saveNeeded();
     accept();
 }
 
@@ -103,6 +108,6 @@ SettingsDialog::onSettingsChanged()
 void
 SettingsDialog::onApplyButtonClicked()
 {
-    emit saveChanges();
+    emit saveNeeded();
     ui.buttons->button( QDialogButtonBox::Apply )->setEnabled( false );
 }
