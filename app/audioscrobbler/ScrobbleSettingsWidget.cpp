@@ -38,6 +38,11 @@ ScrobbleSettingsWidget::ScrobbleSettingsWidget( QWidget* parent )
     connect( ui.scrobblePoint, SIGNAL( sliderMoved( int ) ), this, SLOT( onSliderMoved( int ) ) );
     connect( ui.scrobblePoint, SIGNAL( sliderMoved( int ) ), this, SLOT( onSettingsChanged() ) );
     connect( ui.allowFingerprint, SIGNAL( stateChanged( int ) ), this, SLOT( onSettingsChanged() ) );
+
+#ifdef Q_OS_MAC || Q_OS_WIN
+    connect( ui.launchItunes, SIGNAL( stateChanged( int ) ), this, SLOT( onSettingsChanged() ) );
+#endif
+
 }
 
 void
@@ -52,9 +57,15 @@ ScrobbleSettingsWidget::setupUi()
     ui.scrobblePoint = new QSlider( Qt::Horizontal, this );
     ui.allowFingerprint = new QCheckBox( this );
 
+#ifdef Q_OS_MAC || Q_OS_WIN
+    ui.launchItunes = new QCheckBox( this );
+#endif
+
     QVBoxLayout* v = new QVBoxLayout;
     QVBoxLayout* vg = new QVBoxLayout;
     QHBoxLayout* h = new QHBoxLayout;
+
+
 
     ui.scrobblePoint->setTickInterval( 10 );
     ui.scrobblePoint->setRange( 50, 100 );
@@ -72,6 +83,9 @@ ScrobbleSettingsWidget::setupUi()
 
     ui.allowFingerprint->setChecked( unicorn::UserSettings().value( "allowFingerprint", false ).toBool() );
 
+#ifdef Q_OS_MAC || Q_OS_WIN
+    ui.launchItunes->setChecked( uinicorn::AppSettings().value( "launchItunes", true ).toBool() );
+#endif
 
     QGroupBox* groupBox = new QGroupBox( this );
     groupBox->setTitle( tr( "Preferences" ) );
@@ -85,6 +99,10 @@ ScrobbleSettingsWidget::setupUi()
 
     vg->addLayout( h );
     vg->addWidget( ui.allowFingerprint );
+
+#ifdef Q_OS_MAC || Q_OS_WIN
+    vg->addWidget( ui.launchItunes );
+#endif
 
     groupBox->setLayout( vg );
 
@@ -112,5 +130,8 @@ ScrobbleSettingsWidget::saveSettings()
         qDebug() << "Saving settings...";
         unicorn::UserSettings().setValue( "scrobblePoint", ui.scrobblePoint->value() );
         unicorn::UserSettings().setValue( "allowFingerprint", ui.allowFingerprint->isChecked() );
+#ifdef Q_OS_MAC || Q_OS_WIN
+        unicorn::AppSettings().setValue( "launchItunes", ui.launchItunes->isChecked() );
+#endif
     }
 }

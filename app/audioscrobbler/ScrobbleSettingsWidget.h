@@ -39,6 +39,7 @@ private:
     {
         class QSlider* scrobblePoint;
         class QCheckBox* allowFingerprint;
+        class QCheckBox* launchItunes;
         class QLabel* percentText;
     } ui;
 
