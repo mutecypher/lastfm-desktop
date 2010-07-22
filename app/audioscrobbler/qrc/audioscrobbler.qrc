@@ -30,5 +30,6 @@
 		<file>header_simartists.png</file>
 		<file>header_tags.png</file>
         <file>close.png</file>
+		<file>default_album_large.png</file>
     </qresource>
 </RCC>
