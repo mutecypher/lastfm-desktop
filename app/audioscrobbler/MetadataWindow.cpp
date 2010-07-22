@@ -112,6 +112,14 @@ MetadataWindow::MetadataWindow()
     ui.tabBar->insertTab( TAB_PROFILE, tr( "Profile" ) );
     ui.tabBar->insertTab( TAB_INFO, tr( "Info" ) );
     connect( ui.tabBar, SIGNAL( currentChanged( int )), SLOT( onTabChanged( int )));
+
+    //HACK: on KDE, the tab bar seems to inherit the app background color resulting in
+    //a dark font color over dark background.
+    if ( ui.tabBar->palette().color( ui.tabBar->backgroundRole() ).name() ==  "#e0dfde" )
+    {
+        ui.tabBar->setStyleSheet( "color: #cccccc" );
+    }
+
     hb->layout()->addWidget( ui.now_playing_source );
 
     centralWidget()->layout()->addWidget(hb);

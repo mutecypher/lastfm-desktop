@@ -31,9 +31,9 @@
 #include "ScrobSocket.h"
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/qtsingleapplication/qtsinglecoreapplication.h"
+#include "lib/unicorn/UnicornSettings.h"
 #include "MainWindow.h"
 #include "Radio.h"
-#include "app/moose.h"
 
 void cleanup();
 
@@ -152,7 +152,7 @@ static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
 void cleanup()
 {
     if (radio && radio->audioOutput()) {
-	    QSettings().value( "Volume", radio->audioOutput()->volume() );
+	    unicorn::AppSettings().setValue( "Volume", radio->audioOutput()->volume() );
     }
 }
 

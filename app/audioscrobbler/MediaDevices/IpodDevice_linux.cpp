@@ -1,3 +1,22 @@
+/*
+   Copyright 2005-2010 Last.fm Ltd.
+      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
+
+   This file is part of the Last.fm Desktop Application Suite.
+
+   lastfm-desktop is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   lastfm-desktop is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
+*/
 #include "IpodDevice_linux.h"
 
 #include <QApplication>
@@ -14,6 +33,7 @@ extern "C"
 
 IpodDevice::IpodDevice()
     : m_itdb( 0 )
+    , m_mpl( 0 )
 {}
 
 
@@ -22,6 +42,7 @@ IpodDevice::~IpodDevice()
     if ( m_itdb )
     {
         itdb_free( m_itdb );
+        itdb_playlist_free( m_mpl );
     }
 }
 
@@ -34,6 +55,8 @@ IpodDevice::open()
 
     m_itdb = itdb_new();
     itdb_set_mountpoint( m_itdb, mountpath );
+    m_mpl = itdb_playlist_new( "iPod", false );
+    itdb_playlist_set_mpl( m_mpl );
     GError* err = 0;
     m_itdb = itdb_parse( mountpath, &err );
 
