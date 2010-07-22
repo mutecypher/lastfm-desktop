@@ -120,7 +120,7 @@ IpodSettingsWidget::saveSettings()
         qDebug() << "Saving settings...";
         unicorn::UserSettings().setValue( "enableIpodScrobbling", ui.enableScrobbling->isChecked() );
         unicorn::UserSettings().setValue( "confirmIpodScrobbles", ui.confirmScrobbles->isChecked() );
-
+        onSettingsSaved();
     }
 }
 

@@ -133,5 +133,6 @@ ScrobbleSettingsWidget::saveSettings()
 #ifdef Q_OS_MAC || Q_OS_WIN
         unicorn::AppSettings().setValue( "launchItunes", ui.launchItunes->isChecked() );
 #endif
+        onSettingsSaved();
     }
 }

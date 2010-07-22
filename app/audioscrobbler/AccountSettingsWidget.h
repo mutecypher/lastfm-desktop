@@ -23,7 +23,6 @@
 
 #include "SettingsWidget.h"
 
-
 class AccountSettingsWidget: public SettingsWidget
 {
 Q_OBJECT
