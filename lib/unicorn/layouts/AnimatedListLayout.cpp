@@ -95,7 +95,7 @@ AnimatedListLayout::onItemLoaded()
     // check to see if all the new items are loaded yet
     foreach ( QLayoutItem* item , m_newItemList )
     {
-        if ( !item->widget()->isHidden() )
+        if ( item->widget()->isHidden() )
         {
             allItemsLoaded = false;
             break;
