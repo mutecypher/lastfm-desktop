@@ -39,8 +39,8 @@ AccountSettingsWidget::AccountSettingsWidget( QWidget* parent )
 {
     setupUi();
     populateLanguages();
-    connect( ui.users, SIGNAL( userChanged() ), this, SIGNAL( settingsChanged() ) );
-    connect( ui.languages, SIGNAL( currentIndexChanged( int ) ), this, SIGNAL( settingsChanged() ) );
+    connect( ui.users, SIGNAL( userChanged() ), this, SLOT( onSettingsChanged() ) );
+    connect( ui.languages, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onSettingsChanged() ) );
 }
 
 void
@@ -81,6 +81,7 @@ AccountSettingsWidget::setupUi()
 void
 AccountSettingsWidget::saveSettings()
 {
+    qDebug() << "has unsaved changes?" << hasUnsavedChanges();
     if ( hasUnsavedChanges() )
     {
         unicorn::Settings s;
