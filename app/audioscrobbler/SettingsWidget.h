@@ -23,7 +23,7 @@
 
 #include <QWidget>
 
-class SettingsWidget: public QWidget
+class SettingsWidget : public QWidget
 {
     Q_OBJECT
 public:
