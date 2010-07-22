@@ -35,13 +35,14 @@ ScrobbleControls::ScrobbleControls()
     layout()->addWidget(ui.love = new QPushButton(tr("love")));
     ui.love->setObjectName("love");
     ui.love->setCheckable( true );
-    ui.love->setToolTip( tr( "Love" ) );
+    ui.love->setToolTip( tr( "Love track" ) );
 
     connect(ui.love, SIGNAL(clicked(bool)), qApp, SLOT(changeLovedState(bool)));
+    connect( ui.love, SIGNAL( toggled( bool ) ), this, SLOT( onLoveChanged( bool ) ) );
     
     layout()->addWidget(ui.tag = new QPushButton(tr("tag")));
     ui.tag->setObjectName("tag");
-    ui.tag->setToolTip( tr( "Tag" ) );
+    ui.tag->setToolTip( tr( "Add tags" ) );
 
     layout()->addWidget(ui.share = new QPushButton(tr("share")));
     ui.share->setObjectName("share");
@@ -71,4 +72,17 @@ void
 ScrobbleControls::setShareAction( const QAction* a )
 {
     connect( ui.share, SIGNAL(clicked()), a, SLOT(trigger()));
+}
+
+void
+ScrobbleControls::onLoveChanged( bool checked )
+{
+    if ( checked )
+    {
+        ui.love->setToolTip( tr( "Unlove track" ) );
+    }
+    else
+    {
+        ui.love->setToolTip( tr( "Love track" ) );
+    }
 }

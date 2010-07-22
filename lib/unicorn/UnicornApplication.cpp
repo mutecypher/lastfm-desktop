@@ -50,7 +50,7 @@
 #include <QTimer>
 #include <QDebug>
 
-#include "dialogs/UserManager.h"
+#include "dialogs/UserManagerDialog.h"
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
@@ -166,7 +166,7 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
 void 
 unicorn::Application::manageUsers()
 {
-    UserManager um;
+    UserManagerDialog um;
     connect( &um, SIGNAL( rosterUpdated()), SIGNAL( rosterUpdated()));
     
     if( um.exec())

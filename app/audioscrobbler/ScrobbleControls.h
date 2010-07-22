@@ -48,6 +48,10 @@ protected:
         QPushButton* tag;
         QPushButton* share;
     } ui;
+
+private slots:
+    void onLoveChanged( bool checked );
+
 };
 
 #endif //SCROBBLE_CONTROLS_H
