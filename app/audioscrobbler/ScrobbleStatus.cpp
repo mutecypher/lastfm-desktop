@@ -30,7 +30,6 @@
 ScrobbleStatus::ScrobbleStatus( QWidget* parent )   
                :StylableWidget( parent ),
                 m_stopWatch( 0 ),
-                m_timer( 0 ),
                 m_mouseDown( false )
 {
     new QHBoxLayout( this );
@@ -56,10 +55,6 @@ ScrobbleStatus::ScrobbleStatus( QWidget* parent )
     ui.playerStatus = new QLabel();
     ui.playerStatus->setObjectName( "player_status" );
     layout()->addWidget( ui.playerStatus );
-
-    m_timer = new QTimer(this);
-    connect(m_timer, SIGNAL(timeout()), SLOT(update()));
-    m_timer->start(500);
 }
 
 void
@@ -121,6 +116,7 @@ ScrobbleStatus::onTrackStarted( const Track& track, const Track& previousTrack )
 
     connect( m_stopWatch, SIGNAL(paused(bool)), SLOT( onWatchPaused(bool)) );
     connect( m_stopWatch, SIGNAL(timeout()), SLOT( onWatchFinished()));
+    connect( m_stopWatch, SIGNAL(frameChanged(int)), SLOT(update()));
 }
 
 void
@@ -130,6 +126,7 @@ ScrobbleStatus::onTrackStopped()
     ui.playerStatus->setText("");
     ui.as->clear();
 }
+
 
 void 
 ScrobbleStatus::mousePressEvent( QMouseEvent* event )

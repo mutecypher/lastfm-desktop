@@ -52,7 +52,6 @@ private:
     } movie;
 
     QPointer<StopWatch> m_stopWatch;
-    QTimer* m_timer;
     bool m_mouseDown;
 
 public slots:
