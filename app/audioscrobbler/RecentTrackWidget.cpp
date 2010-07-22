@@ -35,8 +35,8 @@
 
 #include <lastfm/ws.h>
 
-RecentTrackWidget::RecentTrackWidget( const Track& track, QWidget* parent )
-    :StylableWidget(parent), m_track( track )
+RecentTrackWidget::RecentTrackWidget( const Track& track )
+    :StylableWidget(), m_track( track )
 {
     setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
 
