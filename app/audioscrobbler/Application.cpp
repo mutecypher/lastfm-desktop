@@ -50,6 +50,7 @@
 #include <QShortcut>
 #include <QFileDialog>
 #include <QDesktopServices>
+#include <QNetworkDiskCache>
 
 #ifdef Q_OS_WIN32
 #include "windows.h"
@@ -88,7 +89,11 @@ Application::init()
             return;
         }
     }*/
-    
+
+    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
+    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
+    lastfm::nam()->setCache( diskCache );
+
 /// tray
     tray = new QSystemTrayIcon(this);
     QIcon trayIcon( AS_TRAY_ICON );

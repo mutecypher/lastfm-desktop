@@ -16,7 +16,7 @@ class QLabel;
 class QPushButton;
 class QVBoxLayout;
 
-class UserRadioButton : public QRadioButton
+class UNICORN_DLLEXPORT UserRadioButton : public QRadioButton
 {
 Q_OBJECT
 

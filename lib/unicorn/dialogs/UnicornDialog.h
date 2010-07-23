@@ -7,8 +7,11 @@
 #include "../UnicornMainWindow.h"
 #include "../UnicornSettings.h"
 #include <math.h>
+
+#include "lib/DllExportMacro.h"
+
 namespace unicorn {
-class Dialog : public QDialog
+class UNICORN_DLLEXPORT Dialog : public QDialog
 {
 Q_OBJECT
 public:

@@ -18,16 +18,19 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "StopWatch.h"
-#include <QTimer>
+#include <QTimeLine>
 
 
-StopWatch::StopWatch( ScrobblePoint timeout, uint elapsed ) : m_point( timeout )
+StopWatch::StopWatch( ScrobblePoint timeout, uint elapsed )
+    : m_point( timeout )
 {    
-    m_timer = new QTimer( this );
-    m_timer->setSingleShot( true );
-    m_remaining = qMax( int(m_point)*1000 - int(elapsed), 0 );
+    m_timeline = new QTimeLine( m_point * 1000, this );
+    m_timeline->setFrameRange(0, m_point * 1000);
+    m_timeline->setEasingCurve( QEasingCurve::Linear );
+    m_timeline->setUpdateInterval( 20 );
 
-    connect( m_timer, SIGNAL(timeout()), SLOT(finished()) );
+    connect( m_timeline, SIGNAL(finished()), SIGNAL(timeout()) );
+    connect( m_timeline, SIGNAL(frameChanged(int)), SIGNAL(frameChanged(int)));
 }
 
 StopWatch::~StopWatch()
@@ -40,42 +43,34 @@ StopWatch::~StopWatch()
 void
 StopWatch::start() //private
 {
-    m_elapsed.restart();
-    m_timer->setInterval( m_remaining );
-    m_timer->start();
+    m_timeline->start();
 }
 
 
 void
 StopWatch::pause()
 {
-    if (!m_timer->isActive() || !m_remaining)
-        return;
-
-    m_timer->stop();
-    
-    // cater to potentially having more elapsed time than remaining time
-    uint const remaining = m_remaining - m_elapsed.elapsed();
-    m_remaining = (remaining <= m_remaining) ? remaining : 0;
-
+    m_timeline->stop();
     emit paused( true );
+}
+
+bool
+StopWatch::isTimedOut() const
+{
+    return m_timeline->state() == QTimeLine::NotRunning;
+}
+
+uint
+StopWatch::elapsed() const
+{
+    return m_timeline->currentFrame();
 }
 
 
 void
 StopWatch::resume()
 {
-    if (!m_remaining || m_timer->isActive())
-        return;
-
-    start();
+    m_timeline->resume();
     emit paused( false );
 }
 
-
-void
-StopWatch::finished()
-{
-    m_remaining = 0;
-    emit timeout();
-}

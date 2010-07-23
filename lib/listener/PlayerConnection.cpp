@@ -20,6 +20,7 @@
 #include "PlayerConnection.h"
 #include <QtAlgorithms>
 #include <QDebug>
+#include <QTimer>
 
 
 class Error
@@ -45,6 +46,25 @@ struct FatalError : public Error
     virtual bool isFatal() const { return true; }
 };
 
+PlayerConnection::PlayerConnection()
+    : m_elapsed( 0 ), m_state( Stopped )
+{
+    m_stoppedTimer = new QTimer( this );
+    connect( m_stoppedTimer, SIGNAL(timeout()), SLOT(onStopped()) );
+}
+
+PlayerConnection::PlayerConnection( const QString& id, const QString& name )
+    : m_id( id )
+    , m_name( name )
+    , m_elapsed( 0 )
+    , m_state( Stopped )
+{
+    Q_ASSERT( id.size() );
+
+    m_stoppedTimer = new QTimer( this );
+    connect( m_stoppedTimer, SIGNAL(timeout()), SLOT(onStopped()) );
+}
+
 
 void PlayerConnection::forceTrackStarted( const Track& t )
 {
@@ -66,6 +86,7 @@ PlayerConnection::handleCommand( PlayerCommand command, Track t )
             case CommandStart:
                 if (t.isNull()) throw FatalError("Can't start a null track");
                 m_state = Playing;
+                m_stoppedTimer->stop();
                 if (t == m_track) throw NonFatalError("Already playing this track");
                 qSwap(m_track, t);
                 m_elapsed = 0;
@@ -89,11 +110,9 @@ PlayerConnection::handleCommand( PlayerCommand command, Track t )
             case CommandTerm:
             case CommandInit:
             case CommandStop:
-                m_track = Track();
-                if (m_state == Stopped) throw NonFatalError("Already stopped");
-                m_state = Stopped;
-                m_elapsed = 0;
-                emit stopped();
+                // don't process the stop straight away because we could be skipping
+                // track so wait a second to make sure we don't get a start command
+                m_stoppedTimer->start( 1000 );
                 break;
                 
             case CommandBootstrap:
@@ -113,4 +132,14 @@ PlayerConnection::handleCommand( PlayerCommand command, Track t )
             emit stopped();
         }
     }
+}
+
+void
+PlayerConnection::onStopped()
+{
+    m_track = Track();
+    if (m_state == Stopped) throw NonFatalError("Already stopped");
+    m_state = Stopped;
+    m_elapsed = 0;
+    emit stopped();
 }

@@ -221,14 +221,10 @@ ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
     }
     if( t != previous )
     {
-        //ui.listeningNow->model()->clear();
         ui.topTags->clear();
         ui.yourTags->clear();
         model.listeningNow->clear();
     }
-    //ui.topFans->clear();
-
-    //ui.trackScrobbles->clear();
 }
 
 
@@ -289,18 +285,12 @@ ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
 void
 ScrobbleInfoWidget::onStopped()
 {
-    //ui.bio->clear();
     ui.artistImage->clear();
     ui.artistImage->setHref(QUrl());
     ui.title1->clear();
-    //ui.tags->clear();
     ui.title2->clear();
     ui.onTourBanner->hide();
-    //ui.artistScrobbles->clear();
-    //ui.albumScrobbles->clear();
-    //ui.trackScrobbles->clear();
 }
-
 
 void
 ScrobbleInfoWidget::onArtistGotEvents(const XmlQuery& lfm)
