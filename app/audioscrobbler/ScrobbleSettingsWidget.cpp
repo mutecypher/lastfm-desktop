@@ -84,7 +84,7 @@ ScrobbleSettingsWidget::setupUi()
     ui.allowFingerprint->setChecked( unicorn::UserSettings().value( "allowFingerprint", false ).toBool() );
 
 #ifdef Q_OS_MAC || Q_OS_WIN
-    ui.launchItunes->setChecked( uinicorn::AppSettings().value( "launchItunes", true ).toBool() );
+    ui.launchItunes->setChecked( unicorn::AppSettings().value( "launchItunes", true ).toBool() );
 #endif
 
     QGroupBox* groupBox = new QGroupBox( this );
