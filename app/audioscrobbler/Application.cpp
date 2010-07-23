@@ -18,39 +18,44 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Application.h"
+
 #ifdef Q_WS_X11
 #include "MediaDevices/IpodDevice_linux.h"
 #endif
-#include "MetadataWindow.h"
-#include "ScrobbleControls.h"
-#include "ScrobbleInfoFetcher.h"
-#include "StopWatch.h"
-#include "SettingsDialog.h"
+
+#include "Dialogs/SettingsDialog.h"
 #include "lib/listener/DBusListener.h"
+#include "lib/listener/legacy/LegacyPlayerListener.h"
 #include "lib/listener/PlayerConnection.h"
 #include "lib/listener/PlayerListener.h"
 #include "lib/listener/PlayerMediator.h"
-#include "lib/listener/legacy/LegacyPlayerListener.h"
+#include "MetadataWindow.h"
+#include "ScrobbleInfoFetcher.h"
+#include "StopWatch.h"
+#include "../Widgets/ScrobbleControls.h"
+
 #ifdef Q_WS_MAC
 #include "lib/listener/mac/ITunesListener.h"
 #endif
-#include <lastfm/Audioscrobbler>
-#include <lastfm/XmlQuery>
-#include <QMenu>
-#include <QDebug>
+
 #include "lib/unicorn/dialogs/AboutDialog.h"
-#include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/dialogs/ShareDialog.h"
-#include "lib/unicorn/UnicornSettings.h"
+#include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
+#include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "Wizard/FirstRunWizard.h"
+
+#include <lastfm/Audioscrobbler>
+#include <lastfm/XmlQuery>
 
 #include <QShortcut>
 #include <QFileDialog>
 #include <QDesktopServices>
 #include <QNetworkDiskCache>
+#include <QMenu>
+#include <QDebug>
 
 #ifdef Q_OS_WIN32
 #include "windows.h"
@@ -324,7 +329,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     state = Playing;
 
     Q_ASSERT(connection);
-    
+
     //TODO move to playerconnection
     if(t == oldtrack){ 
         qWarning() << "Trying to start the same track as last time, assuming programmer error and doing nothing";
@@ -334,6 +339,20 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
         qWarning() << "Can't start null track!";
         return;
     }
+
+    double trackLengthPercent = unicorn::UserSettings().value( "scrobblePoint", 50 ).toDouble() / 100.0;
+
+    //This is to prevent the next track being scrobbled
+    //instead of the track just listened
+    if ( trackLengthPercent == 100 && !oldtrack.isNull() )
+    {
+        trackToScrobble = oldtrack;
+    }
+    else
+    {
+        trackToScrobble = t;
+    }
+
     m_artist_action->setText( t.artist()); 
     m_title_action->setText( t.title() + " [" + t.durationString() + ']' );
 
@@ -344,7 +363,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
         qDebug() << "************** Now Playing..";
         as->nowPlaying(t);
     }
-    ScrobblePoint timeout(t.duration()/2);
+    ScrobblePoint timeout( t.duration() * trackLengthPercent );
     watch = new StopWatch(timeout, connection->elapsed());
     watch->resume();
     connect(watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
@@ -371,7 +390,7 @@ void
 Application::onStopWatchTimedOut()
 {
     Q_ASSERT(connection);    
-    if( as ) as->cache(connection->track());
+    if( as ) as->cache( trackToScrobble );
 }
 
 void
