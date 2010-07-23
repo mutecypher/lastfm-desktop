@@ -18,39 +18,44 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Application.h"
+
 #ifdef Q_WS_X11
 #include "MediaDevices/IpodDevice_linux.h"
 #endif
-#include "MetadataWindow.h"
-#include "ScrobbleControls.h"
-#include "ScrobbleInfoFetcher.h"
-#include "StopWatch.h"
-#include "SettingsDialog.h"
+
+#include "Dialogs/SettingsDialog.h"
 #include "lib/listener/DBusListener.h"
+#include "lib/listener/legacy/LegacyPlayerListener.h"
 #include "lib/listener/PlayerConnection.h"
 #include "lib/listener/PlayerListener.h"
 #include "lib/listener/PlayerMediator.h"
-#include "lib/listener/legacy/LegacyPlayerListener.h"
+#include "MetadataWindow.h"
+#include "ScrobbleInfoFetcher.h"
+#include "StopWatch.h"
+#include "../Widgets/ScrobbleControls.h"
+
 #ifdef Q_WS_MAC
 #include "lib/listener/mac/ITunesListener.h"
 #endif
-#include <lastfm/Audioscrobbler>
-#include <lastfm/XmlQuery>
-#include <QMenu>
-#include <QDebug>
+
 #include "lib/unicorn/dialogs/AboutDialog.h"
-#include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/dialogs/ShareDialog.h"
-#include "lib/unicorn/UnicornSettings.h"
+#include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
+#include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "Wizard/FirstRunWizard.h"
+
+#include <lastfm/Audioscrobbler>
+#include <lastfm/XmlQuery>
 
 #include <QShortcut>
 #include <QFileDialog>
 #include <QDesktopServices>
 #include <QNetworkDiskCache>
+#include <QMenu>
+#include <QDebug>
 
 #ifdef Q_OS_WIN32
 #include "windows.h"
