@@ -1,25 +1,24 @@
-#include "UserManager.h"
+#include "UserManagerWidget.h"
 
-#include <QHBoxLayout>
+#include "lib/unicorn/dialogs/LoginContinueDialog.h"
+#include "lib/unicorn/dialogs/LoginDialog.h"
+#include "lib/unicorn/dialogs/WelcomeDialog.h"
+#include "lib/unicorn/QMessageBoxBuilder.h"
+#include "lib/unicorn/UnicornSettings.h"
+
 #include <lastfm/User>
-#include <QLabel>
+
 #include <QApplication>
+#include <QButtonGroup>
+#include <QDebug>
+#include <QDialogButtonBox>
+#include <QGroupBox>
+#include <QHBoxLayout>
+#include <QLabel>
 #include <QMouseEvent>
 #include <QPushButton>
 #include <QTimer>
-#include <QDebug>
-
-
 #include <QVBoxLayout>
-#include <QPushButton>
-#include <QGroupBox>
-#include <QDialogButtonBox>
-
-#include "lib/unicorn/QMessageBoxBuilder.h"
-#include "lib/unicorn/UnicornSettings.h"
-#include "lib/unicorn/dialogs/LoginDialog.h"
-#include "lib/unicorn/dialogs/LoginContinueDialog.h"
-#include "lib/unicorn/dialogs/WelcomeDialog.h"
 
 using lastfm::UserDetails;
 UserRadioButton::UserRadioButton( const User& user )
@@ -145,58 +144,51 @@ UserRadioButton::user() const
 }
 
 
-UserManager::UserManager( QWidget* parent )
-            :QDialog( parent ), m_buttonGroup( new QButtonGroup( this ) )
+UserManagerWidget::UserManagerWidget( QWidget* parent )
+            :QWidget( parent ), m_buttonGroup( new QButtonGroup( this ) )
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setSpacing( 10 );
     layout->addWidget( new QLabel( tr( "Users authenticated with this application" )));
 
-    layout->addWidget( ui.groupBox = new QGroupBox());
-    new QVBoxLayout( ui.groupBox );
+    layout->addWidget( ui.groupBox = new QGroupBox() );
+
+    ui.usersLayout = new QVBoxLayout( ui.groupBox );
+
     ui.groupBox->setTitle( tr( "Log me in as:" ));
 
+    ui.usersLayout->addStretch( 1 );
+    ui.groupBox->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
+
+    QHBoxLayout* buttonLayout = new QHBoxLayout();
+
+    ui.addUserButton = new QPushButton( tr( "Add new user" ), this );
+
+    buttonLayout->addWidget( ui.addUserButton );
+    buttonLayout->addStretch( 1 );
+
+    ui.usersLayout->addLayout( buttonLayout );
+
     QList<lastfm::User> roster = unicorn::Settings().userRoster();
-    
+
     foreach( lastfm::User u, roster ) {
         UserRadioButton* b = new UserRadioButton( u );
         add( b, false );
     }
 
-    qobject_cast<QBoxLayout*>(ui.groupBox->layout())->addStretch();
-    ui.groupBox->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
+    connect( ui.addUserButton, SIGNAL( clicked() ), SLOT( onAddUserClicked() ) );
+    connect( m_buttonGroup, SIGNAL( buttonClicked( int ) ), this, SIGNAL( userChanged() ) );
 
-    QHBoxLayout* actionButtons = new QHBoxLayout();
-    QDialogButtonBox* bb;
-    actionButtons->addWidget( bb = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ));
-
-    m_addUserButton = bb->addButton( tr( "Add new user" ), QDialogButtonBox::ActionRole );
-    connect( m_addUserButton, SIGNAL( clicked() ), SLOT( onAddUserClicked() ) );
-
-    connect( bb, SIGNAL( accepted()), SLOT( onAccept()));
-    connect( bb, SIGNAL( rejected()), SLOT( reject()));
-    layout->addLayout( actionButtons );
     setTabOrders();
 }
 
 
-UserManager::~UserManager()
+UserManagerWidget::~UserManagerWidget()
 {
-}
-
-void 
-UserManager::onAccept()
-{
-    unicorn::Settings s;
-    UserRadioButton* urb = qobject_cast<UserRadioButton*>( m_buttonGroup->checkedButton());
-    if( !urb || urb->user() == User().name()) return QDialog::reject();
-
-    s.setValue( "Username", urb->user());
-    QDialog::accept();
 }
 
 void
-UserManager::onAddUserClicked()
+UserManagerWidget::onAddUserClicked()
 {
     LoginDialog* ld = new LoginDialog( this );
     ld->setWindowFlags( Qt::Sheet );
@@ -206,7 +198,7 @@ UserManager::onAddUserClicked()
 
 
 void
-UserManager::onLoginDialogAccepted()
+UserManagerWidget::onLoginDialogAccepted()
 {
     LoginDialog* ld = qobject_cast<LoginDialog*>(sender());
     Q_ASSERT( ld );
@@ -222,7 +214,7 @@ UserManager::onLoginDialogAccepted()
 
 
 void 
-UserManager::onUserAdded()
+UserManagerWidget::onUserAdded()
 {
     LoginContinueDialog* lcd = qobject_cast<LoginContinueDialog*>(sender());
     Q_ASSERT( lcd );
@@ -241,12 +233,9 @@ UserManager::onUserAdded()
 }
 
 void 
-UserManager::add( UserRadioButton* urb, bool announce )
+UserManagerWidget::add( UserRadioButton* urb, bool announce )
 {
-    // The user is added 1 widget from last 
-    // (the last widget being the stretch)
-    qobject_cast<QBoxLayout*>(ui.groupBox->layout())->insertWidget( ui.groupBox->layout()->count() - 1, 
-                                                                    urb);
+    ui.usersLayout->insertWidget( ui.usersLayout->count() - 2, urb );
     m_buttonGroup->addButton( urb );
 
     if( announce )
@@ -256,17 +245,20 @@ UserManager::add( UserRadioButton* urb, bool announce )
 }
 
 void
-UserManager::setTabOrders()
+UserManagerWidget::setTabOrders()
 {
     if( m_buttonGroup->buttons().count() )
     {
         if( m_buttonGroup->checkedButton() )
         {
             qDebug() << "button: " << qobject_cast<UserRadioButton *>( m_buttonGroup->checkedButton() )->user();
-            setTabOrder( m_buttonGroup->checkedButton(), m_addUserButton );
+            setTabOrder( m_buttonGroup->checkedButton(), ui.addUserButton );
         }
     }
-    setTabOrder( m_addUserButton, m_buttonGroup->button( QDialogButtonBox::Ok ) );
-    setTabOrder( m_buttonGroup->button( QDialogButtonBox::Ok ), m_buttonGroup->button( QDialogButtonBox::Cancel ) );
-
  }
+
+QAbstractButton*
+UserManagerWidget::checkedButton() const
+{
+    return m_buttonGroup->checkedButton();
+}

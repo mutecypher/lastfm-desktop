@@ -25,6 +25,7 @@
 #include "ScrobbleControls.h"
 #include "ScrobbleInfoFetcher.h"
 #include "StopWatch.h"
+#include "SettingsDialog.h"
 #include "lib/listener/DBusListener.h"
 #include "lib/listener/PlayerConnection.h"
 #include "lib/listener/PlayerListener.h"
@@ -149,11 +150,11 @@ Application::init()
 
     m_submit_scrobbles_toggle = menu->addAction(tr("Submit Scrobbles"));
 #ifdef Q_WS_MAC
-    menu->addAction(tr("Preferences")+ELLIPSIS);
+    m_prefs_action = menu->addAction(tr("Preferences")+ELLIPSIS);
 #else
-    menu->addAction(tr("Options")+ELLIPSIS);
+    m_prefs_action = menu->addAction(tr("Options")+ELLIPSIS);
 #endif
-
+    connect( m_prefs_action, SIGNAL( triggered() ), this, SLOT( onPrefsTriggered() ) );
     menu->addSeparator();
     QMenu* helpMenu = menu->addMenu( tr( "Help" ) );
 
@@ -533,6 +534,13 @@ Application::onAboutTriggered()
 {
     if ( m_aboutDialog ) m_aboutDialog = new AboutDialog( mw );
     m_aboutDialog->show();
+}
+
+void
+Application::onPrefsTriggered()
+{
+    SettingsDialog* settingsDialog = new SettingsDialog( mw );
+    settingsDialog->exec();
 }
 
 void 
