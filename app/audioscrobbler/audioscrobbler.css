@@ -223,6 +223,7 @@ RecentTrackWidget HttpImageWidget#art {
 	max-width: 32;
 	max-height: 32;
 	qproperty-scaledContents: true;
+	qproperty-pixmap: url(:/default_album_large.png);
 	margin: 0px 0px;
 }
 

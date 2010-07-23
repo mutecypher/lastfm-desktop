@@ -24,6 +24,7 @@
 #include "PlayerCommand.h"
 #include "app/client/State.h" //FIXME
 #include <lastfm/Track>
+#include <QTimer>
 
 
 /** delete yourself when the player closes/quits */
@@ -31,26 +32,19 @@ class LISTENER_DLLEXPORT PlayerConnection : public QObject
 {
     Q_OBJECT
 
+    QTimer* m_stoppedTimer;
     QString const m_id;
     QString const m_name;   
     uint m_elapsed;
 
-    PlayerConnection() : m_elapsed( 0 ), m_state( Stopped )
-    {}
+    PlayerConnection();
     
 protected:
     State m_state;
     Track m_track;
     
 public:    
-    PlayerConnection( const QString& id, const QString& name ) 
-            : m_id( id )
-            , m_name( name )
-            , m_elapsed( 0 )
-            , m_state( Stopped )
-    {
-        Q_ASSERT( id.size() );
-    }
+    PlayerConnection( const QString& id, const QString& name );
     
     ~PlayerConnection()
     {
@@ -85,6 +79,8 @@ signals:
     void stopped();
 	void bootstrapReady();
 
+private slots:
+    void onStopped();
 };
 
 #endif

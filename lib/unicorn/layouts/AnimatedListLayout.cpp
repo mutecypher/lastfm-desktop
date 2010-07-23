@@ -25,7 +25,9 @@
 #include <QTimeLine>
 
 AnimatedListLayout::AnimatedListLayout( QWidget* parent )
-           : QLayout( parent ), m_timeLine( new QTimeLine( 1500, this ) ), m_animated( true )
+           : QLayout( parent ),
+           m_timeLine( new QTimeLine( 1500, this ) ),
+           m_animated( true )
 {
     m_timeLine->setUpdateInterval( 20 );
     m_timeLine->setEasingCurve( QEasingCurve::OutBounce );
@@ -69,36 +71,54 @@ AnimatedListLayout::addItem( QLayoutItem* item )
     {
         m_newItemList.prepend( item );
 
-        // make suer we don't draw the item in the list until
+        // make sure we don't draw the item in the list until
         // it has been added properly
         QRect itemRect = contentsRect();
         itemRect.setHeight( 2 );
         itemRect.translate( -3, -3);
         item->setGeometry( itemRect );
-
-        connect( item->widget(), SIGNAL(loaded()), SLOT(onItemLoaded()));
     }
     else
     {
         m_itemList.prepend( item );
     }
+
+    connect( item->widget(), SIGNAL(loaded()), SLOT(onItemLoaded()));
 }
 
 void
 AnimatedListLayout::onItemLoaded()
 {
     int cumHeight(0);
+    bool allItemsLoaded = true;
 
-    while ( m_newItemList.count() > 0 &&
-            !m_newItemList.last()->widget()->isHidden() )
+    // check to see if all the new items are loaded yet
+    foreach ( QLayoutItem* item , m_newItemList )
     {
-        QLayoutItem* item = m_newItemList.takeLast();
-        m_itemList.prepend( item );
-        cumHeight += item->sizeHint().height();
+        if ( item->widget()->isHidden() )
+        {
+            allItemsLoaded = false;
+            break;
+        }
+    }
+
+    if ( allItemsLoaded )
+    {
+        // All the items have loaded so calculate how tall
+        // they are and prepend them to the proper item list
+
+        foreach ( QLayoutItem* item , m_newItemList )
+        {
+            m_itemList.prepend( item );
+            cumHeight += item->sizeHint().height();
+        }
+
+        m_newItemList.clear();
     }
 
     if ( cumHeight > 0 )
     {
+        // Start the animation!
         m_timeLine->setDirection( QTimeLine::Forward );
         m_timeLine->setStartFrame( 0 + cumHeight + m_timeLine->currentFrame() );
         m_timeLine->setEndFrame( 0 );
@@ -172,6 +192,16 @@ AnimatedListLayout::doLayout( const QRect& rect, int vOffset )
 {
     int cumHeight = 0;
 
+    // make sure that all the unloaded items are off the screen
+    foreach( QLayoutItem* i, m_newItemList )
+    {
+        QRect itemRect = rect;
+        itemRect.moveLeft( itemRect.width() * 2 );
+        i->setGeometry( itemRect );
+    }
+
+    // Draw the items in order according to the animation
+    // vOffset is where we are in the animation
     foreach( QLayoutItem* i, m_itemList )
     {
         QRect itemRect = rect;

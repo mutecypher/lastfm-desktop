@@ -28,7 +28,7 @@ class RecentTrackWidget : public StylableWidget
 {
     Q_OBJECT
 public:
-    RecentTrackWidget( const Track& track, QWidget* parent = 0 );
+    RecentTrackWidget( const Track& track );
 
     Track track() const { return m_track;}
 
