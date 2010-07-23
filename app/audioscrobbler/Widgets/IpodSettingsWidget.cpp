@@ -38,7 +38,11 @@ IpodSettingsWidget::IpodSettingsWidget( QWidget* parent )
     : SettingsWidget( parent )
 {
     setupUi();
+
+#ifdef Q_OS_MAC || Q_OS_WIN
     connect( ui.enableScrobbling, SIGNAL( stateChanged( int ) ), this, SLOT( onSettingsChanged() ) );
+#endif
+
     connect( ui.confirmScrobbles, SIGNAL( stateChanged( int ) ), this, SLOT( onSettingsChanged() ) );
     connect( ui.clearAssociations, SIGNAL( clicked() ), this, SLOT( clearIpodAssociations() ) );
 }
@@ -56,7 +60,6 @@ IpodSettingsWidget::setupUi()
     QVBoxLayout* vg2 = new QVBoxLayout;
     QHBoxLayout* h1 = new QHBoxLayout;
 
-    ui.enableScrobbling = new QCheckBox( this );
     ui.confirmScrobbles = new QCheckBox( this );
     ui.iPodAssociations = new QTreeWidget( this );
     ui.clearAssociations = new QPushButton( this );
@@ -65,13 +68,18 @@ IpodSettingsWidget::setupUi()
 
    // groupBox1->setTitle( tr( "Configure " ) );
     groupBox2->setTitle( tr( "iPod Associations" ) );
+
+#ifdef Q_OS_MAC || Q_OS_WIN
+    ui.enableScrobbling = new QCheckBox( this );
     ui.enableScrobbling->setText( tr( "Enable iPod scrobbling" ) );
+    ui.enableScrobbling->setChecked( unicorn::UserSettings().value( "enableIpodScrobbling", true ).toBool() );
+    vg->addWidget( ui.enableScrobbling );
+#endif
+
     ui.confirmScrobbles->setText( tr( "Always confirm iPod scrobbles" ) );
 
-    ui.enableScrobbling->setChecked( unicorn::UserSettings().value( "enableIpodScrobbling", true ).toBool() );
     ui.confirmScrobbles->setChecked( unicorn::UserSettings().value( "confirmIpodScrobbles", false ).toBool() );
 
-    vg->addWidget( ui.enableScrobbling );
     vg->addWidget( ui.confirmScrobbles );
 
     groupBox1->setLayout( vg );
@@ -118,7 +126,9 @@ IpodSettingsWidget::saveSettings()
     {
         //save settings
         qDebug() << "Saving settings...";
+#ifdef Q_OS_MAC || Q_OS_WIN
         unicorn::UserSettings().setValue( "enableIpodScrobbling", ui.enableScrobbling->isChecked() );
+#endif
         unicorn::UserSettings().setValue( "confirmIpodScrobbles", ui.confirmScrobbles->isChecked() );
         onSettingsSaved();
     }
