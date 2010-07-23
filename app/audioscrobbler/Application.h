@@ -18,6 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <lastfm/global.h>
+#include <lastfm/Track>
 #include "lib/unicorn/UnicornApplication.h"
 #include <QPointer>
 #include <QSystemTrayIcon>
@@ -59,6 +60,8 @@ namespace audioscrobbler
         QPointer<StopWatch> watch;
         QPointer<MetadataWindow> mw;
         QPointer<ScrobbleInfoFetcher> fetcher;
+
+        Track trackToScrobble;
 
         AboutDialog* m_aboutDialog;
         

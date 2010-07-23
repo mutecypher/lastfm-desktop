@@ -319,7 +319,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     state = Playing;
 
     Q_ASSERT(connection);
-    
+
     //TODO move to playerconnection
     if(t == oldtrack){ 
         qWarning() << "Trying to start the same track as last time, assuming programmer error and doing nothing";
@@ -329,6 +329,20 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
         qWarning() << "Can't start null track!";
         return;
     }
+
+    double trackLengthPercent = unicorn::UserSettings().value( "scrobblePoint", 50 ).toDouble() / 100.0;
+
+    //This is to prevent the next track being scrobbled
+    //instead of the track just listened
+    if ( trackLengthPercent == 100 && !oldtrack.isNull() )
+    {
+        trackToScrobble = oldtrack;
+    }
+    else
+    {
+        trackToScrobble = t;
+    }
+
     m_artist_action->setText( t.artist()); 
     m_title_action->setText( t.title() + " [" + t.durationString() + ']' );
 
@@ -339,7 +353,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
         qDebug() << "************** Now Playing..";
         as->nowPlaying(t);
     }
-    ScrobblePoint timeout(t.duration()/2);
+    ScrobblePoint timeout( t.duration() * trackLengthPercent );
     watch = new StopWatch(timeout, connection->elapsed());
     watch->resume();
     connect(watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
@@ -366,7 +380,7 @@ void
 Application::onStopWatchTimedOut()
 {
     Q_ASSERT(connection);    
-    if( as ) as->cache(connection->track());
+    if( as ) as->cache( trackToScrobble );
 }
 
 void
