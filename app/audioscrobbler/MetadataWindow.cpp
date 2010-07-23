@@ -19,11 +19,11 @@
 */
 #include "MetadataWindow.h"
 
-#include "ScrobbleStatus.h"
-#include "ScrobbleControls.h"
 #include "Application.h"
-#include "ProfileWidget.h"
-#include "ScrobbleInfoWidget.h"
+#include "../Widgets/ProfileWidget.h"
+#include "../Widgets/ScrobbleControls.h"
+#include "../Widgets/ScrobbleInfoWidget.h"
+#include "../Widgets/ScrobbleStatus.h"
 
 #include "lib/unicorn/widgets/MessageBar.h"
 #include "lib/unicorn/widgets/GhostWidget.h"

@@ -18,10 +18,10 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "AccountSettingsWidget.h"
-#include "IpodSettingsWidget.h"
 #include "SettingsDialog.h"
-#include "ScrobbleSettingsWidget.h"
+#include "../Widgets/AccountSettingsWidget.h"
+#include "../Widgets/IpodSettingsWidget.h"
+#include "../Widgets/ScrobbleSettingsWidget.h"
 
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
