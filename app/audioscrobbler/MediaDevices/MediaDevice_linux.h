@@ -27,21 +27,83 @@
 class MediaDevice: public QObject
 {
     Q_OBJECT
+
 public:
     MediaDevice();
     ~MediaDevice();
-    
+
+    /**
+     * @return the database to sync tracks to be scrobbled.
+     */
     QSqlDatabase database() const;
 
+    /**
+     * Try to detect if there is any of the user associated devices already mounted and use it.
+     * If more than one device is detected then nothing would be done.
+     * @return true if there was just one of the user's devices mounted, otherwise returns false.
+     */
+    bool autoDetectMountPath();
+
+    /**
+     * Sets the mount path where the device is mounted.
+     * @param path The mount path of the mounted device.
+     */
     void setMountPath( const QString& path ){ m_mountPath = path; }
 
-    QString error() const { return m_error; }
+    /**
+     * @return The mount path of the device.
+     */
+    QString mountPath() const { return m_mountPath; }
 
+    /**
+     * Associates the device to the audioscrobbler user account.
+     * @return true if it succeeds, false otherwise.
+     */
+    bool associateDevice();
+
+    /**
+     * @return the last error ocurred or empty string if there wasn't any.
+     */
+    QString lastError() const { return m_error; }
+
+    /**
+     * @return an unique ID for the device.
+     */
+    virtual QString deviceId() const = 0;
+
+    /**
+     * @return the device name.
+     */
+    virtual QString deviceName() const = 0;
+
+    /**
+     * @return an unique table name.
+     */
     virtual QString tableName() const = 0;
+
+    /**
+     * @return a list of tracks to be scrobbled.
+     */
     virtual QList<Track> tracksToScrobble() = 0;
+
+    /**
+     * @return true if the device is already associated with the user account, false otherwise.
+     */
+    bool isDeviceKnown() const;
+
 
 protected:
     QString m_error;
+
+private:
+    struct DeviceInfo
+    {
+        QString mountPath;
+        QString prettyName;
+    };
+
+private:
+    QMap<QString, DeviceInfo> m_detectedDevices;
     QString m_mountPath;
 };
 

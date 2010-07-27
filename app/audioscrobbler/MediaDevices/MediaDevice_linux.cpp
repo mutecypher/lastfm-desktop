@@ -18,6 +18,8 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "MediaDevice_linux.h"
+#include "lib/unicorn/UnicornSettings.h"
+
 #include <lastfm/misc.h>
 
 #include <QSqlQuery>
@@ -60,4 +62,77 @@ MediaDevice::database() const
     return db;
 }
 
+bool
+MediaDevice::autoDetectMountPath()
+{
+    unicorn::UserSettings us;
+    int count = us.beginReadArray( "associatedDevices" );
 
+    if ( !count )
+        return false;
+
+    m_detectedDevices.clear();
+
+    DeviceInfo deviceInfo;
+    QString deviceId;
+    for ( int i = 0; i < count; i++ )
+    {
+        us.setArrayIndex( i );
+        deviceId = us.value( "deviceId" ).toString();
+        deviceInfo.prettyName = us.value( "deviceName" ).toString();
+        deviceInfo.mountPath = us.value( "mountPath" ).toString();
+        if ( QFile::exists( deviceInfo.mountPath ) )
+        {
+            m_detectedDevices[ deviceId ] = deviceInfo;
+        }
+    }
+    us.endArray();
+
+    //No device detected or many, so user has to choose.
+    if ( m_detectedDevices.count() == 0 || m_detectedDevices.count() > 1 )
+    {
+        return false;
+    }
+
+    setMountPath( m_detectedDevices.values()[ 0 ].mountPath );
+    return true;
+}
+
+bool
+MediaDevice::isDeviceKnown() const
+{
+    unicorn::UserSettings us;
+    int count = us.beginReadArray( "associatedDevices" );
+    QString devId;
+    bool isKnown = false;
+    for ( int i = 0; i < count; i++ )
+    {
+        us.setArrayIndex( i );
+        devId = us.value( "deviceId", "" ).toString();
+        if ( devId == deviceId() )
+        {
+            isKnown = true;
+        }
+    }
+    us.endArray();
+    return isKnown;
+}
+
+bool
+MediaDevice::associateDevice()
+{
+    if ( deviceId().isEmpty() || deviceName().isEmpty() || mountPath().isEmpty() || !QFile::exists( m_mountPath ) )
+        return false;
+
+    unicorn::UserSettings us;
+    int count = us.beginReadArray( "associatedDevices" );
+    us.endArray();
+
+    us.beginWriteArray( "associatedDevices" );
+    us.setArrayIndex( count );
+    us.setValue( "deviceId", deviceId() );
+    us.setValue( "deviceName", deviceName() );
+    us.setValue( "mountPath", QDir::toNativeSeparators( mountPath() ) );
+    us.endArray();
+    return true;
+}

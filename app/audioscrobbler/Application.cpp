@@ -43,7 +43,6 @@
 #include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/UnicornSettings.h"
-#include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "Wizard/FirstRunWizard.h"
 
@@ -464,36 +463,40 @@ Application::onShareTriggered()
 }
 
 #ifdef Q_WS_X11
+
+QString
+Application::getIpodMountPath()
+{
+    QString path = "";
+    QFileDialog dialog( 0, tr( "Where is your iPod mounted?" ), "/" );
+    dialog.setOption( QFileDialog::ShowDirsOnly, true );
+    dialog.setFileMode( QFileDialog::Directory );
+
+    //The following lines are to make sure the QFileDialog looks native.
+    QString backgroundColor( "transparent" );
+    dialog.setStyleSheet( "QDockWidget QFrame{ background-color: " + backgroundColor + "; }" );
+
+    if ( dialog.exec() )
+    {
+       path = dialog.selectedFiles()[ 0 ];
+    }
+    return path;
+}
+
 void
 Application::onScrobbleIpodTriggered()
 {
     IpodDevice iPod;
     QString path;
 
-    path = unicorn::UserSettings().value( "device/mountpath", "" ).toString();
+    bool autoDetectionSuceeded = true;
 
-    if ( path.isEmpty() || !QFile::exists( path ) )
+    if ( !iPod.autoDetectMountPath() )
     {
-        path = "";
-        QFileDialog dialog( 0, tr( "Where is your iPod mounted?" ), "/" );
-        dialog.setOption( QFileDialog::ShowDirsOnly, true );
-        dialog.setFileMode( QFileDialog::Directory );
-
-        //The following lines are to make sure the QFileDialog looks native.
-        QString backgroundColor( "transparent" );
-        dialog.setStyleSheet( "QDockWidget QFrame{ background-color: " + backgroundColor + "; }" );
-
-        if ( dialog.exec() )
-        {
-            path = dialog.selectedFiles()[ 0 ];
-        }
-
-        if ( path.isEmpty() )
-            return;
-
+        path = getIpodMountPath();
+        iPod.setMountPath( path );
+        autoDetectionSuceeded = false;
     }
-
-    iPod.setMountPath( path );
 
     qApp->setOverrideCursor( Qt::WaitCursor );
     QList<Track> tracks = iPod.tracksToScrobble();
@@ -501,35 +504,60 @@ Application::onScrobbleIpodTriggered()
 
     qDebug() << tracks.count() << " new tracks to scrobble.";
 
+    //Autodetection probably failed but we couldn't detect it earlier.
+    //Give it another chance.
+    if ( !iPod.lastError().isEmpty() && autoDetectionSuceeded )
+    {
+        path = getIpodMountPath();
+        iPod.setMountPath( path );
+        qApp->setOverrideCursor( Qt::WaitCursor );
+        tracks = iPod.tracksToScrobble();
+        qApp->restoreOverrideCursor();
+    }
+
     if ( tracks.count() )
     {
         as->cache( tracks );
+
+        QMessageBoxBuilder( mw )
+                .setIcon( QMessageBox::Information )
+                .setTitle( tr( "Scrobble iPod" ) )
+                .setText( tr( "%1 tracks scrobbled." ).arg( tracks.count() ) )
+                .exec();
+
+        if ( !iPod.isDeviceKnown() )
+        {
+            qDebug() << "Should we save it?";
+            int result = QMessageBoxBuilder( mw )
+                        .setIcon( QMessageBox::Information )
+                        .setTitle( tr( "Scrobble iPod" ) )
+                        .setText( tr( "Do you want to associate the device %1 to your audioscrobbler user account?" ).arg( iPod.deviceName() ) )
+                        .setButtons( QMessageBox::Yes | QMessageBox::No )
+                        .exec();
+
+            if ( result == QMessageBox::Yes )
+                iPod.associateDevice();
+        }
     }
-    else if ( !iPod.error().isEmpty() )
+    else if ( !iPod.lastError().isEmpty() )
     {
         QMessageBoxBuilder( mw )
                 .setIcon( QMessageBox::Critical )
                 .setTitle( tr( "Scrobble iPod" ) )
-                .setText( iPod.error() )
+                .setText( iPod.lastError() )
                 .exec();
-        qDebug() << iPod.error();
+        qDebug() << iPod.lastError();
     }
     else
     {
         QMessageBoxBuilder( mw )
-                .setIcon( QMessageBox::Warning )
+                .setIcon( QMessageBox::Information )
                 .setTitle( tr( "Scrobble iPod" ) )
                 .setText( tr( "No tracks to scrobble since your last sync." ) )
                 .exec();
         qDebug() << "No tracks to scrobble";
     }
 
-    //if the iPod mount path was correct we check if we have to update the configuration file
-    if ( tracks.count() || iPod.error().isEmpty() )
-    {
-        if ( unicorn::UserSettings().value( "device/mountpath", "" ).toString() != path )
-            unicorn::UserSettings().setValue( "device/mountpath", path );
-    }
 }
 #endif
 

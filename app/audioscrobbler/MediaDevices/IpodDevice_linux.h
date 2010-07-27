@@ -32,8 +32,12 @@ class IpodDevice: public MediaDevice
 public:
     IpodDevice();
     ~IpodDevice();
-    virtual QString tableName() const { return m_tableName; }
+
+    virtual QString deviceId() const { return m_deviceId; }
+    virtual QString deviceName() const;
+    virtual QString tableName() const { return m_deviceId; }
     virtual QList<Track> tracksToScrobble();
+
 private:
     void commit( Itdb_Track* iTrack );
     void open();
@@ -44,7 +48,7 @@ private:
 private:
     Itdb_iTunesDB* m_itdb;
     Itdb_Playlist* m_mpl;
-    QString m_tableName;
+    QString m_deviceId;
     QString m_ipodModel;
 };
 

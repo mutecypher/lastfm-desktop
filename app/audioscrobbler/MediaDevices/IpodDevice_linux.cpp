@@ -18,12 +18,15 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "IpodDevice_linux.h"
+#include "lib/unicorn/QMessageBoxBuilder.h"
+#include "lib/unicorn/UnicornSettings.h"
 
 #include <QApplication>
 #include <QByteArray>
 #include <QFile>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QStringList>
 
 extern "C"
 {
@@ -46,12 +49,13 @@ IpodDevice::~IpodDevice()
     }
 }
 
-
 void
 IpodDevice::open()
 {
-    QByteArray _mountpath = QFile::encodeName( m_mountPath );
+    QByteArray _mountpath = QFile::encodeName( mountPath() );
     const char* mountpath = _mountpath.data();
+
+    qDebug() << "mount path: " << mountPath();
 
     m_itdb = itdb_new();
     itdb_set_mountpoint( m_itdb, mountpath );
@@ -63,13 +67,14 @@ IpodDevice::open()
     if ( err )
         throw tr( "The iPod database could not be opened." );
 
-    if( m_tableName.isEmpty() )
+    if( m_deviceId.isEmpty() )
     {
         const Itdb_IpodInfo* iPodInfo = itdb_device_get_ipod_info( m_itdb->device );
         const gchar* ipodModel = itdb_info_get_ipod_model_name_string( iPodInfo->ipod_model );
         m_ipodModel = QString( ipodModel );
-        m_tableName = m_ipodModel.section( ' ', 0, 0 ) + "_" + QString::number( m_itdb->id );
+        m_deviceId = m_ipodModel.section( ' ', 0, 0 ) + "_" + QString::number( m_itdb->id );
     }
+
 }
 
 
@@ -127,6 +132,7 @@ IpodDevice::tracksToScrobble()
             commit( iTrack );
         }
     }
+    m_error = "";
     return tracks;
 }
 
@@ -191,6 +197,13 @@ IpodDevice::commit( Itdb_Track* iTrack )
 }
 
 
-
+QString
+IpodDevice::deviceName() const
+{
+    QStringList devPath = mountPath().split( "/", QString::SkipEmptyParts );
+    if ( !devPath.isEmpty() )
+        return devPath.last();
+    return QString();
+}
 
 

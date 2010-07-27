@@ -114,6 +114,7 @@ namespace audioscrobbler
         void onShareTriggered();
 
 #ifdef Q_WS_X11
+        QString getIpodMountPath();
         void onScrobbleIpodTriggered();
 #endif
 
