@@ -20,7 +20,7 @@
 #ifndef IPOD_DEVICE_H
 #define IPOD_DEVICE_H
 
-#include "MediaDevice_linux.h"
+#include "MediaDevice.h"
 
 typedef struct _Itdb_iTunesDB Itdb_iTunesDB;
 typedef struct _Itdb_Track Itdb_Track;
@@ -33,10 +33,55 @@ public:
     IpodDevice();
     ~IpodDevice();
 
+    /**
+     * Deletes the table with the device scrobbled tracks information.
+     * @return true on success.
+     */
+    static bool deleteDeviceHistory( QString username, QString deviceId );
+
+    /**
+     * Delete the database containing all the devices scrobbled tracks tables.
+     * @return true on success.
+     */
+    static bool deleteDevicesHistory();
+
+    /**
+     * @return the database to sync tracks to be scrobbled.
+     */
+    QSqlDatabase database() const;
+
+
+    /**
+     * Try to detect if there is any of the user associated devices already mounted and use it.
+     * If more than one device is detected then nothing would be done.
+     * @return true if there was just one of the user's devices mounted, otherwise returns false.
+     */
+    bool autoDetectMountPath();
+
+    /**
+     * Sets the mount path where the device is mounted.
+     * @param path The mount path of the mounted device.
+     */
+    void setMountPath( const QString& path ){ m_mountPath = path; }
+
+    /**
+     * @return The mount path of the device.
+     */
+    QString mountPath() const { return m_mountPath; }
+
     virtual QString deviceId() const { return m_deviceId; }
     virtual QString deviceName() const;
-    virtual QString tableName() const { return m_deviceId; }
-    virtual QList<Track> tracksToScrobble();
+
+    /**
+     * @return an unique table name to store the device scrobbled tracks.
+     */
+    QString tableName() const;
+
+    /**
+     * @return a list of tracks to be scrobbled.
+     */
+    QList<Track> tracksToScrobble();
+
 
 private:
     void commit( Itdb_Track* iTrack );
@@ -46,9 +91,18 @@ private:
     QDateTime previousPlayTime( Itdb_Track* track ) const;
 
 private:
+    struct DeviceInfo
+    {
+        QString mountPath;
+        QString prettyName;
+    };
+
+private:
     Itdb_iTunesDB* m_itdb;
     Itdb_Playlist* m_mpl;
     QString m_deviceId;
+    QMap<QString, DeviceInfo> m_detectedDevices;
+    QString m_mountPath;
     QString m_ipodModel;
 };
 

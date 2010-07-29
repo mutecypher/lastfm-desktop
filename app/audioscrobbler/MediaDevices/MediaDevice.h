@@ -24,42 +24,22 @@
 #include <QSqlDatabase>
 #include <lastfm/Track>
 
+#define DB_NAME "MediaDevicesScrobbles"
+
 class MediaDevice: public QObject
 {
     Q_OBJECT
 
 public:
     MediaDevice();
-    ~MediaDevice();
 
     /**
-     * @return the database to sync tracks to be scrobbled.
-     */
-    QSqlDatabase database() const;
-
-    /**
-     * Try to detect if there is any of the user associated devices already mounted and use it.
-     * If more than one device is detected then nothing would be done.
-     * @return true if there was just one of the user's devices mounted, otherwise returns false.
-     */
-    bool autoDetectMountPath();
-
-    /**
-     * Sets the mount path where the device is mounted.
-     * @param path The mount path of the mounted device.
-     */
-    void setMountPath( const QString& path ){ m_mountPath = path; }
-
-    /**
-     * @return The mount path of the device.
-     */
-    QString mountPath() const { return m_mountPath; }
-
-    /**
-     * Associates the device to the audioscrobbler user account.
+     * Associates the device to an user account.
+     * @param username the user name to associate the device to. If no user name is provided the
+     * device gets associated to the current user logged in.
      * @return true if it succeeds, false otherwise.
      */
-    bool associateDevice();
+    bool associateDevice( QString username = "" );
 
     /**
      * @return the last error ocurred or empty string if there wasn't any.
@@ -76,15 +56,13 @@ public:
      */
     virtual QString deviceName() const = 0;
 
-    /**
-     * @return an unique table name.
-     */
-    virtual QString tableName() const = 0;
 
+#ifdef Q_WS_X11
     /**
-     * @return a list of tracks to be scrobbled.
+     * @return The mount path of the device.
      */
-    virtual QList<Track> tracksToScrobble() = 0;
+    virtual QString mountPath() const = 0;
+#endif
 
     /**
      * @return true if the device is already associated with the user account, false otherwise.
@@ -94,17 +72,6 @@ public:
 
 protected:
     QString m_error;
-
-private:
-    struct DeviceInfo
-    {
-        QString mountPath;
-        QString prettyName;
-    };
-
-private:
-    QMap<QString, DeviceInfo> m_detectedDevices;
-    QString m_mountPath;
 };
 
 

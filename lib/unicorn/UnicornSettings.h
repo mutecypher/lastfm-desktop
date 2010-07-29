@@ -53,7 +53,7 @@ namespace unicorn
     class UNICORN_DLLEXPORT UserSettings : public QSettings
     {
     public:
-        UserSettings();
+        UserSettings( QString userName = "" );
         static const char* subscriptionKey() { return "subscriber"; }
     };
 }

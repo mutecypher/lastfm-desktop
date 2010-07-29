@@ -488,7 +488,7 @@ Application::onScrobbleIpodTriggered()
 {
     IpodDevice iPod;
     QString path;
-
+    bool bootStrapping = false;
     bool autoDetectionSuceeded = true;
 
     if ( !iPod.autoDetectMountPath() )
@@ -502,8 +502,6 @@ Application::onScrobbleIpodTriggered()
     QList<Track> tracks = iPod.tracksToScrobble();
     qApp->restoreOverrideCursor();
 
-    qDebug() << tracks.count() << " new tracks to scrobble.";
-
     //Autodetection probably failed but we couldn't detect it earlier.
     //Give it another chance.
     if ( !iPod.lastError().isEmpty() && autoDetectionSuceeded )
@@ -515,31 +513,49 @@ Application::onScrobbleIpodTriggered()
         qApp->restoreOverrideCursor();
     }
 
+    qDebug() << tracks.count() << " new tracks to scrobble.";
+
+    if ( iPod.lastError().isEmpty() && !iPod.isDeviceKnown() )
+    {
+        bootStrapping = true;
+        qDebug() << "Should we save it?";
+        int result = QMessageBoxBuilder( mw )
+                          .setIcon( QMessageBox::Question )
+                          .setTitle( tr( "Scrobble iPod" ) )
+                          .setText( tr( "Do you want to associate the device %1 to your audioscrobbler user account?" ).arg( iPod.deviceName() ) )
+                          .setButtons( QMessageBox::Yes | QMessageBox::No )
+                          .exec();
+
+        if ( result == QMessageBox::Yes )
+        {
+            iPod.associateDevice();
+            QMessageBoxBuilder( mw )
+                .setIcon( QMessageBox::Information )
+                .setTitle( tr( "Scrobble iPod" ) )
+                .setText( tr( "Device successfully associated to your user account. "
+                              "From now on you can scrobble the tracks you listen on this device." ) )
+                .exec();
+
+        }
+        else
+        {
+            IpodDevice::deleteDeviceHistory( unicorn::Session().username(), iPod.deviceId() );
+        }
+    }
+
     if ( tracks.count() )
     {
-        as->cache( tracks );
-
-        QMessageBoxBuilder( mw )
+        if ( !bootStrapping )
+        {
+            as->cache( tracks );
+            QMessageBoxBuilder( mw )
                 .setIcon( QMessageBox::Information )
                 .setTitle( tr( "Scrobble iPod" ) )
                 .setText( tr( "%1 tracks scrobbled." ).arg( tracks.count() ) )
                 .exec();
-
-        if ( !iPod.isDeviceKnown() )
-        {
-            qDebug() << "Should we save it?";
-            int result = QMessageBoxBuilder( mw )
-                        .setIcon( QMessageBox::Information )
-                        .setTitle( tr( "Scrobble iPod" ) )
-                        .setText( tr( "Do you want to associate the device %1 to your audioscrobbler user account?" ).arg( iPod.deviceName() ) )
-                        .setButtons( QMessageBox::Yes | QMessageBox::No )
-                        .exec();
-
-            if ( result == QMessageBox::Yes )
-                iPod.associateDevice();
         }
     }
-    else if ( !iPod.lastError().isEmpty() )
+    else if ( !iPod.lastError().isEmpty() && !path.isEmpty() )
     {
         QMessageBoxBuilder( mw )
                 .setIcon( QMessageBox::Critical )
@@ -547,6 +563,7 @@ Application::onScrobbleIpodTriggered()
                 .setText( iPod.lastError() )
                 .exec();
         qDebug() << iPod.lastError();
+        return;
     }
     else
     {
@@ -557,6 +574,7 @@ Application::onScrobbleIpodTriggered()
                 .exec();
         qDebug() << "No tracks to scrobble";
     }
+
 
 }
 #endif

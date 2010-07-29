@@ -20,7 +20,13 @@
 
 #include "IpodSettingsWidget.h"
 
+#ifdef Q_WS_X11
+#include "../MediaDevices/IpodDevice_linux.h"
+#endif
+
 #include "lib/unicorn/UnicornSettings.h"
+
+#include <lastfm/User>
 
 #include <QCheckBox>
 #include <QDebug>
@@ -45,6 +51,8 @@ IpodSettingsWidget::IpodSettingsWidget( QWidget* parent )
 
     connect( ui.confirmScrobbles, SIGNAL( stateChanged( int ) ), this, SLOT( onSettingsChanged() ) );
     connect( ui.clearAssociations, SIGNAL( clicked() ), this, SLOT( clearIpodAssociations() ) );
+    connect( ui.removeAssociation, SIGNAL( clicked() ), this, SLOT( removeIpodAssociation() ) );
+    connect( ui.iPodAssociations, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), this, SLOT( onItemActivated() ) );
 }
 
 
@@ -63,6 +71,8 @@ IpodSettingsWidget::setupUi()
     ui.confirmScrobbles = new QCheckBox( this );
     ui.iPodAssociations = new QTreeWidget( this );
     ui.clearAssociations = new QPushButton( this );
+    ui.removeAssociation = new QPushButton( this );
+
     QGroupBox* groupBox1 = new QGroupBox( this );
     QGroupBox* groupBox2 = new QGroupBox( this );
 
@@ -85,7 +95,7 @@ IpodSettingsWidget::setupUi()
     groupBox1->setLayout( vg );
 
 
-    ui.iPodAssociations->setColumnCount( 2 );
+    ui.iPodAssociations->setColumnCount( 3 );
     ui.iPodAssociations->setSortingEnabled( false );
     ui.iPodAssociations->header()->setResizeMode( QHeaderView::ResizeToContents );
     ui.iPodAssociations->setRootIsDecorated( false );
@@ -97,13 +107,16 @@ IpodSettingsWidget::setupUi()
     populateIpodAssociations();
 
     QStringList headerLabels;
-    headerLabels.append( tr( "Device" ) );
+    headerLabels.append( tr( "Device ID" ) );
+    headerLabels.append( tr( "Device Name" ) );
     headerLabels.append( tr( "User" ) );
     ui.iPodAssociations->setHeaderLabels( headerLabels );
 
     ui.clearAssociations->setText( tr( "Clear user associations" ) );
+    ui.removeAssociation->setText( tr( "Remove association" ) );
 
     h1->addStretch( 1 );
+    h1->addWidget( ui.removeAssociation );
     h1->addWidget( ui.clearAssociations );
     vg2->addWidget( ui.iPodAssociations );
     vg2->addLayout( h1 );
@@ -137,14 +150,78 @@ IpodSettingsWidget::saveSettings()
 void
 IpodSettingsWidget::populateIpodAssociations()
 {
-    //TODO: read from settings
+    QList<lastfm::User> roster = unicorn::Settings().userRoster();
+    foreach( lastfm::User user, roster )
+    {
+        unicorn::UserSettings us( user.name() );
+        int count = us.beginReadArray( "associatedDevices" );
+
+        for ( int i = 0; i < count; i++ )
+        {
+            us.setArrayIndex( i );
+            QTreeWidgetItem* item = new QTreeWidgetItem( ui.iPodAssociations );
+            item->setText( 0, us.value( "deviceId" ).toString() );
+            item->setText( 1, us.value( "deviceName" ).toString() );
+            item->setText( 2, user.name() );
+        }
+        us.endArray();
+    }
 
     ui.clearAssociations->setEnabled( ui.iPodAssociations->topLevelItemCount() > 0 );
+    ui.removeAssociation->setEnabled( false );
 }
 
 void
 IpodSettingsWidget::clearIpodAssociations()
 {
-   ui.iPodAssociations->clear();
-   ui.clearAssociations->setEnabled( false );
+    QList<lastfm::User> roster = unicorn::Settings().userRoster();
+    foreach( lastfm::User user, roster )
+    {
+        unicorn::UserSettings us( user.name() );
+        us.remove( "associatedDevices" );
+    }
+
+#ifdef Q_WS_X11
+    IpodDevice::deleteDevicesHistory();
+#endif
+
+    ui.iPodAssociations->clear();
+    ui.clearAssociations->setEnabled( false );
+    ui.removeAssociation->setEnabled( false );
+}
+
+void
+IpodSettingsWidget::onItemActivated()
+{
+
+    ui.removeAssociation->setEnabled( true );
+}
+
+void
+IpodSettingsWidget::removeIpodAssociation()
+{
+    QTreeWidgetItem* association = ui.iPodAssociations->currentItem();
+    QString deviceId = association->text( 0 );
+    QString userName = association->text( 2 );
+
+    unicorn::UserSettings us( userName );
+    int count = us.beginReadArray( "associatedDevices" );
+    for ( int i = 0; i < count; i++ )
+    {
+        us.setArrayIndex( i );
+        if ( deviceId == us.value( "deviceId" ).toString() )
+        {
+            us.remove( "deviceId" );
+            us.remove( "mountPath" );
+            us.remove( "deviceName" );
+            #ifdef Q_WS_X11
+            IpodDevice::deleteDeviceHistory( userName, deviceId );
+            #endif
+            break;
+        }
+    }
+    us.endArray();
+    us.setValue( "associatedDevices/size", count - 1 );
+    ui.iPodAssociations->takeTopLevelItem( ui.iPodAssociations->indexOfTopLevelItem( association ) );
+    ui.removeAssociation->setEnabled( false );
 }
