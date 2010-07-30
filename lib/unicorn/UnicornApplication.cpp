@@ -182,7 +182,13 @@ void
 unicorn::Application::translate()
 {
 #ifdef NDEBUG
-    QString const iso3166 = QLocale().name().right( 2 ).toLower();
+    //Try to load the language set by the user and
+    //if there wasn't any, then use the system language
+    QString const iso639 = AppSettings().value( "language", "" );
+    if ( iso639.isEmpty() )
+    {
+        QString const iso639 = QLocale().name().left( 2 );
+    }
 
 #ifdef Q_WS_MAC
     QDir const d = lastfm::dir::bundle().filePath( "Contents/Resources/qm" );
@@ -192,10 +198,10 @@ unicorn::Application::translate()
 
     //TODO need a unicorn/core/etc. translation, plus policy of no translations elsewhere or something!
     QTranslator* t1 = new QTranslator;
-    t1->load( d.filePath( "lastfm_" + iso3166 ) );
+    t1->load( d.filePath( "lastfm_" + iso639 ) );
 
     QTranslator* t2 = new QTranslator;
-    t2->load( d.filePath( "qt_" + iso3166 ) );
+    t2->load( d.filePath( "qt_" + iso639 ) );
 
     installTranslator( t1 );
     installTranslator( t2 );

@@ -18,39 +18,43 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Application.h"
+
 #ifdef Q_WS_X11
 #include "MediaDevices/IpodDevice_linux.h"
 #endif
-#include "MetadataWindow.h"
-#include "ScrobbleControls.h"
-#include "ScrobbleInfoFetcher.h"
-#include "StopWatch.h"
-#include "SettingsDialog.h"
+
+#include "Dialogs/SettingsDialog.h"
 #include "lib/listener/DBusListener.h"
+#include "lib/listener/legacy/LegacyPlayerListener.h"
 #include "lib/listener/PlayerConnection.h"
 #include "lib/listener/PlayerListener.h"
 #include "lib/listener/PlayerMediator.h"
-#include "lib/listener/legacy/LegacyPlayerListener.h"
+#include "MetadataWindow.h"
+#include "ScrobbleInfoFetcher.h"
+#include "StopWatch.h"
+#include "../Widgets/ScrobbleControls.h"
+
 #ifdef Q_WS_MAC
 #include "lib/listener/mac/ITunesListener.h"
 #endif
-#include <lastfm/Audioscrobbler>
-#include <lastfm/XmlQuery>
-#include <QMenu>
-#include <QDebug>
+
 #include "lib/unicorn/dialogs/AboutDialog.h"
-#include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/dialogs/ShareDialog.h"
-#include "lib/unicorn/UnicornSettings.h"
+#include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "Wizard/FirstRunWizard.h"
 
+#include <lastfm/Audioscrobbler>
+#include <lastfm/XmlQuery>
+
 #include <QShortcut>
 #include <QFileDialog>
 #include <QDesktopServices>
 #include <QNetworkDiskCache>
+#include <QMenu>
+#include <QDebug>
 
 #ifdef Q_OS_WIN32
 #include "windows.h"
@@ -326,7 +330,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     state = Playing;
 
     Q_ASSERT(connection);
-    
+
     //TODO move to playerconnection
     if(t == oldtrack){ 
         qWarning() << "Trying to start the same track as last time, assuming programmer error and doing nothing";
@@ -336,6 +340,20 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
         qWarning() << "Can't start null track!";
         return;
     }
+
+    double trackLengthPercent = unicorn::UserSettings().value( "scrobblePoint", 50 ).toDouble() / 100.0;
+
+    //This is to prevent the next track being scrobbled
+    //instead of the track just listened
+    if ( trackLengthPercent == 100 && !oldtrack.isNull() )
+    {
+        trackToScrobble = oldtrack;
+    }
+    else
+    {
+        trackToScrobble = t;
+    }
+
     m_artist_action->setText( t.artist()); 
     m_title_action->setText( t.title() + " [" + t.durationString() + ']' );
 
@@ -346,7 +364,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
         qDebug() << "************** Now Playing..";
         as->nowPlaying(t);
     }
-    ScrobblePoint timeout(t.duration()/2);
+    ScrobblePoint timeout( t.duration() * trackLengthPercent );
     watch = new StopWatch(timeout, connection->elapsed());
     watch->resume();
     connect(watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
@@ -373,7 +391,7 @@ void
 Application::onStopWatchTimedOut()
 {
     Q_ASSERT(connection);    
-    if( as ) as->cache(connection->track());
+    if( as ) as->cache( trackToScrobble );
 }
 
 void
@@ -447,72 +465,119 @@ Application::onShareTriggered()
 }
 
 #ifdef Q_WS_X11
+
+QString
+Application::getIpodMountPath()
+{
+    QString path = "";
+    QFileDialog dialog( 0, tr( "Where is your iPod mounted?" ), "/" );
+    dialog.setOption( QFileDialog::ShowDirsOnly, true );
+    dialog.setFileMode( QFileDialog::Directory );
+
+    //The following lines are to make sure the QFileDialog looks native.
+    QString backgroundColor( "transparent" );
+    dialog.setStyleSheet( "QDockWidget QFrame{ background-color: " + backgroundColor + "; }" );
+
+    if ( dialog.exec() )
+    {
+       path = dialog.selectedFiles()[ 0 ];
+    }
+    return path;
+}
+
 void
 Application::onScrobbleIpodTriggered()
 {
     IpodDevice iPod;
     QString path;
+    bool bootStrapping = false;
+    bool autoDetectionSuceeded = true;
 
-    path = unicorn::UserSettings().value( "device/mountpath", "" ).toString();
-
-    if ( path.isEmpty() || !QFile::exists( path ) )
+    if ( !iPod.autoDetectMountPath() )
     {
-        path = "";
-        QFileDialog dialog( 0, tr( "Where is your iPod mounted?" ), "/" );
-        dialog.setOption( QFileDialog::ShowDirsOnly, true );
-        dialog.setFileMode( QFileDialog::Directory );
-
-        //The following lines are to make sure the QFileDialog looks native.
-        QString backgroundColor( "transparent" );
-        dialog.setStyleSheet( "QDockWidget QFrame{ background-color: " + backgroundColor + "; }" );
-
-        if ( dialog.exec() )
-        {
-            path = dialog.selectedFiles()[ 0 ];
-        }
-
-        if ( path.isEmpty() )
-            return;
-
+        path = getIpodMountPath();
+        iPod.setMountPath( path );
+        autoDetectionSuceeded = false;
     }
-
-    iPod.setMountPath( path );
 
     qApp->setOverrideCursor( Qt::WaitCursor );
     QList<Track> tracks = iPod.tracksToScrobble();
     qApp->restoreOverrideCursor();
 
+    //Autodetection probably failed but we couldn't detect it earlier.
+    //Give it another chance.
+    if ( !iPod.lastError().isEmpty() && autoDetectionSuceeded )
+    {
+        path = getIpodMountPath();
+        iPod.setMountPath( path );
+        qApp->setOverrideCursor( Qt::WaitCursor );
+        tracks = iPod.tracksToScrobble();
+        qApp->restoreOverrideCursor();
+    }
+
     qDebug() << tracks.count() << " new tracks to scrobble.";
+
+    if ( iPod.lastError().isEmpty() && !iPod.isDeviceKnown() )
+    {
+        bootStrapping = true;
+        qDebug() << "Should we save it?";
+        int result = QMessageBoxBuilder( mw )
+                          .setIcon( QMessageBox::Question )
+                          .setTitle( tr( "Scrobble iPod" ) )
+                          .setText( tr( "Do you want to associate the device %1 to your audioscrobbler user account?" ).arg( iPod.deviceName() ) )
+                          .setButtons( QMessageBox::Yes | QMessageBox::No )
+                          .exec();
+
+        if ( result == QMessageBox::Yes )
+        {
+            iPod.associateDevice();
+            QMessageBoxBuilder( mw )
+                .setIcon( QMessageBox::Information )
+                .setTitle( tr( "Scrobble iPod" ) )
+                .setText( tr( "Device successfully associated to your user account. "
+                              "From now on you can scrobble the tracks you listen on this device." ) )
+                .exec();
+
+        }
+        else
+        {
+            IpodDevice::deleteDeviceHistory( unicorn::Session().username(), iPod.deviceId() );
+        }
+    }
 
     if ( tracks.count() )
     {
-        as->cache( tracks );
+        if ( !bootStrapping )
+        {
+            as->cache( tracks );
+            QMessageBoxBuilder( mw )
+                .setIcon( QMessageBox::Information )
+                .setTitle( tr( "Scrobble iPod" ) )
+                .setText( tr( "%1 tracks scrobbled." ).arg( tracks.count() ) )
+                .exec();
+        }
     }
-    else if ( !iPod.error().isEmpty() )
+    else if ( !iPod.lastError().isEmpty() && !path.isEmpty() )
     {
         QMessageBoxBuilder( mw )
                 .setIcon( QMessageBox::Critical )
                 .setTitle( tr( "Scrobble iPod" ) )
-                .setText( iPod.error() )
+                .setText( iPod.lastError() )
                 .exec();
-        qDebug() << iPod.error();
+        qDebug() << iPod.lastError();
+        return;
     }
     else
     {
         QMessageBoxBuilder( mw )
-                .setIcon( QMessageBox::Warning )
+                .setIcon( QMessageBox::Information )
                 .setTitle( tr( "Scrobble iPod" ) )
                 .setText( tr( "No tracks to scrobble since your last sync." ) )
                 .exec();
         qDebug() << "No tracks to scrobble";
     }
 
-    //if the iPod mount path was correct we check if we have to update the configuration file
-    if ( tracks.count() || iPod.error().isEmpty() )
-    {
-        if ( unicorn::UserSettings().value( "device/mountpath", "" ).toString() != path )
-            unicorn::UserSettings().setValue( "device/mountpath", path );
-    }
+
 }
 #endif
 

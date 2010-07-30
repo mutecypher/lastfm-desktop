@@ -18,8 +18,10 @@ QMAKE_LINK=@\\$$LITERAL_HASH
 CONFIG-=app_bundle
 CONFIG+=lib_bundle
 OBJECTS_DIR=.
-DESTDIR=build/Debug/
-TARGET=PrefPane.prefpane
+
+QMAKE_BUNDLE_EXTENSION=.prefpane
+debug:TARGET=Scrobbler_debug.prefpane
+release:TARGET=Scrobbler.prefpane
 
 QMAKE_EXTRA_TARGETS = pp
 PRE_TARGETDEPS = $$pp.target

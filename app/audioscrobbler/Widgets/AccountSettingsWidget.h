@@ -1,6 +1,6 @@
 /*
-   Copyright 2005-2010 Last.fm Ltd.
-      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
+   Copyright 2010 Last.fm Ltd.
+      - Primarily authored by Jono Cole, Michael Coffey, and William Viana
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -17,33 +17,32 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef MEDIA_DEVICE_H
-#define MEDIA_DEVICE_H
 
-#include <QObject>
-#include <QSqlDatabase>
-#include <lastfm/Track>
+#ifndef ACCOUNT_SETTINGS_WIDGET_H_
+#define ACCOUNT_SETTINGS_WIDGET_H_
 
-class MediaDevice: public QObject
+#include "SettingsWidget.h"
+
+class AccountSettingsWidget: public SettingsWidget
 {
-    Q_OBJECT
+Q_OBJECT
 public:
-    MediaDevice();
-    ~MediaDevice();
-    
-    QSqlDatabase database() const;
+    AccountSettingsWidget( QWidget* parent = 0 );
 
-    void setMountPath( const QString& path ){ m_mountPath = path; }
+public slots:
+    virtual void saveSettings();
 
-    QString error() const { return m_error; }
+private:
+    void setupUi();
+    void populateLanguages();
 
-    virtual QString tableName() const = 0;
-    virtual QList<Track> tracksToScrobble() = 0;
+private:
+    struct Ui
+    {
+        class UserManagerWidget* users;
+        class QComboBox* languages;
+    } ui;
 
-protected:
-    QString m_error;
-    QString m_mountPath;
 };
 
-
-#endif // MEDIA_DEVICE_H
+#endif //ACCOUNT_SETTINGS_WIDGET_H_

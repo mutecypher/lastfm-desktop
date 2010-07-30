@@ -18,12 +18,16 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "IpodDevice_linux.h"
+#include "lib/unicorn/QMessageBoxBuilder.h"
+#include "lib/unicorn/UnicornSettings.h"
+#include "lib/unicorn/UnicornSession.h"
 
 #include <QApplication>
 #include <QByteArray>
 #include <QFile>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QStringList>
 
 extern "C"
 {
@@ -46,12 +50,76 @@ IpodDevice::~IpodDevice()
     }
 }
 
+bool
+IpodDevice::deleteDeviceHistory( QString username, QString deviceId )
+{
+    QString const name = DB_NAME;
+    QSqlDatabase db = QSqlDatabase::database( name );
+    bool b = false;
+
+    if ( !db.isValid() )
+    {
+        db = QSqlDatabase::addDatabase( "QSQLITE", name );
+        db.setDatabaseName( lastfm::dir::runtimeData().filePath( name + ".db" ) );
+    }
+
+    db.open();
+
+    QSqlQuery q( db );
+    b = q.exec( "DROP TABLE " + username + "_" + deviceId );
+
+    if ( !b )
+        qWarning() << q.lastError().text();
+
+    return b;
+}
+
+bool
+IpodDevice::deleteDevicesHistory()
+{
+    QString const name = DB_NAME;
+    QString filePath = lastfm::dir::runtimeData().filePath( name + ".db" );
+    return QFile::remove( filePath );
+}
+
+QSqlDatabase
+IpodDevice::database() const
+{
+    QString const name = DB_NAME;
+    QSqlDatabase db = QSqlDatabase::database( name );
+
+    if ( !db.isValid() )
+    {
+        db = QSqlDatabase::addDatabase( "QSQLITE", name );
+        db.setDatabaseName( lastfm::dir::runtimeData().filePath( name + ".db" ) );
+
+        db.open();
+
+
+    }
+
+    if( !db.tables().contains( tableName() ) )
+    {
+        QSqlQuery q( db );
+        qDebug() << "table name: " << tableName();
+        bool b = q.exec( "CREATE TABLE " + tableName() + " ( "
+                         "id           INTEGER PRIMARY KEY, "
+                         "playcount    INTEGER, "
+                         "lastplaytime INTEGER )" );
+        if ( !b )
+            qWarning() << q.lastError().text();
+    }
+
+    return db;
+}
 
 void
 IpodDevice::open()
 {
-    QByteArray _mountpath = QFile::encodeName( m_mountPath );
+    QByteArray _mountpath = QFile::encodeName( mountPath() );
     const char* mountpath = _mountpath.data();
+
+    qDebug() << "mount path: " << mountPath();
 
     m_itdb = itdb_new();
     itdb_set_mountpoint( m_itdb, mountpath );
@@ -63,13 +131,14 @@ IpodDevice::open()
     if ( err )
         throw tr( "The iPod database could not be opened." );
 
-    if( m_tableName.isEmpty() )
+    if( m_deviceId.isEmpty() )
     {
         const Itdb_IpodInfo* iPodInfo = itdb_device_get_ipod_info( m_itdb->device );
         const gchar* ipodModel = itdb_info_get_ipod_model_name_string( iPodInfo->ipod_model );
         m_ipodModel = QString( ipodModel );
-        m_tableName = m_ipodModel.section( ' ', 0, 0 ) + "_" + QString::number( m_itdb->id );
+        m_deviceId = m_ipodModel.section( ' ', 0, 0 ) + "_" + QString::number( m_itdb->id );
     }
+
 }
 
 
@@ -127,6 +196,7 @@ IpodDevice::tracksToScrobble()
             commit( iTrack );
         }
     }
+    m_error = "";
     return tracks;
 }
 
@@ -142,8 +212,6 @@ IpodDevice::setTrackInfo( Track& lstTrack, Itdb_Track* iTrack )
     QDateTime t;
     t.setTime_t( iTrack->time_played );
     MutableTrack( lstTrack ).setTimeStamp( t );
-    qDebug() << "date time: " << t;
-    qDebug() << "lstTrack timestamp: " << lstTrack.timestamp().toString();
     MutableTrack( lstTrack ).setDuration( iTrack->tracklen / 1000 ); // set duration in seconds
 
     MutableTrack( lstTrack ).setExtra( "playerName", "iPod " + m_ipodModel );
@@ -191,6 +259,53 @@ IpodDevice::commit( Itdb_Track* iTrack )
 }
 
 
+QString
+IpodDevice::deviceName() const
+{
+    QStringList devPath = mountPath().split( "/", QString::SkipEmptyParts );
+    if ( !devPath.isEmpty() )
+        return devPath.last();
+    return QString();
+}
 
+QString
+IpodDevice::tableName() const
+{
+    return unicorn::Session().username() + "_" + m_deviceId;
+}
 
+bool
+IpodDevice::autoDetectMountPath()
+{
+    unicorn::UserSettings us;
+    int count = us.beginReadArray( "associatedDevices" );
 
+    if ( !count )
+        return false;
+
+    m_detectedDevices.clear();
+
+    DeviceInfo deviceInfo;
+    QString deviceId;
+    for ( int i = 0; i < count; i++ )
+    {
+        us.setArrayIndex( i );
+        deviceId = us.value( "deviceId" ).toString();
+        deviceInfo.prettyName = us.value( "deviceName" ).toString();
+        deviceInfo.mountPath = us.value( "mountPath" ).toString();
+        if ( QFile::exists( deviceInfo.mountPath ) )
+        {
+            m_detectedDevices[ deviceId ] = deviceInfo;
+        }
+    }
+    us.endArray();
+
+    //No device detected or many, so user has to choose.
+    if ( m_detectedDevices.count() == 0 || m_detectedDevices.count() > 1 )
+    {
+        return false;
+    }
+
+    setMountPath( m_detectedDevices.values()[ 0 ].mountPath );
+    return true;
+}

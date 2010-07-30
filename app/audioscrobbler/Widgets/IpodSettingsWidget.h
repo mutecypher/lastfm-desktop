@@ -33,6 +33,11 @@ public:
 public slots:
     virtual void saveSettings();
 
+private slots:
+    void clearIpodAssociations();
+    void removeIpodAssociation();
+    void onItemActivated();
+
 private:
     struct Ui
     {
@@ -40,12 +45,12 @@ private:
         class QCheckBox* confirmScrobbles;
         class QTreeWidget* iPodAssociations;
         class QPushButton* clearAssociations;
+        class QPushButton* removeAssociation;
     } ui;
 
 private:
     void setupUi();
     void populateIpodAssociations();
-    void clearIpodAssociations();
 };
 
 #endif
