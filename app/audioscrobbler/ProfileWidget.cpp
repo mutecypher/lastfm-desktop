@@ -74,7 +74,6 @@ ProfileWidget::ProfileWidget( QWidget* p )
     connect( qApp, SIGNAL(sessionChanged(unicorn::Session, unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));
     connect( qApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
     connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
-    connect( qApp, SIGNAL(scrobblesSubmitted(QList<lastfm::Track>, int)), SLOT(onScrobblesSubmitted(QList<lastfm::Track>, int)));
 }
 
 void 
@@ -106,17 +105,5 @@ ProfileWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
     foreach ( lastfm::Track track, tracks )
         ui.recentTracks->addCachedTrack( track );
-
-    ui.recentTracks->write();
 }
 
-void 
-ProfileWidget::onScrobblesSubmitted( const QList<lastfm::Track>& tracks, int succeeded )
-{
-    *ui.scrobbleMeter += succeeded;
-
-    foreach ( lastfm::Track track, tracks )
-        ui.recentTracks->addScrobbledTrack( track );
-
-    ui.recentTracks->write();
-}

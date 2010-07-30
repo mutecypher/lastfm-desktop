@@ -23,6 +23,7 @@
 #include <QIcon>
 #include <QFile>
 #include <QLabel>
+#include <QTimer>
 
 #include <lastfm/misc.h>
 
@@ -45,6 +46,11 @@ RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
     connect( layout, SIGNAL(moveFinished()), SLOT(onMoveFinished()));
 
     setUsername( username );
+
+    m_writeTimer = new QTimer( this );
+    m_writeTimer->setSingleShot( true );
+
+    connect( m_writeTimer, SIGNAL(timeout()), SLOT(doWrite()) );
 }
 
 void
@@ -103,9 +109,16 @@ RecentTracksWidget::read()
     static_cast<AnimatedListLayout*>(layout())->setAnimated( true );
 }
 
-
 void
 RecentTracksWidget::write() const
+{
+    qDebug() << m_path;
+
+    m_writeTimer->start( 200 );
+}
+
+void
+RecentTracksWidget::doWrite() const
 {
     qDebug() << m_path;
 
@@ -138,12 +151,13 @@ RecentTracksWidget::write() const
 void
 RecentTracksWidget::addCachedTrack( const Track& a_track )
 {
-    MutableTrack( a_track ).setExtra( "scrobbleStatus", "cached" );
-
     RecentTrackWidget* item = new RecentTrackWidget( a_track );
     layout()->addWidget( item );
 
     connect( a_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
+    connect( a_track.signalProxy(), SIGNAL(statusChanged()), SLOT(onTrackChanged()));
+
+    write();
 }
 
 void
@@ -159,8 +173,3 @@ RecentTracksWidget::onMoveFinished()
    write();
 }
 
-void
-RecentTracksWidget::addScrobbledTrack( const Track& a_track )
-{
-    MutableTrack( a_track ).setExtra( "scrobbleStatus", "scrobbled" );
-}

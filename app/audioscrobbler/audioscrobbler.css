@@ -219,6 +219,14 @@ RecentTrackWidget QLabel {
 	margin: 0px 0px;
 }
 
+RecentTrackWidget[status="cached"] QLabel#trackText {
+	color: #0187c5;
+}
+
+RecentTrackWidget[status="error"] QLabel#trackText {
+	color: #d51007;
+}
+
 RecentTrackWidget HttpImageWidget#art {
 	max-width: 32;
 	max-height: 32;
