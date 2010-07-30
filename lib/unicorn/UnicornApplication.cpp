@@ -57,26 +57,31 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
                       m_signingIn( true ),
                       m_icm( 0 )
 {
+}
+
+void
+unicorn::Application::init()
+{
     addLibraryPath(applicationDirPath());
 
-#ifdef Q_WS_MAC
+    #ifdef Q_WS_MAC
     qt_mac_set_menubar_icons( false );
-#endif    
+    #endif
 
     CoreApplication::init();
 
     setupHotKeys();
 
-#ifdef __APPLE__
+    #ifdef __APPLE__
     AEEventHandlerUPP h = NewAEEventHandlerUPP( appleEventHandler );
     AEInstallEventHandler( kCoreEventClass, kAEReopenApplication, h, 0, false );
-#endif
+    #endif
 
-#ifdef Q_WS_MAC
+    #ifdef Q_WS_MAC
     #define CSS_PATH "/../Resources/"
-#else
+    #else
     #define CSS_PATH "/"
-#endif
+    #endif
 
     refreshStyleSheet();
 
@@ -93,12 +98,11 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
 
     m_bus.board();
 
-#ifdef __APPLE__
+    #ifdef __APPLE__
     setQuitOnLastWindowClosed( false );
-#endif
+    #endif
 
     initiateLogin();
-
 }
 
 void 

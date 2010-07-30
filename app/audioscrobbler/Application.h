@@ -127,7 +127,7 @@ namespace audioscrobbler
 
         void onSessionChanged();
 
-        void toggleWindow( bool = true );
+        void showWindow();
 
         void onMessageReceived(const QString& message);
 

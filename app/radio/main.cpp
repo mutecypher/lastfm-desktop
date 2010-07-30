@@ -77,6 +77,8 @@ int main( int argc, char** argv )
         if ( app.sendMessage( app.arguments().join( "\t" ) ) )
             return 0;
 
+        app.init();
+
         QObject::connect(&app, SIGNAL(messageReceived(const QString&)), &app, SLOT(onMessageReceived(const QString&)));
 
 		q = new QMainObject;

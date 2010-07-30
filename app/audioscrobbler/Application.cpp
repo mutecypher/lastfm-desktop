@@ -81,6 +81,9 @@ Application::Application(int& argc, char** argv)
 void
 Application::init()
 {
+    // Initialise the unicorn base class first!
+    unicorn::Application::init();
+
     /*if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
     {
         FirstRunWizard* w = new FirstRunWizard();
@@ -97,17 +100,17 @@ Application::init()
 /// tray
     tray = new QSystemTrayIcon(this);
     QIcon trayIcon( AS_TRAY_ICON );
-    #ifdef Q_WS_MAC
-        trayIcon.addFile( ":systray_icon_pressed_mac.png", QSize(), QIcon::Selected );
-    #endif
+#ifdef Q_WS_MAC
+    trayIcon.addFile( ":systray_icon_pressed_mac.png", QSize(), QIcon::Selected );
+#endif
 
-    #ifdef Q_WS_WIN
-        connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
-    #endif
+#ifdef Q_WS_WIN
+    connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+#endif
 
-    #ifdef Q_WS_X11
-        connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
-    #endif
+#ifdef Q_WS_X11
+    connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+#endif
     tray->setIcon(trayIcon);
     tray->show();
     connect( this, SIGNAL( aboutToQuit()), tray, SLOT( hide()));
@@ -117,7 +120,6 @@ Application::init()
     (menu->addMenu( new UserMenu()))->setText( "Users");
     m_toggle_window_action = menu->addAction( tr("Show Scrobbler"));
     m_toggle_window_action->setShortcut( Qt::CTRL + Qt::META + Qt::Key_S );
-    m_toggle_window_action->setCheckable( true );
     menu->addSeparator();
     m_artist_action = menu->addAction( "" );
     m_title_action = menu->addAction(tr("Ready"));
@@ -197,7 +199,7 @@ Application::init()
 #endif
 
 #ifndef Q_OS_LINUX
-    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action, SLOT( toggle()));
+    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action, SLOT( trigger()));
 #endif
     //although the shortcuts are actually set on the ScrobbleControls widget,
     //setting it here adds the shortkey text to the trayicon menu
@@ -236,21 +238,21 @@ Application::init()
 
 /// listeners
     try{
-    #ifdef Q_OS_MAC
+#ifdef Q_OS_MAC
         ITunesListener* itunes = new ITunesListener(mediator);
         connect(itunes, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
         itunes->start();
-    #endif
+#endif
 
         QObject* o = new PlayerListener(mediator);
         connect(o, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
         o = new LegacyPlayerListener(mediator);
         connect(o, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
 
-    #ifdef QT_DBUS_LIB
+#ifdef QT_DBUS_LIB
         DBusListener* dbus = new DBusListener(mediator);
         connect(dbus, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
-    #endif
+#endif
     }
     catch(std::runtime_error& e){
         qWarning() << e.what();
@@ -258,7 +260,7 @@ Application::init()
     }
 
 
-    connect( m_toggle_window_action, SIGNAL( toggled( bool )), SLOT( toggleWindow( bool )), Qt::QueuedConnection );
+    connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
 
     connect( this, SIGNAL(messageReceived(QString)), SLOT(onMessageReceived(QString)) );
     connect( this, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session) ), 
@@ -582,16 +584,12 @@ Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason )
 }
 
 void
-Application::toggleWindow( bool show )
+Application::showWindow()
 {
-    if( show ) {
-        mw->showNormal();
-        mw->setFocus();
-        mw->raise();
-        mw->activateWindow();
-    } else {
-       mw->hide();
-    }
+    mw->showNormal();
+    mw->setFocus();
+    mw->raise();
+    mw->activateWindow();
 }
 
 void
