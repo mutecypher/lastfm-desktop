@@ -33,7 +33,7 @@
 #include <QTextFrame>
 #include <lastfm/XmlQuery>
 #include <lastfm/ws.h>
-#include "Application.h"
+#include "../Application.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/DataListWidget.h"

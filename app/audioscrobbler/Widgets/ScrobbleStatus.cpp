@@ -18,8 +18,8 @@
 */
 
 #include "ScrobbleStatus.h"
-#include "StopWatch.h"
-#include "Application.h"
+#include "../StopWatch.h"
+#include "../Application.h"
 #include "lib/listener/PlayerConnection.h"
 
 #include <QHBoxLayout>

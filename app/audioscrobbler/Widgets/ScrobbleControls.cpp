@@ -19,7 +19,7 @@
 */
 
 #include "ScrobbleControls.h"
-#include "Application.h"
+#include "../Application.h"
 
 #include <QHBoxLayout>
 #include <QPushButton>
