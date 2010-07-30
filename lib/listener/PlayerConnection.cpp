@@ -62,6 +62,8 @@ PlayerConnection::PlayerConnection( const QString& id, const QString& name )
     Q_ASSERT( id.size() );
 
     m_stoppedTimer = new QTimer( this );
+    m_stoppedTimer->setSingleShot( true );
+
     connect( m_stoppedTimer, SIGNAL(timeout()), SLOT(onStopped()) );
 }
 
@@ -79,6 +81,8 @@ void PlayerConnection::forcePaused()
 void
 PlayerConnection::handleCommand( PlayerCommand command, Track t )
 {
+    qDebug() << command;
+
     try
     {
         switch (command)
@@ -111,7 +115,7 @@ PlayerConnection::handleCommand( PlayerCommand command, Track t )
             case CommandInit:
             case CommandStop:
                 // don't process the stop straight away because we could be skipping
-                // track so wait a second to make sure we don't get a start command
+                // track so wait a second to make sure we don't get a start comman
                 m_stoppedTimer->start( 1000 );
                 break;
                 
@@ -138,8 +142,15 @@ void
 PlayerConnection::onStopped()
 {
     m_track = Track();
-    if (m_state == Stopped) throw NonFatalError("Already stopped");
-    m_state = Stopped;
-    m_elapsed = 0;
-    emit stopped();
+
+    if (m_state == Stopped)
+    {
+        qWarning() << "Already stopped";
+    }
+    else
+    {
+        m_state = Stopped;
+        m_elapsed = 0;
+        emit stopped();
+    }
 }
