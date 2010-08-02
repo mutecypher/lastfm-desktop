@@ -54,11 +54,6 @@
 
 #include "dialogs/UserManagerDialog.h"
 
-#include <QX11Info>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
-
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
@@ -176,12 +171,10 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
 void
 unicorn::Application::onNewConnection()
 {
-    Display* dpy = m_lc->window()->x11Info().display();
-    XSetInputFocus( dpy, m_lc->winId(), RevertToPointerRoot, CurrentTime );
-    if ( !XRaiseWindow( dpy, m_lc->winId() ) )
-    {
-        qWarning() << "It's a trap!";
-    }
+    m_lc->showNormal();
+    m_lc->setFocus();
+    m_lc->raise();
+    m_lc->activateWindow();
 }
 
 void 
