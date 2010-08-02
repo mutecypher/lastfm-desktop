@@ -54,6 +54,20 @@ RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
 }
 
 void
+RecentTracksWidget::disableHover()
+{
+    for ( int i(0) ; i < layout()->count() ; ++i )
+        layout()->itemAt( i )->widget()->setUpdatesEnabled( false );
+}
+
+void
+RecentTracksWidget::enableHover()
+{
+    for ( int i(0) ; i < layout()->count() ; ++i )
+        layout()->itemAt( i )->widget()->setUpdatesEnabled( true );
+}
+
+void
 RecentTracksWidget::onTrackChanged()
 {
     write();
@@ -101,6 +115,9 @@ RecentTracksWidget::read()
             Track* track = new Track( n.toElement() );
             RecentTrackWidget* item = new RecentTrackWidget( *track );
             layout()->addWidget( item );
+
+            connect( item, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
+            connect( item, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
 
             connect( track->signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
         }
@@ -156,6 +173,9 @@ RecentTracksWidget::addCachedTrack( const Track& a_track )
 
     connect( a_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
     connect( a_track.signalProxy(), SIGNAL(statusChanged()), SLOT(onTrackChanged()));
+
+    connect( item, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
+    connect( item, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
 
     write();
 }

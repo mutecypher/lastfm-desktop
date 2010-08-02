@@ -37,6 +37,9 @@ public:
 signals:
     void loaded();
 
+    void cogMenuAboutToShow();
+    void cogMenuAboutToHide();
+
 private:
     void enterEvent( class QEvent* event );
     void leaveEvent( class QEvent* event );

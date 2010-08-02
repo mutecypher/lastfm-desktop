@@ -86,6 +86,9 @@ RecentTrackWidget::RecentTrackWidget( const Track& track )
     loveAction->setCheckable( true );
     loveAction->setChecked( track.isLoved() );
 
+    connect( cogMenu, SIGNAL(aboutToShow()), SIGNAL(cogMenuAboutToShow()));
+    connect( cogMenu, SIGNAL(aboutToHide()), SIGNAL(cogMenuAboutToHide()));
+
     cogMenu->addAction( QIcon(":/tag-rest.png"), "Tag", this, SLOT(onTagClicked()) );
     cogMenu->addAction( QIcon(":/share-rest.png"), "Share", this, SLOT(onShareClicked()) );
 

@@ -43,6 +43,9 @@ private slots:
     void onMoveFinished();
     void doWrite() const;
 
+    void disableHover();
+    void enableHover();
+
 private:
     QString m_path;
     class QTimer* m_writeTimer;
