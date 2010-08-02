@@ -70,7 +70,9 @@ StopWatch::elapsed() const
 void
 StopWatch::resume()
 {
-    m_timeline->resume();
+    if ( !isTimedOut() )
+        m_timeline->resume();
+
     emit paused( false );
 }
 
