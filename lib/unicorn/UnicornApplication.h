@@ -35,6 +35,8 @@ namespace lastfm{
     class InternetConnectionMonitor;
 }
 
+class LoginContinueDialog;
+
 class QNetworkReply;
 
 namespace unicorn
@@ -173,6 +175,8 @@ namespace unicorn
 		QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
         QString m_cssDir;
         QString m_cssFileName;
+
+        LoginContinueDialog* m_lc;
 #ifdef __APPLE__
         static short appleEventHandler( const AppleEvent*, AppleEvent*, long );
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
@@ -189,6 +193,7 @@ namespace unicorn
         void onSigningInQuery( const QString& );
         void onBusSessionQuery( const QString& );
         void onBusSessionChanged( const Session& );
+        void onNewConnection();
 
     signals:
         void gotUserInfo( const lastfm::UserDetails& );

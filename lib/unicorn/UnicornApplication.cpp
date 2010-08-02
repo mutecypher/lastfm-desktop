@@ -24,9 +24,10 @@
     #include <QMainWindow>
     extern void qt_mac_set_menubar_icons( bool );
 #elif defined WIN32
-	#include <windows.h>
+    #include <windows.h>
     #include <QAbstractEventDispatcher>
 #endif
+
 
 #include "UnicornApplication.h"
 #include "QMessageBoxBuilder.h"
@@ -49,8 +50,15 @@
 #include <QFileInfo>
 #include <QTimer>
 #include <QDebug>
+#include <QTcpServer>
 
 #include "dialogs/UserManagerDialog.h"
+
+#include <QX11Info>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+
+
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
@@ -130,7 +138,9 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
     else
     {
         m_signingIn = true;
-
+        QTcpServer* tcpServer = new QTcpServer( this );
+        tcpServer->listen( QHostAddress( QHostAddress::LocalHost ), 4242 );
+        connect( tcpServer, SIGNAL( newConnection() ), this, SLOT( onNewConnection() ) );
         while ( m_signingIn )
         {
             LoginDialog d;
@@ -139,15 +149,15 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
             if ( d.exec() == QDialog::Accepted )
             {
                 disconnect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise()));
-                LoginContinueDialog lc( d.token() );
-                connect( &m_bus, SIGNAL( signingInQuery( QString)), &lc, SLOT( raise() ) );
+                m_lc = new LoginContinueDialog( d.token() );
+                connect( &m_bus, SIGNAL( signingInQuery( QString)), m_lc, SLOT( raise() ) );
 
-                lc.raise();
+                m_lc->raise();
 
-                if ( lc.exec() == QDialog::Accepted )
+                if ( m_lc->exec() == QDialog::Accepted )
                 {
-                    WelcomeDialog( User(lc.session().username())).exec();
-                    changeSession( lc.session()         );
+                    WelcomeDialog( User( m_lc->session().username())).exec();
+                    changeSession( m_lc->session()         );
 
                     m_signingIn = false;
                 }
@@ -162,6 +172,17 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
    
 }
 
+
+void
+unicorn::Application::onNewConnection()
+{
+    Display* dpy = m_lc->window()->x11Info().display();
+    XSetInputFocus( dpy, m_lc->winId(), RevertToPointerRoot, CurrentTime );
+    if ( !XRaiseWindow( dpy, m_lc->winId() ) )
+    {
+        qWarning() << "It's a trap!";
+    }
+}
 
 void 
 unicorn::Application::manageUsers()
