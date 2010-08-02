@@ -366,7 +366,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     }
     ScrobblePoint timeout( t.duration() * trackLengthPercent );
     watch = new StopWatch(timeout, connection->elapsed());
-    watch->resume();
+    watch->start();
     connect(watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
 
     tray->showMessage(applicationName(), t.toString());

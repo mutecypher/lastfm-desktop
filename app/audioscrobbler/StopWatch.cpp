@@ -33,31 +33,27 @@ StopWatch::StopWatch( ScrobblePoint timeout, uint elapsed )
     connect( m_timeline, SIGNAL(frameChanged(int)), SIGNAL(frameChanged(int)));
 }
 
-StopWatch::~StopWatch()
-{
-    if (!isTimedOut() && (m_point*1000) - elapsed() < 4000)
-        emit timeout();
-}
-
-
 void
-StopWatch::start() //private
+StopWatch::start()
 {
     m_timeline->start();
+    emit paused( false );
 }
-
 
 void
 StopWatch::pause()
 {
-    m_timeline->stop();
+    m_timeline->setPaused( true );
     emit paused( true );
 }
 
-bool
-StopWatch::isTimedOut() const
+void
+StopWatch::resume()
 {
-    return m_timeline->state() == QTimeLine::NotRunning;
+    // Only resume if we are already running
+    if ( m_timeline->state() == QTimeLine::Paused )
+        m_timeline->resume();
+    emit paused( false );
 }
 
 uint
@@ -65,14 +61,3 @@ StopWatch::elapsed() const
 {
     return m_timeline->currentFrame();
 }
-
-
-void
-StopWatch::resume()
-{
-    if ( !isTimedOut() )
-        m_timeline->resume();
-
-    emit paused( false );
-}
-
