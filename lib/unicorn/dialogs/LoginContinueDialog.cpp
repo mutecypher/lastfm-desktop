@@ -57,6 +57,11 @@ LoginContinueDialog::cancel()
     qDeleteAll( findChildren<QNetworkReply*>() );
 }
 
+void
+LoginContinueDialog::setToken( QString token )
+{
+    m_token = token;
+}
 
 void
 LoginContinueDialog::onGetSession()

@@ -51,14 +51,86 @@
 #include <QTimer>
 #include <QDebug>
 #include <QTcpServer>
+#include <QTcpSocket>
+#include <QRegExp>
 
 #include "dialogs/UserManagerDialog.h"
+
+unicorn::TinyWebServer::TinyWebServer( QObject* parent )
+    : QObject( parent )
+    , m_tcpServer( 0 )
+{
+    m_tcpServer = new QTcpServer( this );
+    m_tcpServer->listen( QHostAddress( QHostAddress::LocalHost ), 0 );
+    connect( m_tcpServer, SIGNAL( newConnection() ), this, SLOT( onNewConnection() ) );
+}
+
+void
+unicorn::TinyWebServer::onNewConnection()
+{
+    Q_ASSERT( m_tcpServer );
+    m_clientSocket = m_tcpServer->nextPendingConnection();
+    if ( m_clientSocket )
+    {
+        connect( m_clientSocket, SIGNAL( disconnected() ), m_clientSocket, SLOT( deleteLater() ) );
+        connect( m_clientSocket, SIGNAL( readyRead() ), this, SLOT( readFromSocket() ) );
+    }
+}
+
+int
+unicorn::TinyWebServer::serverPort() const
+{
+    Q_ASSERT( m_tcpServer );
+    return m_tcpServer->serverPort();
+}
+
+QHostAddress
+unicorn::TinyWebServer::serverAddress() const
+{
+    Q_ASSERT( m_tcpServer );
+    return m_tcpServer->serverAddress();
+}
+
+void
+unicorn::TinyWebServer::readFromSocket()
+{
+    Q_ASSERT( m_clientSocket );
+
+    m_header += m_clientSocket->read( m_clientSocket->bytesAvailable() );
+    if ( m_header.endsWith( "\r\n\r\n" ) )
+    {
+        processRequest();
+        m_clientSocket->disconnectFromHost();
+    }
+}
+
+void
+unicorn::TinyWebServer::processRequest()
+{
+    QRegExp rx( "token=(\\d|\\w)+" );
+    if ( rx.indexIn( m_header ) != -1 )
+    {
+        m_token = rx.cap( 0 ).split( "=" )[ 1 ];
+        sendRedirect();
+        emit gotToken( m_token );
+    }
+}
+
+void
+unicorn::TinyWebServer::sendRedirect()
+{
+    char* redirectHeader = "HTTP/1.1 302 Found\r\nLocation: http://www.last.fm/\r\n\r\n\0";
+    m_clientSocket->write( redirectHeader ) ;
+
+}
 
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
                       m_signingIn( true ),
-                      m_icm( 0 )
+                      m_icm( 0 ),
+                      m_lc( 0 ),
+                      m_webServer( 0 )
 {
     addLibraryPath(applicationDirPath());
 
@@ -133,26 +205,33 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
     else
     {
         m_signingIn = true;
-        QTcpServer* tcpServer = new QTcpServer( this );
-        tcpServer->listen( QHostAddress( QHostAddress::LocalHost ), 4242 );
-        connect( tcpServer, SIGNAL( newConnection() ), this, SLOT( onNewConnection() ) );
+        m_webServer = new TinyWebServer( this );
+        QString callbackUrl = "http://" + m_webServer->serverAddress().toString()
+                              + ":" + QString::number( m_webServer->serverPort() );
         while ( m_signingIn )
         {
-            LoginDialog d;
+            LoginDialog d( callbackUrl );
             connect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise() ) );
 
             if ( d.exec() == QDialog::Accepted )
             {
-                disconnect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise()));
-                m_lc = new LoginContinueDialog( d.token() );
-                connect( &m_bus, SIGNAL( signingInQuery( QString)), m_lc, SLOT( raise() ) );
+                disconnect( &m_bus, SIGNAL( signingInQuery( QString ) ), &d, SLOT( raise() ) );
+
+                connect( m_webServer, SIGNAL( gotToken( QString ) ), this, SLOT( onGotToken( QString ) ) );
+
+                if ( !m_lc )
+                {
+                    m_lc = new LoginContinueDialog();
+                }
+
+                connect( &m_bus, SIGNAL( signingInQuery( QString ) ), m_lc, SLOT( raise() ) );
 
                 m_lc->raise();
 
                 if ( m_lc->exec() == QDialog::Accepted )
                 {
-                    WelcomeDialog( User( m_lc->session().username())).exec();
-                    changeSession( m_lc->session()         );
+                    WelcomeDialog( User( m_lc->session().username() ) ).exec();
+                    changeSession( m_lc->session() );
 
                     m_signingIn = false;
                 }
@@ -162,6 +241,10 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
                 throw StubbornUserException();
             }
         }
+        delete m_lc;
+        delete m_webServer;
+        m_lc = 0;
+        m_webServer = 0;
     }
     m_signingIn = false;
    
@@ -169,8 +252,10 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
 
 
 void
-unicorn::Application::onNewConnection()
+unicorn::Application::onGotToken( QString token )
 {
+    qDebug() << "\\o/";
+    m_lc->setToken( token );
     m_lc->showNormal();
     m_lc->setFocus();
     m_lc->raise();

@@ -38,6 +38,8 @@ namespace lastfm{
 class LoginContinueDialog;
 
 class QNetworkReply;
+class QTcpServer;
+class QTcpSocket;
 
 namespace unicorn
 {
@@ -117,6 +119,37 @@ namespace unicorn
             void lovedStateChanged(bool loved);
     };
 
+    /**
+     * This class is used during the web authentication process in order to be able
+     * to return to the application after the authentication is completed.
+     */
+    class UNICORN_DLLEXPORT TinyWebServer: public QObject
+    {
+        Q_OBJECT
+        public:
+            TinyWebServer( QObject* parent = 0 );
+
+            int serverPort() const;
+            QHostAddress serverAddress() const;
+
+        signals:
+            void gotToken( QString token );
+
+        private:
+            void processRequest();
+            void sendRedirect();
+
+        private slots:
+            void onNewConnection();
+            void readFromSocket();
+
+        private:
+            QTcpServer* m_tcpServer;
+            QTcpSocket* m_clientSocket;
+            QString     m_header;
+            QString     m_token;
+    };
+
     class UNICORN_DLLEXPORT Application : public QtSingleApplication
     {
         Q_OBJECT
@@ -177,6 +210,8 @@ namespace unicorn
         QString m_cssFileName;
 
         LoginContinueDialog* m_lc;
+        TinyWebServer* m_webServer;
+
 #ifdef __APPLE__
         static short appleEventHandler( const AppleEvent*, AppleEvent*, long );
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
@@ -193,7 +228,7 @@ namespace unicorn
         void onSigningInQuery( const QString& );
         void onBusSessionQuery( const QString& );
         void onBusSessionChanged( const Session& );
-        void onNewConnection();
+        void onGotToken( QString token );
 
     signals:
         void gotUserInfo( const lastfm::UserDetails& );

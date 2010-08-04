@@ -30,7 +30,7 @@
 #endif
 
 
-LoginDialog::LoginDialog( QWidget* parent )
+LoginDialog::LoginDialog( QString callbackUrl, QWidget* parent )
             :QDialog( parent )
 {
     setWindowModality( Qt::ApplicationModal );
@@ -47,6 +47,8 @@ LoginDialog::LoginDialog( QWidget* parent )
 
     layout->addWidget( ui.buttonBox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );
 
+    m_callbackUrl = callbackUrl;
+
     connect( ui.buttonBox, SIGNAL(accepted()), SLOT(authenticate()) );
     connect( ui.buttonBox, SIGNAL(rejected()), SLOT(reject()) );
 }
@@ -55,27 +57,10 @@ LoginDialog::LoginDialog( QWidget* parent )
 void
 LoginDialog::authenticate()
 {
-    connect( unicorn::Session::getToken(), SIGNAL(finished()), SLOT(onGotToken()) );
-}
-
-
-void
-LoginDialog::cancel()
-{
-    qDeleteAll( findChildren<QNetworkReply*>() );
-}
-
-
-void
-LoginDialog::onGotToken()
-{
-    lastfm::XmlQuery lfm = lastfm::XmlQuery( lastfm::ws::parse( static_cast<QNetworkReply*>(sender()) ) );
-
-    m_token = lfm["token"].text();
-
     QUrl authUrl( "http://www.last.fm/api/auth/" );
     authUrl.addQueryItem( "api_key", lastfm::ws::ApiKey );
-    authUrl.addQueryItem( "token", m_token );
+    authUrl.addQueryItem( "token", "" );
+    authUrl.addQueryItem( "cb", m_callbackUrl );
 
     if ( QDesktopServices::openUrl( authUrl ) )
     {
@@ -88,3 +73,12 @@ LoginDialog::onGotToken()
         reject(); // ???
     }
 }
+
+
+
+void
+LoginDialog::cancel()
+{
+    qDeleteAll( findChildren<QNetworkReply*>() );
+}
+

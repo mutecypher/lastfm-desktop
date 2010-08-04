@@ -38,14 +38,15 @@ private:
     } ui;
 
 public:
-    LoginContinueDialog( QString token, QWidget* parent = 0 );
+    LoginContinueDialog( QString token = "", QWidget* parent = 0 );
 
     unicorn::Session session() const { return m_session; }
+    void setToken( QString token );
     
 private slots:
     void onGetSession();
     void onGotSession();
-	void cancel();
+    void cancel();
 
 private:
     QPushButton* ok() const { return ui.buttonBox->button( QDialogButtonBox::Ok ); }
