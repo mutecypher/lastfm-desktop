@@ -24,10 +24,13 @@
 #include <QDebug>
 
 SlideOverLayout::SlideOverLayout( QWidget* parent )
-           : QLayout( parent ), m_currentItem( 0 ), m_previousItem( 0 ), m_timeLine( new QTimeLine( 200, this ) )
+           : QLayout( parent ),
+           m_currentItem( 0 ),
+           m_previousItem( 0 ),
+           m_timeLine( new QTimeLine( 300, this ) )
 {
     m_timeLine->setUpdateInterval( 20 );
-    m_timeLine->setCurveShape( QTimeLine::EaseInCurve );
+    m_timeLine->setCurveShape( QTimeLine::EaseInOutCurve );
     connect( m_timeLine, SIGNAL(frameChanged( int )), SLOT(onFrameChanged( int )));
     connect( m_timeLine, SIGNAL(finished()), SLOT(onMoveFinished()));
 }

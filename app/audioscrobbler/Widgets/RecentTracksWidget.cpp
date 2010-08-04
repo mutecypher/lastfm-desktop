@@ -120,6 +120,7 @@ RecentTracksWidget::read()
             connect( item, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
 
             connect( track->signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
+            connect( track->signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onTrackChanged()));
         }
     }
 
@@ -172,7 +173,7 @@ RecentTracksWidget::addCachedTrack( const Track& a_track )
     layout()->addWidget( item );
 
     connect( a_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
-    connect( a_track.signalProxy(), SIGNAL(statusChanged()), SLOT(onTrackChanged()));
+    connect( a_track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onTrackChanged()));
 
     connect( item, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
     connect( item, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));

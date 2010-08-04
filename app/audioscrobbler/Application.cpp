@@ -286,7 +286,6 @@ Application::onSessionChanged()
 {
     Audioscrobbler* oldAs = as;
     as = new Audioscrobbler("ass");
-    connect( as, SIGNAL(scrobblesSubmitted(QList<lastfm::Track>, int)), SIGNAL(scrobblesSubmitted(QList<lastfm::Track>, int)));
     connect( as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
     delete oldAs;
 }
@@ -332,10 +331,6 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     Q_ASSERT(connection);
 
     //TODO move to playerconnection
-    if(t == oldtrack){ 
-        qWarning() << "Trying to start the same track as last time, assuming programmer error and doing nothing";
-        return;
-    }
     if(t.isNull()){
         qWarning() << "Can't start null track!";
         return;

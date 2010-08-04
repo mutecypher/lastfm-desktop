@@ -46,6 +46,8 @@ public:
     void start();
     void pause();
     void resume();
+
+    bool paused();
     
     /** in milliseconds */
     uint elapsed() const;

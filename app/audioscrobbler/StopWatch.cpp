@@ -33,6 +33,12 @@ StopWatch::StopWatch( ScrobblePoint timeout, uint elapsed )
     connect( m_timeline, SIGNAL(frameChanged(int)), SIGNAL(frameChanged(int)));
 }
 
+bool
+StopWatch::paused()
+{
+    return (m_timeline->state() == QTimeLine::Paused);
+}
+
 void
 StopWatch::start()
 {
