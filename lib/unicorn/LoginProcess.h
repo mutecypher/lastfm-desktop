@@ -47,7 +47,14 @@ private:
 };
 
 /**
- * This class encapsulates the whole login process
+ * This class encapsulates the whole login process.
+ *
+ * Call the authenticate function to start the login process
+ * and connect to the gotSession signal to be notified when
+ * the process finishes.
+ * Whenever you call the method session() directly make sure you check
+ * if it's a valid session. If it's not, you can use the showError method
+ * to show a dialog with the error message.
  */
 class UNICORN_DLLEXPORT LoginProcess : public QObject
 {
