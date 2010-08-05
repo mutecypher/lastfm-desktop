@@ -173,6 +173,7 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
                     }
                     else
                     {
+                        disconnect( m_loginProcess, SIGNAL( gotSession( unicorn::Session& ) ), this, SLOT( onGotSession( unicorn::Session& ) ) );
                         m_loginProcess->cancel();
                         m_loginProcess->showError();
                     }
@@ -198,10 +199,7 @@ unicorn::Application::onGotSession( unicorn::Session& session )
 {
     Q_UNUSED( session )
     qDebug() << "\\o/";
-    m_lc->showNormal();
-    m_lc->setFocus();
-    m_lc->raise();
-    m_lc->activateWindow();
+    m_lc->accept();
 }
 
 void 

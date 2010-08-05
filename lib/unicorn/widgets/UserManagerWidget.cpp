@@ -152,6 +152,9 @@ UserManagerWidget::UserManagerWidget( QWidget* parent )
             , m_loginProcess( 0 )
             , m_lcd( 0 )
 {
+    m_lcd = new LoginContinueDialog( this );
+    connect( m_lcd, SIGNAL( accepted()), SLOT( onUserAdded()));
+
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setSpacing( 10 );
     layout->addWidget( new QLabel( tr( "Users authenticated with this application" )));
@@ -208,10 +211,13 @@ UserManagerWidget::onLoginDialogAccepted()
     LoginDialog* ld = qobject_cast<LoginDialog*>(sender());
     Q_ASSERT( ld );
 
-    if ( !m_loginProcess )
+    if ( m_loginProcess )
     {
-        m_loginProcess = new unicorn::LoginProcess( this );
+        delete m_loginProcess;
+        m_loginProcess = 0;
     }
+
+    m_loginProcess = new unicorn::LoginProcess( this );
 
     ld->deleteLater();
 
@@ -221,14 +227,9 @@ UserManagerWidget::onLoginDialogAccepted()
 
     m_loginProcess->authenticate();
 
-    if ( !m_lcd )
-    {
-        m_lcd = new LoginContinueDialog( this );
-    }
 
     m_lcd->setWindowFlags( Qt::Sheet );
     m_lcd->open();
-    connect( m_lcd, SIGNAL( accepted()), SLOT( onUserAdded()));
 }
 
 
@@ -236,10 +237,7 @@ void
 UserManagerWidget::onGotSession( unicorn::Session& s )
 {
     Q_UNUSED( s )
-    m_lcd->showNormal();
-    m_lcd->setFocus();
-    m_lcd->raise();
-    m_lcd->activateWindow();
+    m_lcd->accept();
 }
 
 void 

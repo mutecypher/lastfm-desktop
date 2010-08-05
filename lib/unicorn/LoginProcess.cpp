@@ -62,6 +62,7 @@ TinyWebServer::readFromSocket()
     {
         processRequest();
         m_clientSocket->disconnectFromHost();
+        m_tcpServer->close();
     }
 }
 
@@ -98,10 +99,13 @@ LoginProcess::LoginProcess( QObject* parent )
 void
 LoginProcess::authenticate()
 {
-    if ( !m_webServer )
+    if ( m_webServer )
     {
-        m_webServer = new TinyWebServer( this );
+        delete m_webServer;
+        m_webServer = 0;
     }
+
+    m_webServer = new TinyWebServer( this );
 
     QUrl authUrl( "http://www.last.fm/api/auth/" );
     QString callbackUrl = "http://" + m_webServer->serverAddress().toString()
