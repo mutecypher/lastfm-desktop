@@ -30,99 +30,33 @@
 
 
 #include "UnicornApplication.h"
-#include "QMessageBoxBuilder.h"
-#include "UnicornCoreApplication.h"
-#include "dialogs/LoginDialog.h"
+
 #include "dialogs/LoginContinueDialog.h"
+#include "dialogs/LoginDialog.h"
+#include "dialogs/UserManagerDialog.h"
 #include "dialogs/WelcomeDialog.h"
+#include "LoginProcess.h"
+#include "QMessageBoxBuilder.h"
 #include "SignalBlocker.h"
+#include "UnicornCoreApplication.h"
 #include "UnicornSettings.h"
+
 #include <lastfm/misc.h>
 #include <lastfm/User>
 #include <lastfm/InternetConnectionMonitor>
 #include <lastfm/ws.h>
 #include <lastfm/XmlQuery>
-#include <QDir>
+
+
 #include <QDebug>
-#include <QLocale>
-#include <QTranslator>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QTimer>
-#include <QDebug>
-#include <QTcpServer>
-#include <QTcpSocket>
+#include <QLocale>
 #include <QRegExp>
+#include <QTimer>
+#include <QTranslator>
 
-#include "dialogs/UserManagerDialog.h"
-
-unicorn::TinyWebServer::TinyWebServer( QObject* parent )
-    : QObject( parent )
-    , m_tcpServer( 0 )
-{
-    m_tcpServer = new QTcpServer( this );
-    m_tcpServer->listen( QHostAddress( QHostAddress::LocalHost ), 0 );
-    connect( m_tcpServer, SIGNAL( newConnection() ), this, SLOT( onNewConnection() ) );
-}
-
-void
-unicorn::TinyWebServer::onNewConnection()
-{
-    Q_ASSERT( m_tcpServer );
-    m_clientSocket = m_tcpServer->nextPendingConnection();
-    if ( m_clientSocket )
-    {
-        connect( m_clientSocket, SIGNAL( disconnected() ), m_clientSocket, SLOT( deleteLater() ) );
-        connect( m_clientSocket, SIGNAL( readyRead() ), this, SLOT( readFromSocket() ) );
-    }
-}
-
-int
-unicorn::TinyWebServer::serverPort() const
-{
-    Q_ASSERT( m_tcpServer );
-    return m_tcpServer->serverPort();
-}
-
-QHostAddress
-unicorn::TinyWebServer::serverAddress() const
-{
-    Q_ASSERT( m_tcpServer );
-    return m_tcpServer->serverAddress();
-}
-
-void
-unicorn::TinyWebServer::readFromSocket()
-{
-    Q_ASSERT( m_clientSocket );
-
-    m_header += m_clientSocket->read( m_clientSocket->bytesAvailable() );
-    if ( m_header.endsWith( "\r\n\r\n" ) )
-    {
-        processRequest();
-        m_clientSocket->disconnectFromHost();
-    }
-}
-
-void
-unicorn::TinyWebServer::processRequest()
-{
-    QRegExp rx( "token=(\\d|\\w)+" );
-    if ( rx.indexIn( m_header ) != -1 )
-    {
-        m_token = rx.cap( 0 ).split( "=" )[ 1 ];
-        sendRedirect();
-        emit gotToken( m_token );
-    }
-}
-
-void
-unicorn::TinyWebServer::sendRedirect()
-{
-    char* redirectHeader = "HTTP/1.1 302 Found\r\nLocation: http://www.last.fm/\r\n\r\n\0";
-    m_clientSocket->write( redirectHeader ) ;
-
-}
 
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
@@ -130,7 +64,7 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
                       m_signingIn( true ),
                       m_icm( 0 ),
                       m_lc( 0 ),
-                      m_webServer( 0 )
+                      m_loginProcess( 0 )
 {
     addLibraryPath(applicationDirPath());
 
@@ -205,19 +139,19 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
     else
     {
         m_signingIn = true;
-        m_webServer = new TinyWebServer( this );
-        QString callbackUrl = "http://" + m_webServer->serverAddress().toString()
-                              + ":" + QString::number( m_webServer->serverPort() );
+        m_loginProcess = new LoginProcess( this );
+        LoginDialog d;
         while ( m_signingIn )
         {
-            LoginDialog d( callbackUrl );
             connect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise() ) );
 
             if ( d.exec() == QDialog::Accepted )
             {
                 disconnect( &m_bus, SIGNAL( signingInQuery( QString ) ), &d, SLOT( raise() ) );
 
-                connect( m_webServer, SIGNAL( gotToken( QString ) ), this, SLOT( onGotToken( QString ) ) );
+                connect( m_loginProcess, SIGNAL( gotSession( unicorn::Session& ) ), this, SLOT( onGotSession( unicorn::Session& ) ) );
+
+                m_loginProcess->authenticate();
 
                 if ( !m_lc )
                 {
@@ -230,10 +164,18 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
 
                 if ( m_lc->exec() == QDialog::Accepted )
                 {
-                    WelcomeDialog( User( m_lc->session().username() ) ).exec();
-                    changeSession( m_lc->session() );
+                    if ( m_loginProcess->session().isValid() )
+                    {
+                        WelcomeDialog( User( m_loginProcess->session().username() ) ).exec();
+                        changeSession( m_loginProcess->session() );
 
-                    m_signingIn = false;
+                        m_signingIn = false;
+                    }
+                    else
+                    {
+                        m_loginProcess->cancel();
+                        m_loginProcess->showError();
+                    }
                 }
             }
             else
@@ -242,9 +184,9 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
             }
         }
         delete m_lc;
-        delete m_webServer;
+        delete m_loginProcess;
         m_lc = 0;
-        m_webServer = 0;
+        m_loginProcess = 0;
     }
     m_signingIn = false;
    
@@ -252,10 +194,10 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
 
 
 void
-unicorn::Application::onGotToken( QString token )
+unicorn::Application::onGotSession( unicorn::Session& session )
 {
+    Q_UNUSED( session )
     qDebug() << "\\o/";
-    m_lc->setToken( token );
     m_lc->showNormal();
     m_lc->setFocus();
     m_lc->raise();

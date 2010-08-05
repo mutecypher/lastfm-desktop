@@ -19,18 +19,9 @@
 */
 #include "LoginDialog.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
-#include <lastfm/misc.h>
-#include <lastfm/XmlQuery>
-#include <lastfm/ws.h>
 #include <QtGui>
-#include <QDesktopServices>
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
-
-LoginDialog::LoginDialog( QString callbackUrl, QWidget* parent )
+LoginDialog::LoginDialog( QWidget* parent )
             :QDialog( parent )
 {
     setWindowModality( Qt::ApplicationModal );
@@ -47,38 +38,9 @@ LoginDialog::LoginDialog( QString callbackUrl, QWidget* parent )
 
     layout->addWidget( ui.buttonBox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );
 
-    m_callbackUrl = callbackUrl;
-
-    connect( ui.buttonBox, SIGNAL(accepted()), SLOT(authenticate()) );
+    connect( ui.buttonBox, SIGNAL(accepted()), SLOT(accept()) );
     connect( ui.buttonBox, SIGNAL(rejected()), SLOT(reject()) );
 }
 
 
-void
-LoginDialog::authenticate()
-{
-    QUrl authUrl( "http://www.last.fm/api/auth/" );
-    authUrl.addQueryItem( "api_key", lastfm::ws::ApiKey );
-    authUrl.addQueryItem( "token", "" );
-    authUrl.addQueryItem( "cb", m_callbackUrl );
-
-    if ( QDesktopServices::openUrl( authUrl ) )
-    {
-        // prepare for continue to be clicked
-        accept();
-    }
-    else
-    {
-        // We were unable to open a browser - what do we do now?
-        reject(); // ???
-    }
-}
-
-
-
-void
-LoginDialog::cancel()
-{
-    qDeleteAll( findChildren<QNetworkReply*>() );
-}
 

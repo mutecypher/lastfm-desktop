@@ -3,8 +3,10 @@
 #include "lib/unicorn/dialogs/LoginContinueDialog.h"
 #include "lib/unicorn/dialogs/LoginDialog.h"
 #include "lib/unicorn/dialogs/WelcomeDialog.h"
+#include "lib/unicorn/LoginProcess.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/UnicornSettings.h"
+#include "lib/unicorn/UnicornSession.h"
 
 #include <lastfm/User>
 
@@ -145,7 +147,10 @@ UserRadioButton::user() const
 
 
 UserManagerWidget::UserManagerWidget( QWidget* parent )
-            :QWidget( parent ), m_buttonGroup( new QButtonGroup( this ) )
+            :QWidget( parent )
+            , m_buttonGroup( new QButtonGroup( this ) )
+            , m_loginProcess( 0 )
+            , m_lcd( 0 )
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setSpacing( 10 );
@@ -202,34 +207,64 @@ UserManagerWidget::onLoginDialogAccepted()
 {
     LoginDialog* ld = qobject_cast<LoginDialog*>(sender());
     Q_ASSERT( ld );
-    
-    QString token = ld->token();
+
+    if ( !m_loginProcess )
+    {
+        m_loginProcess = new unicorn::LoginProcess( this );
+    }
+
     ld->deleteLater();
 
-    LoginContinueDialog* lcd = new LoginContinueDialog( token, this );
-    lcd->setWindowFlags( Qt::Sheet );
-    lcd->open();
-    connect( lcd, SIGNAL( accepted()), SLOT( onUserAdded()));
+
+    connect( m_loginProcess, SIGNAL( gotSession( unicorn::Session& ) ),
+             this, SLOT( onGotSession( unicorn::Session& ) ) );
+
+    m_loginProcess->authenticate();
+
+    if ( !m_lcd )
+    {
+        m_lcd = new LoginContinueDialog( this );
+    }
+
+    m_lcd->setWindowFlags( Qt::Sheet );
+    m_lcd->open();
+    connect( m_lcd, SIGNAL( accepted()), SLOT( onUserAdded()));
 }
 
+
+void
+UserManagerWidget::onGotSession( unicorn::Session& s )
+{
+    Q_UNUSED( s )
+    m_lcd->showNormal();
+    m_lcd->setFocus();
+    m_lcd->raise();
+    m_lcd->activateWindow();
+}
 
 void 
 UserManagerWidget::onUserAdded()
 {
-    LoginContinueDialog* lcd = qobject_cast<LoginContinueDialog*>(sender());
-    Q_ASSERT( lcd );
+    Q_ASSERT( m_loginProcess );
 
-    const unicorn::Session& s = lcd->session();
+    const unicorn::Session& s = m_loginProcess->session();
+    if ( s.isValid() )
+    {
+        User user( s.username());
+        UserRadioButton* urb = new UserRadioButton( user );
+
+        add( urb );
+        if( ui.groupBox->layout()->count() <= 1 ) urb->click();
     
-    User user( s.username());
-    UserRadioButton* urb = new UserRadioButton( user );
+        setTabOrders();
 
-    add( urb );
-    if( ui.groupBox->layout()->count() <= 1 ) urb->click();
-    
-    setTabOrders();
-
-    WelcomeDialog( user ).exec();
+        WelcomeDialog( user ).exec();
+    }
+    else
+    {
+        m_loginProcess->cancel();
+        m_loginProcess->showError();
+    }
 }
 
 void 

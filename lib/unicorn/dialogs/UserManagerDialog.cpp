@@ -31,7 +31,7 @@ UserManagerDialog::UserManagerDialog( QWidget* parent )
     layout->addLayout( actionButtons );
     setLayout( layout );
 
-    connect( m_users, SIGNAL( roosterUpdated() ), this, SIGNAL( roosterUpdated() ) );
+    connect( m_users, SIGNAL( rosterUpdated() ), this, SIGNAL( rosterUpdated() ) );
     connect( bb, SIGNAL( accepted()), SLOT( onAccept()));
     connect( bb, SIGNAL( rejected()), SLOT( reject()));
 }

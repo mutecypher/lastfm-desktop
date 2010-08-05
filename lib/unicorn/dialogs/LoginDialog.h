@@ -39,16 +39,10 @@ private:
     } ui;
 
 public:
-    LoginDialog( QString callbackUrl, QWidget* parent = 0 );
-
-private slots:
-    void authenticate();
-    void cancel();
+    LoginDialog( QWidget* parent = 0 );
 
 private:
     QPushButton* ok() const { return ui.buttonBox->button( QDialogButtonBox::Ok ); }
-
-    QString m_callbackUrl;
 };
 
 #endif
