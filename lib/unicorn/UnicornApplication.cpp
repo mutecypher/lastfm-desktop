@@ -490,3 +490,10 @@ unicorn::Application::winEventFilter ( void* message )
 	return false;
 }
 #endif
+
+void
+unicorn::Application::restart()
+{
+    qApp->closeAllWindows();
+    initiateLogin();
+}

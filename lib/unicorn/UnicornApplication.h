@@ -169,6 +169,7 @@ namespace unicorn
         void changeSession( const unicorn::Session& newSession, bool announce = true );
         void sendBusLovedStateChanged(bool loved);
         void refreshStyleSheet();
+        void restart();
 
     private:
         void translate();
@@ -202,6 +203,7 @@ namespace unicorn
         Bus m_bus;
         lastfm::InternetConnectionMonitor* m_icm;
 	
+
     private slots:
         void onUserGotInfo();
         void onWizardRunningQuery( const QString& );

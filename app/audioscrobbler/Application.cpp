@@ -90,12 +90,27 @@ Application::initiateLogin( bool forceLogout ) throw( StubbornUserException )
         setWizardRunning( true );
         FirstRunWizard* w = new FirstRunWizard();
         if( w->exec() != QDialog::Accepted ) {
-            quit();
             setWizardRunning( false );
-            return;
+            throw StubbornUserException();
         }
     }
     setWizardRunning( false );
+
+    //this covers the case where the last user was removed
+    //and the main window was closed.
+    if ( mw )
+    {
+        mw->show();
+    }
+
+    if ( tray )
+    {
+        //HACK: turns out when all the windows are closed, the tray stops working
+        //unless you call the following methods.
+        tray->hide();
+        tray->show();
+    }
+
 }
 
 void
@@ -752,3 +767,4 @@ Application::actuallyQuit()
     }
     QCoreApplication::quit();
 }
+

@@ -5,6 +5,7 @@
 #include "lib/unicorn/dialogs/WelcomeDialog.h"
 #include "lib/unicorn/LoginProcess.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
+#include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/UnicornSession.h"
 
@@ -126,7 +127,14 @@ UserRadioButton::removeMe()
                                   .exec();
     if( result != QMessageBox::Yes ) return;
 
-    unicorn::Settings().remove( m_name->text() );
+    unicorn::Settings us;
+    us.remove( m_name->text() );
+
+    if ( us.userRoster().count() == 0 )
+    {
+        us.setValue( "FirstRunWizardCompleted", false );
+        qobject_cast<unicorn::Application*>( qApp )->restart();
+    }
 
     if( isChecked()) {
         foreach (UserRadioButton* b, parentWidget()->findChildren<UserRadioButton*>()) {
