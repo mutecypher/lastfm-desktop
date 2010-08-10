@@ -83,16 +83,27 @@ Application::Application(int& argc, char** argv)
 }
 
 void
-Application::init()
+Application::initiateLogin( bool forceLogout ) throw( StubbornUserException )
 {
-    /*if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
+    qDebug() << "First run!";
+    if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
     {
+        setWizardRunning( true );
         FirstRunWizard* w = new FirstRunWizard();
-        if( !w->exec() ) {
+        if( w->exec() != QDialog::Accepted ) {
             quit();
+            setWizardRunning( false );
             return;
         }
-    }*/
+    }
+    setWizardRunning( false );
+}
+
+void
+Application::init()
+{
+
+    initiateLogin();
 
     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
     diskCache->setCacheDirectory( lastfm::dir::cache().path() );
@@ -729,7 +740,8 @@ Application::quit()
                                              .setIcon( QMessageBox::Question )
                                              .setButtons( QMessageBox::Yes | QMessageBox::No )
                                              .exec(&dontAsk);
-    if( result == QMessageBox::Yes ) {
+    if( result == QMessageBox::Yes )
+    {
         unicorn::AppSettings().setValue( "quitDontAsk", dontAsk );
         QCoreApplication::quit();
     }

@@ -63,6 +63,7 @@ public:
     LoginProcess( QObject* parent = 0 );
     QString token() const;
     Session session() const;
+    QUrl authUrl() const;
     void showError() const;
 
 public slots:
@@ -82,6 +83,7 @@ private:
     QString m_token;
     lastfm::ws::ParseError m_lastError;
     QNetworkReply::NetworkError m_lastNetworkError;
+    QUrl m_authUrl;
 };
 
 }// namespace unicorn

@@ -32,6 +32,7 @@ using moralistfad::Application;
 Application::Application( int& argc, char** argv ) 
     : unicorn::Application( argc, argv )
 {
+    initiateLogin();
 #ifdef Q_OS_MAC
         FSRef appRef;
         LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );

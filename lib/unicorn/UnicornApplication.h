@@ -52,7 +52,7 @@ namespace unicorn
                 connect( this, SIGNAL( queryRequest( QString, QByteArray )), SLOT( onQuery( QString, QByteArray )));
             };
 
-            bool isSigningIn(){ return sendQuery( "SIGNINGIN" ) == "TRUE"; }
+            bool isWizardRunning(){ return sendQuery( "WIZARDRUNNING" ) == "TRUE"; }
             Session getSession()
             {
                 Session s;
@@ -103,21 +103,27 @@ namespace unicorn
 
             void onQuery( const QString& uuid, const QByteArray& message )
             {
-                if( message == "SIGNINGIN" )
-                    emit signingInQuery( uuid );
+                if( message == "WIZARDRUNNING" )
+                    emit wizardRunningQuery( uuid );
                 else if( message == "SESSION" )
                     emit sessionQuery( uuid );
             }
 
         signals:
-            void signingInQuery( const QString& uuid );
+            void wizardRunningQuery( const QString& uuid );
             void sessionQuery( const QString& uuid );
             void sessionChanged( const Session );
             void rosterUpdated();
             void lovedStateChanged(bool loved);
     };
 
-
+    /**
+     * Unicorn base Application.
+     *
+     * Child classes should make sure to call the protected function initiateLogin
+     * on their constructor otherwise the app would probably crash, as there will be
+     * no valid user session.
+     */
     class UNICORN_DLLEXPORT Application : public QtSingleApplication
     {
         Q_OBJECT
@@ -163,7 +169,6 @@ namespace unicorn
         void refreshStyleSheet();
 
     private:
-        void initiateLogin( bool forceLogout = false ) throw( StubbornUserException );
         void translate();
         void setupHotKeys();
         void onHotKeyEvent(quint32 id);
@@ -172,13 +177,10 @@ namespace unicorn
 
         QString m_styleSheet;
         Session m_currentSession;
-        bool m_signingIn;
-		QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
+        bool m_wizardRunning;
+        QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
         QString m_cssDir;
         QString m_cssFileName;
-
-        LoginContinueDialog* m_lc;
-        class LoginProcess* m_loginProcess;
 
 #ifdef __APPLE__
         static short appleEventHandler( const AppleEvent*, AppleEvent*, long );
@@ -188,15 +190,21 @@ namespace unicorn
         static bool winEventFilter ( void* );
 #endif
     protected:
+        /**
+         * Reimplement this function if you want to control the initial login process.
+         */
+        virtual void initiateLogin( bool forceLogout = false ) throw( StubbornUserException );
+
+        void setWizardRunning( bool running );
+
         Bus m_bus;
         lastfm::InternetConnectionMonitor* m_icm;
 	
     private slots:
         void onUserGotInfo();
-        void onSigningInQuery( const QString& );
+        void onWizardRunningQuery( const QString& );
         void onBusSessionQuery( const QString& );
         void onBusSessionChanged( const Session& );
-        void onGotSession( unicorn::Session& session );
 
     signals:
         void gotUserInfo( const lastfm::UserDetails& );

@@ -18,203 +18,146 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "LoginPage.h"
+#include "../Application.h"
+
+#include "lib/unicorn/LoginProcess.h"
+#include "lib/unicorn/UnicornSession.h"
 
 #ifdef WIN32
 #include <windows.h>
 #endif // WIN32
 
-#include <QVBoxLayout>
+#include <QApplication>
+#include <QDebug>
 #include <QGridLayout>
-
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-
-#include <lastfm/misc.h>
-#include <lastfm/ws.h>
-#include <lastfm/XmlQuery>
+#include <QVBoxLayout>
 
 LoginPage::LoginPage( QWidget* parent )
           :QWizardPage( parent )
+          , m_loginProcess( 0 )
+          , m_isComplete( false )
 {
-    setTitle(tr( "Login" ));
-    setSubTitle(tr( "Please enter your last.fm username and password below:" ));
-    new QVBoxLayout( this );
+    setTitle( tr( "Login" ) );
+    setSubTitle( tr( "Please enter your last.fm username and password below" ) );
 
-    QWidget* login = new QWidget( this );
-    QGridLayout* loginLayout = new QGridLayout( login );
-    
-    ui.username = new QLineEdit( login );
-    ui.password = new QLineEdit( login );
-    ui.password->setEchoMode( QLineEdit::Password );
+    QVBoxLayout* pageLayout = new QVBoxLayout( this );
 
-    registerField( "username*", ui.username );
-    registerField( "password*", ui.password );
+    QVBoxLayout* loginLayout = new QVBoxLayout;
+    ui.description = new QLabel( tr( "This application needs your permission to connect to your Last.fm profile.\n" ) +
+                                 tr( "Click OK to go to the Last.fm website and do this." ) );
+    ui.description->setObjectName( "description" );
+    ui.description->setWordWrap( true );
 
-    connect( ui.username, SIGNAL(textChanged(QString)), SIGNAL( completeChanged()));
-    connect( ui.password, SIGNAL(textChanged(QString)), SIGNAL( completeChanged()));
-    connect( ui.username, SIGNAL(returnPressed()), ui.username->nextInFocusChain(), SLOT(setFocus()));
-    connect( ui.password, SIGNAL(returnPressed()), ui.password->nextInFocusChain(), SLOT(setFocus()));
+    ui.continueMsg = new QLabel( tr( "Once you have approved this app, click Next to complete the login process." ) );
+    ui.continueMsg->setObjectName( "continueMsg" );
+    ui.continueMsg->setWordWrap( true );
+    ui.continueMsg->hide();
 
-    ui.errorMsg = new QLabel( "", login );
-    ui.errorMsg->setObjectName( "errorMsg" );
-    ui.errorMsg->setWordWrap( true );
-    ui.errorMsg->hide();
+    ui.browserMsg = new QLabel( tr( "If your browser doesn't open automatically, "
+                                    "you can visit the following URL:" ) );
+    ui.browserMsg->setObjectName( "browserMsg" );
+    ui.browserMsg->setWordWrap( true );
+    ui.browserMsg->hide();
 
+    ui.loginUrl = new QLineEdit;
+    ui.loginUrl->setReadOnly( true );
+    ui.loginUrl->hide();
+    ui.loginUrl->setObjectName( "loginUrl" );
 
-    loginLayout->addWidget( ui.errorMsg, 0, 0, 1, 2, Qt::AlignTop );
+    ui.okButton = new QPushButton( this );
+    ui.okButton->setText( "Ok" );
 
-    loginLayout->addWidget( new QLabel( tr( "Username:" ), login ), 1, 0 );
-    loginLayout->addWidget( ui.username, 1, 1 );
-    loginLayout->addWidget( new QLabel( tr( "Password:" ), login ), 2, 0 );
-    loginLayout->addWidget( ui.password, 2, 1 );
+    QHBoxLayout* buttonLayout = new QHBoxLayout;
 
-    QLabel* signupLink = new QLabel( "<a href=\"https://www.last.fm/join\">" + tr( "Sign up for a Last.fm account" ) + "</a>", login);
-    signupLink->setOpenExternalLinks( true );
+    buttonLayout->addWidget( ui.okButton );
+    buttonLayout->addStretch( 1 );
 
-    QLabel* forgotPWLink = new QLabel( "<a href=\"http://www.last.fm/settings/lostpassword\">" + tr( "Forgot your password?" ) + "</a>", login);
-    forgotPWLink->setOpenExternalLinks( true );
+    loginLayout->addWidget( ui.description );
+    loginLayout->addLayout( buttonLayout );
+    loginLayout->addSpacing( 10 );
+    loginLayout->addWidget( ui.continueMsg );
+    loginLayout->addSpacing( 10 );
+    loginLayout->addWidget( ui.browserMsg );
+    loginLayout->addWidget( ui.loginUrl );
 
-    loginLayout->addWidget( signupLink, 3, 0, 1, 2, Qt::AlignTop );
-    loginLayout->addWidget( forgotPWLink, 4, 0, 1, 2, Qt::AlignTop );
-
-    loginLayout->setRowStretch( 4, 1 );
-
-    layout()->addWidget( login );
+    pageLayout->addLayout( loginLayout );
 }
 
 
 void
 LoginPage::initializePage()
 {
-    QAbstractButton* b = wizard()->button( QWizard::NextButton );
-    b->disconnect();
-    connect( b, SIGNAL( clicked()), SLOT( authenticate()));
-    
-    // setFocus is not really necessary but gives nice visual hint as to
-    // the action being performed by pushing return.
-    connect( ui.password, SIGNAL( returnPressed()), wizard()->button( QWizard::NextButton ), SLOT(setFocus()));
-    
-    connect( ui.password, SIGNAL( returnPressed()), wizard()->button( QWizard::NextButton ), SLOT(click()));
+    m_isComplete = false;
+    ui.okButton->setEnabled( true );
+    connect( ui.okButton, SIGNAL( clicked() ), this, SLOT( authenticate() ) );
 }
 
 
 void 
 LoginPage::cleanupPage()
 {
-    QAbstractButton* b = wizard()->button( QWizard::NextButton );
-    b->disconnect();
-    connect( b, SIGNAL( clicked()), wizard(), SLOT( next()));
-    ui.errorMsg->hide();
+    m_isComplete = false;
+    ui.okButton->setEnabled( true );
+    ui.continueMsg->hide();
+    ui.browserMsg->hide();
+    ui.loginUrl->hide();
 }
 
 void 
 LoginPage::authenticate() 
 {
-    QAbstractButton* b = wizard()->button( QWizard::NextButton );
-    b->blockSignals( true );
+    ui.okButton->setEnabled( false );
+    if ( m_loginProcess )
+    {
+        delete m_loginProcess;
+    }
+    m_loginProcess = new unicorn::LoginProcess( this );
+    connect( m_loginProcess, SIGNAL( gotSession( unicorn::Session& ) ),
+             this, SLOT( onAuthenticated( unicorn::Session& ) ) );
 
-    QString username = field( "username" ).toString().toLower();
-    QString password = lastfm::md5( field( "password" ).toString().toUtf8() );
+    m_loginProcess->authenticate();
 
-    QMap<QString, QString> params;
-    params["method"] = "auth.getMobileSession";
-    params["username"] = username;
-    params["authToken"] = lastfm::md5( (username + password).toUtf8() );
-    QNetworkReply* reply = lastfm::ws::post( params );
-    reply->setParent( this );
+    ui.continueMsg->show();
+    ui.browserMsg->show();
+    ui.loginUrl->setText( m_loginProcess->authUrl().toString() );
+    ui.loginUrl->home( false );
+    ui.loginUrl->show();
+}
 
-    connect( reply, SIGNAL(finished()), SLOT(onAuthenticated()) );
+bool
+LoginPage::isComplete() const
+{
+    return m_isComplete;
 }
 
 void 
-LoginPage::onAuthenticated()
+LoginPage::onAuthenticated( unicorn::Session& session )
 {
-    QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
-    QAbstractButton* b = wizard()->button( QWizard::NextButton );
+    qDebug() << "\\o/";
 
-    b->blockSignals( false );
-    
-    try {
-        lastfm::XmlQuery lfm = lastfm::ws::parse( reply );
-        lastfm::XmlQuery session = lfm["session"];
-        
-        // replace username; because eg. perhaps the user typed their
-        // username with the wrong camel case
-        QString username = session["name"].text();
-            
-        lastfm::ws::Username = username;
-        lastfm::ws::SessionKey = session["key"].text();
-
-        wizard()->next();
-
-        // reattach the next button to
-        // the qwizard::next() slot.
-        cleanupPage();
-        
-        return;
-    }
-    catch (lastfm::ws::ParseError& e)
+    if ( session.isValid() )
     {
-        qWarning() << e.what();
-
-        switch (e.enumValue())
+        audioscrobbler::Application* app = qobject_cast<audioscrobbler::Application*>( qApp );
+        if ( app )
         {
-            case lastfm::ws::AuthenticationFailed:
-                // COPYTODO
-                /*QMessageBoxBuilder( this )
-                        .setIcon( QMessageBox::Critical )
-                        .setTitle( tr("Login Failed") ) */
-                ui.errorMsg->setText( tr("That doesn't seem right, try again?") );
-                        /*.exec();*/;
-                break;
-            
-            default:
-                // COPYTODO
-                /*QMessageBoxBuilder( this )
-                        .setIcon( QMessageBox::Critical )
-                        .setTitle( tr("Last.fm Unavailable") ) */
-                ui.errorMsg->setText( tr("There was a problem communicating with the Last.fm services. Please try again later.") );
-                        /*.exec();*/
-                break;
-            
-            case lastfm::ws::TryAgainLater:
-            case lastfm::ws::UnknownError:
-                switch ((int)reply->error())
-                {
-                    case QNetworkReply::ProxyConnectionClosedError:
-                    case QNetworkReply::ProxyConnectionRefusedError:
-                    case QNetworkReply::ProxyNotFoundError:
-                    case QNetworkReply::ProxyTimeoutError:
-                    case QNetworkReply::ProxyAuthenticationRequiredError: //TODO we are meant to prompt!
-                    case QNetworkReply::UnknownProxyError:
-                    case QNetworkReply::UnknownNetworkError:
-                        break;
-                    default:
-                        return;
-                }
+            app->changeSession( m_loginProcess->session() );
 
-/*                    // TODO proxy prompting?
-                // COPYTODO
-                QMessageBoxBuilder( this )
-                        .setIcon( QMessageBox::Critical )
-                        .setTitle( tr("Cannot connect to Last.fm") ) */
-                ui.errorMsg->setText( tr("Last.fm cannot be reached. Please check your firewall or proxy settings.") );
-                        /*.exec();*/
+            m_isComplete = true;
+            emit completeChanged();
 
-            #ifdef WIN32
-                // show Internet Settings Control Panel
-                HMODULE h = LoadLibraryA( "InetCpl.cpl" );
-                if (!h) break;
-                BOOL (WINAPI *cpl)(HWND) = (BOOL (WINAPI *)(HWND)) GetProcAddress( h, "LaunchConnectionDialog" );
-                if (cpl) cpl( winId() );
-                FreeLibrary( h );
-            #endif
-                break;
+            wizard()->showNormal();
+            wizard()->setFocus();
+            wizard()->raise();
+            wizard()->activateWindow();
         }
-        ui.password->setFocus();
-        ui.password->selectAll();
-        ui.errorMsg->show();
+    }
+    else
+    {
+        m_loginProcess->showError();
     }
 }
 

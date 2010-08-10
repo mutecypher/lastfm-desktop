@@ -107,14 +107,14 @@ LoginProcess::authenticate()
 
     m_webServer = new TinyWebServer( this );
 
-    QUrl authUrl( "http://www.last.fm/api/auth/" );
+    m_authUrl = QUrl( "http://www.last.fm/api/auth/" );
     QString callbackUrl = "http://" + m_webServer->serverAddress().toString()
                           + ":" + QString::number( m_webServer->serverPort() );
-    authUrl.addQueryItem( "api_key", lastfm::ws::ApiKey );
-    authUrl.addQueryItem( "token", "" );
-    authUrl.addQueryItem( "cb", callbackUrl );
+    m_authUrl.addQueryItem( "api_key", lastfm::ws::ApiKey );
+    m_authUrl.addQueryItem( "token", "" );
+    m_authUrl.addQueryItem( "cb", callbackUrl );
 
-    if ( QDesktopServices::openUrl( authUrl ) )
+    if ( QDesktopServices::openUrl( m_authUrl ) )
     {
         connect( m_webServer, SIGNAL( gotToken( QString ) ), this, SLOT( getSession( QString ) ) );
     }
@@ -130,6 +130,12 @@ Session
 LoginProcess::session() const
 {
     return m_session;
+}
+
+QUrl
+LoginProcess::authUrl() const
+{
+    return m_authUrl;
 }
 
 void
