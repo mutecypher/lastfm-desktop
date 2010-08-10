@@ -339,7 +339,7 @@ ScrobbleInfoWidget::onTrackGotTopFans(const XmlQuery& lfm)
             break;
 
         User u(e);
-        if ( !u.imageUrl( lastfm::ImageSize::Small ).toString().isEmpty() )
+        if ( !u.imageUrl( lastfm::Small ).toString().isEmpty() )
             model.listeningNow->addUser(u);
     }
 
@@ -350,7 +350,7 @@ ScrobbleInfoWidget::onTrackGotTopFans(const XmlQuery& lfm)
             break;
 
         User u(e);
-        if ( u.imageUrl( lastfm::ImageSize::Small ).toString().isEmpty() )
+        if ( u.imageUrl( lastfm::Small ).toString().isEmpty() )
             model.listeningNow->addUser(u);
     }
 }
