@@ -56,7 +56,8 @@ public:
         setPage( Page_Login, new LoginPage(this));
         setPage( Page_Bootstrap, new BootstrapPage( this ));
         setPage( Page_Welcome, new WelcomePage( this ) );
-        connect( this, SIGNAL(accepted()), SLOT(onWizardCompleted()));
+        connect( this, SIGNAL( rejected() ), this, SLOT( onRejected() ) );
+        connect( this, SIGNAL( accepted() ), this, SLOT( onWizardCompleted() ) );
     }
 
     int nextId() const
@@ -83,11 +84,24 @@ public:
         }
     }
 
-public slots:
+private slots:
     void onWizardCompleted()
     {
         unicorn::Settings().setValue( "FirstRunWizardCompleted", true );
     }
+
+
+    void onRejected()
+    {
+        //if the user doesn't finish the wizard then we make sure
+        //the settings are removed.
+        if ( unicorn::Session().isValid() )
+        {
+            unicorn::Settings us;
+            us.remove( unicorn::Session().username() );
+        }
+    }
+
 };
 
 #endif //FIRST_RUN_WIZARD_H_
