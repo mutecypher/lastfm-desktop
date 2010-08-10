@@ -23,7 +23,6 @@
 #include "lib/unicorn/UnicornCoreApplication.h"
 #include <lastfm/Audioscrobbler>
 #include <lastfm/misc.h>
-#include <lastfm/Scrobble>
 #include <lastfm/ScrobbleCache>
 #include <lastfm/ws.h>
 #include <QByteArray>

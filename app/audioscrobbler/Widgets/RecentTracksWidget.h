@@ -37,12 +37,16 @@ public:
     void write() const;
 
     void addCachedTrack( const Track& a_track );
-    void addScrobbledTrack( const Track& a_track );
 
 private slots:
     void onTrackChanged();
     void onMoveFinished();
+    void doWrite() const;
+
+    void disableHover();
+    void enableHover();
 
 private:
     QString m_path;
+    class QTimer* m_writeTimer;
 };

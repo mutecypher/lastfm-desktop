@@ -18,8 +18,8 @@
 */
 
 #include "ScrobbleStatus.h"
-#include "StopWatch.h"
-#include "Application.h"
+#include "../StopWatch.h"
+#include "../Application.h"
 #include "lib/listener/PlayerConnection.h"
 
 #include <QHBoxLayout>
@@ -63,7 +63,7 @@ ScrobbleStatus::paintEvent( QPaintEvent* event )
     StylableWidget::paintEvent( event );
     
     m_stopWatch = ((audioscrobbler::Application*)qApp)->stopWatch();
-    if( !m_stopWatch )
+    if( !m_stopWatch || m_stopWatch && m_stopWatch->paused())
         return;
 
     QPainter p( this );
@@ -77,17 +77,17 @@ ScrobbleStatus::paintEvent( QPaintEvent* event )
 void 
 ScrobbleStatus::onWatchPaused( bool isPaused )
 {
-    if( !isPaused ) {
-        ui.playerStatus->setText( ((audioscrobbler::Application*)qApp)->currentConnection()->name());
-        movie.scrobbler_as->jumpToFrame( 0 );
-        ui.as->setMovie(movie.scrobbler_as );
-        ui.as->movie()->start();
-        return; 
+    if ( isPaused )
+    {
+        ui.title->setText("");
+        ui.playerStatus->setText("");
+        ui.as->clear();
+        update();
     }
-    
-    ui.playerStatus->setText( ((audioscrobbler::Application*)qApp)->currentConnection()->name() + tr( " is paused" ));
-    ui.as->setMovie(movie.scrobbler_paused);
-    ui.as->movie()->start();
+    else
+    {
+        setStatusToCurrentTrack();
+    }
 }
 
 void
@@ -97,16 +97,25 @@ ScrobbleStatus::onWatchFinished()
     ui.playerStatus->setText( tr( "Track Scrobbled" ));
 }
 
-void 
-ScrobbleStatus::onTrackStarted( const Track& track, const Track& previousTrack )
+void
+ScrobbleStatus::setStatusToCurrentTrack()
 {
-    qDebug() << "New Track " << track.toString();
-    ui.title->setText( track.toString() );
-    
+    ui.title->setText( m_currentTrack.toString() );
+
     //FIXME: this looks like it could be dodgy!
     ui.playerStatus->setText( ((audioscrobbler::Application*)qApp)->currentConnection()->name());
     ui.as->setMovie( movie.scrobbler_as );
     ui.as->movie()->start();
+}
+
+void 
+ScrobbleStatus::onTrackStarted( const Track& track, const Track& previousTrack )
+{
+    qDebug() << "New Track " << track.toString();
+
+    m_currentTrack = track;
+
+    setStatusToCurrentTrack();
 
     if( m_stopWatch ) {
         disconnect( m_stopWatch, 0, this, 0 );

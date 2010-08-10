@@ -207,24 +207,28 @@ DataBox #contents QLabel {
 
 RecentTrackWidget {
 	border-top: 1px solid #cccccc;
-	padding: 0px 0px;
-	min-height: 34;
+	padding: 0px 0px 2px 0px;
 }
 
 RecentTrackWidget:hover {
 	background-color: rgba( 0, 0, 2, 230 );
 }
 
-RecentTrackWidget QLabel {
-	margin: 0px 0px;
+RecentTrackWidget[status="cached"] QLabel#trackText {
+	color: #0187c5;
+}
+
+RecentTrackWidget[status="error"] QLabel#trackText {
+	color: #d51007;
 }
 
 RecentTrackWidget HttpImageWidget#art {
-	max-width: 32;
-	max-height: 32;
+	max-width: 34px;
+	max-height: 34px;
 	qproperty-scaledContents: true;
 	qproperty-pixmap: url(:/default_album_large.png);
 	margin: 0px 0px;
+	padding: 0px 0px;
 }
 
 RecentTrackWidget QLabel#love {
@@ -327,10 +331,11 @@ QTextBrowser, QLabel#title1, QLabel#title2 {
 MetadataWindow #artistImage {
     padding: 0px;  
     border: 1px solid #716f6f; 
-    min-width: 99px; 
-    min-height: 76px; 
-	max-width: 99px; 
-    max-height: 76px; 
+    min-width: 160px;     
+	max-width: 160px;
+	min-height: 120px; 
+    max-height: 120px; 
+	qproperty-gradient: false;
 }
 
 QLabel#title1 {

@@ -21,14 +21,44 @@
 #include "HttpImageWidget.h"
 
 HttpImageWidget::HttpImageWidget( QWidget* parent )
-    :QLabel( parent ), m_mouseDown( false )
+    :QLabel( parent ), m_mouseDown( false ), m_gradient( false )
 {
 }
 
+bool
+HttpImageWidget::gradient()
+{
+    return m_gradient;
+}
 
-void HttpImageWidget::loadUrl( const QUrl& url, bool gradient )
+void
+HttpImageWidget::setGradient( bool gradient )
 {
     m_gradient = gradient;
+    update();
+}
+
+void
+HttpImageWidget::paintEvent( QPaintEvent* event )
+{
+    QLabel::paintEvent(event);
+
+    if ( pixmap() && m_gradient)
+    {
+        QLinearGradient g(QPoint(), pixmap()->rect().bottomLeft());
+        g.setColorAt( 0.0, QColor(0, 0, 0, 0.11*255));
+        g.setColorAt( 1.0, QColor(0, 0, 0, 0.88*255));
+
+        QPainter p(this);
+        p.setCompositionMode(QPainter::CompositionMode_Multiply);
+        p.fillRect(pixmap()->rect(), g);
+        p.end();
+    }
+}
+
+void
+HttpImageWidget::loadUrl( const QUrl& url )
+{
     connect( lastfm::nam()->get(QNetworkRequest(url)), SIGNAL(finished()), SLOT(onUrlLoaded()));
 }
 
@@ -60,7 +90,7 @@ void HttpImageWidget::mouseReleaseEvent( QMouseEvent* event )
 
 void HttpImageWidget::onClick()
 {
-    QDesktopServices::openUrl( m_href);
+    QDesktopServices::openUrl( m_href );
 }
 
 void HttpImageWidget::onUrlLoaded()
@@ -70,18 +100,14 @@ void HttpImageWidget::onUrlLoaded()
         QPixmap px;
         px.loadFromData(static_cast<QNetworkReply*>(sender())->readAll());
 
-        if( m_gradient ) {
-            QLinearGradient g(QPoint(), px.rect().bottomLeft());
-            g.setColorAt( 0.0, QColor(0, 0, 0, 0.11*255));
-            g.setColorAt( 1.0, QColor(0, 0, 0, 0.88*255));
+        // Decide which way to scale based on the ratio of height to width
+        // of the image and the area that the image is going to be drawn to
+        if ( (px.height() * 1000) / px.width() > (height() * 1000) / width() )
+            px = px.scaledToWidth( width(), Qt::SmoothTransformation );
+        else
+            px = px.scaledToHeight( height(), Qt::SmoothTransformation );
 
-            QPainter p(&px);
-            p.setCompositionMode(QPainter::CompositionMode_Multiply);
-            p.fillRect(px.rect(), g);
-            p.end();
-        }
-
-        setPixmap(px);
+        setPixmap( px );
     }
 
     emit loaded();

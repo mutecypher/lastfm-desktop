@@ -40,6 +40,8 @@ protected:
     virtual void mouseReleaseEvent( class QMouseEvent* );
 
 private:
+    void setStatusToCurrentTrack();
+
     struct {
         class QLabel* as;
         class QLabel* title;
@@ -53,6 +55,8 @@ private:
 
     QPointer<StopWatch> m_stopWatch;
     bool m_mouseDown;
+
+    Track m_currentTrack;
 
 public slots:
     void onTrackStarted( const Track&, const Track& );

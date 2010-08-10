@@ -33,7 +33,7 @@
 #include <QTextFrame>
 #include <lastfm/XmlQuery>
 #include <lastfm/ws.h>
-#include "Application.h"
+#include "../Application.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/DataListWidget.h"
@@ -231,9 +231,6 @@ ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
 void
 ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
 {
-    QString xmltext = lfm.text();
-    qDebug() << "Loading image Url:" << xmltext;
-
     int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
     int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
     int userListens = lfm["artist"]["stats"]["userplaycount"].text().toInt();
@@ -277,7 +274,7 @@ ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
     root->setFrameFormat(f);
 
     QUrl url = lfm["artist"]["image size=large"].text();
-    ui.artistImage->loadUrl( url, true );
+    ui.artistImage->loadUrl( url );
     ui.artistImage->setHref( lfm["artist"][ "url" ].text());
 }
 
@@ -333,11 +330,28 @@ ScrobbleInfoWidget::onTrackGotTopFans(const XmlQuery& lfm)
 {
     model.listeningNow->clear();
 
-    foreach(const XmlQuery& e, lfm["topfans"].children("user").mid(0, 4))
+    QList<XmlQuery> users = lfm["topfans"].children("user");
+
+    // Add users that have avatars
+    foreach(const XmlQuery& e, users)
     {
-        //ui.topFans->addItem(e["name"].text(), QUrl(e["url"].text()));
+        if (model.listeningNow->rowCount() == 4)
+            break;
+
         User u(e);
-        model.listeningNow->addUser(u);
+        if ( !u.imageUrl( lastfm::ImageSize::Small ).toString().isEmpty() )
+            model.listeningNow->addUser(u);
+    }
+
+    // If we still haven't got 4, add the ones that don't have avatars
+    foreach(const XmlQuery& e, users)
+    {
+        if (model.listeningNow->rowCount() == 4)
+            break;
+
+        User u(e);
+        if ( u.imageUrl( lastfm::ImageSize::Small ).toString().isEmpty() )
+            model.listeningNow->addUser(u);
     }
 }
 

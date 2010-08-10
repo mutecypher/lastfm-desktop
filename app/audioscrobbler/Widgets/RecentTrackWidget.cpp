@@ -66,8 +66,9 @@ RecentTrackWidget::RecentTrackWidget( const Track& track )
         connect( track.signalProxy(), SIGNAL(gotInfo(XmlQuery)), SLOT(onGotInfo(XmlQuery)));
     }
 
-    layout->addWidget( ui.title = new QLabel( track.toString() ), 1, Qt::AlignTop );
-    ui.title->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
+    layout->addWidget( ui.trackText = new QLabel( track.toString() ), 1, Qt::AlignTop );
+    ui.trackText->setObjectName( "trackText" );
+    ui.trackText->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
 
     layout->addWidget( ui.love = new QLabel("love"), 0, Qt::AlignTop );
     ui.love->setObjectName( "love" );
@@ -85,6 +86,9 @@ RecentTrackWidget::RecentTrackWidget( const Track& track )
     loveAction->setCheckable( true );
     loveAction->setChecked( track.isLoved() );
 
+    connect( cogMenu, SIGNAL(aboutToShow()), SIGNAL(cogMenuAboutToShow()));
+    connect( cogMenu, SIGNAL(aboutToHide()), SIGNAL(cogMenuAboutToHide()));
+
     cogMenu->addAction( QIcon(":/tag-rest.png"), "Tag", this, SLOT(onTagClicked()) );
     cogMenu->addAction( QIcon(":/share-rest.png"), "Share", this, SLOT(onShareClicked()) );
 
@@ -95,8 +99,12 @@ RecentTrackWidget::RecentTrackWidget( const Track& track )
     connect( m_timestampTimer, SIGNAL(timeout()), SLOT(updateTimestamp()));
     updateTimestamp();
 
+    onScrobbleStatusChanged();
+
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onLoveToggled(bool)));
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), loveAction, SLOT(setChecked(bool)));
+
+    connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()) );
 }
 
 void
@@ -127,8 +135,8 @@ RecentTrackWidget::leaveEvent( class QEvent* )
 void
 RecentTrackWidget::resizeEvent(QResizeEvent* )
 {
-    QFontMetrics fm( ui.title->font() );
-    ui.title->setText( fm.elidedText ( m_track.toString(), Qt::ElideRight, ui.title->width() - 2 ) );
+    QFontMetrics fm( ui.trackText->font() );
+    ui.trackText->setText( fm.elidedText ( m_track.toString(), Qt::ElideRight, ui.trackText->width() - 2 ) );
 }
 
 void
@@ -199,4 +207,52 @@ void
 RecentTrackWidget::onLoveToggled( bool loved )
 {
     ui.love->setVisible( loved );
+}
+
+void RecentTrackWidget::onScrobbleStatusChanged()
+{
+    setToolTip( tr("") );
+
+    switch ( m_track.scrobbleStatus() )
+    {
+    case Track::Null:
+        setStatus( "null" );
+        break;
+    case Track::Cached:
+        setStatus( "cached" );
+        setToolTip( tr("Cached") );
+        break;
+    case Track::Submitted:
+        setStatus( "submitted" );
+        break;
+    case Track::Error:
+        setStatus( "error" );
+        break;
+    }
+
+    switch ( m_track.scrobbleError() )
+    {
+    case Track::FilteredArtistName:
+        setToolTip( tr("Artist name did not pass filters") );
+        break;
+    case Track::FilteredTrackName:
+        setToolTip( tr("Track name did not pass filters") );
+        break;
+    case Track::FilteredAlbumName:
+        setToolTip( tr("Album name did not pass filters") );
+        break;
+    case Track::FilteredTimestamp:
+        setToolTip( tr("Timestamp did not pass filters") );
+        break;
+    case Track::ExceededMaxDailyScrobbles:
+        setToolTip( tr("Max daily scrobbles exceeded") );
+        break;
+    case Track::InvalidStreamAuth:
+        setToolTip( tr("Stream auth was invalid") );
+        break;
+    default:
+        break;
+    }
+
+    ui.trackText->setStyle(QApplication::style());
 }

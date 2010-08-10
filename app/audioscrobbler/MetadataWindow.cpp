@@ -111,6 +111,7 @@ MetadataWindow::MetadataWindow()
     hb->layout()->addWidget( ui.tabBar = new QTabBar());
     ui.tabBar->insertTab( TAB_PROFILE, tr( "Profile" ) );
     ui.tabBar->insertTab( TAB_INFO, tr( "Info" ) );
+    ui.tabBar->setTabEnabled ( TAB_INFO, false );
     connect( ui.tabBar, SIGNAL( currentChanged( int )), SLOT( onTabChanged( int )));
 
     //HACK: on KDE, the tab bar seems to inherit the app background color resulting in
@@ -119,6 +120,7 @@ MetadataWindow::MetadataWindow()
     {
         ui.tabBar->setStyleSheet( "color: #cccccc" );
     }
+
 
     hb->layout()->addWidget( ui.now_playing_source );
 
@@ -197,6 +199,8 @@ MetadataWindow::MetadataWindow()
 void
 MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
 {
+    ui.tabBar->setTabEnabled ( TAB_INFO, true );
+
     if ( m_currentTrack.isNull() )
     {
         // We are starting form a stopped state
@@ -217,6 +221,7 @@ MetadataWindow::onStopped()
     ui.now_playing_source->onTrackStopped();
     ui.tabBar->setCurrentIndex( TAB_PROFILE );
     m_currentTrack = Track();
+    ui.tabBar->setTabEnabled ( TAB_INFO, false );
 }
 
 
@@ -225,6 +230,7 @@ MetadataWindow::onResumed()
 {
     // Switch back to the info view when you resume. We never
     // actually stop with iTunes so this is more consistent.
+    ui.tabBar->setTabEnabled ( TAB_INFO, true );
     ui.tabBar->setCurrentIndex( TAB_INFO );
     toggleProfile( false );
 }
@@ -233,6 +239,8 @@ MetadataWindow::onResumed()
 void
 MetadataWindow::onPaused()
 {
+    setCurrentWidget( stack.profile );
+    ui.tabBar->setTabEnabled ( TAB_INFO, false );
 }
 
 

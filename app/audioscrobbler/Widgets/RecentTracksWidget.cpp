@@ -23,6 +23,7 @@
 #include <QIcon>
 #include <QFile>
 #include <QLabel>
+#include <QTimer>
 
 #include <lastfm/misc.h>
 
@@ -45,6 +46,25 @@ RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
     connect( layout, SIGNAL(moveFinished()), SLOT(onMoveFinished()));
 
     setUsername( username );
+
+    m_writeTimer = new QTimer( this );
+    m_writeTimer->setSingleShot( true );
+
+    connect( m_writeTimer, SIGNAL(timeout()), SLOT(doWrite()) );
+}
+
+void
+RecentTracksWidget::disableHover()
+{
+    for ( int i(0) ; i < layout()->count() ; ++i )
+        layout()->itemAt( i )->widget()->setUpdatesEnabled( false );
+}
+
+void
+RecentTracksWidget::enableHover()
+{
+    for ( int i(0) ; i < layout()->count() ; ++i )
+        layout()->itemAt( i )->widget()->setUpdatesEnabled( true );
 }
 
 void
@@ -96,16 +116,27 @@ RecentTracksWidget::read()
             RecentTrackWidget* item = new RecentTrackWidget( *track );
             layout()->addWidget( item );
 
+            connect( item, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
+            connect( item, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
+
             connect( track->signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
+            connect( track->signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onTrackChanged()));
         }
     }
 
     static_cast<AnimatedListLayout*>(layout())->setAnimated( true );
 }
 
-
 void
 RecentTracksWidget::write() const
+{
+    qDebug() << m_path;
+
+    m_writeTimer->start( 200 );
+}
+
+void
+RecentTracksWidget::doWrite() const
 {
     qDebug() << m_path;
 
@@ -138,12 +169,16 @@ RecentTracksWidget::write() const
 void
 RecentTracksWidget::addCachedTrack( const Track& a_track )
 {
-    MutableTrack( a_track ).setExtra( "scrobbleStatus", "cached" );
-
     RecentTrackWidget* item = new RecentTrackWidget( a_track );
     layout()->addWidget( item );
 
     connect( a_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
+    connect( a_track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onTrackChanged()));
+
+    connect( item, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
+    connect( item, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
+
+    write();
 }
 
 void
@@ -159,8 +194,3 @@ RecentTracksWidget::onMoveFinished()
    write();
 }
 
-void
-RecentTracksWidget::addScrobbledTrack( const Track& a_track )
-{
-    MutableTrack( a_track ).setExtra( "scrobbleStatus", "scrobbled" );
-}

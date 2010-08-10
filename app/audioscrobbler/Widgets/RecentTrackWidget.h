@@ -32,13 +32,20 @@ public:
 
     Track track() const { return m_track;}
 
+    QString status() const { return m_status; }
+
 signals:
     void loaded();
+
+    void cogMenuAboutToShow();
+    void cogMenuAboutToHide();
 
 private:
     void enterEvent( class QEvent* event );
     void leaveEvent( class QEvent* event );
     void resizeEvent( class QResizeEvent* event );
+
+    void setStatus( QString status ) { m_status = status; }
 
 private slots:
     void onLoveToggled( bool loved );
@@ -51,10 +58,12 @@ private slots:
 
     void onGotInfo( const XmlQuery& lfm );
 
+    void onScrobbleStatusChanged();
+
 private:
     struct
     {
-        class QLabel* title;
+        class QLabel* trackText;
         class HttpImageWidget* albumArt;
         class QLabel* love;
         class QToolButton* cog;
@@ -64,4 +73,7 @@ private:
 
     Track m_track;
     class QTimer* m_timestampTimer;
+
+    Q_PROPERTY(QString status READ status WRITE setStatus);
+    QString m_status;
 };

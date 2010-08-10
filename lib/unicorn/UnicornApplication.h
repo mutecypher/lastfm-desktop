@@ -139,6 +139,8 @@ namespace unicorn
         Application( int&, char** ) throw( StubbornUserException );
         ~Application();
 
+        virtual void init();
+
         /** Will return the actual stylesheet that is loaded if one is specified
            (on the command-line with -stylesheet or with setStyleSheet(). )
            Note. the QApplication styleSheet property will return the path 
