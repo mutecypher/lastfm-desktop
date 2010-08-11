@@ -28,6 +28,7 @@
 
 #include <lastfm/User>
 
+#include <QApplication>
 #include <QComboBox>
 #include <QGroupBox>
 #include <QHBoxLayout>
@@ -42,6 +43,7 @@ AccountSettingsWidget::AccountSettingsWidget( QWidget* parent )
     populateLanguages();
     connect( ui.users, SIGNAL( userChanged() ), this, SLOT( onSettingsChanged() ) );
     connect( ui.languages, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onSettingsChanged() ) );
+    connect( ui.users, SIGNAL( rosterUpdated() ), qApp, SIGNAL( rosterUpdated() ) );
 }
 
 void
