@@ -35,6 +35,62 @@ extern "C"
     #include <glib/glist.h>
 }
 
+TracksFetcher::TracksFetcher( Itdb_iTunesDB *itdb, IpodDevice* parent )
+{
+    m_itdb = itdb;
+    m_ipod = parent;
+}
+
+void
+TracksFetcher::run()
+{
+    fetchTracks();
+    exec();
+}
+
+void
+TracksFetcher::fetchTracks()
+{
+    GList *cur;
+    for ( cur = m_itdb->tracks; cur; cur = cur->next )
+    {
+        Itdb_Track *iTrack = ( Itdb_Track * )cur->data;
+        if ( !iTrack )
+            continue;
+
+        int newPlayCount = iTrack->playcount - m_ipod->previousPlayCount( iTrack );
+        QDateTime time;
+        time.setTime_t( iTrack->time_played );
+
+        if ( time.toTime_t() == 0 )
+            continue;
+
+        QDateTime prevPlayTime = m_ipod->previousPlayTime( iTrack );
+
+        //this logic takes into account that sometimes the itdb track play count is not
+        //updated correctly (or libgpod doesn't get it right),
+        //so we rely on the track play time too, which seems to be right most of the time
+        if ( ( iTrack->playcount > 0 && newPlayCount > 0 ) || time > prevPlayTime )
+        {
+            Track lstTrack;
+            m_ipod->setTrackInfo( lstTrack, iTrack );
+
+            if ( newPlayCount == 0 )
+                newPlayCount++;
+
+            //add the track to the list as many times as the updated playcount.
+            for ( int i = 0; i < newPlayCount; i++ )
+            {
+                m_tracksToScrobble.append( lstTrack );
+            }
+
+            m_ipod->commit( iTrack );
+        }
+    }
+    exit();
+}
+
+
 IpodDevice::IpodDevice()
     : m_itdb( 0 )
     , m_mpl( 0 )
@@ -81,6 +137,7 @@ IpodDevice::deleteDevicesHistory()
     QString filePath = lastfm::dir::runtimeData().filePath( name + ".db" );
     return QFile::remove( filePath );
 }
+
 
 QSqlDatabase
 IpodDevice::database() const
@@ -141,11 +198,22 @@ IpodDevice::open()
 
 }
 
-
 QList<Track>
 IpodDevice::tracksToScrobble()
 {
-    QList<Track> tracks;
+    return m_tracksToScrobble;
+}
+
+void
+IpodDevice::onFinished()
+{
+    m_tracksToScrobble = m_tf->tracksToScrobble();
+    emit scrobblingCompleted( m_tracksToScrobble.count() );
+}
+
+void
+IpodDevice::fetchTracksToScrobble()
+{
     try
     {
         open();
@@ -153,14 +221,22 @@ IpodDevice::tracksToScrobble()
     catch ( QString &error )
     {
         m_error = error;
-        return tracks;
+        emit errorOccurred();
+        return;
     }
 
     if ( !m_itdb )
-        return tracks;
-
-
-    GList *cur;
+    {
+        m_error = "Itunes Database error";
+        emit errorOccurred();
+        return;
+    }
+    
+    emit calculatingScrobbles( itdb_tracks_number( m_itdb ) );
+    m_tf = new TracksFetcher( m_itdb, this );
+    connect( m_tf, SIGNAL( finished() ), this, SLOT( onFinished() ) );
+    m_tf->start();
+   /* GList *cur;
     for ( cur = m_itdb->tracks; cur; cur = cur->next )
     {
         Itdb_Track *iTrack = ( Itdb_Track * )cur->data;
@@ -190,14 +266,14 @@ IpodDevice::tracksToScrobble()
             //add the track to the list as many times as the updated playcount.
             for ( int i = 0; i < newPlayCount; i++ )
             {
-                tracks += lstTrack;
+                m_tracksToScrobble.append( lstTrack );
             }
 
             commit( iTrack );
         }
-    }
+    }*/
     m_error = "";
-    return tracks;
+//    emit scrobblingCompleted( m_tracksToScrobble.count() );
 }
 
 

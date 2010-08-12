@@ -69,6 +69,11 @@ public:
      */
     bool isDeviceKnown() const;
 
+signals:
+    void deviceScrobblingStarted();
+    void calculatingScrobbles( int trackCount );
+    void scrobblingCompleted( int trackCount );
+    void errorOccurred();
 
 protected:
     QString m_error;

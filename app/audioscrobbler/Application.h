@@ -31,6 +31,10 @@ class QAction;
 class ScrobbleInfoFetcher;
 class StopWatch;
 
+#ifdef Q_WS_X11
+    class IpodDevice;
+#endif
+
 namespace audioscrobbler
 {
     
@@ -60,6 +64,9 @@ namespace audioscrobbler
         QPointer<StopWatch> watch;
         QPointer<MetadataWindow> mw;
         QPointer<ScrobbleInfoFetcher> fetcher;
+    #ifdef Q_WS_X11
+        QPointer<IpodDevice> iPod;
+    #endif
 
         Track trackToScrobble;
 
@@ -119,6 +126,7 @@ namespace audioscrobbler
 #ifdef Q_WS_X11
         QString getIpodMountPath();
         void onScrobbleIpodTriggered();
+        void scrobbleIpodTracks( int trackCount );
 #endif
 
         void onVisitProfileTriggered();

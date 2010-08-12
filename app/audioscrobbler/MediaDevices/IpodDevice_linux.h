@@ -22,13 +22,32 @@
 
 #include "MediaDevice.h"
 
+#include <QThread>
+
 typedef struct _Itdb_iTunesDB Itdb_iTunesDB;
 typedef struct _Itdb_Track Itdb_Track;
 typedef struct _Itdb_Playlist Itdb_Playlist;
+class IpodDevice;
+class TracksFetcher: public QThread
+{
+public:
+    TracksFetcher( Itdb_iTunesDB* itdb, IpodDevice* parent );
+    QList<Track> tracksToScrobble(){ return m_tracksToScrobble; }
+    void run();
+private:
+    void fetchTracks();
+private:
+    Itdb_iTunesDB* m_itdb;
+    IpodDevice* m_ipod;
+    QList<Track> m_tracksToScrobble;
+};
 
 class IpodDevice: public MediaDevice
 {
     Q_OBJECT
+
+friend class TracksFetcher;
+
 public:
     IpodDevice();
     ~IpodDevice();
@@ -82,6 +101,11 @@ public:
      */
     QList<Track> tracksToScrobble();
 
+public slots:
+    /**
+     * Fetches the tracks from the iPod.
+     */
+    void fetchTracksToScrobble();
 
 private:
     void commit( Itdb_Track* iTrack );
@@ -89,7 +113,8 @@ private:
     void setTrackInfo( Track& lstTrack, Itdb_Track* iTrack );
     uint previousPlayCount( Itdb_Track* iTrack ) const;
     QDateTime previousPlayTime( Itdb_Track* track ) const;
-
+private slots:
+    void onFinished();
 private:
     struct DeviceInfo
     {
@@ -104,6 +129,8 @@ private:
     QMap<QString, DeviceInfo> m_detectedDevices;
     QString m_mountPath;
     QString m_ipodModel;
+    QList<Track> m_tracksToScrobble;
+    TracksFetcher* m_tf;
 };
 
 #endif // IPOD_DEVICE_H
