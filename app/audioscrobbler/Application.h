@@ -126,6 +126,8 @@ namespace audioscrobbler
 #ifdef Q_WS_X11
         QString getIpodMountPath();
         void onScrobbleIpodTriggered();
+        void onIpodScrobblingError();
+        void onCalculatingScrobbles( int trackCount );
         void scrobbleIpodTracks( int trackCount );
 #endif
 

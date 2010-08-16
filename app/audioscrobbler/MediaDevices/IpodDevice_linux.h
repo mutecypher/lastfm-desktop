@@ -27,18 +27,25 @@
 typedef struct _Itdb_iTunesDB Itdb_iTunesDB;
 typedef struct _Itdb_Track Itdb_Track;
 typedef struct _Itdb_Playlist Itdb_Playlist;
-class IpodDevice;
-class TracksFetcher: public QThread
+
+class IpodTracksFetcher: public QThread
 {
 public:
-    TracksFetcher( Itdb_iTunesDB* itdb, IpodDevice* parent );
+    IpodTracksFetcher( Itdb_iTunesDB* itdb, QSqlDatabase scrobblesdb, QString tableName, QString ipodModel );
     QList<Track> tracksToScrobble(){ return m_tracksToScrobble; }
     void run();
 private:
     void fetchTracks();
+    void commit( Itdb_Track* iTrack );
+    void setTrackInfo( Track& lstTrack, Itdb_Track* iTrack );
+    uint previousPlayCount( Itdb_Track* iTrack ) const;
+    QDateTime previousPlayTime( Itdb_Track* track ) const;
+
 private:
     Itdb_iTunesDB* m_itdb;
-    IpodDevice* m_ipod;
+    QSqlDatabase m_scrobblesdb;
+    QString m_tableName;
+    QString m_ipodModel;
     QList<Track> m_tracksToScrobble;
 };
 
@@ -46,9 +53,16 @@ class IpodDevice: public MediaDevice
 {
     Q_OBJECT
 
-friend class TracksFetcher;
-
 public:
+
+    enum Error
+    {
+        NoError,
+        AutodetectionError,
+        AccessError,
+        UnknownError
+    };
+
     IpodDevice();
     ~IpodDevice();
 
@@ -75,13 +89,13 @@ public:
      * If more than one device is detected then nothing would be done.
      * @return true if there was just one of the user's devices mounted, otherwise returns false.
      */
-    bool autoDetectMountPath();
+    bool autodetectMountPath();
 
     /**
      * Sets the mount path where the device is mounted.
      * @param path The mount path of the mounted device.
      */
-    void setMountPath( const QString& path ){ m_mountPath = path; }
+    void setMountPath( const QString& path, bool autodetected = false );
 
     /**
      * @return The mount path of the device.
@@ -101,6 +115,8 @@ public:
      */
     QList<Track> tracksToScrobble();
 
+    Error lastError() const{ return m_error; }
+
 public slots:
     /**
      * Fetches the tracks from the iPod.
@@ -108,13 +124,11 @@ public slots:
     void fetchTracksToScrobble();
 
 private:
-    void commit( Itdb_Track* iTrack );
     void open();
-    void setTrackInfo( Track& lstTrack, Itdb_Track* iTrack );
-    uint previousPlayCount( Itdb_Track* iTrack ) const;
-    QDateTime previousPlayTime( Itdb_Track* track ) const;
+
 private slots:
     void onFinished();
+
 private:
     struct DeviceInfo
     {
@@ -130,7 +144,9 @@ private:
     QString m_mountPath;
     QString m_ipodModel;
     QList<Track> m_tracksToScrobble;
-    TracksFetcher* m_tf;
+    IpodTracksFetcher* m_tf;
+    bool m_autodetected;
+    Error m_error;
 };
 
 #endif // IPOD_DEVICE_H

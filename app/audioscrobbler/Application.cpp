@@ -509,47 +509,45 @@ void
 Application::onScrobbleIpodTriggered()
 {
     if ( iPod )
+    {
+        qDebug() << "deleting ipod...";
         delete iPod;
-
+    }
+    qDebug() << "here";
     iPod = new IpodDevice;
     QString path;
-    bool autoDetectionSuceeded = true;
+    bool autodetectionSuceeded = true;
 
-    if ( !iPod->autoDetectMountPath() )
+    if ( !iPod->autodetectMountPath() )
     {
         path = getIpodMountPath();
         iPod->setMountPath( path );
-        autoDetectionSuceeded = false;
+        autodetectionSuceeded = false;
     }
 
-    if ( autoDetectionSuceeded || !path.isEmpty() )
+    if ( autodetectionSuceeded || !path.isEmpty() )
     {
         connect( iPod, SIGNAL( scrobblingCompleted( int ) ), this, SLOT( scrobbleIpodTracks( int ) ) );
+        connect( iPod, SIGNAL( calculatingScrobbles( int ) ), this, SLOT( onCalculatingScrobbles( int ) ) );
+        connect( iPod, SIGNAL( errorOccurred() ), this, SLOT( onIpodScrobblingError() ) );
         iPod->fetchTracksToScrobble();
-        qApp->setOverrideCursor( Qt::WaitCursor );
-        qDebug() << "fetching tracks...";
     }
+}
+
+void
+Application::onCalculatingScrobbles( int trackCount )
+{
+    qApp->setOverrideCursor( Qt::WaitCursor );
 }
 
 void
 Application::scrobbleIpodTracks( int trackCount )
 {
-    //Autodetection probably failed but we couldn't detect it earlier.
-    //Give it another chance.
-   /* if ( !iPod->lastError().isEmpty() && autoDetectionSuceeded )
-    {
-        path = getIpodMountPath();
-        iPod.setMountPath( path );
-        qApp->setOverrideCursor( Qt::WaitCursor );
-        tracks = iPod.tracksToScrobble();
-        qApp->restoreOverrideCursor();
-    }*/
-
     qApp->restoreOverrideCursor();
     qDebug() << trackCount << " new tracks to scrobble.";
 
     bool bootStrapping = false;
-    if ( iPod->lastError().isEmpty() && !iPod->isDeviceKnown() )
+    if ( iPod->lastError() != IpodDevice::NoError && !iPod->isDeviceKnown() )
     {
         bootStrapping = true;
         qDebug() << "Should we save it?";
@@ -591,17 +589,7 @@ Application::scrobbleIpodTracks( int trackCount )
                 .exec();
         }
     }
-    else if ( !iPod->lastError().isEmpty() )
-    {
-        QMessageBoxBuilder( mw )
-                .setIcon( QMessageBox::Critical )
-                .setTitle( tr( "Scrobble iPod" ) )
-                .setText( iPod->lastError() )
-                .exec();
-        qDebug() << iPod->lastError();
-        return;
-    }
-    else
+    else if ( !iPod->lastError() )
     {
         QMessageBoxBuilder( mw )
                 .setIcon( QMessageBox::Information )
@@ -611,7 +599,50 @@ Application::scrobbleIpodTracks( int trackCount )
         qDebug() << "No tracks to scrobble";
     }
     delete iPod;
+    iPod = 0;
 }
+
+void
+Application::onIpodScrobblingError()
+{
+    qDebug() << "iPod Error";
+    qApp->restoreOverrideCursor();
+    QString path;
+    switch( iPod->lastError() )
+    {
+        case IpodDevice::AutodetectionError: //give it another try
+            qDebug() << "giving another try";
+            path = getIpodMountPath();
+            if ( !path.isEmpty() )
+            {
+                iPod->setMountPath( path );
+                iPod->fetchTracksToScrobble();
+            }
+            break;
+
+        case IpodDevice::AccessError:
+            QMessageBoxBuilder( mw )
+                    .setIcon( QMessageBox::Critical )
+                    .setTitle( tr( "Scrobble iPod" ) )
+                    .setText( tr( "The iPod database could not be opened." ) )
+                    .exec();
+            delete iPod;
+            iPod = 0;
+            break;
+        case IpodDevice::UnknownError:
+            QMessageBoxBuilder( mw )
+                    .setIcon( QMessageBox::Critical )
+                    .setTitle( tr( "Scrobble iPod" ) )
+                    .setText( tr( "An unkown error occurred while trying to access the iPod database." ) )
+                    .exec();
+            delete iPod;
+            iPod = 0;
+            break;
+        default:
+            qDebug() << "untracked error:" << iPod->lastError();
+    }
+}
+
 #endif
 
 

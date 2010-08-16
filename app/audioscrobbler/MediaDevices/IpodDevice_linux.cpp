@@ -35,21 +35,23 @@ extern "C"
     #include <glib/glist.h>
 }
 
-TracksFetcher::TracksFetcher( Itdb_iTunesDB *itdb, IpodDevice* parent )
+IpodTracksFetcher::IpodTracksFetcher( Itdb_iTunesDB *itdb, QSqlDatabase scrobblesdb, QString tableName, QString ipodModel )
 {
     m_itdb = itdb;
-    m_ipod = parent;
+    m_tableName = tableName;
+    m_scrobblesdb = scrobblesdb;
+    m_ipodModel = ipodModel;
 }
 
 void
-TracksFetcher::run()
+IpodTracksFetcher::run()
 {
     fetchTracks();
     exec();
 }
 
 void
-TracksFetcher::fetchTracks()
+IpodTracksFetcher::fetchTracks()
 {
     GList *cur;
     for ( cur = m_itdb->tracks; cur; cur = cur->next )
@@ -58,14 +60,14 @@ TracksFetcher::fetchTracks()
         if ( !iTrack )
             continue;
 
-        int newPlayCount = iTrack->playcount - m_ipod->previousPlayCount( iTrack );
+        int newPlayCount = iTrack->playcount - previousPlayCount( iTrack );
         QDateTime time;
         time.setTime_t( iTrack->time_played );
 
         if ( time.toTime_t() == 0 )
             continue;
 
-        QDateTime prevPlayTime = m_ipod->previousPlayTime( iTrack );
+        QDateTime prevPlayTime = previousPlayTime( iTrack );
 
         //this logic takes into account that sometimes the itdb track play count is not
         //updated correctly (or libgpod doesn't get it right),
@@ -73,7 +75,7 @@ TracksFetcher::fetchTracks()
         if ( ( iTrack->playcount > 0 && newPlayCount > 0 ) || time > prevPlayTime )
         {
             Track lstTrack;
-            m_ipod->setTrackInfo( lstTrack, iTrack );
+            setTrackInfo( lstTrack, iTrack );
 
             if ( newPlayCount == 0 )
                 newPlayCount++;
@@ -84,16 +86,72 @@ TracksFetcher::fetchTracks()
                 m_tracksToScrobble.append( lstTrack );
             }
 
-            m_ipod->commit( iTrack );
+            //commit( iTrack );
         }
     }
+    qDebug() << "tracks fetching finished";
     exit();
 }
 
+void
+IpodTracksFetcher::setTrackInfo( Track& lstTrack, Itdb_Track* iTrack )
+{
+    MutableTrack( lstTrack ).setArtist( QString::fromUtf8( iTrack->artist ) );
+    MutableTrack( lstTrack ).setAlbum( QString::fromUtf8( iTrack->album ) );
+    MutableTrack( lstTrack ).setTitle( QString::fromUtf8( iTrack->title ) );
+    MutableTrack( lstTrack ).setSource( Track::MediaDevice );
+
+    QDateTime t;
+    t.setTime_t( iTrack->time_played );
+    MutableTrack( lstTrack ).setTimeStamp( t );
+    MutableTrack( lstTrack ).setDuration( iTrack->tracklen / 1000 ); // set duration in seconds
+
+    MutableTrack( lstTrack ).setExtra( "playerName", "iPod " + m_ipodModel );
+}
+
+void
+IpodTracksFetcher::commit( Itdb_Track* iTrack )
+{
+    QSqlQuery query( m_scrobblesdb );
+    QString sql = "REPLACE INTO " + m_tableName + " ( playcount, lastplaytime, id ) VALUES( %1, %2, %3 )";
+
+    query.exec( sql.arg( iTrack->playcount ).arg( iTrack->time_played ).arg( iTrack->id  ) );
+    if( query.lastError().type() != QSqlError::NoError )
+        qWarning() << query.lastError().text();
+}
+
+uint
+IpodTracksFetcher::previousPlayCount( Itdb_Track* track ) const
+{
+    QSqlQuery query( m_scrobblesdb );
+    QString sql = "SELECT playcount FROM " + m_tableName + " WHERE id=" + QString::number( track->id );
+
+    query.exec( sql );
+
+    if( query.next() )
+        return query.value( 0 ).toUInt();
+    return 0;
+}
+
+QDateTime
+IpodTracksFetcher::previousPlayTime( Itdb_Track* track ) const
+{
+    QSqlQuery query( m_scrobblesdb );
+    QString sql = "SELECT lastplaytime FROM " + m_tableName  + " WHERE id=" + QString::number( track->id );
+
+    query.exec( sql );
+
+    if( query.next() )
+        return QDateTime::fromTime_t( query.value( 0 ).toUInt() );
+    return QDateTime::fromTime_t( 0 );
+}
 
 IpodDevice::IpodDevice()
     : m_itdb( 0 )
     , m_mpl( 0 )
+    , m_tf( 0 )
+    , m_autodetected( false )
+    , m_error( NoError )
 {}
 
 
@@ -104,6 +162,8 @@ IpodDevice::~IpodDevice()
         itdb_free( m_itdb );
         itdb_playlist_free( m_mpl );
     }
+
+    delete m_tf;
 }
 
 bool
@@ -205,13 +265,6 @@ IpodDevice::tracksToScrobble()
 }
 
 void
-IpodDevice::onFinished()
-{
-    m_tracksToScrobble = m_tf->tracksToScrobble();
-    emit scrobblingCompleted( m_tracksToScrobble.count() );
-}
-
-void
 IpodDevice::fetchTracksToScrobble()
 {
     try
@@ -220,120 +273,34 @@ IpodDevice::fetchTracksToScrobble()
     }
     catch ( QString &error )
     {
-        m_error = error;
-        emit errorOccurred();
-        return;
-    }
-
-    if ( !m_itdb )
-    {
-        m_error = "Itunes Database error";
+        qDebug() << "Error initializing the device:" << error;
+        if ( m_autodetected )
+        {
+            m_error = AutodetectionError;
+        }
+        else
+        {
+            m_error = AccessError;
+        }
         emit errorOccurred();
         return;
     }
     
     emit calculatingScrobbles( itdb_tracks_number( m_itdb ) );
-    m_tf = new TracksFetcher( m_itdb, this );
+    m_tf = new IpodTracksFetcher( m_itdb, database(), tableName(), m_ipodModel );
     connect( m_tf, SIGNAL( finished() ), this, SLOT( onFinished() ) );
     m_tf->start();
-   /* GList *cur;
-    for ( cur = m_itdb->tracks; cur; cur = cur->next )
-    {
-        Itdb_Track *iTrack = ( Itdb_Track * )cur->data;
-        if ( !iTrack )
-            continue;
 
-        int newPlayCount = iTrack->playcount - previousPlayCount( iTrack );
-        QDateTime time;
-        time.setTime_t( iTrack->time_played );
-
-        if ( time.toTime_t() == 0 )
-            continue;
-
-        QDateTime prevPlayTime = previousPlayTime( iTrack );
-
-        //this logic takes into account that sometimes the itdb track play count is not
-        //updated correctly (or libgpod doesn't get it right),
-        //so we rely on the track play time too, which seems to be right most of the time
-        if ( ( iTrack->playcount > 0 && newPlayCount > 0 ) || time > prevPlayTime )
-        {
-            Track lstTrack;
-            setTrackInfo( lstTrack, iTrack );
-
-            if ( newPlayCount == 0 )
-                newPlayCount++;
-
-            //add the track to the list as many times as the updated playcount.
-            for ( int i = 0; i < newPlayCount; i++ )
-            {
-                m_tracksToScrobble.append( lstTrack );
-            }
-
-            commit( iTrack );
-        }
-    }*/
-    m_error = "";
-//    emit scrobblingCompleted( m_tracksToScrobble.count() );
 }
 
 
 void
-IpodDevice::setTrackInfo( Track& lstTrack, Itdb_Track* iTrack )
+IpodDevice::onFinished()
 {
-    MutableTrack( lstTrack ).setArtist( QString::fromUtf8( iTrack->artist ) );
-    MutableTrack( lstTrack ).setAlbum( QString::fromUtf8( iTrack->album ) );
-    MutableTrack( lstTrack ).setTitle( QString::fromUtf8( iTrack->title ) );
-    MutableTrack( lstTrack ).setSource( Track::MediaDevice );
-
-    QDateTime t;
-    t.setTime_t( iTrack->time_played );
-    MutableTrack( lstTrack ).setTimeStamp( t );
-    MutableTrack( lstTrack ).setDuration( iTrack->tracklen / 1000 ); // set duration in seconds
-
-    MutableTrack( lstTrack ).setExtra( "playerName", "iPod " + m_ipodModel );
+    m_error = NoError;
+    m_tracksToScrobble = m_tf->tracksToScrobble();
+    emit scrobblingCompleted( m_tracksToScrobble.count() );
 }
-
-
-uint
-IpodDevice::previousPlayCount( Itdb_Track* track ) const
-{
-    QSqlDatabase db = database();
-    QSqlQuery query( db );
-    QString sql = "SELECT playcount FROM " + tableName() + " WHERE id=" + QString::number( track->id );
-
-    query.exec( sql );
-
-    if( query.next() )
-        return query.value( 0 ).toUInt();
-    return 0;
-}
-
-QDateTime
-IpodDevice::previousPlayTime( Itdb_Track* track ) const
-{
-    QSqlDatabase db = database();
-    QSqlQuery query( db );
-    QString sql = "SELECT lastplaytime FROM " + tableName() + " WHERE id=" + QString::number( track->id );
-
-    query.exec( sql );
-
-    if( query.next() )
-        return QDateTime::fromTime_t( query.value( 0 ).toUInt() );
-    return QDateTime::fromTime_t( 0 );
-}
-
-void
-IpodDevice::commit( Itdb_Track* iTrack )
-{
-    QSqlDatabase db = database();
-    QSqlQuery query( db );
-    QString sql = "REPLACE INTO " + tableName() + " ( playcount, lastplaytime, id ) VALUES( %1, %2, %3 )";
-
-    query.exec( sql.arg( iTrack->playcount ).arg( iTrack->time_played ).arg( iTrack->id  ) );
-    if( query.lastError().type() != QSqlError::NoError )
-        qWarning() << query.lastError().text();
-}
-
 
 QString
 IpodDevice::deviceName() const
@@ -351,7 +318,7 @@ IpodDevice::tableName() const
 }
 
 bool
-IpodDevice::autoDetectMountPath()
+IpodDevice::autodetectMountPath()
 {
     unicorn::UserSettings us;
     int count = us.beginReadArray( "associatedDevices" );
@@ -382,6 +349,13 @@ IpodDevice::autoDetectMountPath()
         return false;
     }
 
-    setMountPath( m_detectedDevices.values()[ 0 ].mountPath );
+    setMountPath( m_detectedDevices.values()[ 0 ].mountPath, true );
     return true;
+}
+
+void
+IpodDevice::setMountPath( const QString &path, bool autodetected )
+{
+    m_mountPath = path;
+    m_autodetected = autodetected;
 }
