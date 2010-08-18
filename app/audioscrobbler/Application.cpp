@@ -24,6 +24,7 @@
 #endif
 
 #include "Dialogs/SettingsDialog.h"
+#include "Dialogs/ScrobbleConfirmationDialog.h"
 #include "lib/listener/DBusListener.h"
 #include "lib/listener/legacy/LegacyPlayerListener.h"
 #include "lib/listener/PlayerConnection.h"
@@ -581,12 +582,25 @@ Application::scrobbleIpodTracks( int trackCount )
     {
         if ( !bootStrapping )
         {
-            as->cache( tracks );
-            QMessageBoxBuilder( mw )
-                .setIcon( QMessageBox::Information )
-                .setTitle( tr( "Scrobble iPod" ) )
-                .setText( tr( "%1 tracks scrobbled." ).arg( tracks.count() ) )
-                .exec();
+            if( unicorn::UserSettings().value( "confirmIpodScrobbles", false ).toBool() )
+            {
+                qDebug() << "showing confirm dialog";
+                ScrobbleConfirmationDialog confirmDialog( tracks );
+                if ( confirmDialog.exec() == QDialog::Accepted )
+                {
+                    tracks = confirmDialog.tracksToScrobble();
+                    as->cache( tracks );
+                }
+            }
+            else
+            {
+                as->cache( tracks );
+                QMessageBoxBuilder( mw )
+                        .setIcon( QMessageBox::Information )
+                        .setTitle( tr( "Scrobble iPod" ) )
+                        .setText( tr( "%1 tracks scrobbled." ).arg( tracks.count() ) )
+                        .exec();
+            }
         }
     }
     else if ( !iPod->lastError() )

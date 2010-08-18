@@ -31,8 +31,9 @@ typedef struct _Itdb_Playlist Itdb_Playlist;
 class IpodTracksFetcher: public QThread
 {
 public:
-    IpodTracksFetcher( Itdb_iTunesDB* itdb, QSqlDatabase scrobblesdb, QString tableName, QString ipodModel );
-    QList<Track> tracksToScrobble(){ return m_tracksToScrobble; }
+    IpodTracksFetcher( Itdb_iTunesDB* itdb, QSqlDatabase scrobblesdb,
+                       const QString& tableName, const QString& ipodModel );
+    const QList<lastfm::Track>& tracksToScrobble() const{ return m_tracksToScrobble; }
     void run();
 private:
     void fetchTracks();
@@ -113,7 +114,7 @@ public:
     /**
      * @return a list of tracks to be scrobbled.
      */
-    QList<Track> tracksToScrobble();
+    const QList<Track>& tracksToScrobble() const;
 
     Error lastError() const{ return m_error; }
 

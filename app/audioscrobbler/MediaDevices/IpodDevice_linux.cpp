@@ -35,7 +35,8 @@ extern "C"
     #include <glib/glist.h>
 }
 
-IpodTracksFetcher::IpodTracksFetcher( Itdb_iTunesDB *itdb, QSqlDatabase scrobblesdb, QString tableName, QString ipodModel )
+IpodTracksFetcher::IpodTracksFetcher( Itdb_iTunesDB *itdb, QSqlDatabase scrobblesdb,
+                                      const QString& tableName, const QString& ipodModel )
 {
     m_itdb = itdb;
     m_tableName = tableName;
@@ -258,8 +259,8 @@ IpodDevice::open()
 
 }
 
-QList<Track>
-IpodDevice::tracksToScrobble()
+const QList<Track>&
+IpodDevice::tracksToScrobble() const
 {
     return m_tracksToScrobble;
 }
