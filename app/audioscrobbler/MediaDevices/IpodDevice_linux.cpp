@@ -87,7 +87,7 @@ IpodTracksFetcher::fetchTracks()
                 m_tracksToScrobble.append( lstTrack );
             }
 
-            //commit( iTrack );
+            commit( iTrack );
         }
     }
     qDebug() << "tracks fetching finished";

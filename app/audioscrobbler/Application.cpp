@@ -589,11 +589,20 @@ Application::scrobbleIpodTracks( int trackCount )
                 if ( confirmDialog.exec() == QDialog::Accepted )
                 {
                     tracks = confirmDialog.tracksToScrobble();
+
+                    // sort the iPod scrobbles before caching them
+                    if ( tracks.count() > 1 )
+                        qSort ( tracks.begin(), tracks.end() );
+
                     as->cache( tracks );
                 }
             }
             else
             {
+                // sort the iPod scrobbles before caching them
+                if ( tracks.count() > 1 )
+                    qSort ( tracks.begin(), tracks.end() );
+                    
                 as->cache( tracks );
                 QMessageBoxBuilder( mw )
                         .setIcon( QMessageBox::Information )
