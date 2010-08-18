@@ -773,11 +773,28 @@ Application::onMessageReceived(const QString& message)
                     scrobbles << track;
             }
 
-            // sort the iPod scrobbles before caching them
-            if ( scrobbles.count() > 1 )
-                qSort ( scrobbles.begin(), scrobbles.end() );
+            if( unicorn::UserSettings().value( "confirmIpodScrobbles", false ).toBool() )
+            {
+                ScrobbleConfirmationDialog confirmDialog( scrobbles );
+                if ( confirmDialog.exec() == QDialog::Accepted )
+                {
+                    scrobbles = confirmDialog.tracksToScrobble();
 
-            as->cache( scrobbles );
+                    // sort the iPod scrobbles before caching them
+                    if ( scrobbles.count() > 1 )
+                        qSort ( scrobbles.begin(), scrobbles.end() );
+
+                    as->cache( scrobbles );
+                }
+            }
+            else
+            {
+                // sort the iPod scrobbles before caching them
+                if ( scrobbles.count() > 1 )
+                    qSort ( scrobbles.begin(), scrobbles.end() );
+
+                as->cache( scrobbles );
+            }
         }
 
         iPodScrobblesFile.remove();
