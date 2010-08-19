@@ -79,7 +79,6 @@ namespace audioscrobbler
         QAction* m_tag_action;
         QAction* m_share_action;
         QAction* m_show_window_action;
-        QAction* m_toggle_window_action;
         QAction* m_scrobble_ipod_action;
         QAction* m_visit_profile_action;
         QAction* m_faq_action;
@@ -147,7 +146,6 @@ namespace audioscrobbler
         void onSessionChanged( unicorn::Session newSession, unicorn::Session oldSession );
 
         void showWindow();
-        void toggleWindow();
 
         void onMessageReceived(const QString& message);
 
