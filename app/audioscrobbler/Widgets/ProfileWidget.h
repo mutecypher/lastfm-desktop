@@ -37,6 +37,7 @@ protected slots:
     void onSessionChanged( const unicorn::Session& );
     void onGotUserInfo( const lastfm::UserDetails& );
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
+    void onScrobbleStatusChanged();
 
 protected:
     struct {

@@ -135,7 +135,7 @@ ScrobSocket::start( const Track& t )
     transmit( "START c=" + m_clientId + "&"
                     "a=" + encodeAmp( t.artist() ) + "&"
                     "t=" + encodeAmp( t.title() ) + "&"
-                    "b=" + encodeAmp( t.album() ) + "&"     // todo: and when album.isNull?
+                    "b=" + encodeAmp( t.album().title() == "[unknown]" ? QString("") : t.album().title() ) + "&"     // todo: and when album.isNull?
                     "l=" + QString::number( t.duration() ) + "&"
                     "p=" + encodeAmp( t.url().path() ) + '\n' );
 }

@@ -799,12 +799,12 @@ Application::onMessageReceived(const QString& message)
             }
             else
             {
-                // sort the iPod scrobbles before caching them
-                if ( scrobbles.count() > 1 )
-                    qSort ( scrobbles.begin(), scrobbles.end() );
+        // sort the iPod scrobbles before caching them
+        if ( scrobbles.count() > 1 )
+            qSort ( scrobbles.begin(), scrobbles.end() );
 
-                as->cache( scrobbles );
-            }
+        as->cache( scrobbles );
+    }
         }
 
         iPodScrobblesFile.remove();

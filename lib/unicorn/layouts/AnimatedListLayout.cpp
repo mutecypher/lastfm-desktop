@@ -30,7 +30,6 @@ AnimatedListLayout::AnimatedListLayout( QWidget* parent )
            m_animated( true )
 {
     m_timeLine->setUpdateInterval( 20 );
-    m_timeLine->setEasingCurve( QEasingCurve::OutBounce );
 
     connect( m_timeLine, SIGNAL(frameChanged( int )), SLOT(onFrameChanged( int )));
     connect( m_timeLine, SIGNAL(finished()), SIGNAL(moveFinished()));
@@ -42,6 +41,12 @@ AnimatedListLayout::~AnimatedListLayout()
     QLayoutItem *l;
     while ((l = takeAt(0)))
         delete l;
+}
+
+void
+AnimatedListLayout::setEasingCurve( QEasingCurve::Type easingCurve )
+{
+    m_timeLine->setEasingCurve( easingCurve );
 }
 
 void

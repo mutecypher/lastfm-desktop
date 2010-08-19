@@ -58,8 +58,9 @@ TitleBar::TitleBar( const QString& title )
     connect( qApp, SIGNAL( internetConnectionDown() ), this, SLOT( onConnectionDown() ) );
     connect( qApp, SIGNAL( internetConnectionUp() ), this, SLOT( onConnectionUp() ) );
     QLabel* l;
-    layout->addWidget( l = new QLabel( title, this ));
-    l->setAlignment( Qt::AlignCenter );
+    //layout->addWidget( l = new QLabel( title, this ));
+    //l->setAlignment( Qt::AlignCenter );
+    layout->addStretch( 1 );
 
 
     m_inetStatus->setAlignment( Qt::AlignLeft );
@@ -246,8 +247,13 @@ MetadataWindow::onPaused()
 
 void
 MetadataWindow::setCurrentWidget( QWidget* w )
-{
-    centralWidget()->findChild<SlideOverLayout*>()->revealWidget( w );
+{          
+    SlideOverLayout* layout = centralWidget()->findChild<SlideOverLayout*>();
+
+    // Make sure we dont's switch to the same widget
+    // because it makes ugly things happen
+    if ( layout->currentWidget() != w )
+        layout->revealWidget( w );
 }
 
 void

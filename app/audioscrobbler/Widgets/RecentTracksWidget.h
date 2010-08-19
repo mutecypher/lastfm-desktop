@@ -20,6 +20,8 @@
 
 #include <QWidget>
 #include <QList>
+#include <QEasingCurve>
+
 
 #include "lib/unicorn/StylableWidget.h"
 
@@ -38,6 +40,9 @@ public:
 
     void addCachedTrack( const Track& a_track );
 
+    QEasingCurve::Type easingCurve() const;
+    void setEasingCurve( QEasingCurve::Type easingCurve );
+
 private slots:
     void onTrackChanged();
     void onMoveFinished();
@@ -45,6 +50,10 @@ private slots:
 
     void disableHover();
     void enableHover();
+
+private:
+    Q_PROPERTY(QEasingCurve::Type easingCurve READ easingCurve WRITE setEasingCurve);
+    QEasingCurve::Type m_easingCurve;
 
 private:
     QString m_path;
