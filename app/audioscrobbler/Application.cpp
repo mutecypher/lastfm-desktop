@@ -325,7 +325,7 @@ Application::onSessionChanged( unicorn::Session newSession, unicorn::Session old
     {
         us.setArrayIndex( i );
 
-        IpodDevice* ipod = new IpodDevice( us.value( "deviceId" ).toString(),
+        IpodDeviceLinux* ipod = new IpodDeviceLinux( us.value( "deviceId" ).toString(),
                                            us.value( "deviceName" ).toString() );
         if ( ipod->isDeviceKnown() )
         {
@@ -548,7 +548,7 @@ Application::onScrobbleIpodTriggered()
         delete iPod;
     }
     qDebug() << "here";
-    iPod = new IpodDevice;
+    iPod = new IpodDeviceLinux;
     QString path;
     bool autodetectionSuceeded = true;
 
@@ -581,7 +581,7 @@ Application::scrobbleIpodTracks( int trackCount )
     qDebug() << trackCount << " new tracks to scrobble.";
 
     bool bootStrapping = false;
-    if ( iPod->lastError() != IpodDevice::NoError && !iPod->isDeviceKnown() )
+    if ( iPod->lastError() != IpodDeviceLinux::NoError && !iPod->isDeviceKnown() )
     {
         bootStrapping = true;
         qDebug() << "Should we save it?";
@@ -605,7 +605,7 @@ Application::scrobbleIpodTracks( int trackCount )
         }
         else
         {
-            IpodDevice::deleteDeviceHistory( unicorn::Session().username(), iPod->deviceId() );
+            IpodDeviceLinux::deleteDeviceHistory( unicorn::Session().username(), iPod->deviceId() );
         }
     }
 
@@ -666,7 +666,7 @@ Application::onIpodScrobblingError()
     QString path;
     switch( iPod->lastError() )
     {
-        case IpodDevice::AutodetectionError: //give it another try
+        case IpodDeviceLinux::AutodetectionError: //give it another try
             qDebug() << "giving another try";
             path = getIpodMountPath();
             if ( !path.isEmpty() )
@@ -676,7 +676,7 @@ Application::onIpodScrobblingError()
             }
             break;
 
-        case IpodDevice::AccessError:
+        case IpodDeviceLinux::AccessError:
             QMessageBoxBuilder( mw )
                     .setIcon( QMessageBox::Critical )
                     .setTitle( tr( "Scrobble iPod" ) )
@@ -685,7 +685,7 @@ Application::onIpodScrobblingError()
             delete iPod;
             iPod = 0;
             break;
-        case IpodDevice::UnknownError:
+        case IpodDeviceLinux::UnknownError:
             QMessageBoxBuilder( mw )
                     .setIcon( QMessageBox::Critical )
                     .setTitle( tr( "Scrobble iPod" ) )
@@ -836,7 +836,7 @@ Application::onMessageReceived(const QString& message)
         {
             // The device has not been associated yet
             // so associate to the current user
-            IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
+            IpodDeviceLinux* ipod = new IpodDeviceLinux( deviceId, deviceName );
             ipod->associateDevice( lastfm::ws::Username );
             delete ipod;
         }

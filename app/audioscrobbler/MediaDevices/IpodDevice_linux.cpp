@@ -147,7 +147,7 @@ IpodTracksFetcher::previousPlayTime( Itdb_Track* track ) const
     return QDateTime::fromTime_t( 0 );
 }
 
-IpodDevice::IpodDevice()
+IpodDeviceLinux::IpodDeviceLinux()
     : m_itdb( 0 )
     , m_mpl( 0 )
     , m_tf( 0 )
@@ -156,7 +156,7 @@ IpodDevice::IpodDevice()
 {}
 
 
-IpodDevice::~IpodDevice()
+IpodDeviceLinux::~IpodDeviceLinux()
 {
     if ( m_itdb )
     {
@@ -168,7 +168,7 @@ IpodDevice::~IpodDevice()
 }
 
 bool
-IpodDevice::deleteDeviceHistory( QString username, QString deviceId )
+IpodDeviceLinux::deleteDeviceHistory( QString username, QString deviceId )
 {
     QString const name = DB_NAME;
     QSqlDatabase db = QSqlDatabase::database( name );
@@ -192,7 +192,7 @@ IpodDevice::deleteDeviceHistory( QString username, QString deviceId )
 }
 
 bool
-IpodDevice::deleteDevicesHistory()
+IpodDeviceLinux::deleteDevicesHistory()
 {
     QString const name = DB_NAME;
     QString filePath = lastfm::dir::runtimeData().filePath( name + ".db" );
@@ -201,7 +201,7 @@ IpodDevice::deleteDevicesHistory()
 
 
 QSqlDatabase
-IpodDevice::database() const
+IpodDeviceLinux::database() const
 {
     QString const name = DB_NAME;
     QSqlDatabase db = QSqlDatabase::database( name );
@@ -232,7 +232,7 @@ IpodDevice::database() const
 }
 
 void
-IpodDevice::open()
+IpodDeviceLinux::open()
 {
     QByteArray _mountpath = QFile::encodeName( mountPath() );
     const char* mountpath = _mountpath.data();
@@ -260,13 +260,13 @@ IpodDevice::open()
 }
 
 const QList<Track>&
-IpodDevice::tracksToScrobble() const
+IpodDeviceLinux::tracksToScrobble() const
 {
     return m_tracksToScrobble;
 }
 
 void
-IpodDevice::fetchTracksToScrobble()
+IpodDeviceLinux::fetchTracksToScrobble()
 {
     try
     {
@@ -296,7 +296,7 @@ IpodDevice::fetchTracksToScrobble()
 
 
 void
-IpodDevice::onFinished()
+IpodDeviceLinux::onFinished()
 {
     m_error = NoError;
     m_tracksToScrobble = m_tf->tracksToScrobble();
@@ -304,7 +304,7 @@ IpodDevice::onFinished()
 }
 
 QString
-IpodDevice::deviceName() const
+IpodDeviceLinux::deviceName() const
 {
     QStringList devPath = mountPath().split( "/", QString::SkipEmptyParts );
     if ( !devPath.isEmpty() )
@@ -313,13 +313,13 @@ IpodDevice::deviceName() const
 }
 
 QString
-IpodDevice::tableName() const
+IpodDeviceLinux::tableName() const
 {
     return unicorn::Session().username() + "_" + m_deviceId;
 }
 
 bool
-IpodDevice::autodetectMountPath()
+IpodDeviceLinux::autodetectMountPath()
 {
     unicorn::UserSettings us;
     int count = us.beginReadArray( "associatedDevices" );
@@ -355,7 +355,7 @@ IpodDevice::autodetectMountPath()
 }
 
 void
-IpodDevice::setMountPath( const QString &path, bool autodetected )
+IpodDeviceLinux::setMountPath( const QString &path, bool autodetected )
 {
     m_mountPath = path;
     m_autodetected = autodetected;

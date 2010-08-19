@@ -50,7 +50,7 @@ private:
     QList<Track> m_tracksToScrobble;
 };
 
-class IpodDevice: public MediaDevice
+class IpodDeviceLinux: public MediaDevice
 {
     Q_OBJECT
 
@@ -64,8 +64,8 @@ public:
         UnknownError
     };
 
-    IpodDevice();
-    ~IpodDevice();
+    IpodDeviceLinux();
+    ~IpodDeviceLinux();
 
     /**
      * Deletes the table with the device scrobbled tracks information.
