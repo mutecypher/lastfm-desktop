@@ -82,7 +82,8 @@ LfmListModel::itemUpdated()
 {
     LfmItem* item = static_cast<LfmItem*>(sender());
     int index = m_items.indexOf( item );
-    emit dataChanged( createIndex( index, 0), createIndex( index, 0));
+    if ( index >= 0 )
+        emit dataChanged( createIndex( index, 0), createIndex( index, 0));
 }
 
 
@@ -99,6 +100,9 @@ LfmListModel::data( const QModelIndex & index, int role ) const
 
         case Qt::DecorationRole:
             return item.m_icon;
+
+        case Qt::ToolTipRole:
+            return item.m_type->toString();
 
         case CursorRole:
             return Qt::PointingHandCursor;

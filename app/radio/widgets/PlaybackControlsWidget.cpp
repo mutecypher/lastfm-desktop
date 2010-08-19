@@ -23,6 +23,7 @@
 #include <QSpacerItem>
 #include <QNetworkReply>
 #include <QProcess>
+#include <QAction>
 
 #include <QSlider>
 #include <QToolButton>
@@ -60,9 +61,72 @@
 #include "ApplicationServices/ApplicationServices.h"
 #endif
 
+void
+PlaybackControlsWidget::createActions()
+{
+    {
+        m_loveAction = new QAction( tr( "Love" ), this );
+        m_loveAction->setCheckable( true );
+        QIcon loveIcon;
+        loveIcon.addFile( ":/love-isloved.png", QSize(), QIcon::Normal, QIcon::On );
+        loveIcon.addFile( ":/love-rest.png", QSize(), QIcon::Normal, QIcon::Off );
+        m_loveAction->setIcon( loveIcon );
+
+        m_loveAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ) );
+        connect( m_loveAction, SIGNAL(triggered(bool)), SLOT(onLoveClicked(bool)) );
+        connect( m_loveAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
+    }
+    {
+        m_banAction = new QAction( tr( "Ban" ), this );
+        QIcon banIcon;
+        banIcon.addFile( ":/ban-rest.png" );
+        m_banAction->setIcon( banIcon );
+
+        m_banAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_B ) );
+        connect( m_banAction, SIGNAL(triggered(bool)), SLOT(onBanClicked()) );
+        connect( m_banAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
+    }
+    {
+        m_playAction = new QAction( tr( "Play" ), this );
+        m_playAction->setCheckable( true );
+        QIcon playIcon;
+        playIcon.addFile( ":/stop-rest.png", QSize(), QIcon::Normal, QIcon::On );
+        playIcon.addFile( ":/play-rest.png", QSize(), QIcon::Normal, QIcon::Off );
+        m_playAction->setIcon( playIcon );
+
+        m_playAction->setShortcut( QKeySequence(Qt::Key_Space) );
+        connect( m_playAction, SIGNAL(triggered(bool)), SLOT(onPlayClicked(bool)) );
+        connect( m_playAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
+    }
+    {
+        m_skipAction = new QAction( tr( "Skip" ), this );
+        QIcon skipIcon;
+        skipIcon.addFile( ":/skip-rest.png" );
+        m_skipAction->setIcon( skipIcon );
+
+        m_skipAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Right ) );
+        connect( m_skipAction, SIGNAL(triggered(bool)), radio, SLOT(skip()) );
+        connect( m_skipAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
+    }
+}
+
+void
+PlaybackControlsWidget::onActionsChanged()
+{
+    ui.love->setChecked( m_loveAction->isChecked() );
+    ui.ban->setChecked( m_banAction->isChecked() );
+    ui.play->setChecked( m_playAction->isChecked() );
+    ui.skip->setChecked( m_skipAction->isChecked() );
+}
+
+//
+
+
 PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
                        :StylableWidget( parent )
 {
+    createActions();
+
     QHBoxLayout* layout = new QHBoxLayout( this );
 
     layout->addWidget( ui.radioOptions = new QPushButton( tr( "radio options" ) ));
@@ -171,10 +235,10 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     connect( radio, SIGNAL(tuningIn( const RadioStation&)), SLOT( onRadioTuningIn( const RadioStation&)));
     connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)));
 
-    connect( ui.love, SIGNAL(clicked(bool)), SLOT(onLoveClicked(bool)));
-    connect( ui.ban, SIGNAL(clicked()), SLOT(onBanClicked()));
-    connect( ui.play, SIGNAL( clicked(bool)), SLOT( onPlayClicked(bool)) );
-    connect( ui.skip, SIGNAL( clicked()), radio, SLOT(skip()));
+    connect( ui.love, SIGNAL( clicked()), m_loveAction, SLOT( trigger() ));
+    connect( ui.ban, SIGNAL( clicked()), m_banAction, SLOT( trigger() ));
+    connect( ui.play, SIGNAL( clicked()), m_playAction, SLOT( trigger()) );
+    connect( ui.skip, SIGNAL( clicked()), m_skipAction, SLOT( trigger() ));
     connect( ui.info, SIGNAL( clicked()), SLOT(onInfoClicked()));
     connect( ui.radioOptions, SIGNAL( clicked(bool)), SLOT(onRadioOptionsClicked(bool)) );
 
@@ -183,15 +247,6 @@ PlaybackControlsWidget::PlaybackControlsWidget( QWidget* parent )
     connect( ui.love, SIGNAL(clicked(bool)), qApp, SLOT(sendBusLovedStateChanged(bool)) );
 
     setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-
-    // make the space button check and uncheck the play button
-    new QShortcut( QKeySequence(Qt::Key_Space), this, SLOT(onSpaceKey()) );
-
-    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_Right ), this, SLOT( onSkipTriggered() ) );
-
-    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ), this, SLOT( onLoveTriggered() ) );
-
-    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_B ), this, SLOT( onBanClicked() ) );
 
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ), this, SLOT( onMuteTriggered() ) );
 
@@ -256,7 +311,8 @@ void
 PlaybackControlsWidget::onRadioStopped()
 {
     // make sure the play/stop button is in the correct state
-    ui.play->setChecked( false );
+    m_playAction->setChecked( false );
+    m_playAction->setText( tr( "Play" ) );
     ui.play->setToolTip( tr( "Play" ) );
 
     // when the radio is stopped we can only use the play and volue controls
@@ -267,7 +323,8 @@ void
 PlaybackControlsWidget::onRadioTuningIn( const RadioStation& )
 {
     // make sure the play/stop button is in the correct state
-    ui.play->setChecked( true );
+    m_playAction->setChecked( true );
+    m_playAction->setText( tr( "Stop" ) );
     ui.play->setToolTip( tr( "Stop" ) );
     // when the radio is playing we can use all the controls
     setButtonsEnabled( true );
@@ -276,7 +333,7 @@ PlaybackControlsWidget::onRadioTuningIn( const RadioStation& )
 void
 PlaybackControlsWidget::onTrackSpooled( const Track& track )
 {
-    ui.love->setChecked( track.isLoved() );
+    m_loveAction->setChecked( track.isLoved() );
 
     // make sure any changes to the love status of the
     // track are reflected in the love button
@@ -318,6 +375,10 @@ PlaybackControlsWidget::setButtonsEnabled( bool enabled )
     ui.info->setEnabled( enabled );
     ui.tagAction->setEnabled( enabled );
     ui.shareAction->setEnabled( enabled );
+
+    m_loveAction->setEnabled( enabled );
+    m_banAction->setEnabled( enabled );
+    m_skipAction->setEnabled( enabled );
 }
 
 void
@@ -384,12 +445,6 @@ PlaybackControlsWidget::onSpaceKey()
 }
 
 void
-PlaybackControlsWidget::onSkipTriggered()
-{
-    radio->skip();
-}
-
-void
 PlaybackControlsWidget::onLoveTriggered()
 {
     ui.love->setChecked( !ui.love->isChecked() );
@@ -438,3 +493,13 @@ PlaybackControlsWidget::onMuteTriggered()
 {
     radio->mute();
 }
+
+void
+PlaybackControlsWidget::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
+{
+    thumbButtonActions.append( m_loveAction );
+    thumbButtonActions.append( m_banAction );
+    thumbButtonActions.append( m_playAction );
+    thumbButtonActions.append( m_skipAction );
+}
+

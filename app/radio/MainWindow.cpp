@@ -43,11 +43,11 @@ MainWindow::MainWindow()
     QStatusBar* status = new QStatusBar( this );
 
     addDragHandleWidget( status );
-    PlaybackControlsWidget* pcw = new PlaybackControlsWidget( status );
+    m_pcw = new PlaybackControlsWidget( status );
 
     status->setSizeGripEnabled( false );
 
-    status->addWidget( pcw, 1 );
+    status->addWidget( m_pcw, 1 );
     setStatusBar( status );
 
     QWidget* w = new StylableWidget();
@@ -60,7 +60,7 @@ MainWindow::MainWindow()
 
     connect(m_mainWidget, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
 
-    connect(pcw, SIGNAL(startRadio(RadioStation)), m_mainWidget, SLOT(onStartRadio(RadioStation)));
+    connect(m_pcw, SIGNAL(startRadio(RadioStation)), m_mainWidget, SLOT(onStartRadio(RadioStation)));
     
  //   connect(radio, SIGNAL(stopped()), status, SLOT(hideAnimated()));
  //   connect(radio, SIGNAL(tuningIn( const RadioStation&)), status, SLOT(showAnimated()));
@@ -84,13 +84,7 @@ MainWindow::MainWindow()
 void
 MainWindow::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
 {
-//    QAction* love = new QAction( "Love" , this );
-//    love->setCheckable( true );
-//    QIcon loveIcon;
-//    loveIcon.addFile( ":/love-rest.png", QSize( 16, 16), QIcon::Normal, QIcon::On );
-//    loveIcon.addFile( ":/love-isloved.png", QSize( 16, 16), QIcon::Normal, QIcon::Off );
-//    love->setIcon( loveIcon );
-//    thumbButtonActions.append( love );
+    m_pcw->addWinThumbBarButtons( thumbButtonActions );
 }
 
 void 
@@ -132,3 +126,5 @@ MainWindow::onRadioError(int code, const QVariant& data)
             break;
     }
 }
+
+

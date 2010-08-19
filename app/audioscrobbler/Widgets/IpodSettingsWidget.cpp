@@ -40,6 +40,13 @@
 #include <QTreeWidget>
 #include <QVBoxLayout>
 
+enum
+{
+    IpodColumnUser,
+    IpodColumnDeviceName,
+    IpodColumnCount
+};
+
 IpodSettingsWidget::IpodSettingsWidget( QWidget* parent )
     : SettingsWidget( parent )
 {
@@ -95,7 +102,7 @@ IpodSettingsWidget::setupUi()
     groupBox1->setLayout( vg );
 
 
-    ui.iPodAssociations->setColumnCount( 3 );
+    ui.iPodAssociations->setColumnCount( IpodColumnCount );
     ui.iPodAssociations->setSortingEnabled( false );
     ui.iPodAssociations->header()->setResizeMode( QHeaderView::ResizeToContents );
     ui.iPodAssociations->setRootIsDecorated( false );
@@ -107,9 +114,9 @@ IpodSettingsWidget::setupUi()
     populateIpodAssociations();
 
     QStringList headerLabels;
-    headerLabels.append( tr( "Device ID" ) );
-    headerLabels.append( tr( "Device Name" ) );
     headerLabels.append( tr( "User" ) );
+    headerLabels.append( tr( "Device Name" ) );
+
     ui.iPodAssociations->setHeaderLabels( headerLabels );
 
     ui.clearAssociations->setText( tr( "Clear user associations" ) );
@@ -160,9 +167,9 @@ IpodSettingsWidget::populateIpodAssociations()
         {
             us.setArrayIndex( i );
             QTreeWidgetItem* item = new QTreeWidgetItem( ui.iPodAssociations );
-            item->setText( 0, us.value( "deviceId" ).toString() );
-            item->setText( 1, us.value( "deviceName" ).toString() );
-            item->setText( 2, user.name() );
+            item->setText( IpodColumnUser, user.name() );
+            item->setText( IpodColumnDeviceName, us.value( "deviceName" ).toString() );
+            item->setData( IpodColumnDeviceName, Qt::UserRole, us.value( "deviceId" ).toString() );
         }
         us.endArray();
     }
@@ -201,8 +208,8 @@ void
 IpodSettingsWidget::removeIpodAssociation()
 {
     QTreeWidgetItem* association = ui.iPodAssociations->currentItem();
-    QString deviceId = association->text( 0 );
-    QString userName = association->text( 2 );
+    QString deviceId = association->data( IpodColumnDeviceName, Qt::UserRole ).toString();
+    QString userName = association->text( IpodColumnUser );
 
     unicorn::UserSettings us( userName );
     int count = us.beginReadArray( "associatedDevices" );

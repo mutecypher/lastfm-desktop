@@ -104,6 +104,18 @@ void
 ProfileWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
     foreach ( lastfm::Track track, tracks )
+    {
         ui.recentTracks->addCachedTrack( track );
+        connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
+    }
+}
+
+void
+ProfileWidget::onScrobbleStatusChanged()
+{
+    if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
+    {
+        *ui.scrobbleMeter += 1;
+    }
 }
 

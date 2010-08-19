@@ -205,6 +205,11 @@ DataBox #contents QLabel {
 #bio #header QLabel#icon { background-image: url(:/header_bio.png); }
 #similarArtists #header QLabel#icon { background-image: url(:/header_simartists.png); }
 
+RecentTracksWidget {
+	/* See QEasingCurve for a full list */
+	qproperty-easingCurve: OutBounce;
+}
+
 RecentTrackWidget {
 	border-top: 1px solid #cccccc;
 	padding: 0px 0px 2px 0px;
