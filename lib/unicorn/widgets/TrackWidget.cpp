@@ -65,6 +65,8 @@ TrackWidget::TrackWidget( const lastfm::Track& track )
     if ( m_track.album().isNull() ) ui.albumShare->setEnabled( false );
 
     ui.image->setFixedSize( radioButtons->sizeHint().height(), radioButtons->sizeHint().height() );
+    
+    setFixedWidth( 400 );
 }
 
 void

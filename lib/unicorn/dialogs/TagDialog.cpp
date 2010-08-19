@@ -40,8 +40,9 @@ TagDialog::TagDialog( const Track& track, QWidget *parent )
     
     setupUi();
     setWindowTitle( tr("Tag") );
-    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
-    
+    layout()->setSizeConstraint( QLayout::SetFixedSize );
+    setSizeGripEnabled( false );
+
     connect( User().getTopTags(), SIGNAL(finished()), SLOT(onUserGotTopTags()) );
     connect( m_track.getTopTags(), SIGNAL(finished()), SLOT(onTrackGotTopTags()) );
 	
@@ -138,7 +139,6 @@ TagDialog::setupUi()
     v->addWidget( new QLabel( tr("Choose something to tag:") ) );
 
     v->addWidget( ui.track = new TrackWidget( m_track ) );
-
     v->addWidget( new QLabel( tr("Tags") ) );
 
     v->addWidget( ui.tagsWidget = new ItemSelectorWidget( ItemSelectorWidget::Tag, this ) );
