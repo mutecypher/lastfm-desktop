@@ -48,4 +48,10 @@ YourStationsWidget::YourStationsWidget()
     item->setToolTip( tr( "Your Neighbourhood" ) );
     layout->addWidget(item, 2, 0);
     connect(item, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
+
+    item = new PlayableItemWidget( tr( "Your Adventure" ), RadioStation::adventure( lastfm::ws::Username ) );
+    item->setToolTip( tr( "Your Adventure" ) );
+    layout->addWidget( item, 2, 1 );
+    connect( item, SIGNAL( startRadio( RadioStation ) ), SIGNAL( startRadio( RadioStation ) ) );
+
 }
