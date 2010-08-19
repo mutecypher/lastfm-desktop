@@ -49,6 +49,10 @@ ShareDialog::ShareDialog( const Track& t, QWidget* parent )
     m_track = t;
 
     setupUi();
+
+    setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
+    layout()->setSizeConstraint( QLayout::SetFixedSize );
+
     setWindowTitle( tr("Share") );    
     enableDisableOk();
 
