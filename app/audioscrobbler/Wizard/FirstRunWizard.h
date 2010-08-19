@@ -71,7 +71,7 @@ public:
                 return Page_Plugin;
             case Page_Plugin:
                 return Page_Welcome;
-            #elif Q_WS_MAC
+            #elif defined Q_WS_MAC
                 return Page_Bootstrap;
             case Page_Bootstrap:
                 return Page_Welcome;
