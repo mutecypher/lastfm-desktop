@@ -325,7 +325,7 @@ Application::onSessionChanged( unicorn::Session newSession, unicorn::Session old
     {
         us.setArrayIndex( i );
 
-        IpodDeviceLinux* ipod = new IpodDeviceLinux( us.value( "deviceId" ).toString(),
+        IpodDevice* ipod = new IpodDevice( us.value( "deviceId" ).toString(),
                                            us.value( "deviceName" ).toString() );
         if ( ipod->isDeviceKnown() )
         {
@@ -836,7 +836,7 @@ Application::onMessageReceived(const QString& message)
         {
             // The device has not been associated yet
             // so associate to the current user
-            IpodDeviceLinux* ipod = new IpodDeviceLinux( deviceId, deviceName );
+            IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
             ipod->associateDevice( lastfm::ws::Username );
             delete ipod;
         }
