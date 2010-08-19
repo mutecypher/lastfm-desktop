@@ -102,6 +102,7 @@ namespace audioscrobbler
         void actuallyQuit();
 
         void changeLovedState(bool loved);
+        void onBusLovedStateChanged(bool);
 
         void onTrackGotInfo(const XmlQuery& );
 
@@ -129,11 +130,13 @@ namespace audioscrobbler
         void onResumed();
         void onStopped();
 
-        void onSessionChanged();
+        void onSessionChanged( unicorn::Session newSession, unicorn::Session oldSession );
 
         void showWindow();
 
         void onMessageReceived(const QString& message);
 
+    private:
+        void scrobbleIpodFile( QString iPodScrobblesFilename );
     };
 }

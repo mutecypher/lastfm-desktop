@@ -58,11 +58,19 @@ public:
     } 
 	ui;
 
+    class QAction* m_loveAction;
+    class QAction* m_banAction;
+    class QAction* m_playAction;
+    class QAction* m_skipAction;
+
+    void addWinThumbBarButtons( QList<QAction*>& thumbButtonActions );
+
 private:
     void setButtonsEnabled( bool enabled );
     void saveRadioOptions();
     void restoreRadioOptions();
     void setRadioOptionsChecked();
+    void createActions();
 
 public slots:
 	void onRadioStopped();
@@ -76,7 +84,6 @@ public slots:
     void onShareClicked();
     void onInfoClicked();
     void onSpaceKey();
-    void onSkipTriggered();
     void onLoveTriggered();
     void onMuteTriggered();
 
@@ -84,6 +91,8 @@ public slots:
 
     void onBanClicked();
     void onBanFinished();
+
+    void onActionsChanged();
 
 signals:
     void startRadio(RadioStation);
