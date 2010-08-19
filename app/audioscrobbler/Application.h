@@ -32,7 +32,7 @@ class ScrobbleInfoFetcher;
 class StopWatch;
 
 #ifdef Q_WS_X11
-    class IpodDevice;
+    class IpodDeviceLinux;
 #endif
 
 namespace audioscrobbler
@@ -65,7 +65,7 @@ namespace audioscrobbler
         QPointer<MetadataWindow> mw;
         QPointer<ScrobbleInfoFetcher> fetcher;
     #ifdef Q_WS_X11
-        QPointer<IpodDevice> iPod;
+        QPointer<IpodDeviceLinux> iPod;
     #endif
 
         Track trackToScrobble;

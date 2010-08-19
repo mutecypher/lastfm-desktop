@@ -189,7 +189,7 @@ IpodSettingsWidget::clearIpodAssociations()
     }
 
 #ifdef Q_WS_X11
-    IpodDevice::deleteDevicesHistory();
+    IpodDeviceLinux::deleteDevicesHistory();
 #endif
 
     ui.iPodAssociations->clear();
@@ -222,7 +222,7 @@ IpodSettingsWidget::removeIpodAssociation()
             us.remove( "mountPath" );
             us.remove( "deviceName" );
             #ifdef Q_WS_X11
-            IpodDevice::deleteDeviceHistory( userName, deviceId );
+            IpodDeviceLinux::deleteDeviceHistory( userName, deviceId );
             #endif
             break;
         }
