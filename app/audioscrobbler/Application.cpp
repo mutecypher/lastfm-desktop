@@ -148,8 +148,8 @@ Application::init()
 /// tray menu
     QMenu* menu = new QMenu;
     (menu->addMenu( new UserMenu()))->setText( "Users");
-    m_toggle_window_action = menu->addAction( tr("Show Scrobbler"));
-    m_toggle_window_action->setShortcut( Qt::CTRL + Qt::META + Qt::Key_S );
+    m_show_window_action = menu->addAction( tr("Show Scrobbler"));
+    m_show_window_action->setShortcut( Qt::CTRL + Qt::META + Qt::Key_S );
     menu->addSeparator();
     m_artist_action = menu->addAction( "" );
     m_title_action = menu->addAction(tr("Ready"));
@@ -229,7 +229,7 @@ Application::init()
 #endif
 
 #ifndef Q_OS_LINUX
-    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action, SLOT( trigger()));
+    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action = new QAction( this ), SLOT( trigger()));
 #endif
     //although the shortcuts are actually set on the ScrobbleControls widget,
     //setting it here adds the shortkey text to the trayicon menu
@@ -290,7 +290,8 @@ Application::init()
     }
 
 
-    connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
+    connect( m_show_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
+    connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( toggleWindow()), Qt::QueuedConnection );
 
     connect( this, SIGNAL(messageReceived(QString)), SLOT(onMessageReceived(QString)) );
     connect( this, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session) ), 
@@ -732,7 +733,7 @@ Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason )
 #ifdef Q_WS_WIN
     if( reason != QSystemTrayIcon::DoubleClick ) return;
 #endif
-    m_toggle_window_action->trigger();
+    m_show_window_action->trigger();
 }
 
 void
@@ -742,6 +743,15 @@ Application::showWindow()
     mw->setFocus();
     mw->raise();
     mw->activateWindow();
+}
+
+void 
+Application::toggleWindow()
+{
+    if( activeWindow() )
+        mw->hide();
+    else
+        showWindow();
 }
 
 void
@@ -802,7 +812,7 @@ Application::onMessageReceived(const QString& message)
     else if ( !arguments.contains( "--tray" ) )
     {
         // raise the app
-        m_toggle_window_action->trigger();
+        m_show_window_action->trigger();
 #ifdef Q_OS_WIN32
 		SetForegroundWindow(mw->winId());
 #endif
