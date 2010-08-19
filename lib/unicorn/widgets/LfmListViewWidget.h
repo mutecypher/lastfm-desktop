@@ -30,6 +30,7 @@
 #include <QEvent>
 #include "lib/DllExportMacro.h"
 #include <QListView>
+#include <QFontMetrics>
 
 #include <QDebug>
 
@@ -61,7 +62,10 @@ public:
             iconRect.setSize( iconSize );
             p->drawRect( iconRect );
         }
-        p->drawText( opt.rect.adjusted( 46, 3, -5, -5 ), index.data().toString());
+
+        QFontMetrics fm( p->font() );
+        QString elidedText = fm.elidedText( index.data().toString(), Qt::ElideRight, opt.rect.width() - 50 );
+        p->drawText( opt.rect.adjusted( 46, 3, -5, -5 ), elidedText );
     }
 
     virtual QSize sizeHint( const QStyleOptionViewItem& opt, const QModelIndex& index ) const 
