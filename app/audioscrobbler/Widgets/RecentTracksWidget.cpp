@@ -51,7 +51,25 @@ RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
     m_writeTimer->setSingleShot( true );
 
     connect( m_writeTimer, SIGNAL(timeout()), SLOT(doWrite()) );
+
+
 }
+
+
+QEasingCurve::Type
+RecentTracksWidget::easingCurve() const
+{
+    return m_easingCurve;
+}
+
+
+void
+RecentTracksWidget::setEasingCurve( QEasingCurve::Type easingCurve )
+{
+    m_easingCurve = easingCurve;
+    static_cast<AnimatedListLayout*>(layout())->setEasingCurve( m_easingCurve );
+}
+
 
 void
 RecentTracksWidget::disableHover()
