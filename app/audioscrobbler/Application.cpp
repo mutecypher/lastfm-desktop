@@ -45,6 +45,7 @@
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/widgets/UserMenu.h"
+#include "MediaDevices/IpodDevice.h"
 #include "Wizard/FirstRunWizard.h"
 
 #include <lastfm/Audioscrobbler>
@@ -229,7 +230,7 @@ Application::init()
 #endif
 
 #ifndef Q_OS_LINUX
-    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action = new QAction( this ), SLOT( trigger()));
+    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_show_window_action = new QAction( this ), SLOT( trigger()));
 #endif
     //although the shortcuts are actually set on the ScrobbleControls widget,
     //setting it here adds the shortkey text to the trayicon menu
@@ -252,6 +253,7 @@ Application::init()
     // update the love buttons if love was pressed in the radio
     connect(this, SIGNAL(busLovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
     connect(this, SIGNAL(busLovedStateChanged(bool)), sc->loveButton(), SLOT(setChecked(bool)));
+    connect(this, SIGNAL(busLovedStateChanged(bool)), SLOT(onBusLovedStateChanged(bool)));
 
     // tell everyone that is interested that data about the current track has been fetched
     connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotInfo(XmlQuery)));
@@ -291,30 +293,60 @@ Application::init()
 
 
     connect( m_show_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
-    connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( toggleWindow()), Qt::QueuedConnection );
 
     connect( this, SIGNAL(messageReceived(QString)), SLOT(onMessageReceived(QString)) );
     connect( this, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session) ), 
-                   SLOT(onSessionChanged()));
+                   SLOT(onSessionChanged( unicorn::Session, unicorn::Session )));
 
     //We're not going to catch the first session change as it happened in the unicorn application before
     //we could connect to the signal!
     changeSession( unicorn::Session());
 
     // clicking on a system tray message should show the scrobbler
-    connect( tray, SIGNAL(messageClicked()), m_toggle_window_action, SLOT(trigger()));
+    connect( tray, SIGNAL(messageClicked()), m_show_window_action, SLOT(trigger()));
 
     emit messageReceived( arguments().join(";") );
 }
 
 
 void
-Application::onSessionChanged()
+Application::onSessionChanged( unicorn::Session newSession, unicorn::Session oldSession )
 {
     Audioscrobbler* oldAs = as;
     as = new Audioscrobbler("ass");
     connect( as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
     delete oldAs;
+
+    // Check if there are any iPod scrobbles
+    unicorn::UserSettings us( newSession.username() );
+    int count = us.beginReadArray( "associatedDevices" );
+
+    for ( int i = 0; i < count; i++ )
+    {
+        us.setArrayIndex( i );
+
+        IpodDevice* ipod = new IpodDevice( us.value( "deviceId" ).toString(),
+                                           us.value( "deviceName" ).toString() );
+        if ( ipod->isDeviceKnown() )
+        {
+            // the current user is associated with this iPod
+
+            // chack if there are any iPod scrobbles in its folder
+
+            QDir scrobblesDir = lastfm::dir::runtimeData();
+            scrobblesDir.cd( "devices/" + ipod->deviceId() + "/scrobbles" );
+            scrobblesDir.setFilter(QDir::Files | QDir::NoSymLinks);
+            scrobblesDir.setNameFilters( QStringList() << "*.xml" );
+
+            QFileInfoList list = scrobblesDir.entryInfoList();
+
+            foreach ( QFileInfo fileInfo, list )
+                scrobbleIpodFile( fileInfo.filePath() );
+        }
+
+        delete ipod;
+    }
+    us.endArray();
 }
 
 void
@@ -391,7 +423,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     watch->start();
     connect(watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
 
-    tray->showMessage(applicationName(), t.toString());
+    tray->setToolTip( t.toString() );
 
     mw->scrobbleControls()->setEnabled( true );
     m_love_action->setEnabled( true );
@@ -714,6 +746,12 @@ Application::changeLovedState(bool loved)
         track.unlove();
 }
 
+void
+Application::onBusLovedStateChanged( bool loved )
+{
+    MutableTrack( mw->currentTrack() ).setLoved( loved );
+}
+
 PlayerConnection*
 Application::currentConnection() const
 {
@@ -745,15 +783,6 @@ Application::showWindow()
     mw->activateWindow();
 }
 
-void 
-Application::toggleWindow()
-{
-    if( activeWindow() )
-        mw->hide();
-    else
-        showWindow();
-}
-
 void
 Application::onMessageReceived(const QString& message)
 {
@@ -763,51 +792,58 @@ Application::onMessageReceived(const QString& message)
 
     if ( pos >= 0 )
     {
-        QFile iPodScrobblesFile( arguments[ pos + 1 ] );
+        // iPod scrobble time!
 
-        if ( iPodScrobblesFile.open( QIODevice::ReadOnly | QIODevice::Text ) )
+        // Check if this iPod has been associated to any of our users
+        QString deviceId = arguments[ arguments.indexOf( "--deviceId" ) + 1 ];
+        QString deviceName = arguments[ arguments.indexOf( "--deviceName" ) + 1 ];
+
+        bool deviceAssociated( false );
+        bool thisUser( false );
+
+        // Check if the device has been associated with a user
+        // and then if it is with the current user
+        QList<lastfm::User> roster = unicorn::Settings().userRoster();
+        foreach( lastfm::User user, roster )
         {
-            QDomDocument iPodScrobblesDoc;
-            iPodScrobblesDoc.setContent( &iPodScrobblesFile );
-            QDomNodeList tracks = iPodScrobblesDoc.elementsByTagName( "track" );
+            unicorn::UserSettings us( user.name() );
+            int count = us.beginReadArray( "associatedDevices" );
 
-            QList<lastfm::Track> scrobbles;
-
-            for ( int i(0) ; i < tracks.count() ; ++i )
+            for ( int i = 0; i < count; i++ )
             {
-                lastfm::Track track( tracks.at(i).toElement() );
+                us.setArrayIndex( i );
 
-                int playcount = track.extra("playCount").toInt();
+                QString tempDeviceId = us.value( "deviceId" ).toString();
 
-                for ( int j(0) ; j < playcount ; ++j )
-                    scrobbles << track;
-            }
+                qDebug() << tempDeviceId;
 
-            if( unicorn::UserSettings().value( "confirmIpodScrobbles", false ).toBool() )
-            {
-                ScrobbleConfirmationDialog confirmDialog( scrobbles );
-                if ( confirmDialog.exec() == QDialog::Accepted )
+                if ( tempDeviceId == deviceId )
                 {
-                    scrobbles = confirmDialog.tracksToScrobble();
+                    deviceAssociated = true;
 
-                    // sort the iPod scrobbles before caching them
-                    if ( scrobbles.count() > 1 )
-                        qSort ( scrobbles.begin(), scrobbles.end() );
+                    if ( user.name() == lastfm::ws::Username )
+                        thisUser = true;
 
-                    as->cache( scrobbles );
+                    break;
                 }
             }
-            else
-            {
-        // sort the iPod scrobbles before caching them
-        if ( scrobbles.count() > 1 )
-            qSort ( scrobbles.begin(), scrobbles.end() );
+            us.endArray();
 
-        as->cache( scrobbles );
-    }
+            if ( deviceAssociated ) break;
         }
 
-        iPodScrobblesFile.remove();
+        if ( !deviceAssociated )
+        {
+            // The device has not been associated yet
+            // so associate to the current user
+            IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
+            ipod->associateDevice( lastfm::ws::Username );
+            delete ipod;
+        }
+
+        if ( !deviceAssociated || thisUser )
+            // This iPod is currently associated to the current user so scrobble!
+            scrobbleIpodFile( arguments[ pos + 1 ] );
     }
     else if ( !arguments.contains( "--tray" ) )
     {
@@ -817,6 +853,58 @@ Application::onMessageReceived(const QString& message)
 		SetForegroundWindow(mw->winId());
 #endif
     }
+}
+
+void
+Application::scrobbleIpodFile( QString iPodScrobblesFilename )
+{
+    qDebug() << iPodScrobblesFilename;
+
+    QFile iPodScrobblesFile( iPodScrobblesFilename );
+
+    if ( iPodScrobblesFile.open( QIODevice::ReadOnly | QIODevice::Text ) )
+    {
+        QDomDocument iPodScrobblesDoc;
+        iPodScrobblesDoc.setContent( &iPodScrobblesFile );
+        QDomNodeList tracks = iPodScrobblesDoc.elementsByTagName( "track" );
+
+        QList<lastfm::Track> scrobbles;
+
+        for ( int i(0) ; i < tracks.count() ; ++i )
+        {
+            lastfm::Track track( tracks.at(i).toElement() );
+
+            int playcount = track.extra("playCount").toInt();
+
+            for ( int j(0) ; j < playcount ; ++j )
+                scrobbles << track;
+        }
+
+        if( unicorn::UserSettings().value( "confirmIpodScrobbles", false ).toBool() )
+        {
+            ScrobbleConfirmationDialog confirmDialog( scrobbles );
+            if ( confirmDialog.exec() == QDialog::Accepted )
+            {
+                scrobbles = confirmDialog.tracksToScrobble();
+
+                // sort the iPod scrobbles before caching them
+                if ( scrobbles.count() > 1 )
+                    qSort ( scrobbles.begin(), scrobbles.end() );
+
+                as->cache( scrobbles );
+            }
+        }
+        else
+        {
+            // sort the iPod scrobbles before caching them
+            if ( scrobbles.count() > 1 )
+                qSort ( scrobbles.begin(), scrobbles.end() );
+
+            as->cache( scrobbles );
+        }
+    }
+
+    iPodScrobblesFile.remove();
 }
 
 void 

@@ -5,6 +5,7 @@
 #include <lastfm/misc.h>
 #include <lastfm/XmlQuery>
 
+#include <QApplication>
 #include <QDesktopServices>
 #include <QUrl>
 #include <QTcpServer>
@@ -227,7 +228,7 @@ LoginProcess::showError() const
             HMODULE h = LoadLibraryA( "InetCpl.cpl" );
             if (!h) break;
             BOOL (WINAPI *cpl)(HWND) = (BOOL (WINAPI *)(HWND)) GetProcAddress( h, "LaunchConnectionDialog" );
-            if (cpl) cpl( winId() );
+            if (cpl) cpl( qApp->activeWindow()->winId() );
             FreeLibrary( h );
 #endif
             break;
