@@ -41,17 +41,8 @@ private:
 public:
     LoginDialog( QWidget* parent = 0 );
 
-    QString token() const { return m_token; }
-    
-private slots:
-    void authenticate();
-    void onGotToken();
-	void cancel();
-
 private:
     QPushButton* ok() const { return ui.buttonBox->button( QDialogButtonBox::Ok ); }
-
-    QString m_token;
 };
 
 #endif

@@ -24,37 +24,44 @@
     #include <QMainWindow>
     extern void qt_mac_set_menubar_icons( bool );
 #elif defined WIN32
-	#include <windows.h>
+    #include <windows.h>
     #include <QAbstractEventDispatcher>
 #endif
 
+
 #include "UnicornApplication.h"
-#include "QMessageBoxBuilder.h"
-#include "UnicornCoreApplication.h"
-#include "dialogs/LoginDialog.h"
+
 #include "dialogs/LoginContinueDialog.h"
+#include "dialogs/LoginDialog.h"
+#include "dialogs/UserManagerDialog.h"
 #include "dialogs/WelcomeDialog.h"
+#include "LoginProcess.h"
+#include "QMessageBoxBuilder.h"
 #include "SignalBlocker.h"
+#include "UnicornCoreApplication.h"
 #include "UnicornSettings.h"
+
 #include <lastfm/misc.h>
 #include <lastfm/User>
 #include <lastfm/InternetConnectionMonitor>
 #include <lastfm/ws.h>
 #include <lastfm/XmlQuery>
-#include <QDir>
+
+
 #include <QDebug>
-#include <QLocale>
-#include <QTranslator>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QLocale>
+#include <QRegExp>
 #include <QTimer>
-#include <QDebug>
+#include <QTranslator>
 
-#include "dialogs/UserManagerDialog.h"
+
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
-                      m_signingIn( true ),
+                      m_wizardRunning( true ),
                       m_icm( 0 )
 {
 }
@@ -91,7 +98,7 @@ unicorn::Application::init()
     connect( m_icm, SIGNAL( up( QString ) ), this, SIGNAL( internetConnectionUp() ) );
     connect( m_icm, SIGNAL( down( QString ) ), this, SIGNAL( internetConnectionDown() ) );
 
-    connect( &m_bus, SIGNAL( signingInQuery( QString )), SLOT( onSigningInQuery( QString )));
+    connect( &m_bus, SIGNAL( wizardRunningQuery( QString )), SLOT( onWizardRunningQuery( QString )));
     connect( &m_bus, SIGNAL( sessionQuery( QString )), SLOT( onBusSessionQuery( QString )));
     connect( &m_bus, SIGNAL( sessionChanged( Session )), SLOT( onBusSessionChanged( Session )));
     connect( &m_bus, SIGNAL( lovedStateChanged(bool)), SIGNAL( busLovedStateChanged(bool)));
@@ -102,7 +109,6 @@ unicorn::Application::init()
     setQuitOnLastWindowClosed( false );
     #endif
 
-    initiateLogin();
 }
 
 void 
@@ -116,10 +122,11 @@ unicorn::Application::loadStyleSheet( QFile& file )
 void
 unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserException )
 {
-    if( m_bus.isSigningIn() )
+    if( m_bus.isWizardRunning() )
     {
         SignalBlocker( &m_bus, SIGNAL( sessionChanged(Session)), -1 ).start();
-    } else if( !forceLogout )
+    }
+    else if( !forceLogout )
     {
         Session busSession = m_bus.getSession();
        
@@ -127,45 +134,26 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
             m_currentSession = busSession;
     }
 
-    if( !forceLogout && m_currentSession.isValid())
+    if( !forceLogout && m_currentSession.isValid() )
     {
         changeSession( m_currentSession );
     }
     else
     {
-        m_signingIn = true;
+        SignalBlocker( &m_bus, SIGNAL( sessionChanged( Session ) ), -1 ).start();
+        Session busSession = m_bus.getSession();
 
-        while ( m_signingIn )
+        if( busSession.isValid() )
         {
-            LoginDialog d;
-            connect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise() ) );
-
-            if ( d.exec() == QDialog::Accepted )
-            {
-                disconnect( &m_bus, SIGNAL( signingInQuery( QString)), &d, SLOT( raise()));
-                LoginContinueDialog lc( d.token() );
-                connect( &m_bus, SIGNAL( signingInQuery( QString)), &lc, SLOT( raise() ) );
-
-                lc.raise();
-
-                if ( lc.exec() == QDialog::Accepted )
-                {
-                    WelcomeDialog( User(lc.session().username())).exec();
-                    changeSession( lc.session()         );
-
-                    m_signingIn = false;
-                }
-            }
-            else
-            {
-                throw StubbornUserException();
-            }
+               m_currentSession = busSession;
+               changeSession( m_currentSession );
+        }
+        else
+        {
+            throw StubbornUserException();
         }
     }
-    m_signingIn = false;
-   
 }
-
 
 void 
 unicorn::Application::manageUsers()
@@ -234,17 +222,26 @@ unicorn::Application::onUserGotInfo()
     emit gotUserInfo( userInfo );
 }
 
-
-void 
-unicorn::Application::onSigningInQuery( const QString& uuid )
+void
+unicorn::Application::setWizardRunning( bool running )
 {
-    qDebug() << "Are we signing in? " << m_signingIn;
-    if( m_signingIn )
-        m_bus.sendQueryResponse( uuid, "TRUE" );
-    else
-        m_bus.sendQueryResponse( uuid, "FALSE" );
+    m_wizardRunning = running;
 }
 
+void
+unicorn::Application::onWizardRunningQuery( const QString& uuid )
+{
+    qDebug() << "Is the Wizard running?";
+    if ( m_wizardRunning )
+    {
+        m_bus.sendQueryResponse( uuid, "TRUE" );
+    }
+    else
+    {
+        m_bus.sendQueryResponse( uuid, "FALSE" );
+    }
+
+}
 
 void 
 unicorn::Application::onBusSessionQuery( const QString& uuid )
@@ -266,7 +263,7 @@ unicorn::Application::onBusSessionChanged( const Session& session )
 void 
 unicorn::Application::changeSession( const Session& newSession, bool announce )
 {
-    if( !m_signingIn && newSession.username() != m_currentSession.username() &&
+    if( !m_wizardRunning && newSession.username() != m_currentSession.username() &&
         Settings().value( "changeSessionConfirmation", true ).toBool()) {
         bool dontAskAgain = false;
         int result = QMessageBoxBuilder( findMainWindow() ).setTitle( tr( "Changing User" ) )
@@ -493,3 +490,10 @@ unicorn::Application::winEventFilter ( void* message )
 	return false;
 }
 #endif
+
+void
+unicorn::Application::restart()
+{
+    qApp->closeAllWindows();
+    initiateLogin();
+}

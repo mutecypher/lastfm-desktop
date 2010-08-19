@@ -24,6 +24,7 @@
 #include "LoginPage.h"
 #include "PluginPage.h"
 #include "BootstrapPage.h"
+#include "WelcomePage.h"
 
 #include "lib/unicorn/UnicornSettings.h"
 #include <QWizard>
@@ -39,7 +40,8 @@ class FirstRunWizard : public QWizard
        Page_Intro = 0,
        Page_Login,
        Page_Plugin,
-       Page_Bootstrap
+       Page_Bootstrap,
+       Page_Welcome
     };
 
 public:
@@ -48,10 +50,14 @@ public:
     {
         resize( 625, 440 );
         setPage( Page_Intro, new IntroPage(this));
+        #ifdef Q_WS_MAC || Q_WS_WIN
         setPage( Page_Plugin, new PluginPage());
+        #endif
         setPage( Page_Login, new LoginPage(this));
         setPage( Page_Bootstrap, new BootstrapPage( this ));
-        connect( this, SIGNAL(accepted()), SLOT(onWizardCompleted()));
+        setPage( Page_Welcome, new WelcomePage( this ) );
+        connect( this, SIGNAL( rejected() ), this, SLOT( onRejected() ) );
+        connect( this, SIGNAL( accepted() ), this, SLOT( onWizardCompleted() ) );
     }
 
     int nextId() const
@@ -63,22 +69,39 @@ public:
             case Page_Login:
             #ifdef Q_OS_WIN32
                 return Page_Plugin;
-            #else
+            case Page_Plugin:
+                return Page_Welcome;
+            #elif Q_WS_MAC
                 return Page_Bootstrap;
-            #endif
-
             case Page_Bootstrap:
+                return Page_Welcome;
+            #else Q_WS_X11
+                return Page_Welcome;
+            #endif
 
             default:
                 return -1;
         }
     }
 
-public slots:
+private slots:
     void onWizardCompleted()
     {
         unicorn::Settings().setValue( "FirstRunWizardCompleted", true );
     }
+
+
+    void onRejected()
+    {
+        //if the user doesn't finish the wizard then we make sure
+        //the settings are removed.
+        if ( unicorn::Session().isValid() )
+        {
+            unicorn::Settings us;
+            us.remove( unicorn::Session().username() );
+        }
+    }
+
 };
 
 #endif //FIRST_RUN_WIZARD_H_

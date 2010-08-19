@@ -31,6 +31,10 @@ class QAction;
 class ScrobbleInfoFetcher;
 class StopWatch;
 
+#ifdef Q_WS_X11
+    class IpodDevice;
+#endif
+
 namespace audioscrobbler
 {
     
@@ -60,6 +64,9 @@ namespace audioscrobbler
         QPointer<StopWatch> watch;
         QPointer<MetadataWindow> mw;
         QPointer<ScrobbleInfoFetcher> fetcher;
+    #ifdef Q_WS_X11
+        QPointer<IpodDevice> iPod;
+    #endif
 
         Track trackToScrobble;
 
@@ -71,6 +78,7 @@ namespace audioscrobbler
         QAction* m_love_action;
         QAction* m_tag_action;
         QAction* m_share_action;
+        QAction* m_show_window_action;
         QAction* m_toggle_window_action;
         QAction* m_scrobble_ipod_action;
         QAction* m_visit_profile_action;
@@ -106,6 +114,9 @@ namespace audioscrobbler
 
         void onTrackGotInfo(const XmlQuery& );
 
+    protected:
+        virtual void initiateLogin( bool forceLogout = false )throw( StubbornUserException );
+
     private slots:
         void onTrayActivated(QSystemTrayIcon::ActivationReason);
         void onStopWatchTimedOut();
@@ -117,6 +128,9 @@ namespace audioscrobbler
 #ifdef Q_WS_X11
         QString getIpodMountPath();
         void onScrobbleIpodTriggered();
+        void onIpodScrobblingError();
+        void onCalculatingScrobbles( int trackCount );
+        void scrobbleIpodTracks( int trackCount );
 #endif
 
         void onVisitProfileTriggered();
@@ -133,6 +147,7 @@ namespace audioscrobbler
         void onSessionChanged( unicorn::Session newSession, unicorn::Session oldSession );
 
         void showWindow();
+        void toggleWindow();
 
         void onMessageReceived(const QString& message);
 

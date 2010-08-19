@@ -20,9 +20,15 @@
 #ifndef LOGIN_PAGE_H_
 #define LOGIN_PAGE_H_
 
-
 #include <QWizardPage>
 #include <QAbstractButton>
+
+namespace unicorn
+{
+    class LoginProcess;
+    class Session;
+}
+
 class LoginPage : public QWizardPage
 {
     Q_OBJECT
@@ -31,20 +37,25 @@ public:
 
     virtual void initializePage();
     virtual void cleanupPage();
+    virtual bool isComplete() const;
  
 private slots:
-    
     void authenticate();
-    void onAuthenticated();
+    void onAuthenticated( unicorn::Session& session );
 
 private:
 
     struct {
-        class QLineEdit* username;
-        class QLineEdit* password;
+        class QLabel* description;
         class QLabel* errorMsg;
+        class QLabel* continueMsg;
+        class QLabel* browserMsg;
+        class QLineEdit* loginUrl;
+        class QPushButton* okButton;
     } ui;
 
+    unicorn::LoginProcess* m_loginProcess;
+    bool m_isComplete;
 };
 
 #endif //LOGIN_PAGE_H_

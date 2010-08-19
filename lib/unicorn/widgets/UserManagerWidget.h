@@ -8,6 +8,13 @@
 #include "lib/DllExportMacro.h"
 
 namespace lastfm{ class User; }
+namespace unicorn
+{
+    class LoginProcess;
+    class Session;
+}
+
+class LoginContinueDialog;
 
 class QAbstractButton;
 class QButtonGroup;
@@ -72,8 +79,13 @@ protected:
 private:
     void setTabOrders();
 
+private slots:
+    void onGotSession( unicorn::Session& s );
+
 private:
     QButtonGroup* m_buttonGroup;
+    unicorn::LoginProcess* m_loginProcess;
+    LoginContinueDialog* m_lcd;
 };
 
 #endif //USER_MANAGER_WIDGET_H_

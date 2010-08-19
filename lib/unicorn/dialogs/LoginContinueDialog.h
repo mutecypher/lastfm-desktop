@@ -21,7 +21,6 @@
 #define LOGIN_CONTINUE_DIALOG_H
 
 #include "lib/DllExportMacro.h"
-#include "lib/unicorn/UnicornSession.h"
 #include <QDialog>
 #include <QDialogButtonBox>
 
@@ -38,22 +37,13 @@ private:
     } ui;
 
 public:
-    LoginContinueDialog( QString token, QWidget* parent = 0 );
-
-    unicorn::Session session() const { return m_session; }
-    
-private slots:
-    void onGetSession();
-    void onGotSession();
-	void cancel();
+    LoginContinueDialog( QWidget* parent = 0 );
 
 private:
     QPushButton* ok() const { return ui.buttonBox->button( QDialogButtonBox::Ok ); }
 
 private:
-    QString m_token;
     bool m_subscriber;
-    unicorn::Session m_session;
 };
 
 #endif
