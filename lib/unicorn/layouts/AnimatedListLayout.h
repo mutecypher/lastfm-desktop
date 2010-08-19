@@ -22,6 +22,7 @@
 
 #include <lib/DllExportMacro.h>
 #include <QVBoxLayout>
+#include <QEasingCurve>
 
 class UNICORN_DLLEXPORT AnimatedListLayout : public QLayout
 {
@@ -32,6 +33,7 @@ public:
     ~AnimatedListLayout();
 
     void setAnimated( bool animated );
+    void setEasingCurve( QEasingCurve::Type easingCurve );
 
     Qt::Orientations expandingDirections() const;
     bool hasHeightForWidth() const;
