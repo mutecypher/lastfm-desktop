@@ -78,6 +78,7 @@ TrackWidget::onRadioButtonsClicked( bool )
     {
         QString artistName = fm.elidedText( m_track.artist().name(), Qt::ElideRight, ui.description->width() );
         ui.description->setText( artistName + "\n" );
+        ui.description->setToolTip( m_track.artist().name() );
         ui.image->setPixmap( ui.artistImage );
     }
     else if ( ui.albumShare->isChecked() )
@@ -85,6 +86,7 @@ TrackWidget::onRadioButtonsClicked( bool )
         QString albumTitle = fm.elidedText( m_track.album().title(), Qt::ElideRight, ui.description->width() );
         QString artistName = fm.elidedText( m_track.artist().name(), Qt::ElideRight, ui.description->width() );
         ui.description->setText( albumTitle + "\n" + artistName );
+        ui.description->setToolTip( m_track.album().title() + "\n" + m_track.artist().name() );
         ui.image->setPixmap( ui.albumImage );
     }
     else if ( ui.trackShare->isChecked() )
@@ -94,6 +96,7 @@ TrackWidget::onRadioButtonsClicked( bool )
         QString title = fm.elidedText( m_track.title(), Qt::ElideRight, ui.description->width() - durationWidth );
         QString artistName = fm.elidedText( m_track.artist().name(), Qt::ElideRight, ui.description->width() );
         ui.description->setText(  title + durationString + artistName );
+        ui.description->setToolTip( m_track.title() + durationString + m_track.artist().name() );
         ui.image->setPixmap( ui.artistImage );
     }
 }
