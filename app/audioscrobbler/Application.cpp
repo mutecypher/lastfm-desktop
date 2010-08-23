@@ -411,8 +411,18 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
         trackToScrobble = t;
     }
 
-    m_artist_action->setText( t.artist()); 
-    m_title_action->setText( t.title() + " [" + t.durationString() + ']' );
+    qDebug() << "action geometry: " << tray->contextMenu()->actionGeometry( m_artist_action );
+    int actionOffsets = 150; //this magic number seems to work to avoid the menu to expand with long titles
+    int actionWidth = tray->contextMenu()->actionGeometry( m_artist_action ).width() - actionOffsets;
+    QFontMetrics fm( font() );
+    QString artistActionText = fm.elidedText( t.artist(), Qt::ElideRight, actionWidth );
+    QString durationString = " [" + t.durationString() + "]";
+    QString titleActionText = fm.elidedText( t.title(), Qt::ElideRight, actionWidth - fm.width( durationString ) );
+
+    m_artist_action->setText( artistActionText );
+    m_artist_action->setToolTip( t.artist() );
+    m_title_action->setText( titleActionText + durationString );
+    m_title_action->setToolTip( t.title() + " [" + t.durationString() + "]" );
 
     delete watch;
     qDebug() << "********** AS = " << as;
