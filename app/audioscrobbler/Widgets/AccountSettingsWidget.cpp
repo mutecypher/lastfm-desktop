@@ -35,6 +35,8 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
+using lastfm::User;
+
 
 AccountSettingsWidget::AccountSettingsWidget( QWidget* parent )
     : SettingsWidget( parent )

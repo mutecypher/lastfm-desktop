@@ -14,40 +14,82 @@
 #include <QVBoxLayout>
 #include <QPalette>
 #include <QColorDialog>
-#include "../../../lib/unicorn/widgets/DataBox.h"
+#include <QListWidget>
+#include "../Dialogs/SettingsDialog.h"
+#include <lastfm/ws.h>
+#include "../../../lib/unicorn/UnicornApplication.h"
+#include <QDebug>
+
+class MySettingsDialog : public SettingsDialog {
+public:
+    MySettingsDialog( QWidget* p = 0 )
+    :SettingsDialog( p ){ setWindowFlags( Qt::Widget ); ui.pageList->setCurrentRow( 2 ); setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed);}
+    
+//    virtual QSize sizeHint() const {
+//        NSView* nsv = reinterpret_cast<NSView*>(winId());
+//        return QSize( [[[nsv superview] superview] frame].size.width, [[[nsv superview] superview] frame].size.height );
+//    }
+    
+protected:
+    virtual bool eventFilter(QObject *obj, QEvent *ev) {
+        
+        if( ev->type() == QEvent::Resize ) {
+//            updateGeometry();
+            NSView* nsv = reinterpret_cast<NSView*>(winId());
+            layout()->update();
+            if( [nsv window] )
+                [nsv setFrameSize: [[[nsv superview] superview] frame].size ];
+        }
+        return false;
+    }
+};
 
 FmLastPrefPanePrefWidget::FmLastPrefPanePrefWidget()
+                         :dialog( 0 ), 
+                          widget( 0 )
 {
     char* argv;
     int argc = 0;
-    QApplication* app = new QApplication( argc, &argv, true );
+    unicorn::Application* app = new unicorn::Application( argc, &argv );
+    QCoreApplication::arguments();
     widget = new QMacNativeWidget();
     QBoxLayout* layout = new QVBoxLayout( widget );
-    QLabel* hello = new QLabel( "Testing..", widget);
-    QLabel* onetwothree = new QLabel( "1235", widget );
-    layout->addWidget( onetwothree );
-    layout->addWidget( new DataBox( "Hello", hello, 0 ) );
-    layout->addStretch( 1 );
+
+    layout->addWidget( dialog = new MySettingsDialog( widget ) );
     
-    
-    foreach( QWidget* w, widget->findChildren<QWidget*>()) {
-        w->setAutoFillBackground( true );
-        [reinterpret_cast<NSView*>(w->winId()) setAutoresizingMask:NSViewWidthSizable];
+    foreach( QWidget* w, dialog->findChildren<QWidget*>()) {
+        w->installEventFilter( dialog );
+        w->show();
     }
     
+    NSWindow *systemPrefsWindow = [[NSApplication sharedApplication] mainWindow];
+    [reinterpret_cast<NSView*>(dialog->winId()) setFrame: [systemPrefsWindow contentRectForFrameRect:[systemPrefsWindow frame]]];
+    [reinterpret_cast<NSView*>(widget->winId()) setAutoresizingMask: NSViewWidthSizable ];
+
     widget->layout()->setContentsMargins( 0, 0, 0, 0 );
     widget->layout()->setSpacing( 0 );
 
-    widget->setAutoFillBackground( true );
-    QPalette p = widget->palette();
-    widget->setPalette( p );
+    dialog->setAutoFillBackground( true );
+    
+    
     widget->show();
 }
 
 NSView* 
 FmLastPrefPanePrefWidget::view()
 {
+    qDebug() << "Getting view..";
+    
     const WId id = widget->winId();
     const NSView* ret = reinterpret_cast<NSView*>(id);
+    
+//    widget->layout()->update();
     return ret;
+}
+
+void 
+FmLastPrefPanePrefWidget::updateGeometry()
+{
+    if( this && dialog )
+        dialog->updateGeometry();
 }

@@ -62,6 +62,10 @@ UserRadioButton::UserRadioButton( const User& user )
     QVBoxLayout* vl = new QVBoxLayout(this);
     vl->addLayout( l );
     remove->setFocusPolicy( Qt::NoFocus );
+
+    m_name->setAutoFillBackground( true );
+    m_realName->setAutoFillBackground( true );
+    m_loggedIn->setAutoFillBackground( true );
 }
 
 void 

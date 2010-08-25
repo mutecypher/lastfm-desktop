@@ -44,7 +44,7 @@ private slots:
     void onSettingsChanged();
     void onApplyButtonClicked();
 
-private:
+protected:
     struct Ui
     {
         class QDialogButtonBox* buttons;
