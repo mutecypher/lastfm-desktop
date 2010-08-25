@@ -315,8 +315,8 @@ Application::onSessionChanged( unicorn::Session newSession, unicorn::Session old
     delete oldAs;
 
     deviceScrobbler->disconnect();
-    connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )),
-             as, SLOT( cache( QList<lastfm::Track> )));
+    connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )),
+             as, SLOT( cache( QList<Track> )));
 
     deviceScrobbler->checkCachedIPodScrobbles();
 

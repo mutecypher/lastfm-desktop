@@ -21,7 +21,7 @@ public:
     void twiddled( QStringList arguments );
 
 signals:
-    void foundScrobbles( QList<lastfm::Track> );
+    void foundScrobbles( QList<Track> );
 
 public slots:
 #ifdef Q_WS_X11
