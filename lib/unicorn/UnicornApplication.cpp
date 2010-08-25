@@ -57,7 +57,6 @@
 #include <QTimer>
 #include <QTranslator>
 
-
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
@@ -80,6 +79,7 @@ unicorn::Application::init()
     setupHotKeys();
 
     #ifdef __APPLE__
+    installCocoaEventHandler();
     AEEventHandlerUPP h = NewAEEventHandlerUPP( appleEventHandler );
     AEInstallEventHandler( kCoreEventClass, kAEReopenApplication, h, 0, false );
     #endif
