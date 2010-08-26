@@ -549,7 +549,7 @@ Application::onScrobbleIpodTriggered()
         delete iPod;
     }
     qDebug() << "here";
-    iPod = new IpodDevice;
+    iPod = new IpodDeviceLinux;
     QString path;
     bool autodetectionSuceeded = true;
 
@@ -582,7 +582,7 @@ Application::scrobbleIpodTracks( int trackCount )
     qDebug() << trackCount << " new tracks to scrobble.";
 
     bool bootStrapping = false;
-    if ( iPod->lastError() != IpodDevice::NoError && !iPod->isDeviceKnown() )
+    if ( iPod->lastError() != IpodDeviceLinux::NoError && !iPod->isDeviceKnown() )
     {
         bootStrapping = true;
         qDebug() << "Should we save it?";
@@ -606,7 +606,7 @@ Application::scrobbleIpodTracks( int trackCount )
         }
         else
         {
-            IpodDevice::deleteDeviceHistory( unicorn::Session().username(), iPod->deviceId() );
+            IpodDeviceLinux::deleteDeviceHistory( unicorn::Session().username(), iPod->deviceId() );
         }
     }
 
@@ -667,7 +667,7 @@ Application::onIpodScrobblingError()
     QString path;
     switch( iPod->lastError() )
     {
-        case IpodDevice::AutodetectionError: //give it another try
+        case IpodDeviceLinux::AutodetectionError: //give it another try
             qDebug() << "giving another try";
             path = getIpodMountPath();
             if ( !path.isEmpty() )
@@ -677,7 +677,7 @@ Application::onIpodScrobblingError()
             }
             break;
 
-        case IpodDevice::AccessError:
+        case IpodDeviceLinux::AccessError:
             QMessageBoxBuilder( mw )
                     .setIcon( QMessageBox::Critical )
                     .setTitle( tr( "Scrobble iPod" ) )
@@ -686,7 +686,7 @@ Application::onIpodScrobblingError()
             delete iPod;
             iPod = 0;
             break;
-        case IpodDevice::UnknownError:
+        case IpodDeviceLinux::UnknownError:
             QMessageBoxBuilder( mw )
                     .setIcon( QMessageBox::Critical )
                     .setTitle( tr( "Scrobble iPod" ) )

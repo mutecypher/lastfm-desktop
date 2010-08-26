@@ -31,6 +31,13 @@ public:
     virtual QString deviceId() const;
     virtual QString deviceName() const;
 
+#ifdef Q_WS_X11
+    /**
+     * @return The mount path of the device.
+     */
+    virtual QString mountPath() const{ return QString(); }
+#endif
+
 private:
     QString m_deviceId;
     QString m_deviceName;

@@ -17,8 +17,8 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef IPOD_DEVICE_H
-#define IPOD_DEVICE_H
+#ifndef IPOD_DEVICE_LINUX_H
+#define IPOD_DEVICE_LINUX_H
 
 #include "MediaDevice.h"
 
@@ -50,7 +50,7 @@ private:
     QList<Track> m_tracksToScrobble;
 };
 
-class IpodDevice: public MediaDevice
+class IpodDeviceLinux: public MediaDevice
 {
     Q_OBJECT
 
@@ -64,8 +64,8 @@ public:
         UnknownError
     };
 
-    IpodDevice();
-    ~IpodDevice();
+    IpodDeviceLinux();
+    ~IpodDeviceLinux();
 
     /**
      * Deletes the table with the device scrobbled tracks information.

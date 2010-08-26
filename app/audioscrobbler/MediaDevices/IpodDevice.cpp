@@ -17,7 +17,8 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "IpodDevice.h"
+
+
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/UnicornSession.h"
@@ -29,6 +30,7 @@
 #include <QSqlQuery>
 #include <QStringList>
 
+#include "IpodDevice.h"
 
 IpodDevice::IpodDevice( const QString& deviceId, const QString& deviceName )
     : m_deviceId( deviceId ), m_deviceName( deviceName )
