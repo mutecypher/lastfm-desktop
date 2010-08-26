@@ -38,7 +38,6 @@
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/DataListWidget.h"
-#include "lib/unicorn/widgets/FadeInWidget.h"
 #include "lib/unicorn/widgets/BannerWidget.h"
 #include "lib/unicorn/widgets/LfmListViewWidget.h"
 #include <QDebug>
