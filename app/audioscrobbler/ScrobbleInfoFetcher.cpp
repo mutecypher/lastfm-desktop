@@ -36,6 +36,7 @@ ScrobbleInfoFetcher::onTrackStarted( const Track& t, const Track& oldTrack )
 /// close any outstanding replies from the last track
     foreach (QNetworkReply* reply, m_replies) reply->close();
     m_replies.clear();
+    m_numRequests = 0;
 
 /// make some requests for the new track
 
@@ -44,12 +45,11 @@ ScrobbleInfoFetcher::onTrackStarted( const Track& t, const Track& oldTrack )
         {
             // track.getInfo
             t.getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
-            connect( t.signalProxy(), SIGNAL(gotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)) ) ;
-            //m_replies.append(reply);
-            //connect(reply, SIGNAL(finished()), SLOT(onTrackGotInfo()));
+            connect( t.signalProxy(), SIGNAL(gotInfo(XmlQuery)), SLOT(onTrackGotInfo(XmlQuery)) ) ;
+            ++m_numRequests;
         }
         {
-        // track.getTopFans
+            // track.getTopFans
             QNetworkReply* reply = t.getTopFans();
             m_replies.append(reply);
             connect(reply, SIGNAL(finished()), SLOT(onTrackGotTopFans()));
@@ -87,18 +87,19 @@ ScrobbleInfoFetcher::onTrackStarted( const Track& t, const Track& oldTrack )
     }
 }
 
+void
+ScrobbleInfoFetcher::isFinished()
+{
+    if ( m_replies.count() == 0 && m_numRequests == 0 )
+        emit finished();
+}
 
 void
-ScrobbleInfoFetcher::onTrackGotInfo()
+ScrobbleInfoFetcher::onTrackGotInfo( const XmlQuery& lfm )
 {
-    QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
-    bool removed = m_replies.removeOne(reply);
-
-    XmlQuery lfm = reply->readAll();
-    emit trackGotInfo(lfm);
-
-    if (m_replies.count() == 0)
-        emit finished();
+    emit trackGotInfo( lfm );
+    --m_numRequests;
+    isFinished();
 }
 
 
@@ -111,8 +112,7 @@ ScrobbleInfoFetcher::onAlbumGotInfo()
     XmlQuery lfm = reply->readAll();
     emit albumGotInfo(lfm);
 
-    if (m_replies.count() == 0)
-        emit finished();
+    isFinished();
 }
 
 
@@ -125,8 +125,7 @@ ScrobbleInfoFetcher::onArtistGotInfo()
     XmlQuery lfm = reply->readAll();
     emit artistGotInfo(lfm);
 
-    if (m_replies.count() == 0)
-        emit finished();
+    isFinished();
 }
 
 
@@ -139,8 +138,7 @@ ScrobbleInfoFetcher::onArtistGotEvents()
     XmlQuery lfm = reply->readAll();
     emit artistGotEvents(lfm);
 
-    if (m_replies.count() == 0)
-        emit finished();
+    isFinished();
 }
 
 
@@ -153,8 +151,7 @@ ScrobbleInfoFetcher::onTrackGotTopFans()
     XmlQuery lfm = reply->readAll();
     emit trackGotTopFans(lfm);
 
-    if (m_replies.count() == 0)
-        emit finished();
+    isFinished();
 }
 
 
@@ -167,6 +164,5 @@ ScrobbleInfoFetcher::onTrackGotTags()
     XmlQuery lfm = reply->readAll();
     emit trackGotTags(lfm);
 
-    if (m_replies.count() == 0)
-        emit finished();
+    isFinished();
 }

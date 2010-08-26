@@ -43,7 +43,7 @@ signals:
 private slots:
     void onTrackStarted( const Track& t, const Track& oldTrack );
 
-    void onTrackGotInfo();
+    void onTrackGotInfo( const XmlQuery& lfm );
     void onAlbumGotInfo();
     void onArtistGotInfo();
     void onArtistGotEvents();
@@ -51,5 +51,9 @@ private slots:
     void onTrackGotTags();
 
 private:
+    void isFinished();
+
+private:
     class QList<class QNetworkReply* > m_replies;
+    int m_numRequests;
 };

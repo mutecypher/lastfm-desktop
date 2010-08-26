@@ -23,28 +23,8 @@
 #include <lastfm/ScrobblePoint>
 #include <QDateTime>
 #include <QObject>
-#include <QTimer>
+
 namespace audioscrobbler { class Application; }
-
-namespace mxcl
-{
-    struct Time : private QTime
-    {
-        Time() : started( false ) 
-        {}
-        
-        bool started;
-        
-        void restart() { started = true; QTime::restart(); }
-
-        /** Disallow negative time, Trolltech suck? */
-        uint elapsed() const 
-        { 
-            return started ? qMax( 0, QTime::elapsed() ) : 0;
-        }
-    };
-}
-
 
 /** Emits timeout() after seconds specified to start. 
   * Continues to measure time after that point until object death.
@@ -62,31 +42,25 @@ public:
       * The watch will not timeout() if elapsed is greater that the 
       * scrobble point */
     StopWatch( ScrobblePoint timeout_in_seconds, uint elapsed_in_ms = 0 );
-    ~StopWatch();
 
-    bool isTimedOut() const { return m_remaining == 0 && !m_timer->isActive(); }
-
+    void start();
     void pause();
     void resume();
+
+    bool paused();
     
     /** in milliseconds */
-    uint elapsed() const { return ((m_point*1000 - m_remaining) + ( m_timer->isActive() ? m_elapsed.elapsed() : 0)); }
+    uint elapsed() const;
 
     ScrobblePoint scrobblePoint() const { return m_point; }
     
 signals:
     void paused( bool );
+    void frameChanged( int millisecs );
     void timeout();
 
-private slots:
-    void finished();
-    
-private:
-    void start();
-    
-    class QTimer* m_timer;
-    uint m_remaining;
-    mxcl::Time m_elapsed;
+private: 
+    class QTimeLine* m_timeline;
     ScrobblePoint m_point;
 };
 

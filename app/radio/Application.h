@@ -29,6 +29,8 @@ namespace moralistfad
 	public:
 	    Application( int&, char** );
 
+        void init();
+
 	signals:    
 	    /** something should show it. Currently MainWindow does */
 	    void error( const QString& message );

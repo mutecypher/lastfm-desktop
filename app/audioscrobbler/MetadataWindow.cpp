@@ -19,11 +19,11 @@
 */
 #include "MetadataWindow.h"
 
-#include "ScrobbleStatus.h"
-#include "ScrobbleControls.h"
 #include "Application.h"
-#include "ProfileWidget.h"
-#include "ScrobbleInfoWidget.h"
+#include "../Widgets/ProfileWidget.h"
+#include "../Widgets/ScrobbleControls.h"
+#include "../Widgets/ScrobbleInfoWidget.h"
+#include "../Widgets/ScrobbleStatus.h"
 
 #include "lib/unicorn/widgets/MessageBar.h"
 #include "lib/unicorn/widgets/GhostWidget.h"
@@ -58,8 +58,9 @@ TitleBar::TitleBar( const QString& title )
     connect( qApp, SIGNAL( internetConnectionDown() ), this, SLOT( onConnectionDown() ) );
     connect( qApp, SIGNAL( internetConnectionUp() ), this, SLOT( onConnectionUp() ) );
     QLabel* l;
-    layout->addWidget( l = new QLabel( title, this ));
-    l->setAlignment( Qt::AlignCenter );
+    //layout->addWidget( l = new QLabel( title, this ));
+    //l->setAlignment( Qt::AlignCenter );
+    layout->addStretch( 1 );
 
 
     m_inetStatus->setAlignment( Qt::AlignLeft );
@@ -111,7 +112,17 @@ MetadataWindow::MetadataWindow()
     hb->layout()->addWidget( ui.tabBar = new QTabBar());
     ui.tabBar->insertTab( TAB_PROFILE, tr( "Profile" ) );
     ui.tabBar->insertTab( TAB_INFO, tr( "Info" ) );
+    ui.tabBar->setTabEnabled ( TAB_INFO, false );
     connect( ui.tabBar, SIGNAL( currentChanged( int )), SLOT( onTabChanged( int )));
+
+    //HACK: on KDE, the tab bar seems to inherit the app background color resulting in
+    //a dark font color over dark background.
+    if ( ui.tabBar->palette().color( ui.tabBar->backgroundRole() ).name() ==  "#e0dfde" )
+    {
+        ui.tabBar->setStyleSheet( "color: #cccccc" );
+    }
+
+
     hb->layout()->addWidget( ui.now_playing_source );
 
     centralWidget()->layout()->addWidget(hb);
@@ -189,9 +200,16 @@ MetadataWindow::MetadataWindow()
 void
 MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
 {
-    //ui.userButton->setChecked( false );
-    ui.tabBar->setCurrentIndex( TAB_INFO );
-    toggleProfile( false );
+    ui.tabBar->setTabEnabled ( TAB_INFO, true );
+
+    if ( m_currentTrack.isNull() )
+    {
+        // We are starting form a stopped state
+        // so switch to the info view
+        ui.tabBar->setCurrentIndex( TAB_INFO );
+        toggleProfile( false );
+    }
+
     ui.now_playing_source->onTrackStarted( t, previous );
     m_currentTrack = t;
 }
@@ -204,25 +222,38 @@ MetadataWindow::onStopped()
     ui.now_playing_source->onTrackStopped();
     ui.tabBar->setCurrentIndex( TAB_PROFILE );
     m_currentTrack = Track();
+    ui.tabBar->setTabEnabled ( TAB_INFO, false );
 }
 
 
 void
 MetadataWindow::onResumed()
 {
+    // Switch back to the info view when you resume. We never
+    // actually stop with iTunes so this is more consistent.
+    ui.tabBar->setTabEnabled ( TAB_INFO, true );
+    ui.tabBar->setCurrentIndex( TAB_INFO );
+    toggleProfile( false );
 }
 
 
 void
 MetadataWindow::onPaused()
 {
+    setCurrentWidget( stack.profile );
+    ui.tabBar->setTabEnabled ( TAB_INFO, false );
 }
 
 
 void
 MetadataWindow::setCurrentWidget( QWidget* w )
-{
-    centralWidget()->findChild<SlideOverLayout*>()->revealWidget( w );
+{          
+    SlideOverLayout* layout = centralWidget()->findChild<SlideOverLayout*>();
+
+    // Make sure we dont's switch to the same widget
+    // because it makes ugly things happen
+    if ( layout->currentWidget() != w )
+        layout->revealWidget( w );
 }
 
 void

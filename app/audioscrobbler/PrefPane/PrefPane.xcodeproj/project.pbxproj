@@ -1,0 +1,342 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
+		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
+		FB2089DD11ECD211004CA2E5 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FB2089DC11ECD211004CA2E5 /* icon.png */; };
+		FB208A0C11EF15A8004CA2E5 /* FmLastPrefPane.m in Sources */ = {isa = PBXBuildFile; fileRef = FB208A0A11EF15A8004CA2E5 /* FmLastPrefPane.m */; };
+		FB64B78211EF6A220058400B /* moc_DataBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB64B78011EF6A220058400B /* moc_DataBox.cpp */; };
+		FB64B78311EF6A220058400B /* moc_StylableWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB64B78111EF6A220058400B /* moc_StylableWidget.cpp */; };
+		FBA446ED11EC9EDF005DA6BB /* FmLastPrefPaneQtView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FBA446EA11EC9EDF005DA6BB /* FmLastPrefPaneQtView.mm */; };
+		FBA446EE11EC9EDF005DA6BB /* FmLastPrefPanePrefWidget.mm in Sources */ = {isa = PBXBuildFile; fileRef = FBA446EC11EC9EDF005DA6BB /* FmLastPrefPanePrefWidget.mm */; };
+		FBA446F211EC9F46005DA6BB /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBA446F111EC9F46005DA6BB /* PreferencePanes.framework */; };
+		FBA446FB11ECBFC8005DA6BB /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBA446F911ECBFC8005DA6BB /* MainWindow.xib */; };
+		FBA4470211ECBFE9005DA6BB /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBA4470011ECBFE9005DA6BB /* QtCore.framework */; };
+		FBA4470311ECBFE9005DA6BB /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBA4470111ECBFE9005DA6BB /* QtGui.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		8D5B49B6048680CD000E48DA /* Scrobbler_debug.prefpane */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Scrobbler_debug.prefpane; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D2F7E65807B2D6F200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		FB2089DC11ECD211004CA2E5 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		FB208A0A11EF15A8004CA2E5 /* FmLastPrefPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FmLastPrefPane.m; sourceTree = "<group>"; };
+		FB208A0B11EF15A8004CA2E5 /* FmLastPrefPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FmLastPrefPane.h; sourceTree = "<group>"; };
+		FB64B78011EF6A220058400B /* moc_DataBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = moc_DataBox.cpp; path = ../../../lib/unicorn/_build/moc_DataBox.cpp; sourceTree = SOURCE_ROOT; };
+		FB64B78111EF6A220058400B /* moc_StylableWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = moc_StylableWidget.cpp; path = ../../../lib/unicorn/_build/moc_StylableWidget.cpp; sourceTree = SOURCE_ROOT; };
+		FBA446E911EC9EDF005DA6BB /* FmLastPrefPaneQtView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FmLastPrefPaneQtView.h; sourceTree = "<group>"; };
+		FBA446EA11EC9EDF005DA6BB /* FmLastPrefPaneQtView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FmLastPrefPaneQtView.mm; sourceTree = "<group>"; };
+		FBA446EB11EC9EDF005DA6BB /* FmLastPrefPanePrefWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FmLastPrefPanePrefWidget.h; sourceTree = "<group>"; };
+		FBA446EC11EC9EDF005DA6BB /* FmLastPrefPanePrefWidget.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FmLastPrefPanePrefWidget.mm; sourceTree = "<group>"; };
+		FBA446F111EC9F46005DA6BB /* PreferencePanes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PreferencePanes.framework; path = /System/Library/Frameworks/PreferencePanes.framework; sourceTree = "<absolute>"; };
+		FBA446FA11ECBFC8005DA6BB /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		FBA4470011ECBFE9005DA6BB /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = /opt/qt/qt.git/lib/QtCore.framework; sourceTree = "<absolute>"; };
+		FBA4470111ECBFE9005DA6BB /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = /opt/qt/qt.git/lib/QtGui.framework; sourceTree = "<absolute>"; };
+		FBCB815F11ECCA780019E4C7 /* PrefPane_prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefPane_prefix.pch; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D5B49B3048680CD000E48DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */,
+				FBA446F211EC9F46005DA6BB /* PreferencePanes.framework in Frameworks */,
+				FBA4470211ECBFE9005DA6BB /* QtCore.framework in Frameworks */,
+				FBA4470311ECBFE9005DA6BB /* QtGui.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* PrefPane */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77AFFE84173DC02AAC07 /* Classes */,
+				32C88E010371C26100C91783 /* Other Sources */,
+				089C167CFE841241C02AAC07 /* Resources */,
+				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
+				19C28FB8FE9D52D311CA2CBB /* Products */,
+			);
+			name = PrefPane;
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
+				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
+			);
+			name = "Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C167CFE841241C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FB2089DC11ECD211004CA2E5 /* icon.png */,
+				FBA446F911ECBFC8005DA6BB /* MainWindow.xib */,
+				8D5B49B7048680CD000E48DA /* Info.plist */,
+				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77AFFE84173DC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				FB64B78011EF6A220058400B /* moc_DataBox.cpp */,
+				FB64B78111EF6A220058400B /* moc_StylableWidget.cpp */,
+				FBA446E911EC9EDF005DA6BB /* FmLastPrefPaneQtView.h */,
+				FBA446EA11EC9EDF005DA6BB /* FmLastPrefPaneQtView.mm */,
+				FBA446EB11EC9EDF005DA6BB /* FmLastPrefPanePrefWidget.h */,
+				FBA446EC11EC9EDF005DA6BB /* FmLastPrefPanePrefWidget.mm */,
+				FB208A0A11EF15A8004CA2E5 /* FmLastPrefPane.m */,
+				FB208A0B11EF15A8004CA2E5 /* FmLastPrefPane.h */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FBA4470011ECBFE9005DA6BB /* QtCore.framework */,
+				FBA4470111ECBFE9005DA6BB /* QtGui.framework */,
+				FBA446F111EC9F46005DA6BB /* PreferencePanes.framework */,
+				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7AEFEA557BF11CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				089C167FFE841241C02AAC07 /* AppKit.framework */,
+				D2F7E65807B2D6F200F64583 /* CoreData.framework */,
+				089C1672FE841209C02AAC07 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FB8FE9D52D311CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D5B49B6048680CD000E48DA /* Scrobbler_debug.prefpane */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		32C88E010371C26100C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				FBCB815F11ECCA780019E4C7 /* PrefPane_prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D5B49AC048680CD000E48DA /* PrefPane */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB913A08733D840010E9CD /* Build configuration list for PBXNativeTarget "PrefPane" */;
+			buildPhases = (
+				8D5B49AF048680CD000E48DA /* Resources */,
+				8D5B49B1048680CD000E48DA /* Sources */,
+				8D5B49B3048680CD000E48DA /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PrefPane;
+			productInstallPath = "$(HOME)/Library/Bundles";
+			productName = PrefPane;
+			productReference = 8D5B49B6048680CD000E48DA /* Scrobbler_debug.prefpane */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "PrefPane" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 089C166AFE841209C02AAC07 /* PrefPane */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D5B49AC048680CD000E48DA /* PrefPane */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D5B49AF048680CD000E48DA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */,
+				FBA446FB11ECBFC8005DA6BB /* MainWindow.xib in Resources */,
+				FB2089DD11ECD211004CA2E5 /* icon.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D5B49B1048680CD000E48DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FBA446ED11EC9EDF005DA6BB /* FmLastPrefPaneQtView.mm in Sources */,
+				FBA446EE11EC9EDF005DA6BB /* FmLastPrefPanePrefWidget.mm in Sources */,
+				FB208A0C11EF15A8004CA2E5 /* FmLastPrefPane.m in Sources */,
+				FB64B78211EF6A220058400B /* moc_DataBox.cpp in Sources */,
+				FB64B78311EF6A220058400B /* moc_StylableWidget.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C167DFE841241C02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C167EFE841241C02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		FBA446F911ECBFC8005DA6BB /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FBA446FA11ECBFC8005DA6BB /* English */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB913B08733D840010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/qt/qt.git/lib,
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = PrefPane_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				PRODUCT_NAME = Scrobbler_debug;
+				WRAPPER_EXTENSION = prefpane;
+			};
+			name = Debug;
+		};
+		1DEB913C08733D840010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/qt/qt.git/lib,
+				);
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = PrefPane_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				PRODUCT_NAME = Scrobbler;
+				WRAPPER_EXTENSION = prefpane;
+			};
+			name = Release;
+		};
+		1DEB913F08733D840010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				BUNDLE_LOADER = "/Applications/System Preferences.app/Contents/MacOS/System Preferences";
+				CONFIGURATION_BUILD_DIR = ../../../_bin;
+				EXECUTABLE_EXTENSION = "";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/opt/qt/qt-current/include/QtGui",
+					../../..,
+				);
+				INFOPLIST_PREPROCESS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				PRODUCT_NAME = Audioscrobbler;
+				SDKROOT = macosx10.4;
+				WRAPPER_EXTENSION = prefpane;
+			};
+			name = Debug;
+		};
+		1DEB914008733D840010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CONFIGURATION_BUILD_DIR = ../../../_bin;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../../,
+					"/opt/qt/qt-current/include/QtGui",
+				);
+				PREBINDING = NO;
+				SDKROOT = macosx10.4;
+				USER_HEADER_SEARCH_PATHS = "";
+				WRAPPER_EXTENSION = prefpane;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB913A08733D840010E9CD /* Build configuration list for PBXNativeTarget "PrefPane" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB913B08733D840010E9CD /* Debug */,
+				1DEB913C08733D840010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "PrefPane" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB913F08733D840010E9CD /* Debug */,
+				1DEB914008733D840010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}

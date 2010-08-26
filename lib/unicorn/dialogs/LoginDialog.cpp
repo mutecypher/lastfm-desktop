@@ -19,16 +19,7 @@
 */
 #include "LoginDialog.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
-#include <lastfm/misc.h>
-#include <lastfm/XmlQuery>
-#include <lastfm/ws.h>
 #include <QtGui>
-#include <QDesktopServices>
-
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 
 LoginDialog::LoginDialog( QWidget* parent )
             :QDialog( parent )
@@ -47,44 +38,9 @@ LoginDialog::LoginDialog( QWidget* parent )
 
     layout->addWidget( ui.buttonBox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );
 
-    connect( ui.buttonBox, SIGNAL(accepted()), SLOT(authenticate()) );
+    connect( ui.buttonBox, SIGNAL(accepted()), SLOT(accept()) );
     connect( ui.buttonBox, SIGNAL(rejected()), SLOT(reject()) );
 }
 
 
-void
-LoginDialog::authenticate()
-{
-    connect( unicorn::Session::getToken(), SIGNAL(finished()), SLOT(onGotToken()) );
-}
 
-
-void
-LoginDialog::cancel()
-{
-    qDeleteAll( findChildren<QNetworkReply*>() );
-}
-
-
-void
-LoginDialog::onGotToken()
-{
-    lastfm::XmlQuery lfm = lastfm::XmlQuery( lastfm::ws::parse( static_cast<QNetworkReply*>(sender()) ) );
-
-    m_token = lfm["token"].text();
-
-    QUrl authUrl( "http://www.last.fm/api/auth/" );
-    authUrl.addQueryItem( "api_key", lastfm::ws::ApiKey );
-    authUrl.addQueryItem( "token", m_token );
-
-    if ( QDesktopServices::openUrl( authUrl ) )
-    {
-        // prepare for continue to be clicked
-        accept();
-    }
-    else
-    {
-        // We were unable to open a browser - what do we do now?
-        reject(); // ???
-    }
-}

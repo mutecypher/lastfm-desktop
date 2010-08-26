@@ -18,64 +18,52 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "StopWatch.h"
-#include <QTimer>
+#include <QTimeLine>
 
 
-StopWatch::StopWatch( ScrobblePoint timeout, uint elapsed ) : m_point( timeout )
+StopWatch::StopWatch( ScrobblePoint timeout, uint elapsed )
+    : m_point( timeout )
 {    
-    m_timer = new QTimer( this );
-    m_timer->setSingleShot( true );
-    m_remaining = qMax( int(m_point)*1000 - int(elapsed), 0 );
+    m_timeline = new QTimeLine( m_point * 1000, this );
+    m_timeline->setFrameRange(0, m_point * 1000);
+    m_timeline->setEasingCurve( QEasingCurve::Linear );
+    m_timeline->setUpdateInterval( 20 );
 
-    connect( m_timer, SIGNAL(timeout()), SLOT(finished()) );
+    connect( m_timeline, SIGNAL(finished()), SIGNAL(timeout()) );
+    connect( m_timeline, SIGNAL(frameChanged(int)), SIGNAL(frameChanged(int)));
 }
 
-StopWatch::~StopWatch()
+bool
+StopWatch::paused()
 {
-    if (!isTimedOut() && (m_point*1000) - elapsed() < 4000)
-        emit timeout();
+    return (m_timeline->state() == QTimeLine::Paused);
 }
-
 
 void
-StopWatch::start() //private
+StopWatch::start()
 {
-    m_elapsed.restart();
-    m_timer->setInterval( m_remaining );
-    m_timer->start();
+    m_timeline->start();
+    emit paused( false );
 }
-
 
 void
 StopWatch::pause()
 {
-    if (!m_timer->isActive() || !m_remaining)
-        return;
-
-    m_timer->stop();
-    
-    // cater to potentially having more elapsed time than remaining time
-    uint const remaining = m_remaining - m_elapsed.elapsed();
-    m_remaining = (remaining <= m_remaining) ? remaining : 0;
-
+    m_timeline->setPaused( true );
     emit paused( true );
 }
-
 
 void
 StopWatch::resume()
 {
-    if (!m_remaining || m_timer->isActive())
-        return;
-
-    start();
+    // Only resume if we are already running
+    if ( m_timeline->state() == QTimeLine::Paused )
+        m_timeline->resume();
     emit paused( false );
 }
 
-
-void
-StopWatch::finished()
+uint
+StopWatch::elapsed() const
 {
-    m_remaining = 0;
-    emit timeout();
+    return m_timeline->currentFrame();
 }

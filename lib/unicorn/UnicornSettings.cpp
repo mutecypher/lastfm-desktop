@@ -17,9 +17,9 @@ unicorn::AppSettings::AppSettings( QString appname )
     : QSettings( unicorn::organizationName(), appname.isEmpty() ? qApp->applicationName() : appname )
 {}
 
-unicorn::UserSettings::UserSettings()
+unicorn::UserSettings::UserSettings( QString userName )
 {
-    QString const username = Application::instance()->currentSession().username();
+    QString const username = userName.isEmpty()? Application::instance()->currentSession().username(): userName;
     beginGroup( username );
     // it shouldn't be possible, since unicorn::Application enforces
     // assignment of the username parameter before anything else
