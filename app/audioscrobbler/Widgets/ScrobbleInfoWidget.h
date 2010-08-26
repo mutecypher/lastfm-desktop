@@ -54,6 +54,8 @@ protected slots:
 
     void listItemClicked( const QModelIndex& );
 
+    void onFinished();
+
 signals:
     void lovedStateChanged(bool loved);
 
@@ -74,6 +76,7 @@ protected:
          class QLabel* totalScrobbles;
          class DataListWidget* yourTags;
          class DataListWidget* topTags;
+         class QWidget* area;
     } ui;
 
     struct {
