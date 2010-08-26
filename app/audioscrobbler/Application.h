@@ -30,6 +30,7 @@ class PlayerMediator;
 class QAction;
 class ScrobbleInfoFetcher;
 class StopWatch;
+class DeviceScrobbler;
 
 #ifdef Q_WS_X11
     class IpodDeviceLinux;
@@ -64,9 +65,8 @@ namespace audioscrobbler
         QPointer<StopWatch> watch;
         QPointer<MetadataWindow> mw;
         QPointer<ScrobbleInfoFetcher> fetcher;
-    #ifdef Q_WS_X11
-        QPointer<IpodDeviceLinux> iPod;
-    #endif
+        QPointer<DeviceScrobbler> deviceScrobbler;
+
 
         Track trackToScrobble;
 
@@ -124,14 +124,6 @@ namespace audioscrobbler
         void onTagTriggered();
         void onShareTriggered();
 
-#ifdef Q_WS_X11
-        QString getIpodMountPath();
-        void onScrobbleIpodTriggered();
-        void onIpodScrobblingError();
-        void onCalculatingScrobbles( int trackCount );
-        void scrobbleIpodTracks( int trackCount );
-#endif
-
         void onVisitProfileTriggered();
         void onFaqTriggered();
         void onForumsTriggered();
@@ -148,8 +140,5 @@ namespace audioscrobbler
         void showWindow();
 
         void onMessageReceived(const QString& message);
-
-    private:
-        void scrobbleIpodFile( QString iPodScrobblesFilename );
     };
 }
