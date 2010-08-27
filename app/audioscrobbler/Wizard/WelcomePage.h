@@ -26,7 +26,7 @@ public:
 
     virtual void initializePage()
     {
-        QString username = unicorn::Session().username();
+        QString username = unicorn::Session().userInfo().name();
         ui.welcomeLabel->setText(
             tr( "<p><strong>Hi %1,<br/>Welcome to the Last.fm Scrobbler</strong>\t\t\t</p>" ).arg( username ) +
             tr( "<p>The Scrobbler tracks what you listen to and updates your Last.fm profile.</p>"

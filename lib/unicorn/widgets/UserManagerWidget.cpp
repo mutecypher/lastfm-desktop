@@ -253,12 +253,12 @@ UserManagerWidget::onUserAdded()
 {
     Q_ASSERT( m_loginProcess );
 
-    const unicorn::Session& s = m_loginProcess->session();
+    unicorn::Session* s = m_loginProcess->session();
 
     bool alreadyAdded = false;
     foreach ( UserRadioButton* b, findChildren<UserRadioButton*>() )
     {
-        if ( s.username() == b->user() )
+        if ( s->userInfo().name() == b->user() )
         {
             alreadyAdded = true;
             break;
@@ -267,9 +267,9 @@ UserManagerWidget::onUserAdded()
 
     if ( !alreadyAdded )
     {
-        if ( s.isValid() )
+        if ( s->isValid() )
         {
-            User user( s.username());
+            User user( s->userInfo().name() );
             UserRadioButton* urb = new UserRadioButton( user );
 
             add( urb );

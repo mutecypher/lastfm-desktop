@@ -42,9 +42,9 @@ protected:
     }
 
 protected slots:
-    void onSessionChanged( const unicorn::Session& s )
+    void onSessionChanged( unicorn::Session* s )
     {
-        int index = findText( s.username());
+        int index = findText( s->userInfo().name() );
         setCurrentIndex( index );
     }
 
@@ -74,7 +74,7 @@ protected slots:
         insertSeparator( count());  //why is there no addSeparator?!
         addItem( "Manage Users", false );
 
-        onSessionChanged( qobject_cast<unicorn::Application*>(qApp)->currentSession());
+        onSessionChanged( qobject_cast<unicorn::Application*>(qApp)->currentSession() );
     }
 };
 

@@ -62,7 +62,8 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
                       m_wizardRunning( true ),
-                      m_icm( 0 )
+                      m_icm( 0 ),
+                      m_currentSession( 0 )
 {
 }
 
@@ -100,7 +101,7 @@ unicorn::Application::init()
 
     connect( &m_bus, SIGNAL( wizardRunningQuery( QString )), SLOT( onWizardRunningQuery( QString )));
     connect( &m_bus, SIGNAL( sessionQuery( QString )), SLOT( onBusSessionQuery( QString )));
-    connect( &m_bus, SIGNAL( sessionChanged( Session )), SLOT( onBusSessionChanged( Session )));
+    connect( &m_bus, SIGNAL( sessionChanged( Session* )), SLOT( onBusSessionChanged( Session* )));
     connect( &m_bus, SIGNAL( lovedStateChanged(bool)), SIGNAL( busLovedStateChanged(bool)));
 
     m_bus.board();
@@ -128,23 +129,27 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
     }
     else if( !forceLogout )
     {
-        Session busSession = m_bus.getSession();
+        Session* busSession = m_bus.getSession();
        
-        if( busSession.isValid() )
+        if( busSession->isValid() )
+        {
+            delete m_currentSession;
             m_currentSession = busSession;
+        }
     }
 
-    if( !forceLogout && m_currentSession.isValid() )
+    if( !forceLogout && m_currentSession->isValid() )
     {
         changeSession( m_currentSession );
     }
     else
     {
-        SignalBlocker( &m_bus, SIGNAL( sessionChanged( Session ) ), -1 ).start();
-        Session busSession = m_bus.getSession();
+        SignalBlocker( &m_bus, SIGNAL( sessionChanged( Session* ) ), -1 ).start();
+        Session* busSession = m_bus.getSession();
 
-        if( busSession.isValid() )
+        if( busSession->isValid() )
         {
+               delete m_currentSession;
                m_currentSession = busSession;
                changeSession( m_currentSession );
         }
@@ -155,6 +160,24 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
     }
 }
 
+
+Session*
+unicorn::Application::changeSession( QNetworkReply* reply )
+{
+    if ( m_currentSession )
+    {
+
+    }
+
+}
+
+Session*
+unicorn::Application::changeSession( const QString& username, const QString& sessionKey )
+{
+
+
+}
+
 void 
 unicorn::Application::manageUsers()
 {
@@ -162,7 +185,7 @@ unicorn::Application::manageUsers()
     connect( &um, SIGNAL( rosterUpdated()), SIGNAL( rosterUpdated()));
     
     if( um.exec())
-        changeSession( Session());
+        changeSession( new Session() );
 }
 
 
@@ -254,20 +277,22 @@ unicorn::Application::onBusSessionQuery( const QString& uuid )
 
 
 void 
-unicorn::Application::onBusSessionChanged( const Session& session )
+unicorn::Application::onBusSessionChanged( Session* session )
 {
     changeSession( session, false );
 }
 
 
 void 
-unicorn::Application::changeSession( const Session& newSession, bool announce )
+unicorn::Application::changeSession( Session* newSession, bool announce )
 {
-    if( !m_wizardRunning && newSession.username() != m_currentSession.username() &&
-        Settings().value( "changeSessionConfirmation", true ).toBool()) {
+    if( !m_wizardRunning && m_currentSession && newSession->userInfo().name() != m_currentSession->userInfo().name() &&
+        Settings().value( "changeSessionConfirmation", true ).toBool() ) {
         bool dontAskAgain = false;
         int result = QMessageBoxBuilder( findMainWindow() ).setTitle( tr( "Changing User" ) )
-           .setText( tr( "%1 will be logged into the Scrobbler and Last.fm Radio. All music will now be scrobbled to this account. Do you want to continue?" ).arg( newSession.username() ))
+           .setText( tr( "%1 will be logged into the Scrobbler and Last.fm Radio. "
+                         "All music will now be scrobbled to this account. Do you want to continue?" )
+                         .arg( newSession->userInfo().name() ))
            .setIcon( QMessageBox::Information )
            .setButtons( QMessageBox::Yes | QMessageBox::Cancel )
            .dontAskAgain()
@@ -277,14 +302,17 @@ unicorn::Application::changeSession( const Session& newSession, bool announce )
         if( result != QMessageBox::Yes )
             return;
     }
-    Session oldSession = currentSession();
-    m_currentSession = newSession;
-    lastfm::ws::Username = m_currentSession.username();
-    lastfm::ws::SessionKey = m_currentSession.sessionKey();
+    Session* oldSession = currentSession();
+    delete m_currentSession;
+    m_currentSession = 0;
+    m_currentSession = new Session( newSession->userInfo().name(), newSession->sessionKey() );
+
+    lastfm::ws::Username = m_currentSession->userInfo().name();
+    lastfm::ws::SessionKey = m_currentSession->sessionKey();
     connect( lastfm::UserDetails::getInfo(), SIGNAL(finished()), this, SLOT(onUserGotInfo()) );
     
     if( announce )
-        m_bus.changeSession( currentSession());
+        m_bus.announceSessionChange( currentSession() );
 
     emit sessionChanged( currentSession(), oldSession );
 }

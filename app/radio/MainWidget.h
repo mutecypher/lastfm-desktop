@@ -186,16 +186,16 @@ public:
     }
 
 public slots:
-    void onSessionChanged( const unicorn::Session &newSession, const unicorn::Session &oldSession )
+    void onSessionChanged( unicorn::Session *newSession, unicorn::Session* oldSession )
     {
         QString lblText( m_mainLabel->text() );
-        if( lblText.startsWith( newSession.username() ) )
+        if( lblText.startsWith( newSession->userInfo().name() ) )
         {
-            lblText.replace( QString( newSession.username() + "'s" ), QString( "Your" ) );
+            lblText.replace( QString( newSession->userInfo().name() + "'s" ), QString( "Your" ) );
         }
         else
         {
-            lblText.replace( QString( "Your" ), QString( oldSession.username() + "'s" ) );
+            lblText.replace( QString( "Your" ), QString( oldSession->userInfo().name() + "'s" ) );
         }
         m_mainLabel->setText( lblText );
     }

@@ -315,7 +315,7 @@ IpodDeviceLinux::deviceName() const
 QString
 IpodDeviceLinux::tableName() const
 {
-    return unicorn::Session().username() + "_" + m_deviceId;
+    return unicorn::Session().userInfo().name() + "_" + m_deviceId;
 }
 
 bool

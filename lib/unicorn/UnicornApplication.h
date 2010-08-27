@@ -53,26 +53,26 @@ namespace unicorn
             };
 
             bool isWizardRunning(){ return sendQuery( "WIZARDRUNNING" ) == "TRUE"; }
-            Session getSession()
+
+            QDataStream getSessionData()
             {
-                Session s;
                 QByteArray ba = sendQuery( "SESSION" ); 
                 if( ba.length() > 0 )
                 {
                     QDataStream ds( ba );
-                    ds >> s;
+                    return ds;
                 }
-                return s;
+                return QDataStream();
             }
 
-            void changeSession( const Session& s )
+            void announceSessionChange( Session* s )
             {
                 qDebug() << "Session change, let's spread the message through the bus!";
                 QByteArray ba; 
                 QDataStream ds( &ba, QIODevice::WriteOnly | QIODevice::Truncate );
 
                 ds << QString( "SESSIONCHANGED" );
-                ds << s;
+                ds << ( *s );
                                 
                 sendMessage( ba );
             }
@@ -90,8 +90,8 @@ namespace unicorn
                 if( stringMessage == "SESSIONCHANGED" )
                 {
                     qDebug() << "and it's a session change alert";
-                    Session newSession;
-                    ds >> newSession;
+                    Session* newSession = new Session();
+                    ds >> ( *newSession );
                     emit sessionChanged( newSession );
                 }
                 else if( message.startsWith( "LOVED=" ))
@@ -112,7 +112,7 @@ namespace unicorn
         signals:
             void wizardRunningQuery( const QString& uuid );
             void sessionQuery( const QString& uuid );
-            void sessionChanged( const Session );
+            void sessionChanged( Session* );
             void rosterUpdated();
             void lovedStateChanged(bool loved);
     };
@@ -149,7 +149,7 @@ namespace unicorn
             return m_styleSheet;
         }
 
-        Session currentSession() { return m_currentSession; }
+        Session* currentSession() { return m_currentSession; }
 
         static unicorn::Application* instance(){ return (unicorn::Application*)qApp; }
         void installHotKey( Qt::KeyboardModifiers, quint32, QObject* receiver, const char* slot );
@@ -166,7 +166,7 @@ namespace unicorn
         }
 
         void manageUsers();
-        void changeSession( const unicorn::Session& newSession, bool announce = true );
+        void changeSession( unicorn::Session* newSession, bool announce = true );
         void sendBusLovedStateChanged(bool loved);
         void refreshStyleSheet();
         void restart();
@@ -179,7 +179,7 @@ namespace unicorn
         QMainWindow* findMainWindow();
 
         QString m_styleSheet;
-        Session m_currentSession;
+        Session* m_currentSession;
         bool m_wizardRunning;
         QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
         QString m_cssDir;
@@ -208,11 +208,11 @@ namespace unicorn
         void onUserGotInfo();
         void onWizardRunningQuery( const QString& );
         void onBusSessionQuery( const QString& );
-        void onBusSessionChanged( const Session& );
+        void onBusSessionChanged( Session* );
 
     signals:
         void gotUserInfo( const lastfm::UserDetails& );
-        void sessionChanged( const unicorn::Session& newSession, const unicorn::Session& oldSession );
+        void sessionChanged( unicorn::Session* newSession, unicorn::Session* oldSession );
         void rosterUpdated();
         void busLovedStateChanged(bool loved);
         void internetConnectionUp();

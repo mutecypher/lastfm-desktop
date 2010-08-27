@@ -98,7 +98,7 @@ private slots:
         if ( unicorn::Session().isValid() )
         {
             unicorn::Settings us;
-            us.remove( unicorn::Session().username() );
+            us.remove( unicorn::Session().userInfo().name() );
         }
     }
 

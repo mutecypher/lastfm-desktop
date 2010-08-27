@@ -71,20 +71,21 @@ ProfileWidget::ProfileWidget( QWidget* p )
     l->addWidget( scrobbleDetails );
     l->addWidget( recentTrackBox );
     
-    connect( qApp, SIGNAL(sessionChanged(unicorn::Session, unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));
+    connect( qApp, SIGNAL( sessionChanged( unicorn::Session*, unicorn::Session* ) ),
+             SLOT( onSessionChanged( unicorn::Session* ) ) );
     connect( qApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
     connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 }
 
 void 
-ProfileWidget::onSessionChanged( const Session& session )
+ProfileWidget::onSessionChanged( Session* session )
 {
-    ui.welcomeLabel->setText( tr("%1's Profile" ).arg( session.username() ));
+    ui.welcomeLabel->setText( tr( "%1's Profile" ).arg( session->userInfo().name() ) );
     ui.since->clear(); 
     ui.scrobbleMeter->clear();
     ui.avatar->clear();
 
-    ui.recentTracks->setUsername( session.username() );
+    ui.recentTracks->setUsername( session->userInfo().name() );
 }
 
 void 

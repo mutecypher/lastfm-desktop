@@ -2,7 +2,10 @@
 #define UNICORN_SESSION_H_
 #include <lastfm/XmlQuery>
 #include <lastfm/misc.h>
+#include <lastfm/User>
 #include <lastfm/ws.h>
+
+#include <QObject>
 #include <QSharedData>
 
 #include "lib/DllExportMacro.h"
@@ -12,33 +15,31 @@ namespace unicorn {
 class UNICORN_DLLEXPORT SessionData : public QSharedData
 {
 public:
-    SessionData(): isSubscriber( false ){}
+    SessionData(){};
 
-    QString username;
     QString sessionKey;
-    bool isSubscriber;
-    bool remember;
+    QString username;
 };
 
-class UNICORN_DLLEXPORT Session
+class UNICORN_DLLEXPORT Session: public QObject
 {
+    Q_OBJECT
 public:
+    /** Return session object from stored session */
     Session();
-    Session( const Session& other );
+    Session( const QString& username, QString sessionKey = "" );
     Session( QNetworkReply* reply ) throw( lastfm::ws::ParseError );
 
-    /** Return session object from stored session */
-    Session( const QString& username );
 
     bool isValid() const
     {
         return d;
     }
 
-    QString username() const;
     QString sessionKey() const;
+    QString username() const{ return m_userInfo.name(); }
 
-    bool isSubscriber() const;
+    lastfm::UserDetails userInfo() const;
 
     static QNetworkReply* 
     getToken()
@@ -64,8 +65,6 @@ public:
         QMap<QString, QString> data;
         data[ "username" ] = d->username;
         data[ "sessionkey" ] = d->sessionKey;
-        data[ "subscriber" ] = d->isSubscriber ? "1" : "0";
-        data[ "remember" ] = d->remember ? "1" : "0";
         out << data;
         return out;
     }
@@ -77,18 +76,21 @@ public:
         if( !d ) 
             d = new SessionData();
 
-        init( data[ "username" ], data[ "sessionkey" ], data[ "subscriber" ] == "1");
-        d->remember = data[ "remember" ] == "1";
+        init( data[ "username" ], data[ "sessionkey" ] );
         
         return in;
     }
 
 protected:
-    void init( const QString& username, const QString& sessionKey, const bool isSubscriber );
+    void init( const QString& username, const QString& sessionKey );
+
+private:
+    void cacheUserInfo( const lastfm::UserDetails& userInfo );
 
 private:
     QExplicitlySharedDataPointer<SessionData> d;
     QString m_prevUsername;
+    lastfm::UserDetails m_userInfo;
 };
 
 }

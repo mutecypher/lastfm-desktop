@@ -295,12 +295,12 @@ Application::init()
     connect( m_show_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
 
     connect( this, SIGNAL(messageReceived(QString)), SLOT(onMessageReceived(QString)) );
-    connect( this, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session) ), 
-                   SLOT(onSessionChanged( unicorn::Session, unicorn::Session )));
+    connect( this, SIGNAL( sessionChanged( unicorn::Session*, unicorn::Session* ) ),
+                   SLOT( onSessionChanged( unicorn::Session*, unicorn::Session* ) ) );
 
     //We're not going to catch the first session change as it happened in the unicorn application before
     //we could connect to the signal!
-    changeSession( unicorn::Session());
+    changeSession( new unicorn::Session() );
 
     // clicking on a system tray message should show the scrobbler
     connect( tray, SIGNAL(messageClicked()), m_show_window_action, SLOT(trigger()));
@@ -310,7 +310,7 @@ Application::init()
 
 
 void
-Application::onSessionChanged( unicorn::Session newSession, unicorn::Session oldSession )
+Application::onSessionChanged( unicorn::Session* newSession, unicorn::Session* oldSession )
 {
     Audioscrobbler* oldAs = as;
     as = new Audioscrobbler("ass");
@@ -318,7 +318,7 @@ Application::onSessionChanged( unicorn::Session newSession, unicorn::Session old
     delete oldAs;
 
     // Check if there are any iPod scrobbles
-    unicorn::UserSettings us( newSession.username() );
+    unicorn::UserSettings us( newSession->userInfo().name() );
     int count = us.beginReadArray( "associatedDevices" );
 
     for ( int i = 0; i < count; i++ )
@@ -618,7 +618,7 @@ Application::scrobbleIpodTracks( int trackCount )
         }
         else
         {
-            IpodDeviceLinux::deleteDeviceHistory( unicorn::Session().username(), iPod->deviceId() );
+            IpodDeviceLinux::deleteDeviceHistory( unicorn::Session().userInfo().name(), iPod->deviceId() );
         }
     }
 
