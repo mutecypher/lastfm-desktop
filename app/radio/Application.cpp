@@ -128,11 +128,10 @@ Application::onWsError( lastfm::ws::Error e )
     switch (e)
     {
         case lastfm::ws::InvalidSessionKey:
-            if(!logout())
-                quit();
+            quit();
             break;
-		default:
-			break;
+        default:
+            break;
     }
 }
 

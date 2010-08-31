@@ -62,7 +62,7 @@ SessionData::onUserGotInfo()
 
 }*/
 
-Session::Session()
+/*Session::Session()
         : d( 0 )
 {
     Settings s;
@@ -86,10 +86,39 @@ Session::Session()
 
     s.beginGroup( username );
     init( username, s.value( "SessionKey", "" ).toString() );
+}*/
+
+
+QMap<QString, QString>
+Session::lastSessionData()
+{
+    Settings s;
+    QMap<QString, QString> sessionData;
+    //use the Username setting or the first username if there have been any logged in previously
+    QString username = s.value( "Username", QString()).toString();
+
+    QStringList groups = s.childGroups();
+    if( (username.isEmpty()||!groups.contains(username, Qt::CaseInsensitive ))
+        && !groups.isEmpty()) {
+        foreach( QString child, s.childGroups()) {
+            if( child == "com" || !s.contains( child + "/SessionKey") ) continue;
+            username = child;
+            break;
+        }
+    }
+
+    if( !username.isEmpty() )
+    {
+        s.beginGroup( username );
+        sessionData[ "username" ] = username;
+        sessionData[ "sessionKey" ] = s.value( "SessionKey", "" ).toString();
+        s.endGroup();
+    }
+
+    return sessionData;
 }
 
 Session::Session( QNetworkReply* reply ) throw( lastfm::ws::ParseError )
-        : d( 0 )
 {
     lastfm::XmlQuery lfm = lastfm::ws::parse( reply );
     lastfm::XmlQuery session = lfm["session"];
@@ -104,7 +133,6 @@ Session::Session( QNetworkReply* reply ) throw( lastfm::ws::ParseError )
 }
 
 Session::Session( const QString& username, QString sessionKey )
-        : d( 0 )
 {
     Settings s;
     s.setValue( "Username", username );
@@ -122,10 +150,7 @@ Session::Session( const QString& username, QString sessionKey )
 QString 
 Session::sessionKey() const
 {
-    if( isValid() )
-        return d->sessionKey;
-    
-    return QString();
+    return m_sessionKey;
 }
 
 lastfm::UserDetails
@@ -137,25 +162,23 @@ Session::userInfo() const
 void 
 Session::init( const QString& username, const QString& sessionKey )
 {
-    d = new SessionData;
 
-    d->sessionKey = sessionKey;
-
+    m_sessionKey = sessionKey;
     Settings s;
     s.beginGroup( username );
     m_userInfo.setName( username );
-    m_userInfo.setScrobbleCount( s.value( "scrobbleCount", 0 ).toInt() );
-    m_userInfo.setDateRegistered( s.value( "dateRegistered", QDateTime() ).toDateTime() );
+    m_userInfo.setScrobbleCount( s.value( "ScrobbleCount", 0 ).toInt() );
+    m_userInfo.setDateRegistered( s.value( "DateRegistered", QDateTime() ).toDateTime() );
 
-    m_userInfo.setRealName( Settings().value( "realName", "" ).toString() );
+    m_userInfo.setRealName( Settings().value( "RealName", "" ).toString() );
 
     QList<QUrl> imageUrls;
-    int imageCount = s.beginReadArray( "imageUrls" );
+    int imageCount = s.beginReadArray( "ImageUrls" );
 
     for ( int i = 0; i < imageCount; i++ )
     {
         s.setArrayIndex( i );
-        imageUrls.append( s.value( "url", QUrl() ).toUrl() );
+        imageUrls.append( s.value( "Url", QUrl() ).toUrl() );
     }
     s.endArray();
 
@@ -171,20 +194,22 @@ Session::cacheUserInfo( const lastfm::UserDetails& userInfo )
 {
     const char* key = UserSettings::subscriptionKey();
     Settings s;
-    s.setValue( key, userInfo.isSubscriber() );
-    s.setValue( "scrobbleCount", userInfo.scrobbleCount() );
-    s.setValue( "dateRegistered", userInfo.dateRegistered() );
-    s.setValue( "realName", userInfo.realName() );
+    s.beginGroup( userInfo.name() );
+    s.setValue( "Subscriber", userInfo.isSubscriber() );
+    s.setValue( "ScrobbleCount", userInfo.scrobbleCount() );
+    s.setValue( "DateRegistered", userInfo.dateRegistered() );
+    s.setValue( "RealName", userInfo.realName() );
 
     QList<lastfm::ImageSize> size;
     size << lastfm::Small << lastfm::Medium << lastfm::Large;
 
-    s.beginWriteArray( "imageUrls", 3 );
+    s.beginWriteArray( "ImageUrls", 3 );
     for ( int i = 0; i < 3; i++ )
     {
-        s.setValue( "url", userInfo.imageUrl( size[ i ] ) );
+        s.setValue( "Url", userInfo.imageUrl( size[ i ] ) );
     }
     s.endArray();
+    s.endGroup();
 
 }
 

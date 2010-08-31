@@ -27,7 +27,6 @@
 #include <windows.h>
 #endif // WIN32
 
-#include <QApplication>
 #include <QDebug>
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -116,8 +115,8 @@ LoginPage::authenticate()
         delete m_loginProcess;
     }
     m_loginProcess = new unicorn::LoginProcess( this );
-    connect( m_loginProcess, SIGNAL( gotSession( unicorn::Session& ) ),
-             this, SLOT( onAuthenticated( unicorn::Session& ) ) );
+    connect( m_loginProcess, SIGNAL( gotSession( unicorn::Session* ) ),
+             this, SLOT( onAuthenticated( unicorn::Session* ) ) );
 
     m_loginProcess->authenticate();
 
@@ -135,25 +134,19 @@ LoginPage::isComplete() const
 }
 
 void 
-LoginPage::onAuthenticated( unicorn::Session& session )
+LoginPage::onAuthenticated( unicorn::Session* session )
 {
     qDebug() << "\\o/";
 
-    if ( session.isValid() )
+    if ( session )
     {
-        audioscrobbler::Application* app = qobject_cast<audioscrobbler::Application*>( qApp );
-        if ( app )
-        {
-            app->changeSession( m_loginProcess->session() );
+        m_isComplete = true;
+        emit completeChanged();
 
-            m_isComplete = true;
-            emit completeChanged();
-
-            wizard()->showNormal();
-            wizard()->setFocus();
-            wizard()->raise();
-            wizard()->activateWindow();
-        }
+        wizard()->showNormal();
+        wizard()->setFocus();
+        wizard()->raise();
+        wizard()->activateWindow();
     }
     else
     {

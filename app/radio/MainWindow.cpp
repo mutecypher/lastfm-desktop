@@ -71,7 +71,7 @@ MainWindow::MainWindow()
              m_mainWidget, SIGNAL( sessionChanged( unicorn::Session*&, unicorn::Session*& ) ) );
     //if we've got this far we must already have a session so use
     //the current session to start things rolling.
-    onSessionChanged( qobject_cast<unicorn::Application*>(qApp)->currentSession(), new Session() );
+    onSessionChanged( qobject_cast<unicorn::Application*>(qApp)->currentSession() );
 
 
     finishUi();
@@ -88,7 +88,7 @@ MainWindow::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
 }
 
 void 
-MainWindow::onSessionChanged( unicorn::Session* s, unicorn::Session* )
+MainWindow::onSessionChanged( unicorn::Session* s )
 {
     qDebug() << "session changed and the app noticed it!";
     User user;

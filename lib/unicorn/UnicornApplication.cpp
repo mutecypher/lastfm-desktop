@@ -101,7 +101,7 @@ unicorn::Application::init()
 
     connect( &m_bus, SIGNAL( wizardRunningQuery( QString )), SLOT( onWizardRunningQuery( QString )));
     connect( &m_bus, SIGNAL( sessionQuery( QString )), SLOT( onBusSessionQuery( QString )));
-    connect( &m_bus, SIGNAL( sessionChanged( Session* )), SLOT( onBusSessionChanged( Session* )));
+    connect( &m_bus, SIGNAL( sessionChanged( const QMap<QString, QString>& )), SLOT( onBusSessionChanged( const QMap<QString, QString>& )));
     connect( &m_bus, SIGNAL( lovedStateChanged(bool)), SIGNAL( busLovedStateChanged(bool)));
 
     m_bus.board();
@@ -121,37 +121,37 @@ unicorn::Application::loadStyleSheet( QFile& file )
 }
 
 void
-unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserException )
+unicorn::Application::initiateLogin() throw( StubbornUserException )
 {
+    Session* newSession = 0;
     if( m_bus.isWizardRunning() )
     {
-        SignalBlocker( &m_bus, SIGNAL( sessionChanged(Session)), -1 ).start();
-    }
-    else if( !forceLogout )
-    {
-        Session* busSession = m_bus.getSession();
-       
-        if( busSession->isValid() )
-        {
-            delete m_currentSession;
-            m_currentSession = busSession;
-        }
-    }
-
-    if( !forceLogout && m_currentSession->isValid() )
-    {
-        changeSession( m_currentSession );
+        SignalBlocker( &m_bus, SIGNAL( sessionChanged( const QMap<QString, QString>& ) ), -1 ).start();
     }
     else
     {
-        SignalBlocker( &m_bus, SIGNAL( sessionChanged( Session* ) ), -1 ).start();
-        Session* busSession = m_bus.getSession();
-
-        if( busSession->isValid() )
+        QMap<QString, QString> sessionData = m_bus.getSessionData();
+       
+        if ( sessionData.contains( "sessionKey" ) && sessionData.contains( "username" ) )
         {
-               delete m_currentSession;
-               m_currentSession = busSession;
-               changeSession( m_currentSession );
+            newSession = new Session( sessionData[ "username" ], sessionData[ "sessionKey" ] );
+        }
+    }
+
+    if ( newSession )
+    {
+        changeSession( newSession );
+    }
+    else
+    {
+        SignalBlocker( &m_bus, SIGNAL( sessionChanged( const QMap<QString, QString>& ) ), -1 ).start();
+
+        QMap<QString, QString> sessionData = m_bus.getSessionData();
+
+        if ( sessionData.contains( "sessionKey" ) && sessionData.contains( "username" ) )
+        {
+            newSession = new Session( sessionData[ "username" ], sessionData[ "sessionKey" ] );
+            changeSession( newSession );
         }
         else
         {
@@ -161,22 +161,7 @@ unicorn::Application::initiateLogin( bool forceLogout ) throw( StubbornUserExcep
 }
 
 
-Session*
-unicorn::Application::changeSession( QNetworkReply* reply )
-{
-    if ( m_currentSession )
-    {
 
-    }
-
-}
-
-Session*
-unicorn::Application::changeSession( const QString& username, const QString& sessionKey )
-{
-
-
-}
 
 void 
 unicorn::Application::manageUsers()
@@ -184,8 +169,14 @@ unicorn::Application::manageUsers()
     UserManagerDialog um;
     connect( &um, SIGNAL( rosterUpdated()), SIGNAL( rosterUpdated()));
     
-    if( um.exec())
-        changeSession( new Session() );
+    if( um.exec() )
+    {
+        QMap<QString, QString> lastSession = Session::lastSessionData();
+        if ( lastSession.contains( "username" ) && lastSession.contains( "sessionKey" ) )
+        {
+            changeSession( lastSession[ "username" ], lastSession[ "sessionKey" ] );
+        }
+    }
 }
 
 
@@ -271,19 +262,33 @@ unicorn::Application::onBusSessionQuery( const QString& uuid )
 {
     QByteArray ba;
     QDataStream s( &ba, QIODevice::WriteOnly );
-    s << currentSession();
+    QMap<QString, QString> sessionData;
+    sessionData[ "username" ] = currentSession()->userInfo().name();
+    sessionData[ "sessionKey" ] = currentSession()->sessionKey();
+    s << sessionData;
     m_bus.sendQueryResponse( uuid, ba );
 }
 
 
 void 
-unicorn::Application::onBusSessionChanged( Session* session )
+unicorn::Application::onBusSessionChanged( const QMap<QString, QString>& sessionData )
 {
-    changeSession( session, false );
+    changeSession( new Session( sessionData[ "username" ], sessionData[ "sessionKey" ] ), false );
 }
 
+unicorn::Session*
+unicorn::Application::changeSession( QNetworkReply* reply, bool announce )
+{
+    return changeSession( new Session( reply ), announce );
+}
 
-void 
+unicorn::Session*
+unicorn::Application::changeSession( const QString& username, const QString& sessionKey, bool announce )
+{
+    return changeSession( new Session( username, sessionKey ), announce );
+}
+
+unicorn::Session*
 unicorn::Application::changeSession( Session* newSession, bool announce )
 {
     if( !m_wizardRunning && m_currentSession && newSession->userInfo().name() != m_currentSession->userInfo().name() &&
@@ -300,21 +305,27 @@ unicorn::Application::changeSession( Session* newSession, bool announce )
 
         Settings().setValue( "changeSessionConfirmation", !dontAskAgain );
         if( result != QMessageBox::Yes )
-            return;
+            return 0;
     }
-    Session* oldSession = currentSession();
-    delete m_currentSession;
-    m_currentSession = 0;
-    m_currentSession = new Session( newSession->userInfo().name(), newSession->sessionKey() );
+
+    if ( m_currentSession )
+    {
+        delete m_currentSession;
+        m_currentSession = 0;
+    }
+
+    m_currentSession = newSession;
 
     lastfm::ws::Username = m_currentSession->userInfo().name();
     lastfm::ws::SessionKey = m_currentSession->sessionKey();
-    connect( lastfm::UserDetails::getInfo(), SIGNAL(finished()), this, SLOT(onUserGotInfo()) );
+
+    connect( lastfm::UserDetails::getInfo(), SIGNAL( finished() ), this, SLOT( onUserGotInfo() ) );
     
     if( announce )
         m_bus.announceSessionChange( currentSession() );
 
-    emit sessionChanged( currentSession(), oldSession );
+    emit sessionChanged( currentSession() );
+    return currentSession();
 }
 
 void

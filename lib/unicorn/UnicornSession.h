@@ -12,15 +12,6 @@
 
 namespace unicorn {
 
-class UNICORN_DLLEXPORT SessionData : public QSharedData
-{
-public:
-    SessionData(){};
-
-    QString sessionKey;
-    QString username;
-};
-
 class UNICORN_DLLEXPORT Session: public QObject
 {
     Q_OBJECT
@@ -31,13 +22,7 @@ public:
     Session( QNetworkReply* reply ) throw( lastfm::ws::ParseError );
 
 
-    bool isValid() const
-    {
-        return d;
-    }
-
     QString sessionKey() const;
-    QString username() const{ return m_userInfo.name(); }
 
     lastfm::UserDetails userInfo() const;
 
@@ -58,13 +43,14 @@ public:
         return lastfm::ws::post( params, false );
     }
 
+    static QMap<QString, QString>
+    lastSessionData();
+
     QDataStream& write( QDataStream& out ) const
     {
-        if( !d ) return out;
-
         QMap<QString, QString> data;
-        data[ "username" ] = d->username;
-        data[ "sessionkey" ] = d->sessionKey;
+        data[ "username" ] = userInfo().name();
+        data[ "sessionkey" ] = m_sessionKey;
         out << data;
         return out;
     }
@@ -73,8 +59,6 @@ public:
     {
         QMap<QString, QString> data;
         in >> data;
-        if( !d ) 
-            d = new SessionData();
 
         init( data[ "username" ], data[ "sessionkey" ] );
         
@@ -88,8 +72,8 @@ private:
     void cacheUserInfo( const lastfm::UserDetails& userInfo );
 
 private:
-    QExplicitlySharedDataPointer<SessionData> d;
     QString m_prevUsername;
+    QString m_sessionKey;
     lastfm::UserDetails m_userInfo;
 };
 

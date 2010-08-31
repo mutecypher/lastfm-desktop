@@ -41,7 +41,7 @@ public slots:
     void onRadioError(int code, const QVariant& data);
 
 protected slots:
-    void onSessionChanged( unicorn::Session* s, unicorn::Session* );
+    void onSessionChanged( unicorn::Session* s );
 
 private:
     void addWinThumbBarButtons( QList<QAction*>& );

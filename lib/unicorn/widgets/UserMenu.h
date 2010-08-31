@@ -30,21 +30,21 @@ protected slots:
             return;
 
         foreach( QAction* a, actions() ) {
-            if( a->text() == s->username())
+            if( a->text() == s->userInfo().name() )
                 return a->setChecked( true );
         }
     }
 
     void onTriggered( QAction* a )
     {
-        unicorn::Session* s = new unicorn::Session( a->text() );
-        if( !s->isValid()) {
-            //TODO Error handling
-            return;
-        }
-        
+        unicorn::Settings s;
+
+        s.beginGroup( a->text() );
+        QString username = s.value( "username", "" ).toString();
+        QString sessionKey = s.value( "sessionKey", "" ).toString();
         QMetaObject::invokeMethod( qApp, "changeSession", 
-                                         Q_ARG( unicorn::Session*, s));
+                                         Q_ARG( const QString&, username ),
+                                         Q_ARG( const QString&, sessionKey ) );
 
         //Refresh the user list to be certain that 
         //the correct current user is checked.

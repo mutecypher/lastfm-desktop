@@ -1,5 +1,6 @@
 #include "LoginProcess.h"
 #include "QMessageBoxBuilder.h"
+#include "UnicornApplication.h"
 
 #include <lastfm/ws.h>
 #include <lastfm/misc.h>
@@ -92,7 +93,6 @@ TinyWebServer::sendRedirect()
 LoginProcess::LoginProcess( QObject* parent )
     : QObject( parent )
     , m_webServer( 0 )
-    , m_session( 0 )
     , m_lastError( lastfm::ws::NoError )
     , m_lastNetworkError( QNetworkReply::NoError )
 {
@@ -102,8 +102,6 @@ LoginProcess::~LoginProcess()
 {
     if ( m_webServer )
         delete m_webServer;
-    if ( m_session )
-        delete m_session;
 }
 
 void
@@ -136,12 +134,6 @@ LoginProcess::token() const
     return m_token;
 }
 
-Session*
-LoginProcess::session() const
-{
-    return m_session;
-}
-
 QUrl
 LoginProcess::authUrl() const
 {
@@ -162,13 +154,8 @@ LoginProcess::onGotSession()
 {
     try
     {
-        if ( m_session )
-        {
-            delete m_session;
-        }
-
-        m_session = new unicorn::Session( static_cast<QNetworkReply*>( sender() ) );
-        emit gotSession( m_session );
+        Session* session = qobject_cast<unicorn::Application* >( qApp )->changeSession( static_cast<QNetworkReply*>( sender() ) );
+        emit gotSession( session );
         delete m_webServer;
         m_webServer = 0;
     }

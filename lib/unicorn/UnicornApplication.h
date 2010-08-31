@@ -54,15 +54,16 @@ namespace unicorn
 
             bool isWizardRunning(){ return sendQuery( "WIZARDRUNNING" ) == "TRUE"; }
 
-            QDataStream getSessionData()
+            QMap<QString, QString> getSessionData()
             {
                 QByteArray ba = sendQuery( "SESSION" ); 
+                QMap<QString, QString> sessionData;
                 if( ba.length() > 0 )
                 {
                     QDataStream ds( ba );
-                    return ds;
+                    ds >> sessionData;
                 }
-                return QDataStream();
+                return sessionData;
             }
 
             void announceSessionChange( Session* s )
@@ -89,10 +90,9 @@ namespace unicorn
         
                 if( stringMessage == "SESSIONCHANGED" )
                 {
+                    QMap<QString, QString> sessionData;
                     qDebug() << "and it's a session change alert";
-                    Session* newSession = new Session();
-                    ds >> ( *newSession );
-                    emit sessionChanged( newSession );
+                    emit sessionChanged( sessionData );
                 }
                 else if( message.startsWith( "LOVED=" ))
                 {
@@ -103,6 +103,7 @@ namespace unicorn
 
             void onQuery( const QString& uuid, const QByteArray& message )
             {
+                qDebug() << "query received" << message;
                 if( message == "WIZARDRUNNING" )
                     emit wizardRunningQuery( uuid );
                 else if( message == "SESSION" )
@@ -112,7 +113,7 @@ namespace unicorn
         signals:
             void wizardRunningQuery( const QString& uuid );
             void sessionQuery( const QString& uuid );
-            void sessionChanged( Session* );
+            void sessionChanged( const QMap<QString, QString>& sessionData );
             void rosterUpdated();
             void lovedStateChanged(bool loved);
     };
@@ -155,23 +156,15 @@ namespace unicorn
         void installHotKey( Qt::KeyboardModifiers, quint32, QObject* receiver, const char* slot );
 
     public slots:
-        bool logout()
-        {
-            try {
-                initiateLogin( true );
-            } catch( const StubbornUserException& ) { 
-                return false; 
-            }
-            return true;
-        }
-
         void manageUsers();
-        void changeSession( unicorn::Session* newSession, bool announce = true );
+        unicorn::Session* changeSession( const QString& username, const QString& sessionKey, bool announce = true );
+        unicorn::Session* changeSession( QNetworkReply* reply, bool announce = true );
         void sendBusLovedStateChanged(bool loved);
         void refreshStyleSheet();
         void restart();
 
     private:
+        unicorn::Session* changeSession( unicorn::Session* newSession, bool announce = true );
         void translate();
         void setupHotKeys();
         void onHotKeyEvent(quint32 id);
@@ -196,7 +189,7 @@ namespace unicorn
         /**
          * Reimplement this function if you want to control the initial login process.
          */
-        virtual void initiateLogin( bool forceLogout = false ) throw( StubbornUserException );
+        virtual void initiateLogin() throw( StubbornUserException );
 
         void setWizardRunning( bool running );
 
@@ -208,11 +201,11 @@ namespace unicorn
         void onUserGotInfo();
         void onWizardRunningQuery( const QString& );
         void onBusSessionQuery( const QString& );
-        void onBusSessionChanged( Session* );
+        void onBusSessionChanged( const QMap<QString, QString>& sessionData );
 
     signals:
         void gotUserInfo( const lastfm::UserDetails& );
-        void sessionChanged( unicorn::Session* newSession, unicorn::Session* oldSession );
+        void sessionChanged( unicorn::Session* newSession );
         void rosterUpdated();
         void busLovedStateChanged(bool loved);
         void internetConnectionUp();

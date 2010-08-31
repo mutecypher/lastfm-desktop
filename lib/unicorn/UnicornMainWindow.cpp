@@ -63,7 +63,6 @@ unicorn::MainWindow::finishUi()
     ui.account = menuBar()->addMenu( User().name() );
     ui.profile = ui.account->addAction( tr("Visit &Profile"), this, SLOT(visitProfile()) );
     ui.account->addSeparator();
-    ui.account->addAction( tr("Log &Out"), qApp, SLOT(logout()) );
     QAction* quit = ui.account->addAction( tr("&Quit"), qApp, SLOT(quit()) );
     quit->setMenuRole( QAction::QuitRole );
 #ifdef Q_OS_WIN

@@ -71,7 +71,7 @@ ProfileWidget::ProfileWidget( QWidget* p )
     l->addWidget( scrobbleDetails );
     l->addWidget( recentTrackBox );
     
-    connect( qApp, SIGNAL( sessionChanged( unicorn::Session*, unicorn::Session* ) ),
+    connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ),
              SLOT( onSessionChanged( unicorn::Session* ) ) );
     connect( qApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
     connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));

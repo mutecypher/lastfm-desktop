@@ -30,14 +30,13 @@ public:
 protected:
     void changeUser( const QString& username )
     {
-        unicorn::Session s( username );
-        if( !s.isValid()) {
-            //TODO Error handling
-            return;
-        }
-        
-        QMetaObject::invokeMethod( qApp, "changeSession", 
-                                         Q_ARG( unicorn::Session, s));
+        unicorn::Settings s;
+
+        s.beginGroup( username );
+        QString sessionKey = s.value( "sessionKey", "" ).toString();
+        QMetaObject::invokeMethod( qApp, "changeSession",
+                                         Q_ARG( const QString&, username ),
+                                         Q_ARG( const QString&, sessionKey ) );
 
     }
 
