@@ -131,11 +131,15 @@ unicorn::Application::initiateLogin() throw( StubbornUserException )
     else
     {
         QMap<QString, QString> sessionData = m_bus.getSessionData();
-       
-        if ( sessionData.contains( "sessionKey" ) && sessionData.contains( "username" ) )
+
+        //If the bus returns an empty session data, try to get the session from the last user logged in
+        if ( ! ( sessionData.contains( "sessionKey" ) || sessionData.contains( "username" ) ) )
         {
-            newSession = new Session( sessionData[ "username" ], sessionData[ "sessionKey" ] );
+            sessionData = Session::lastSessionData();
         }
+
+        if ( sessionData.contains( "sessionKey" ) && sessionData.contains( "username" ) )
+            newSession = new Session( sessionData[ "username" ], sessionData[ "sessionKey" ] );
     }
 
     if ( newSession )
