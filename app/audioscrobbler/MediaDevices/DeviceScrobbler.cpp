@@ -1,6 +1,6 @@
 #include "DeviceScrobbler.h"
 
-#include "Dialogs/ScrobbleConfirmationDialog.h"
+#include "../Dialogs/ScrobbleConfirmationDialog.h"
 
 DeviceScrobbler::DeviceScrobbler() { }
 
