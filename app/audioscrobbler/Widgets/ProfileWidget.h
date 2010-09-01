@@ -35,7 +35,7 @@ public:
 
 protected slots:
     void onSessionChanged( unicorn::Session* );
-    void onGotUserInfo( const lastfm::UserDetails& );
+    void updateUserInfo( const lastfm::UserDetails& );
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
     void onScrobbleStatusChanged();
 

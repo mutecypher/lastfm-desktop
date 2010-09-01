@@ -65,11 +65,18 @@ public:
         return in;
     }
 
+signals:
+    void userInfoUpdated( const lastfm::UserDetails& userInfo );
+
 protected:
     void init( const QString& username, const QString& sessionKey );
 
 private:
     void cacheUserInfo( const lastfm::UserDetails& userInfo );
+
+private slots:
+    void fetchUserInfo();
+    void onUserGotInfo();
 
 private:
     QString m_prevUsername;

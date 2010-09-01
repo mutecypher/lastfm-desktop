@@ -18,8 +18,8 @@ public:
     :QMenu( p )
     {
         connect( qApp, SIGNAL( rosterUpdated()), SLOT( refresh()));
-        connect( qApp, SIGNAL( sessionChanged( unicorn::Session*, unicorn::Session* ))
-                     , SLOT( onSessionChanged( unicorn::Session* )));
+        connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ),
+                 this, SLOT( onSessionChanged( unicorn::Session* ) ) );
         refresh();
     }
 
@@ -40,8 +40,8 @@ protected slots:
         unicorn::Settings s;
 
         s.beginGroup( a->text() );
-        QString username = s.value( "username", "" ).toString();
-        QString sessionKey = s.value( "sessionKey", "" ).toString();
+        QString username = a->text();
+        QString sessionKey = s.value( "SessionKey", "" ).toString();
         QMetaObject::invokeMethod( qApp, "changeSession", 
                                          Q_ARG( const QString&, username ),
                                          Q_ARG( const QString&, sessionKey ) );

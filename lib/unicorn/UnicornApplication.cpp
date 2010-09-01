@@ -291,8 +291,11 @@ unicorn::Application::changeSession( const QString& username, const QString& ses
 unicorn::Session*
 unicorn::Application::changeSession( Session* newSession, bool announce )
 {
-    if( !m_wizardRunning && m_currentSession && newSession->userInfo().name() != m_currentSession->userInfo().name() &&
-        Settings().value( "changeSessionConfirmation", true ).toBool() ) {
+    if ( m_currentSession && newSession->userInfo().name() == m_currentSession->userInfo().name() )
+        return 0;
+
+    if( !m_wizardRunning &&  Settings().value( "changeSessionConfirmation", true ).toBool() )
+    {
         bool dontAskAgain = false;
         int result = QMessageBoxBuilder( findMainWindow() ).setTitle( tr( "Changing User" ) )
            .setText( tr( "%1 will be logged into the Scrobbler and Last.fm Radio. "

@@ -3,90 +3,10 @@
 
 #include <lastfm/User>
 
+#include <QApplication>
 #include <QDebug>
 
 namespace unicorn {
-
-/*void
-SessionData::onUserGotInfo()
-{
-    QNetworkReply* reply = ( QNetworkReply* )sender();
-
-    if ( reply->error() == QNetworkReply::NoError  )
-    {
-        lastfm::UserDetails userInfo( reply );
-
-        emit userInfoUpdated( userInfo );
-
-        //Save user info
-        const char* key = UserSettings::subscriptionKey();
-        Settings s;
-        s.setValue( key, userInfo.isSubscriber() );
-        s.setValue( "scrobbleCount", userInfo.scrobbleCount() );
-        s.setValue( "dateRegistered", userInfo.dateRegistered() );
-        s.setValue( "realName", userInfo.realName() );
-
-        QList<lastfm::ImageSize> size;
-        size << lastfm::Small << lastfm::Medium << lastfm::Large;
-
-        s.beginWriteArray( "imageUrls", 3 );
-        for ( int i = 0; i < 3; i++ )
-        {
-            s.setValue( "url", userInfo.imageUrl( size[ i ] ) );
-        }
-        s.endArray();
-    }
-    else
-    {
-        //there was a network error, so we fetch the user data from the settings
-        lastfm::UserDetails userInfo;
-        Settings s;
-        userInfo.setScrobbleCount( s.value( "scrobbleCount", 0 ).toInt() );
-        userInfo.setDateRegistered( s.value( "dateRegistered", QDateTime() ).toDateTime() );
-
-        userInfo.setRealName( Settings().value( "realName", "" ).toString() );
-
-        QList<QUrl> imageUrls;
-        int imageCount = s.beginReadArray( "imageUrls" );
-
-        for ( int i = 0; i < imageCount; i++ )
-        {
-            s.setArrayIndex( i );
-            imageUrls.append( s.value( "url", QUrl() ).toUrl() );
-        }
-        s.endArray();
-
-        userInfo.setImages( imageUrls );
-        emit userInfoUpdated( userInfo );
-    }
-
-}*/
-
-/*Session::Session()
-        : d( 0 )
-{
-    Settings s;
-    
-    //use the Username setting or the first username if there have been any logged in previously
-    QString username = s.value( "Username", QString()).toString();
-
-    QStringList groups = s.childGroups();
-    if( (username.isEmpty()||!groups.contains(username, Qt::CaseInsensitive ))
-        && !groups.isEmpty()) {
-        foreach( QString child, s.childGroups()) {
-            if( child == "com" || !s.contains( child + "/SessionKey") ) continue;
-            username = child;
-            break;
-        }
-    }
-
-    if( username.isEmpty()) return;
-
-    m_prevUsername = username;
-
-    s.beginGroup( username );
-    init( username, s.value( "SessionKey", "" ).toString() );
-}*/
 
 
 QMap<QString, QString>
@@ -129,7 +49,6 @@ Session::Session( QNetworkReply* reply ) throw( lastfm::ws::ParseError )
     QString sessionKey = session["key"].text();
     
     init( username, sessionKey );
-
 }
 
 Session::Session( const QString& username, QString sessionKey )
@@ -162,7 +81,6 @@ Session::userInfo() const
 void 
 Session::init( const QString& username, const QString& sessionKey )
 {
-
     m_sessionKey = sessionKey;
     Settings s;
     s.beginGroup( username );
@@ -187,6 +105,37 @@ Session::init( const QString& username, const QString& sessionKey )
     s.setValue( "SessionKey", sessionKey );
 
     s.endGroup();
+
+    fetchUserInfo();
+    connect( qApp, SIGNAL( internetConnectionUp() ), this, SLOT( fetchUserInfo() ) );
+}
+
+void
+Session::fetchUserInfo()
+{
+    qDebug() << "fetching user info";
+    lastfm::ws::Username = m_userInfo.name();
+    lastfm::ws::SessionKey = m_sessionKey;
+    connect( lastfm::UserDetails::getInfo(), SIGNAL( finished() ), this, SLOT( onUserGotInfo() ) );
+}
+
+void
+Session::onUserGotInfo()
+{
+    QNetworkReply* reply = ( QNetworkReply* )sender();
+
+    if ( reply->error() == QNetworkReply::NoError  )
+    {
+        lastfm::UserDetails userInfo( reply );
+
+        m_userInfo = userInfo;
+        emit userInfoUpdated( m_userInfo );
+        cacheUserInfo( m_userInfo );
+    }
+    else
+    {
+        qDebug() << "error getting user info: " << reply->errorString();
+    }
 }
 
 void
@@ -195,18 +144,19 @@ Session::cacheUserInfo( const lastfm::UserDetails& userInfo )
     const char* key = UserSettings::subscriptionKey();
     Settings s;
     s.beginGroup( userInfo.name() );
-    s.setValue( "Subscriber", userInfo.isSubscriber() );
+    s.setValue( key, userInfo.isSubscriber() );
     s.setValue( "ScrobbleCount", userInfo.scrobbleCount() );
     s.setValue( "DateRegistered", userInfo.dateRegistered() );
     s.setValue( "RealName", userInfo.realName() );
 
-    QList<lastfm::ImageSize> size;
-    size << lastfm::Small << lastfm::Medium << lastfm::Large;
+    QList<lastfm::ImageSize> sizes;
+    sizes << lastfm::Small << lastfm::Medium << lastfm::Large;
 
-    s.beginWriteArray( "ImageUrls", 3 );
-    for ( int i = 0; i < 3; i++ )
+    s.beginWriteArray( "ImageUrls", sizes.count() );
+    for ( int i = 0; i < sizes.count(); i++ )
     {
-        s.setValue( "Url", userInfo.imageUrl( size[ i ] ) );
+        s.setArrayIndex( i );
+        s.setValue( "Url", userInfo.imageUrl( sizes[ i ] ) );
     }
     s.endArray();
     s.endGroup();

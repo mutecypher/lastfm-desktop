@@ -91,6 +91,7 @@ namespace unicorn
                 if( stringMessage == "SESSIONCHANGED" )
                 {
                     QMap<QString, QString> sessionData;
+                    ds >> sessionData;
                     qDebug() << "and it's a session change alert";
                     emit sessionChanged( sessionData );
                 }
