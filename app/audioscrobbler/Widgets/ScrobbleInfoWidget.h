@@ -80,6 +80,7 @@ protected:
         class LfmListModel* similarArtists;
         class LfmListModel* listeningNow;
     } model;
+
 };
 
 #endif //SCROBBLE_INFO_WIDGET_H_
