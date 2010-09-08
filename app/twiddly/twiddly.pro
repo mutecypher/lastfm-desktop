@@ -1,6 +1,12 @@
 TARGET = iPodScrobbler
 LIBS += -lunicorn -llastfm
 QT = core xml sql
+
+macx:CONFIG( app_bundle ) {
+    DESTDIR = $$DESTDIR/audioscrobbler.app/Contents/MacOS
+    QMAKE_POST_LINK += $$ROOT_DIR/admin/dist/mac/bundleFrameworks.sh $$DESTDIR/$$TARGET
+}
+
 CONFIG += lastfm
 CONFIG -= app_bundle
 
@@ -21,11 +27,6 @@ HEADERS = TwiddlyApplication.h \
 mac {
     SOURCES += ITunesLibrary_mac.cpp
     HEADERS += ITunesLibrary_mac.h
-}
-
-exists(/Developer/Applications/Qt) | mac:release {
-    DESTDIR = $$DESTDIR/audioscrobbler.app/Contents/MacOS
-    QMAKE_POST_LINK += $$ROOT_DIR/admin/dist/mac/bundleFrameworks.sh $$DESTDIR/$$TARGET
 }
 
 win32 {
