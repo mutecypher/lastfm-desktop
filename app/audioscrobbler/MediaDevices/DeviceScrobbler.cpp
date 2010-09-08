@@ -3,6 +3,13 @@
 #include "Dialogs/ScrobbleConfirmationDialog.h"
 #include "lib/unicorn/UnicornApplication.h"
 
+#ifdef Q_WS_X11
+#include <QFileDialog>
+#include "lib/unicorn/QMessageBoxBuilder.h"
+#endif
+
+QString getIpodMountPath();
+
 DeviceScrobbler::DeviceScrobbler() { }
 
 
@@ -139,7 +146,7 @@ DeviceScrobbler::onScrobbleIpodTriggered() {
 QString getIpodMountPath()
 {
     QString path = "";
-    QFileDialog dialog( 0, tr( "Where is your iPod mounted?" ), "/" );
+    QFileDialog dialog( 0, QObject::tr( "Where is your iPod mounted?" ), "/" );
     dialog.setOption( QFileDialog::ShowDirsOnly, true );
     dialog.setFileMode( QFileDialog::Directory );
 
@@ -171,7 +178,7 @@ DeviceScrobbler::scrobbleIpodTracks( int trackCount )
     {
         bootStrapping = true;
         qDebug() << "Should we save it?";
-        int result = QMessageBoxBuilder( mw )
+        int result = QMessageBoxBuilder( 0 )
             .setIcon( QMessageBox::Question )
             .setTitle( tr( "Scrobble iPod" ) )
             .setText( tr( "Do you want to associate the device %1 to your audioscrobbler user account?" ).arg( iPod->deviceName() ) )
@@ -181,7 +188,7 @@ DeviceScrobbler::scrobbleIpodTracks( int trackCount )
         if ( result == QMessageBox::Yes )
         {
             iPod->associateDevice();
-            QMessageBoxBuilder( mw )
+            QMessageBoxBuilder( 0 )
                 .setIcon( QMessageBox::Information )
                 .setTitle( tr( "Scrobble iPod" ) )
                 .setText( tr( "Device successfully associated to your user account. "
@@ -191,7 +198,11 @@ DeviceScrobbler::scrobbleIpodTracks( int trackCount )
         }
         else
         {
-            IpodDeviceLinux::deleteDeviceHistory( unicorn::Session().username(), iPod->deviceId() );
+            unicorn::Session* currentSession = qobject_cast<unicorn::Application*>( qApp )->currentSession();
+            if ( currentSession )
+            {
+                IpodDeviceLinux::deleteDeviceHistory( currentSession->userInfo().name(), iPod->deviceId() );
+            }
         }
     }
 
@@ -223,7 +234,7 @@ DeviceScrobbler::scrobbleIpodTracks( int trackCount )
                     qSort ( tracks.begin(), tracks.end() );
 
                 emit foundScrobbles( tracks );
-                QMessageBoxBuilder( mw )
+                QMessageBoxBuilder( 0 )
                     .setIcon( QMessageBox::Information )
                     .setTitle( tr( "Scrobble iPod" ) )
                     .setText( tr( "%1 tracks scrobbled." ).arg( tracks.count() ) )
@@ -233,7 +244,7 @@ DeviceScrobbler::scrobbleIpodTracks( int trackCount )
     }
     else if ( !iPod->lastError() )
     {
-        QMessageBoxBuilder( mw )
+        QMessageBoxBuilder( 0 )
             .setIcon( QMessageBox::Information )
             .setTitle( tr( "Scrobble iPod" ) )
             .setText( tr( "No tracks to scrobble since your last sync." ) )
@@ -263,7 +274,7 @@ DeviceScrobbler::onIpodScrobblingError()
             break;
 
         case IpodDeviceLinux::AccessError:
-            QMessageBoxBuilder( mw )
+            QMessageBoxBuilder( 0 )
                 .setIcon( QMessageBox::Critical )
                 .setTitle( tr( "Scrobble iPod" ) )
                 .setText( tr( "The iPod database could not be opened." ) )
@@ -272,7 +283,7 @@ DeviceScrobbler::onIpodScrobblingError()
             iPod = 0;
             break;
         case IpodDeviceLinux::UnknownError:
-            QMessageBoxBuilder( mw )
+            QMessageBoxBuilder( 0 )
                 .setIcon( QMessageBox::Critical )
                 .setTitle( tr( "Scrobble iPod" ) )
                 .setText( tr( "An unkown error occurred while trying to access the iPod database." ) )
