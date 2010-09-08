@@ -157,6 +157,7 @@ ScrobbleInfoWidget::setupUi()
         QVBoxLayout* layout = new QVBoxLayout( listeners );
         layout->addWidget( new QLabel( tr( "People listening to this track right now:" )) );
         layout->addWidget( ui.listeningNow = new LfmListView() );
+        ui.listeningNow->setObjectName( "listeningNow" );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
     }
@@ -179,6 +180,7 @@ ScrobbleInfoWidget::setupUi()
     {
         QVBoxLayout* layout = new QVBoxLayout( simart );
         layout->addWidget( ui.similarArtists = new LfmListView() );
+        ui.similarArtists->setObjectName( "similarArtists" );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
     }

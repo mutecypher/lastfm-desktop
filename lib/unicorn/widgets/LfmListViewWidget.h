@@ -38,58 +38,22 @@ namespace lastfm { class AbstractType; };
 using lastfm::AbstractType;
 
 class UNICORN_DLLEXPORT LfmDelegate :public QStyledItemDelegate {
-Q_OBJECT
+    Q_OBJECT
+    Q_PROPERTY(QPixmap defaultImage READ defaultImage WRITE setDefaultImage);
+
 public:
-    LfmDelegate( QAbstractItemView* parent ):QStyledItemDelegate(parent)
-    {
-        m_viewSize = parent->size();
-        parent->installEventFilter( this );
-    }
+    LfmDelegate( QAbstractItemView* parent );
 
-    virtual void paint( QPainter* p, const QStyleOptionViewItem& opt, const QModelIndex& index ) const
-    {
-        if( index.data(Qt::DecorationRole).type() == QVariant::Icon ) {
-            QIcon icon = index.data(Qt::DecorationRole).value<QIcon>();
-            QRect iconRect = opt.rect.translated( 3, 3 );
-            iconRect.setSize( QSize( 34, 34 ));
-            icon.paint( p, iconRect );
-            QSize iconSize = icon.actualSize( iconRect.size());
-            
-            if( iconSize.isEmpty()) iconSize = QSize( 34, 34 );
+    virtual void paint( QPainter* p, const QStyleOptionViewItem& opt, const QModelIndex& index ) const;
+    virtual QSize sizeHint( const QStyleOptionViewItem& opt, const QModelIndex& index ) const;
+    bool eventFilter( QObject* obj, QEvent* event );
 
-            iconRect.translate( ( iconRect.width() - iconSize.width()) / 2.0f,
-                                ( iconRect.height() - iconSize.height()) /2.0f );
-            iconRect.setSize( iconSize );
-            p->drawRect( iconRect );
-        }
+    QPixmap defaultImage() const;
+    void setDefaultImage( QPixmap defaultImage );
 
-        QFontMetrics fm( p->font() );
-        QString elidedText = fm.elidedText( index.data().toString(), Qt::ElideRight, opt.rect.width() - 50 );
-        p->drawText( opt.rect.adjusted( 46, 3, -5, -5 ), elidedText );
-    }
-
-    virtual QSize sizeHint( const QStyleOptionViewItem& opt, const QModelIndex& index ) const 
-    {
-        QFontMetrics fm( opt.font );
-        int textWidth = fm.width( index.data().toString());
-        int spacing = qobject_cast<QListView*>(parent())->spacing();
-        return QSize( (m_viewSize.width() / 2)-(spacing*2), 40 );
-    }
-
-    bool eventFilter( QObject* obj, QEvent* event )
-    {
-        if( event->type() == QEvent::Resize ) {
-            QWidget* view = qobject_cast< QWidget* >(obj );
-            
-            if( !view ) return false;
-
-            m_viewSize = view->size();
-            emit sizeHintChanged( QModelIndex() );
-        }
-        return false;
-    }
-
+private:
     QSize m_viewSize;
+    QPixmap m_defaultImage;
 };
 
 class LfmItem : public QObject {
@@ -128,7 +92,7 @@ class UNICORN_DLLEXPORT LfmListModel : public QAbstractListModel {
     Q_OBJECT
 public:
     enum DataRole { WwwRole = Qt::UserRole,
-                    CursorRole };
+                    CursorRole};
 
     LfmListModel( QObject* parent=0 ):QAbstractListModel( parent ){}
 
