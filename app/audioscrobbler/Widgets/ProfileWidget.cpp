@@ -99,7 +99,12 @@ ProfileWidget::updateUserInfo( const lastfm::UserDetails& userdetails )
     int const daysRegistered = userdetails.dateRegistered().daysTo( QDateTime::currentDateTime());
     int const weeksRegistered = daysRegistered / 7;
     QString sinceText = tr("Scrobbles since %1" ).arg( userdetails.dateRegistered().toString( "d MMM yyyy"));
-    sinceText += "\n(" + tr( "That's about %1 tracks a week" ).arg( userdetails.scrobbleCount() / weeksRegistered ) + ")";
+
+    if( weeksRegistered )
+        sinceText += "\n(" + tr( "That's about %1 tracks a week" ).arg( userdetails.scrobbleCount() / weeksRegistered ) + ")";
+    else
+        sinceText = "";
+
     ui.since->setText( sinceText );
     ui.avatar->loadUrl( userdetails.imageUrl( lastfm::Medium ));
     ui.avatar->setHref( userdetails.www());

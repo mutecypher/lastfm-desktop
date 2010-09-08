@@ -43,8 +43,8 @@ protected slots:
         QString username = a->text();
         QString sessionKey = s.value( "SessionKey", "" ).toString();
         QMetaObject::invokeMethod( qApp, "changeSession", 
-                                         Q_ARG( const QString&, username ),
-                                         Q_ARG( const QString&, sessionKey ) );
+                                         Q_ARG( const QString, username ),
+                                         Q_ARG( const QString, sessionKey ) );
 
         //Refresh the user list to be certain that 
         //the correct current user is checked.

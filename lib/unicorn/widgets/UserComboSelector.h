@@ -35,8 +35,8 @@ protected:
         s.beginGroup( username );
         QString sessionKey = s.value( "sessionKey", "" ).toString();
         QMetaObject::invokeMethod( qApp, "changeSession",
-                                         Q_ARG( const QString&, username ),
-                                         Q_ARG( const QString&, sessionKey ) );
+                                         Q_ARG( const QString, username ),
+                                         Q_ARG( const QString, sessionKey ) );
 
     }
 
