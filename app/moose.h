@@ -25,6 +25,7 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include <lastfm/misc.h>
 #ifdef Q_OS_MAC
+    #define AUDIOSCROBBLER_BUNDLEID "fm.last.audioscrobbler"
     #include <ApplicationServices/ApplicationServices.h>
 
     //This macro clashes with Qt headers
@@ -65,35 +66,25 @@ namespace moose
         #endif
     }
 
-    static inline void startAudioscrobbler( const QMap<QString, QString>& argMap )
+    static inline void startAudioscrobbler( QStringList& vargs )
     {
-        QStringList argList;
-
-        QMapIterator<QString, QString> i(argMap);
-        while (i.hasNext()) {
-            i.next();
-             argList << "--" + i.key();
-             argList << i.value();
-        }
-
 #ifndef Q_OS_MAC
-        QProcess::startDetached( moose::path(), argList);
+        QProcess::startDetached( moose::path(), vargs);
 #elif defined Q_OS_MAC
         FSRef appRef;
-        LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
+        LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( AUDIOSCROBBLER_BUNDLEID ), NULL, &appRef, NULL );
 
-        const void* arg[argMap.count() * 2];
+        const void* arg[vargs.size()];
 
         int index(0);
 
-        QString dataString;
-
-        i.toFront();
-        while (i.hasNext()) {
-             i.next();
-             arg[index++] = CFStringCreateWithCString( NULL, QString( "--" + i.key() ).toUtf8().data(), kCFStringEncodingUTF8 );
-             arg[index++] = CFStringCreateWithCString( NULL, i.value().toUtf8().data(), kCFStringEncodingUTF8 );
-         }
+        AEDescList argAEList;
+        AECreateList( NULL, 0, FALSE, &argAEList );
+        
+        foreach( QString i, vargs ) {
+            arg[index++] = CFStringCreateWithCString( NULL, i.toUtf8().data(), kCFStringEncodingUTF8 );
+            AEPutPtr( &argAEList, 0, typeChar, i.toUtf8().data(), i.toUtf8().length());
+        }
 
         LSApplicationParameters params;
         params.version = 0;
@@ -102,31 +93,29 @@ namespace moose
         params.asyncLaunchRefCon = NULL;
         params.environment = NULL;
 
-        CFArrayRef args = CFArrayCreate( NULL, ((const void**)arg), argMap.count() * 2, NULL);
+        CFArrayRef args = CFArrayCreate( NULL, ((const void**)arg), vargs.size(), NULL);
         params.argv = args;
 
-        const char* data = argList.join(";").toUtf8().data();
-
-        AEDesc desc;
-        AECreateDesc( typeChar, data, argList.join(";").toUtf8().size(), &desc );
 
         AEAddressDesc target;
         AECreateDesc( typeApplicationBundleID, CFSTR( "fm.last.audioscrobbler" ), 22, &target);
 
         AppleEvent event;
         AECreateAppleEvent ( kCoreEventClass,
-                                  kAEReopenApplication ,
-                                  &target,
-                                  kAutoGenerateReturnID,
-                                  kAnyTransactionID,
-                                  &event );
+                kAEReopenApplication ,
+                &target,
+                kAutoGenerateReturnID,
+                kAnyTransactionID,
+                &event );
 
-        AEPutParamDesc( &event, keyAEPropData, &desc );
+        AEPutParamDesc( &event, keyAEPropData, &argAEList );
 
         params.initialEvent = &event;
 
         LSOpenApplication( &params, NULL );
-        AEDisposeDesc( &desc );
+        AEDisposeDesc( &argAEList );
+        AEDisposeDesc( &target );
+
 #endif
     }
 

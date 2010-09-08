@@ -139,6 +139,6 @@ namespace audioscrobbler
 
         void showWindow();
 
-        void onMessageReceived(const QString& message);
+        void onMessageReceived(const QStringList& message);
     };
 }

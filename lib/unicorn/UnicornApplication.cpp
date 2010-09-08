@@ -472,53 +472,47 @@ unicorn::Application::hotkeyEventHandler( EventHandlerCallRef, EventRef event, v
 pascal OSErr /* static */
 unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long )
 {
-    qDebug() << "yeah";
-
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );
-    
-    AEAddressDesc desc;
-
-    OSErr ret;
-    ret = AEGetParamDesc( e, keyAEPropData, typeChar, &desc );
-    
-    if( ret == noErr ) {
-        unsigned int size = AEGetDescDataSize( &desc );
-        char data[size + 1];
-        data[ size ] = 0;
-        ret = AEGetDescData( &desc, data, size );
-        QString dataString( data );
-
-        qDebug() << dataString;
-
-        if( dataString == "tray" )
-            return unimpErr;
-        else if ( dataString.startsWith( "--twiddled" ) )
-        {
-            emit qobject_cast<unicorn::Application*>(qApp)->messageReceived( dataString );
-            return unimpErr;
-        }
-
-    }
-
+ 
     switch (id)
     {
         case kAEQuitApplication:
             qApp->quit();
             return noErr;
 
-        case kAEReopenApplication:
-        {
-            QMainWindow* mw = qobject_cast<unicorn::Application*>(qApp)->findMainWindow();
-            if( mw ) {
-                mw->show(), mw->raise(), mw->activateWindow();
-            }
-            return noErr;
-        }
-
         default:
-            return unimpErr;
+            break;
     }
+
+    AEAddressDesc descList;
+
+    OSErr ret;
+    ret = AEGetParamDesc( e, keyAEPropData, typeAEList, &descList );
+    long count = 0;
+    ret = AECountItems( &descList, &count );
+    if( ret != noErr )
+        count = 0;
+
+    QStringList args;
+    for( int i = 1; i <= count; ++i ) {
+        AEAddressDesc desc;
+        AEGetNthDesc( &descList, i, typeChar, NULL, &desc );
+        if( ret == noErr ) {
+            unsigned int size = AEGetDescDataSize( &desc );
+            char data[size + 1];
+            data[ size ] = 0;
+            ret = AEGetDescData( &desc, data, size );
+            QString dataString( data );
+
+            qDebug() << dataString;
+            args << dataString;
+        }
+    }
+
+    emit qobject_cast<unicorn::Application*>(qApp)->messageReceived( args );
+    return unimpErr;
+
 }
 #endif
 

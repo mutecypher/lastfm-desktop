@@ -19,6 +19,7 @@
 */
 
 #include <QStringList>
+#include <QRegExp>
 
 #include "_version.h"
 #include "Application.h"
@@ -32,8 +33,8 @@ int main( int argc, char** argv )
     try
     {
         audioscrobbler::Application app( argc, argv );
-
-        if ( app.sendMessage( app.arguments().join(";") ) )
+        
+        if ( app.sendMessage( app.arguments() ) )
             return 0;
 
         app.init();

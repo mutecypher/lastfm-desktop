@@ -128,8 +128,9 @@ main( int argc, char** argv )
                 xml.documentElement().setAttribute( "uid", ipod->uid() );
                 writeXml( xml, path );
 
-                QMap<QString, QString> args;
-                args["twiddled"] = path;
+                QStringList args;
+                args << "--twiddled";
+                args << path;
 
                 moose::startAudioscrobbler( args );
             }

@@ -136,7 +136,7 @@ bool QtLocalPeer::isClient()
 }
 
 
-bool QtLocalPeer::sendMessage(const QString &message, int timeout)
+bool QtLocalPeer::sendMessage(const QStringList &message, int timeout)
 {
     if (!isClient())
         return false;
@@ -160,9 +160,8 @@ bool QtLocalPeer::sendMessage(const QString &message, int timeout)
     if (!connOk)
         return false;
 
-    QByteArray uMsg(message.toUtf8());
     QDataStream ds(&socket);
-    ds.writeBytes(uMsg.constData(), uMsg.size());
+    ds << message;
     bool res = socket.waitForBytesWritten(timeout);
     res &= socket.waitForReadyRead(timeout);   // wait for ack
     res &= (socket.read(qstrlen(ack)) == ack);
@@ -179,23 +178,8 @@ void QtLocalPeer::receiveConnection()
     while (socket->bytesAvailable() < (int)sizeof(quint32))
         socket->waitForReadyRead();
     QDataStream ds(socket);
-    QByteArray uMsg;
-    quint32 remaining;
-    ds >> remaining;
-    uMsg.resize(remaining);
-    int got = 0;
-    char* uMsgBuf = uMsg.data();
-    do {
-        got = ds.readRawData(uMsgBuf, remaining);
-        remaining -= got;
-        uMsgBuf += got;
-    } while (remaining && got >= 0 && socket->waitForReadyRead(2000));
-    if (got < 0) {
-        qWarning() << "QtLocalPeer: Message reception failed" << socket->errorString();
-        delete socket;
-        return;
-    }
-    QString message(QString::fromUtf8(uMsg));
+    QStringList message;
+    ds >> message;
     socket->write(ack, qstrlen(ack));
     socket->waitForBytesWritten(1000);
     delete socket;

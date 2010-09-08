@@ -32,6 +32,8 @@
     #define MOOSE_PLUGIN_HKEY_A MOOSE_HKEY_A "\\Plugins\\itw"
 #else
     #define MOOSE_PREFS_PLIST "fm.last.Audioscrobbler"
+    #include <vector>
+    #include <string>
     #include <CoreServices/CoreServices.h>
     #include <ApplicationServices/ApplicationServices.h>
     #include <sys/syslimits.h>
@@ -84,6 +86,11 @@ namespace Moose
         /** /-terminated */
         std::string
         bundleFolder();
+
+    
+        /** use launch services to start / send a message to the scrobbler */
+        void 
+        launchAudioscrobbler( const std::vector<std::string>& arg );
     #endif
 
     #ifdef WIN32

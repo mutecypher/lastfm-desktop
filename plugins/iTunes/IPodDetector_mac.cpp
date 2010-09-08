@@ -943,14 +943,21 @@ IPodDetector::notifyIfUnknownIPod( IPod* ipod )
     CFStringRef appId = CFSTR( "fm.last" );
     CFStringRef user = (CFStringRef) CFPreferencesCopyAppValue( key, appId );
 
+    std::vector<std::string> args;
+    args.push_back( "--tray" );
     if (user == NULL)
     {
         CFPreferencesSetAppValue( key, CFSTR( "" ), appId );
         CFPreferencesAppSynchronize( appId );
-        Moose::exec( Moose::applicationPath(), "--ipod-detected" );
-    }
-    else
+        args.push_back( "--new-ipod-detected" );
+    } else {
         CFRelease( user );
-
+        args.push_back( "--ipod-detected" );
+    }
+    
+    args.push_back( ipod->serial() );
+    
+    Moose::launchAudioscrobbler( args );
+    
     CFRelease( key );
 }

@@ -76,12 +76,12 @@ public:
         { isRunning(); Q_UNUSED(dummy) }
 
 public Q_SLOTS:
-    bool sendMessage(const QString &message, int timeout = 5000);
+    bool sendMessage(const QStringList &message, int timeout = 5000);
     void activateWindow();
 
 
 Q_SIGNALS:
-    void messageReceived(const QString &message);
+    void messageReceived(const QStringList &message);
 
 
 private:

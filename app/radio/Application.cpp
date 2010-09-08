@@ -156,9 +156,9 @@ Argument argument( const QString& arg )
 }
 
 void
-Application::onMessageReceived( const QString& message )
+Application::onMessageReceived( const QStringList& message )
 {
-    parseArguments( message.split( "\t" ) );
+    parseArguments( message );
 }
 
 void

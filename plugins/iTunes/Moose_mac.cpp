@@ -18,6 +18,7 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+#define AUDIOSCROBBLER_BUNDLEID "fm.last.audioscrobbler"
 #include "Moose.h"
 #include "common/c++/Logger.h"
 #include <sys/stat.h>
@@ -58,15 +59,17 @@ CFStringToStdString( CFStringRef s )
 std::string
 Moose::applicationPath()
 {
-    CFStringRef path = (CFStringRef) CFPreferencesCopyAppValue(
-            CFSTR( "Path" ),
-            CFSTR( MOOSE_PREFS_PLIST ) );
-
+    FSRef appRef;
+    LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
+    
+    char path[PATH_MAX];
+    FSRefMakePath( &appRef, (unsigned char*)path, PATH_MAX );
+    
     if ( path == NULL )
-        return "/Applications/Last.fm.app/Contents/MacOS/Last.fm";
+        return "/Applications/audioscrobbler.app";
 
-    std::string s = CFStringToStdString( path );
-    CFRelease( path );
+    std::string s = path;
+    s.append( "/Contents/MacOS/audioscrobbler" );
     return s;
 }
 
@@ -129,6 +132,55 @@ Moose::setFileDescriptorsCloseOnExec()
         }
     }
     if (n) LOG( 3, "Set " << n << " file descriptors FD_CLOEXEC" );
+}
+
+void 
+Moose::launchAudioscrobbler( const std::vector<std::string>& vargs )
+{
+    FSRef appRef;
+    LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( AUDIOSCROBBLER_BUNDLEID ), NULL, &appRef, NULL );
+    
+    const void* arg[vargs.size()];
+    
+    int index(0);
+
+    AEDescList argAEList;
+    AECreateList( NULL, 0, FALSE, &argAEList );
+    
+    for( std::vector<std::string>::const_iterator i = vargs.begin(); i != vargs.end(); i++ ) {
+        arg[index++] = CFStringCreateWithCString( NULL, i->c_str(), kCFStringEncodingUTF8 );
+        AEPutPtr( &argAEList, 0, typeChar, i->c_str(), i->length());
+    }
+    
+    LSApplicationParameters params;
+    params.version = 0;
+    params.flags = kLSLaunchAndHide;
+    params.application = &appRef;
+    params.asyncLaunchRefCon = NULL;
+    params.environment = NULL;
+    
+    CFArrayRef args = CFArrayCreate( NULL, ((const void**)arg), vargs.size(), NULL);
+    params.argv = args;
+    
+  
+    AEAddressDesc target;
+    AECreateDesc( typeApplicationBundleID, CFSTR( "fm.last.audioscrobbler" ), 22, &target);
+    
+    AppleEvent event;
+    AECreateAppleEvent ( kCoreEventClass,
+                        kAEReopenApplication ,
+                        &target,
+                        kAutoGenerateReturnID,
+                        kAnyTransactionID,
+                        &event );
+    
+    AEPutParamDesc( &event, keyAEPropData, &argAEList );
+    
+    params.initialEvent = &event;
+    
+    LSOpenApplication( &params, NULL );
+    AEDisposeDesc( &argAEList );
+    AEDisposeDesc( &target );
 }
 
 

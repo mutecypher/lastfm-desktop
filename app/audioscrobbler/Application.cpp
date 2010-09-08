@@ -46,6 +46,7 @@
 #include <lastfm/Audioscrobbler>
 #include <lastfm/XmlQuery>
 
+#include <QRegExp>
 #include <QShortcut>
 #include <QFileDialog>
 #include <QDesktopServices>
@@ -291,7 +292,7 @@ Application::init()
 
     connect( m_show_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
 
-    connect( this, SIGNAL(messageReceived(QString)), SLOT(onMessageReceived(QString)) );
+    connect( this, SIGNAL(messageReceived(QStringList)), SLOT(onMessageReceived(QStringList)) );
     connect( this, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
 
     //We're not going to catch the first session change as it happened in the unicorn application before
@@ -309,7 +310,7 @@ Application::init()
     // clicking on a system tray message should show the scrobbler
     connect( tray, SIGNAL(messageClicked()), m_show_window_action, SLOT(trigger()));
 
-    emit messageReceived( arguments().join(";") );
+    emit messageReceived( arguments() );
 }
 
 
@@ -589,17 +590,15 @@ Application::showWindow()
 }
 
 void
-Application::onMessageReceived(const QString& message)
+Application::onMessageReceived(const QStringList& message)
 {
-    QStringList arguments = message.split(";");
+    int pos = message.indexOf( "--twiddled" );
 
-    int pos = arguments.indexOf( "--twiddled" );
-
-    if ( arguments.contains( "--twiddled" ) )
+    if ( message.contains( "--twiddled" ) )
     {
-        deviceScrobbler->twiddled( arguments );
+        deviceScrobbler->twiddled( message );
     }
-    else if ( !arguments.contains( "--tray" ) )
+    else if ( !message.contains( "--tray" ) )
     {
         // raise the app
         m_show_window_action->trigger();

@@ -74,12 +74,12 @@ int main( int argc, char** argv )
     {
         moralistfad::Application app( argc, argv );
 
-        if ( app.sendMessage( app.arguments().join( "\t" ) ) )
+        if ( app.sendMessage( app.arguments() ) )
             return 0;
 
         app.init();
 
-        QObject::connect(&app, SIGNAL(messageReceived(const QString&)), &app, SLOT(onMessageReceived(const QString&)));
+        QObject::connect(&app, SIGNAL(messageReceived(const QStringList&)), &app, SLOT(onMessageReceived(const QStringList&)));
 
 		q = new QMainObject;
         radio = new Radio();

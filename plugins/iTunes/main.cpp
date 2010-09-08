@@ -119,40 +119,9 @@ static void launchClient()
 #if TARGET_OS_MAC
     if ( Moose::launchWithMediaPlayer() )
     {
-        FSRef appRef;
-        LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
-
-        AEDesc desc;
-        const char* data = "tray";
-        AECreateDesc( typeChar, data, sizeof( data ), &desc );
-
-        LSApplicationParameters params;
-        params.version = 0;
-        params.flags = kLSLaunchAndHide;
-        params.application = &appRef;
-        params.asyncLaunchRefCon = NULL;
-        params.environment = NULL;
-        CFStringRef arg = CFSTR( "--tray" );
-        CFArrayRef args = CFArrayCreate( NULL, ((const void**)&arg), 1, NULL);
-        params.argv = args;
-        
-        AEAddressDesc target;
-        AECreateDesc( typeApplicationBundleID, CFSTR( "fm.last.audioscrobbler" ), 22, &target);
-        
-        AppleEvent event;
-        AECreateAppleEvent ( kCoreEventClass,
-                                  kAEReopenApplication ,
-                                  &target,
-                                  kAutoGenerateReturnID,
-                                  kAnyTransactionID,
-                                  &event );
-
-        AEPutParamDesc( &event, keyAEPropData, &desc );
-        
-        params.initialEvent = &event;
-        
-        LSOpenApplication( &params, NULL );
-        AEDisposeDesc( &desc );
+        std::vector< std::string > tray;
+        tray.push_back( "--tray" );
+        Moose::launchAudioscrobbler( tray );
     }
 #endif
 }

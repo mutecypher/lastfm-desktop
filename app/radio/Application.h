@@ -38,7 +38,7 @@ namespace moralistfad
 
 	public slots:
 		void parseArguments( const QStringList& args );
-        void onMessageReceived( const QString& message );
+        void onMessageReceived( const QStringList& message );
 
 	private slots:    
 	    /** all webservices connect to this and emit in the case of bad errors that
