@@ -36,14 +36,17 @@ DeviceScrobbler::checkCachedIPodScrobbles() {
             // chack if there are any iPod scrobbles in its folder
 
             QDir scrobblesDir = lastfm::dir::runtimeData();
-            scrobblesDir.cd( "devices/" + ipod->deviceId() + "/scrobbles" );
-            scrobblesDir.setFilter(QDir::Files | QDir::NoSymLinks);
-            scrobblesDir.setNameFilters( QStringList() << "*.xml" );
 
-            QFileInfoList list = scrobblesDir.entryInfoList();
+            if ( scrobblesDir.cd( "devices/" + ipod->deviceId() + "/scrobbles" ) )
+            {
+                scrobblesDir.setFilter(QDir::Files | QDir::NoSymLinks);
+                scrobblesDir.setNameFilters( QStringList() << "*.xml" );
 
-            foreach ( QFileInfo fileInfo, list )
-                scrobbleIpodFile( fileInfo.filePath() );
+                QFileInfoList list = scrobblesDir.entryInfoList();
+
+                foreach ( QFileInfo fileInfo, list )
+                    scrobbleIpodFile( fileInfo.filePath() );
+            }
         }
 
         delete ipod;
