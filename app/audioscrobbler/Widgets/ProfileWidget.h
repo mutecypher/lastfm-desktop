@@ -34,8 +34,8 @@ public:
     ProfileWidget( QWidget* p = 0 );
 
 protected slots:
-    void onSessionChanged( const unicorn::Session& );
-    void onGotUserInfo( const lastfm::UserDetails& );
+    void onSessionChanged( unicorn::Session* );
+    void updateUserInfo( const lastfm::UserDetails& );
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
     void onScrobbleStatusChanged();
 

@@ -296,12 +296,19 @@ Application::init()
     connect( m_show_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
 
     connect( this, SIGNAL(messageReceived(QString)), SLOT(onMessageReceived(QString)) );
-    connect( this, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session) ), 
-                   SLOT(onSessionChanged( unicorn::Session, unicorn::Session )));
+    connect( this, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
 
     //We're not going to catch the first session change as it happened in the unicorn application before
     //we could connect to the signal!
-    changeSession( unicorn::Session());
+
+    if ( !currentSession() )
+    {
+        QMap<QString, QString> lastSession = unicorn::Session::lastSessionData();
+        if ( lastSession.contains( "username" ) && lastSession.contains( "sessionKey" ) )
+        {
+            changeSession( lastSession[ "username" ], lastSession[ "sessionKey" ] );
+        }
+    }
 
     // clicking on a system tray message should show the scrobbler
     connect( tray, SIGNAL(messageClicked()), m_show_window_action, SLOT(trigger()));
@@ -311,7 +318,7 @@ Application::init()
 
 
 void
-Application::onSessionChanged( unicorn::Session newSession, unicorn::Session oldSession )
+Application::onSessionChanged( unicorn::Session* newSession )
 {
     Audioscrobbler* oldAs = as;
     as = new Audioscrobbler("ass");
@@ -319,7 +326,7 @@ Application::onSessionChanged( unicorn::Session newSession, unicorn::Session old
     delete oldAs;
 
     // Check if there are any iPod scrobbles
-    unicorn::UserSettings us( newSession.username() );
+    unicorn::UserSettings us( newSession->userInfo().name() );
     int count = us.beginReadArray( "associatedDevices" );
 
     for ( int i = 0; i < count; i++ )
@@ -335,16 +342,19 @@ Application::onSessionChanged( unicorn::Session newSession, unicorn::Session old
             // chack if there are any iPod scrobbles in its folder
 
             QDir scrobblesDir = lastfm::dir::runtimeData();
-            scrobblesDir.cd( "devices/" + ipod->deviceId() + "/scrobbles" );
-            scrobblesDir.setFilter(QDir::Files | QDir::NoSymLinks);
-            scrobblesDir.setNameFilters( QStringList() << "*.xml" );
 
-            QFileInfoList list = scrobblesDir.entryInfoList();
+            //The directory might not exist
+            if ( scrobblesDir.cd( "devices/" + ipod->deviceId() + "/scrobbles" ) )
+            {
+                scrobblesDir.setFilter(QDir::Files | QDir::NoSymLinks);
+                scrobblesDir.setNameFilters( QStringList() << "*.xml" );
 
-            foreach ( QFileInfo fileInfo, list )
-                scrobbleIpodFile( fileInfo.filePath() );
+                QFileInfoList list = scrobblesDir.entryInfoList();
+
+                foreach ( QFileInfo fileInfo, list )
+                    scrobbleIpodFile( fileInfo.filePath() );
+            }
         }
-
         delete ipod;
     }
     us.endArray();
@@ -409,8 +419,18 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
         trackToScrobble = t;
     }
 
-    m_artist_action->setText( t.artist()); 
-    m_title_action->setText( t.title() + " [" + t.durationString() + ']' );
+    qDebug() << "action geometry: " << tray->contextMenu()->actionGeometry( m_artist_action );
+    int actionOffsets = 150; //this magic number seems to work to avoid the menu to expand with long titles
+    int actionWidth = tray->contextMenu()->actionGeometry( m_artist_action ).width() - actionOffsets;
+    QFontMetrics fm( font() );
+    QString artistActionText = fm.elidedText( t.artist(), Qt::ElideRight, actionWidth );
+    QString durationString = " [" + t.durationString() + "]";
+    QString titleActionText = fm.elidedText( t.title(), Qt::ElideRight, actionWidth - fm.width( durationString ) );
+
+    m_artist_action->setText( artistActionText );
+    m_artist_action->setToolTip( t.artist() );
+    m_title_action->setText( titleActionText + durationString );
+    m_title_action->setToolTip( t.title() + " [" + t.durationString() + "]" );
 
     delete watch;
     qDebug() << "********** AS = " << as;
@@ -606,7 +626,8 @@ Application::scrobbleIpodTracks( int trackCount )
         }
         else
         {
-            IpodDeviceLinux::deleteDeviceHistory( unicorn::Session().username(), iPod->deviceId() );
+            audioscrobbler::Application* app = qobject_cast<audioscrobbler::Application*>( qApp );
+            IpodDeviceLinux::deleteDeviceHistory( app->currentSession()->userInfo().name(), iPod->deviceId() );
         }
     }
 

@@ -43,7 +43,8 @@ unicorn::MainWindow::MainWindow()
     new QShortcut( QKeySequence(Qt::CTRL+Qt::Key_W), this, SLOT(close()) );
     new QShortcut( QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_L), this, SLOT(openLog()) );
     connect( qApp, SIGNAL(gotUserInfo( const lastfm::UserDetails& )), SLOT(onGotUserInfo( const lastfm::UserDetails& )) );
-    connect( qApp, SIGNAL(sessionChanged( unicorn::Session, unicorn::Session )), SLOT(onSessionChanged( unicorn::Session )));
+    connect( qApp, SIGNAL(sessionChanged( unicorn::Session* ) ),
+             SLOT( onSessionChanged( unicorn::Session* ) ) );
     connect( qApp->desktop(), SIGNAL( resized(int)), SLOT( cleverlyPosition()));
 #ifdef Q_OS_WIN32
     taskBarCreatedMessage = RegisterWindowMessage(L"TaskbarButtonCreated");
@@ -62,7 +63,6 @@ unicorn::MainWindow::finishUi()
     ui.account = menuBar()->addMenu( User().name() );
     ui.profile = ui.account->addAction( tr("Visit &Profile"), this, SLOT(visitProfile()) );
     ui.account->addSeparator();
-    ui.account->addAction( tr("Log &Out"), qApp, SLOT(logout()) );
     QAction* quit = ui.account->addAction( tr("&Quit"), qApp, SLOT(quit()) );
     quit->setMenuRole( QAction::QuitRole );
 #ifdef Q_OS_WIN
@@ -260,10 +260,10 @@ unicorn::MainWindow::showEvent( QShowEvent* )
 
 
 void
-unicorn::MainWindow::onSessionChanged( const Session& session )
+unicorn::MainWindow::onSessionChanged( Session* session )
 {
     ui.account->findChild<QAction*>("UserBlurb")->deleteLater();
-    ui.account->setTitle( session.username());
+    ui.account->setTitle( session->userInfo().name() );
 }
 
 void 

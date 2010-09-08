@@ -126,7 +126,6 @@ MetadataWindow::MetadataWindow()
     hb->layout()->addWidget( ui.now_playing_source );
 
     centralWidget()->layout()->addWidget(hb);
-    connect( ui.now_playing_source, SIGNAL( clicked()), SLOT( showNowScrobbling()));
 
     stack.nowScrobbling = new ScrobbleInfoWidget( centralWidget() );
     stack.nowScrobbling->setObjectName( "NowScrobbling" );

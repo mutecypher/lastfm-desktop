@@ -1,9 +1,12 @@
 #ifndef WELCOME_PAGE_H
 #define WELCOME_PAGE_H
 
+#include "lib/unicorn/UnicornApplication.h"
+
 #include "lib/unicorn/Updater/PluginList.h"
 #include "lib/unicorn/UnicornSession.h"
 
+#include <QApplication>
 #include <QDebug>
 #include <QLabel>
 #include <QVariant>
@@ -26,7 +29,8 @@ public:
 
     virtual void initializePage()
     {
-        QString username = unicorn::Session().username();
+//        QString username = unicorn::Session().userInfo().name();
+        QString username = qobject_cast<unicorn::Application*>( qApp )->currentSession()->userInfo().name();
         ui.welcomeLabel->setText(
             tr( "<p><strong>Hi %1,<br/>Welcome to the Last.fm Scrobbler</strong>\t\t\t</p>" ).arg( username ) +
             tr( "<p>The Scrobbler tracks what you listen to and updates your Last.fm profile.</p>"
