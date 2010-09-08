@@ -8,6 +8,7 @@
 
 #ifdef Q_WS_X11
 #include "MediaDevices/IpodDevice_linux.h"
+#include <QPointer>
 #endif
 
 using unicorn::Session;
@@ -31,7 +32,6 @@ public slots:
 private slots:
     
 #ifdef Q_WS_X11
-    QString getIpodMountPath();
     void onCalculatingScrobbles( int trackCount );
     void scrobbleIpodTracks( int trackCount );
     void onIpodScrobblingError();

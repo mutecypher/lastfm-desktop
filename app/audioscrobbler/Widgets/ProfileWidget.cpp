@@ -71,6 +71,13 @@ ProfileWidget::ProfileWidget( QWidget* p )
     l->addWidget( scrobbleDetails );
     l->addWidget( recentTrackBox );
     
+    //On first run we won't catch the sessionChanged signal on time
+    //so we should try to get the current session from the unicorn::Application 
+    unicorn::Session* currentSession = qobject_cast<unicorn::Application*>( qApp )->currentSession();
+    if ( currentSession )
+    {
+        onSessionChanged( currentSession );
+    }
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ),
              SLOT( onSessionChanged( unicorn::Session* ) ) );
     connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
@@ -79,6 +86,9 @@ ProfileWidget::ProfileWidget( QWidget* p )
 void 
 ProfileWidget::onSessionChanged( Session* session )
 {
+    if ( !session )
+        return;
+
     qDebug() << "profile widget: session change";
     ui.welcomeLabel->setText( tr( "%1's Profile" ).arg( session->userInfo().name() ) );
     ui.since->clear(); 

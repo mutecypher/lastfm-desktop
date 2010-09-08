@@ -298,7 +298,7 @@ unicorn::Application::changeSession( Session* newSession, bool announce )
     if ( m_currentSession && newSession->userInfo().name() == m_currentSession->userInfo().name() )
         return 0;
 
-    if( !m_wizardRunning &&  Settings().value( "changeSessionConfirmation", true ).toBool() )
+    if( m_currentSession && !m_wizardRunning &&  Settings().value( "changeSessionConfirmation", true ).toBool() )
     {
         bool dontAskAgain = false;
         int result = QMessageBoxBuilder( findMainWindow() ).setTitle( tr( "Changing User" ) )
