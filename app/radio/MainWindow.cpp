@@ -65,13 +65,13 @@ MainWindow::MainWindow()
  //   connect(radio, SIGNAL(stopped()), status, SLOT(hideAnimated()));
  //   connect(radio, SIGNAL(tuningIn( const RadioStation&)), status, SLOT(showAnimated()));
     
-    connect( qApp, SIGNAL( sessionChanged( const unicorn::Session&, const unicorn::Session& ) ), 
-             SLOT( onSessionChanged( const unicorn::Session&, const unicorn::Session& ) ) );
-    connect( qApp, SIGNAL( sessionChanged( const unicorn::Session&, const unicorn::Session& ) ), 
-             m_mainWidget, SIGNAL( sessionChanged( const unicorn::Session&, const unicorn::Session& ) ) );
+    connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ),
+             SLOT( onSessionChanged( unicorn::Session* ) ) );
+    connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ),
+             m_mainWidget, SIGNAL( sessionChanged( unicorn::Session* ) ) );
     //if we've got this far we must already have a session so use
     //the current session to start things rolling.
-    onSessionChanged( qobject_cast<unicorn::Application*>(qApp)->currentSession(), Session());
+    onSessionChanged( qobject_cast<unicorn::Application*>(qApp)->currentSession() );
 
 
     finishUi();
@@ -88,7 +88,7 @@ MainWindow::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
 }
 
 void 
-MainWindow::onSessionChanged( const unicorn::Session& s, const unicorn::Session& )
+MainWindow::onSessionChanged( unicorn::Session* s )
 {
     qDebug() << "session changed and the app noticed it!";
     User user;

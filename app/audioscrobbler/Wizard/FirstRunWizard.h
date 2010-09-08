@@ -95,10 +95,11 @@ private slots:
     {
         //if the user doesn't finish the wizard then we make sure
         //the settings are removed.
-        if ( unicorn::Session().isValid() )
+        QMap<QString, QString> lastSession = unicorn::Session::lastSessionData();
+        if ( lastSession.contains( "username" ) )
         {
             unicorn::Settings us;
-            us.remove( unicorn::Session().username() );
+            us.remove( lastSession[ "username" ] );
         }
     }
 

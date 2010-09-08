@@ -94,7 +94,10 @@ AccountSettingsWidget::saveSettings()
         if ( urb && urb->user() != User().name() )
         {
             s.setValue( "Username", urb->user() );
-            qobject_cast<unicorn::Application *>( qApp )->changeSession( unicorn::Session(), true );
+            s.beginGroup( urb->user() );
+            QString sessionKey = s.value( "SessionKey", "" ).toString();
+            s.endGroup();
+            qobject_cast<unicorn::Application *>( qApp )->changeSession( urb->user(), sessionKey, true );
         }
 
         int currIndex = ui.languages->currentIndex();

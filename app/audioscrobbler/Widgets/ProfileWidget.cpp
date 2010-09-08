@@ -71,30 +71,40 @@ ProfileWidget::ProfileWidget( QWidget* p )
     l->addWidget( scrobbleDetails );
     l->addWidget( recentTrackBox );
     
-    connect( qApp, SIGNAL(sessionChanged(unicorn::Session, unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));
-    connect( qApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
+    connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ),
+             SLOT( onSessionChanged( unicorn::Session* ) ) );
     connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 }
 
 void 
-ProfileWidget::onSessionChanged( const Session& session )
+ProfileWidget::onSessionChanged( Session* session )
 {
-    ui.welcomeLabel->setText( tr("%1's Profile" ).arg( session.username() ));
+    qDebug() << "profile widget: session change";
+    ui.welcomeLabel->setText( tr( "%1's Profile" ).arg( session->userInfo().name() ) );
     ui.since->clear(); 
     ui.scrobbleMeter->clear();
     ui.avatar->clear();
 
-    ui.recentTracks->setUsername( session.username() );
+    ui.recentTracks->setUsername( session->userInfo().name() );
+    updateUserInfo( session->userInfo() );
+    connect( session, SIGNAL( userInfoUpdated( const lastfm::UserDetails& ) ),
+             this, SLOT( updateUserInfo( const lastfm::UserDetails& ) ) );
 }
 
 void 
-ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userdetails )
+ProfileWidget::updateUserInfo( const lastfm::UserDetails& userdetails )
 {
+    qDebug() << "user info updated";
     ui.scrobbleMeter->setCount( userdetails.scrobbleCount() );
     int const daysRegistered = userdetails.dateRegistered().daysTo( QDateTime::currentDateTime());
     int const weeksRegistered = daysRegistered / 7;
     QString sinceText = tr("Scrobbles since %1" ).arg( userdetails.dateRegistered().toString( "d MMM yyyy"));
-    sinceText += "\n(" + tr( "That's about %1 tracks a week" ).arg( userdetails.scrobbleCount() / weeksRegistered ) + ")";
+
+    if( weeksRegistered )
+        sinceText += "\n(" + tr( "That's about %1 tracks a week" ).arg( userdetails.scrobbleCount() / weeksRegistered ) + ")";
+    else
+        sinceText = "";
+
     ui.since->setText( sinceText );
     ui.avatar->loadUrl( userdetails.imageUrl( lastfm::Medium ));
     ui.avatar->setHref( userdetails.www());

@@ -48,7 +48,7 @@ public:
 signals:
     void startRadio(RadioStation);
     void widgetChanged( QWidget* );
-    void sessionChanged( const unicorn::Session&, const unicorn::Session& );
+    void sessionChanged( unicorn::Session* );
     
 public slots:
     void onStartRadio(RadioStation rs);
@@ -186,18 +186,19 @@ public:
     }
 
 public slots:
-    void onSessionChanged( const unicorn::Session &newSession, const unicorn::Session &oldSession )
+    void onSessionChanged( unicorn::Session *newSession )
     {
         QString lblText( m_mainLabel->text() );
-        if( lblText.startsWith( newSession.username() ) )
+        if( lblText.startsWith( newSession->userInfo().name() ) )
         {
-            lblText.replace( QString( newSession.username() + "'s" ), QString( "Your" ) );
+            lblText.replace( QString( newSession->userInfo().name() + "'s" ), QString( "Your" ) );
         }
-        else
+        else if ( !m_prevUsername.isEmpty() )
         {
-            lblText.replace( QString( "Your" ), QString( oldSession.username() + "'s" ) );
+            lblText.replace( QString( "Your" ), QString( m_prevUsername + "'s" ) );
         }
         m_mainLabel->setText( lblText );
+        m_prevUsername = newSession->userInfo().name();
     }
 
 private slots:
@@ -216,6 +217,7 @@ signals:
 
 private:
     QLabel* m_mainLabel;
+    QString m_prevUsername;
 };
 
 #endif

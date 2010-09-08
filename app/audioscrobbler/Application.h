@@ -135,7 +135,7 @@ namespace audioscrobbler
         void onResumed();
         void onStopped();
 
-        void onSessionChanged( unicorn::Session newSession, unicorn::Session oldSession );
+        void onSessionChanged( unicorn::Session* newSession );
 
         void showWindow();
 

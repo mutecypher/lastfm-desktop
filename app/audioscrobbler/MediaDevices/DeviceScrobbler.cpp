@@ -1,6 +1,7 @@
 #include "DeviceScrobbler.h"
 
 #include "Dialogs/ScrobbleConfirmationDialog.h"
+#include "lib/unicorn/UnicornApplication.h"
 
 DeviceScrobbler::DeviceScrobbler() { }
 
@@ -8,7 +9,11 @@ DeviceScrobbler::DeviceScrobbler() { }
 void 
 DeviceScrobbler::checkCachedIPodScrobbles() {
     // Check if there are any iPod scrobbles
-    unicorn::UserSettings us( Session().username() );
+    unicorn::Session* currentSession = qobject_cast<unicorn::Application*>(qApp)->currentSession();
+    if( !currentSession )
+        return;
+
+    unicorn::UserSettings us( currentSession->userInfo().name() );
     int count = us.beginReadArray( "associatedDevices" );
 
     for ( int i = 0; i < count; i++ )

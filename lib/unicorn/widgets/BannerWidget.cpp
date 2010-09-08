@@ -1,5 +1,6 @@
 #include "BannerWidget.h"
 
+#include <QDesktopServices>
 #include <QMoveEvent>
 #include <QResizeEvent>
 #include <QPainter>
@@ -12,6 +13,7 @@ BannerWidget::BannerWidget( const QString& pText, QWidget* parent )
     setText( QString( " " ) + pText + " " );
     parent->installEventFilter( this );
     move( 0, 0 );
+    connect( this, SIGNAL( clicked() ), this, SLOT( onClick() ) );
 }
 
 void 
@@ -31,6 +33,12 @@ BannerWidget::paintEvent( QPaintEvent* e )
 
     painter.fillRect( bgRect, palette().brush( QPalette::Window ));
     style()->drawItemText( &painter, m_textRect.translated( 0, -1 ), Qt::AlignHCenter, palette(), true, text() );
+}
+
+void 
+BannerWidget::setHref( const QUrl& url )
+{
+    m_href = url;
 }
 
 void 
@@ -60,3 +68,10 @@ BannerWidget::eventFilter( QObject* obj, QEvent* event )
     }
     return false;
 }
+
+void
+BannerWidget::onClick()
+{
+    QDesktopServices::openUrl( m_href );
+}
+

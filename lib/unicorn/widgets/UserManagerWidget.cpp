@@ -257,12 +257,19 @@ UserManagerWidget::onUserAdded()
 {
     Q_ASSERT( m_loginProcess );
 
-    const unicorn::Session& s = m_loginProcess->session();
+    unicorn::Session* s = qobject_cast<unicorn::Application*>( qApp )->currentSession();
+
+    if ( !s )
+    {
+        m_loginProcess->cancel();
+        m_loginProcess->showError();
+        return;
+    }
 
     bool alreadyAdded = false;
     foreach ( UserRadioButton* b, findChildren<UserRadioButton*>() )
     {
-        if ( s.username() == b->user() )
+        if ( s->userInfo().name() == b->user() )
         {
             alreadyAdded = true;
             break;
@@ -271,23 +278,15 @@ UserManagerWidget::onUserAdded()
 
     if ( !alreadyAdded )
     {
-        if ( s.isValid() )
-        {
-            User user( s.username());
-            UserRadioButton* urb = new UserRadioButton( user );
+        User user( s->userInfo().name() );
+        UserRadioButton* urb = new UserRadioButton( user );
 
-            add( urb );
-            if( ui.groupBox->layout()->count() <= 1 ) urb->click();
-    
-            setTabOrders();
+        add( urb );
+        if( ui.groupBox->layout()->count() <= 1 ) urb->click();
 
-            WelcomeDialog( user ).exec();
-        }
-        else
-        {
-            m_loginProcess->cancel();
-            m_loginProcess->showError();
-        }
+        setTabOrders();
+
+        WelcomeDialog( user ).exec();
     }
     else
     {
