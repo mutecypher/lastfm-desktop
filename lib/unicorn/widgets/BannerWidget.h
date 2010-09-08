@@ -5,6 +5,7 @@
 #include <QAbstractButton>
 #include <QMatrix>
 #include <QRect>
+#include <QUrl>
 
 #include "lib/DllExportMacro.h"
 
@@ -13,6 +14,9 @@ Q_OBJECT
 public:
     BannerWidget( const QString& text, QWidget* parent );
 
+public slots:
+    void setHref( const QUrl& url );
+
 protected:
     void paintEvent( class QPaintEvent* e );
     void resizeEvent( class QResizeEvent* e );
@@ -20,6 +24,12 @@ protected:
 
     QMatrix m_transformMatrix;
     QRect m_textRect;
+
+private slots:
+    void onClick();
+
+private:
+    QUrl m_href;
 };
 
 #endif //BANNER_WIDGET_H

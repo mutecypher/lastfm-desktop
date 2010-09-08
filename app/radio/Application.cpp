@@ -17,6 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #include "Application.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "Radio.h"
@@ -127,11 +128,10 @@ Application::onWsError( lastfm::ws::Error e )
     switch (e)
     {
         case lastfm::ws::InvalidSessionKey:
-            if(!logout())
-                quit();
+            quit();
             break;
-		default:
-			break;
+        default:
+            break;
     }
 }
 

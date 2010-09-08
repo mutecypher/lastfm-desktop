@@ -18,30 +18,33 @@ public:
     :QMenu( p )
     {
         connect( qApp, SIGNAL( rosterUpdated()), SLOT( refresh()));
-        connect( qApp, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session ))
-                     , SLOT( onSessionChanged( unicorn::Session )));
+        connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ),
+                 this, SLOT( onSessionChanged( unicorn::Session* ) ) );
         refresh();
     }
 
 protected slots:
-    void onSessionChanged( const unicorn::Session& s )
+    void onSessionChanged( unicorn::Session* s )
     { 
+        if ( !s )
+            return;
+
         foreach( QAction* a, actions() ) {
-            if( a->text() == s.username())
+            if( a->text() == s->userInfo().name() )
                 return a->setChecked( true );
         }
     }
 
     void onTriggered( QAction* a )
     {
-        unicorn::Session s( a->text() );
-        if( !s.isValid()) {
-            //TODO Error handling
-            return;
-        }
-        
+        unicorn::Settings s;
+
+        s.beginGroup( a->text() );
+        QString username = a->text();
+        QString sessionKey = s.value( "SessionKey", "" ).toString();
         QMetaObject::invokeMethod( qApp, "changeSession", 
-                                         Q_ARG( unicorn::Session, s));
+                                         Q_ARG( const QString&, username ),
+                                         Q_ARG( const QString&, sessionKey ) );
 
         //Refresh the user list to be certain that 
         //the correct current user is checked.

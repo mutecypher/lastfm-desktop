@@ -17,6 +17,8 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include "Application.h"
 #include "IpodDevice_linux.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/UnicornSettings.h"
@@ -315,7 +317,12 @@ IpodDeviceLinux::deviceName() const
 QString
 IpodDeviceLinux::tableName() const
 {
-    return unicorn::Session().username() + "_" + m_deviceId;
+    audioscrobbler::Application* app = qobject_cast<audioscrobbler::Application* >( qApp );
+    if ( app )
+    {
+        return app->currentSession()->userInfo().name() + "_" + m_deviceId;
+    }
+    return QString();
 }
 
 bool

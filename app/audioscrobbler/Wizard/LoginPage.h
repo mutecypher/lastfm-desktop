@@ -41,7 +41,7 @@ public:
  
 private slots:
     void authenticate();
-    void onAuthenticated( unicorn::Session& session );
+    void onAuthenticated( unicorn::Session* session );
 
 private:
 

@@ -235,6 +235,8 @@ ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
     int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
     int userListens = lfm["artist"]["stats"]["userplaycount"].text().toInt();
 
+    ui.onTourBanner->setHref( QUrl( lfm["artist"]["url"].text() + "/+events" ) );
+
     model.similarArtists->clear();
 
     foreach(const XmlQuery& e, lfm["artist"]["similar"].children("artist").mid(0,4))

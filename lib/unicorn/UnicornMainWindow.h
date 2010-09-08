@@ -120,7 +120,7 @@ namespace unicorn
 
     private slots:
         void onGotUserInfo( const lastfm::UserDetails& );
-        void onSessionChanged( const unicorn::Session& );
+        void onSessionChanged( unicorn::Session* );
         void cleverlyPosition();
 #ifdef Q_OS_WIN32
         void updateThumbButtons();

@@ -52,17 +52,14 @@ private:
  * Call the authenticate function to start the login process
  * and connect to the gotSession signal to be notified when
  * the process finishes.
- * Whenever you call the method session() directly make sure you check
- * if it's a valid session. If it's not, you can use the showError method
- * to show a dialog with the error message.
  */
 class UNICORN_DLLEXPORT LoginProcess : public QObject
 {
     Q_OBJECT
 public:
     LoginProcess( QObject* parent = 0 );
+    ~LoginProcess();
     QString token() const;
-    Session session() const;
     QUrl authUrl() const;
     void showError() const;
 
@@ -72,14 +69,13 @@ public slots:
     void cancel();
 
 signals:
-    void gotSession( unicorn::Session& s );
+    void gotSession( unicorn::Session* s );
 
 private slots:
     void onGotSession();
 
 private: 
     TinyWebServer* m_webServer;
-    Session m_session;
     QString m_token;
     lastfm::ws::ParseError m_lastError;
     QNetworkReply::NetworkError m_lastNetworkError;
