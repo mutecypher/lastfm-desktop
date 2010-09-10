@@ -114,7 +114,7 @@ namespace audioscrobbler
         void onTrackGotInfo(const XmlQuery& );
 
     protected:
-        virtual void initiateLogin( bool forceLogout = false )throw( StubbornUserException );
+        virtual void initiateLogin()throw( StubbornUserException );
 
     private slots:
         void onTrayActivated(QSystemTrayIcon::ActivationReason);

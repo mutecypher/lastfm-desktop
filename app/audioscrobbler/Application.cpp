@@ -80,7 +80,7 @@ Application::Application(int& argc, char** argv)
 }
 
 void
-Application::initiateLogin( bool forceLogout ) throw( StubbornUserException )
+Application::initiateLogin() throw( StubbornUserException )
 {
     if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
     {
