@@ -69,6 +69,7 @@ Radio::~Radio()
 void
 Radio::play( const RadioStation& station )
 {
+    qDebug() << "play";
     if (m_state != Stopped)
     {
         //FIXME filthy! get us to a clean slate
@@ -129,6 +130,7 @@ Radio::playNext( const RadioStation& station )
 void
 Radio::enqueue()
 {  
+    qDebug() << "enqueue";
     if (m_state == Stopped) {
         // this should be impossible. If we are stopped, then the GUI looks
         // stopped too, and receiving tracks to play will result in a playing
@@ -287,6 +289,9 @@ Radio::onPhononStateChanged( Phonon::State newstate, Phonon::State oldstate )
 void
 Radio::phononEnqueue()
 {
+    qDebug() << "phononEnqueue";
+    qDebug() << "queue size: " << m_mediaObject->queue().size();
+
     if (m_mediaObject->queue().size() || !m_tuner)
         return;
 
@@ -308,6 +313,10 @@ Radio::phononEnqueue()
 
         // if we are playing a track now, enqueue, otherwise start now!
         if (m_mediaObject->currentSource().url().isValid()) {
+            //on Linux we should wait to track finish so we're not gonna enqueue
+            #ifdef Q_WS_X11
+            return;
+            #endif
             qDebug() << "enqueuing " << t;
             m_mediaObject->enqueue( ms );
         } else {
@@ -439,6 +448,7 @@ Radio::onFinished()
 bool 
 Radio::initRadio()
 {
+    qDebug() << "initRadio";
 	Phonon::AudioOutput* audioOutput = new Phonon::AudioOutput( Phonon::MusicCategory, this );
 
     // restore the last volume
@@ -508,6 +518,7 @@ Radio::initRadio()
 void
 Radio::deInitRadio()
 {
+    qDebug() << "deInitRadio";
     // try to deleteLater and phonon crashes. poo.
     // leak em...  :(
     m_audioOutput = 0;

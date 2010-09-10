@@ -137,6 +137,7 @@ UserRadioButton::removeMe()
     if ( us.userRoster().count() == 0 )
     {
         us.setValue( "FirstRunWizardCompleted", false );
+        qApp->closeAllWindows();
         qobject_cast<unicorn::Application*>( qApp )->restart();
     }
 
