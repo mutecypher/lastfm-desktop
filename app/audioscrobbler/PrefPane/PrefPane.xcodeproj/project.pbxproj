@@ -10,15 +10,23 @@
 		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		FB2089DD11ECD211004CA2E5 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FB2089DC11ECD211004CA2E5 /* icon.png */; };
-		FB208A0C11EF15A8004CA2E5 /* FmLastPrefPane.m in Sources */ = {isa = PBXBuildFile; fileRef = FB208A0A11EF15A8004CA2E5 /* FmLastPrefPane.m */; };
-		FB64B78211EF6A220058400B /* moc_DataBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB64B78011EF6A220058400B /* moc_DataBox.cpp */; };
-		FB64B78311EF6A220058400B /* moc_StylableWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB64B78111EF6A220058400B /* moc_StylableWidget.cpp */; };
+		FB208A0C11EF15A8004CA2E5 /* FmLastPrefPane.mm in Sources */ = {isa = PBXBuildFile; fileRef = FB208A0A11EF15A8004CA2E5 /* FmLastPrefPane.mm */; };
 		FBA446ED11EC9EDF005DA6BB /* FmLastPrefPaneQtView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FBA446EA11EC9EDF005DA6BB /* FmLastPrefPaneQtView.mm */; };
 		FBA446EE11EC9EDF005DA6BB /* FmLastPrefPanePrefWidget.mm in Sources */ = {isa = PBXBuildFile; fileRef = FBA446EC11EC9EDF005DA6BB /* FmLastPrefPanePrefWidget.mm */; };
 		FBA446F211EC9F46005DA6BB /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBA446F111EC9F46005DA6BB /* PreferencePanes.framework */; };
 		FBA446FB11ECBFC8005DA6BB /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBA446F911ECBFC8005DA6BB /* MainWindow.xib */; };
 		FBA4470211ECBFE9005DA6BB /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBA4470011ECBFE9005DA6BB /* QtCore.framework */; };
 		FBA4470311ECBFE9005DA6BB /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBA4470111ECBFE9005DA6BB /* QtGui.framework */; };
+		FBD4837111FA088F00B21E5A /* moc_SettingsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD4837011FA088F00B21E5A /* moc_SettingsDialog.cpp */; };
+		FBD4838111FA09DC00B21E5A /* SettingsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD4838011FA09DC00B21E5A /* SettingsDialog.cpp */; };
+		FBD4838611FA0A0D00B21E5A /* AccountSettingsWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD4838311FA0A0D00B21E5A /* AccountSettingsWidget.cpp */; };
+		FBD4838711FA0A0D00B21E5A /* IpodSettingsWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD4838411FA0A0D00B21E5A /* IpodSettingsWidget.cpp */; };
+		FBD4838811FA0A0D00B21E5A /* ScrobbleSettingsWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD4838511FA0A0D00B21E5A /* ScrobbleSettingsWidget.cpp */; };
+		FBD483AE11FA0CC300B21E5A /* moc_AccountSettingsWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD483AB11FA0CC300B21E5A /* moc_AccountSettingsWidget.cpp */; };
+		FBD483AF11FA0CC300B21E5A /* moc_IpodSettingsWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD483AC11FA0CC300B21E5A /* moc_IpodSettingsWidget.cpp */; };
+		FBD483B011FA0CC300B21E5A /* moc_ScrobbleSettingsWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD483AD11FA0CC300B21E5A /* moc_ScrobbleSettingsWidget.cpp */; };
+		FBD483B411FA0CFE00B21E5A /* moc_SettingsWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD483B311FA0CFE00B21E5A /* moc_SettingsWidget.cpp */; };
+		FBD483B711FA0D4700B21E5A /* SettingsWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD483B611FA0D4700B21E5A /* SettingsWidget.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,10 +38,8 @@
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D2F7E65807B2D6F200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		FB2089DC11ECD211004CA2E5 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
-		FB208A0A11EF15A8004CA2E5 /* FmLastPrefPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FmLastPrefPane.m; sourceTree = "<group>"; };
+		FB208A0A11EF15A8004CA2E5 /* FmLastPrefPane.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FmLastPrefPane.mm; sourceTree = "<group>"; };
 		FB208A0B11EF15A8004CA2E5 /* FmLastPrefPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FmLastPrefPane.h; sourceTree = "<group>"; };
-		FB64B78011EF6A220058400B /* moc_DataBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = moc_DataBox.cpp; path = ../../../lib/unicorn/_build/moc_DataBox.cpp; sourceTree = SOURCE_ROOT; };
-		FB64B78111EF6A220058400B /* moc_StylableWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = moc_StylableWidget.cpp; path = ../../../lib/unicorn/_build/moc_StylableWidget.cpp; sourceTree = SOURCE_ROOT; };
 		FBA446E911EC9EDF005DA6BB /* FmLastPrefPaneQtView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FmLastPrefPaneQtView.h; sourceTree = "<group>"; };
 		FBA446EA11EC9EDF005DA6BB /* FmLastPrefPaneQtView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FmLastPrefPaneQtView.mm; sourceTree = "<group>"; };
 		FBA446EB11EC9EDF005DA6BB /* FmLastPrefPanePrefWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FmLastPrefPanePrefWidget.h; sourceTree = "<group>"; };
@@ -43,6 +49,16 @@
 		FBA4470011ECBFE9005DA6BB /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = /opt/qt/qt.git/lib/QtCore.framework; sourceTree = "<absolute>"; };
 		FBA4470111ECBFE9005DA6BB /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = /opt/qt/qt.git/lib/QtGui.framework; sourceTree = "<absolute>"; };
 		FBCB815F11ECCA780019E4C7 /* PrefPane_prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefPane_prefix.pch; sourceTree = "<group>"; };
+		FBD4837011FA088F00B21E5A /* moc_SettingsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = moc_SettingsDialog.cpp; path = ../_build/moc_SettingsDialog.cpp; sourceTree = SOURCE_ROOT; };
+		FBD4838011FA09DC00B21E5A /* SettingsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SettingsDialog.cpp; path = ../Dialogs/SettingsDialog.cpp; sourceTree = SOURCE_ROOT; };
+		FBD4838311FA0A0D00B21E5A /* AccountSettingsWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccountSettingsWidget.cpp; path = ../Widgets/AccountSettingsWidget.cpp; sourceTree = SOURCE_ROOT; };
+		FBD4838411FA0A0D00B21E5A /* IpodSettingsWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IpodSettingsWidget.cpp; path = ../Widgets/IpodSettingsWidget.cpp; sourceTree = SOURCE_ROOT; };
+		FBD4838511FA0A0D00B21E5A /* ScrobbleSettingsWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScrobbleSettingsWidget.cpp; path = ../Widgets/ScrobbleSettingsWidget.cpp; sourceTree = SOURCE_ROOT; };
+		FBD483AB11FA0CC300B21E5A /* moc_AccountSettingsWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = moc_AccountSettingsWidget.cpp; path = ../_build/moc_AccountSettingsWidget.cpp; sourceTree = SOURCE_ROOT; };
+		FBD483AC11FA0CC300B21E5A /* moc_IpodSettingsWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = moc_IpodSettingsWidget.cpp; path = ../_build/moc_IpodSettingsWidget.cpp; sourceTree = SOURCE_ROOT; };
+		FBD483AD11FA0CC300B21E5A /* moc_ScrobbleSettingsWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = moc_ScrobbleSettingsWidget.cpp; path = ../_build/moc_ScrobbleSettingsWidget.cpp; sourceTree = SOURCE_ROOT; };
+		FBD483B311FA0CFE00B21E5A /* moc_SettingsWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = moc_SettingsWidget.cpp; path = ../_build/moc_SettingsWidget.cpp; sourceTree = SOURCE_ROOT; };
+		FBD483B611FA0D4700B21E5A /* SettingsWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SettingsWidget.cpp; path = ../Widgets/SettingsWidget.cpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +79,12 @@
 		089C166AFE841209C02AAC07 /* PrefPane */ = {
 			isa = PBXGroup;
 			children = (
+				FBD483B611FA0D4700B21E5A /* SettingsWidget.cpp */,
+				FBD4837011FA088F00B21E5A /* moc_SettingsDialog.cpp */,
+				FBD483B311FA0CFE00B21E5A /* moc_SettingsWidget.cpp */,
+				FBD483AB11FA0CC300B21E5A /* moc_AccountSettingsWidget.cpp */,
+				FBD483AC11FA0CC300B21E5A /* moc_IpodSettingsWidget.cpp */,
+				FBD483AD11FA0CC300B21E5A /* moc_ScrobbleSettingsWidget.cpp */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				32C88E010371C26100C91783 /* Other Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
@@ -95,13 +117,15 @@
 		08FB77AFFE84173DC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				FB64B78011EF6A220058400B /* moc_DataBox.cpp */,
-				FB64B78111EF6A220058400B /* moc_StylableWidget.cpp */,
+				FBD4838311FA0A0D00B21E5A /* AccountSettingsWidget.cpp */,
+				FBD4838411FA0A0D00B21E5A /* IpodSettingsWidget.cpp */,
+				FBD4838511FA0A0D00B21E5A /* ScrobbleSettingsWidget.cpp */,
+				FBD4838011FA09DC00B21E5A /* SettingsDialog.cpp */,
 				FBA446E911EC9EDF005DA6BB /* FmLastPrefPaneQtView.h */,
 				FBA446EA11EC9EDF005DA6BB /* FmLastPrefPaneQtView.mm */,
 				FBA446EB11EC9EDF005DA6BB /* FmLastPrefPanePrefWidget.h */,
 				FBA446EC11EC9EDF005DA6BB /* FmLastPrefPanePrefWidget.mm */,
-				FB208A0A11EF15A8004CA2E5 /* FmLastPrefPane.m */,
+				FB208A0A11EF15A8004CA2E5 /* FmLastPrefPane.mm */,
 				FB208A0B11EF15A8004CA2E5 /* FmLastPrefPane.h */,
 			);
 			name = Classes;
@@ -202,9 +226,17 @@
 			files = (
 				FBA446ED11EC9EDF005DA6BB /* FmLastPrefPaneQtView.mm in Sources */,
 				FBA446EE11EC9EDF005DA6BB /* FmLastPrefPanePrefWidget.mm in Sources */,
-				FB208A0C11EF15A8004CA2E5 /* FmLastPrefPane.m in Sources */,
-				FB64B78211EF6A220058400B /* moc_DataBox.cpp in Sources */,
-				FB64B78311EF6A220058400B /* moc_StylableWidget.cpp in Sources */,
+				FB208A0C11EF15A8004CA2E5 /* FmLastPrefPane.mm in Sources */,
+				FBD4837111FA088F00B21E5A /* moc_SettingsDialog.cpp in Sources */,
+				FBD4838111FA09DC00B21E5A /* SettingsDialog.cpp in Sources */,
+				FBD4838611FA0A0D00B21E5A /* AccountSettingsWidget.cpp in Sources */,
+				FBD4838711FA0A0D00B21E5A /* IpodSettingsWidget.cpp in Sources */,
+				FBD4838811FA0A0D00B21E5A /* ScrobbleSettingsWidget.cpp in Sources */,
+				FBD483AE11FA0CC300B21E5A /* moc_AccountSettingsWidget.cpp in Sources */,
+				FBD483AF11FA0CC300B21E5A /* moc_IpodSettingsWidget.cpp in Sources */,
+				FBD483B011FA0CC300B21E5A /* moc_ScrobbleSettingsWidget.cpp in Sources */,
+				FBD483B411FA0CFE00B21E5A /* moc_SettingsWidget.cpp in Sources */,
+				FBD483B711FA0D4700B21E5A /* SettingsWidget.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,8 +277,18 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = PrefPane_Prefix.pch;
+				HEADER_SEARCH_PATHS = (
+					"/opt/qt/qt-current/include/**",
+					/opt/local/include,
+					../../..,
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				LIBRARY_SEARCH_PATHS = /opt/local/lib;
+				OTHER_LDFLAGS = (
+					"-llastfm",
+					"-lunicorn",
+				);
 				PRODUCT_NAME = Scrobbler_debug;
 				WRAPPER_EXTENSION = prefpane;
 			};
@@ -282,14 +324,11 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"/opt/qt/qt-current/include/QtGui",
-					../../..,
-				);
 				INFOPLIST_PREPROCESS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
+				PRELINK_LIBS = "";
 				PRODUCT_NAME = Audioscrobbler;
 				SDKROOT = macosx10.4;
 				WRAPPER_EXTENSION = prefpane;

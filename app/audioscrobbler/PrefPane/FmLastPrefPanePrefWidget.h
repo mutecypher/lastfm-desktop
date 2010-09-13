@@ -18,9 +18,11 @@ public:
     FmLastPrefPanePrefWidget();
     NSView* view();
     QMacNativeWidget* qWidget(){ return widget; }
+    void updateGeometry();
     
 private:
     QMacNativeWidget* widget;
+    class SettingsDialog* dialog;
 };
 
 #endif //PREF_WIDGET_H_

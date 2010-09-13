@@ -8,3 +8,5 @@ DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 # UniqueApplication
 win32:LIBS += user32.lib shell32.lib ole32.lib
+
+macx:LIBS += -framework Cocoa

@@ -180,6 +180,7 @@ namespace unicorn
         QString m_cssFileName;
 
 #ifdef __APPLE__
+        void installCocoaEventHandler() const;
         static short appleEventHandler( const AppleEvent*, AppleEvent*, long );
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
 #endif

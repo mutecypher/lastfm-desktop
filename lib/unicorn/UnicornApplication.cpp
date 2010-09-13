@@ -57,7 +57,6 @@
 #include <QTimer>
 #include <QTranslator>
 
-
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
@@ -81,6 +80,7 @@ unicorn::Application::init()
     setupHotKeys();
 
     #ifdef __APPLE__
+    installCocoaEventHandler();
     AEEventHandlerUPP h = NewAEEventHandlerUPP( appleEventHandler );
     AEInstallEventHandler( kCoreEventClass, kAEReopenApplication, h, 0, false );
     #endif
@@ -298,7 +298,7 @@ unicorn::Application::changeSession( Session* newSession, bool announce )
     if ( m_currentSession && newSession->userInfo().name() == m_currentSession->userInfo().name() )
         return 0;
 
-    if( !m_wizardRunning &&  Settings().value( "changeSessionConfirmation", true ).toBool() )
+    if( m_currentSession && !m_wizardRunning &&  Settings().value( "changeSessionConfirmation", true ).toBool() )
     {
         bool dontAskAgain = false;
         int result = QMessageBoxBuilder( findMainWindow() ).setTitle( tr( "Changing User" ) )

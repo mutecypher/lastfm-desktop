@@ -6,4 +6,6 @@
 
 - (id) initWithFrame:(NSRect)frameRect;
 - (void) drawRect:(NSRect)rect;
+- (FmLastPrefPanePrefWidget*) prefWidget;
+
 @end
