@@ -262,6 +262,7 @@ Application::init()
     connect(fetcher, SIGNAL(trackGotTopFans(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotTopFans(XmlQuery)));
     connect(fetcher, SIGNAL(artistGotEvents(XmlQuery)), mw->nowScrobbling(), SLOT(onArtistGotEvents(XmlQuery)));
     connect(fetcher, SIGNAL(trackGotTags(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotTags(XmlQuery)));
+    connect(fetcher, SIGNAL(finished()), mw->nowScrobbling(), SLOT(onFinished()));
 
 /// mediator
     mediator = new PlayerMediator(this);

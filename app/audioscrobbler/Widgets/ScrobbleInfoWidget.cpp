@@ -31,6 +31,7 @@
 #include <QDesktopServices>
 #include <QAbstractTextDocumentLayout>
 #include <QTextFrame>
+#include <QScrollBar>
 #include <lastfm/XmlQuery>
 #include <lastfm/ws.h>
 #include "../Application.h"
@@ -47,8 +48,6 @@
 ScrobbleInfoWidget::ScrobbleInfoWidget( QWidget* p )
                    :StylableWidget( p )
 {
-    //ui.setupUi( this );
-    
     setupUi();
     
     ui.onTourBanner = new BannerWidget( tr("On Tour"), ui.contents );
@@ -81,7 +80,7 @@ ScrobbleInfoWidget::setupUi()
     ui.scrollArea = new QScrollArea( this );
     
     ui.contents = new QWidget();
-    QVBoxLayout* layout = new QVBoxLayout( ui.contents );
+    QVBoxLayout* mainLayout = new QVBoxLayout( ui.contents );
     
     ui.scrollArea->setWidget( ui.contents );
     ui.scrollArea->setWidgetResizable( true );
@@ -109,7 +108,12 @@ ScrobbleInfoWidget::setupUi()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
     }
-    layout->addWidget(titleBox);
+
+    mainLayout->addWidget(titleBox);
+
+    mainLayout->addWidget( ui.area = new QWidget( this ) );
+    ui.area->hide();
+    QVBoxLayout* layout = new QVBoxLayout( ui.area );
 
     QWidget* scrobbles = new QWidget();
     {
@@ -182,15 +186,23 @@ ScrobbleInfoWidget::setupUi()
     layout->addWidget( simartBox );
     
     layout->addStretch(1);
+	mainLayout->addStretch(1);
 
     new QVBoxLayout( this );
     this->layout()->setContentsMargins( 0, 0, 0, 0 );
     this->layout()->addWidget( ui.scrollArea );
+
+    //ui.fadeInWidget = new FadeInWidget( area );
 }
 
 void 
 ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
 {
+    if ( ui.scrollArea->verticalScrollBar()->isVisible() )
+        ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+
+    ui.area->hide();
+
     const unsigned short em_dash = 0x2014;
     QString title = QString("<a class='title' href=\"%1\">%2</a> ") + QChar(em_dash) + " <a class='title' href=\"%3\">%4</a>";
     const unicorn::Application* uApp = qobject_cast<unicorn::Application*>(qApp);
@@ -227,6 +239,14 @@ ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
     }
 }
 
+
+void
+ScrobbleInfoWidget::onFinished()
+{
+    ui.area->updateGeometry();
+    ui.area->show();
+    ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
+}
 
 void
 ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
@@ -284,6 +304,7 @@ ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
 void
 ScrobbleInfoWidget::onStopped()
 {
+    ui.area->hide();
     ui.artistImage->clear();
     ui.artistImage->setHref(QUrl());
     ui.title1->clear();

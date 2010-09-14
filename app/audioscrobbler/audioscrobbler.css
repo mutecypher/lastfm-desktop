@@ -315,6 +315,11 @@ MetadataWindow QLabel#name {
 DataListWidget QLabel{ padding: 0px; margin: 0px; padding-left: 5px;}
 DataListWidget { padding: 0px; margin: 0px; margin-bottom: -4px; }
 
+ScrobbleInfoWidget LfmListView {
+	max-height: 107;
+	min-height: 107;
+}
+
 MetadataWindow QLabel#value,
 MetadataWindow #value > QLabel {
     padding-top 1px;
