@@ -20,8 +20,10 @@ public:
 
     void checkCachedIPodScrobbles();
     void twiddled( QStringList arguments );
+    void iPodDetected( const QStringList& arguments );
 
 signals:
+    void detectedIPod( const QString& serialNumber );
     void foundScrobbles( QList<Track> );
 
 public slots:
@@ -37,11 +39,10 @@ private slots:
     void onIpodScrobblingError();
 #endif
 
-
 private:
-    #ifdef Q_WS_X11
-        QPointer<IpodDeviceLinux> iPod;
-    #endif
+#ifdef Q_WS_X11
+    QPointer<IpodDeviceLinux> iPod;
+#endif
 
 
     void scrobbleIpodFile( QString iPodScrobblesFilename );

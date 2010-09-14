@@ -181,6 +181,7 @@ namespace unicorn
 
 #ifdef __APPLE__
         void installCocoaEventHandler() const;
+        void appleEventReceived( const QStringList& messages );
         static short appleEventHandler( const AppleEvent*, AppleEvent*, long );
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
 #endif

@@ -20,6 +20,7 @@
 #include "MetadataWindow.h"
 
 #include "Application.h"
+#include "MediaDevices/DeviceScrobbler.h"
 #include "../Widgets/ProfileWidget.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "../Widgets/ScrobbleInfoWidget.h"
@@ -54,9 +55,13 @@ TitleBar::TitleBar( const QString& title )
     pb->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
     pb->setFlat( true );
     layout->addWidget( m_inetStatus = new QLabel( "Online", this ) );
+    layout->addWidget( m_iPodStatus = new QLabel( "", this ));
     m_inetStatus->setStyleSheet( "color: #cccccc" );
+    m_iPodStatus->setStyleSheet( "color: #cccccc" );
     connect( qApp, SIGNAL( internetConnectionDown() ), this, SLOT( onConnectionDown() ) );
     connect( qApp, SIGNAL( internetConnectionUp() ), this, SLOT( onConnectionUp() ) );
+    DeviceScrobbler* deviceScrobbler = qobject_cast<audioscrobbler::Application*>(qApp)->deviceScrobbler();
+    connect(deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected( QString )), Qt::DirectConnection);
     QLabel* l;
     //layout->addWidget( l = new QLabel( title, this ));
     //l->setAlignment( Qt::AlignCenter );
@@ -80,6 +85,12 @@ void
 TitleBar::onConnectionDown()
 {
     m_inetStatus->setText( "Offline" );
+}
+
+void
+TitleBar::onIPodDetected( const QString& )
+{
+    m_iPodStatus->setText( "iPod Detected.." );
 }
 
 

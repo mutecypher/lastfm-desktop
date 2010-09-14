@@ -171,7 +171,7 @@ Application::init()
 #ifdef Q_WS_X11
     menu->addSeparator();
     m_scrobble_ipod_action = menu->addAction( tr( "Scrobble iPod..." ) );
-    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), deviceScrobbler, SLOT( onScrobbleIpodTriggered() ) );
+    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), m_deviceScrobbler, SLOT( onScrobbleIpodTriggered() ) );
 #endif
 
     menu->addSeparator();
@@ -214,13 +214,14 @@ Application::init()
     fetcher = new ScrobbleInfoFetcher;
 
 /// DeviceScrobbler
-    deviceScrobbler = new DeviceScrobbler;
+    m_deviceScrobbler = new DeviceScrobbler;
 
 /// MetadataWindow
     mw = new MetadataWindow;
     mw->addWinThumbBarButton( m_love_action );
     mw->addWinThumbBarButton( m_tag_action );
     mw->addWinThumbBarButton( m_share_action );
+
 #ifdef Q_WS_MAC
     const int sKeyCode = 1;
 #elif defined Q_WS_WIN
@@ -322,11 +323,11 @@ Application::onSessionChanged( unicorn::Session* newSession )
     connect( as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
     delete oldAs;
 
-    deviceScrobbler->disconnect();
-    connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )),
+    m_deviceScrobbler->disconnect( SIGNAL( foundScrobbles(QList<Track> )));
+    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )),
              as, SLOT( cache( QList<Track> )));
 
-    deviceScrobbler->checkCachedIPodScrobbles();
+    m_deviceScrobbler->checkCachedIPodScrobbles();
 }
 
 void
@@ -570,6 +571,12 @@ Application::stopWatch() const
     return watch;
 }
 
+DeviceScrobbler* 
+Application::deviceScrobbler() const
+{
+    return m_deviceScrobbler.data();
+}
+
 void 
 Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason ) 
 {
@@ -592,13 +599,18 @@ Application::showWindow()
 void
 Application::onMessageReceived(const QStringList& message)
 {
-    int pos = message.indexOf( "--twiddled" );
+    qDebug() << "Messages: " << message;
 
     if ( message.contains( "--twiddled" ) )
     {
-        deviceScrobbler->twiddled( message );
+        m_deviceScrobbler->twiddled( message );
     }
-    else if ( !message.contains( "--tray" ) )
+    else if ( message.contains( "--new-ipod-detected" ) ||
+              message.contains( "--ipod-detected" ))
+    {
+        m_deviceScrobbler->iPodDetected( message );
+    }
+    if ( !message.contains( "--tray" ) )
     {
         // raise the app
         m_show_window_action->trigger();

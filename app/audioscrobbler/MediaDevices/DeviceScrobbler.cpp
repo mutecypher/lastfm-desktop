@@ -1,4 +1,5 @@
 #include "DeviceScrobbler.h"
+#include <QDebug>
 
 #include "Dialogs/ScrobbleConfirmationDialog.h"
 #include "lib/unicorn/UnicornApplication.h"
@@ -10,8 +11,9 @@
 
 QString getIpodMountPath();
 
-DeviceScrobbler::DeviceScrobbler() { }
-
+DeviceScrobbler::DeviceScrobbler() {
+    qDebug() << "Instantiating DeviceScrobbler";
+}
 
 void 
 DeviceScrobbler::checkCachedIPodScrobbles() {
@@ -52,6 +54,25 @@ DeviceScrobbler::checkCachedIPodScrobbles() {
         delete ipod;
     }
     us.endArray();
+}
+
+
+void 
+DeviceScrobbler::iPodDetected( const QStringList& arguments ) {
+    bool newIpod = false;
+
+    int pos = arguments.indexOf( "--ipod-detected" );
+    if( pos == -1 ) {
+        pos = arguments.indexOf( "--new-ipod-detected" );
+        newIpod = true;
+    }
+
+    QString serialNumber;
+    
+    if( pos > -1 ) serialNumber = arguments[ pos + 1 ];
+   
+    qDebug() << "emitting detectedIPod: " << (int)this;
+    emit detectedIPod( serialNumber );
 }
 
 void 
@@ -141,10 +162,7 @@ DeviceScrobbler::onScrobbleIpodTriggered() {
         iPod->fetchTracksToScrobble();
     }
 }
-#endif
 
-
-#ifdef Q_WS_X11
 
 QString getIpodMountPath()
 {
@@ -300,12 +318,6 @@ DeviceScrobbler::onIpodScrobblingError()
 }
 
 #endif
-
-
-#ifdef Q_WS_X11
-QPointer<IpodDeviceLinux> iPod;
-#endif
-
 
 void 
 DeviceScrobbler::scrobbleIpodFile( QString iPodScrobblesFilename )

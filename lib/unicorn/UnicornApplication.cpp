@@ -165,8 +165,6 @@ unicorn::Application::initiateLogin() throw( StubbornUserException )
 }
 
 
-
-
 void 
 unicorn::Application::manageUsers()
 {
@@ -458,7 +456,6 @@ unicorn::Application::findMainWindow()
 }
 
 #ifdef __APPLE__
-#include <iostream>
 OSStatus /* static */
 unicorn::Application::hotkeyEventHandler( EventHandlerCallRef, EventRef event, void* data )
 {
@@ -467,6 +464,14 @@ unicorn::Application::hotkeyEventHandler( EventHandlerCallRef, EventRef event, v
     GetEventParameter( event, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(hkId), NULL, &hkId);
     self->onHotKeyEvent( hkId.id );
     return noErr;
+}
+
+
+void
+unicorn::Application::appleEventReceived( const QStringList& messages )
+{
+    qDebug() << "Messages: " << messages;
+    emit messageReceived( messages );
 }
 
 pascal OSErr /* static */
@@ -510,7 +515,7 @@ unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long 
         }
     }
 
-    emit qobject_cast<unicorn::Application*>(qApp)->messageReceived( args );
+    qobject_cast<unicorn::Application*>(qApp)->appleEventReceived( args );
     return unimpErr;
 
 }
