@@ -134,6 +134,13 @@ main( int argc, char** argv )
 
                 moose::startAudioscrobbler( args );
             }
+            else
+            {
+                QStringList args;
+                args << "--tray";
+                args << "--twiddled-no-tracks";
+                moose::startAudioscrobbler( args );
+            }
 
             // do last so we don't record a sync if we threw and thus it "didn't" happen
             ipod->settings().setLastSync( start_time );

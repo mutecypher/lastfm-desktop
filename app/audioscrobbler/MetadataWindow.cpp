@@ -61,7 +61,9 @@ TitleBar::TitleBar( const QString& title )
     connect( qApp, SIGNAL( internetConnectionDown() ), this, SLOT( onConnectionDown() ) );
     connect( qApp, SIGNAL( internetConnectionUp() ), this, SLOT( onConnectionUp() ) );
     DeviceScrobbler* deviceScrobbler = qobject_cast<audioscrobbler::Application*>(qApp)->deviceScrobbler();
-    connect(deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected( QString )), Qt::DirectConnection);
+    connect(deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected()));
+    connect(deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_iPodStatus, SLOT( clear()));
+    connect(deviceScrobbler, SIGNAL( noScrobblesFound()), m_iPodStatus, SLOT( clear()));
     QLabel* l;
     //layout->addWidget( l = new QLabel( title, this ));
     //l->setAlignment( Qt::AlignCenter );
@@ -88,7 +90,7 @@ TitleBar::onConnectionDown()
 }
 
 void
-TitleBar::onIPodDetected( const QString& )
+TitleBar::onIPodDetected( )
 {
     m_iPodStatus->setText( "iPod Detected.." );
 }

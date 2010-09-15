@@ -602,7 +602,7 @@ Application::onMessageReceived(const QStringList& message)
 {
     qDebug() << "Messages: " << message;
 
-    if ( message.contains( "--twiddled" ) )
+    if ( message.filter( "twiddled", Qt::CaseInsensitive ).count() )
     {
         m_deviceScrobbler->twiddled( message );
     }

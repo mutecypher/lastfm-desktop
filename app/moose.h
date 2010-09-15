@@ -113,8 +113,8 @@ namespace moose
         params.initialEvent = &event;
 
         LSOpenApplication( &params, NULL );
-        AEDisposeDesc( &argAEList );
-        AEDisposeDesc( &target );
+        //AEDisposeDesc( &argAEList );
+        //AEDisposeDesc( &target );
 
 #endif
     }

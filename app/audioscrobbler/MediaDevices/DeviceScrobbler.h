@@ -24,6 +24,7 @@ public:
 
 signals:
     void detectedIPod( const QString& serialNumber );
+    void noScrobblesFound();
     void foundScrobbles( QList<Track> );
 
 public slots:

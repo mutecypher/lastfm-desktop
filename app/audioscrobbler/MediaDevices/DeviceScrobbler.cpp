@@ -77,6 +77,9 @@ DeviceScrobbler::iPodDetected( const QStringList& arguments ) {
 
 void 
 DeviceScrobbler::twiddled( QStringList arguments ) {
+
+    if( arguments.contains( "--twiddled-no-tracks" ))
+        emit noScrobblesFound();
    // iPod scrobble time!
    //
     int pos = arguments.indexOf( "--twiddled" );
@@ -134,6 +137,57 @@ DeviceScrobbler::twiddled( QStringList arguments ) {
 
 }
 
+void 
+DeviceScrobbler::scrobbleIpodFile( QString iPodScrobblesFilename )
+{
+    qDebug() << iPodScrobblesFilename;
+
+    QFile iPodScrobblesFile( iPodScrobblesFilename );
+
+    if ( iPodScrobblesFile.open( QIODevice::ReadOnly | QIODevice::Text ) )
+    {
+        QDomDocument iPodScrobblesDoc;
+        iPodScrobblesDoc.setContent( &iPodScrobblesFile );
+        QDomNodeList tracks = iPodScrobblesDoc.elementsByTagName( "track" );
+
+        QList<lastfm::Track> scrobbles;
+
+        for ( int i(0) ; i < tracks.count() ; ++i )
+        {
+            lastfm::Track track( tracks.at(i).toElement() );
+
+            int playcount = track.extra("playCount").toInt();
+
+            for ( int j(0) ; j < playcount ; ++j )
+                scrobbles << track;
+        }
+
+        if( unicorn::UserSettings().value( "confirmIpodScrobbles", false ).toBool() )
+        {
+            ScrobbleConfirmationDialog confirmDialog( scrobbles );
+            if ( confirmDialog.exec() == QDialog::Accepted )
+            {
+                scrobbles = confirmDialog.tracksToScrobble();
+
+                // sort the iPod scrobbles before caching them
+                if ( scrobbles.count() > 1 )
+                    qSort ( scrobbles.begin(), scrobbles.end() );
+
+                emit foundScrobbles( scrobbles );
+            }
+        }
+        else
+        {
+            // sort the iPod scrobbles before caching them
+            if ( scrobbles.count() > 1 )
+                qSort ( scrobbles.begin(), scrobbles.end() );
+
+            emit foundScrobbles( scrobbles );
+        }
+    }
+
+    iPodScrobblesFile.remove();
+}
 #ifdef Q_WS_X11
 void 
 DeviceScrobbler::onScrobbleIpodTriggered() {
@@ -319,55 +373,4 @@ DeviceScrobbler::onIpodScrobblingError()
 
 #endif
 
-void 
-DeviceScrobbler::scrobbleIpodFile( QString iPodScrobblesFilename )
-{
-    qDebug() << iPodScrobblesFilename;
-
-    QFile iPodScrobblesFile( iPodScrobblesFilename );
-
-    if ( iPodScrobblesFile.open( QIODevice::ReadOnly | QIODevice::Text ) )
-    {
-        QDomDocument iPodScrobblesDoc;
-        iPodScrobblesDoc.setContent( &iPodScrobblesFile );
-        QDomNodeList tracks = iPodScrobblesDoc.elementsByTagName( "track" );
-
-        QList<lastfm::Track> scrobbles;
-
-        for ( int i(0) ; i < tracks.count() ; ++i )
-        {
-            lastfm::Track track( tracks.at(i).toElement() );
-
-            int playcount = track.extra("playCount").toInt();
-
-            for ( int j(0) ; j < playcount ; ++j )
-                scrobbles << track;
-        }
-
-        if( unicorn::UserSettings().value( "confirmIpodScrobbles", false ).toBool() )
-        {
-            ScrobbleConfirmationDialog confirmDialog( scrobbles );
-            if ( confirmDialog.exec() == QDialog::Accepted )
-            {
-                scrobbles = confirmDialog.tracksToScrobble();
-
-                // sort the iPod scrobbles before caching them
-                if ( scrobbles.count() > 1 )
-                    qSort ( scrobbles.begin(), scrobbles.end() );
-
-                emit foundScrobbles( scrobbles );
-            }
-        }
-        else
-        {
-            // sort the iPod scrobbles before caching them
-            if ( scrobbles.count() > 1 )
-                qSort ( scrobbles.begin(), scrobbles.end() );
-
-            emit foundScrobbles( scrobbles );
-        }
-    }
-
-    iPodScrobblesFile.remove();
-}
 

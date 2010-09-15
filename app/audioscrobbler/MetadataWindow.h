@@ -85,7 +85,8 @@ public:
 private slots:
     void onConnectionUp();
     void onConnectionDown();
-    void onIPodDetected( const QString& );
+    void onIPodDetected();
+
 signals:
     void closeClicked();
 
