@@ -229,7 +229,7 @@ Application::init()
 #endif
 
 #ifndef Q_OS_LINUX
-    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_show_window_action = new QAction( this ), SLOT( trigger()));
+    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action = new QAction( this ), SLOT( trigger()));
 #endif
     //although the shortcuts are actually set on the ScrobbleControls widget,
     //setting it here adds the shortkey text to the trayicon menu
@@ -293,6 +293,7 @@ Application::init()
 
 
     connect( m_show_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
+    connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( toggleWindow()), Qt::QueuedConnection );
 
     connect( this, SIGNAL(messageReceived(QStringList)), SLOT(onMessageReceived(QStringList)) );
     connect( this, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
@@ -597,6 +598,15 @@ Application::showWindow()
     mw->activateWindow();
 }
 
+void
+Application::toggleWindow()
+{
+    if( activeWindow() )
+        mw->hide();
+    else
+        showWindow();
+}
+    
 void
 Application::onMessageReceived(const QStringList& message)
 {
