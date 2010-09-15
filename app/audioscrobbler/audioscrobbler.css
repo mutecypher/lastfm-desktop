@@ -426,6 +426,18 @@ QComboBox::item:!selected {
     color: black;
 }
 
+LfmDelegate {
+	qproperty-defaultImage: url(":/default_user.png");
+}
+
+LfmListView#listeningNow LfmDelegate {
+	qproperty-defaultImage: url(":/default_user.png");
+}
+
+LfmListView#similarArtists LfmDelegate {
+	qproperty-defaultImage: url(":/default_user.png");
+}
+
 /*
  * The following css will affect rich text in QLabel / QTextBrowser etc
  */

@@ -1,7 +1,7 @@
 #include "DeviceScrobbler.h"
 #include <QDebug>
 
-#include "Dialogs/ScrobbleConfirmationDialog.h"
+#include "../Dialogs/ScrobbleConfirmationDialog.h"
 #include "lib/unicorn/UnicornApplication.h"
 
 #ifdef Q_WS_X11

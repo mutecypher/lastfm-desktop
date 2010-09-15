@@ -29,6 +29,74 @@
 
 #include <iostream>
 
+LfmDelegate::LfmDelegate( QAbstractItemView* parent ):QStyledItemDelegate(parent)
+{
+    m_viewSize = parent->size();
+    parent->installEventFilter( this );
+}
+
+void LfmDelegate::paint( QPainter* p, const QStyleOptionViewItem& opt, const QModelIndex& index ) const
+{
+    QIcon icon;
+
+    if( index.data(Qt::DecorationRole).type() == QVariant::Icon )
+    {
+        icon = index.data(Qt::DecorationRole).value<QIcon>();
+
+        if ( icon.isNull() )
+            //icon = QIcon( m_defaultImage );
+            icon = QIcon( ":/default_user.png" );
+
+        QRect iconRect = opt.rect.translated( 3, 3 );
+        iconRect.setSize( QSize( 34, 34 ));
+        icon.paint( p, iconRect );
+        QSize iconSize = icon.actualSize( iconRect.size());
+
+        if( iconSize.isEmpty()) iconSize = QSize( 34, 34 );
+
+        iconRect.translate( ( iconRect.width() - iconSize.width()) / 2.0f,
+                            ( iconRect.height() - iconSize.height()) /2.0f );
+        iconRect.setSize( iconSize );
+        p->drawRect( iconRect );
+    }
+
+    QFontMetrics fm( p->font() );
+    QString elidedText = fm.elidedText( index.data().toString(), Qt::ElideRight, opt.rect.width() - 50 );
+    p->drawText( opt.rect.adjusted( 46, 3, -5, -5 ), elidedText );
+}
+
+QSize LfmDelegate::sizeHint( const QStyleOptionViewItem& opt, const QModelIndex& index ) const
+{
+    QFontMetrics fm( opt.font );
+    int textWidth = fm.width( index.data().toString());
+    int spacing = qobject_cast<QListView*>(parent())->spacing();
+    return QSize( (m_viewSize.width() / 2)-(spacing*2), 40 );
+}
+
+bool LfmDelegate::eventFilter( QObject* obj, QEvent* event )
+{
+    if( event->type() == QEvent::Resize ) {
+        QWidget* view = qobject_cast< QWidget* >(obj );
+
+        if( !view ) return false;
+
+        m_viewSize = view->size();
+        emit sizeHintChanged( QModelIndex() );
+    }
+    return false;
+}
+
+QPixmap LfmDelegate::defaultImage() const
+{
+    return m_defaultImage;
+}
+
+void LfmDelegate::setDefaultImage( QPixmap defaultImage )
+{
+    m_defaultImage = defaultImage;
+}
+
+
 void
 LfmItem::onImageLoaded()
 {

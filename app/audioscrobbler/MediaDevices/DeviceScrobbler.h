@@ -4,10 +4,10 @@
 #include "lib/unicorn/UnicornSession.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include <lastfm/User>
-#include "MediaDevices/IpodDevice.h"
+#include "IpodDevice.h"
 
 #ifdef Q_WS_X11
-#include "MediaDevices/IpodDevice_linux.h"
+#include "IpodDevice_linux.h"
 #include <QPointer>
 #endif
 
