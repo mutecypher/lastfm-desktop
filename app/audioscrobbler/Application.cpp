@@ -368,6 +368,7 @@ Application::setConnection(PlayerConnection*c)
 void
 Application::onTrackStarted(const Track& t, const Track& oldtrack)
 {
+    // This stops the loving of tracks in the recent tracks list affecting the current track
     disconnect( currentTrack.signalProxy(), SIGNAL(loveToggled(bool)), this, SIGNAL(lovedStateChanged(bool)) );
 
     state = Playing;
@@ -394,6 +395,12 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     {
         trackToScrobble = t;
     }
+
+    ScrobblePoint timeout( currentTrack.duration() * trackLengthPercent );
+    delete watch;
+    watch = new StopWatch(timeout, connection->elapsed());
+    watch->start();
+    connect(watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
 
     setTrackInfo();
 }
@@ -481,17 +488,13 @@ Application::setTrackInfo()
     m_title_action->setText( titleActionText + durationString );
     m_title_action->setToolTip( currentTrack.title() + " [" + currentTrack.durationString() + "]" );
 
-    delete watch;
+
     qDebug() << "********** AS = " << as;
     if( as ) {
         as->submit();
         qDebug() << "************** Now Playing..";
         as->nowPlaying(mw->currentTrack());
     }
-    ScrobblePoint timeout( currentTrack.duration() * trackLengthPercent );
-    watch = new StopWatch(timeout, connection->elapsed());
-    watch->start();
-    connect(watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
 
     tray->setToolTip( currentTrack.toString() );
 
