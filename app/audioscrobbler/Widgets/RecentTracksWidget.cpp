@@ -33,14 +33,14 @@
 #include "RecentTrackWidget.h"
 
 
-const int kNumRecentTracks(10);
+const int kNumRecentTracks(15);
 
 RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
     :StylableWidget( parent )
 {
     setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
 
-    AnimatedListLayout* layout = new AnimatedListLayout( this );
+    AnimatedListLayout* layout = new AnimatedListLayout( kNumRecentTracks, this );
     layout->setSpacing( 0 );
 
     connect( layout, SIGNAL(moveFinished()), SLOT(onMoveFinished()));
