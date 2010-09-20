@@ -443,7 +443,7 @@ LfmListView#similarArtists LfmDelegate {
  */
 
 p {
-    line-height: 30px;
+    font-size: 12px;
 }
 
 a {
