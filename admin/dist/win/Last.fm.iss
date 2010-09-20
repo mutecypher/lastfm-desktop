@@ -28,9 +28,9 @@ DisableReadyPage=yes
 DirExistsWarning=no
 DisableFinishedPage=no
 ShowLanguageDialog=yes
-;WizardImageFile=..\res\wizard.bmp
-;WizardSmallImageFile=..\res\app_55.bmp
-;SetupIconFile=..\res\install.ico
+WizardImageFile=wizard.bmp
+WizardSmallImageFile=wizard_small.bmp
+SetupIconFile=installer.ico
 WizardImageBackColor=$ffffff
 WizardImageStretch=no
 AppMutex=Lastfm-F396D8C8-9595-4f48-A319-48DCB827AD8F, Audioscrobbler-7BC5FBA0-A70A-406e-A50B-235D5AFE67FB
@@ -70,14 +70,14 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 ;Source: "..\bin\killer.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Main files
-Source: "_bin\radio.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_bin\audioscrobbler.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_bin\iPodScrobbler.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\radio.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\audioscrobbler.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\iPodScrobbler.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 ;libraries
-Source: "_bin\lastfm.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_bin\unicorn.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "_bin\listener.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\lastfm.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\unicorn.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\listener.dll"; DestDir: "{app}"; Flags: ignoreversion
         
 ;Source: "\bin\Updater.exe"; DestDir: "{app}"; Flags: ignoreversion
 ;Source: "\bin\CrashReporter.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -89,12 +89,12 @@ Source: "_bin\listener.dll"; DestDir: "{app}"; Flags: ignoreversion
 ;Source: "\bin\Microsoft.VC80.CRT\*"; DestDir: "{app}\Microsoft.VC80.CRT"; Flags: ignoreversion
 
 ; Qt binaries
-Source: "{code:GetPathVistaDll}\bin\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{%QTDIR}\bin\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{%QTDIR}\bin\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{%QTDIR}\bin\QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{%QTDIR}\bin\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{%QTDIR}\bin\phonon4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "%QTDIR%\bin\phonon4.dll"; DestDir: "{app}"; Flags: ignoreversion
 ;image formats
 Source: "%QTDIR%\plugins\imageformats\qjpeg4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
 Source: "%QTDIR%\plugins\imageformats\qgif4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
@@ -103,25 +103,25 @@ Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\plugins\imagef
 Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\plugins\phonon_backend"; Flags: ignoreversion
 
 ;The stylesheets
-Source: "\lib\unicorn\unicorn.css"; DestDir: "{app}"; Flags: ignoreversion
-Source: "\app\audioscrobbler\audioscrobbler.css"; DestDir: "{app}"; Flags: ignoreversion
-Source: "\app\radio\radio.css"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\lib\unicorn\unicorn.css"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\app\audioscrobbler\audioscrobbler.css"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\app\radio\radio.css"; DestDir: "{app}"; Flags: ignoreversion
 
 ;Third party dependancies
-Source: "..\bin\LastFM.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\libfftw3f-3.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\zlibwapi.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\VistaLib32.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\VistaLib64.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\srv_httpinput.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\srv_rtaudioplayback.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\srv_madtranscode.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "..\bin\LastFM.exe.config"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "..\bin\libfftw3f-3.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "..\bin\zlibwapi.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "..\bin\VistaLib32.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "..\bin\VistaLib64.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "..\bin\srv_httpinput.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "..\bin\srv_rtaudioplayback.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "..\bin\srv_madtranscode.dll"; DestDir: "{app}"; Flags: ignoreversion
 
-;Some
-Source: "..\ChangeLog.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\COPYING"; DestDir: "{app}"; Flags: ignoreversion
+;Some text files
+;Source: "..\ChangeLog.txt"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "..\COPYING"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "..\bin\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs
+;Source: "..\bin\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs
 
 
 [Registry]
