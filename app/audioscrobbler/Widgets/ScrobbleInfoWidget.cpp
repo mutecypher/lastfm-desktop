@@ -168,6 +168,7 @@ ScrobbleInfoWidget::setupUi()
     {
         QVBoxLayout* layout = new QVBoxLayout( bio );
         layout->addWidget( ui.bioText = new QTextBrowser() );
+        ui.bioText->setOpenLinks( false );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
     }
@@ -245,8 +246,10 @@ ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
 void
 ScrobbleInfoWidget::onFinished()
 {
-    ui.area->updateGeometry();
     ui.area->show();
+    ui.area->updateGeometry();
+    ui.bioText->updateGeometry();
+    onBioChanged( ui.bioText->document()->documentLayout()->documentSize() );
     ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
 }
 
