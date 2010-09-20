@@ -7,8 +7,8 @@ Version=0.0.0.0
 
 [Setup]
 OutputBaseFilename=Last.fm-0.0.0.0
-VersionInfoVersion=1.5.0
-VersionInfoTextVersion=1.5.0
+VersionInfoVersion=2.0.0
+VersionInfoTextVersion=2.0.0
 AppName=Last.fm
 AppVerName=Last.fm {cm:Version}
 VersionInfoDescription=Last.fm Installer
@@ -16,7 +16,7 @@ AppPublisher=Last.fm
 AppPublisherURL=http://www.last.fm
 AppSupportURL=http://www.last.fm
 AppUpdatesURL=http://www.last.fm
-AppCopyright=Copyright 2008 Last.fm Ltd. (C)
+AppCopyright=Copyright 2010 Last.fm Ltd. (C)
 DefaultDirName={pf}\Last.fm
 UsePreviousAppDir=yes
 DefaultGroupName=Last.fm
@@ -28,9 +28,9 @@ DisableReadyPage=yes
 DirExistsWarning=no
 DisableFinishedPage=no
 ShowLanguageDialog=yes
-WizardImageFile=..\res\wizard.bmp
-WizardSmallImageFile=..\res\app_55.bmp
-SetupIconFile=..\res\install.ico
+;WizardImageFile=..\res\wizard.bmp
+;WizardSmallImageFile=..\res\app_55.bmp
+;SetupIconFile=..\res\install.ico
 WizardImageBackColor=$ffffff
 WizardImageStretch=no
 AppMutex=Lastfm-F396D8C8-9595-4f48-A319-48DCB827AD8F, Audioscrobbler-7BC5FBA0-A70A-406e-A50B-235D5AFE67FB
@@ -44,17 +44,17 @@ AppId=LastFM
 [Languages]
 ; The first string is an internal code that we can set to whatever we feel like
 Name: "en"; MessagesFile: "compiler:Default.isl"
-Name: "fr"; MessagesFile: "..\res\French-15-5.1.11.isl"
-Name: "it"; MessagesFile: "..\res\Italian-14-5.1.11.isl"
-Name: "de"; MessagesFile: "..\res\German-2-5.1.11.isl"
-Name: "es"; MessagesFile: "..\res\SpanishStd-5-5.1.11.isl"
-Name: "pt"; MessagesFile: "..\res\BrazilianPortuguese-16-5.1.11.isl"
-Name: "pl"; MessagesFile: "..\res\Polish-8-5.1.11.isl"
-Name: "ru"; MessagesFile: "..\res\Russian-19-5.1.11.isl"
-Name: "jp"; MessagesFile: "..\res\Japanese-5-5.1.11.isl"
-Name: "cn"; MessagesFile: "..\res\ChineseSimp-12-5.1.11.isl"
-Name: "tr"; MessagesFile: "..\res\Turkish-3-5.1.11.isl"
-Name: "sv"; MessagesFile: "..\res\Swedish-10-5.1.12.isl"
+;Name: "fr"; MessagesFile: "..\res\French-15-5.1.11.isl"
+;Name: "it"; MessagesFile: "..\res\Italian-14-5.1.11.isl"
+;Name: "de"; MessagesFile: "..\res\German-2-5.1.11.isl"
+;Name: "es"; MessagesFile: "..\res\SpanishStd-5-5.1.11.isl"
+;Name: "pt"; MessagesFile: "..\res\BrazilianPortuguese-16-5.1.11.isl"
+;Name: "pl"; MessagesFile: "..\res\Polish-8-5.1.11.isl"
+;Name: "ru"; MessagesFile: "..\res\Russian-19-5.1.11.isl"
+;Name: "jp"; MessagesFile: "..\res\Japanese-5-5.1.11.isl"
+;Name: "cn"; MessagesFile: "..\res\ChineseSimp-12-5.1.11.isl"
+;Name: "tr"; MessagesFile: "..\res\Turkish-3-5.1.11.isl"
+;Name: "sv"; MessagesFile: "..\res\Swedish-10-5.1.12.isl"
 
 
 [Tasks]
@@ -67,30 +67,47 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 ; Needed to kill helper
-Source: "..\bin\killer.exe"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "..\bin\killer.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Main files
-Source: "..\bin\LastFM.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\Updater.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\CrashReporter.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\Cleaner.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\iPodScrobbler.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\LastFmTools1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\LastFmFingerprint1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\Moose1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\breakpad.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\Microsoft.VC80.CRT\*"; DestDir: "{app}\Microsoft.VC80.CRT"; Flags: ignoreversion
+Source: "_bin\radio.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_bin\audioscrobbler.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_bin\iPodScrobbler.exe"; DestDir: "{app}"; Flags: ignoreversion
 
-; These $VARS are replaced by the build script
-Source: "%QTDIR%\bin\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "%QTDIR%\bin\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "%QTDIR%\bin\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "%QTDIR%\bin\QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "%QTDIR%\bin\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "%QTDIR%\plugins\imageformats\qjpeg4.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "%QTDIR%\plugins\imageformats\qgif4.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
+;libraries
+Source: "_bin\lastfm.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_bin\unicorn.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "_bin\listener.dll"; DestDir: "{app}"; Flags: ignoreversion
+        
+;Source: "\bin\Updater.exe"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "\bin\CrashReporter.exe"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "\bin\Cleaner.exe"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "\bin\LastFmTools1.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "\bin\LastFmFingerprint1.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "\bin\Moose1.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "\bin\breakpad.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "\bin\Microsoft.VC80.CRT\*"; DestDir: "{app}\Microsoft.VC80.CRT"; Flags: ignoreversion
 
+; Qt binaries
+Source: "{code:GetPathVistaDll}\bin\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{%QTDIR}\bin\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{%QTDIR}\bin\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{%QTDIR}\bin\QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{%QTDIR}\bin\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{%QTDIR}\bin\phonon4.dll"; DestDir: "{app}"; Flags: ignoreversion
+;image formats
+Source: "%QTDIR%\plugins\imageformats\qjpeg4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
+Source: "%QTDIR%\plugins\imageformats\qgif4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
+Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
+;phonon
+Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\plugins\phonon_backend"; Flags: ignoreversion
+
+;The stylesheets
+Source: "\lib\unicorn\unicorn.css"; DestDir: "{app}"; Flags: ignoreversion
+Source: "\app\audioscrobbler\audioscrobbler.css"; DestDir: "{app}"; Flags: ignoreversion
+Source: "\app\radio\radio.css"; DestDir: "{app}"; Flags: ignoreversion
+
+;Third party dependancies
 Source: "..\bin\LastFM.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\libfftw3f-3.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\zlibwapi.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -100,16 +117,7 @@ Source: "..\bin\srv_httpinput.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\srv_rtaudioplayback.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\srv_madtranscode.dll"; DestDir: "{app}"; Flags: ignoreversion
 
-; This is the sickest shit. If I leave their real names, one of them won't load on Win98.
-; If I call them ext_1,2,3 they all will.
-; For Win9x
-Source: "..\bin\ext_skypenotify.dll"; DestDir: "{app}"; DestName: "ext_4.dll"; MinVersion: 1, 0; Flags: ignoreversion
-Source: "..\bin\ext_messengernotify.dll"; DestDir: "{app}"; DestName: "ext_5.dll"; MinVersion: 1, 0; Flags: ignoreversion
-
-; For Win2k/XP
-Source: "..\bin\ext_skypenotify.dll"; DestDir: "{app}"; MinVersion: 0, 1; Flags: ignoreversion
-Source: "..\bin\ext_messengernotify.dll"; DestDir: "{app}"; MinVersion: 0, 1; Flags: ignoreversion
-
+;Some
 Source: "..\ChangeLog.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\COPYING"; DestDir: "{app}"; Flags: ignoreversion
 
@@ -118,13 +126,16 @@ Source: "..\bin\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubd
 
 [Registry]
 Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Version"; ValueData: "{cm:Version}"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\LastFM.exe"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\radio.exe"; Flags: uninsdeletekey
 
 ; Register last.fm protocol only if it isn't already
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: ""; ValueData: "URL:lastfm"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Flags: uninsdeletekey
-Root: HKCR; Subkey: "lastfm\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\LastFM.exe"" ""%1"""; Flags: uninsdeletekey
+Root: HKCR; Subkey: "lastfm\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\radio.exe"" ""%1"""; Flags: uninsdeletekey
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Flags: uninsdeletekey
+
+; Register Last.fm in the control panel
+
 
 ; This is just for deleting keys at uninstall
 Root: HKCU; Subkey: "Software\Last.fm"; Flags: dontcreatekey uninsdeletekeyifempty
@@ -166,17 +177,17 @@ Type: files; Name: "{app}ext_sidebar.dll";
 Type: files; Name: "{app}ext_notifyskype.dll";
 
 ; Old shortcut that lived in user desktop
-Type: files; Name: "{userdesktop}\Last.fm.lnk"
+;Type: files; Name: "{userdesktop}\Last.fm.lnk"
 
 ; Old startup shortcut that lived in common startup (this is now managed by the app itself to allow user disabling)
-Type: files; Name: "{commonstartup}\Last.fm Helper.lnk"
+;Type: files; Name: "{commonstartup}\Last.fm Helper.lnk"
 
 
 ; This is the LAST step of uninstallation
 [UninstallDelete]
 ; Legacy
-Type: files; Name: "{app}\LastFM.url"
-Type: files; Name: "{app}\UpTemp.exe"
+;Type: files; Name: "{app}\LastFM.url"
+;Type: files; Name: "{app}\UpTemp.exe"
 Type: dirifempty; Name: "{app}"
 
 ; TODO: why don't we attempt this also on Vista? What could go wrong?
