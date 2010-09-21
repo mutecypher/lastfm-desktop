@@ -40,6 +40,8 @@ AppMutex=Lastfm-F396D8C8-9595-4f48-A319-48DCB827AD8F, Audioscrobbler-7BC5FBA0-A7
 ; the first version.
 AppId=LastFM
 
+[Components]
+Name: Radio; Description: Last.fm Radio
 
 [Languages]
 ; The first string is an internal code that we can set to whatever we feel like
@@ -70,7 +72,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 ;Source: "..\bin\killer.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Main files
-Source: "..\..\..\_bin\radio.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\radio.exe"; DestDir: "{app}"; Components: Radio ; Flags: ignoreversion
 Source: "..\..\..\_bin\audioscrobbler.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\iPodScrobbler.exe"; DestDir: "{app}"; Flags: ignoreversion
 
@@ -89,23 +91,23 @@ Source: "..\..\..\_bin\listener.dll"; DestDir: "{app}"; Flags: ignoreversion
 ;Source: "\bin\Microsoft.VC80.CRT\*"; DestDir: "{app}\Microsoft.VC80.CRT"; Flags: ignoreversion
 
 ; Qt binaries
-Source: "%QTDIR%\bin\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "%QTDIR%\bin\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "%QTDIR%\bin\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "%QTDIR%\bin\QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "%QTDIR%\bin\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "%QTDIR%\bin\phonon4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "c:\Qt\4.7.0-beta2\\bin\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "c:\Qt\4.7.0-beta2\\bin\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "c:\Qt\4.7.0-beta2\\bin\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "c:\Qt\4.7.0-beta2\\bin\QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "c:\Qt\4.7.0-beta2\\bin\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "c:\Qt\4.7.0-beta2\\bin\phonon4.dll"; DestDir: "{app}"; Components: Radio; Flags: ignoreversion
 ;image formats
-Source: "%QTDIR%\plugins\imageformats\qjpeg4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
-Source: "%QTDIR%\plugins\imageformats\qgif4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
-Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
+Source: "c:\Qt\4.7.0-beta2\\plugins\imageformats\qjpeg4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
+Source: "c:\Qt\4.7.0-beta2\\plugins\imageformats\qgif4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
+Source: "c:\Qt\4.7.0-beta2\\plugins\imageformats\qmng4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
 ;phonon
-Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\plugins\phonon_backend"; Flags: ignoreversion
+Source: "c:\Qt\4.7.0-beta2\\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\plugins\phonon_backend"; Components: Radio; Flags: ignoreversion
 
 ;The stylesheets
 Source: "..\..\..\lib\unicorn\unicorn.css"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\app\audioscrobbler\audioscrobbler.css"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\..\app\radio\radio.css"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\app\radio\radio.css"; DestDir: "{app}"; Components: Radio; Flags: ignoreversion
 
 ;Third party dependancies
 ;Source: "..\bin\LastFM.exe.config"; DestDir: "{app}"; Flags: ignoreversion
