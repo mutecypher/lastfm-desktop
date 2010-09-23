@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [CustomMessages]
-Version=0.0.0.0
+Version=2.0.0.17
 
 
 [Setup]
@@ -41,7 +41,11 @@ AppMutex=Lastfm-F396D8C8-9595-4f48-A319-48DCB827AD8F, Audioscrobbler-7BC5FBA0-A7
 AppId=LastFM
 
 [Components]
-Name: Radio; Description: Last.fm Radio
+Name: Radio; Description: "Radio"; Types: full
+Name: Audioscrobbler; Description: "Audioscrobbler"; Flags: fixed; Types: full compact custom
+Name: Unicorn; Description: "Application Library"; Flags: fixed; Types: full compact custom
+Name: LibLastfm; Description: "API Library"; Flags: fixed; Types: full compact custom
+Name: Qt; Description: "Qt Libraries"; Flags: fixed; Types: full compact custom
 
 [Languages]
 ; The first string is an internal code that we can set to whatever we feel like
@@ -73,40 +77,35 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 ; Main files
 Source: "..\..\..\_bin\radio.exe"; DestDir: "{app}"; Components: Radio ; Flags: ignoreversion
-Source: "..\..\..\_bin\audioscrobbler.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\..\_bin\iPodScrobbler.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\audioscrobbler.exe"; DestDir: "{app}"; Components: Audioscrobbler ; Flags: ignoreversion
+Source: "..\..\..\_bin\iPodScrobbler.exe"; DestDir: "{app}"; Components: Audioscrobbler ; Flags: ignoreversion
 
 ;libraries
-Source: "..\..\..\_bin\lastfm.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\..\_bin\unicorn.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\..\_bin\listener.dll"; DestDir: "{app}"; Flags: ignoreversion
-        
-;Source: "\bin\Updater.exe"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "\bin\CrashReporter.exe"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "\bin\Cleaner.exe"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "\bin\LastFmTools1.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "\bin\LastFmFingerprint1.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "\bin\Moose1.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "\bin\breakpad.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "\bin\Microsoft.VC80.CRT\*"; DestDir: "{app}\Microsoft.VC80.CRT"; Flags: ignoreversion
+Source: "..\..\..\_bin\lastfm.dll"; DestDir: "{app}"; Components: LibLastfm; Flags: ignoreversion
+Source: "..\..\..\_bin\unicorn.dll"; DestDir: "{app}"; Components: Unicorn; Flags: ignoreversion
+Source: "..\..\..\_bin\listener.dll"; DestDir: "{app}"; Components: Unicorn; Flags: ignoreversion
+
+;Visual Studio redistributable packages
+Source: "%VSDIR%\VC\redist\x86\Microsoft.VC90.CRT\*"; DestDir: "{app}"; Flags: ignoreversion
+Source: "%VSDIR%\VC\redist\x86\Microsoft.VC90.ATL\*"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Qt binaries
-Source: "c:\Qt\4.7.0-beta2\\bin\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "c:\Qt\4.7.0-beta2\\bin\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "c:\Qt\4.7.0-beta2\\bin\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "c:\Qt\4.7.0-beta2\\bin\QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "c:\Qt\4.7.0-beta2\\bin\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "c:\Qt\4.7.0-beta2\\bin\phonon4.dll"; DestDir: "{app}"; Components: Radio; Flags: ignoreversion
-;image formats
-Source: "c:\Qt\4.7.0-beta2\\plugins\imageformats\qjpeg4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
-Source: "c:\Qt\4.7.0-beta2\\plugins\imageformats\qgif4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
-Source: "c:\Qt\4.7.0-beta2\\plugins\imageformats\qmng4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
-;phonon
-Source: "c:\Qt\4.7.0-beta2\\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\plugins\phonon_backend"; Components: Radio; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtCore4.dll"; DestDir: "{app}"; Components: Qt; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtGui4.dll"; DestDir: "{app}"; Components: Qt; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtNetwork4.dll"; DestDir: "{app}"; Components: Qt; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtXml4.dll"; DestDir: "{app}"; Components: Qt; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtSql4.dll"; DestDir: "{app}"; Components: Qt; Flags: ignoreversion
+Source: "%QTDIR%\bin\phonon4.dll"; DestDir: "{app}"; Components: Radio; Flags: ignoreversion
+;image formats plugins
+Source: "%QTDIR%\plugins\imageformats\qjpeg4.dll"; DestDir: "{app}\plugins\imageformats"; Components: Qt; Flags: ignoreversion
+Source: "%QTDIR%\plugins\imageformats\qgif4.dll"; DestDir: "{app}\plugins\imageformats"; Components: Qt; Flags: ignoreversion
+Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\plugins\imageformats"; Components: Qt; Flags: ignoreversion
+;phonon backend plugin
+Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\plugins\phonon_backend"; Components: Radio; Flags: ignoreversion
 
 ;The stylesheets
-Source: "..\..\..\lib\unicorn\unicorn.css"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\..\app\audioscrobbler\audioscrobbler.css"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\lib\unicorn\unicorn.css"; DestDir: "{app}"; Components: Unicorn; Flags: ignoreversion
+Source: "..\..\..\app\audioscrobbler\audioscrobbler.css"; DestDir: "{app}"; Components: Audioscrobbler; Flags: ignoreversion
 Source: "..\..\..\app\radio\radio.css"; DestDir: "{app}"; Components: Radio; Flags: ignoreversion
 
 ;Third party dependancies
@@ -128,13 +127,13 @@ Source: "..\..\..\app\radio\radio.css"; DestDir: "{app}"; Components: Radio; Fla
 
 [Registry]
 Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Version"; ValueData: "{cm:Version}"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\radio.exe"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\radio.exe"; Components: Radio; Flags: uninsdeletekey
 
 ; Register last.fm protocol only if it isn't already
-Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: ""; ValueData: "URL:lastfm"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Flags: uninsdeletekey
-Root: HKCR; Subkey: "lastfm\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\radio.exe"" ""%1"""; Flags: uninsdeletekey
-Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Flags: uninsdeletekey
+Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: ""; ValueData: "URL:lastfm"; Components: Radio; Flags: uninsdeletekey
+Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Components: Radio; Flags: uninsdeletekey
+Root: HKCR; Subkey: "lastfm\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\radio.exe"" ""%1"""; Components: Radio; Flags: uninsdeletekey
+Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Components: Radio; Flags: uninsdeletekey
 
 ; Register Last.fm in the control panel
 
@@ -151,38 +150,26 @@ Filename: "{app}\LastFM.url"; Section: "InternetShortcut"; Key: "URL"; String: "
 
 
 [Icons]
-Name: "{group}\Last.fm"; Filename: "{app}\LastFM.exe"
+Name: "{group}\Last.fm Radio"; Filename: "{app}\radio.exe"
+Name: "{group}\Last.fm Audioscrobbler"; Filename: "{app}\audioscrobbler.exe"
 Name: "{group}\Go to www.last.fm"; Filename: "{app}\LastFM.url"
 Name: "{group}\{cm:UninstallProgram,Last.fm}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\Last.fm"; Filename: "{app}\LastFM.exe"; Tasks: desktopicon
+Name: "{commondesktop}\Last.fm Radio"; Filename: "{app}\radio.exe"; Tasks: desktopicon
+;Name: "{commondesktop}\Last.fm Audioscrobbler"; Filename: "{app}\audioscrobbler.exe"; Tasks: desktopicon
 
 ; The OnlyBelowVersion flag disables this on Vista as an admin-run installer can't install a quick launch
 ; icon to the standard user's folder location. Sucks.
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"; Filename: "{app}\LastFM.exe"; OnlyBelowVersion: 0,6; Tasks: quicklaunchicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"; Filename: "{app}\radio.exe"; OnlyBelowVersion: 0,6; Tasks: quicklaunchicon
 
 
 [Run]
 ; Launch normally for pre-Vista versions
-Filename: "{app}\LastFM.exe"; Description: "{cm:LaunchProgram,Last.fm}"; Flags: nowait postinstall; OnlyBelowVersion: 0,6
+Filename: "{app}\audioscrobbler.exe"; Description: "{cm:LaunchProgram,Last.fm}"; Flags: nowait postinstall; OnlyBelowVersion: 0,6
 
 ; For Vista, we have to go through the VistaLib to get the apps to launch non-elevated.
 ; Not launching helper here (app does it on startup) as it led to two instances being launched
 ; through the VistaLib DLL.
-Filename: "RunDll32.exe"; Parameters: "{code:GetPathVistaDll},RunNonElevated {code:AddQuotes|{app}\LastFM.exe}"; Description: "{cm:LaunchProgram,Last.fm}"; Flags: nowait postinstall; MinVersion: 0,6
-
-
-[InstallDelete]
-; So that these files get replaced on Win98 with their renamed versions (see above)
-Type: files; Name: "{app}ext_metadata.dll";
-Type: files; Name: "{app}ext_search.dll";
-Type: files; Name: "{app}ext_sidebar.dll";
-Type: files; Name: "{app}ext_notifyskype.dll";
-
-; Old shortcut that lived in user desktop
-;Type: files; Name: "{userdesktop}\Last.fm.lnk"
-
-; Old startup shortcut that lived in common startup (this is now managed by the app itself to allow user disabling)
-;Type: files; Name: "{commonstartup}\Last.fm Helper.lnk"
+Filename: "RunDll32.exe"; Parameters: "{code:GetPathVistaDll},RunNonElevated {code:AddQuotes|{app}\audioscrobbler.exe}"; Description: "{cm:LaunchProgram,Last.fm}"; Flags: nowait postinstall; MinVersion: 0,6
 
 
 ; This is the LAST step of uninstallation
@@ -257,7 +244,7 @@ end;
 
 function InitializeSetup(): Boolean;
 begin
-  QuitHelper(True);
+  //QuitHelper(True);
 
   // Need to evaluate and store this before any installation has been done
   g_firstRun := not IsUpgrade();

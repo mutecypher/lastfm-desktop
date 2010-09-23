@@ -15,19 +15,12 @@ use File::Find;
 
 
 ########################################################################
-if ($ARGV[0] eq "--upload")
-{
-    my $VERSION = getVersion();
-    my $r = system( "perl",
-                    "dist/breakpad-upload-symbolstore.pl", 
-                    "dist/Last.fm-$VERSION-win.symbols.tar.bz2" );
-    exit $r;
-}
-########################################################################
 
 my $VERSION = getVersion();
 
-my $ISSFILE = "Last.fm.iss";
+# copy the input file to a temp location and use that instead
+copy('Last.fm.iss', 'Last.fm.tmp.iss') or die;
+my $ISSFILE = 'Last.fm.tmp.iss';
 
 my $QTDIR = quotemeta( $ENV{'QTDIR'} or die $! );
 my $VSDIR = quotemeta( $ENV{'VSDIR'} or die $! );
@@ -42,19 +35,21 @@ print( "\nDon't forget the change log! ([Enter] to continue, [Ctrl-C] to abort)\
 $dummy = <STDIN>;
 
 header( "Substituting strings in various files" );
-    sub findVersionFiles()
-    {
-        if ($_ =~ /\.rc$/i || $_ =~ /\.manifest$/i || $_ =~ /\.iss$/i)
-        {
-            push( @versionFiles, $File::Find::name );
-        }
-    }
-	find( \&findVersionFiles, "." );
-
+    #sub findVersionFiles()
+    #{
+    #    if ($_ =~ /\.rc$/i || $_ =~ /\.manifest$/i || $_ =~ /\.iss$/i)
+    #    {
+    #        push( @versionFiles, $File::Find::name );
+    #    }
+    #}
+	#find( \&findVersionFiles, "." );
+	
+	push( @versionFiles, $ISSFILE );
+	
     updateVersion( @versionFiles );
 
-    system( 'perl -pi".bak" -e "s/%QTDIR%/' . $QTDIR . '/g" ' . $ISSFILE );
-    system( 'perl -pi".bak" -e "s/%VSDIR%/' . $VSDIR . '/g" ' . $ISSFILE );
+    system( 'perl -pi".bak" -e "s/\%QTDIR\%/' . $QTDIR . '/g" ' . $ISSFILE );
+    system( 'perl -pi".bak" -e "s/\%VSDIR\%/' . $VSDIR . '/g" ' . $ISSFILE );
 
 #header( "Translations" );
 #    if ($ARGV[0] eq "--jp")
@@ -72,7 +67,7 @@ header( "Installer" );
     #my $ISDIR = $ENV{'ISDIR'} or "c:\\Program Files\\Inno Setup 5";
     #$ISDIR =~ s/\\/\//g;
     #run( "$ISDIR\\iscc.exe", "$ISSFILE" ) or die $!;
-	run( "c:/Program Files (x86)/Inno Setup 5/iscc.exe", "Last.fm.iss" ) or die $!;
+	run( "c:/Program Files (x86)/Inno Setup 5/iscc.exe", $ISSFILE ) or die $!;
 
 #header( "Building symbolstore" );
 #    dumpSyms( "bin" );
