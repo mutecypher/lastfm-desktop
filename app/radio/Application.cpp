@@ -140,6 +140,7 @@ enum Argument
     LastFmUrl,
     Pause, //toggles pause
     Skip,
+    Exit,
     Unknown
 };
 
@@ -147,6 +148,7 @@ Argument argument( const QString& arg )
 {
     if (arg == "--pause") return Pause;
     if (arg == "--skip") return Skip;
+    if (arg == "--exit") return Exit;
 
     QUrl url( arg );
     //TODO show error if invalid schema and that
@@ -174,6 +176,10 @@ Application::parseArguments( const QStringList& args )
         {
             case LastFmUrl:
                 radio->play( RadioStation( arg ) );
+                break;
+
+            case Exit:
+                exit();
                 break;
 
             case Skip:

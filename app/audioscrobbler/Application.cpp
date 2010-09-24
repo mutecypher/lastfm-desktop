@@ -637,7 +637,11 @@ Application::onMessageReceived(const QStringList& message)
 {
     qDebug() << "Messages: " << message;
 
-    if ( message.filter( "twiddled", Qt::CaseInsensitive ).count() )
+    if ( message.contains( "--exit" ) )
+    {
+        exit();
+    }
+    else if ( message.filter( "twiddled", Qt::CaseInsensitive ).count() )
     {
         m_deviceScrobbler->twiddled( message );
     }
@@ -646,6 +650,7 @@ Application::onMessageReceived(const QStringList& message)
     {
         m_deviceScrobbler->iPodDetected( message );
     }
+
     if ( !message.contains( "--tray" ) )
     {
         // raise the app
