@@ -40,12 +40,16 @@ AppMutex=Lastfm-F396D8C8-9595-4f48-A319-48DCB827AD8F, Audioscrobbler-7BC5FBA0-A7
 ; the first version.
 AppId=LastFM
 
+[Types]
+Name: "full"; Description: "Full installation"
+Name: "compact"; Description: "Compact installation (just the scrobbler)"
+
 [Components]
 Name: Radio; Description: "Radio"; Types: full
-Name: Audioscrobbler; Description: "Audioscrobbler"; Flags: fixed; Types: full compact custom
-Name: Unicorn; Description: "Application Library"; Flags: fixed; Types: full compact custom
-Name: LibLastfm; Description: "API Library"; Flags: fixed; Types: full compact custom
-Name: Qt; Description: "Qt Libraries"; Flags: fixed; Types: full compact custom
+Name: Audioscrobbler; Description: "Audioscrobbler"; Flags: fixed; Types: full compact
+Name: Unicorn; Description: "Application Library"; Flags: fixed; Types: full compact
+Name: LibLastfm; Description: "API Library"; Flags: fixed; Types: full compact
+Name: Qt; Description: "Qt Libraries"; Flags: fixed; Types: full compact
 
 [Languages]
 ; The first string is an internal code that we can set to whatever we feel like
@@ -72,12 +76,10 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 
 [Files]
-; Needed to kill helper
-;Source: "..\bin\killer.exe"; DestDir: "{app}"; Flags: ignoreversion
-
 ; Main files
-Source: "..\..\..\_bin\radio.exe"; DestDir: "{app}"; Components: Radio ; Flags: ignoreversion
-Source: "..\..\..\_bin\audioscrobbler.exe"; DestDir: "{app}"; Components: Audioscrobbler ; Flags: ignoreversion
+Source: "..\..\..\_bin\radio.exe"; DestDir: "{app}"; Components: Radio ; Flags: ignoreversion; BeforeInstall: ExitApp('{app}\radio.exe')
+Source: "..\..\..\_bin\audioscrobbler.exe"; DestDir: "{app}"; Components: Audioscrobbler ; Flags: ignoreversion; BeforeInstall: ExitApp('{app}\audioscrobbler.exe')
+
 Source: "..\..\..\_bin\iPodScrobbler.exe"; DestDir: "{app}"; Components: Audioscrobbler ; Flags: ignoreversion
 
 ;libraries
@@ -96,27 +98,19 @@ Source: "%QTDIR%\bin\QtNetwork4.dll"; DestDir: "{app}"; Components: Qt; Flags: i
 Source: "%QTDIR%\bin\QtXml4.dll"; DestDir: "{app}"; Components: Qt; Flags: ignoreversion
 Source: "%QTDIR%\bin\QtSql4.dll"; DestDir: "{app}"; Components: Qt; Flags: ignoreversion
 Source: "%QTDIR%\bin\phonon4.dll"; DestDir: "{app}"; Components: Radio; Flags: ignoreversion
+
 ;image formats plugins
-Source: "%QTDIR%\plugins\imageformats\qjpeg4.dll"; DestDir: "{app}\plugins\imageformats"; Components: Qt; Flags: ignoreversion
-Source: "%QTDIR%\plugins\imageformats\qgif4.dll"; DestDir: "{app}\plugins\imageformats"; Components: Qt; Flags: ignoreversion
-Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\plugins\imageformats"; Components: Qt; Flags: ignoreversion
+Source: "%QTDIR%\plugins\imageformats\qjpeg4.dll"; DestDir: "{app}\imageformats"; Components: Qt; Flags: ignoreversion
+Source: "%QTDIR%\plugins\imageformats\qgif4.dll"; DestDir: "{app}\imageformats"; Components: Qt; Flags: ignoreversion
+Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\imageformats"; Components: Qt; Flags: ignoreversion
+
 ;phonon backend plugin
-Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\plugins\phonon_backend"; Components: Radio; Flags: ignoreversion
+Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\phonon_backend"; Components: Radio; Flags: ignoreversion
 
 ;The stylesheets
 Source: "..\..\..\lib\unicorn\unicorn.css"; DestDir: "{app}"; Components: Unicorn; Flags: ignoreversion
 Source: "..\..\..\app\audioscrobbler\audioscrobbler.css"; DestDir: "{app}"; Components: Audioscrobbler; Flags: ignoreversion
 Source: "..\..\..\app\radio\radio.css"; DestDir: "{app}"; Components: Radio; Flags: ignoreversion
-
-;Third party dependancies
-;Source: "..\bin\LastFM.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "..\bin\libfftw3f-3.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "..\bin\zlibwapi.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "..\bin\VistaLib32.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "..\bin\VistaLib64.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "..\bin\srv_httpinput.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "..\bin\srv_rtaudioplayback.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "..\bin\srv_madtranscode.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ;Some text files
 ;Source: "..\ChangeLog.txt"; DestDir: "{app}"; Flags: ignoreversion
@@ -127,7 +121,7 @@ Source: "..\..\..\app\radio\radio.css"; DestDir: "{app}"; Components: Radio; Fla
 
 [Registry]
 Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Version"; ValueData: "{cm:Version}"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\radio.exe"; Components: Radio; Flags: uninsdeletekey
+Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\audioscrobbler.exe"; Components: Radio; Flags: uninsdeletekey
 
 ; Register last.fm protocol only if it isn't already
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: ""; ValueData: "URL:lastfm"; Components: Radio; Flags: uninsdeletekey
@@ -155,7 +149,6 @@ Name: "{group}\Last.fm Audioscrobbler"; Filename: "{app}\audioscrobbler.exe"
 Name: "{group}\Go to www.last.fm"; Filename: "{app}\LastFM.url"
 Name: "{group}\{cm:UninstallProgram,Last.fm}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\Last.fm Radio"; Filename: "{app}\radio.exe"; Tasks: desktopicon
-;Name: "{commondesktop}\Last.fm Audioscrobbler"; Filename: "{app}\audioscrobbler.exe"; Tasks: desktopicon
 
 ; The OnlyBelowVersion flag disables this on Vista as an admin-run installer can't install a quick launch
 ; icon to the standard user's folder location. Sucks.
@@ -163,25 +156,14 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"; Filename
 
 
 [Run]
-; Launch normally for pre-Vista versions
-Filename: "{app}\audioscrobbler.exe"; Description: "{cm:LaunchProgram,Last.fm}"; Flags: nowait postinstall; OnlyBelowVersion: 0,6
-
-; For Vista, we have to go through the VistaLib to get the apps to launch non-elevated.
-; Not launching helper here (app does it on startup) as it led to two instances being launched
-; through the VistaLib DLL.
-Filename: "RunDll32.exe"; Parameters: "{code:GetPathVistaDll},RunNonElevated {code:AddQuotes|{app}\audioscrobbler.exe}"; Description: "{cm:LaunchProgram,Last.fm}"; Flags: nowait postinstall; MinVersion: 0,6
-
+Filename: "{app}\audioscrobbler.exe"; Flags: nowait runasoriginaluser
 
 ; This is the LAST step of uninstallation
 [UninstallDelete]
-; Legacy
-;Type: files; Name: "{app}\LastFM.url"
-;Type: files; Name: "{app}\UpTemp.exe"
 Type: dirifempty; Name: "{app}"
 
-; TODO: why don't we attempt this also on Vista? What could go wrong?
-Type: filesandordirs; Name: "{localappdata}\Last.fm\Client"; OnlyBelowVersion: 0,6
-Type: dirifempty; Name: "{localappdata}\Last.fm"; OnlyBelowVersion: 0,6
+Type: filesandordirs; Name: "{localappdata}\Last.fm\Client"
+Type: dirifempty; Name: "{localappdata}\Last.fm"
 
 ; This should be possible to delete as we're waiting until all the plugin uninstallers have been run.
 Type: files; Name: "{commonappdata}\Last.fm\Client\uninst.bat"
@@ -192,44 +174,13 @@ Type: dirifempty; Name: "{commonappdata}\Last.fm"
 
 ; This is the FIRST step of uninstallation
 [UninstallRun]
-; Vista only: We need to do this to clean out any HKCU and {localappdata} locations for a potential standard user who used the application.
-; But we can't! Because there is currently no way of making the installer wait for the Cleaner to finish which means we'll end up with
-; broken uninstalls.
-;Filename: "RunDll32.exe"; Parameters: "{code:GetPathVistaDll},RunNonElevated {code:AddQuotes|{app}\Cleaner.exe}"; Flags: waituntilterminated runhidden; MinVersion: 0,6
+Filename: "{app}\radio.exe"; Parameters: "--exit"
+Filename: "{app}\audioscrobbler.exe"; Parameters: "--exit"
 
 
 [Code]
 // Global variables
 var g_firstRun: Boolean;
-
-procedure QuitHelper(install: Boolean);
-var
-  helperPath: String;
-  killerPath: String;
-  processExitCode: Integer;
-  execOK: Boolean;
-begin
-
-  // Since we ditched the helper altogether, we can only do the
-  // brute force shutdown via killer.exe. Using the --quit method
-  // will fail because the old helper exe will be incompatible with
-  // the new moose.dll.
-  if install then
-  begin
-    //MsgBox('install, extract temporary', mbInformation, MB_OK);
-    ExtractTemporaryFile('killer.exe');
-    killerPath := ExpandConstant('{tmp}\killer.exe');
-  end
-  else
-  begin
-    //MsgBox('uninstall, use killer from app', mbInformation, MB_OK);
-    killerPath := ExpandConstant('{app}\killer.exe');
-  end;
-
-  execOK := Exec(killerPath, 'LastFMHelper.exe', '', SW_HIDE, ewWaitUntilTerminated, processExitCode);
-  if (execOK = False) then MsgBox('Failed to shut down helper process', mbError, MB_OK);
-
-end;
 
 // This must be called before the install and its value stored
 function IsUpgrade(): Boolean;
@@ -253,102 +204,12 @@ begin
   Result := TRUE;
 end;
 
-function ShouldSkipPage(PageID: Integer): Boolean;
-begin
-  if PageID = 14 then
-  begin
-
-    // We skip the final screen if it's first run and go straight into config wizard
-    if g_firstRun then
-      Result := TRUE
-    else
-      Result := FALSE;
-
-  end;
-end;
-
-function GetPathVistaDll(Param: String): String;
+procedure ExitApp(FileName: String);
 var
-  path: String;
-begin
-  if IsWin64() then
-    path := AddQuotes( ExpandConstant('{app}') +  '\VistaLib64.dll' )
-  else
-    path := AddQuotes( ExpandConstant('{app}') +  '\VistaLib32.dll' );
-
-  //MsgBox('path: ' + path, mbInformation, MB_OK);
-  Result := path;
-end;
-
-
-// These don't work
-//procedure RunNonElevated32( hWnd: Integer; file, params, dir: String );
-//external 'RunNonElevated@files:VistaLib32.dll';
-
-
-//procedure RunNonElevated64( hWnd: Integer; file, params, dir: String );
-//external 'RunNonElevated@files:VistaLib64.dll';
-
-
-procedure CurUninstallStepChanged(CurStep: TUninstallStep);
-var
-  batfile: String;
-  uninstallers: TArrayOfString;
-  arrayLen: Integer;
-  lineIdx: Integer;
-  currentLine: String;
   processExitCode: Integer;
   execOK: Boolean;
 begin
-  if (CurStep = usUninstall) then
-  begin
-
-    QuitHelper(False);
-
-    // Uninstall the plugins
-    batfile := ExpandConstant('{commonappdata}\Last.fm\Client\uninst2.bat');
-    LoadStringsFromFile(batfile, uninstallers);
-    //MsgBox('loaded string array', mbInformation, MB_OK);
-
-    arrayLen := GetArrayLength(uninstallers) - 1;
-    for lineIdx := 0 to arrayLen do
-    begin
-      currentLine := uninstallers[lineIdx];
-
-      if (Pos('start', currentLine) = 1) then
-      begin
-        // Old style entry, convert from OEM codepage and strip junk
-        OemToCharBuff(currentLine);
-        Delete(currentLine, 1, 16);
-
-        //MsgBox('deleted front: ' + currentLine, mbInformation, MB_OK);
-
-        Delete(currentLine, Pos('"', currentLine), Length(currentLine) - Pos('"', currentLine) + 1 );
-
-        //MsgBox('deleted back: ' + currentLine, mbInformation, MB_OK);
-
-        //MsgBox('old style, trying: ' + currentLine, mbInformation, MB_OK);
-
-        execOK := Exec(currentLine, '/SILENT', '', SW_SHOW, ewWaitUntilTerminated, processExitCode);
-        //if (execOK = True) then MsgBox('OEM exec successful', mbInformation, MB_OK)
-        //else MsgBox('OEM exec failed', mbInformation, MB_OK);
-      end else
-      begin
-        //MsgBox('execing line: ' + currentLine, mbInformation, MB_OK);
-        execOK := Exec(currentLine, '/SILENT', '', SW_SHOW, ewWaitUntilTerminated, processExitCode);
-        //if (execOK = True) then MsgBox('exec successful', mbInformation, MB_OK)
-        //else MsgBox('exec failed', mbInformation, MB_OK);
-      end;
-
-    end; // end of loop
-
-    // Run Cleaner
-    //Exec( 'RunDll32.exe', GetPathVistaDll('') + ',RunNonElevated ' + AddQuotes( ExpandConstant( '{app}' ) + '\Cleaner.exe' ), '', SW_HIDE, ewWaitUntilTerminated, processExitCode );
-
-    // Horrible, but there's no way of ensuring that the script waits for the Cleaner to finish.
-    // This is still not enough. Big caches take some time to wipe.
-    //Sleep( 5000 );
-
-  end; // end of CurStep = usUninstall
-
+  execOK := ExecAsOriginalUser(ExpandConstant(FileName), '--exit', '', SW_SHOW, ewWaitUntilTerminated, processExitCode);
 end;
+
+
