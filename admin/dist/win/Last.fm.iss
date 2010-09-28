@@ -31,6 +31,8 @@ ShowLanguageDialog=yes
 WizardImageFile=wizard.bmp
 WizardSmallImageFile=wizard_small.bmp
 SetupIconFile=installer.ico
+UninstallDisplayIcon={app}\audioscrobbler.exe
+AppModifyPath="{app}\UninsHs.exe" /m0=LastFM
 WizardImageBackColor=$ffffff
 WizardImageStretch=no
 AppMutex=Lastfm-F396D8C8-9595-4f48-A319-48DCB827AD8F, Audioscrobbler-7BC5FBA0-A70A-406e-A50B-235D5AFE67FB
@@ -45,7 +47,7 @@ Name: "full"; Description: "Full installation"
 Name: "compact"; Description: "Compact installation (just the scrobbler)"
 
 [Components]
-Name: Radio; Description: "Radio"; Types: full
+Name: Radio; Description: "Radio"; Flags: disablenouninstallwarning; Types: full
 Name: Audioscrobbler; Description: "Audioscrobbler"; Flags: fixed; Types: full compact
 Name: Unicorn; Description: "Application Library"; Flags: fixed; Types: full compact
 Name: LibLastfm; Description: "API Library"; Flags: fixed; Types: full compact
@@ -54,32 +56,31 @@ Name: Qt; Description: "Qt Libraries"; Flags: fixed; Types: full compact
 [Languages]
 ; The first string is an internal code that we can set to whatever we feel like
 Name: "en"; MessagesFile: "compiler:Default.isl"
-;Name: "fr"; MessagesFile: "..\res\French-15-5.1.11.isl"
-;Name: "it"; MessagesFile: "..\res\Italian-14-5.1.11.isl"
-;Name: "de"; MessagesFile: "..\res\German-2-5.1.11.isl"
-;Name: "es"; MessagesFile: "..\res\SpanishStd-5-5.1.11.isl"
-;Name: "pt"; MessagesFile: "..\res\BrazilianPortuguese-16-5.1.11.isl"
-;Name: "pl"; MessagesFile: "..\res\Polish-8-5.1.11.isl"
-;Name: "ru"; MessagesFile: "..\res\Russian-19-5.1.11.isl"
-;Name: "jp"; MessagesFile: "..\res\Japanese-5-5.1.11.isl"
-;Name: "cn"; MessagesFile: "..\res\ChineseSimp-12-5.1.11.isl"
-;Name: "tr"; MessagesFile: "..\res\Turkish-3-5.1.11.isl"
-;Name: "sv"; MessagesFile: "..\res\Swedish-10-5.1.12.isl"
+;Name: "fr"; MessagesFile: "compiler:French.isl"
+;Name: "it"; MessagesFile: "compiler:Italian.isl"
+;Name: "de"; MessagesFile: "compiler:Deutsch.isl"
+;Name: "es"; MessagesFile: "compiler:Spanish.isl"
+;Name: "pt"; MessagesFile: "compiler:Portuguese - Brasil.isl"
+;Name: "pl"; MessagesFile: "compiler:Polish.isl"
+;Name: "ru"; MessagesFile: "compiler:Russian.isl"
+;Name: "jp"; MessagesFile: "compiler:Japanese.isl"
+;Name: "chs"; MessagesFile: "compiler:Simplified Chinese.isl"
+;Name: "tr"; MessagesFile: "compiler:Turkish.isl"
+;Name: "se"; MessagesFile: "compiler:Swedish.isl"
 
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkedonce
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Components: Radio
 
 ; The OnlyBelowVersion flag disables this on Vista as an admin-run installer can't install a quick launch
 ; icon to the standard user's folder location. Sucks.
-Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0, 6;
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Components: Radio; Flags: unchecked; OnlyBelowVersion: 0, 6;
 
 
 [Files]
 ; Main files
 Source: "..\..\..\_bin\radio.exe"; DestDir: "{app}"; Components: Radio ; Flags: ignoreversion; BeforeInstall: ExitApp('{app}\radio.exe')
 Source: "..\..\..\_bin\audioscrobbler.exe"; DestDir: "{app}"; Components: Audioscrobbler ; Flags: ignoreversion; BeforeInstall: ExitApp('{app}\audioscrobbler.exe')
-
 Source: "..\..\..\_bin\iPodScrobbler.exe"; DestDir: "{app}"; Components: Audioscrobbler ; Flags: ignoreversion
 
 ;libraries
@@ -112,16 +113,14 @@ Source: "..\..\..\lib\unicorn\unicorn.css"; DestDir: "{app}"; Components: Unicor
 Source: "..\..\..\app\audioscrobbler\audioscrobbler.css"; DestDir: "{app}"; Components: Audioscrobbler; Flags: ignoreversion
 Source: "..\..\..\app\radio\radio.css"; DestDir: "{app}"; Components: Radio; Flags: ignoreversion
 
-;Some text files
-;Source: "..\ChangeLog.txt"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "..\COPYING"; DestDir: "{app}"; Flags: ignoreversion
+;The add/modify/remove file
+Source: "UninsHs.exe"; DestDir: "{app}"; Flags: onlyifdoesntexist
 
-;Source: "..\bin\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs
-
+;Text files?
 
 [Registry]
 Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Version"; ValueData: "{cm:Version}"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\audioscrobbler.exe"; Components: Radio; Flags: uninsdeletekey
+Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\audioscrobbler.exe"; Components: Audioscrobbler; Flags: uninsdeletekey
 
 ; Register last.fm protocol only if it isn't already
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: ""; ValueData: "URL:lastfm"; Components: Radio; Flags: uninsdeletekey
@@ -130,25 +129,26 @@ Root: HKCR; Subkey: "lastfm\shell\open\command"; ValueType: string; ValueName: "
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Components: Radio; Flags: uninsdeletekey
 
 ; Register Last.fm in the control panel
-
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: ""; ValueData: "Audioscrobbler"; Components: Audioscrobbler; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: ""; ValueData: "Audioscrobbler"; Components: Audioscrobbler; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: "InfoTip"; ValueData: "Last.fm Audioscobbler"; Components: Audioscrobbler; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: "System.ApplicationName"; ValueData: "fm.last.audioscrobbler"; Components: Audioscrobbler; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: "System.ControlPanel.Category"; ValueData: "8"; Components: Audioscrobbler; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\audioscrobbler.exe, -2"; Components: Audioscrobbler; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}\Shell\Open\Command"; ValueType: string; ValueName: ""; ValueData: "{app}\audioscrobbler.exe --settings"; Components: Audioscrobbler; Flags: uninsdeletekey
 
 ; This is just for deleting keys at uninstall
-Root: HKCU; Subkey: "Software\Last.fm"; Flags: dontcreatekey uninsdeletekeyifempty
-Root: HKLM; Subkey: "Software\Last.fm"; Flags: dontcreatekey uninsdeletekeyifempty
-Root: HKCU; Subkey: "Software\Last.fm\Client"; Flags: dontcreatekey uninsdeletekey
-Root: HKLM; Subkey: "Software\Last.fm\Client"; Flags: dontcreatekey uninsdeletekey
-
-
-[INI]
-Filename: "{app}\LastFM.url"; Section: "InternetShortcut"; Key: "URL"; String: "http://www.last.fm"
-
+Root: HKCU; Subkey: "Software\Last.fm"; Flags: dontcreatekey uninsdeletekey
+Root: HKLM; Subkey: "Software\Last.fm"; Flags: dontcreatekey uninsdeletekey
 
 [Icons]
-Name: "{group}\Last.fm Radio"; Filename: "{app}\radio.exe"
-Name: "{group}\Last.fm Audioscrobbler"; Filename: "{app}\audioscrobbler.exe"
-Name: "{group}\Go to www.last.fm"; Filename: "{app}\LastFM.url"
-Name: "{group}\{cm:UninstallProgram,Last.fm}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\Last.fm Radio"; Filename: "{app}\radio.exe"; Tasks: desktopicon
+Name: "{group}\Last.fm Radio"; Components: Radio; Filename: "{app}\radio.exe"
+Name: "{group}\Last.fm Audioscrobbler"; Components: Audioscrobbler; Filename: "{app}\audioscrobbler.exe"
+Name: "{commondesktop}\Last.fm Radio"; Filename: "{app}\radio.exe"; Components: Radio; Tasks: desktopicon
+
+;Uninstall
+Name: "{group}\Uninstall Last.fm"; Filename: "{uninstallexe}"
+Name: "{group}\Uninstall Last.fm"; Filename: "{app}\UninsHs.exe"; Parameters: "/u0=LastFM"
 
 ; The OnlyBelowVersion flag disables this on Vista as an admin-run installer can't install a quick launch
 ; icon to the standard user's folder location. Sucks.
@@ -156,14 +156,25 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"; Filename
 
 
 [Run]
-Filename: "{app}\audioscrobbler.exe"; Flags: nowait runasoriginaluser
+Filename: "{app}\audioscrobbler.exe"; Description: "Last.fm Audioscrbbler"; Flags: nowait postinstall
+Filename: "{app}\UninsHs.exe"; Parameters: "/r0=LastFM,{language},{srcexe},{app}\Installer.exe"; Flags: runminimized runhidden nowait
+
+[InstallDelete]
+;All the files that are not in fixed components (so the Radio compontent is actually removed on modify)
+Type: Files; Name: "{commondesktop}\Last.fm Radio.lnk"
+Type: Files; Name: "{app}\radio.exe"
+Type: Files; Name: "{app}\phonon4.dll"
+Type: Files; Name: "{app}\radio.css"
+Type: Files; Name: "{app}\phonon_backend\phonon_ds94.dll"
+Type: dirifempty; Name: "{app}\phonon_backend\"
 
 ; This is the LAST step of uninstallation
 [UninstallDelete]
+;remove folders, if they are empty
+Type: files; Name: "{app}\Installer.exe"
 Type: dirifempty; Name: "{app}"
 
-Type: filesandordirs; Name: "{localappdata}\Last.fm\Client"
-Type: dirifempty; Name: "{localappdata}\Last.fm"
+Type: filesandordirs; Name: "{localappdata}\Last.fm"
 
 ; This should be possible to delete as we're waiting until all the plugin uninstallers have been run.
 Type: files; Name: "{commonappdata}\Last.fm\Client\uninst.bat"
@@ -176,7 +187,6 @@ Type: dirifempty; Name: "{commonappdata}\Last.fm"
 [UninstallRun]
 Filename: "{app}\radio.exe"; Parameters: "--exit"
 Filename: "{app}\audioscrobbler.exe"; Parameters: "--exit"
-
 
 [Code]
 // Global variables
@@ -193,10 +203,50 @@ begin
   Result := (sPrevPath <> '');
 end;
 
+function ShouldSkipPage(PageID: Integer): Boolean;
+begin
+  if PageID = wpFinished then
+  begin
+    // We skip the final screen if it's first run and go straight into config wizard
+    if g_firstRun then
+      Result := TRUE
+  end;
+  
+  // This skip page code is for add/modify/remove
+  if Pos('/SP-', UpperCase(GetCmdTail)) > 0 then
+    case PageID of
+      wpLicense, wpPassword, wpInfoBefore, wpUserInfo,
+      wpSelectDir, wpSelectProgramGroup, wpInfoAfter:
+        Result := True;
+  end;
+end;
+
+
+procedure ExitApp(FileName: String);
+var
+  processExitCode: Integer;
+begin
+  if ExecAsOriginalUser( ExpandConstant(FileName), '--exit', '', SW_SHOW, ewWaitUntilTerminated, processExitCode) then
+  begin
+    // *high five*
+  end
+  else begin
+    //MsgBox( 'Failed to stop ' + ExpandConstant(FileName), mbInformation, MB_OK );
+  end;
+end;
+
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if CurStep = ssInstall then
+    begin
+      ExitApp( '{app}\radio.exe' );
+      ExitApp( '{app}\audioscrobbler.exe' );
+    end;
+end;
+
 function InitializeSetup(): Boolean;
 begin
-  //QuitHelper(True);
-
   // Need to evaluate and store this before any installation has been done
   g_firstRun := not IsUpgrade();
 
@@ -204,12 +254,6 @@ begin
   Result := TRUE;
 end;
 
-procedure ExitApp(FileName: String);
-var
-  processExitCode: Integer;
-  execOK: Boolean;
-begin
-  execOK := ExecAsOriginalUser(ExpandConstant(FileName), '--exit', '', SW_SHOW, ewWaitUntilTerminated, processExitCode);
-end;
+
 
 
