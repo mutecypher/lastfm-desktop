@@ -40,7 +40,7 @@ public:
     void setGradient( bool gradient );
 
 public slots:
-    void loadUrl( const QUrl& url );
+    void loadUrl( const QUrl& url, bool scale = true );
     void setHref( const QUrl& url );
     
 protected:
@@ -59,6 +59,7 @@ signals:
 private:
     bool m_mouseDown;
     bool m_gradient;
+    bool m_scale;
     QUrl m_href;
 
     Q_PROPERTY(bool gradient READ gradient WRITE setGradient);

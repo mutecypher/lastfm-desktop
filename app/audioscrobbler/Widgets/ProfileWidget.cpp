@@ -116,7 +116,7 @@ ProfileWidget::updateUserInfo( const lastfm::UserDetails& userdetails )
         sinceText = "";
 
     ui.since->setText( sinceText );
-    ui.avatar->loadUrl( userdetails.imageUrl( lastfm::Medium ));
+    ui.avatar->loadUrl( userdetails.imageUrl( lastfm::Medium ), false );
     ui.avatar->setHref( userdetails.www());
 }
 
