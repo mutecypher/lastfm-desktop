@@ -565,7 +565,7 @@ Application::onAboutTriggered()
 void
 Application::onPrefsTriggered()
 {
-    SettingsDialog* settingsDialog = new SettingsDialog( mw );
+    SettingsDialog* settingsDialog = new SettingsDialog();
     settingsDialog->exec();
 }
 
@@ -641,6 +641,11 @@ Application::onMessageReceived(const QStringList& message)
     {
         exit();
     }
+    else if ( message.contains( "--settings" ) )
+    {
+        // raise the settings window
+        m_prefs_action->trigger();
+    }
     else if ( message.filter( "twiddled", Qt::CaseInsensitive ).count() )
     {
         m_deviceScrobbler->twiddled( message );
@@ -651,7 +656,7 @@ Application::onMessageReceived(const QStringList& message)
         m_deviceScrobbler->iPodDetected( message );
     }
 
-    if ( !message.contains( "--tray" ) )
+    if ( !(message.contains( "--tray" ) || message.contains( "--settings" )))
     {
         // raise the app
         m_show_window_action->trigger();
