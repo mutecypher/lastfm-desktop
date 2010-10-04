@@ -101,7 +101,7 @@ UserRadioButton::onImageLoaded()
 }
 
 bool 
-UserRadioButton::eventFilter( QObject* obj, QEvent* event )
+UserRadioButton::eventFilter( QObject* /*obj*/, QEvent* event )
 {
     QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>( event );
     if( !mouseEvent ) return false;

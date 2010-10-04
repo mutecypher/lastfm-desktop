@@ -25,6 +25,8 @@
 #include <lastfm/Track>
 #include <stdexcept>
 
+// ignore the warning about the exception specification
+#pragma warning( disable : 4290 )
 
 class PlayerCommandParser
 {

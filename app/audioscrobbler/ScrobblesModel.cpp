@@ -35,13 +35,13 @@ ScrobblesModel::ScrobblesModel( const QList<lastfm::Track> tracks, QObject* pare
 }
 
 int
-ScrobblesModel::rowCount( const QModelIndex& parent ) const
+ScrobblesModel::rowCount( const QModelIndex& /*parent*/ ) const
 {
     return m_scrobbleList.count();
 }
 
 int
-ScrobblesModel::columnCount( const QModelIndex& parent ) const
+ScrobblesModel::columnCount( const QModelIndex& /*parent*/ ) const
 {
     return m_headerTitles.count();
 }

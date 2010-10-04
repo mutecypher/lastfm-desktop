@@ -11,7 +11,7 @@ GhostWidget::GhostWidget( QWidget* origin, QWidget* parent )
 }
 
 bool 
-GhostWidget::eventFilter( QObject* obj, QEvent* event )
+GhostWidget::eventFilter( QObject* /*obj*/, QEvent* event )
 {
     if( event->type() == QEvent::Resize ) {
         QResizeEvent* re = static_cast<QResizeEvent*>( event );

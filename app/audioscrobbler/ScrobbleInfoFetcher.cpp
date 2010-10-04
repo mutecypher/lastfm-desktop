@@ -107,7 +107,7 @@ void
 ScrobbleInfoFetcher::onAlbumGotInfo()
 {
     QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
-    bool removed = m_replies.removeOne(reply);
+    m_replies.removeOne(reply);
 
     XmlQuery lfm = reply->readAll();
     emit albumGotInfo(lfm);
@@ -120,7 +120,7 @@ void
 ScrobbleInfoFetcher::onArtistGotInfo()
 {
     QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
-    bool removed = m_replies.removeOne(reply);
+    m_replies.removeOne(reply);
 
     XmlQuery lfm = reply->readAll();
     emit artistGotInfo(lfm);
@@ -133,7 +133,7 @@ void
 ScrobbleInfoFetcher::onArtistGotEvents()
 {
     QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
-    bool removed = m_replies.removeOne(reply);
+    m_replies.removeOne(reply);
 
     XmlQuery lfm = reply->readAll();
     emit artistGotEvents(lfm);
@@ -146,7 +146,7 @@ void
 ScrobbleInfoFetcher::onTrackGotTopFans()
 {
     QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
-    bool removed = m_replies.removeOne(reply);
+    m_replies.removeOne(reply);
 
     XmlQuery lfm = reply->readAll();
     emit trackGotTopFans(lfm);
@@ -159,7 +159,7 @@ void
 ScrobbleInfoFetcher::onTrackGotTags()
 {
     QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
-    bool removed = m_replies.removeOne(reply);
+    m_replies.removeOne(reply);
 
     XmlQuery lfm = reply->readAll();
     emit trackGotTags(lfm);

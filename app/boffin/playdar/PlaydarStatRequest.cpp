@@ -78,12 +78,12 @@ PlaydarStatRequest::onReqFinished()
 void 
 PlaydarStatRequest::onError( QNetworkReply::NetworkError code )
 {
-    QObject* s = sender();
+    //QObject* s = sender();
     qDebug() << "StatRequest error: " << code << endl;
 }
 
 void 
-PlaydarStatRequest::fail(const char* message)
+PlaydarStatRequest::fail(const char* /*message*/)
 {
     emit error();
 }

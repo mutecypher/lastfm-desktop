@@ -66,7 +66,7 @@ DiagnosticsDialog::DiagnosticsDialog( QWidget *parent )
 }
 
 
-static QString scrobblerStatusText( int const i )
+static QString scrobblerStatusText( int const /*i*/ )
 {
     using lastfm::Audioscrobbler;
     /*
@@ -93,7 +93,7 @@ static QString scrobblerStatusText( int const i )
 
 
 void
-DiagnosticsDialog::scrobbleActivity( int msg )
+DiagnosticsDialog::scrobbleActivity( int /*msg*/ )
 {
     /*
     m_delay->add( scrobblerStatusText( msg ) );

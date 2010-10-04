@@ -62,7 +62,7 @@ ItemSelectorWidget::ItemSelectorWidget(Type type, QWidget* parent)
 }
 
 void
-ItemSelectorWidget::onTextChanged( const QString& text )
+ItemSelectorWidget::onTextChanged( const QString& /*text*/ )
 {
     //QFontMetrics fm(font());
 

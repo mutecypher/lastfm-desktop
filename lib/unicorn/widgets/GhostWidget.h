@@ -11,7 +11,7 @@ public:
 
 protected:
     bool eventFilter( QObject* obj, QEvent* event );
-    void paintEvent( class QPaintEvent* e ){}
+    void paintEvent( class QPaintEvent* /*e*/ ){}
 };
 
 #endif //GHOST_WIDGET_H

@@ -318,7 +318,7 @@ Application::init()
 
 
 void
-Application::onSessionChanged( unicorn::Session* newSession )
+Application::onSessionChanged( unicorn::Session* /*newSession*/ )
 {
     Audioscrobbler* oldAs = as;
     as = new Audioscrobbler("ass");
@@ -398,7 +398,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
 
     ScrobblePoint timeout( currentTrack.duration() * trackLengthPercent );
     delete watch;
-    watch = new StopWatch(timeout, connection->elapsed());
+    watch = new StopWatch(timeout);
     watch->start();
     connect(watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
 
@@ -473,8 +473,6 @@ Application::onStopped()
 void
 Application::setTrackInfo()
 {
-    double trackLengthPercent = unicorn::UserSettings().value( "scrobblePoint", 50 ).toDouble() / 100.0;
-
     qDebug() << "action geometry: " << tray->contextMenu()->actionGeometry( m_artist_action );
     int actionOffsets = 150; //this magic number seems to work to avoid the menu to expand with long titles
     int actionWidth = tray->contextMenu()->actionGeometry( m_artist_action ).width() - actionOffsets;

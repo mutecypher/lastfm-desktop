@@ -76,7 +76,7 @@ void HttpImageWidget::setHref( const QUrl& url )
 }
 
     
-void HttpImageWidget::mousePressEvent( QMouseEvent* event )
+void HttpImageWidget::mousePressEvent( QMouseEvent* /*event*/ )
 {
     m_mouseDown = true;
 }

@@ -62,7 +62,7 @@ AnimatedListLayout::setAnimated( bool animated )
 
         m_timeLine->stop();
 
-        foreach ( QLayoutItem* item, m_newItemList )
+        while ( m_newItemList.count() != 0 )
             m_itemList.prepend( m_newItemList.takeLast() );
 
         doLayout( geometry() );

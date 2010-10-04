@@ -189,7 +189,7 @@ EncodingUtils::Utf8ToAnsi(
 
         if (nLength == 0)
         {
-            int nError = GetLastError();
+            //int nError = GetLastError();
             
             // ERROR_INSUFFICIENT_BUFFER
             // ERROR_INVALID_FLAGS
@@ -223,7 +223,7 @@ EncodingUtils::Utf8ToAnsi(
 
         if (nStatus == 0)
         {
-            int nError = GetLastError();
+            //int nError = GetLastError();
             //LOG(1, "Couldn't convert UTF8 string '" << pcUTF8Str <<
             //    "' to Unicode. Returning empty string. Error code: " << nError << "\n");
             delete[] pcWideStr;
@@ -251,7 +251,7 @@ EncodingUtils::Utf8ToAnsi(
         
         if (nStatus == 0)
         {
-            int nError = GetLastError();
+            //int nError = GetLastError();
 
             // ERROR_INSUFFICIENT_BUFFER
             // ERROR_INVALID_FLAGS

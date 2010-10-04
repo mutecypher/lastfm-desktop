@@ -144,6 +144,9 @@ RecentTrackWidget::updateTimestamp()
 {
     QDateTime now = QDateTime::currentDateTime();
 
+    // Full time in the tool tip
+    ui.timestamp->setToolTip(m_track.timestamp().toString( "ddd h:ssap" ));
+
     if ( m_track.timestamp().daysTo( now ) > 1 )
     {
         ui.timestamp->setText(m_track.timestamp().toString( "ddd h:ssap" ));

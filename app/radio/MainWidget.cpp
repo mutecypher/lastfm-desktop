@@ -57,7 +57,7 @@ MainWidget::MainWidget( QWidget* parent )
 
 
 void 
-MainWidget::onSlideStarted( QLayoutItem* next, QLayoutItem* prev )
+MainWidget::onSlideStarted( QLayoutItem* next, QLayoutItem* /*prev*/ )
 {
     if( next->widget() )
         emit widgetChanged( next->widget());

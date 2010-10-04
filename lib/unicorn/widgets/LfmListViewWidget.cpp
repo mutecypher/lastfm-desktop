@@ -65,10 +65,10 @@ void LfmDelegate::paint( QPainter* p, const QStyleOptionViewItem& opt, const QMo
     p->drawText( opt.rect.adjusted( 46, 3, -5, -5 ), elidedText );
 }
 
-QSize LfmDelegate::sizeHint( const QStyleOptionViewItem& opt, const QModelIndex& index ) const
+QSize LfmDelegate::sizeHint( const QStyleOptionViewItem& opt, const QModelIndex& /*index*/ ) const
 {
     QFontMetrics fm( opt.font );
-    int textWidth = fm.width( index.data().toString());
+    //int textWidth = fm.width( index.data().toString());
     int spacing = qobject_cast<QListView*>(parent())->spacing();
     return QSize( (m_viewSize.width() / 2)-(spacing*2), 40 );
 }

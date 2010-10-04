@@ -42,7 +42,7 @@
 #include <QMenuBar>
 
 
-TitleBar::TitleBar( const QString& title )
+TitleBar::TitleBar( const QString& /*title*/ )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
@@ -64,7 +64,7 @@ TitleBar::TitleBar( const QString& title )
     connect(deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected()));
     connect(deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_iPodStatus, SLOT( clear()));
     connect(deviceScrobbler, SIGNAL( noScrobblesFound()), m_iPodStatus, SLOT( clear()));
-    QLabel* l;
+    //QLabel* l;
     //layout->addWidget( l = new QLabel( title, this ));
     //l->setAlignment( Qt::AlignCenter );
     layout->addStretch( 1 );

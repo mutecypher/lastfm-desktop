@@ -85,7 +85,7 @@ RecentStationsWidget::setModel(QAbstractItemModel* model)
 void
 RecentStationsWidget::recalcMoreButton()
 {
-    bool more = m_list->model() && 
-        (m_list->model()->rowCount() > m_list->getDisplayedColumns() * ROW_COUNT);
+    //bool more = m_list->model() &&
+    //    (m_list->model()->rowCount() > m_list->getDisplayedColumns() * ROW_COUNT);
     //m_moreButton->setVisible(more);
 }

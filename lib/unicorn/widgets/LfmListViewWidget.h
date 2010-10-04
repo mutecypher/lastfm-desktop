@@ -104,8 +104,9 @@ public:
     void read(QString path);
     void write(QString path) const;
 
-    int rowCount ( const QModelIndex & parent = QModelIndex() ) const
+    int rowCount ( const QModelIndex& parent = QModelIndex() ) const
     {
+        Q_UNUSED(parent);
         return m_items.length();
     }
 

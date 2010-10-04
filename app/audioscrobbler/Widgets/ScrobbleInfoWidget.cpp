@@ -256,9 +256,9 @@ ScrobbleInfoWidget::onFinished()
 void
 ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
 {
-    int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
-    int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
-    int userListens = lfm["artist"]["stats"]["userplaycount"].text().toInt();
+    //int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
+    //int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
+    //int userListens = lfm["artist"]["stats"]["userplaycount"].text().toInt();
 
     ui.onTourBanner->setHref( QUrl( lfm["artist"]["url"].text() + "/+events" ) );
 
@@ -328,11 +328,11 @@ ScrobbleInfoWidget::onArtistGotEvents(const XmlQuery& lfm)
 }
 
 void
-ScrobbleInfoWidget::onAlbumGotInfo(const XmlQuery& lfm)
+ScrobbleInfoWidget::onAlbumGotInfo(const XmlQuery& /*lfm*/)
 {
-    int scrobbles = lfm["album"]["playcount"].text().toInt();
-    int listeners = lfm["album"]["listeners"].text().toInt();
-    int userListens = lfm["album"]["userplaycount"].text().toInt();
+    //int scrobbles = lfm["album"]["playcount"].text().toInt();
+    //int listeners = lfm["album"]["listeners"].text().toInt();
+    //int userListens = lfm["album"]["userplaycount"].text().toInt();
 
     //ui.albumScrobbles->setText(QString("%L1").arg(scrobbles) + " plays (" + QString("%L1").arg(listeners) + " listeners)" + "\n" + QString("%L1").arg(userListens) + " plays in your library");;
 }
@@ -341,7 +341,7 @@ void
 ScrobbleInfoWidget::onTrackGotInfo(const XmlQuery& lfm)
 {
     int scrobbles = lfm["track"]["playcount"].text().toInt();
-    int listeners = lfm["track"]["listeners"].text().toInt();
+    //int listeners = lfm["track"]["listeners"].text().toInt();
     int userListens = lfm["track"]["userplaycount"].text().toInt();
 
     ui.yourScrobbles->setText( QString("%L1").arg(userListens));
