@@ -19,6 +19,3 @@ CONFIG( tests ) {
         app/client/tests/test_client.pro
 }
 
-
-QMAKE_POST_LINK += admin/dist/win/build-release-win.pl
-
