@@ -70,6 +70,18 @@ ScrobbleInfoWidget::ScrobbleInfoWidget( QWidget* p )
     connect( ui.listeningNow, SIGNAL( clicked( QModelIndex )), SLOT( listItemClicked( QModelIndex )));
 
     connect( qApp, SIGNAL( trackStarted( Track, Track)), SLOT( onTrackStarted( Track, Track )));
+    //connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
+    //connect( qApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
+    connect( qApp, SIGNAL( stopped() ), SLOT( onStopped() ) );
+
+    connect( qApp, SIGNAL(trackGotInfo(XmlQuery)), SLOT(onTrackGotInfo(XmlQuery)));
+    connect( qApp, SIGNAL(albumGotInfo(XmlQuery)), SLOT(onAlbumGotInfo(XmlQuery)));
+    connect( qApp, SIGNAL(artistGotInfo(XmlQuery)), SLOT(onArtistGotInfo(XmlQuery)));
+    connect( qApp, SIGNAL(trackGotTopFans(XmlQuery)), SLOT(onTrackGotTopFans(XmlQuery)));
+    connect( qApp, SIGNAL(artistGotEvents(XmlQuery)), SLOT(onArtistGotEvents(XmlQuery)));
+    connect( qApp, SIGNAL(trackGotTags(XmlQuery)), SLOT(onTrackGotTags(XmlQuery)));
+    connect( qApp, SIGNAL(finished()), SLOT(onFinished()));
+
     connect(ui.bioText->document()->documentLayout(), SIGNAL( documentSizeChanged(QSizeF)), SLOT( onBioChanged(QSizeF)));
     connect(ui.bioText, SIGNAL(anchorClicked(QUrl)), SLOT(onAnchorClicked(QUrl)));
 }
@@ -85,35 +97,11 @@ ScrobbleInfoWidget::setupUi()
     ui.scrollArea->setWidget( ui.contents );
     ui.scrollArea->setWidgetResizable( true );
 
-    QWidget* titleBox = new QWidget();
-    {
-        QHBoxLayout* layout = new QHBoxLayout( titleBox );
-        
-        QVBoxLayout* vl = new QVBoxLayout();
-        vl->addWidget( ui.title1 = new QLabel());
-        ui.title1->setObjectName( "title1" );
-        ui.title1->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
-        ui.title1->setOpenExternalLinks( true );
-
-        vl->addWidget( ui.title2 = new QLabel());
-        ui.title2->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
-        ui.title2->setObjectName( "title2" );
-        ui.title2->setOpenExternalLinks( true );
-        vl->addStretch();
-        
-        layout->addLayout( vl , 1);
-        layout->addStretch();
-        layout->addWidget( ui.artistImage = new HttpImageWidget(), 1);
-        ui.artistImage->setObjectName("artistImage");
-        layout->setContentsMargins( 0, 0, 0, 0 );
-        layout->setSpacing( 0 );
-    }
-
-    mainLayout->addWidget(titleBox);
-
     mainLayout->addWidget( ui.area = new QWidget( this ) );
     ui.area->hide();
     QVBoxLayout* layout = new QVBoxLayout( ui.area );
+
+    QVBoxLayout* scrobTagsLayout = new QVBoxLayout();
 
     QWidget* scrobbles = new QWidget();
     {
@@ -131,7 +119,7 @@ ScrobbleInfoWidget::setupUi()
     }
     DataBox* scrobBox = new DataBox( tr( "Scrobbles for this track" ), scrobbles );
     scrobBox->setObjectName( "scrobbles" );
-    layout->addWidget( scrobBox );
+    scrobTagsLayout->addWidget( scrobBox );
 
     QWidget* tags = new QWidget();
     {
@@ -149,7 +137,14 @@ ScrobbleInfoWidget::setupUi()
     }
     DataBox* tagsBox = new DataBox( tr( "Tags for this track" ), tags );
     tagsBox->setObjectName( "tags" );
-    layout->addWidget( tagsBox );
+    scrobTagsLayout->addWidget( tagsBox );
+
+    QHBoxLayout* artistLayout = new QHBoxLayout();
+    artistLayout->addLayout( scrobTagsLayout, 1 );
+    artistLayout->addWidget( ui.artistImage = new HttpImageWidget(), 1, Qt::AlignTop);
+    ui.artistImage->setObjectName("artistImage");
+
+    layout->addLayout( artistLayout );
 
     QWidget* listeners = new QWidget();
     {
@@ -194,8 +189,6 @@ ScrobbleInfoWidget::setupUi()
     new QVBoxLayout( this );
     this->layout()->setContentsMargins( 0, 0, 0, 0 );
     this->layout()->addWidget( ui.scrollArea );
-
-    //ui.fadeInWidget = new FadeInWidget( area );
 }
 
 void 
@@ -206,30 +199,9 @@ ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
 
     ui.area->hide();
 
-    const unsigned short em_dash = 0x2014;
-    QString title = QString("<a class='title' href=\"%1\">%2</a> ") + QChar(em_dash) + " <a class='title' href=\"%3\">%4</a>";
-    const unicorn::Application* uApp = qobject_cast<unicorn::Application*>(qApp);
-
-    ui.title1->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg(t.artist().www().toString(),
-                                                                                      t.artist(),
-                                                                                      t.www().toString(),
-                                                                                      t.title()));
-    if( !t.album().isNull() )
-    {
-        QString album("from <a class='title' href=\"%1\">%2</a>");
-        ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( t.album().www().toString(),
-                                                                                          t.album().title()));
-    }
-    else
-    {
-        ui.title2->clear();
-    }
-
     if (t.artist() != previous.artist())
     {
         // it is a different artist so clear anything that is artist specific
-        ui.artistImage->clear();
-        ui.artistImage->setHref( QUrl());
         ui.bioText->clear();
         ui.onTourBanner->hide();
         model.similarArtists->clear();
@@ -239,6 +211,12 @@ ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
         ui.topTags->clear();
         ui.yourTags->clear();
         model.listeningNow->clear();
+    }
+    if (t.artist() != previous.artist())
+    {
+        // it is a different artist so clear anything that is artist specific
+        ui.artistImage->clear();
+        ui.artistImage->setHref( QUrl());
     }
 }
 
@@ -300,9 +278,9 @@ ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
     f.setMargin(0);
     root->setFrameFormat(f);
 
-    QUrl url = lfm["artist"]["image size=large"].text();
+    QUrl url = lfm["artist"]["image size=extralarge"].text();
     ui.artistImage->loadUrl( url );
-    ui.artistImage->setHref( lfm["artist"][ "url" ].text());
+    ui.artistImage->setHref( lfm["artist"][ "url" ].text() );
 }
 
 
@@ -310,10 +288,10 @@ void
 ScrobbleInfoWidget::onStopped()
 {
     ui.area->hide();
-    ui.artistImage->clear();
-    ui.artistImage->setHref(QUrl());
-    ui.title1->clear();
-    ui.title2->clear();
+    //ui.artistImage->clear();
+    //ui.artistImage->setHref(QUrl());
+    //ui.title1->clear();
+    //ui.title2->clear();
     ui.onTourBanner->hide();
 }
 

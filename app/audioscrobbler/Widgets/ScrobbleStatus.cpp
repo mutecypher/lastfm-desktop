@@ -55,6 +55,9 @@ ScrobbleStatus::ScrobbleStatus( QWidget* parent )
     ui.playerStatus = new QLabel();
     ui.playerStatus->setObjectName( "player_status" );
     layout()->addWidget( ui.playerStatus );
+
+    connect( qApp, SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)));
+    connect( qApp, SIGNAL(stopped()), SLOT(onTrackStopped()));
 }
 
 void

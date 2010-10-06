@@ -19,6 +19,7 @@
 */
 #include "Application.h"
 
+#include "widgets/ProfileWidget.h"
 #include "Dialogs/SettingsDialog.h"
 #include "lib/listener/DBusListener.h"
 #include "lib/listener/legacy/LegacyPlayerListener.h"
@@ -238,31 +239,26 @@ Application::init()
     m_share_action->setShortcut( Qt::CTRL + Qt::Key_S );
     m_love_action->setShortcut( Qt::CTRL + Qt::Key_L );
 
-    ScrobbleControls* sc = mw->scrobbleControls();
-    sc->setEnabled( false );
-    sc->setTagAction( m_tag_action );
-    sc->setShareAction( m_share_action );
     // make the love buttons sychronised
     connect(this, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
-    connect(this, SIGNAL(lovedStateChanged(bool)), sc->loveButton(), SLOT(setChecked(bool)));
 
     // tell the radio that the scrobbler's love state has changed
     connect(this, SIGNAL(lovedStateChanged(bool)), SLOT(sendBusLovedStateChanged(bool)));
 
     // update the love buttons if love was pressed in the radio
     connect(this, SIGNAL(busLovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
-    connect(this, SIGNAL(busLovedStateChanged(bool)), sc->loveButton(), SLOT(setChecked(bool)));
     connect(this, SIGNAL(busLovedStateChanged(bool)), SLOT(onBusLovedStateChanged(bool)));
 
     // tell everyone that is interested that data about the current track has been fetched
-    connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotInfo(XmlQuery)));
-    connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
-    connect(fetcher, SIGNAL(albumGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onAlbumGotInfo(XmlQuery)));
-    connect(fetcher, SIGNAL(artistGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onArtistGotInfo(XmlQuery)));
-    connect(fetcher, SIGNAL(trackGotTopFans(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotTopFans(XmlQuery)));
-    connect(fetcher, SIGNAL(artistGotEvents(XmlQuery)), mw->nowScrobbling(), SLOT(onArtistGotEvents(XmlQuery)));
-    connect(fetcher, SIGNAL(trackGotTags(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotTags(XmlQuery)));
-    connect(fetcher, SIGNAL(finished()), mw->nowScrobbling(), SLOT(onFinished()));
+    connect( fetcher, SIGNAL(trackGotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)));
+    connect( fetcher, SIGNAL(albumGotInfo(XmlQuery)), SIGNAL(albumGotInfo(XmlQuery)));
+    connect( fetcher, SIGNAL(artistGotInfo(XmlQuery)), SIGNAL(artistGotInfo(XmlQuery)));
+    connect( fetcher, SIGNAL(artistGotEvents(XmlQuery)), SIGNAL(artistGotEvents(XmlQuery)));
+    connect( fetcher, SIGNAL(trackGotTopFans(XmlQuery)), SIGNAL(trackGotTopFans(XmlQuery)));
+    connect( fetcher, SIGNAL(trackGotTags(XmlQuery)), SIGNAL(trackGotTags(XmlQuery)));
+    connect( fetcher, SIGNAL(finished()), SIGNAL(finished()));
+
+    connect( fetcher, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
 
 /// mediator
     mediator = new PlayerMediator(this);
@@ -344,16 +340,17 @@ Application::setConnection(PlayerConnection*c)
             connection->setElapsed(watch->elapsed());
     }
 
+    //
     connect(c, SIGNAL(trackStarted(Track, Track)), SLOT(onTrackStarted(Track, Track)));
     connect(c, SIGNAL(paused()), SLOT(onPaused()));
     connect(c, SIGNAL(resumed()), SLOT(onResumed()));
     connect(c, SIGNAL(stopped()), SLOT(onStopped()));
-    connect(c, SIGNAL(trackStarted(Track, Track)), mw, SLOT(onTrackStarted(Track, Track)));
+
     connect(c, SIGNAL(trackStarted(Track, Track)), SIGNAL(trackStarted(Track, Track)));
-    connect(c, SIGNAL(resumed()), mw, SLOT(onResumed()));
-    connect(c, SIGNAL(paused()), mw, SLOT(onPaused()));
-    connect(c, SIGNAL(stopped()), mw, SLOT(onStopped()));
-    connect(c, SIGNAL(trackStarted(Track,Track)), fetcher, SLOT(onTrackStarted(Track,Track)));
+    connect(c, SIGNAL(resumed()), SIGNAL(resumed()));
+    connect(c, SIGNAL(paused()), SIGNAL(paused()));
+    connect(c, SIGNAL(stopped()), SIGNAL(stopped()));
+
     connection = c;
 
     if(c->state() == Playing || c->state() == Paused){
@@ -496,7 +493,6 @@ Application::setTrackInfo()
 
     tray->setToolTip( currentTrack.toString() );
 
-    mw->scrobbleControls()->setEnabled( true );
     m_love_action->setEnabled( true );
     m_tag_action->setEnabled( true );
     m_share_action->setEnabled( true );
@@ -508,7 +504,6 @@ Application::setTrackInfo()
 void
 Application::resetTrackInfo()
 {
-    mw->scrobbleControls()->setEnabled( false );
     m_artist_action->setText( "" );
     m_title_action->setText( tr( "Ready" ));
     m_love_action->setEnabled( false );

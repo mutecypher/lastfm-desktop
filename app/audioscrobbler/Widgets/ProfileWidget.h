@@ -24,7 +24,10 @@
 
 namespace unicorn{ class Session; }
 namespace lastfm{ class Track; }
+using lastfm::Track;
 namespace lastfm{ class UserDetails; } 
+namespace lastfm{ class XmlQuery; }
+using lastfm::XmlQuery;
 
 class ProfileWidget : public StylableWidget
 {
@@ -32,6 +35,10 @@ class ProfileWidget : public StylableWidget
 
 public:
     ProfileWidget( QWidget* p = 0 );
+
+public slots:
+    void onTrackStarted( const Track&, const Track& );
+    void onStopped();
 
 protected slots:
     void onSessionChanged( unicorn::Session* );
@@ -45,7 +52,9 @@ protected:
         class ScrobbleMeter* scrobbleMeter;
         class QLabel* since;
         class HttpImageWidget* avatar;
-        class RecentTracksWidget* recentTracks;
+        class QLabel* title1;
+        class QLabel* title2;
+        class ScrobbleControls* sc;
     } ui;
 
     QString m_path;

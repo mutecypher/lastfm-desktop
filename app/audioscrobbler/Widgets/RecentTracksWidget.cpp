@@ -51,7 +51,7 @@ RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
     m_writeTimer->setSingleShot( true );
 
     connect( m_writeTimer, SIGNAL(timeout()), SLOT(doWrite()) );
-
+    connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 
 }
 
@@ -210,5 +210,12 @@ RecentTracksWidget::onMoveFinished()
     }
 
    write();
+}
+
+void
+RecentTracksWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
+{
+    foreach ( lastfm::Track track, tracks )
+        addCachedTrack( track );
 }
 

@@ -50,6 +50,7 @@ private slots:
 
     void disableHover();
     void enableHover();
+    void onScrobblesCached( const QList<lastfm::Track>& tracks );
 
 private:
     Q_PROPERTY(QEasingCurve::Type easingCurve READ easingCurve WRITE setEasingCurve);

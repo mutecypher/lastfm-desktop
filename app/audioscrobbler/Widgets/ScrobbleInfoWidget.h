@@ -64,14 +64,12 @@ protected:
 
     struct {
          class BannerWidget* onTourBanner;
+         class HttpImageWidget* artistImage;
          class QScrollArea* scrollArea;
          class QWidget* contents;
          class QListView* listeningNow;
          class QTextBrowser* bioText;
          class QListView* similarArtists;
-         class QLabel* title1;
-         class QLabel* title2;
-         class HttpImageWidget* artistImage;
          class QLabel* yourScrobbles;
          class QLabel* totalScrobbles;
          class DataListWidget* yourTags;
