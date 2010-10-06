@@ -100,13 +100,13 @@ ProfileWidget::ProfileWidget( QWidget* p )
     connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 
     connect( qApp, SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
-    //connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
-    //connect( qApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
+    connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
+    connect( qApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
     connect( qApp, SIGNAL( stopped() ), SLOT( onStopped() ) );
 }
 
 void
-ProfileWidget::onTrackStarted( const Track& t, const Track& previous )
+ProfileWidget::onTrackStarted( const Track& t, const Track& /*previous*/ )
 {
     const unsigned short em_dash = 0x2014;
     QString title = QString("<a class='title' href=\"%1\">%2</a> ") + QChar(em_dash) + " <a class='title' href=\"%3\">%4</a>";
@@ -122,6 +122,23 @@ ProfileWidget::onTrackStarted( const Track& t, const Track& previous )
     {
         ui.title2->clear();
     }
+
+    ui.title1->show();
+    ui.title2->show();
+}
+
+void
+ProfileWidget::onPaused()
+{
+    ui.title1->hide();
+    ui.title2->hide();
+}
+
+void
+ProfileWidget::onResumed()
+{
+    ui.title1->show();
+    ui.title2->show();
 }
 
 void

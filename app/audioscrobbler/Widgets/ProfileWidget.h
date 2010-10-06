@@ -36,15 +36,17 @@ class ProfileWidget : public StylableWidget
 public:
     ProfileWidget( QWidget* p = 0 );
 
-public slots:
-    void onTrackStarted( const Track&, const Track& );
-    void onStopped();
 
-protected slots:
+private slots:
     void onSessionChanged( unicorn::Session* );
     void updateUserInfo( const lastfm::UserDetails& );
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
     void onScrobbleStatusChanged();
+
+    void onTrackStarted( const Track&, const Track& );
+    void onPaused();
+    void onResumed();
+    void onStopped();
 
 protected:
     struct {
