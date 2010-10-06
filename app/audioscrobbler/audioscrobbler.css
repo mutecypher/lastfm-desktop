@@ -138,8 +138,8 @@ QScrollArea {
 MetadataWindow ProfileWidget .QLabel,
 ScrobbleInfoWidget QLabel,
 MetadataWindow QAbstractItemView,
-MetadataWindow DataListWidget
-RecentTrackWidget QLabel {
+MetadataWindow DataListWidget,
+#recentTracks QLabel {
     color: #cccccc;
     margin: 0px;
     font-size: 11px;
@@ -205,6 +205,14 @@ DataBox #contents QLabel {
 #bio #header QLabel#icon { background-image: url(:/header_bio.png); }
 #similarArtists #header QLabel#icon { background-image: url(:/header_simartists.png); }
 
+QTabWidget::pane {
+	border: none;
+}
+
+DataBox#recentTracks {
+	padding: 18px 18px 0px;
+}
+
 RecentTracksWidget {
 	/* See QEasingCurve for a full list */
 	qproperty-easingCurve: OutBounce;
@@ -245,16 +253,6 @@ RecentTrackWidget QLabel#love {
     background-position: left bottom;
 	max-width: 15;
 	max-height: 15;
-}
-
-RecentTrackWidget QLabel#love {
-	color: transparent;
-	padding: 0px 0px;
-	qproperty-pixmap: url(:/love-isloved.png);
-	background-repeat: none;
-    background-position: left bottom;
-	width: 15;
-	height: 15;
 }
 
 RecentTrackWidget QToolButton#cog {
