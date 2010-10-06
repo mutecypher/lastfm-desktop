@@ -18,6 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QApplication>
 #include <QList>
 #include <QNetworkReply>
 
@@ -28,6 +29,10 @@
 ScrobbleInfoFetcher::ScrobbleInfoFetcher(QObject* parent)
     :QObject(parent)
 {
+    connect( qApp, SIGNAL( trackStarted( Track, Track)), SLOT( onTrackStarted( Track, Track )));
+    //connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
+    //connect( qApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
+    //connect( qApp, SIGNAL( stopped() ), SLOT( onStopped() ) );
 }
 
 void

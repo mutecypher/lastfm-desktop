@@ -25,7 +25,9 @@
 #include "../Widgets/ScrobbleControls.h"
 #include "../Widgets/ScrobbleInfoWidget.h"
 #include "../Widgets/ScrobbleStatus.h"
+#include "../Widgets/RecentTracksWidget.h"
 
+#include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/MessageBar.h"
 #include "lib/unicorn/widgets/GhostWidget.h"
 #include "lib/unicorn/widgets/UserToolButton.h"
@@ -40,6 +42,7 @@
 #include <QSizeGrip>
 #include <QTimer>
 #include <QMenuBar>
+#include <QTabWidget>
 
 
 TitleBar::TitleBar( const QString& /*title*/ )
@@ -47,8 +50,8 @@ TitleBar::TitleBar( const QString& /*title*/ )
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
     QPushButton* pb = new QPushButton( "Close" );
-#ifdef Q_OS_MAC
     pb->setShortcut( Qt::CTRL + Qt::Key_H );
+#ifdef Q_OS_MAC
     layout->addWidget( pb );
 #endif
     connect( pb, SIGNAL(clicked()), SIGNAL( closeClicked()));
@@ -70,10 +73,8 @@ TitleBar::TitleBar( const QString& /*title*/ )
     //l->setAlignment( Qt::AlignCenter );
     layout->addStretch( 1 );
 
-
     m_inetStatus->setAlignment( Qt::AlignLeft );
 #ifndef Q_OS_MAC
-    pb->setShortcut( Qt::CTRL + Qt::Key_H );
     layout->addWidget( pb );
 #endif
 }
@@ -111,7 +112,6 @@ TitleBar::onScrobblesFound()
 
 
 MetadataWindow::MetadataWindow()
-               :layout( new SlideOverLayout())
 {
     setWindowTitle( "Audioscrobbler" );
     setAttribute( Qt::WA_TranslucentBackground );
@@ -120,9 +120,9 @@ MetadataWindow::MetadataWindow()
     
     setCentralWidget(new QWidget);
 
-    new QVBoxLayout( centralWidget());
-    centralWidget()->layout()->setSpacing( 0 );
-    centralWidget()->layout()->setContentsMargins( 0, 0, 0, 0 );
+    QVBoxLayout* layout = new QVBoxLayout( centralWidget() );
+    layout->setSpacing( 0 );
+    layout->setContentsMargins( 0, 0, 0, 0 );
 
     TitleBar* titleBar;
     qobject_cast<QBoxLayout*>(centralWidget()->layout())->addWidget( titleBar = new TitleBar("Audioscrobbler"), 0, Qt::AlignBottom );
@@ -130,46 +130,43 @@ MetadataWindow::MetadataWindow()
 
     ui.now_playing_source = new ScrobbleStatus();
     ui.now_playing_source->setContentsMargins( 0, 0, 0, 0 );
+    ui.now_playing_source->setObjectName("now_playing");
+    ui.now_playing_source->setFixedHeight( 22 );
+
     QWidget* hb = new StylableWidget();
     hb->setObjectName( "ScrobbleStatusRow" );
     new QHBoxLayout( hb );
     hb->layout()->setContentsMargins( 0, 0, 0, 0 );
     hb->layout()->setSpacing( 0 );
+    hb->layout()->addWidget( ui.now_playing_source );
 
-    hb->layout()->addWidget( ui.tabBar = new QTabBar());
-    ui.tabBar->insertTab( TAB_PROFILE, tr( "Profile" ) );
-    ui.tabBar->insertTab( TAB_INFO, tr( "Info" ) );
-    ui.tabBar->setTabEnabled ( TAB_INFO, false );
-    connect( ui.tabBar, SIGNAL( currentChanged( int )), SLOT( onTabChanged( int )));
+    layout->addWidget(hb);
+    layout->addWidget( ui.profile = new ProfileWidget() );
+    layout->addWidget( ui.tabs = new QTabWidget( this ), 1 );
 
     //HACK: on KDE, the tab bar seems to inherit the app background color resulting in
     //a dark font color over dark background.
-    if ( ui.tabBar->palette().color( ui.tabBar->backgroundRole() ).name() ==  "#e0dfde" )
-    {
-        ui.tabBar->setStyleSheet( "color: #cccccc" );
-    }
+    //if ( ui.tabs->tabBar()->palette().color( ui.tabs->tabBar()->backgroundRole() ).name() ==  "#e0dfde" )
+    //{
+    //    ui.tabs->tabBar()->setStyleSheet( "color: #cccccc" );
+    //}
 
+    ui.recentTracks = new RecentTracksWidget( lastfm::ws::Username, this );
+    ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
-    hb->layout()->addWidget( ui.now_playing_source );
+    DataBox* recentTrackBox = new DataBox( tr( "Recently scrobbled tracks" ), ui.recentTracks );
+    recentTrackBox->setObjectName( "recentTracks" );
 
-    centralWidget()->layout()->addWidget(hb);
+    ui.tabs->addTab( recentTrackBox, tr( "Recent tracks" ) );
 
-    stack.nowScrobbling = new ScrobbleInfoWidget( centralWidget() );
-    stack.nowScrobbling->setObjectName( "NowScrobbling" );
-    layout->addWidget( stack.nowScrobbling );
+    ui.nowScrobbling = new ScrobbleInfoWidget( centralWidget() );
+    ui.nowScrobbling->setObjectName( "NowScrobbling" );
 
-    connect(stack.nowScrobbling, SIGNAL(lovedStateChanged(bool)), qApp, SLOT(changeLovedState(bool)));
+    ui.tabs->addTab( ui.nowScrobbling, tr( "Info" ) );
 
-    ui.now_playing_source->setObjectName("now_playing");
-    ui.now_playing_source->setFixedHeight( 22 );
-    QWidget* slideOverWidget = new StylableWidget();
-    slideOverWidget->setObjectName( "slideOverContainer" );
-    slideOverWidget->setLayout( layout );
-    centralWidget()->layout()->addWidget( slideOverWidget );
-    layout->addWidget( stack.profile = new ProfileWidget());
+    ui.tabs->setTabEnabled( TAB_INFO, false );
 
-    setCurrentWidget( stack.profile );
-
+    connect( ui.nowScrobbling, SIGNAL(lovedStateChanged(bool)), qApp, SLOT(changeLovedState(bool)));
 
     setMinimumWidth( 410 );
 
@@ -178,35 +175,17 @@ MetadataWindow::MetadataWindow()
     {
         statusBar->setContentsMargins( 0, 0, 0, 0 );
 
-        /*ui.userButton = new UserToolButton();
-        ui.userButton->setChecked( true );
-        connect( ui.userButton, SIGNAL(toggled( bool )), SLOT(toggleProfile( bool )));*/
         QHBoxLayout* sb = new QHBoxLayout( statusBar );
         QSizeGrip* sg = new QSizeGrip( this );
-
-        //sb->addWidget( ui.userButton );
-        //FIXME: this code is duplicated in the radio too
-        //In order to compensate for the sizer grip on the bottom right
-        //of the window, an empty QWidget is added as a spacer.
-        if( sg )
-            sb->addWidget( new GhostWidget( sg ) );
-
-        sb->addWidget( new QWidget(), 1 );
-        sb->addWidget( ui.sc = new ScrobbleControls());
-        sb->addWidget( new QWidget(), 1 );
-        //sb->addWidget( new GhostWidget( ui.userButton ));
         sb->addWidget( sg, 0 , Qt::AlignBottom | Qt::AlignRight );
-        centralWidget()->layout()->addWidget( statusBar );
+        layout->addWidget( statusBar );
     }
 
     addDragHandleWidget( titleBar );
-#ifdef Q_OS_MAC
     addDragHandleWidget( ui.now_playing_source );
-    //addDragHandleWidget( nav );
-    addDragHandleWidget( stack.profile );
-    addDragHandleWidget( stack.nowScrobbling );
+    addDragHandleWidget( ui.profile );
+    addDragHandleWidget( ui.nowScrobbling );
     addDragHandleWidget( statusBar );
-#endif
 
     setWindowTitle(tr("Last.fm Audioscrobbler"));
     setUnifiedTitleAndToolBarOnMac( true );
@@ -217,26 +196,36 @@ MetadataWindow::MetadataWindow()
 
     finishUi();
 
+    connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
+    connect( qApp, SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
+    connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
+    connect( qApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
+    connect( qApp, SIGNAL( stopped() ), SLOT( onStopped() ) );
+
 #ifdef NDEBUG
     menuBar()->hide();
 #endif
 }
 
+void
+MetadataWindow::onSessionChanged( unicorn::Session* session )
+{
+    ui.recentTracks->setUsername( session->userInfo().name() );
+}
 
 void
 MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
 {
-    ui.tabBar->setTabEnabled ( TAB_INFO, true );
+    ui.tabs->setTabEnabled ( TAB_INFO, true );
 
     if ( m_currentTrack.isNull() )
     {
         // We are starting form a stopped state
         // so switch to the info view
-        ui.tabBar->setCurrentIndex( TAB_INFO );
+        ui.tabs->setCurrentIndex( TAB_INFO );
         toggleProfile( false );
     }
 
-    ui.now_playing_source->onTrackStarted( t, previous );
     m_currentTrack = t;
 }
 
@@ -244,11 +233,10 @@ MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
 void
 MetadataWindow::onStopped()
 {
-    setCurrentWidget( stack.profile );
-    ui.now_playing_source->onTrackStopped();
-    ui.tabBar->setCurrentIndex( TAB_PROFILE );
+    setCurrentWidget( ui.profile );
+    ui.tabs->setCurrentIndex( TAB_PROFILE );
     m_currentTrack = Track();
-    ui.tabBar->setTabEnabled ( TAB_INFO, false );
+    ui.tabs->setTabEnabled ( TAB_INFO, false );
 }
 
 
@@ -257,8 +245,8 @@ MetadataWindow::onResumed()
 {
     // Switch back to the info view when you resume. We never
     // actually stop with iTunes so this is more consistent.
-    ui.tabBar->setTabEnabled ( TAB_INFO, true );
-    ui.tabBar->setCurrentIndex( TAB_INFO );
+    ui.tabs->setTabEnabled ( TAB_INFO, true );
+    ui.tabs->setCurrentIndex( TAB_INFO );
     toggleProfile( false );
 }
 
@@ -266,29 +254,29 @@ MetadataWindow::onResumed()
 void
 MetadataWindow::onPaused()
 {
-    setCurrentWidget( stack.profile );
-    ui.tabBar->setTabEnabled ( TAB_INFO, false );
+    setCurrentWidget( ui.profile );
+    ui.tabs->setTabEnabled ( TAB_INFO, false );
 }
 
 
 void
 MetadataWindow::setCurrentWidget( QWidget* w )
-{          
-    SlideOverLayout* layout = centralWidget()->findChild<SlideOverLayout*>();
+{
+    int index = ui.tabs->indexOf( w );
 
     // Make sure we dont's switch to the same widget
     // because it makes ugly things happen
-    if ( layout->currentWidget() != w )
-        layout->revealWidget( w );
+    if ( index != -1 && index != ui.tabs->currentIndex() )
+        ui.tabs->setCurrentIndex( index );
 }
 
 void
 MetadataWindow::toggleProfile( bool show )
 {
     if( show )
-        setCurrentWidget( stack.profile );
+        setCurrentWidget( ui.profile );
     else
-        setCurrentWidget( stack.nowScrobbling );
+        setCurrentWidget( ui.nowScrobbling );
 }
 
 void 
@@ -305,7 +293,7 @@ void
 MetadataWindow::showNowScrobbling()
 {
     //ui.userButton->setChecked( false );
-    ui.tabBar->setCurrentIndex( TAB_INFO );
+    ui.tabs->setCurrentIndex( TAB_INFO );
     toggleProfile( false );
 }
 

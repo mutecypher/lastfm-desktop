@@ -36,6 +36,11 @@ class DeviceScrobbler;
     class IpodDeviceLinux;
 #endif
 
+#if defined(aApp)
+#undef aApp
+#endif
+#define aApp (static_cast<audioscrobbler::Application*>(QCoreApplication::instance()))
+
 namespace audioscrobbler
 {
     
@@ -101,10 +106,24 @@ namespace audioscrobbler
         
     signals:
         void trackStarted( const Track&, const Track& );
+        void resumed();
+        void paused();
+        void stopped();
+
         void scrobblesCached( const QList<lastfm::Track>& tracks );
         void scrobblesSubmitted( const QList<lastfm::Track>& tracks, int numTracks );
 
         void lovedStateChanged(bool loved);
+
+        // re-route all the info fetchers singals
+        void trackGotInfo(const XmlQuery& lfm);
+        void albumGotInfo(const XmlQuery& lfm);
+        void artistGotInfo(const XmlQuery& lfm);
+        void artistGotEvents(const XmlQuery& lfm);
+        void trackGotTopFans(const XmlQuery& lfm);
+        void trackGotTags(const XmlQuery& lfm);
+
+        void finished();
 
     public slots:
         void quit();

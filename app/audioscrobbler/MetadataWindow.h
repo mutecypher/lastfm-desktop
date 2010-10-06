@@ -20,35 +20,21 @@ class MetadataWindow : public unicorn::MainWindow
 {
     Q_OBJECT
 
-    struct{ 
-        FirstRunWizard* firstrun;
-        ProfileWidget* profile;
-        QWidget* nowScrobbling;
-    } stack;
-
     struct{
         ScrobbleStatus* now_playing_source;
         UserToolButton* userButton;
 
-        QTabBar* tabBar;
-
-        ScrobbleControls* sc;
         MessageBar* message_bar;
 
-        struct {
-            QAbstractButton* profile;
-            QAbstractButton* nowScrobbling;
-        } nav;
+        class QTabWidget* tabs;
+        ProfileWidget* profile;
+        QWidget* nowScrobbling;
+        class RecentTracksWidget* recentTracks;
     } ui;
-
-    SlideOverLayout* layout;
 
 public:
     MetadataWindow();
     const Track& currentTrack() const{ return m_currentTrack; }
-    ScrobbleControls* scrobbleControls() const{ return ui.sc; }
-
-    QObject* nowScrobbling() const { return stack.nowScrobbling;}
 
     void addWinThumbBarButton( QAction* );
 
@@ -62,6 +48,7 @@ private slots:
     void toggleProfile( bool );
     void onTabChanged( int );
     void showNowScrobbling();
+    void onSessionChanged( unicorn::Session* );
     
 private:
     Track m_currentTrack;

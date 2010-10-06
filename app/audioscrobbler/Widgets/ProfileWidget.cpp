@@ -38,38 +38,56 @@
 #include "ProfileWidget.h"
 #include "ScrobbleMeter.h"
 #include "RecentTracksWidget.h"
+#include "ScrobbleControls.h"
 
 using unicorn::Session;
 ProfileWidget::ProfileWidget( QWidget* p )
            :StylableWidget( p )
 {
-    QVBoxLayout* l = new QVBoxLayout( this );
-    QHBoxLayout* userDetails = new QHBoxLayout();
-    userDetails->addWidget( ui.avatar = new HttpImageWidget());
-    ui.avatar->setObjectName( "avatar" );
-    ui.avatar->setToolTip( tr( "Visit Last.fm profile" ) );
-    ui.avatar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
-    userDetails->addWidget( ui.welcomeLabel = new QLabel(), 0, Qt::AlignTop );
-    ui.welcomeLabel->setObjectName( "title" );
+    QHBoxLayout* mainLayout = new QHBoxLayout( this);
 
-    l->addLayout( userDetails );
-    QFrame* scrobbleDetails = new QFrame();
-    scrobbleDetails->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
-    scrobbleDetails->setObjectName( "ScrobbleDetails" );
+    QWidget* profileBox = new StylableWidget();
+    {
+        QHBoxLayout* profileLayout = new QHBoxLayout( profileBox );
 
-    new QVBoxLayout( scrobbleDetails );
-    qobject_cast<QVBoxLayout*>(scrobbleDetails->layout())->addWidget( ui.scrobbleMeter = new ScrobbleMeter(), 0, Qt::AlignHCenter );
-    scrobbleDetails->layout()->addWidget( ui.since = new QLabel()); 
-    ui.since->setAlignment( Qt::AlignCenter );
+        profileLayout->addWidget( ui.avatar = new HttpImageWidget());
+        ui.avatar->setObjectName( "avatar" );
+        ui.avatar->setToolTip( tr( "Visit Last.fm profile" ) );
+        ui.avatar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
 
-    ui.recentTracks = new RecentTracksWidget( lastfm::ws::Username, this );
-    ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
+        QVBoxLayout* userDetails = new QVBoxLayout();
 
-    DataBox* recentTrackBox = new DataBox( tr( "Recently scrobbled tracks" ), ui.recentTracks );
-    recentTrackBox->setObjectName( "recentTracks" );
+        userDetails->addWidget( ui.welcomeLabel = new QLabel(), 0, Qt::AlignTop );
+        ui.welcomeLabel->setObjectName( "title" );
 
-    l->addWidget( scrobbleDetails );
-    l->addWidget( recentTrackBox );
+        userDetails->addWidget( ui.scrobbleMeter = new ScrobbleMeter() );
+        userDetails->addWidget( ui.since = new QLabel() );
+
+        profileLayout->addLayout( userDetails );
+    }
+
+    mainLayout->addWidget( profileBox );
+
+    QWidget* titleBox = new QWidget();
+    {
+        QVBoxLayout* vl = new QVBoxLayout( titleBox );
+        vl->addWidget( ui.title1 = new QLabel());
+        ui.title1->setObjectName( "title1" );
+        ui.title1->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
+        ui.title1->setOpenExternalLinks( true );
+
+        vl->addWidget( ui.title2 = new QLabel());
+        ui.title2->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
+        ui.title2->setObjectName( "title2" );
+        ui.title2->setOpenExternalLinks( true );
+
+        vl->addStretch( 1 );
+
+        vl->addWidget( ui.sc = new ScrobbleControls());
+        vl->addStretch();
+    }
+
+    mainLayout->addWidget( titleBox );
     
     //On first run we won't catch the sessionChanged signal on time
     //so we should try to get the current session from the unicorn::Application 
@@ -78,9 +96,39 @@ ProfileWidget::ProfileWidget( QWidget* p )
     {
         onSessionChanged( currentSession );
     }
-    connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ),
-             SLOT( onSessionChanged( unicorn::Session* ) ) );
+    connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
     connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+
+    connect( qApp, SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
+    //connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
+    //connect( qApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
+    connect( qApp, SIGNAL( stopped() ), SLOT( onStopped() ) );
+}
+
+void
+ProfileWidget::onTrackStarted( const Track& t, const Track& previous )
+{
+    const unsigned short em_dash = 0x2014;
+    QString title = QString("<a class='title' href=\"%1\">%2</a> ") + QChar(em_dash) + " <a class='title' href=\"%3\">%4</a>";
+    const unicorn::Application* uApp = qobject_cast<unicorn::Application*>(qApp);
+
+    ui.title1->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg(t.artist().www().toString(), t.artist(), t.www().toString(), t.title()));
+    if( !t.album().isNull() )
+    {
+        QString album("from <a class='title' href=\"%1\">%2</a>");
+        ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( t.album().www().toString(), t.album().title()));
+    }
+    else
+    {
+        ui.title2->clear();
+    }
+}
+
+void
+ProfileWidget::onStopped()
+{
+    ui.title1->clear();
+    ui.title2->clear();
 }
 
 void 
@@ -95,7 +143,6 @@ ProfileWidget::onSessionChanged( Session* session )
     ui.scrobbleMeter->clear();
     ui.avatar->clear();
 
-    ui.recentTracks->setUsername( session->userInfo().name() );
     updateUserInfo( session->userInfo() );
     connect( session, SIGNAL( userInfoUpdated( const lastfm::UserDetails& ) ),
              this, SLOT( updateUserInfo( const lastfm::UserDetails& ) ) );
@@ -124,18 +171,13 @@ void
 ProfileWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
     foreach ( lastfm::Track track, tracks )
-    {
-        ui.recentTracks->addCachedTrack( track );
         connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
-    }
 }
 
 void
 ProfileWidget::onScrobbleStatusChanged()
 {
     if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
-    {
         *ui.scrobbleMeter += 1;
-    }
 }
 

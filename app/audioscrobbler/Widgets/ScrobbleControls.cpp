@@ -18,15 +18,16 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ScrobbleControls.h"
-#include "../Application.h"
-
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QToolButton>
 #include <QAction>
 
 #include <QShortcut>
+
+#include "ScrobbleControls.h"
+#include "../Application.h"
+
 ScrobbleControls::ScrobbleControls()
 {
     new QHBoxLayout( this );
@@ -51,6 +52,43 @@ ScrobbleControls::ScrobbleControls()
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ), ui.share, SLOT( click() ) );
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ), ui.tag, SLOT( click() ) );
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ), ui.love, SLOT( toggle() ) );
+
+    connect( aApp, SIGNAL( busLovedStateChanged(bool)), ui.love, SLOT( setChecked(bool)));
+    connect( qApp, SIGNAL( lovedStateChanged(bool)), ui.love, SLOT( setChecked(bool)));
+
+    connect( aApp, SIGNAL( trackStarted( Track, Track)), SLOT( onTrackStarted( Track, Track )));
+    connect( aApp, SIGNAL( paused() ), SLOT( onPaused() ) );
+    connect( aApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
+    connect( aApp, SIGNAL( stopped() ), SLOT( onStopped() ) );
+
+    connect( ui.tag, SIGNAL( clicked()), aApp->tagAction(), SLOT( trigger()));
+    connect( ui.share, SIGNAL( clicked()), aApp->shareAction(), SLOT( trigger()));
+
+    setEnabled( false );
+}
+
+void
+ScrobbleControls::onTrackStarted( const Track&, const Track& )
+{
+    setEnabled( true );
+}
+
+void
+ScrobbleControls::onPaused()
+{
+    setEnabled( false );
+}
+
+void
+ScrobbleControls::onResumed()
+{
+    setEnabled( true );
+}
+
+void
+ScrobbleControls::onStopped()
+{
+    setEnabled( false );
 }
 
 void
@@ -59,19 +97,6 @@ ScrobbleControls::setEnabled( bool enabled )
     ui.love->setEnabled( enabled );
     ui.tag->setEnabled( enabled );
     ui.share->setEnabled( enabled );
-}
-
-void
-ScrobbleControls::setTagAction( const QAction* a )
-{
-    connect( ui.tag, SIGNAL(clicked()), a, SLOT(trigger()));
-
-}
-
-void
-ScrobbleControls::setShareAction( const QAction* a )
-{
-    connect( ui.share, SIGNAL(clicked()), a, SLOT(trigger()));
 }
 
 void
