@@ -35,6 +35,10 @@
 #include "MainWindow.h"
 #include "Radio.h"
 
+#ifdef QT_MAC_USE_COCOA
+    #include "MediaKeysApplication.h"
+#endif
+
 void cleanup();
 
 class QMainObject : public QObject
@@ -58,6 +62,10 @@ namespace lastfm
 
 int main( int argc, char** argv )
 {
+#ifdef QT_MAC_USE_COCOA
+    MediaKeysApplication::sharedApplication();
+#endif
+    
     QtSingleCoreApplication::setApplicationName( "Last.fm Radio" );
     QtSingleCoreApplication::setApplicationVersion( VERSION );
 
