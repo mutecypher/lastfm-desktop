@@ -188,7 +188,7 @@ unicorn::Application::translate()
 #ifdef NDEBUG
     //Try to load the language set by the user and
     //if there wasn't any, then use the system language
-    QString const iso639 = AppSettings().value( "language", "" );
+    QString const iso639 = AppSettings().value( "language", "" ).toString();
     if ( iso639.isEmpty() )
     {
         QString const iso639 = QLocale().name().left( 2 );

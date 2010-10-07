@@ -57,8 +57,9 @@ HttpImageWidget::paintEvent( QPaintEvent* event )
 }
 
 void
-HttpImageWidget::loadUrl( const QUrl& url )
+HttpImageWidget::loadUrl( const QUrl& url, bool scale )
 {
+    m_scale = scale;
     connect( lastfm::nam()->get(QNetworkRequest(url)), SIGNAL(finished()), SLOT(onUrlLoaded()));
 }
 
@@ -75,7 +76,7 @@ void HttpImageWidget::setHref( const QUrl& url )
 }
 
     
-void HttpImageWidget::mousePressEvent( QMouseEvent* event )
+void HttpImageWidget::mousePressEvent( QMouseEvent* /*event*/ )
 {
     m_mouseDown = true;
 }
@@ -100,12 +101,15 @@ void HttpImageWidget::onUrlLoaded()
         QPixmap px;
         px.loadFromData(static_cast<QNetworkReply*>(sender())->readAll());
 
-        // Decide which way to scale based on the ratio of height to width
-        // of the image and the area that the image is going to be drawn to
-        if ( (px.height() * 1000) / px.width() > (height() * 1000) / width() )
-            px = px.scaledToWidth( width(), Qt::SmoothTransformation );
-        else
-            px = px.scaledToHeight( height(), Qt::SmoothTransformation );
+        if ( m_scale )
+        {
+            // Decide which way to scale based on the ratio of height to width
+            // of the image and the area that the image is going to be drawn to
+            if ( (px.height() * 1000) / px.width() > (height() * 1000) / width() )
+                px = px.scaledToWidth( width(), Qt::SmoothTransformation );
+            else
+                px = px.scaledToHeight( height(), Qt::SmoothTransformation );
+        }
 
         setPixmap( px );
     }

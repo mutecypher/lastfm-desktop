@@ -21,7 +21,7 @@
 #include <QTimeLine>
 
 
-StopWatch::StopWatch( ScrobblePoint timeout, uint elapsed )
+StopWatch::StopWatch( ScrobblePoint timeout )
     : m_point( timeout )
 {    
     m_timeline = new QTimeLine( m_point * 1000, this );

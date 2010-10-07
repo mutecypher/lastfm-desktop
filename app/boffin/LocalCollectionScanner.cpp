@@ -66,7 +66,7 @@ LocalCollectionScanner::onReadyReadStandardError()
 }
 
 void  
-LocalCollectionScanner::onFinished(int exitCode, QProcess::ExitStatus exitStatus)
+LocalCollectionScanner::onFinished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
 {
     emit finished();
 }

@@ -53,7 +53,7 @@ PlaylistModel::data(const QModelIndex &index, int role) const
 }
 
 bool
-PlaylistModel::setData(const QModelIndex &index, const QVariant &value, int role)
+PlaylistModel::setData(const QModelIndex& /*index*/, const QVariant& /*value*/, int /*role*/)
 {
     return true;
 }

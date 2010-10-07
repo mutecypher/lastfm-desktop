@@ -109,7 +109,7 @@ ScrobbleStatus::setStatusToCurrentTrack()
 }
 
 void 
-ScrobbleStatus::onTrackStarted( const Track& track, const Track& previousTrack )
+ScrobbleStatus::onTrackStarted( const Track& track, const Track& /*previousTrack*/ )
 {
     qDebug() << "New Track " << track.toString();
 
@@ -138,7 +138,7 @@ ScrobbleStatus::onTrackStopped()
 
 
 void 
-ScrobbleStatus::mousePressEvent( QMouseEvent* event )
+ScrobbleStatus::mousePressEvent( QMouseEvent* /*event*/ )
 {
     m_mouseDown = true;
 }

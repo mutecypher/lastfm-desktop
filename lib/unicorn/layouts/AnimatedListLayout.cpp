@@ -24,10 +24,11 @@
 #include <QLayoutItem>
 #include <QTimeLine>
 
-AnimatedListLayout::AnimatedListLayout( QWidget* parent )
+AnimatedListLayout::AnimatedListLayout( int size, QWidget* parent )
            : QLayout( parent ),
            m_timeLine( new QTimeLine( 1500, this ) ),
-           m_animated( true )
+           m_animated( true ),
+           m_size( size )
 {
     m_timeLine->setUpdateInterval( 20 );
 
@@ -61,7 +62,7 @@ AnimatedListLayout::setAnimated( bool animated )
 
         m_timeLine->stop();
 
-        foreach ( QLayoutItem* item, m_newItemList )
+        while ( m_newItemList.count() != 0 )
             m_itemList.prepend( m_newItemList.takeLast() );
 
         doLayout( geometry() );
@@ -225,7 +226,7 @@ AnimatedListLayout::sizeHint() const
 {
     QSize sh( geometry().width() , 0);
 
-    for ( int i(0) ; i < count() && i < 10 ; ++i )
+    for ( int i(0) ; i < count() && i < m_size ; ++i )
         sh = sh += QSize( 0, itemAt(i)->sizeHint().height() );
     
     return sh;

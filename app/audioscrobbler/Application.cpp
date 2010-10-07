@@ -318,7 +318,7 @@ Application::init()
 
 
 void
-Application::onSessionChanged( unicorn::Session* newSession )
+Application::onSessionChanged( unicorn::Session* /*newSession*/ )
 {
     Audioscrobbler* oldAs = as;
     as = new Audioscrobbler("ass");
@@ -368,6 +368,9 @@ Application::setConnection(PlayerConnection*c)
 void
 Application::onTrackStarted(const Track& t, const Track& oldtrack)
 {
+    // This stops the loving of tracks in the recent tracks list affecting the current track
+    disconnect( currentTrack.signalProxy(), SIGNAL(loveToggled(bool)), this, SIGNAL(lovedStateChanged(bool)) );
+
     state = Playing;
 
     Q_ASSERT(connection);
@@ -377,6 +380,8 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
         qWarning() << "Can't start null track!";
         return;
     }
+
+    currentTrack = t;
 
     double trackLengthPercent = unicorn::UserSettings().value( "scrobblePoint", 50 ).toDouble() / 100.0;
 
@@ -391,40 +396,13 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
         trackToScrobble = t;
     }
 
-    qDebug() << "action geometry: " << tray->contextMenu()->actionGeometry( m_artist_action );
-    int actionOffsets = 150; //this magic number seems to work to avoid the menu to expand with long titles
-    int actionWidth = tray->contextMenu()->actionGeometry( m_artist_action ).width() - actionOffsets;
-    QFontMetrics fm( font() );
-    QString artistActionText = fm.elidedText( t.artist(), Qt::ElideRight, actionWidth );
-    QString durationString = " [" + t.durationString() + "]";
-    QString titleActionText = fm.elidedText( t.title(), Qt::ElideRight, actionWidth - fm.width( durationString ) );
-
-    m_artist_action->setText( artistActionText );
-    m_artist_action->setToolTip( t.artist() );
-    m_title_action->setText( titleActionText + durationString );
-    m_title_action->setToolTip( t.title() + " [" + t.durationString() + "]" );
-
+    ScrobblePoint timeout( currentTrack.duration() * trackLengthPercent );
     delete watch;
-    qDebug() << "********** AS = " << as;
-    if( as ) {
-        as->submit();
-        qDebug() << "************** Now Playing..";
-        as->nowPlaying(t);
-    }
-    ScrobblePoint timeout( t.duration() * trackLengthPercent );
-    watch = new StopWatch(timeout, connection->elapsed());
+    watch = new StopWatch(timeout);
     watch->start();
     connect(watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
 
-    tray->setToolTip( t.toString() );
-
-    mw->scrobbleControls()->setEnabled( true );
-    m_love_action->setEnabled( true );
-    m_tag_action->setEnabled( true );
-    m_share_action->setEnabled( true );
-
-    // make sure that if the love state changes we update all the buttons
-    connect( t.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(lovedStateChanged(bool)) );    
+    setTrackInfo();
 }
 
 void
@@ -453,6 +431,8 @@ Application::onPaused()
     Q_ASSERT(connection);
     Q_ASSERT(watch);
     if(watch) watch->pause();
+
+    resetTrackInfo();
 }
 
 void
@@ -468,6 +448,8 @@ Application::onResumed()
     Q_ASSERT(connection);    
 
     if(watch) watch->resume();
+
+    setTrackInfo();
 }
 
 void
@@ -485,6 +467,47 @@ Application::onStopped()
     delete watch;
     if( as ) as->submit();
 
+    resetTrackInfo();
+}
+
+void
+Application::setTrackInfo()
+{
+    qDebug() << "action geometry: " << tray->contextMenu()->actionGeometry( m_artist_action );
+    int actionOffsets = 150; //this magic number seems to work to avoid the menu to expand with long titles
+    int actionWidth = tray->contextMenu()->actionGeometry( m_artist_action ).width() - actionOffsets;
+    QFontMetrics fm( font() );
+    QString artistActionText = fm.elidedText( currentTrack.artist(), Qt::ElideRight, actionWidth );
+    QString durationString = " [" + currentTrack.durationString() + "]";
+    QString titleActionText = fm.elidedText( currentTrack.title(), Qt::ElideRight, actionWidth - fm.width( durationString ) );
+
+    m_artist_action->setText( artistActionText );
+    m_artist_action->setToolTip( currentTrack.artist() );
+    m_title_action->setText( titleActionText + durationString );
+    m_title_action->setToolTip( currentTrack.title() + " [" + currentTrack.durationString() + "]" );
+
+
+    qDebug() << "********** AS = " << as;
+    if( as ) {
+        as->submit();
+        qDebug() << "************** Now Playing..";
+        as->nowPlaying(mw->currentTrack());
+    }
+
+    tray->setToolTip( currentTrack.toString() );
+
+    mw->scrobbleControls()->setEnabled( true );
+    m_love_action->setEnabled( true );
+    m_tag_action->setEnabled( true );
+    m_share_action->setEnabled( true );
+
+    // make sure that if the love state changes we update all the buttons
+    connect( currentTrack.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(lovedStateChanged(bool)) );
+}
+
+void
+Application::resetTrackInfo()
+{
     mw->scrobbleControls()->setEnabled( false );
     m_artist_action->setText( "" );
     m_title_action->setText( tr( "Ready" ));
@@ -540,7 +563,7 @@ Application::onAboutTriggered()
 void
 Application::onPrefsTriggered()
 {
-    SettingsDialog* settingsDialog = new SettingsDialog( mw );
+    SettingsDialog* settingsDialog = new SettingsDialog();
     settingsDialog->exec();
 }
 
@@ -616,12 +639,22 @@ Application::onMessageReceived(const QStringList& message)
     {
         m_deviceScrobbler->handleMessage( message );
     }
+    else if ( message.contains( "--exit" ) )
+    {
+        exit();
+    }
+    else if ( message.contains( "--settings" ) )
+    {
+        // raise the settings window
+        m_prefs_action->trigger();
+    }
     else if ( message.contains( "--new-ipod-detected" ) ||
               message.contains( "--ipod-detected" ))
     {
         m_deviceScrobbler->iPodDetected( message );
     }
-    if ( !message.contains( "--tray" ) )
+
+    if ( !(message.contains( "--tray" ) || message.contains( "--settings" )))
     {
         // raise the app
         m_show_window_action->trigger();

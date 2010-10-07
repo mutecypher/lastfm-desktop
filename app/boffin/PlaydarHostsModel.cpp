@@ -22,14 +22,14 @@
 
 //virtual 
 QVariant 
-PlaydarHostsModel::data(const QModelIndex &index, int role /* = Qt::DisplayRole */) const
+PlaydarHostsModel::data(const QModelIndex &index, int /*role  = Qt::DisplayRole */) const
 {
     return (index.row() < m_hosts.size()) ? m_hosts[index.row()] : QVariant();
 }
 
 //virtual 
 int 
-PlaydarHostsModel::rowCount(const QModelIndex &parent /* = QModelIndex() */) const
+PlaydarHostsModel::rowCount(const QModelIndex& /*parent  = QModelIndex() */) const
 {
     return m_hosts.size();
 }

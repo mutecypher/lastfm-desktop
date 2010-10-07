@@ -27,6 +27,8 @@
 #include "lib/DllExportMacro.h"
 #include <stdexcept>
 
+// ignore the warning about the exception specification
+#pragma warning( disable : 4290 )
 
 /** listens to external clients via a TcpSocket and notifies a receiver to their
   * commands */

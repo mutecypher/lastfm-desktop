@@ -33,7 +33,7 @@ public:
         :QPushButton( caption )
     {}
 
-    virtual void paintEvent( QPaintEvent* e )
+    virtual void paintEvent( QPaintEvent* /*e*/ )
     {
         QStylePainter p( this );
         QStyleOptionButton option;

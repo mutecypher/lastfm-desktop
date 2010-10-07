@@ -50,9 +50,9 @@ public:
     {
         resize( 625, 440 );
         setPage( Page_Intro, new IntroPage(this));
-        #ifdef Q_WS_MAC || Q_WS_WIN
+#if defined(Q_WS_MAC) || defined(Q_WS_WIN)
         setPage( Page_Plugin, new PluginPage());
-        #endif
+#endif
         setPage( Page_Login, new LoginPage(this));
         setPage( Page_Bootstrap, new BootstrapPage( this ));
         setPage( Page_Welcome, new WelcomePage( this ) );
@@ -67,17 +67,17 @@ public:
                 return Page_Login;
             
             case Page_Login:
-            #ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN32
                 return Page_Plugin;
             case Page_Plugin:
                 return Page_Welcome;
-            #elif defined Q_WS_MAC
+#elif defined Q_WS_MAC
                 return Page_Bootstrap;
             case Page_Bootstrap:
                 return Page_Welcome;
-            #else Q_WS_X11
+#else Q_WS_X11
                 return Page_Welcome;
-            #endif
+#endif
 
             default:
                 return -1;

@@ -27,7 +27,7 @@ TwiddlyApplication::TwiddlyApplication( int& argc, char** argv )
 }
 
 void
-TwiddlyApplication::sendBusMessage( const QByteArray& msg )
+TwiddlyApplication::sendBusMessage( const QByteArray& /*msg*/ )
 {
     //m_bus.sendMessage( msg );
 }

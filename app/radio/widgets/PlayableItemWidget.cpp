@@ -46,7 +46,7 @@ PlayableItemWidget::init()
 
 //virtual 
 void 
-PlayableItemWidget::mouseReleaseEvent(QMouseEvent* event)
+PlayableItemWidget::mouseReleaseEvent(QMouseEvent* /*event*/)
 {
     emit startRadio(m_rs);
 }

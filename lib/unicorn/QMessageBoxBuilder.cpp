@@ -106,7 +106,7 @@ QMessageBoxBuilder::exec( bool* dontAskAgain )
 {
     QApplication::setOverrideCursor( Qt::ArrowCursor );
     box.activateWindow();
-    int const r = box.exec();
+    box.exec();
     QApplication::restoreOverrideCursor();
     
     if( dontAskAgain )

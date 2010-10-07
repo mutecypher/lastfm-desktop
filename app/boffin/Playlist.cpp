@@ -38,7 +38,7 @@ Playlist::startRequest(const QString& rql, PlaydarConnection* pc)
 }
 
 void
-Playlist::onItem(const BoffinPlayableItem& item)
+Playlist::onItem(const BoffinPlayableItem& /*item*/)
 {
 }
 

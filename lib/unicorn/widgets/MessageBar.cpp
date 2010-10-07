@@ -124,7 +124,7 @@ MessageBar::onLabelDestroyed()
 
 
 void
-MessageBar::resizeEvent( QResizeEvent* e )
+MessageBar::resizeEvent( QResizeEvent* /*e*/ )
 {
     ui.papyrus->setFixedWidth( width() );
     foreach (QLabel* l, findChildren<QLabel*>())
@@ -140,7 +140,7 @@ MessageBar::remove( const QString& id )
 
 
 bool
-MessageBar::eventFilter( QObject* obj, QEvent* event )
+MessageBar::eventFilter( QObject* /*obj*/, QEvent* event )
 {
     if( event->type() == QEvent::Resize ) {
         QResizeEvent* e = static_cast<QResizeEvent*>( event );

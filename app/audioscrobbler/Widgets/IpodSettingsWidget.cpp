@@ -52,7 +52,7 @@ IpodSettingsWidget::IpodSettingsWidget( QWidget* parent )
 {
     setupUi();
 
-#ifdef Q_OS_MAC || Q_OS_WIN
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     connect( ui.enableScrobbling, SIGNAL( stateChanged( int ) ), this, SLOT( onSettingsChanged() ) );
 #endif
 
@@ -86,7 +86,7 @@ IpodSettingsWidget::setupUi()
    // groupBox1->setTitle( tr( "Configure " ) );
     groupBox2->setTitle( tr( "iPod Associations" ) );
 
-#ifdef Q_OS_MAC || Q_OS_WIN
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     ui.enableScrobbling = new QCheckBox( this );
     ui.enableScrobbling->setText( tr( "Enable iPod scrobbling" ) );
     ui.enableScrobbling->setChecked( unicorn::UserSettings().value( "enableIpodScrobbling", true ).toBool() );
@@ -146,7 +146,7 @@ IpodSettingsWidget::saveSettings()
     {
         //save settings
         qDebug() << "Saving settings...";
-#ifdef Q_OS_MAC || Q_OS_WIN
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
         unicorn::UserSettings().setValue( "enableIpodScrobbling", ui.enableScrobbling->isChecked() );
 #endif
         unicorn::UserSettings().setValue( "confirmIpodScrobbles", ui.confirmScrobbles->isChecked() );
@@ -221,9 +221,9 @@ IpodSettingsWidget::removeIpodAssociation()
             us.remove( "deviceId" );
             us.remove( "mountPath" );
             us.remove( "deviceName" );
-            #ifdef Q_WS_X11
+#ifdef Q_WS_X11
             IpodDeviceLinux::deleteDeviceHistory( userName, deviceId );
-            #endif
+#endif
             break;
         }
     }

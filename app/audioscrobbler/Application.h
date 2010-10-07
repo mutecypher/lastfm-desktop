@@ -67,7 +67,7 @@ namespace audioscrobbler
         QPointer<ScrobbleInfoFetcher> fetcher;
         QPointer<DeviceScrobbler> m_deviceScrobbler;
 
-
+        Track currentTrack;
         Track trackToScrobble;
 
         AboutDialog* m_aboutDialog;
@@ -117,6 +117,10 @@ namespace audioscrobbler
 
     protected:
         virtual void initiateLogin()throw( StubbornUserException );
+
+    private:
+        void setTrackInfo();
+        void resetTrackInfo();
 
     private slots:
         void onTrayActivated(QSystemTrayIcon::ActivationReason);

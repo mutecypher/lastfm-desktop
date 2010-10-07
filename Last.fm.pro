@@ -4,8 +4,8 @@ SUBDIRS = lib/unicorn \
           lib/listener \
           app/audioscrobbler \
           app/radio \
-          app/twiddly \
-          app/boffin
+          app/twiddly
+          #app/boffin
 
 linux*:SUBDIRS -= app/twiddly
 mac:SUBDIRS += app/audioscrobbler/PrefPane
@@ -18,3 +18,7 @@ CONFIG( tests ) {
         lib/listener/tests/test_liblistener.pro \
         app/client/tests/test_client.pro
 }
+
+
+QMAKE_POST_LINK += admin/dist/win/build-release-win.pl
+

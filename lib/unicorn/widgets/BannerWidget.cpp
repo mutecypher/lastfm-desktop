@@ -17,7 +17,7 @@ BannerWidget::BannerWidget( const QString& pText, QWidget* parent )
 }
 
 void 
-BannerWidget::paintEvent( QPaintEvent* e )
+BannerWidget::paintEvent( QPaintEvent* /*e*/ )
 {
     QPainter painter( this );
 

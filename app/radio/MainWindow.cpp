@@ -88,7 +88,7 @@ MainWindow::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
 }
 
 void 
-MainWindow::onSessionChanged( unicorn::Session* s )
+MainWindow::onSessionChanged( unicorn::Session* /*s*/ )
 {
     qDebug() << "session changed and the app noticed it!";
     User user;

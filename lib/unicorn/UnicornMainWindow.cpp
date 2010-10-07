@@ -73,8 +73,8 @@ unicorn::MainWindow::finishUi()
 
     menuBar()->insertMenu( menuBar()->actions().first(), ui.account );
     QMenu* help = menuBar()->addMenu( tr("Help") );
-    QAction* about = help->addAction( tr("About"), this, SLOT(about()) );
-    QAction* c4u = help->addAction( tr("Check for Updates"), this, SLOT(checkForUpdates()) );
+    help->addAction( tr("About"), this, SLOT(about()) );
+    help->addAction( tr("Check for Updates"), this, SLOT(checkForUpdates()) );
 
 #ifndef NDEBUG
     QMenu* debug = menuBar()->addMenu( tr("Debug") );

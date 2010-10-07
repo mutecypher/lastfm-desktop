@@ -41,7 +41,7 @@ public:
     /** The StopWatch starts off paused, call resume() to start.
       * The watch will not timeout() if elapsed is greater that the 
       * scrobble point */
-    StopWatch( ScrobblePoint timeout_in_seconds, uint elapsed_in_ms = 0 );
+    StopWatch( ScrobblePoint timeout_in_seconds );
 
     void start();
     void pause();

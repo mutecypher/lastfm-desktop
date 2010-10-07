@@ -29,7 +29,7 @@ class UNICORN_DLLEXPORT AnimatedListLayout : public QLayout
     Q_OBJECT
 
 public:
-    AnimatedListLayout( class QWidget* parent = 0 );
+    AnimatedListLayout( int size, class QWidget* parent = 0 );
     ~AnimatedListLayout();
 
     void setAnimated( bool animated );
@@ -61,6 +61,7 @@ private:
     QList<QLayoutItem *> m_newItemList;
     class QTimeLine* m_timeLine;
     bool m_animated;
+    int m_size;
 };
 
 #endif // ANIMATED_LIST_LAYOUT_H

@@ -74,7 +74,7 @@ int main( int argc, char** argv )
     {
         moralistfad::Application app( argc, argv );
 
-        if ( app.sendMessage( app.arguments() ) )
+        if ( app.sendMessage( app.arguments() ) || app.arguments().contains("--exit") )
             return 0;
 
         app.init();
