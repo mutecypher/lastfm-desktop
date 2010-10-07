@@ -612,9 +612,9 @@ Application::onMessageReceived(const QStringList& message)
 {
     qDebug() << "Messages: " << message;
 
-    if ( message.filter( "twiddled", Qt::CaseInsensitive ).count() )
+    if ( message.contains( "--twiddly" ))
     {
-        m_deviceScrobbler->twiddled( message );
+        m_deviceScrobbler->handleMessage( message );
     }
     else if ( message.contains( "--new-ipod-detected" ) ||
               message.contains( "--ipod-detected" ))

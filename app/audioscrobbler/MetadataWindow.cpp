@@ -61,6 +61,7 @@ TitleBar::TitleBar( const QString& title )
     connect( qApp, SIGNAL( internetConnectionDown() ), this, SLOT( onConnectionDown() ) );
     connect( qApp, SIGNAL( internetConnectionUp() ), this, SLOT( onConnectionUp() ) );
     DeviceScrobbler* deviceScrobbler = qobject_cast<audioscrobbler::Application*>(qApp)->deviceScrobbler();
+    connect(deviceScrobbler, SIGNAL( processingScrobbles()), SLOT( onProcessingScrobbles()));
     connect(deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected()));
     connect(deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_iPodStatus, SLOT( clear()));
     connect(deviceScrobbler, SIGNAL( noScrobblesFound()), m_iPodStatus, SLOT( clear()));
@@ -93,6 +94,19 @@ void
 TitleBar::onIPodDetected( )
 {
     m_iPodStatus->setText( "iPod Detected.." );
+}
+
+void
+TitleBar::onProcessingScrobbles()
+{
+    m_iPodStatus->setText( "Processing iPod scrobbles..." );
+}
+
+void 
+TitleBar::onScrobblesFound()
+{
+    m_iPodStatus->setText( "Found iPod Scrobbles" );
+
 }
 
 

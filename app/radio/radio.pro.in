@@ -5,6 +5,7 @@ QT = core gui xml network phonon
 CONFIG += lastfm unicorn
 win32:LIBS += user32.lib
 
+macx:LIBS += -framework Cocoa
 win32:release {
 	LIBS += -lAdvAPI32
 }

@@ -86,6 +86,8 @@ private slots:
     void onConnectionUp();
     void onConnectionDown();
     void onIPodDetected();
+    void onProcessingScrobbles();
+    void onScrobblesFound();
 
 signals:
     void closeClicked();

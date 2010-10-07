@@ -44,6 +44,15 @@ void logException( QString );
 int
 main( int argc, char** argv )
 {
+    {
+        QStringList args;
+        args << "--tray";
+        args << "--twiddly";
+        args << "starting";
+        moose::startAudioscrobbler( args );
+    }
+
+
 #ifdef NDEBUG
     google_breakpad::ExceptionHandler( CoreDir::save().path().toStdString(),
                                        0,
@@ -129,7 +138,9 @@ main( int argc, char** argv )
                 writeXml( xml, path );
 
                 QStringList args;
-                args << "--twiddled";
+                args << "--twiddly";
+                args << "complete";
+                args << "--ipod-path";
                 args << path;
 
                 moose::startAudioscrobbler( args );
@@ -138,7 +149,8 @@ main( int argc, char** argv )
             {
                 QStringList args;
                 args << "--tray";
-                args << "--twiddled-no-tracks";
+                args << "--twiddly";
+                args << "no-tracks-found";
                 moose::startAudioscrobbler( args );
             }
 

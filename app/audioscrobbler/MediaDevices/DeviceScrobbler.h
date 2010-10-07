@@ -19,11 +19,13 @@ public:
     DeviceScrobbler();
 
     void checkCachedIPodScrobbles();
+    void handleMessage( const QStringList& );
     void twiddled( QStringList arguments );
     void iPodDetected( const QStringList& arguments );
 
 signals:
     void detectedIPod( const QString& serialNumber );
+    void processingScrobbles();
     void noScrobblesFound();
     void foundScrobbles( QList<Track> );
 

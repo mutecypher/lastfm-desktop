@@ -58,6 +58,23 @@ DeviceScrobbler::checkCachedIPodScrobbles() {
 
 
 void 
+DeviceScrobbler::handleMessage( const QStringList& message ) {
+    int pos = message.indexOf( "--twiddly" );
+    const QString& action = message[ pos + 1 ];
+    
+    if( action == "started" ) {
+        emit processingScrobbles();
+    }
+    else if( action == "no-tracks-found" ) {
+        emit noScrobblesFound();
+    }
+    else if( action == "complete" ) {
+        twiddled( message );
+    }
+}
+
+
+void 
 DeviceScrobbler::iPodDetected( const QStringList& arguments ) {
     bool newIpod = false;
 
@@ -78,8 +95,9 @@ DeviceScrobbler::iPodDetected( const QStringList& arguments ) {
 void 
 DeviceScrobbler::twiddled( QStringList arguments ) {
 
-    if( arguments.contains( "--twiddled-no-tracks" ))
-        emit noScrobblesFound();
+    if( arguments.contains( "--twiddled-no-tracks" )) {
+        return;
+    }
    // iPod scrobble time!
    //
     int pos = arguments.indexOf( "--twiddled" );
