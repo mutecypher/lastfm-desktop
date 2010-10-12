@@ -18,21 +18,32 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef TRACK_WIDGET_H_
+#define TRACK_WIDGET_H_
+
 #include <QWidget>
+#include <QMovie>
+#include <QPointer>
 
 #include <lastfm/Track>
 
 #include "lib/unicorn/StylableWidget.h"
 
-class RecentTrackWidget : public StylableWidget
+class StopWatch;
+
+class TrackWidget : public StylableWidget
 {
     Q_OBJECT
 public:
-    RecentTrackWidget( const Track& track );
+    TrackWidget();
+    TrackWidget( const Track& track );
 
     Track track() const { return m_track;}
 
     QString status() const { return m_status; }
+
+    bool odd() const { return m_odd; }
+    void setOdd( bool odd ) { m_odd = odd; }
 
 signals:
     void loaded();
@@ -45,7 +56,15 @@ private:
     void leaveEvent( class QEvent* event );
     void resizeEvent( class QResizeEvent* event );
 
+    void paintEvent( class QPaintEvent* event );
+
     void setStatus( QString status ) { m_status = status; }
+
+    void setupUI();
+    void setStatusToCurrentTrack();
+
+    void setTrack( const Track& track );
+    void connectTrack();
 
 private slots:
     void onLoveToggled( bool loved );
@@ -54,26 +73,74 @@ private slots:
     void onTagClicked();
     void onShareClicked();
 
+    void onTrackStarted( const Track& track, const Track& /*previousTrack*/ );
+    void onTrackStopped();
+
+    void onWatchPaused( bool isPaused );
+    void onWatchFinished();
+
     void updateTimestamp();
 
-    void onGotInfo( const XmlQuery& lfm );
-
     void onScrobbleStatusChanged();
+
+    void onCorrected( QString correction );
+
+    void emitLoaded();
 
 private:
     struct
     {
+        class QLabel* as;
         class QLabel* trackText;
-        class HttpImageWidget* albumArt;
+        class QLabel* correction;
         class QLabel* love;
         class QToolButton* cog;
         class GhostWidget* ghostCog;
         class QLabel* timestamp;
     } ui;
 
+    struct {
+        class QMovie* scrobbler_as;
+        class QMovie* scrobbler_paused;
+    } movie;
+
     Track m_track;
     class QTimer* m_timestampTimer;
 
+    QPointer<StopWatch> m_stopWatch;
+
+    QAction* m_loveAction;
+
     Q_PROPERTY(QString status READ status WRITE setStatus);
     QString m_status;
+
+    Q_PROPERTY(bool odd READ odd WRITE setOdd);
+    bool m_odd;
 };
+
+#include <QMovie>
+
+class Movie : public QMovie
+{
+Q_OBJECT
+public:
+    Movie( const QString& filename, const QByteArray& format = QByteArray(), QObject* parent = 0 )
+    :QMovie( filename, format, parent )
+    {
+        connect( this, SIGNAL( frameChanged(int)), SLOT(onFrameChanged(int)));
+    }
+
+signals:
+    void loopFinished();
+
+private slots:
+    void onFrameChanged( int f )
+    {
+        if( f == (frameCount() - 1)) {
+            emit loopFinished();
+        }
+    }
+};
+
+#endif // TRACK_WIDGET_H_
+

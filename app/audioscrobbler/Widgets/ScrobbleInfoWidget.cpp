@@ -35,6 +35,7 @@
 #include <lastfm/XmlQuery>
 #include <lastfm/ws.h>
 #include "../Application.h"
+#include "../ScrobbleInfoFetcher.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/DataListWidget.h"
@@ -45,12 +46,12 @@
 
 
 
-ScrobbleInfoWidget::ScrobbleInfoWidget( QWidget* p )
+ScrobbleInfoWidget::ScrobbleInfoWidget( ScrobbleInfoFetcher* infoFetcher, QWidget* p )
                    :StylableWidget( p )
 {
     setupUi();
     
-    ui.onTourBanner = new BannerWidget( tr("On Tour"), ui.contents );
+    ui.onTourBanner = new BannerWidget( tr("On Tour"), ui.artistImage );
     ui.onTourBanner->setCursor( Qt::PointingHandCursor );
     ui.onTourBanner->hide();
 
@@ -69,27 +70,25 @@ ScrobbleInfoWidget::ScrobbleInfoWidget( QWidget* p )
     connect( ui.similarArtists, SIGNAL( clicked( QModelIndex )), SLOT( listItemClicked( QModelIndex )));
     connect( ui.listeningNow, SIGNAL( clicked( QModelIndex )), SLOT( listItemClicked( QModelIndex )));
 
-    connect( qApp, SIGNAL( trackStarted( Track, Track)), SLOT( onTrackStarted( Track, Track )));
-    //connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
-    //connect( qApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
-    connect( qApp, SIGNAL( stopped() ), SLOT( onStopped() ) );
-
-    connect( qApp, SIGNAL(trackGotInfo(XmlQuery)), SLOT(onTrackGotInfo(XmlQuery)));
-    connect( qApp, SIGNAL(albumGotInfo(XmlQuery)), SLOT(onAlbumGotInfo(XmlQuery)));
-    connect( qApp, SIGNAL(artistGotInfo(XmlQuery)), SLOT(onArtistGotInfo(XmlQuery)));
-    connect( qApp, SIGNAL(trackGotTopFans(XmlQuery)), SLOT(onTrackGotTopFans(XmlQuery)));
-    connect( qApp, SIGNAL(artistGotEvents(XmlQuery)), SLOT(onArtistGotEvents(XmlQuery)));
-    connect( qApp, SIGNAL(trackGotTags(XmlQuery)), SLOT(onTrackGotTags(XmlQuery)));
-    connect( qApp, SIGNAL(finished()), SLOT(onFinished()));
+    connect( infoFetcher, SIGNAL(trackGotInfo(XmlQuery)), SLOT(onTrackGotInfo(XmlQuery)));
+    connect( infoFetcher, SIGNAL(albumGotInfo(XmlQuery)), SLOT(onAlbumGotInfo(XmlQuery)));
+    connect( infoFetcher, SIGNAL(artistGotInfo(XmlQuery)), SLOT(onArtistGotInfo(XmlQuery)));
+    connect( infoFetcher, SIGNAL(trackGotTopFans(XmlQuery)), SLOT(onTrackGotTopFans(XmlQuery)));
+    connect( infoFetcher, SIGNAL(artistGotEvents(XmlQuery)), SLOT(onArtistGotEvents(XmlQuery)));
+    connect( infoFetcher, SIGNAL(trackGotTags(XmlQuery)), SLOT(onTrackGotTags(XmlQuery)));
+    connect( infoFetcher, SIGNAL(finished()), SLOT(onFinished()));
 
     connect(ui.bioText->document()->documentLayout(), SIGNAL( documentSizeChanged(QSizeF)), SLOT( onBioChanged(QSizeF)));
     connect(ui.bioText, SIGNAL(anchorClicked(QUrl)), SLOT(onAnchorClicked(QUrl)));
+
+    connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 }
 
 void 
 ScrobbleInfoWidget::setupUi()
 {
     ui.scrollArea = new QScrollArea( this );
+    ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
     
     ui.contents = new QWidget();
     QVBoxLayout* mainLayout = new QVBoxLayout( ui.contents );
@@ -191,35 +190,6 @@ ScrobbleInfoWidget::setupUi()
     this->layout()->addWidget( ui.scrollArea );
 }
 
-void 
-ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
-{
-    if ( ui.scrollArea->verticalScrollBar()->isVisible() )
-        ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-
-    ui.area->hide();
-
-    if (t.artist() != previous.artist())
-    {
-        // it is a different artist so clear anything that is artist specific
-        ui.bioText->clear();
-        ui.onTourBanner->hide();
-        model.similarArtists->clear();
-    }
-    if( t != previous )
-    {
-        ui.topTags->clear();
-        ui.yourTags->clear();
-        model.listeningNow->clear();
-    }
-    if (t.artist() != previous.artist())
-    {
-        // it is a different artist so clear anything that is artist specific
-        ui.artistImage->clear();
-        ui.artistImage->setHref( QUrl());
-    }
-}
-
 
 void
 ScrobbleInfoWidget::onFinished()
@@ -285,17 +255,6 @@ ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
 
 
 void
-ScrobbleInfoWidget::onStopped()
-{
-    ui.area->hide();
-    //ui.artistImage->clear();
-    //ui.artistImage->setHref(QUrl());
-    //ui.title1->clear();
-    //ui.title2->clear();
-    ui.onTourBanner->hide();
-}
-
-void
 ScrobbleInfoWidget::onArtistGotEvents(const XmlQuery& lfm)
 {
     if (lfm["events"].children("event").count() > 0)
@@ -318,12 +277,12 @@ ScrobbleInfoWidget::onAlbumGotInfo(const XmlQuery& /*lfm*/)
 void
 ScrobbleInfoWidget::onTrackGotInfo(const XmlQuery& lfm)
 {
-    int scrobbles = lfm["track"]["playcount"].text().toInt();
+    m_scrobbles = lfm["track"]["playcount"].text().toInt();
     //int listeners = lfm["track"]["listeners"].text().toInt();
-    int userListens = lfm["track"]["userplaycount"].text().toInt();
+    m_userListens = lfm["track"]["userplaycount"].text().toInt();
 
-    ui.yourScrobbles->setText( QString("%L1").arg(userListens));
-    ui.totalScrobbles->setText( QString("%L1").arg(scrobbles));
+    ui.yourScrobbles->setText( QString("%L1").arg(m_userListens));
+    ui.totalScrobbles->setText( QString("%L1").arg(m_scrobbles));
 
     foreach(const XmlQuery& e, lfm["track"]["toptags"].children("tag").mid(0, 5 ))
     {
@@ -390,3 +349,23 @@ ScrobbleInfoWidget::listItemClicked( const QModelIndex& i )
     const QUrl& url = i.data( LfmListModel::WwwRole ).toUrl();
     QDesktopServices::openUrl( url );
 }
+
+void
+ScrobbleInfoWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
+{
+    foreach ( lastfm::Track track, tracks )
+        connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
+}
+
+void
+ScrobbleInfoWidget::onScrobbleStatusChanged()
+{
+
+    if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
+    {
+        // update total scrobbles and your scrobbles!
+        ui.yourScrobbles->setText( QString("%L1").arg( ++m_userListens ));
+        ui.totalScrobbles->setText( QString("%L1").arg( ++m_scrobbles ));
+    }
+}
+

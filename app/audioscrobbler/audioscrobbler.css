@@ -16,14 +16,13 @@ StylableWidget {
 }
 
 unicorn--MainWindow ProfileWidget,
-unicorn--MainWindow QWidget#NowScrobbling,
-unicorn--MainWindow QWidget#navigation,
-unicorn--MainWindow QWidget#recentTracks {
+unicorn--MainWindow #NowScrobbling,
+unicorn--MainWindow #navigation,
+unicorn--MainWindow #recentTracks {
     background-color: rgba( 38, 38, 38, 230 );
 }
 
 unicorn--MainWindow #ScrobbleStatusRow {
-    padding-left: 4px;
     border: none;
     background: rgba( 20, 20, 20, 240 );
 }
@@ -147,6 +146,10 @@ MetadataWindow DataListWidget,
 }
 
 ScrobbleInfoWidget QPushButton {
+    min-height: 5px;
+}
+
+ScrobbleInfoWidget QPushButton {
     background-color: transparent;
     border: none;
 }
@@ -209,33 +212,43 @@ QTabWidget::pane {
 	border: none;
 }
 
-DataBox#recentTracks {
-	padding: 18px 18px 0px;
+#as {
+	min-width: 30px;
 }
 
 RecentTracksWidget {
 	/* See QEasingCurve for a full list */
 	qproperty-easingCurve: OutBounce;
+	min-height: 15px;
+	min-width: 40px;
 }
 
-RecentTrackWidget {
-	border-top: 1px solid #cccccc;
-	padding: 0px 0px 2px 0px;
+TrackWidget {
+	min-width: 40px;
 }
 
-RecentTrackWidget:hover {
+TrackWidget[odd=true] {
+	background-color: rgba( 51, 51, 51, 230 );
+}
+
+TrackWidget {
+	padding: 0px 20px 0px 10px;
+	min-height: 30px;
+}
+
+TrackWidget:hover {
 	background-color: rgba( 0, 0, 2, 230 );
 }
 
-RecentTrackWidget[status="cached"] QLabel#trackText {
+TrackWidget[status="cached"] QLabel#trackText {
 	color: #0187c5;
 }
 
-RecentTrackWidget[status="error"] QLabel#trackText {
+TrackWidget[status="error"] QLabel#trackText {
 	color: #d51007;
 }
 
-RecentTrackWidget HttpImageWidget#art {
+TrackWidget HttpImageWidget#art {
 	max-width: 34px;
 	max-height: 34px;
 	qproperty-scaledContents: true;
@@ -244,18 +257,32 @@ RecentTrackWidget HttpImageWidget#art {
 	padding: 0px 0px;
 }
 
-RecentTrackWidget QLabel#love {
+TrackWidget QLabel#timestamp {
+	min-width: 90px;
+	qproperty-alignment: "AlignRight|AlignVCenter";
+}
+
+QLabel#correction {
 	color: transparent;
 	padding: 0px 0px;
-	qproperty-pixmap: url(:/love-isloved.png);
+	qproperty-pixmap: url(:/asterisk_small.png);
 	qproperty-scaledContents: true;
 	background-repeat: none;
     background-position: left bottom;
+	max-width: 12;
+	max-height: 11;
+}
+
+TrackWidget QLabel#love {
+	color: transparent;
+	qproperty-pixmap: url(:/love-isloved.png);
+	qproperty-scaledContents: true;
+	background-repeat: none;
 	max-width: 15;
 	max-height: 15;
 }
 
-RecentTrackWidget QToolButton#cog {
+TrackWidget QToolButton#cog {
     qproperty-icon: url(:/cog-rest.png);
 	qproperty-iconSize: 48px 29px;
 	qproperty-popupMode: InstantPopup;
@@ -264,15 +291,15 @@ RecentTrackWidget QToolButton#cog {
 	margin: 0px 0px;
 }
 
-RecentTrackWidget QToolButton::menu-indicator {
+TrackWidget QToolButton::menu-indicator {
     image: none;
 }
 
-RecentTrackWidget QToolButton#cog:pressed {
+TrackWidget QToolButton#cog:pressed {
     qproperty-icon: url(:/cog-onpress.png);
 }
 
-RecentTrackWidget QToolButton#cog:hover {
+TrackWidget QToolButton#cog:hover {
     qproperty-icon: url(:/cog-onhover.png);
 }
 
@@ -320,6 +347,7 @@ QTextBrowser, QLabel#title1, QLabel#title2 {
 }
 
 MetadataWindow #artistImage {
+	origin: top-left;
     padding: 0px;  
     border: 1px solid #716f6f; 
     min-width: 220px;     
@@ -341,7 +369,7 @@ QLabel#title2 {
     padding:12px 10px 0px -2px;
 }
 
-#NowScrobbling QScrollBar {
+QScrollBar  {
     background-color: qlineargradient( x1:0, y1:0, x2:1, y2:0, stop:0 #1f1f1f, stop:1 #5a5a5a);
     margin: 0px;
     width: 15px;
@@ -350,19 +378,19 @@ QLabel#title2 {
     border: 1px solid #1a1a1a;
 }
 
-#NowScrobbling QScrollBar::add-page, 
-#NowScrobbling QScrollBar::sub-page {
+QScrollBar::add-page, 
+QScrollBar::sub-page {
     background: none;
 }
 
-#NowScrobbling QScrollBar::handle {
+QScrollBar::handle {
     background-color: qlineargradient( x1:0, y1:0, x2:1, y2:0, stop:0 #878787, stop:1 #636464 );
     min-height: 20px;
     border-radius: 6px;
 }
 
-#NowScrobbling QScrollBar::sub-line,
-#NowScrobbling QScrollBar::add-line {
+QScrollBar::sub-line,
+QScrollBar::add-line {
     height: 0px;
 }
 
@@ -371,27 +399,18 @@ QSizeGrip {
     color: #808080;
 }
 
-ScrobbleStatus#now_playing {
-    margin: 0px;
-    padding: 0px;
+#nowPlaying {
     color: #262626;
     background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #c2dfe7, stop:1 #8ba2a8 );
-    border: none;
-    border: 1px solid #808080;
-    border-right: none;
 }
 
-ScrobbleStatus QLabel {
-    margin: 0;
-    padding: 3 5 5 5;
-    border: none;
+#nowPlaying QLabel#trackText {
     font-size: 11px;
     color: black;
     background: none;
 }
 
-ScrobbleStatus QLabel#player_status {
-    margin: 0;
+#nowPlaying QLabel#timestamp {
     color: #676767;
 }
 

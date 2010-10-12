@@ -71,10 +71,17 @@ ProfileWidget::ProfileWidget( QWidget* p )
     QWidget* titleBox = new QWidget();
     {
         QVBoxLayout* vl = new QVBoxLayout( titleBox );
-        vl->addWidget( ui.title1 = new QLabel());
+        QHBoxLayout* h1 = new QHBoxLayout();
+        h1->addWidget( ui.title1 = new QLabel(), 1);
         ui.title1->setObjectName( "title1" );
         ui.title1->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
         ui.title1->setOpenExternalLinks( true );
+        h1->addWidget( ui.correction = new QLabel() );
+        ui.correction->setObjectName("correction");
+        ui.correction->hide();
+        h1->addStretch( 0 );
+
+        vl->addLayout( h1 );
 
         vl->addWidget( ui.title2 = new QLabel());
         ui.title2->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
@@ -97,7 +104,7 @@ ProfileWidget::ProfileWidget( QWidget* p )
         onSessionChanged( currentSession );
     }
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
-    connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+    connect( qApp, SIGNAL( scrobblesCached(QList<lastfm::Track>)), SLOT( onScrobblesCached(QList<lastfm::Track>)));
 
     connect( qApp, SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
     connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
@@ -106,17 +113,17 @@ ProfileWidget::ProfileWidget( QWidget* p )
 }
 
 void
-ProfileWidget::onTrackStarted( const Track& t, const Track& /*previous*/ )
+ProfileWidget::setTrackText()
 {
     const unsigned short em_dash = 0x2014;
     QString title = QString("<a class='title' href=\"%1\">%2</a> ") + QChar(em_dash) + " <a class='title' href=\"%3\">%4</a>";
     const unicorn::Application* uApp = qobject_cast<unicorn::Application*>(qApp);
 
-    ui.title1->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg(t.artist().www().toString(), t.artist(), t.www().toString(), t.title()));
-    if( !t.album().isNull() )
+    ui.title1->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg( m_track.artist().www().toString(), m_track.artist( lastfm::Track::Corrected ), m_track.www().toString(), m_track.title( lastfm::Track::Corrected )));
+    if( !m_track.album().isNull() )
     {
         QString album("from <a class='title' href=\"%1\">%2</a>");
-        ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( t.album().www().toString(), t.album().title()));
+        ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( m_track.album().www().toString(), m_track.album( lastfm::Track::Corrected ).title()));
     }
     else
     {
@@ -125,6 +132,23 @@ ProfileWidget::onTrackStarted( const Track& t, const Track& /*previous*/ )
 
     ui.title1->show();
     ui.title2->show();
+
+    if (m_track.corrected())
+    {
+        ui.correction->show();
+        ui.correction->setToolTip( tr("Auto-corrected from: ") + m_track.toString( lastfm::Track::Original ) );
+    }
+    else
+        ui.correction->hide();
+}
+
+void
+ProfileWidget::onTrackStarted( const Track& t, const Track& /*previous*/ )
+{
+    m_track = t;
+    setTrackText();
+
+    connect( t.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
 }
 
 void
@@ -132,20 +156,31 @@ ProfileWidget::onPaused()
 {
     ui.title1->hide();
     ui.title2->hide();
+    ui.correction->hide();
 }
 
 void
 ProfileWidget::onResumed()
 {
-    ui.title1->show();
-    ui.title2->show();
+    setTrackText();
 }
 
 void
 ProfileWidget::onStopped()
 {
+    m_track = Track();
+
     ui.title1->clear();
     ui.title2->clear();
+    ui.title1->hide();
+    ui.title2->hide();
+    ui.correction->hide();
+}
+
+void
+ProfileWidget::onCorrected( QString /*correction*/ )
+{
+    setTrackText();
 }
 
 void 

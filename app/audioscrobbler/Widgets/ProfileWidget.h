@@ -21,6 +21,7 @@
 #define PROFILE_WIDGET_H_
 
 #include "lib/unicorn/StylableWidget.h"
+#include <lastfm/Track>
 
 namespace unicorn{ class Session; }
 namespace lastfm{ class Track; }
@@ -36,6 +37,8 @@ class ProfileWidget : public StylableWidget
 public:
     ProfileWidget( QWidget* p = 0 );
 
+private:
+    void setTrackText();
 
 private slots:
     void onSessionChanged( unicorn::Session* );
@@ -48,6 +51,8 @@ private slots:
     void onResumed();
     void onStopped();
 
+    void onCorrected( QString correction );
+
 protected:
     struct {
         class QLabel* welcomeLabel;
@@ -56,10 +61,12 @@ protected:
         class HttpImageWidget* avatar;
         class QLabel* title1;
         class QLabel* title2;
+        class QLabel* correction;
         class ScrobbleControls* sc;
     } ui;
 
     QString m_path;
+    Track m_track;
 };
 
 #endif //PROFILE_WIDGET_H_

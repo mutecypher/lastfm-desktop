@@ -172,12 +172,9 @@ AnimatedListLayout::itemAt( int index ) const
 QSize 
 AnimatedListLayout::minimumSize() const
 {
-    QSize minSize;
-    
-    foreach( QLayoutItem* i, m_itemList )
-        minSize = minSize.expandedTo( i->minimumSize() );
-    
-    return minSize;
+    QSize min = sizeHint();
+    min.setWidth( this->parentWidget()->minimumWidth() );
+    return min;
 }
 
 
@@ -227,7 +224,7 @@ AnimatedListLayout::sizeHint() const
     QSize sh( geometry().width() , 0);
 
     for ( int i(0) ; i < count() && i < m_size ; ++i )
-        sh = sh += QSize( 0, itemAt(i)->sizeHint().height() );
+        sh = QSize( sh.width(), sh.height() + itemAt(i)->minimumSize().height() );
     
     return sh;
 }

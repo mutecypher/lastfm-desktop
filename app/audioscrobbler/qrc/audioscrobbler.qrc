@@ -32,5 +32,6 @@
         <file>close.png</file>
 		<file>default_album_large.png</file>
 		<file>default_user.png</file>
+		<file>asterisk_small.png</file>
     </qresource>
 </RCC>
