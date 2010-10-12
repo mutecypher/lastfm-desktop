@@ -63,17 +63,17 @@ namespace audioscrobbler
         } state;
         
         // we delete these so QPointers
-        QPointer<QSystemTrayIcon> tray;
-        QPointer<Audioscrobbler> as;
-        QPointer<PlayerMediator> mediator;
-        QPointer<PlayerConnection> connection;
-        QPointer<StopWatch> watch;
-        QPointer<MetadataWindow> mw;
-        QPointer<ScrobbleInfoFetcher> fetcher;
+        QPointer<QSystemTrayIcon> m_tray;
+        QPointer<Audioscrobbler> m_as;
+        QPointer<PlayerMediator> m_mediator;
+        QPointer<PlayerConnection> m_connection;
+        QPointer<StopWatch> m_watch;
+        QPointer<MetadataWindow> m_mw;
+        QPointer<ScrobbleInfoFetcher> m_fetcher;
         QPointer<DeviceScrobbler> m_deviceScrobbler;
 
-        Track currentTrack;
-        Track trackToScrobble;
+        Track m_currentTrack;
+        Track m_trackToScrobble;
 
         AboutDialog* m_aboutDialog;
         
@@ -103,6 +103,8 @@ namespace audioscrobbler
         StopWatch* stopWatch() const;
         PlayerConnection* currentConnection() const;
         DeviceScrobbler* deviceScrobbler() const;
+        Track currentTrack() const { return m_currentTrack;}
+        ScrobbleInfoFetcher* fetcher() const;
         
     signals:
         void trackStarted( const Track&, const Track& );
@@ -145,6 +147,8 @@ namespace audioscrobbler
         void onTrayActivated(QSystemTrayIcon::ActivationReason);
         void onStopWatchTimedOut();
         void setConnection(PlayerConnection*);
+
+        void onCorrected(QString correction);
 
         void onTagTriggered();
         void onShareTriggered();

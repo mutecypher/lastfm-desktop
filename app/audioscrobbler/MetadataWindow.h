@@ -8,7 +8,6 @@
 class QAbstractButton;
 class QTabBar;
 class QLabel;
-class ScrobbleStatus;
 class ScrobbleControls;
 class FirstRunWizard;
 class MessageBar;
@@ -21,15 +20,14 @@ class MetadataWindow : public unicorn::MainWindow
     Q_OBJECT
 
     struct{
-        ScrobbleStatus* now_playing_source;
+        class TrackWidget* nowPlaying;
         UserToolButton* userButton;
 
         MessageBar* message_bar;
 
-        class QTabWidget* tabs;
-        ProfileWidget* profile;
-        QWidget* nowScrobbling;
+        class QSplitter* splitter;
         class RecentTracksWidget* recentTracks;
+        QWidget* nowScrobbling;
     } ui;
 
 public:
@@ -38,16 +36,12 @@ public:
 
     void addWinThumbBarButton( QAction* );
 
-public slots:
+private slots:
     void onTrackStarted(const Track&, const Track&);
     void onStopped();
     void onPaused();
     void onResumed();
 
-private slots:
-    void toggleProfile( bool );
-    void onTabChanged( int );
-    void showNowScrobbling();
     void onSessionChanged( unicorn::Session* );
     
 private:

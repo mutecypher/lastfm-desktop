@@ -59,4 +59,6 @@ private:
 private:
     QString m_path;
     class QTimer* m_writeTimer;
+    class AnimatedListLayout* m_listLayout;
+    int m_rowNum;
 };

@@ -30,10 +30,12 @@
 
 ScrobbleControls::ScrobbleControls()
 {
-    new QHBoxLayout( this );
-    layout()->setContentsMargins( 0, 0, 0, 0 );
+    QHBoxLayout* layout = new QHBoxLayout( this );
+    layout->setContentsMargins( 0, 0, 0, 0 );
 
-    layout()->addWidget(ui.love = new QPushButton(tr("love")));
+    layout->addStretch( 1 );
+
+    layout->addWidget(ui.love = new QPushButton(tr("love")));
     ui.love->setObjectName("love");
     ui.love->setCheckable( true );
     ui.love->setToolTip( tr( "Love track" ) );
@@ -41,13 +43,15 @@ ScrobbleControls::ScrobbleControls()
     connect(ui.love, SIGNAL(clicked(bool)), qApp, SLOT(changeLovedState(bool)));
     connect( ui.love, SIGNAL( toggled( bool ) ), this, SLOT( onLoveChanged( bool ) ) );
     
-    layout()->addWidget(ui.tag = new QPushButton(tr("tag")));
+    layout->addWidget(ui.tag = new QPushButton(tr("tag")));
     ui.tag->setObjectName("tag");
     ui.tag->setToolTip( tr( "Add tags" ) );
 
-    layout()->addWidget(ui.share = new QPushButton(tr("share")));
+    layout->addWidget(ui.share = new QPushButton(tr("share")));
     ui.share->setObjectName("share");
     ui.share->setToolTip( tr( "Share" ) );
+
+    layout->addStretch( 1 );
 
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ), ui.share, SLOT( click() ) );
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ), ui.tag, SLOT( click() ) );
