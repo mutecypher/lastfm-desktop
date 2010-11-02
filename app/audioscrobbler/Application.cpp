@@ -633,7 +633,11 @@ Application::onMessageReceived(const QStringList& message)
 {
     qDebug() << "Messages: " << message;
 
-    if ( message.contains( "--exit" ) )
+    if ( message.contains( "--twiddly" ))
+    {
+        m_deviceScrobbler->handleMessage( message );
+    }
+    else if ( message.contains( "--exit" ) )
     {
         exit();
     }
@@ -641,10 +645,6 @@ Application::onMessageReceived(const QStringList& message)
     {
         // raise the settings window
         m_prefs_action->trigger();
-    }
-    else if ( message.filter( "twiddled", Qt::CaseInsensitive ).count() )
-    {
-        m_deviceScrobbler->twiddled( message );
     }
     else if ( message.contains( "--new-ipod-detected" ) ||
               message.contains( "--ipod-detected" ))
