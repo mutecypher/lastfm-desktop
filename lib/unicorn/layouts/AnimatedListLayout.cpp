@@ -23,6 +23,7 @@
 #include <QWidget>
 #include <QLayoutItem>
 #include <QTimeLine>
+#include <QTimer>
 
 AnimatedListLayout::AnimatedListLayout( int size, QWidget* parent )
            : QLayout( parent ),
@@ -87,42 +88,29 @@ AnimatedListLayout::addItem( QLayoutItem* item )
     else
     {
         m_itemList.prepend( item );
+        update();
     }
 
-    connect( item->widget(), SIGNAL(loaded()), SLOT(onItemLoaded()));
+    QTimer::singleShot(1, this, SLOT(onItemLoaded()));
 }
 
 void
 AnimatedListLayout::onItemLoaded()
 {
     int cumHeight(0);
-    bool allItemsLoaded = true;
 
-    // check to see if all the new items are loaded yet
+    // All the items have loaded so calculate how tall
+    // they are and prepend them to the proper item list
+
     foreach ( QLayoutItem* item , m_newItemList )
     {
-        if ( item->widget()->isHidden() )
-        {
-            allItemsLoaded = false;
-            break;
-        }
+        m_itemList.prepend( item );
+        cumHeight += item->sizeHint().height();
     }
 
-    if ( allItemsLoaded )
-    {
-        // All the items have loaded so calculate how tall
-        // they are and prepend them to the proper item list
+    m_newItemList.clear();
 
-        foreach ( QLayoutItem* item , m_newItemList )
-        {
-            m_itemList.prepend( item );
-            cumHeight += item->sizeHint().height();
-        }
-
-        m_newItemList.clear();
-    }
-
-    if ( cumHeight > 0 )
+    if (cumHeight > 0)
     {
         // Start the animation!
         m_timeLine->setDirection( QTimeLine::Forward );

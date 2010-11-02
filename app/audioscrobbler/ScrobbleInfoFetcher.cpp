@@ -26,66 +26,54 @@
 
 #include "ScrobbleInfoFetcher.h"
 
-ScrobbleInfoFetcher::ScrobbleInfoFetcher(QObject* parent)
-    :QObject(parent)
+ScrobbleInfoFetcher::ScrobbleInfoFetcher( const Track& t, QObject* parent )
+    :QObject( parent ), m_track( t ), m_numRequests( 0 ), m_started( false )
 {
-    connect( qApp, SIGNAL( trackStarted( Track, Track)), SLOT( onTrackStarted( Track, Track )));
-    //connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
-    //connect( qApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
-    //connect( qApp, SIGNAL( stopped() ), SLOT( onStopped() ) );
 }
 
 void
-ScrobbleInfoFetcher::onTrackStarted( const Track& t, const Track& oldTrack )
-{
-/// close any outstanding replies from the last track
-    foreach (QNetworkReply* reply, m_replies) reply->close();
-    m_replies.clear();
-    m_numRequests = 0;
+ScrobbleInfoFetcher::start()
+    {
+    if ( m_started == false )
+    {
+        // only fetch everything once
+        m_started = true;
 
-/// make some requests for the new track
-
-
-    if( t != oldTrack ) {
         {
             // track.getInfo
-            t.getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
-            connect( t.signalProxy(), SIGNAL(gotInfo(XmlQuery)), SLOT(onTrackGotInfo(XmlQuery)) ) ;
+            m_track.getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
+            connect( m_track.signalProxy(), SIGNAL(gotInfo(XmlQuery)), SLOT(onTrackGotInfo(XmlQuery)) ) ;
             ++m_numRequests;
         }
         {
             // track.getTopFans
-            QNetworkReply* reply = t.getTopFans();
+            QNetworkReply* reply = m_track.getTopFans();
             m_replies.append(reply);
             connect(reply, SIGNAL(finished()), SLOT(onTrackGotTopFans()));
         }
         {
             // track.getTags
-            QNetworkReply* reply = t.getTags();
+            QNetworkReply* reply = m_track.getTags();
             m_replies.append(reply);
             connect(reply, SIGNAL(finished()), SLOT(onTrackGotTags()));
         }
-    }
 
-    if( t.artist() != oldTrack.artist() ) {
         {
             // artist.getInfo
-            QNetworkReply* reply = t.artist().getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
+            QNetworkReply* reply = m_track.artist().getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
             m_replies.append(reply);
             connect(reply, SIGNAL(finished()), SLOT(onArtistGotInfo()));
         }
         {
             // artist.getGetEvents
-            QNetworkReply* reply = t.artist().getEvents( 1 );
+            QNetworkReply* reply = m_track.artist().getEvents( 1 );
             m_replies.append(reply);
             connect(reply, SIGNAL(finished()), SLOT(onArtistGotEvents()));
         }
-    }
 
-    if( t.album() != oldTrack.album() ) {
         {
             // album.getInfo
-            QNetworkReply* reply = t.album().getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
+            QNetworkReply* reply = m_track.album().getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
             m_replies.append(reply);
             connect(reply, SIGNAL(finished()), SLOT(onAlbumGotInfo()));
         }

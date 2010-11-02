@@ -20,12 +20,15 @@
 #include "MetadataWindow.h"
 
 #include "Application.h"
+#include "ScrobbleInfoFetcher.h"
 #include "MediaDevices/DeviceScrobbler.h"
 #include "../Widgets/ProfileWidget.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "../Widgets/ScrobbleInfoWidget.h"
 #include "../Widgets/TrackWidget.h"
 #include "../Widgets/RecentTracksWidget.h"
+#include "../Widgets/StatusBar.h"
+#include "../Widgets/TitleBar.h"
 
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/MessageBar.h"
@@ -44,59 +47,7 @@
 #include <QMenuBar>
 #include <QSplitter>
 #include <QScrollArea>
-
-
-TitleBar::TitleBar( const QString& /*title*/ )
-{
-    QHBoxLayout* layout = new QHBoxLayout( this );
-    layout->setContentsMargins( 0, 0, 0, 0 );
-    QPushButton* pb = new QPushButton( "Close" );
-    pb->setShortcut( Qt::CTRL + Qt::Key_H );
-#ifdef Q_OS_MAC
-    layout->addWidget( pb );
-#endif
-    connect( pb, SIGNAL(clicked()), SIGNAL( closeClicked()));
-    pb->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
-    pb->setFlat( true );
-    layout->addWidget( m_inetStatus = new QLabel( "Online", this ) );
-    layout->addWidget( m_iPodStatus = new QLabel( "", this ));
-    m_inetStatus->setStyleSheet( "color: #cccccc" );
-    m_iPodStatus->setStyleSheet( "color: #cccccc" );
-    connect( qApp, SIGNAL( internetConnectionDown() ), this, SLOT( onConnectionDown() ) );
-    connect( qApp, SIGNAL( internetConnectionUp() ), this, SLOT( onConnectionUp() ) );
-    DeviceScrobbler* deviceScrobbler = qobject_cast<audioscrobbler::Application*>(qApp)->deviceScrobbler();
-    connect(deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected()));
-    connect(deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_iPodStatus, SLOT( clear()));
-    connect(deviceScrobbler, SIGNAL( noScrobblesFound()), m_iPodStatus, SLOT( clear()));
-    //QLabel* l;
-    //layout->addWidget( l = new QLabel( title, this ));
-    //l->setAlignment( Qt::AlignCenter );
-    layout->addStretch( 1 );
-
-    m_inetStatus->setAlignment( Qt::AlignLeft );
-#ifndef Q_OS_MAC
-    layout->addWidget( pb );
-#endif
-}
-
-void
-TitleBar::onConnectionUp()
-{
-    m_inetStatus->setText( "Online" );
-}
-
-void
-TitleBar::onConnectionDown()
-{
-    m_inetStatus->setText( "Offline" );
-}
-
-void
-TitleBar::onIPodDetected( )
-{
-    m_iPodStatus->setText( "iPod Detected.." );
-}
-
+#include <QScrollBar>
 
 MetadataWindow::MetadataWindow()
 {
@@ -112,52 +63,53 @@ MetadataWindow::MetadataWindow()
     layout->setContentsMargins( 0, 0, 0, 0 );
 
     TitleBar* titleBar;
-    qobject_cast<QBoxLayout*>(centralWidget()->layout())->addWidget( titleBar = new TitleBar("Audioscrobbler"), 0, Qt::AlignBottom );
+    layout->addWidget( titleBar = new TitleBar( this ));
+    titleBar->setObjectName( "titleBar" );
     connect( titleBar, SIGNAL( closeClicked()), SLOT( close()));
-
-    ui.nowPlaying = new TrackWidget();
-    ui.nowPlaying->setObjectName("nowPlaying");
-    layout->addWidget( ui.nowPlaying );
 
     layout->addWidget( ui.splitter = new QSplitter( Qt::Vertical, this ), 1 );
 
-
-    //HACK: on KDE, the tab bar seems to inherit the app background color resulting in
-    //a dark font color over dark background.
-    //if ( ui.tabs->tabBar()->palette().color( ui.tabs->tabBar()->backgroundRole() ).name() ==  "#e0dfde" )
-    //{
-    //    ui.tabs->tabBar()->setStyleSheet( "color: #cccccc" );
-    //}
+    ui.nowPlaying = new TrackWidget();
+    ui.nowPlaying->setObjectName("nowPlaying");
 
     ui.recentTracks = new RecentTracksWidget( lastfm::ws::Username, this );
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
-    ui.splitter->addWidget( ui.recentTracks );
+    ui.tracks = new QWidget;
+    QHBoxLayout* hl = new QHBoxLayout( ui.tracks );
+    QVBoxLayout* vl = new QVBoxLayout;
+    hl->setContentsMargins( 0, 0, 0, 0 );
+    hl->setSpacing( 0 );
+    vl->setContentsMargins( 0, 0, 0, 0 );
+    vl->setSpacing( 0 );
 
-    ui.nowScrobbling = new ScrobbleInfoWidget( aApp->fetcher(), centralWidget() );
-    ui.nowScrobbling->setObjectName( "NowScrobbling" );
+    hl->addLayout( vl );
 
-    ui.splitter->addWidget( ui.nowScrobbling );
+    QScrollBar* scrollBar = ui.recentTracks->scrollBar();
+    hl->addWidget( scrollBar );
 
-    connect( ui.nowScrobbling, SIGNAL(lovedStateChanged(bool)), qApp, SLOT(changeLovedState(bool)));
+    vl->addWidget( ui.nowPlaying );
+    vl->addWidget( ui.recentTracks );
+
+    ui.splitter->addWidget( ui.tracks );
+
+    ui.splitter->addWidget( ui.scrobbleInfo = new QWidget(this) );
+    ui.scrobbleInfo->setObjectName( "NowScrobbling" );
+    QVBoxLayout* nsLayout = new QVBoxLayout( ui.scrobbleInfo );
+    nsLayout->setSpacing( 0 );
+    nsLayout->setContentsMargins( 0, 0, 0, 0 );
+
+    ui.splitter->setCollapsible( 0, false );
 
     setMinimumWidth( 410 );
 
-    StylableWidget* statusBar = new StylableWidget( this );
+    StylableWidget* statusBar;
+    layout->addWidget( statusBar = new StatusBar( this ) );
     statusBar->setObjectName( "StatusBar" );
-    {
-        statusBar->setContentsMargins( 0, 0, 0, 0 );
 
-        QHBoxLayout* sb = new QHBoxLayout( statusBar );
-        QSizeGrip* sg = new QSizeGrip( this );
-        sb->addWidget( sg, 0 , Qt::AlignBottom | Qt::AlignRight );
-        layout->addWidget( statusBar );
-    }
+
 
     addDragHandleWidget( titleBar );
-    addDragHandleWidget( ui.nowPlaying );
-    //addDragHandleWidget( ui.profile );
-    addDragHandleWidget( ui.nowScrobbling );
     addDragHandleWidget( statusBar );
 
     setWindowTitle(tr("Last.fm Audioscrobbler"));
@@ -184,32 +136,108 @@ void
 MetadataWindow::onSessionChanged( unicorn::Session* session )
 {
     ui.recentTracks->setUsername( session->userInfo().name() );
+
+    // connect all the track widgets so we know when they are clicked
+    for ( int i(0) ; i < ui.recentTracks->count() ; ++i )
+        connect( ui.recentTracks->trackWidget(i), SIGNAL(clicked(TrackWidget*)), SLOT(onTrackClicked(TrackWidget*)));
 }
 
 void
 MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
 {
     m_currentTrack = t;
-}
 
+    centralWidget()->setUpdatesEnabled(false);
+    removeNowPlaying();
+    ui.nowPlaying = new TrackWidget();
+    ui.nowPlaying->setTrack( t );
+    addNowPlaying( ui.nowPlaying );
+    centralWidget()->setUpdatesEnabled(true);
+}
 
 void
 MetadataWindow::onStopped()
 {
     m_currentTrack = Track();
+
+    centralWidget()->setUpdatesEnabled(false);
+    removeNowPlaying();
+    addNowPlaying( ui.nowPlaying = new TrackWidget() );
+    centralWidget()->setUpdatesEnabled(true);
 }
 
+void
+MetadataWindow::removeNowPlaying()
+{
+    QVBoxLayout* layout = static_cast<QVBoxLayout*>(ui.tracks->layout()->itemAt(0)->layout());
+    layout->removeWidget( ui.nowPlaying );
+
+    disconnect( ui.nowPlaying->fetcher(), 0, this, 0 );
+    disconnect( ui.nowPlaying->infoWidget(), 0, qApp, 0 );
+
+    if ( ui.nowPlaying->track().scrobbleStatus() != lastfm::Track::Null )
+        ui.recentTracks->addTrackWidget( ui.nowPlaying );
+    else
+        ui.nowPlaying->deleteLater();
+}
+
+void
+MetadataWindow::addNowPlaying( TrackWidget* trackWidget )
+{
+
+    QVBoxLayout* layout = static_cast<QVBoxLayout*>(ui.tracks->layout()->itemAt(0)->layout());
+
+    layout->insertWidget( 0, trackWidget );
+    trackWidget->setObjectName("nowPlaying");
+
+    connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)));
+    connect( ui.nowPlaying->fetcher(), SIGNAL(albumGotInfo(XmlQuery)), SIGNAL(albumGotInfo(XmlQuery)));
+    connect( ui.nowPlaying->fetcher(), SIGNAL(artistGotInfo(XmlQuery)), SIGNAL(artistGotInfo(XmlQuery)));
+    connect( ui.nowPlaying->fetcher(), SIGNAL(artistGotEvents(XmlQuery)), SIGNAL(artistGotEvents(XmlQuery)));
+    connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotTopFans(XmlQuery)), SIGNAL(trackGotTopFans(XmlQuery)));
+    connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotTags(XmlQuery)), SIGNAL(trackGotTags(XmlQuery)));
+    connect( ui.nowPlaying->fetcher(), SIGNAL(finished()), SIGNAL(finished()));
+
+    ui.nowPlaying->fetcher()->start();
+
+    QVBoxLayout* nsLayout = static_cast<QVBoxLayout*>( ui.scrobbleInfo->layout() );
+    if ( true )
+    {
+        // only swap the info widget if we were
+        // viewing the now playing track
+        while ( nsLayout->count() )
+            nsLayout->takeAt( 0 )->widget()->hide();
+
+        nsLayout->addWidget( ui.nowPlaying->infoWidget() );
+        ui.nowPlaying->infoWidget()->show();
+        connect( ui.nowPlaying->infoWidget(), SIGNAL(lovedStateChanged(bool)), qApp, SLOT(changeLovedState(bool)));
+    }
+
+    connect( trackWidget, SIGNAL(clicked(TrackWidget*)), SLOT(onTrackClicked(TrackWidget*)));
+}
 
 void
 MetadataWindow::onResumed()
 {
-
 }
 
 
 void
 MetadataWindow::onPaused()
 {
+}
+
+void
+MetadataWindow::onTrackClicked( TrackWidget* clickedTrack )
+{
+    QVBoxLayout* nsLayout = static_cast<QVBoxLayout*>( ui.scrobbleInfo->layout() );
+
+    while ( nsLayout->count() )
+        nsLayout->takeAt( 0 )->widget()->hide();
+
+    nsLayout->addWidget( clickedTrack->infoWidget() );
+    clickedTrack->fetcher()->start();
+    clickedTrack->infoWidget()->show();
 }
 
 
