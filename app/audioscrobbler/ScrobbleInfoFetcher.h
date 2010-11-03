@@ -28,7 +28,8 @@ class ScrobbleInfoFetcher : public QObject
 {
     Q_OBJECT
 public:
-    ScrobbleInfoFetcher(QObject* parent = 0);
+    ScrobbleInfoFetcher( const Track& t, QObject* parent = 0);
+    void start();
 
 signals:
     void trackGotInfo(const XmlQuery& lfm);
@@ -41,8 +42,6 @@ signals:
     void finished();
 
 private slots:
-    void onTrackStarted( const Track& t, const Track& oldTrack );
-
     void onTrackGotInfo( const XmlQuery& lfm );
     void onAlbumGotInfo();
     void onArtistGotInfo();
@@ -54,6 +53,9 @@ private:
     void isFinished();
 
 private:
+    Track m_track;
+
     class QList<class QNetworkReply* > m_replies;
     int m_numRequests;
+    bool m_started;
 };

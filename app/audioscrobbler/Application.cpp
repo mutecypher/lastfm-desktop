@@ -19,6 +19,7 @@
 */
 #include "Application.h"
 
+#include "widgets/ProfileWidget.h"
 #include "Dialogs/SettingsDialog.h"
 #include "lib/listener/DBusListener.h"
 #include "lib/listener/legacy/LegacyPlayerListener.h"
@@ -74,7 +75,7 @@ using audioscrobbler::Application;
 
 Application::Application(int& argc, char** argv) 
             : unicorn::Application(argc, argv),
-              as( 0 ),
+              m_as( 0 ),
               state( Unknown )
 {
 	setQuitOnLastWindowClosed( false );
@@ -96,17 +97,17 @@ Application::initiateLogin() throw( StubbornUserException )
 
     //this covers the case where the last user was removed
     //and the main window was closed.
-    if ( mw )
+    if ( m_mw )
     {
-        mw->show();
+        m_mw->show();
     }
 
-    if ( tray )
+    if ( m_tray )
     {
         //HACK: turns out when all the windows are closed, the tray stops working
         //unless you call the following methods.
-        tray->hide();
-        tray->show();
+        m_tray->hide();
+        m_tray->show();
     }
 
 }
@@ -124,22 +125,25 @@ Application::init()
     lastfm::nam()->setCache( diskCache );
 
 /// tray
-    tray = new QSystemTrayIcon(this);
+    m_tray = new QSystemTrayIcon(this);
     QIcon trayIcon( AS_TRAY_ICON );
 #ifdef Q_WS_MAC
     trayIcon.addFile( ":systray_icon_pressed_mac.png", QSize(), QIcon::Selected );
 #endif
 
 #ifdef Q_WS_WIN
-    connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+    connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
 #endif
 
 #ifdef Q_WS_X11
-    connect( tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+    connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
 #endif
-    tray->setIcon(trayIcon);
-    tray->show();
-    connect( this, SIGNAL( aboutToQuit()), tray, SLOT( hide()));
+    m_tray->setIcon(trayIcon);
+    m_tray->show();
+    connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
+
+/// DeviceScrobbler
+    m_deviceScrobbler = new DeviceScrobbler;
 
 /// tray menu
     QMenu* menu = new QMenu;
@@ -208,19 +212,13 @@ Application::init()
     m_title_action->setEnabled( false );
     m_submit_scrobbles_toggle->setCheckable(true);
     m_submit_scrobbles_toggle->setChecked(true);
-    tray->setContextMenu(menu);
-
-/// ScrobbleInfoFetcher
-    fetcher = new ScrobbleInfoFetcher;
-
-/// DeviceScrobbler
-    m_deviceScrobbler = new DeviceScrobbler;
+    m_tray->setContextMenu(menu);
 
 /// MetadataWindow
-    mw = new MetadataWindow;
-    mw->addWinThumbBarButton( m_love_action );
-    mw->addWinThumbBarButton( m_tag_action );
-    mw->addWinThumbBarButton( m_share_action );
+    m_mw = new MetadataWindow;
+    m_mw->addWinThumbBarButton( m_love_action );
+    m_mw->addWinThumbBarButton( m_tag_action );
+    m_mw->addWinThumbBarButton( m_share_action );
 
 #ifdef Q_WS_MAC
     const int sKeyCode = 1;
@@ -238,48 +236,43 @@ Application::init()
     m_share_action->setShortcut( Qt::CTRL + Qt::Key_S );
     m_love_action->setShortcut( Qt::CTRL + Qt::Key_L );
 
-    ScrobbleControls* sc = mw->scrobbleControls();
-    sc->setEnabled( false );
-    sc->setTagAction( m_tag_action );
-    sc->setShareAction( m_share_action );
     // make the love buttons sychronised
     connect(this, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
-    connect(this, SIGNAL(lovedStateChanged(bool)), sc->loveButton(), SLOT(setChecked(bool)));
 
     // tell the radio that the scrobbler's love state has changed
     connect(this, SIGNAL(lovedStateChanged(bool)), SLOT(sendBusLovedStateChanged(bool)));
 
     // update the love buttons if love was pressed in the radio
     connect(this, SIGNAL(busLovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
-    connect(this, SIGNAL(busLovedStateChanged(bool)), sc->loveButton(), SLOT(setChecked(bool)));
     connect(this, SIGNAL(busLovedStateChanged(bool)), SLOT(onBusLovedStateChanged(bool)));
 
     // tell everyone that is interested that data about the current track has been fetched
-    connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotInfo(XmlQuery)));
-    connect(fetcher, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
-    connect(fetcher, SIGNAL(albumGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onAlbumGotInfo(XmlQuery)));
-    connect(fetcher, SIGNAL(artistGotInfo(XmlQuery)), mw->nowScrobbling(), SLOT(onArtistGotInfo(XmlQuery)));
-    connect(fetcher, SIGNAL(trackGotTopFans(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotTopFans(XmlQuery)));
-    connect(fetcher, SIGNAL(artistGotEvents(XmlQuery)), mw->nowScrobbling(), SLOT(onArtistGotEvents(XmlQuery)));
-    connect(fetcher, SIGNAL(trackGotTags(XmlQuery)), mw->nowScrobbling(), SLOT(onTrackGotTags(XmlQuery)));
-    connect(fetcher, SIGNAL(finished()), mw->nowScrobbling(), SLOT(onFinished()));
+    connect( m_mw, SIGNAL(trackGotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)));
+    connect( m_mw, SIGNAL(albumGotInfo(XmlQuery)), SIGNAL(albumGotInfo(XmlQuery)));
+    connect( m_mw, SIGNAL(artistGotInfo(XmlQuery)), SIGNAL(artistGotInfo(XmlQuery)));
+    connect( m_mw, SIGNAL(artistGotEvents(XmlQuery)), SIGNAL(artistGotEvents(XmlQuery)));
+    connect( m_mw, SIGNAL(trackGotTopFans(XmlQuery)), SIGNAL(trackGotTopFans(XmlQuery)));
+    connect( m_mw, SIGNAL(trackGotTags(XmlQuery)), SIGNAL(trackGotTags(XmlQuery)));
+    connect( m_mw, SIGNAL(finished()), SIGNAL(finished()));
+
+    connect( m_mw, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
 
 /// mediator
-    mediator = new PlayerMediator(this);
-    connect(mediator, SIGNAL(activeConnectionChanged( PlayerConnection* )), SLOT(setConnection( PlayerConnection* )) );
+    m_mediator = new PlayerMediator(this);
+    connect( m_mediator, SIGNAL(activeConnectionChanged( PlayerConnection* )), SLOT(setConnection( PlayerConnection* )) );
 
 /// listeners
     try{
 #ifdef Q_OS_MAC
-        ITunesListener* itunes = new ITunesListener(mediator);
-        connect(itunes, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
+        ITunesListener* itunes = new ITunesListener(m_mediator);
+        connect(itunes, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
         itunes->start();
 #endif
 
-        QObject* o = new PlayerListener(mediator);
-        connect(o, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
-        o = new LegacyPlayerListener(mediator);
-        connect(o, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
+        QObject* o = new PlayerListener(m_mediator);
+        connect(o, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
+        o = new LegacyPlayerListener(m_mediator);
+        connect(o, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
 
 #ifdef QT_DBUS_LIB
         DBusListener* dbus = new DBusListener(mediator);
@@ -311,7 +304,7 @@ Application::init()
     }
 
     // clicking on a system tray message should show the scrobbler
-    connect( tray, SIGNAL(messageClicked()), m_show_window_action, SLOT(trigger()));
+    connect( m_tray, SIGNAL(messageClicked()), m_show_window_action, SLOT(trigger()));
 
     emit messageReceived( arguments() );
 }
@@ -320,14 +313,13 @@ Application::init()
 void
 Application::onSessionChanged( unicorn::Session* /*newSession*/ )
 {
-    Audioscrobbler* oldAs = as;
-    as = new Audioscrobbler("ass");
-    connect( as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
-    delete oldAs;
+    disconnect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_as, SLOT( cache( QList<Track> )));
 
-    m_deviceScrobbler->disconnect( SIGNAL( foundScrobbles(QList<Track> )));
-    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )),
-             as, SLOT( cache( QList<Track> )));
+    Audioscrobbler* oldAs = m_as;
+    m_as = new Audioscrobbler("ass");
+    connect( m_as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
+    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_as, SLOT( cache( QList<Track> )));
+    delete oldAs;
 
     m_deviceScrobbler->checkCachedIPodScrobbles();
 }
@@ -335,26 +327,26 @@ Application::onSessionChanged( unicorn::Session* /*newSession*/ )
 void
 Application::setConnection(PlayerConnection*c)
 {
-    if(connection){
+    if( m_connection ){
         // disconnect from all the objects that we connect to below
-        disconnect(connection, 0, this, 0);
-        disconnect(connection, 0, mw, 0);
-		disconnect(connection, 0, fetcher, 0);
-        if(watch)
-            connection->setElapsed(watch->elapsed());
+        disconnect( m_connection, 0, this, 0);
+        disconnect( m_connection, 0, m_mw, 0);
+        if(m_watch)
+            m_connection->setElapsed(m_watch->elapsed());
     }
 
+    //
     connect(c, SIGNAL(trackStarted(Track, Track)), SLOT(onTrackStarted(Track, Track)));
     connect(c, SIGNAL(paused()), SLOT(onPaused()));
     connect(c, SIGNAL(resumed()), SLOT(onResumed()));
     connect(c, SIGNAL(stopped()), SLOT(onStopped()));
-    connect(c, SIGNAL(trackStarted(Track, Track)), mw, SLOT(onTrackStarted(Track, Track)));
+
     connect(c, SIGNAL(trackStarted(Track, Track)), SIGNAL(trackStarted(Track, Track)));
-    connect(c, SIGNAL(resumed()), mw, SLOT(onResumed()));
-    connect(c, SIGNAL(paused()), mw, SLOT(onPaused()));
-    connect(c, SIGNAL(stopped()), mw, SLOT(onStopped()));
-    connect(c, SIGNAL(trackStarted(Track,Track)), fetcher, SLOT(onTrackStarted(Track,Track)));
-    connection = c;
+    connect(c, SIGNAL(resumed()), SIGNAL(resumed()));
+    connect(c, SIGNAL(paused()), SIGNAL(paused()));
+    connect(c, SIGNAL(stopped()), SIGNAL(stopped()));
+
+    m_connection = c;
 
     if(c->state() == Playing || c->state() == Paused){
         c->forceTrackStarted(Track());
@@ -369,11 +361,11 @@ void
 Application::onTrackStarted(const Track& t, const Track& oldtrack)
 {
     // This stops the loving of tracks in the recent tracks list affecting the current track
-    disconnect( currentTrack.signalProxy(), SIGNAL(loveToggled(bool)), this, SIGNAL(lovedStateChanged(bool)) );
+    disconnect( m_currentTrack.signalProxy(), SIGNAL(loveToggled(bool)), this, SIGNAL(lovedStateChanged(bool)) );
 
     state = Playing;
 
-    Q_ASSERT(connection);
+    Q_ASSERT(m_connection);
 
     //TODO move to playerconnection
     if(t.isNull()){
@@ -381,7 +373,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
         return;
     }
 
-    currentTrack = t;
+    m_currentTrack = t;
 
     double trackLengthPercent = unicorn::UserSettings().value( "scrobblePoint", 50 ).toDouble() / 100.0;
 
@@ -389,34 +381,43 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     //instead of the track just listened
     if ( trackLengthPercent == 100 && !oldtrack.isNull() )
     {
-        trackToScrobble = oldtrack;
+        m_trackToScrobble = oldtrack;
     }
     else
     {
-        trackToScrobble = t;
+        m_trackToScrobble = t;
     }
 
-    ScrobblePoint timeout( currentTrack.duration() * trackLengthPercent );
-    delete watch;
-    watch = new StopWatch(timeout);
-    watch->start();
-    connect(watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
+    ScrobblePoint timeout( m_currentTrack.duration() * trackLengthPercent );
+    delete m_watch;
+    m_watch = new StopWatch(timeout);
+    m_watch->start();
+    connect( m_watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
 
     setTrackInfo();
+
+    qDebug() << "********** AS = " << m_as;
+    if( m_as ) {
+        m_as->submit();
+        qDebug() << "************** Now Playing..";
+        m_as->nowPlaying( t );
+    }
+
+    connect( t.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
 }
 
 void
 Application::onTrackGotInfo(const XmlQuery& lfm)
 {
-    Q_ASSERT(connection);
-    MutableTrack( connection->track() ).setFromLfm( lfm );
+    Q_ASSERT(m_connection);
+    MutableTrack( m_connection->track() ).setFromLfm( lfm );
 }
 
 void
 Application::onStopWatchTimedOut()
 {
-    Q_ASSERT(connection);    
-    if( as ) as->cache( trackToScrobble );
+    Q_ASSERT(m_connection);
+    if( m_as ) m_as->cache( m_trackToScrobble );
 }
 
 void
@@ -428,11 +429,11 @@ Application::onPaused()
 
     state = Paused;
 
-    Q_ASSERT(connection);
-    Q_ASSERT(watch);
-    if(watch) watch->pause();
+    Q_ASSERT(m_connection);
+    Q_ASSERT(m_watch);
+    if(m_watch) m_watch->pause();
 
-    resetTrackInfo();
+    //resetTrackInfo();
 }
 
 void
@@ -444,12 +445,12 @@ Application::onResumed()
 
     state = Playing;
 
-    Q_ASSERT(watch);
-    Q_ASSERT(connection);    
+    Q_ASSERT(m_watch);
+    Q_ASSERT(m_connection);
 
-    if(watch) watch->resume();
+    if(m_watch) m_watch->resume();
 
-    setTrackInfo();
+    //setTrackInfo();
 }
 
 void
@@ -461,54 +462,51 @@ Application::onStopped()
 
     state = Stopped;
 
-    Q_ASSERT(watch);
-    Q_ASSERT(connection);
+    Q_ASSERT(m_watch);
+    Q_ASSERT(m_connection);
         
-    delete watch;
-    if( as ) as->submit();
+    delete m_watch;
+    if( m_as ) m_as->submit();
 
     resetTrackInfo();
 }
 
 void
-Application::setTrackInfo()
+Application::onCorrected(QString /*correction*/)
 {
-    qDebug() << "action geometry: " << tray->contextMenu()->actionGeometry( m_artist_action );
-    int actionOffsets = 150; //this magic number seems to work to avoid the menu to expand with long titles
-    int actionWidth = tray->contextMenu()->actionGeometry( m_artist_action ).width() - actionOffsets;
+    setTrackInfo();
+}
+
+void
+Application::setTrackInfo()
+{ 
     QFontMetrics fm( font() );
-    QString artistActionText = fm.elidedText( currentTrack.artist(), Qt::ElideRight, actionWidth );
-    QString durationString = " [" + currentTrack.durationString() + "]";
-    QString titleActionText = fm.elidedText( currentTrack.title(), Qt::ElideRight, actionWidth - fm.width( durationString ) );
+    QString durationString = " [" + m_currentTrack.durationString() + "]";
+
+    int actionOffsets = fm.width( durationString );
+    int actionWidth = m_tray->contextMenu()->actionGeometry( m_artist_action ).width() - actionOffsets;
+
+    QString artistActionText = fm.elidedText( m_currentTrack.artist( lastfm::Track::Corrected ), Qt::ElideRight, actionWidth );
+    QString titleActionText = fm.elidedText( m_currentTrack.title( lastfm::Track::Corrected), Qt::ElideRight, actionWidth - fm.width( durationString ) );
 
     m_artist_action->setText( artistActionText );
-    m_artist_action->setToolTip( currentTrack.artist() );
+    m_artist_action->setToolTip( m_currentTrack.artist( lastfm::Track::Corrected ) );
     m_title_action->setText( titleActionText + durationString );
-    m_title_action->setToolTip( currentTrack.title() + " [" + currentTrack.durationString() + "]" );
+    m_title_action->setToolTip( m_currentTrack.title( lastfm::Track::Corrected ) + " [" + m_currentTrack.durationString() + "]" );
 
+    m_tray->setToolTip( m_currentTrack.toString() );
 
-    qDebug() << "********** AS = " << as;
-    if( as ) {
-        as->submit();
-        qDebug() << "************** Now Playing..";
-        as->nowPlaying(mw->currentTrack());
-    }
-
-    tray->setToolTip( currentTrack.toString() );
-
-    mw->scrobbleControls()->setEnabled( true );
     m_love_action->setEnabled( true );
     m_tag_action->setEnabled( true );
     m_share_action->setEnabled( true );
 
     // make sure that if the love state changes we update all the buttons
-    connect( currentTrack.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(lovedStateChanged(bool)) );
+    connect( m_currentTrack.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(lovedStateChanged(bool)) );
 }
 
 void
 Application::resetTrackInfo()
 {
-    mw->scrobbleControls()->setEnabled( false );
     m_artist_action->setText( "" );
     m_title_action->setText( tr( "Ready" ));
     m_love_action->setEnabled( false );
@@ -519,7 +517,7 @@ Application::resetTrackInfo()
 void 
 Application::onTagTriggered()
 {
-    TagDialog* td = new TagDialog( mw->currentTrack(), mw );
+    TagDialog* td = new TagDialog( m_currentTrack, m_mw );
     td->raise();
     td->show();
     td->activateWindow();
@@ -528,7 +526,7 @@ Application::onTagTriggered()
 void 
 Application::onShareTriggered()
 {
-    ShareDialog* sd = new ShareDialog( mw->currentTrack(), mw );
+    ShareDialog* sd = new ShareDialog( m_currentTrack, m_mw );
     sd->raise();
     sd->show();
     sd->activateWindow();
@@ -556,7 +554,7 @@ Application::onForumsTriggered()
 void
 Application::onAboutTriggered()
 {
-    if ( m_aboutDialog ) m_aboutDialog = new AboutDialog( mw );
+    if ( m_aboutDialog ) m_aboutDialog = new AboutDialog( m_mw );
     m_aboutDialog->show();
 }
 
@@ -570,7 +568,7 @@ Application::onPrefsTriggered()
 void 
 Application::changeLovedState(bool loved)
 {
-    MutableTrack track( mw->currentTrack() );
+    MutableTrack track( m_currentTrack );
 
     if (loved)
         track.love();
@@ -581,19 +579,19 @@ Application::changeLovedState(bool loved)
 void
 Application::onBusLovedStateChanged( bool loved )
 {
-    MutableTrack( mw->currentTrack() ).setLoved( loved );
+    MutableTrack( m_currentTrack ).setLoved( loved );
 }
 
 PlayerConnection*
 Application::currentConnection() const
 {
-    return connection;
+    return m_connection;
 }
 
 StopWatch* 
 Application::stopWatch() const
 {
-    return watch;
+    return m_watch;
 }
 
 DeviceScrobbler* 
@@ -615,17 +613,17 @@ Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason )
 void
 Application::showWindow()
 {
-    mw->showNormal();
-    mw->setFocus();
-    mw->raise();
-    mw->activateWindow();
+    m_mw->showNormal();
+    m_mw->setFocus();
+    m_mw->raise();
+    m_mw->activateWindow();
 }
 
 void
 Application::toggleWindow()
 {
     if( activeWindow() )
-        mw->hide();
+        m_mw->hide();
     else
         showWindow();
 }
@@ -659,7 +657,7 @@ Application::onMessageReceived(const QStringList& message)
         // raise the app
         m_show_window_action->trigger();
 #ifdef Q_OS_WIN32
-		SetForegroundWindow(mw->winId());
+        SetForegroundWindow(m_mw->winId());
 #endif
     }
 }

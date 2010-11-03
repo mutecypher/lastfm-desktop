@@ -4,11 +4,13 @@
 #include "lib/unicorn/UnicornMainWindow.h"
 #include "lib/unicorn/StylableWidget.h"
 #include <lastfm/Track>
+#include <lastfm/XmlQuery>
+
+using lastfm::XmlQuery;
 
 class QAbstractButton;
 class QTabBar;
 class QLabel;
-class ScrobbleStatus;
 class ScrobbleControls;
 class FirstRunWizard;
 class MessageBar;
@@ -16,52 +18,45 @@ class ProfileWidget;
 class SlideOverLayout;
 class UserToolButton;
 
+
 class MetadataWindow : public unicorn::MainWindow
 {
     Q_OBJECT
 
-    struct{ 
-        FirstRunWizard* firstrun;
-        ProfileWidget* profile;
-        QWidget* nowScrobbling;
-    } stack;
-
     struct{
-        ScrobbleStatus* now_playing_source;
-        UserToolButton* userButton;
-
-        QTabBar* tabBar;
-
-        ScrobbleControls* sc;
         MessageBar* message_bar;
 
-        struct {
-            QAbstractButton* profile;
-            QAbstractButton* nowScrobbling;
-        } nav;
+        class QSplitter* splitter;
+        QWidget* tracks;
+        class TrackWidget* nowPlaying;
+        class RecentTracksWidget* recentTracks;
+        QWidget* scrobbleInfo;
     } ui;
-
-    SlideOverLayout* layout;
 
 public:
     MetadataWindow();
     const Track& currentTrack() const{ return m_currentTrack; }
-    ScrobbleControls* scrobbleControls() const{ return ui.sc; }
-
-    QObject* nowScrobbling() const { return stack.nowScrobbling;}
 
     void addWinThumbBarButton( QAction* );
 
-public slots:
+signals:
+    void trackGotInfo(XmlQuery);
+    void albumGotInfo(XmlQuery);
+    void artistGotInfo(XmlQuery);
+    void artistGotEvents(XmlQuery);
+    void trackGotTopFans(XmlQuery);
+    void trackGotTags(XmlQuery);
+    void finished();
+
+private slots:
     void onTrackStarted(const Track&, const Track&);
     void onStopped();
     void onPaused();
     void onResumed();
 
-private slots:
-    void toggleProfile( bool );
-    void onTabChanged( int );
-    void showNowScrobbling();
+    void onSessionChanged( unicorn::Session* );
+
+    void onTrackClicked( class TrackWidget* );
     
 private:
     Track m_currentTrack;
@@ -69,32 +64,14 @@ private:
 
     void setCurrentWidget( QWidget* );
     void addWinThumbBarButtons( QList<QAction*>& );
+    void removeNowPlaying();
+    void addNowPlaying( class TrackWidget* trackWidget );
 
     enum {
         TAB_PROFILE,
         TAB_INFO
     };
 
-};
-
-class TitleBar : public StylableWidget {
-Q_OBJECT
-public:
-    TitleBar(const QString&);
-
-private slots:
-    void onConnectionUp();
-    void onConnectionDown();
-    void onIPodDetected();
-    void onProcessingScrobbles();
-    void onScrobblesFound();
-
-signals:
-    void closeClicked();
-
-private:
-    QLabel* m_inetStatus;
-    QLabel* m_iPodStatus;
 };
 
 #endif //METADATA_WINDOW_H_

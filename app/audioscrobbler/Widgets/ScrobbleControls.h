@@ -35,12 +35,8 @@ class ScrobbleControls : public StylableWidget
 public:
     ScrobbleControls();
 
+private:
     void setEnabled( bool enabled );
-    
-    void setTagAction( const QAction* a );
-    void setShareAction( const QAction* a );
-
-    class QPushButton* loveButton() const { return ui.love; }
 
 protected:
     struct {
@@ -51,6 +47,11 @@ protected:
 
 private slots:
     void onLoveChanged( bool checked );
+
+    void onTrackStarted( const Track& , const Track& );
+    void onPaused();
+    void onResumed();
+    void onStopped();
 
 };
 

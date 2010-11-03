@@ -36,6 +36,11 @@ class DeviceScrobbler;
     class IpodDeviceLinux;
 #endif
 
+#if defined(aApp)
+#undef aApp
+#endif
+#define aApp (static_cast<audioscrobbler::Application*>(QCoreApplication::instance()))
+
 namespace audioscrobbler
 {
     
@@ -58,17 +63,16 @@ namespace audioscrobbler
         } state;
         
         // we delete these so QPointers
-        QPointer<QSystemTrayIcon> tray;
-        QPointer<Audioscrobbler> as;
-        QPointer<PlayerMediator> mediator;
-        QPointer<PlayerConnection> connection;
-        QPointer<StopWatch> watch;
-        QPointer<MetadataWindow> mw;
-        QPointer<ScrobbleInfoFetcher> fetcher;
+        QPointer<QSystemTrayIcon> m_tray;
+        QPointer<Audioscrobbler> m_as;
+        QPointer<PlayerMediator> m_mediator;
+        QPointer<PlayerConnection> m_connection;
+        QPointer<StopWatch> m_watch;
+        QPointer<MetadataWindow> m_mw;
         QPointer<DeviceScrobbler> m_deviceScrobbler;
 
-        Track currentTrack;
-        Track trackToScrobble;
+        Track m_currentTrack;
+        Track m_trackToScrobble;
 
         AboutDialog* m_aboutDialog;
         
@@ -98,13 +102,28 @@ namespace audioscrobbler
         StopWatch* stopWatch() const;
         PlayerConnection* currentConnection() const;
         DeviceScrobbler* deviceScrobbler() const;
+        Track currentTrack() const { return m_currentTrack;}
         
     signals:
         void trackStarted( const Track&, const Track& );
+        void resumed();
+        void paused();
+        void stopped();
+
         void scrobblesCached( const QList<lastfm::Track>& tracks );
         void scrobblesSubmitted( const QList<lastfm::Track>& tracks, int numTracks );
 
         void lovedStateChanged(bool loved);
+
+        // re-route all the info fetchers singals
+        void trackGotInfo(const XmlQuery& lfm);
+        void albumGotInfo(const XmlQuery& lfm);
+        void artistGotInfo(const XmlQuery& lfm);
+        void artistGotEvents(const XmlQuery& lfm);
+        void trackGotTopFans(const XmlQuery& lfm);
+        void trackGotTags(const XmlQuery& lfm);
+
+        void finished();
 
     public slots:
         void quit();
@@ -126,6 +145,8 @@ namespace audioscrobbler
         void onTrayActivated(QSystemTrayIcon::ActivationReason);
         void onStopWatchTimedOut();
         void setConnection(PlayerConnection*);
+
+        void onCorrected(QString correction);
 
         void onTagTriggered();
         void onShareTriggered();

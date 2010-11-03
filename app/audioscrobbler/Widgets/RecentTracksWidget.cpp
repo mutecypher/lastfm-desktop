@@ -24,26 +24,44 @@
 #include <QFile>
 #include <QLabel>
 #include <QTimer>
+#include <QScrollArea>
 
 #include <lastfm/misc.h>
 
 #include "lib/unicorn/layouts/AnimatedListLayout.h"
+#include "lib/unicorn/widgets/DataBox.h"
 
 #include "RecentTracksWidget.h"
-#include "RecentTrackWidget.h"
+#include "TrackWidget.h"
 
 
-const int kNumRecentTracks(15);
+const int kNumRecentTracks(20);
 
 RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
-    :StylableWidget( parent )
-{
+    :StylableWidget( parent ), m_rowNum( 0 )
+{  
+    QLayout* layout = new QVBoxLayout( this );
+    layout->setSpacing(0);
+    layout->setContentsMargins( 0, 0, 0, 0 );
+
+    QWidget* content = new QWidget(this);
+    content->setObjectName( "recentTracks" );
+
+    m_listLayout = new AnimatedListLayout( kNumRecentTracks, content );
+    m_listLayout->setSpacing(0);
+    m_listLayout->setContentsMargins( 0, 0, 0, 0 );
     setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
 
-    AnimatedListLayout* layout = new AnimatedListLayout( kNumRecentTracks, this );
-    layout->setSpacing( 0 );
+    m_listLayout->setSpacing( 0 );
 
-    connect( layout, SIGNAL(moveFinished()), SLOT(onMoveFinished()));
+    m_scrollArea = new QScrollArea( this );
+    m_scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    m_scrollArea->setWidget( content );
+    m_scrollArea->setWidgetResizable( true );
+
+    layout->addWidget( m_scrollArea );
+
+    connect( m_listLayout, SIGNAL(moveFinished()), SLOT(onMoveFinished()));
 
     setUsername( username );
 
@@ -51,10 +69,19 @@ RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
     m_writeTimer->setSingleShot( true );
 
     connect( m_writeTimer, SIGNAL(timeout()), SLOT(doWrite()) );
-
-
+    //connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 }
 
+
+int RecentTracksWidget::count() const
+{
+    return m_listLayout->count();
+}
+
+class TrackWidget* RecentTracksWidget::trackWidget( int index ) const
+{
+    return static_cast<TrackWidget*>(m_listLayout->itemAt( index )->widget());
+}
 
 QEasingCurve::Type
 RecentTracksWidget::easingCurve() const
@@ -67,22 +94,20 @@ void
 RecentTracksWidget::setEasingCurve( QEasingCurve::Type easingCurve )
 {
     m_easingCurve = easingCurve;
-    static_cast<AnimatedListLayout*>(layout())->setEasingCurve( m_easingCurve );
+    m_listLayout->setEasingCurve( m_easingCurve );
 }
 
 
 void
 RecentTracksWidget::disableHover()
 {
-    for ( int i(0) ; i < layout()->count() ; ++i )
-        layout()->itemAt( i )->widget()->setUpdatesEnabled( false );
+    setUpdatesEnabled( false );
 }
 
 void
 RecentTracksWidget::enableHover()
 {
-    for ( int i(0) ; i < layout()->count() ; ++i )
-        layout()->itemAt( i )->widget()->setUpdatesEnabled( true );
+    setUpdatesEnabled( true );
 }
 
 void
@@ -90,6 +115,7 @@ RecentTracksWidget::onTrackChanged()
 {
     write();
 }
+
 
 void RecentTracksWidget::setUsername( QString username )
 {
@@ -107,11 +133,11 @@ RecentTracksWidget::read()
 {
     qDebug() << m_path;
 
-    static_cast<AnimatedListLayout*>(layout())->setAnimated( false );
+    m_listLayout->setAnimated( false );
 
-    for ( int i(0) ; i < layout()->count() ; ++i )
+    for ( int i(0) ; i < m_listLayout->count() ; ++i )
     {
-        QLayoutItem* item = layout()->takeAt( i );
+        QLayoutItem* item = m_listLayout->takeAt( i );
         delete item->widget();
         delete item;
     }
@@ -131,18 +157,12 @@ RecentTracksWidget::read()
         if (n.nodeName() == "track")
         {
             Track* track = new Track( n.toElement() );
-            RecentTrackWidget* item = new RecentTrackWidget( *track );
-            layout()->addWidget( item );
-
-            connect( item, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
-            connect( item, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
-
-            connect( track->signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
-            connect( track->signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onTrackChanged()));
+            TrackWidget* trackWidget = new TrackWidget( *track );
+            addTrackWidget( trackWidget );
         }
     }
 
-    static_cast<AnimatedListLayout*>(layout())->setAnimated( true );
+    m_listLayout->setAnimated( true );
 }
 
 void
@@ -158,7 +178,7 @@ RecentTracksWidget::doWrite() const
 {
     qDebug() << m_path;
 
-    if ( layout()->count() == 0 )
+    if ( m_listLayout->count() == 0 )
     {
         QFile::remove( m_path );
     }
@@ -169,8 +189,8 @@ RecentTracksWidget::doWrite() const
         e.setAttribute( "product", QCoreApplication::applicationName() );
         e.setAttribute( "version", "2" );
 
-        for ( int i(0) ; i < layout()->count() ; ++i )
-            e.appendChild( static_cast<RecentTrackWidget*>(layout()->itemAt(i)->widget())->track().toDomElement( xml ) );
+        for ( int i(0) ; i < m_listLayout->count() ; ++i )
+            e.appendChild( static_cast<TrackWidget*>(m_listLayout->itemAt(i)->widget())->track().toDomElement( xml ) );
 
         xml.appendChild( e );
 
@@ -185,30 +205,59 @@ RecentTracksWidget::doWrite() const
 }
 
 void
-RecentTracksWidget::addCachedTrack( const Track& a_track )
+RecentTracksWidget::addTrackWidget( TrackWidget* trackWidget )
 {
-    RecentTrackWidget* item = new RecentTrackWidget( a_track );
-    layout()->addWidget( item );
+    trackWidget->setObjectName("recentTrack");
+    trackWidget->setOdd( m_rowNum++ % 2);
+    trackWidget->updateTimestamp();
+    m_listLayout->addWidget( trackWidget );
 
-    connect( a_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
-    connect( a_track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onTrackChanged()));
+    connect( trackWidget->track().signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
+    connect( trackWidget->track().signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onTrackChanged()));
+    connect( trackWidget->track().signalProxy(), SIGNAL(corrected(QString)), SLOT(onTrackChanged()));
 
-    connect( item, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
-    connect( item, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
+    connect( trackWidget, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
+    connect( trackWidget, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
 
     write();
 }
 
 void
+RecentTracksWidget::addCachedTrack( const Track& a_track )
+{
+    TrackWidget* trackWidget = new TrackWidget( a_track );
+    addTrackWidget( trackWidget );
+}
+
+void
 RecentTracksWidget::onMoveFinished()
 {
-    while ( layout()->count() > kNumRecentTracks )
+    while ( m_listLayout->count() > kNumRecentTracks )
     {
-        QLayoutItem* item = layout()->takeAt( layout()->count() - 1 );
+        QLayoutItem* item = m_listLayout->takeAt( m_listLayout->count() - 1 );
         delete item->widget();
         delete item;
     }
 
    write();
+}
+
+void
+RecentTracksWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
+{
+    foreach ( lastfm::Track track, tracks )
+        addCachedTrack( track );
+}
+
+void
+RecentTracksWidget::setScrollBar( QScrollBar* scrollbar )
+{
+    m_scrollArea->setVerticalScrollBar( scrollbar );
+}
+
+QScrollBar*
+RecentTracksWidget::scrollBar() const
+{
+    return m_scrollArea->verticalScrollBar();
 }
 

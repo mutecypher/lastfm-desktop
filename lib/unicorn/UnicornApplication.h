@@ -159,6 +159,7 @@ namespace unicorn
 
         static unicorn::Application* instance(){ return (unicorn::Application*)qApp; }
         void installHotKey( Qt::KeyboardModifiers, quint32, QObject* receiver, const char* slot );
+        bool isInternetConnectionUp() const;
 
     public slots:
         void manageUsers();

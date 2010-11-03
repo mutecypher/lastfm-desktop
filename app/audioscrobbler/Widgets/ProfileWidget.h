@@ -21,10 +21,14 @@
 #define PROFILE_WIDGET_H_
 
 #include "lib/unicorn/StylableWidget.h"
+#include <lastfm/Track>
 
 namespace unicorn{ class Session; }
 namespace lastfm{ class Track; }
+using lastfm::Track;
 namespace lastfm{ class UserDetails; } 
+namespace lastfm{ class XmlQuery; }
+using lastfm::XmlQuery;
 
 class ProfileWidget : public StylableWidget
 {
@@ -33,11 +37,21 @@ class ProfileWidget : public StylableWidget
 public:
     ProfileWidget( QWidget* p = 0 );
 
-protected slots:
+private:
+    void setTrackText();
+
+private slots:
     void onSessionChanged( unicorn::Session* );
     void updateUserInfo( const lastfm::UserDetails& );
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
     void onScrobbleStatusChanged();
+
+    void onTrackStarted( const Track&, const Track& );
+    void onPaused();
+    void onResumed();
+    void onStopped();
+
+    void onCorrected( QString correction );
 
 protected:
     struct {
@@ -45,10 +59,14 @@ protected:
         class ScrobbleMeter* scrobbleMeter;
         class QLabel* since;
         class HttpImageWidget* avatar;
-        class RecentTracksWidget* recentTracks;
+        class QLabel* title1;
+        class QLabel* title2;
+        class QLabel* correction;
+        class ScrobbleControls* sc;
     } ui;
 
     QString m_path;
+    Track m_track;
 };
 
 #endif //PROFILE_WIDGET_H_

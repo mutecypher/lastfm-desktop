@@ -35,13 +35,23 @@ public:
     RecentTracksWidget( QString username, QWidget* parent = 0 );
 
     void setUsername( QString username );
+
+    void addTrackWidget( class TrackWidget* trackWidget );
+
     void read();
     void write() const;
 
-    void addCachedTrack( const Track& a_track );
-
     QEasingCurve::Type easingCurve() const;
     void setEasingCurve( QEasingCurve::Type easingCurve );
+
+    void setScrollBar( class QScrollBar* );
+    class QScrollBar* scrollBar() const;
+
+    int count() const;
+    class TrackWidget* trackWidget( int index ) const;
+
+private:
+    void addCachedTrack( const Track& a_track );
 
 private slots:
     void onTrackChanged();
@@ -51,6 +61,8 @@ private slots:
     void disableHover();
     void enableHover();
 
+    void onScrobblesCached( const QList<lastfm::Track>& tracks );
+
 private:
     Q_PROPERTY(QEasingCurve::Type easingCurve READ easingCurve WRITE setEasingCurve);
     QEasingCurve::Type m_easingCurve;
@@ -58,4 +70,7 @@ private:
 private:
     QString m_path;
     class QTimer* m_writeTimer;
+    class AnimatedListLayout* m_listLayout;
+    class QScrollArea* m_scrollArea;
+    int m_rowNum;
 };

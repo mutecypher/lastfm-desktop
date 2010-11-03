@@ -35,26 +35,24 @@ class ScrobbleInfoWidget : public StylableWidget
 {
     Q_OBJECT
 public:
-    ScrobbleInfoWidget( QWidget* p = 0 );
+    ScrobbleInfoWidget( class ScrobbleInfoFetcher* infoFetcher, QWidget* p = 0 );
 
-public slots:
+private slots:
     void onTrackGotInfo(const XmlQuery& lfm);
     void onAlbumGotInfo(const XmlQuery& lfm);
     void onArtistGotInfo(const XmlQuery& lfm);
     void onArtistGotEvents(const XmlQuery& lfm);
     void onTrackGotTopFans(const XmlQuery& lfm);
     void onTrackGotTags(const XmlQuery& lfm);
+    void onFinished();
 
-protected slots:
     void onAnchorClicked( const QUrl& link );
     void onBioChanged( const QSizeF& );
 
-    void onTrackStarted(const Track&, const Track&);
-    void onStopped();
-
     void listItemClicked( const QModelIndex& );
 
-    void onFinished();
+    void onScrobblesCached( const QList<lastfm::Track>& tracks );
+    void onScrobbleStatusChanged();
 
 signals:
     void lovedStateChanged(bool loved);
@@ -64,20 +62,21 @@ protected:
 
     struct {
          class BannerWidget* onTourBanner;
+         class HttpImageWidget* artistImage;
          class QScrollArea* scrollArea;
          class QWidget* contents;
          class QListView* listeningNow;
          class QTextBrowser* bioText;
          class QListView* similarArtists;
-         class QLabel* title1;
-         class QLabel* title2;
-         class HttpImageWidget* artistImage;
          class QLabel* yourScrobbles;
          class QLabel* totalScrobbles;
          class DataListWidget* yourTags;
          class DataListWidget* topTags;
          class QWidget* area;
     } ui;
+
+    int m_scrobbles;
+    int m_userListens;
 
     struct {
         class LfmListModel* similarArtists;

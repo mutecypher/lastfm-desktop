@@ -31,8 +31,6 @@ $VSDIR =~ s/\\/\\\\/g;
 header( "Building release and installer for Last.fm-$VERSION" );
 
 ########################################################################
-print( "\nDon't forget the change log! ([Enter] to continue, [Ctrl-C] to abort)\n" );
-$dummy = <STDIN>;
 
 header( "Substituting strings in various files" );
     #sub findVersionFiles()
