@@ -168,7 +168,7 @@ Application::parseArguments( const QStringList& args )
 {
     qDebug() << args;
 
-    if (args.size() == 1)
+    if (args.size() <= 1)
         return;
 
     foreach (QString const arg, args.mid( 1 ))
