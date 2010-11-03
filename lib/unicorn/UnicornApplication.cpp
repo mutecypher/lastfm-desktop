@@ -542,3 +542,9 @@ unicorn::Application::restart()
     qApp->closeAllWindows();
     initiateLogin();
 }
+
+bool
+unicorn::Application::isInternetConnectionUp() const
+{
+    return m_icm->isUp();
+}

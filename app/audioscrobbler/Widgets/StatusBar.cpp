@@ -40,8 +40,12 @@ StatusBar::StatusBar( QWidget* parent )
     layout->addStretch( 1 );
     layout->addWidget( m_inetStatus = new QLabel( tr(""), this ) );
 
+    aApp->isInternetConnectionUp() ? onConnectionUp() : onConnectionDown();
+
     connect( aApp, SIGNAL( internetConnectionDown() ), SLOT( onConnectionDown() ) );
     connect( aApp, SIGNAL( internetConnectionUp() ), SLOT( onConnectionUp() ) );
+
+    connect( aApp, SIGNAL( gotUserInfo(lastfm::UserDetails)), SLOT( onGotUserInfo(lastfm::UserDetails) ) );
 
     DeviceScrobbler* deviceScrobbler = aApp->deviceScrobbler();
     connect( deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected()));
@@ -49,24 +53,33 @@ StatusBar::StatusBar( QWidget* parent )
     connect( deviceScrobbler, SIGNAL( noScrobblesFound()),SLOT( onNoScrobblesFound()));
 
     layout->addWidget( new QSizeGrip( this ), 0 , Qt::AlignBottom | Qt::AlignRight );
+
+    connect( aApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 }
 
 void
 StatusBar::setStatus()
 {
-    m_mainStatus->setText( tr("Logged in as %1 (%2 scrobbles)").arg( "eartle", QString("%L1").arg( 200000 ) ) );
+    m_mainStatus->setText( tr("Logged in as %1 (%2 scrobbles)").arg( lastfm::ws::Username, QString("%L1").arg( m_scrobbleCount ) ) );
+}
+
+void
+StatusBar::onGotUserInfo(lastfm::UserDetails userDetails)
+{
+    m_scrobbleCount = userDetails.scrobbleCount();
+    setStatus();
 }
 
 void
 StatusBar::onConnectionUp()
 {
-    m_inetStatus->setText( tr("Online") );
+    m_inetStatus->setText( QString::fromUtf8("<...> " ) + tr( "Online"));
 }
 
 void
 StatusBar::onConnectionDown()
 {
-    m_inetStatus->setText( tr("Offline") );
+    m_inetStatus->setText( QString::fromUtf8("<...> " ) + tr( "Offline"));
 }
 
 void
@@ -87,4 +100,21 @@ StatusBar::onNoScrobblesFound()
 {
     m_mainStatus->setText( tr("No scrobbles found") );
     QTimer::singleShot( 10 * 1000, this, SLOT(setStatus()) );
+}
+
+void
+StatusBar::onScrobblesCached( const QList<lastfm::Track>& tracks )
+{
+    foreach ( lastfm::Track track, tracks )
+        connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
+}
+
+void
+StatusBar::onScrobbleStatusChanged()
+{
+    if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
+    {
+        ++m_scrobbleCount;
+        setStatus();
+    }
 }
