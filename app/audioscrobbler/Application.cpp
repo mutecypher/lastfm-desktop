@@ -264,8 +264,8 @@ Application::init()
 /// listeners
     try{
 #ifdef Q_OS_MAC
-        ITunesListener* itunes = new ITunesListener(mediator);
-        connect(itunes, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
+        ITunesListener* itunes = new ITunesListener(m_mediator);
+        connect(itunes, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
         itunes->start();
 #endif
 
