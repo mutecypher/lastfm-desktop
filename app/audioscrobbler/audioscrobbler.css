@@ -35,8 +35,8 @@ TitleBar {
     background-clip: border;
     background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #464646, stop:0.5 #0e0e0e, stop:1 #0e0e0e );
     border-color: rgba( 38, 38, 38, 240 );
-	min-height: 18px;
-	max-height: 18px;
+	min-height: 22px;
+    max-height: 22px;
 }
 
 TitleBar QLabel {
@@ -444,6 +444,10 @@ LfmListView#listeningNow LfmDelegate {
 
 LfmListView#similarArtists LfmDelegate {
 	qproperty-defaultImage: url(":/default_user.png");
+}
+
+QSplitterHandle {
+    background-color: base;
 }
 
 /*

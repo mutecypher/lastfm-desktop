@@ -39,17 +39,26 @@ public:
     :QWizardPage( parent )
     {
         setTitle(tr( "Welcome" ));
+#ifndef Q_OS_MAC
         setSubTitle(tr( "Welcome to the Last.fm client configuration wizard" ));
+#endif
         new QVBoxLayout( this );
+        setContentsMargins( 0, 0, 0, 0 );
+        layout()->setSpacing( 0 );
 
         QWidget* welcome = new QWidget( this );
         new QVBoxLayout( welcome );
+
+        welcome->setContentsMargins( 0, 0, 0, 0 );
+        welcome->layout()->setSpacing( 0 );
         
         QLabel* welcomeLabel = new QLabel( tr( 
+#ifdef Q_OS_MAC
+            "Welcome to the Last.fm client configuration wizard\n\n"
+#endif
             "Last.fm will now look for music players on your computer "
             "and then download the plugins you need to get scrobbling.\n\n"
-            "Before continuing, make sure all your music player software is closed.\n\n"
-                                    "Click Next to continue." ));
+            "Before continuing, make sure all your music player software is closed."));
         welcomeLabel->setWordWrap( true );
         welcome->layout()->addWidget( welcomeLabel );
         static_cast<QBoxLayout*>(welcome->layout())->addStretch();

@@ -41,8 +41,6 @@ LoginPage::LoginPage( QWidget* parent )
           , m_isComplete( false )
 {
     setTitle( tr( "Login" ) );
-    setSubTitle( tr( "Please enter your last.fm username and password below" ) );
-
     QVBoxLayout* pageLayout = new QVBoxLayout( this );
 
     QVBoxLayout* loginLayout = new QVBoxLayout;
@@ -69,6 +67,7 @@ LoginPage::LoginPage( QWidget* parent )
 
     ui.okButton = new QPushButton( this );
     ui.okButton->setText( "Ok" );
+    connect( ui.okButton, SIGNAL( clicked() ), this, SLOT( authenticate() ) );
 
     QHBoxLayout* buttonLayout = new QHBoxLayout;
 
@@ -92,7 +91,6 @@ LoginPage::initializePage()
 {
     m_isComplete = false;
     ui.okButton->setEnabled( true );
-    connect( ui.okButton, SIGNAL( clicked() ), this, SLOT( authenticate() ) );
 }
 
 
@@ -136,13 +134,11 @@ LoginPage::isComplete() const
 void 
 LoginPage::onAuthenticated( unicorn::Session* session )
 {
-    qDebug() << "\\o/";
-
     if ( session )
     {
         m_isComplete = true;
         emit completeChanged();
-
+        wizard()->next();
         wizard()->showNormal();
         wizard()->setFocus();
         wizard()->raise();

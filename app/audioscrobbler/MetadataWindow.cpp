@@ -100,7 +100,7 @@ MetadataWindow::MetadataWindow()
     nsLayout->setContentsMargins( 0, 0, 0, 0 );
 
     ui.splitter->setCollapsible( 0, false );
-
+    ui.splitter->handle( 1 )->setAutoFillBackground( true );
     setMinimumWidth( 410 );
 
     StylableWidget* statusBar;

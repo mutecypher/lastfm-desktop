@@ -63,10 +63,10 @@ RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
 
     connect( m_listLayout, SIGNAL(moveFinished()), SLOT(onMoveFinished()));
 
-    setUsername( username );
-
     m_writeTimer = new QTimer( this );
     m_writeTimer->setSingleShot( true );
+    
+    setUsername( username );
 
     connect( m_writeTimer, SIGNAL(timeout()), SLOT(doWrite()) );
     //connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
