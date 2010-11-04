@@ -8,7 +8,7 @@ SUBDIRS = lib/unicorn \
           #app/boffin
 
 linux*:SUBDIRS -= app/twiddly
-mac:SUBDIRS += app/audioscrobbler/PrefPane
+#mac:SUBDIRS += app/audioscrobbler/PrefPane
 
 CONFIG( tests ) {
     SUBDIRS += \
