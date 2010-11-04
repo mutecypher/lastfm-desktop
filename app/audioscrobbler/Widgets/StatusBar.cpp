@@ -73,13 +73,14 @@ StatusBar::onGotUserInfo(lastfm::UserDetails userDetails)
 void
 StatusBar::onConnectionUp()
 {
-    m_inetStatus->setText( QString::fromUtf8("<...> " ) + tr( "Online"));
+    const char icon[] = {0xE3, 0x80, 0x88, 0xE2, 0x8B, 0xAF, 0xE3, 0x80, 0x89 };
+    m_inetStatus->setText( QString::fromUtf8( icon ) + tr( "Online"));
 }
 
 void
 StatusBar::onConnectionDown()
 {
-    m_inetStatus->setText( QString::fromUtf8("<...> " ) + tr( "Offline"));
+    m_inetStatus->setText( QString::fromUtf8(":(" ) + tr( "Offline"));
 }
 
 void
