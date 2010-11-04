@@ -49,6 +49,7 @@ public:
     : QWizard( parent )
     {
         resize( 625, 440 );
+        setPixmap( QWizard::BackgroundPixmap, QPixmap( ":/as_watermark.png" ));
         setPage( Page_Intro, new IntroPage(this));
 #if defined(Q_WS_MAC) || defined(Q_WS_WIN)
         setPage( Page_Plugin, new PluginPage());

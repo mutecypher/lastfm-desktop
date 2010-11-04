@@ -294,7 +294,7 @@ unicorn::Session*
 unicorn::Application::changeSession( Session* newSession, bool announce )
 {
     if ( m_currentSession && newSession->userInfo().name() == m_currentSession->userInfo().name() )
-        return 0;
+        return m_currentSession;
 
     if( m_currentSession && !m_wizardRunning &&  Settings().value( "changeSessionConfirmation", true ).toBool() )
     {
