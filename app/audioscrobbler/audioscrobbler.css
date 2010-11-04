@@ -35,7 +35,8 @@ TitleBar {
     background-clip: border;
     background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #464646, stop:0.5 #0e0e0e, stop:1 #0e0e0e );
     border-color: rgba( 38, 38, 38, 240 );
-	min-height: 22px;
+	min-height: 18px;
+	max-height: 18px;
 }
 
 TitleBar QLabel {
@@ -88,7 +89,8 @@ StatusBar {
     border-top: 2px solid qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #0e0e0e, stop:1 #686868);
     padding: 0px 0px 0px 22px;
     margin: 0px;
-	min-height: 22px;
+	min-height: 18px;
+	max-height: 18px;
 }
 
 StatusBar QLabel{
