@@ -168,9 +168,9 @@ private slots:
 
     void onError( const QLocalSocket::LocalSocketError& e )
     {
-    #ifdef Q_OS_WIN
-        #Q_UNUSED( e )
-    #endif
+#ifdef Q_OS_WIN
+        Q_UNUSED( e )
+#endif
 
 		if( e == QLocalSocket::ConnectionRefusedError ) {
 			QFile::remove( QDir::tempPath() + "/" + m_busName );

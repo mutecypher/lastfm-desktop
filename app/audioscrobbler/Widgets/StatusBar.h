@@ -21,6 +21,7 @@
 #include "lib/unicorn/StylableWidget.h"
 
 #include <lastfm/Track>
+#include <lastfm/UserDetails>
 
 class QLabel;
 
@@ -33,6 +34,8 @@ class StatusBar : public StylableWidget
     private slots:
         void setStatus();
 
+        void onGotUserInfo(lastfm::UserDetails userDetails);
+
         void onConnectionUp();
         void onConnectionDown();
 
@@ -40,7 +43,12 @@ class StatusBar : public StylableWidget
         void onFoundScrobbles( QList<Track> );
         void onNoScrobblesFound();
 
+        void onScrobblesCached( const QList<lastfm::Track>& tracks );
+        void onScrobbleStatusChanged();
+
     private:
         QLabel* m_inetStatus;
         QLabel* m_mainStatus;
+
+        int m_scrobbleCount;
 };
