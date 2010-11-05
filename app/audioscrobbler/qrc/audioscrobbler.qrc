@@ -34,5 +34,7 @@
 		<file>default_user.png</file>
 		<file>asterisk_small.png</file>
         <file>as_watermark.png</file>
+        <file>pointyarrow.png</file>
+        <file>systray_screenshot.png</file>
     </qresource>
 </RCC>

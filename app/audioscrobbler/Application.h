@@ -103,6 +103,7 @@ namespace audioscrobbler
         PlayerConnection* currentConnection() const;
         DeviceScrobbler* deviceScrobbler() const;
         Track currentTrack() const { return m_currentTrack;}
+        QSystemTrayIcon* tray() const { return m_tray.data(); }
         
     signals:
         void trackStarted( const Track&, const Track& );
