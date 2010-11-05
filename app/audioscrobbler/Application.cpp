@@ -19,7 +19,8 @@
 */
 #include "Application.h"
 
-#include "widgets/ProfileWidget.h"
+#include "Widgets/PointyArrow.h"
+#include "Widgets/ProfileWidget.h"
 #include "Dialogs/SettingsDialog.h"
 #include "lib/listener/DBusListener.h"
 #include "lib/listener/legacy/LegacyPlayerListener.h"
@@ -87,8 +88,8 @@ Application::initiateLogin() throw( StubbornUserException )
     if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
     {
         setWizardRunning( true );
-        FirstRunWizard* w = new FirstRunWizard();
-        if( w->exec() != QDialog::Accepted ) {
+        FirstRunWizard w;
+        if( w.exec() != QDialog::Accepted ) {
             setWizardRunning( false );
             throw StubbornUserException();
         }
@@ -115,10 +116,10 @@ Application::initiateLogin() throw( StubbornUserException )
 void
 Application::init()
 {
+
     // Initialise the unicorn base class first!
     unicorn::Application::init();
 
-    initiateLogin();
 
     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
     diskCache->setCacheDirectory( lastfm::dir::cache().path() );
@@ -141,11 +142,16 @@ Application::init()
     m_tray->setIcon(trayIcon);
     m_tray->show();
     connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
+    
 
-/// DeviceScrobbler
+    /// The login process should be done after the SysTray icon is created
+    /// so that the first run wizard can point to the icon if it is started.
+    initiateLogin();
+
+    /// DeviceScrobbler
     m_deviceScrobbler = new DeviceScrobbler;
 
-/// tray menu
+    /// tray menu
     QMenu* menu = new QMenu;
     (menu->addMenu( new UserMenu()))->setText( "Users");
     m_show_window_action = menu->addAction( tr("Show Scrobbler"));

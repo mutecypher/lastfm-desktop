@@ -25,6 +25,7 @@
 #include "PluginPage.h"
 #include "BootstrapPage.h"
 #include "WelcomePage.h"
+#include "SystemTrayPage.h"
 
 #include "lib/unicorn/UnicornSettings.h"
 #include <QWizard>
@@ -41,7 +42,8 @@ class FirstRunWizard : public QWizard
        Page_Login,
        Page_Plugin,
        Page_Bootstrap,
-       Page_Welcome
+       Page_Welcome,
+       Page_SystemTray
     };
 
 public:
@@ -57,6 +59,7 @@ public:
         setPage( Page_Login, new LoginPage(this));
         setPage( Page_Bootstrap, new BootstrapPage( this ));
         setPage( Page_Welcome, new WelcomePage( this ) );
+        setPage( Page_SystemTray, new SystemTrayPage( this ));
         connect( this, SIGNAL( rejected() ), this, SLOT( onRejected() ) );
         connect( this, SIGNAL( accepted() ), this, SLOT( onWizardCompleted() ) );
     }
@@ -79,6 +82,8 @@ public:
 #else Q_WS_X11
                 return Page_Welcome;
 #endif
+            case Page_Welcome:
+                return Page_SystemTray;
 
             default:
                 return -1;
