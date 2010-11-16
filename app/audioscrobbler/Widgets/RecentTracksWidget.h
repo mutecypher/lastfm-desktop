@@ -21,7 +21,7 @@
 #include <QWidget>
 #include <QList>
 #include <QEasingCurve>
-
+#include <QtSql>
 
 #include "lib/unicorn/StylableWidget.h"
 
@@ -61,6 +61,7 @@ private slots:
     void disableHover();
     void enableHover();
 
+    void onFoundIPodScrobbles( const QList<Track>& tracks );
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
 
 private:
