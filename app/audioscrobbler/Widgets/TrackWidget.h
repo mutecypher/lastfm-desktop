@@ -40,6 +40,10 @@ public:
     TrackWidget();
     TrackWidget( const Track& track );
 
+    void setFromIPodScrobble( const QList<Track>& tracks );
+    void setText( const QString& text );
+    QString text() const;
+
     void setTrack( const Track& track );
 
     Track track() const { return m_track;}
