@@ -325,7 +325,7 @@ Application::onSessionChanged( unicorn::Session* /*newSession*/ )
     Audioscrobbler* oldAs = m_as;
     m_as = new Audioscrobbler("ass");
     connect( m_as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
-    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), m_as, SLOT( cache( QList<lastfm::Track> )));
+    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_as, SLOT( cacheBatch( QList<Track> )));
     delete oldAs;
 
     m_deviceScrobbler->checkCachedIPodScrobbles();

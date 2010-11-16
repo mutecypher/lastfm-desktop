@@ -142,6 +142,10 @@ main( int argc, char** argv )
                 args << "complete";
                 args << "--ipod-path";
                 args << path;
+                args << "--deviceId";
+                args << ipod->uid();
+                args << "--deviceName";
+                args << ipod->serial;
 
                 moose::startAudioscrobbler( args );
             }
@@ -151,6 +155,11 @@ main( int argc, char** argv )
                 args << "--tray";
                 args << "--twiddly";
                 args << "no-tracks-found";
+                args << "--deviceId";
+                args << ipod->uid();
+                args << "--deviceName";
+                args << ipod->serial;
+
                 moose::startAudioscrobbler( args );
             }
 

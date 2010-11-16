@@ -49,6 +49,7 @@ StatusBar::StatusBar( QWidget* parent )
 
     DeviceScrobbler* deviceScrobbler = aApp->deviceScrobbler();
     connect( deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected( QString )));
+    connect( deviceScrobbler, SIGNAL( processingScrobbles()), SLOT( onProcessingScrobbles()));
     connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), SLOT( onFoundScrobbles( QList<Track> )));
     connect( deviceScrobbler, SIGNAL( noScrobblesFound()),SLOT( onNoScrobblesFound()));
 
@@ -85,6 +86,12 @@ void
 StatusBar::onIPodDetected( QString iPod )
 {
     m_mainStatus->setText( tr("iPod Detected... ") + iPod );
+}
+
+void
+StatusBar::onProcessingScrobbles()
+{
+    m_mainStatus->setText( tr("Processing iPod Scrobbles...") );
 }
 
 void
