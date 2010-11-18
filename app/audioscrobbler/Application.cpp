@@ -150,6 +150,7 @@ Application::init()
 
     /// DeviceScrobbler
     m_deviceScrobbler = new DeviceScrobbler;
+    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<Track>)), this, SIGNAL( foundIPodScrobbles(QList<Track>) ));
 
     /// tray menu
     QMenu* menu = new QMenu;
@@ -319,12 +320,12 @@ Application::init()
 void
 Application::onSessionChanged( unicorn::Session* /*newSession*/ )
 {
-    disconnect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_as, SLOT( cache( QList<Track> )));
+    disconnect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), m_as, SLOT( cache( QList<lastfm::Track> )));
 
     Audioscrobbler* oldAs = m_as;
     m_as = new Audioscrobbler("ass");
     connect( m_as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
-    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_as, SLOT( cache( QList<Track> )));
+    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_as, SLOT( cacheBatch( QList<Track> )));
     delete oldAs;
 
     m_deviceScrobbler->checkCachedIPodScrobbles();

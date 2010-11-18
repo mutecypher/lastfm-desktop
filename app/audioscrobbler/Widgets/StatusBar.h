@@ -39,7 +39,8 @@ class StatusBar : public StylableWidget
         void onConnectionUp();
         void onConnectionDown();
 
-        void onIPodDetected();
+        void onIPodDetected( QString );
+        void onProcessingScrobbles();
         void onFoundScrobbles( QList<Track> );
         void onNoScrobblesFound();
 

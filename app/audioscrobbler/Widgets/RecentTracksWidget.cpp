@@ -31,6 +31,7 @@
 #include "lib/unicorn/layouts/AnimatedListLayout.h"
 #include "lib/unicorn/widgets/DataBox.h"
 
+#include "../Application.h"
 #include "RecentTracksWidget.h"
 #include "TrackWidget.h"
 
@@ -69,7 +70,7 @@ RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
     setUsername( username );
 
     connect( m_writeTimer, SIGNAL(timeout()), SLOT(doWrite()) );
-    //connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+    connect( aApp, SIGNAL(foundIPodScrobbles(QList<Track>)), SLOT(onFoundIPodScrobbles(QList<Track>)));
 }
 
 
@@ -156,9 +157,21 @@ RecentTracksWidget::read()
         // TODO: recognise all the other AbstractType classes
         if (n.nodeName() == "track")
         {
-            Track* track = new Track( n.toElement() );
-            TrackWidget* trackWidget = new TrackWidget( *track );
-            addTrackWidget( trackWidget );
+            if (n.attributes().contains("iPodScrobble"))
+            {
+                TrackWidget* trackWidget = new TrackWidget();
+                trackWidget->setText( n.namedItem( "text" ).toElement().text() );
+                trackWidget->setObjectName("iPodScrobble");
+                trackWidget->setOdd( m_rowNum++ % 2);
+
+                m_listLayout->addWidget( trackWidget );
+            }
+            else
+            {
+                Track* track = new Track( n.toElement() );
+                TrackWidget* trackWidget = new TrackWidget( *track );
+                addTrackWidget( trackWidget );
+            }
         }
     }
 
@@ -190,7 +203,22 @@ RecentTracksWidget::doWrite() const
         e.setAttribute( "version", "2" );
 
         for ( int i(0) ; i < m_listLayout->count() ; ++i )
-            e.appendChild( static_cast<TrackWidget*>(m_listLayout->itemAt(i)->widget())->track().toDomElement( xml ) );
+        {
+            if ( trackWidget(i)->track() != Track() )
+            {
+                e.appendChild( trackWidget(i)->track().toDomElement( xml ) );
+            }
+            else
+            {
+                // This is not a track so must be an iPod scrobble
+                QDomElement item = xml.createElement( "track" );
+                item.setAttribute("iPodScrobble", "1");
+                QDomElement trackText = xml.createElement( "text" );
+                trackText.appendChild( xml.createTextNode( trackWidget(i)->text() ) );
+                item.appendChild( trackText );
+                e.appendChild( item );
+            }
+        }
 
         xml.appendChild( e );
 
@@ -243,10 +271,30 @@ RecentTracksWidget::onMoveFinished()
 }
 
 void
+RecentTracksWidget::onFoundIPodScrobbles( const QList<Track>& tracks )
+{
+    // Add a TrackWidget that displays info about the iPod scrobble
+    TrackWidget* trackWidget = new TrackWidget();
+    trackWidget->setFromIPodScrobble( tracks );
+    trackWidget->setObjectName("iPodScrobble");
+    trackWidget->setOdd( m_rowNum++ % 2);
+
+    m_listLayout->addWidget( trackWidget );
+
+    write();
+}
+
+
+void
 RecentTracksWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
     foreach ( lastfm::Track track, tracks )
-        addCachedTrack( track );
+    {
+        // Tracks with a deviceId are iPod scrobbles
+        // we ignore these at the moment
+        if (track.extra("deviceId").isEmpty())
+            addCachedTrack( track );
+    }
 }
 
 void

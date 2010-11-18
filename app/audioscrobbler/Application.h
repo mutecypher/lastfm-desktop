@@ -111,6 +111,7 @@ namespace audioscrobbler
         void paused();
         void stopped();
 
+        void foundIPodScrobbles( const QList<Track>& tracks );
         void scrobblesCached( const QList<lastfm::Track>& tracks );
         void scrobblesSubmitted( const QList<lastfm::Track>& tracks, int numTracks );
 
