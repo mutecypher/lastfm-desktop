@@ -22,6 +22,7 @@
 #include <QDir>
 #include <QMessageBox>
 #include <QDebug>
+#include <QProcess>
 
 /* This function is unused but it works so why not keep it! */
 void recursiveCopy( const QDir& src, const QDir& dest )
@@ -95,6 +96,8 @@ int main( int argc, char* argv[] )
     
  
     recursiveRm( bundleDir );
+
+    QProcess::startDetached( "/Applications/Last.fm/Audioscrobbler.app/Contents/MacOS/audioscrobbler" );
 
     return 0;
 }
