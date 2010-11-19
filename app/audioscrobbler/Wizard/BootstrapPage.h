@@ -28,6 +28,7 @@
 #include <QNetworkReply>
 
 #include "lib/unicorn/Updater/PluginList.h"
+#include "../Application.h"
 
 class BootstrapPage: public QWizardPage
 {
@@ -50,7 +51,7 @@ public:
 
         QList<IPluginInfo*> plugins = m_pluginList.bootstrappablePlugins();
 
-        QLabel* label = new QLabel( tr( "We can import your listening history from the following media players:")); 
+        QLabel* label = new QLabel( tr( "Hi %1,\nWe can import your listening history from the following media players:").arg( aApp->currentSession()->userInfo().name())); 
         label->setWordWrap( true );
         layout()->addWidget(label);
         foreach( IPluginInfo* plugin, plugins ) {

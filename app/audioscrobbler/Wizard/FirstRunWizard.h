@@ -22,6 +22,7 @@
 
 #include "IntroPage.h"
 #include "LoginPage.h"
+#include "AuthInProgressPage.h"
 #include "PluginPage.h"
 #include "BootstrapPage.h"
 #include "WelcomePage.h"
@@ -38,8 +39,8 @@ class FirstRunWizard : public QWizard
 {
     Q_OBJECT
     enum {
-       Page_Intro = 0,
-       Page_Login,
+       Page_Login = 0,
+       Page_AuthInProgress,
        Page_Plugin,
        Page_Bootstrap,
        Page_Welcome,
@@ -50,13 +51,14 @@ public:
     FirstRunWizard( QWidget* parent = 0 )
     : QWizard( parent )
     {
+        setOption( QWizard::NoBackButtonOnStartPage, true );
         resize( 625, 440 );
         setPixmap( QWizard::BackgroundPixmap, QPixmap( ":/as_watermark.png" ));
-        setPage( Page_Intro, new IntroPage(this));
+        setPage( Page_Login, new LoginPage(this));
+        setPage( Page_AuthInProgress, new AuthInProgressPage( this ));
 #if defined(Q_WS_MAC) || defined(Q_WS_WIN)
         setPage( Page_Plugin, new PluginPage());
 #endif
-        setPage( Page_Login, new LoginPage(this));
         setPage( Page_Bootstrap, new BootstrapPage( this ));
         setPage( Page_Welcome, new WelcomePage( this ) );
         setPage( Page_SystemTray, new SystemTrayPage( this ));
@@ -67,10 +69,10 @@ public:
     int nextId() const
     {
         switch( currentId()) {
-            case Page_Intro:
-                return Page_Login;
-            
             case Page_Login:
+                return Page_AuthInProgress;
+
+            case Page_AuthInProgress:
 #ifdef Q_OS_WIN32
                 return Page_Plugin;
             case Page_Plugin:

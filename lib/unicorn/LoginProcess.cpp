@@ -85,7 +85,8 @@ TinyWebServer::sendRedirect()
 {
     char* redirectHeader = "HTTP/1.1 302 Found\r\nLocation: http://www.last.fm/\r\n\r\n\0";
     m_clientSocket->write( redirectHeader ) ;
-
+    m_clientSocket->flush();
+    m_clientSocket->close();
 }
 
 

@@ -17,6 +17,10 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef AUDIOSCROBBLER_APPLICATION_H_
+#define AUDIOSCROBBLER_APPLICATION_H_
+
 #include <lastfm/global.h>
 #include <lastfm/Track>
 #include "lib/unicorn/UnicornApplication.h"
@@ -172,3 +176,5 @@ namespace audioscrobbler
         void onMessageReceived(const QStringList& message);
     };
 }
+
+#endif //AUDIOSCROBBER_APPLICATION_H_
