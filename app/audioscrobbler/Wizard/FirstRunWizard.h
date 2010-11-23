@@ -25,6 +25,7 @@
 #include "AuthInProgressPage.h"
 #include "PluginPage.h"
 #include "BootstrapPage.h"
+#include "BootstrapInProgressPage.h"
 #include "WelcomePage.h"
 #include "SystemTrayPage.h"
 
@@ -43,6 +44,7 @@ class FirstRunWizard : public QWizard
        Page_AuthInProgress,
        Page_Plugin,
        Page_Bootstrap,
+       Page_BootstrapInProgress,
        Page_Welcome,
        Page_SystemTray
     };
@@ -60,6 +62,7 @@ public:
         setPage( Page_Plugin, new PluginPage());
 #endif
         setPage( Page_Bootstrap, new BootstrapPage( this ));
+        setPage( Page_BootstrapInProgress, new BootstrapInProgressPage( this ));
         setPage( Page_Welcome, new WelcomePage( this ) );
         setPage( Page_SystemTray, new SystemTrayPage( this ));
         connect( this, SIGNAL( rejected() ), this, SLOT( onRejected() ) );
@@ -75,15 +78,25 @@ public:
             case Page_AuthInProgress:
 #ifdef Q_OS_WIN32
                 return Page_Plugin;
+            
             case Page_Plugin:
                 return Page_Welcome;
 #elif defined Q_WS_MAC
                 return Page_Bootstrap;
+                 
             case Page_Bootstrap:
-                return Page_Welcome;
+                if( !field( "bootstrap_player" ).toString().isEmpty()) {
+                    return Page_BootstrapInProgress;
+                } else {
+                    return Page_Welcome;
+                }
+
+            case Page_BootstrapInProgress:
+                    return Page_Welcome;
 #else Q_WS_X11
                 return Page_Welcome;
 #endif
+
             case Page_Welcome:
                 return Page_SystemTray;
 

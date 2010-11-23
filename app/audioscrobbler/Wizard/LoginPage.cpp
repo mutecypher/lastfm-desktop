@@ -34,56 +34,25 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QDesktopServices>
 
 LoginPage::LoginPage( QWidget* parent )
           :QWizardPage( parent )
           , m_loginProcess( 0 )
           , m_isComplete( false )
 {
-    setCommitPage( true );
+//    setCommitPage( true );
 
     setTitle( tr( "Connect with Last.fm" ) );
     QVBoxLayout* pageLayout = new QVBoxLayout( this );
     
-    QVBoxLayout* loginLayout = new QVBoxLayout;
     ui.description = new QLabel( tr( "If you already have a Last.fm account, connect with Last.fm.\n\n" ) +
                                  tr( "If you don't have a Last.fm account, you can sign up now for free." ) );
     
     ui.description->setObjectName( "description" );
     ui.description->setWordWrap( true );
     
-    ui.continueMsg = new QLabel( tr( "Once you have approved this app, click Next to complete the login process." ) );
-    ui.continueMsg->setObjectName( "continueMsg" );
-    ui.continueMsg->setWordWrap( true );
-    ui.continueMsg->hide();
-    
-    ui.browserMsg = new QLabel( tr( "If your browser doesn't open automatically, "
-                                    "you can visit the following URL:" ) );
-    
-    ui.browserMsg->setObjectName( "browserMsg" );
-    ui.browserMsg->setWordWrap( true );
-    ui.browserMsg->hide();
-    
-    ui.loginUrl = new QLineEdit;
-    ui.loginUrl->setReadOnly( true );
-    ui.loginUrl->hide();
-    ui.loginUrl->setObjectName( "loginUrl" );
-    
-    
-    QHBoxLayout* buttonLayout = new QHBoxLayout;
-
-    //buttonLayout->addWidget( ui.okButton );
-    //buttonLayout->addStretch( 1 );
-
-    loginLayout->addWidget( ui.description );
-    loginLayout->addLayout( buttonLayout );
-    loginLayout->addSpacing( 10 );
-    loginLayout->addWidget( ui.continueMsg );
-    loginLayout->addSpacing( 10 );
-    loginLayout->addWidget( ui.browserMsg );
-    loginLayout->addWidget( ui.loginUrl );
-    
-    pageLayout->addLayout( loginLayout );
+    pageLayout->addWidget( ui.description );
 }
 
 
@@ -91,42 +60,18 @@ void
 LoginPage::initializePage()
 {
     wizard()->setOption( QWizard::HaveCustomButton1, true );
-    setButtonText( QWizard::CommitButton, tr( "Connect with your Last.fm account" ) );
+    connect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked()), SLOT( onSignUpClicked()));
+    setButtonText( QWizard::NextButton, tr( "Connect with your Last.fm account" ) );
     setButtonText( QWizard::CustomButton1, tr( "Sign up" ));
     m_isComplete = false;
-//    ui.okButton->setEnabled( true );
 }
 
 
 void 
 LoginPage::cleanupPage()
 {
+    disconnect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked()), this, 0 );
     m_isComplete = false;
-    //ui.okButton->setEnabled( true );
-    ui.continueMsg->hide();
-    ui.browserMsg->hide();
-    ui.loginUrl->hide();
-}
-
-void 
-LoginPage::authenticate() 
-{
-    //ui.okButton->setEnabled( false );
-    if ( m_loginProcess )
-    {
-        delete m_loginProcess;
-    }
-    m_loginProcess = new unicorn::LoginProcess( this );
-    connect( m_loginProcess, SIGNAL( gotSession( unicorn::Session* ) ),
-             this, SLOT( onAuthenticated( unicorn::Session* ) ) );
-
-    m_loginProcess->authenticate();
-
-    ui.continueMsg->show();
-    ui.browserMsg->show();
-    ui.loginUrl->setText( m_loginProcess->authUrl().toString() );
-    ui.loginUrl->home( false );
-    ui.loginUrl->show();
 }
 
 bool 
@@ -143,20 +88,7 @@ LoginPage::isComplete() const
 }
 
 void 
-LoginPage::onAuthenticated( unicorn::Session* session )
+LoginPage::onSignUpClicked()
 {
-    if ( session )
-    {
-        m_isComplete = true;
-        emit completeChanged();
-        wizard()->next();
-        wizard()->showNormal();
-        wizard()->setFocus();
-        wizard()->raise();
-        wizard()->activateWindow();
-    }
-    else
-    {
-        m_loginProcess->showError();
-    }
+    QDesktopServices::openUrl( QUrl( "http://www.last.fm/join" ));
 }

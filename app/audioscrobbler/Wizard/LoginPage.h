@@ -41,18 +41,12 @@ public:
     virtual bool isComplete() const;
  
 private slots:
-    void authenticate();
-    void onAuthenticated( unicorn::Session* session );
+    void onSignUpClicked();
 
 private:
 
     struct {
         class QLabel* description;
-        class QLabel* errorMsg;
-        class QLabel* continueMsg;
-        class QLabel* browserMsg;
-        class QLineEdit* loginUrl;
-        class QPushButton* okButton;
     } ui;
 
     unicorn::LoginProcess* m_loginProcess;

@@ -26,6 +26,7 @@
 #include <QVBoxLayout>
 #include <QCheckBox>
 #include <QNetworkReply>
+#include "../Application.h"
 #include <QDebug>
 
 class PluginPage : public QWizardPage

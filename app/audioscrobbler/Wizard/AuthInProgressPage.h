@@ -32,6 +32,7 @@ class AuthInProgressPage : public QWizardPage {
 public:
     AuthInProgressPage( QWizard* parent );
     virtual void initializePage();
+    virtual bool validatePage();
 
 public slots:
     void onAuthenticated( unicorn::Session* );
