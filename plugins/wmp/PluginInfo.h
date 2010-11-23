@@ -23,6 +23,8 @@ public:
         #endif
         return false;
     }
+
+    IPluginInfo* clone() const { return new WmpPluginInfo( *this ); }
 };
 
 #endif //WMP_PLUGIN_INFO_H_

@@ -23,6 +23,8 @@ public:
         #endif
         return false;
     }
+
+    IPluginInfo* clone() const { return new FooBar09PluginInfo( *this ); }
 };
 
 #endif //FOOBAR09_PLUGIN_INFO_H_

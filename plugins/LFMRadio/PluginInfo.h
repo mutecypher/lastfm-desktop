@@ -24,6 +24,8 @@ public:
 
     bool isAppInstalled() const { return true; }
     bool isInstalled() const { return true; }
+
+    IPluginInfo* clone() const{ return new LFMRadioPluginInfo( *this ); }
 };
 
 #endif //LFM_PLUGIN_INFO_H_

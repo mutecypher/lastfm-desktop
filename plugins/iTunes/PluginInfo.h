@@ -14,7 +14,13 @@ public:
     std::string pluginPath() const { return std::string( "Plug-Ins" ); }
     std::string displayName() const { return std::string( "iTunes" ); }
 
-    std::string id() const { return "itw"; }
+    std::string id() const 
+    { 
+        #ifdef WIN32    
+            return "itw"; 
+        #endif
+        return "osx";
+    }
     BootstrapType bootstrapType() const { return ClientBootstrap; }
 
     bool isPlatformSupported() const
@@ -24,6 +30,8 @@ public:
         #endif
         return false;
     }
+
+    IPluginInfo* clone() const { return new ITunesPluginInfo( *this ); }
 };
 
 #endif //ITUNES_PLUGIN_INFO_H_

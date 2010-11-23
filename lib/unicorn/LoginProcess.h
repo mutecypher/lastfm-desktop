@@ -73,6 +73,7 @@ signals:
 
 private slots:
     void onGotSession();
+    void onGotDesktopToken();
 
 private: 
     TinyWebServer* m_webServer;

@@ -23,11 +23,14 @@
 #include <QLabel>
 #include "lib/unicorn/LoginProcess.h"
 #include "lib/unicorn/UnicornSession.h"
+#include "../Application.h"
 
 AuthInProgressPage::AuthInProgressPage( QWizard* parent )
                    :QWizardPage( parent ),
                     m_loginProcess( 0 )
 {
+    setCommitPage( true );
+    setButtonText( QWizard::CommitButton, tr( "Continue" ));
     setTitle( tr( "Hmm, we can't tell if you've connected yet." ));
     
     QVBoxLayout* layout = new QVBoxLayout( this );
@@ -55,12 +58,6 @@ AuthInProgressPage::initializePage()
              this, SLOT( onAuthenticated( unicorn::Session* ) ) );
 
     m_loginProcess->authenticate();
-
-    //ui.continueMsg->show();
-    //ui.browserMsg->show();
-    //ui.loginUrl->setText( m_loginProcess->authUrl().toString() );
-    //ui.loginUrl->home( false );
-    //ui.loginUrl->show();
 }
 
 
@@ -80,3 +77,18 @@ AuthInProgressPage::onAuthenticated( unicorn::Session* session )
         m_loginProcess->showError();
     }
 }
+
+
+bool
+AuthInProgressPage::validatePage()
+{
+    if( aApp->currentSession() ) return true;
+
+    m_loginProcess->getSession( m_loginProcess->token());
+    
+    qDebug() << "Waiting for session";
+    SignalBlocker( m_loginProcess, SIGNAL( gotSession( unicorn::Session* )), 2000 ).start();
+
+    return aApp->currentSession();
+}
+
