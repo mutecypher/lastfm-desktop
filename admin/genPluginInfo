@@ -33,6 +33,31 @@ EOF
 cat << EOF
 
     }
+
+    
+    GenPluginList( const GenPluginList& that )
+    {
+        *this = that;
+    }
+
+    virtual GenPluginList& operator= ( const GenPluginList& that )
+    {
+        for( QList<IPluginInfo*>::const_iterator i = that.begin(); 
+             i != that.end();
+             i++ ) {
+            *this << (*i)->clone();
+        }
+        return *this;
+    }
+
+    
+    virtual ~GenPluginList()
+    {
+        while( !this->isEmpty()) {
+            delete (*this)[0];
+            removeAt( 0 );
+        }
+    }
 };
 EOF
 

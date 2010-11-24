@@ -20,7 +20,7 @@ PluginList::installedPlugins() const
     QList<IPluginInfo*> ret;
     foreach( IPluginInfo* plugin, *this ) {
         if( plugin->isInstalled())
-            ret << plugin;
+            ret << plugin->clone();
     }
     return ret;
 }
@@ -28,10 +28,11 @@ PluginList::installedPlugins() const
 QList<IPluginInfo*>
 PluginList::bootstrappablePlugins() const
 {
-    QList<IPluginInfo*> ret = installedPlugins();
-    foreach( IPluginInfo* plugin, ret ) {
-        if( !plugin->canBootstrap())
-            ret.removeAll( plugin );
+    QList<IPluginInfo*> ret;
+    foreach( IPluginInfo* plugin, installedPlugins() ) {
+        if( plugin->canBootstrap()) {
+            ret << plugin->clone();
+        }
     }
     return ret;
 }
@@ -62,4 +63,14 @@ PluginList::availableDescription() const
         ret = mediaPlayers.join( ", " ) + " or " + ret;
 
     return ret;
+}
+
+IPluginInfo* 
+PluginList::pluginById( const QString& id ) const {
+    foreach( IPluginInfo* plugin, *this ) {
+        if( !plugin->id().compare( id.toStdString())) {
+            return plugin->clone();
+        }
+    }
+    return NULL;
 }

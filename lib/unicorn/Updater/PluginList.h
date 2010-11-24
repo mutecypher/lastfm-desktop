@@ -7,12 +7,17 @@
 class UNICORN_DLLEXPORT PluginList : public GenPluginList
 {
 public:
+    PluginList(){};
+    PluginList( const PluginList& that ) : GenPluginList( that ) { }
+
     QList<IPluginInfo*> availablePlugins() const;
     QList<IPluginInfo*> installedPlugins() const;
     QList<IPluginInfo*> bootstrappablePlugins() const;
 
     PluginList supportedList() const;
     QString availableDescription() const;
+
+    IPluginInfo* pluginById( const QString& id ) const;
 };
 
 #endif //PLUGIN_LIST_H_
