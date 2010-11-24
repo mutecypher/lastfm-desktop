@@ -3,13 +3,16 @@
 
 #include <QTimer>
 #include <QEventLoop>
+
+#include "lib/DllExportMacro.h"
+
 /**
   * @brief Waits for a Qt signal to be emitted before
   *        proceeding with code execution.
   * 
   * @author Jono Cole<jono@last.fm>
   */
-class SignalBlocker : public QEventLoop
+class UNICORN_DLLEXPORT SignalBlocker : public QEventLoop
 {
 Q_OBJECT
 public:
