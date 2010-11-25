@@ -44,15 +44,6 @@ void logException( QString );
 int
 main( int argc, char** argv )
 {
-    {
-        QStringList args;
-        args << "--tray";
-        args << "--twiddly";
-        args << "starting";
-        moose::startAudioscrobbler( args );
-    }
-
-
 #ifdef NDEBUG
     google_breakpad::ExceptionHandler( CoreDir::save().path().toStdString(),
                                        0,
@@ -93,6 +84,14 @@ main( int argc, char** argv )
         }
         else // twiddle!
         {
+            {
+                QStringList args;
+                args << "--tray";
+                args << "--twiddly";
+                args << "starting";
+                moose::startAudioscrobbler( args );
+            }
+
             app.sendBusMessage( "--twiddling" );
 
             IPod* ipod = IPod::fromCommandLineArguments( app.arguments() );
