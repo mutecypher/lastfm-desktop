@@ -118,7 +118,7 @@ AbstractBootstrapper::sendZip( const QString& inFile )
     emit percentageUploaded( 0 );
 
     QNetworkReply* reply = lastfm::nam()->post( request, bytes );
-    //connect( reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT( onUploadProgress(qint64,qint64)));
+    connect( reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT( onUploadProgress(qint64,qint64)));
     connect( reply, SIGNAL(finished()), SLOT(onUploadDone()));
 }
 
