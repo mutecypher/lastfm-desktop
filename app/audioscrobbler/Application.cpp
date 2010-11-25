@@ -19,7 +19,8 @@
 */
 #include "Application.h"
 
-#include "widgets/ProfileWidget.h"
+#include "Widgets/PointyArrow.h"
+#include "Widgets/ProfileWidget.h"
 #include "Dialogs/SettingsDialog.h"
 #include "lib/listener/DBusListener.h"
 #include "lib/listener/legacy/LegacyPlayerListener.h"
@@ -78,7 +79,7 @@ Application::Application(int& argc, char** argv)
               m_as( 0 ),
               state( Unknown )
 {
-	setQuitOnLastWindowClosed( false );
+    setQuitOnLastWindowClosed( false );
 }
 
 void
@@ -87,8 +88,8 @@ Application::initiateLogin() throw( StubbornUserException )
     if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
     {
         setWizardRunning( true );
-        FirstRunWizard* w = new FirstRunWizard();
-        if( w->exec() != QDialog::Accepted ) {
+        FirstRunWizard w;
+        if( w.exec() != QDialog::Accepted ) {
             setWizardRunning( false );
             throw StubbornUserException();
         }
@@ -115,10 +116,10 @@ Application::initiateLogin() throw( StubbornUserException )
 void
 Application::init()
 {
+
     // Initialise the unicorn base class first!
     unicorn::Application::init();
 
-    initiateLogin();
 
     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
     diskCache->setCacheDirectory( lastfm::dir::cache().path() );
@@ -142,10 +143,11 @@ Application::init()
     m_tray->show();
     connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
 
-/// DeviceScrobbler
+    /// DeviceScrobbler
     m_deviceScrobbler = new DeviceScrobbler;
+    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<Track>)), this, SIGNAL( foundIPodScrobbles(QList<Track>) ));
 
-/// tray menu
+    /// tray menu
     QMenu* menu = new QMenu;
     (menu->addMenu( new UserMenu()))->setText( "Users");
     m_show_window_action = menu->addAction( tr("Show Scrobbler"));
@@ -306,6 +308,9 @@ Application::init()
     // clicking on a system tray message should show the scrobbler
     connect( m_tray, SIGNAL(messageClicked()), m_show_window_action, SLOT(trigger()));
 
+    // Do this last so that when the user logs in all the interested widgets find out
+    initiateLogin();
+
     emit messageReceived( arguments() );
 }
 
@@ -313,12 +318,12 @@ Application::init()
 void
 Application::onSessionChanged( unicorn::Session* /*newSession*/ )
 {
-    disconnect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_as, SLOT( cache( QList<Track> )));
+    disconnect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), m_as, SLOT( cache( QList<lastfm::Track> )));
 
     Audioscrobbler* oldAs = m_as;
     m_as = new Audioscrobbler("ass");
     connect( m_as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
-    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_as, SLOT( cache( QList<Track> )));
+    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_as, SLOT( cacheBatch( QList<Track> )));
     delete oldAs;
 
     m_deviceScrobbler->checkCachedIPodScrobbles();

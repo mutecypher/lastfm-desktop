@@ -28,6 +28,29 @@
 #include <QNetworkReply>
 
 #include "lib/unicorn/Updater/PluginList.h"
+#include "../Application.h"
+
+class PlayerSelectorListWidget : public QWidget
+{
+    Q_OBJECT
+    Q_PROPERTY( QString playerId READ playerId )
+public:
+    PlayerSelectorListWidget( QWidget* p = 0 );
+    
+    QString playerId() {
+        return m_playerId;
+    }
+
+signals:
+    void playerChanged();
+
+private slots:
+    void onPluginToggled( bool checked );
+
+private:
+    PluginList m_pluginList;
+    QString m_playerId;
+};
 
 class BootstrapPage: public QWizardPage
 {
@@ -39,30 +62,7 @@ public:
         new QVBoxLayout( this );
     }
     
-    void initializePage()
-    {
-        foreach( QWidget* w, findChildren<QWidget*>()) {
-            layout()->removeWidget( w );
-            delete w;
-        }
-        delete layout();
-        new QVBoxLayout( this );
-
-        QList<IPluginInfo*> plugins = m_pluginList.bootstrappablePlugins();
-
-        QLabel* label = new QLabel( tr( "We can import your listening history from the following media players:")); 
-        label->setWordWrap( true );
-        layout()->addWidget(label);
-        foreach( IPluginInfo* plugin, plugins ) {
-                layout()->addWidget( new QRadioButton( QString::fromStdString( plugin->name())));
-        }
-
-        layout()->addWidget( new QRadioButton( tr("None")));
-        ((QBoxLayout*)layout())->addStretch();
-    }
-
-private:
-    PluginList m_pluginList;
+    void initializePage();
 };
 
 #endif //BOOTSTRAP_WIZARD_H

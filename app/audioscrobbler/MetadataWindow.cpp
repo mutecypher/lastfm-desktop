@@ -198,22 +198,25 @@ MetadataWindow::addNowPlaying( TrackWidget* trackWidget )
     connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotTags(XmlQuery)), SIGNAL(trackGotTags(XmlQuery)));
     connect( ui.nowPlaying->fetcher(), SIGNAL(finished()), SIGNAL(finished()));
 
-    ui.nowPlaying->fetcher()->start();
-
-    QVBoxLayout* nsLayout = static_cast<QVBoxLayout*>( ui.scrobbleInfo->layout() );
-    if ( true )
+    if ( trackWidget->track() != Track() )
     {
-        // only swap the info widget if we were
-        // viewing the now playing track
-        while ( nsLayout->count() )
-            nsLayout->takeAt( 0 )->widget()->hide();
+        ui.nowPlaying->fetcher()->start();
 
-        nsLayout->addWidget( ui.nowPlaying->infoWidget() );
-        ui.nowPlaying->infoWidget()->show();
-        connect( ui.nowPlaying->infoWidget(), SIGNAL(lovedStateChanged(bool)), qApp, SLOT(changeLovedState(bool)));
+        QVBoxLayout* nsLayout = static_cast<QVBoxLayout*>( ui.scrobbleInfo->layout() );
+        if ( true )
+        {
+            // only swap the info widget if we were
+            // viewing the now playing track
+            while ( nsLayout->count() )
+                nsLayout->takeAt( 0 )->widget()->hide();
+
+            nsLayout->addWidget( ui.nowPlaying->infoWidget() );
+            ui.nowPlaying->infoWidget()->show();
+            connect( ui.nowPlaying->infoWidget(), SIGNAL(lovedStateChanged(bool)), qApp, SLOT(changeLovedState(bool)));
+        }
+
+        connect( trackWidget, SIGNAL(clicked(TrackWidget*)), SLOT(onTrackClicked(TrackWidget*)));
     }
-
-    connect( trackWidget, SIGNAL(clicked(TrackWidget*)), SLOT(onTrackClicked(TrackWidget*)));
 }
 
 void

@@ -24,6 +24,8 @@ public:
         #endif
         return false;
     }
+
+    IPluginInfo* clone() const { return new FooBar08PluginInfo( *this ); }
 };
 
 #endif //FOOBAR08_PLUGIN_INFO_H_

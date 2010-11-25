@@ -17,6 +17,10 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef AUDIOSCROBBLER_APPLICATION_H_
+#define AUDIOSCROBBLER_APPLICATION_H_
+
 #include <lastfm/global.h>
 #include <lastfm/Track>
 #include "lib/unicorn/UnicornApplication.h"
@@ -103,6 +107,7 @@ namespace audioscrobbler
         PlayerConnection* currentConnection() const;
         DeviceScrobbler* deviceScrobbler() const;
         Track currentTrack() const { return m_currentTrack;}
+        QSystemTrayIcon* tray() const { return m_tray.data(); }
         
     signals:
         void trackStarted( const Track&, const Track& );
@@ -110,6 +115,7 @@ namespace audioscrobbler
         void paused();
         void stopped();
 
+        void foundIPodScrobbles( const QList<Track>& tracks );
         void scrobblesCached( const QList<lastfm::Track>& tracks );
         void scrobblesSubmitted( const QList<lastfm::Track>& tracks, int numTracks );
 
@@ -170,3 +176,5 @@ namespace audioscrobbler
         void onMessageReceived(const QStringList& message);
     };
 }
+
+#endif //AUDIOSCROBBER_APPLICATION_H_

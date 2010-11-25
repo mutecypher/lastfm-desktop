@@ -17,40 +17,29 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef LOGIN_PAGE_H_
-#define LOGIN_PAGE_H_
+#ifndef AUTH_IN_PROGRESS_PAGE_H
+#define AUTH_IN_PROGRESS_PAGE_H
 
 #include <QWizardPage>
-#include <QAbstractButton>
 
-namespace unicorn
-{
+namespace unicorn{ 
     class LoginProcess;
     class Session;
 }
 
-class LoginPage : public QWizardPage
-{
+class AuthInProgressPage : public QWizardPage {
     Q_OBJECT
 public:
-    LoginPage( QWidget* parent = 0 );
-
+    AuthInProgressPage( QWizard* parent );
     virtual void initializePage();
-    virtual void cleanupPage();
     virtual bool validatePage();
-    virtual bool isComplete() const;
- 
-private slots:
-    void onSignUpClicked();
 
-private:
+public slots:
+    void onAuthenticated( unicorn::Session* );
 
-    struct {
-        class QLabel* description;
-    } ui;
-
+protected:
     unicorn::LoginProcess* m_loginProcess;
-    bool m_isComplete;
 };
 
-#endif //LOGIN_PAGE_H_
+#endif //AUTH_IN_PROGRESS_PAGE_H
+

@@ -96,6 +96,32 @@ ScrobbleInfoWidget::setupUi()
     ui.scrollArea->setWidget( ui.contents );
     ui.scrollArea->setWidgetResizable( true );
 
+    QWidget* titleBox = new QWidget();
+    {
+        QHBoxLayout* layout = new QHBoxLayout( titleBox );
+        
+        QVBoxLayout* vl = new QVBoxLayout();
+        vl->addWidget( ui.title1 = new QLabel());
+        ui.title1->setObjectName( "title1" );
+        ui.title1->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
+        ui.title1->setOpenExternalLinks( true );
+
+        vl->addWidget( ui.title2 = new QLabel());
+        ui.title2->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
+        ui.title2->setObjectName( "title2" );
+        ui.title2->setOpenExternalLinks( true );
+        vl->addStretch();
+        
+        layout->addLayout( vl , 1);
+        layout->addStretch();
+        layout->addWidget( ui.artistImage = new HttpImageWidget(), 1);
+        ui.artistImage->setObjectName("artistImage");
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 0 );
+    }
+
+    mainLayout->addWidget(titleBox);
+
     mainLayout->addWidget( ui.area = new QWidget( this ) );
     ui.area->hide();
     QVBoxLayout* layout = new QVBoxLayout( ui.area );
@@ -136,14 +162,7 @@ ScrobbleInfoWidget::setupUi()
     }
     DataBox* tagsBox = new DataBox( tr( "Tags for this track" ), tags );
     tagsBox->setObjectName( "tags" );
-    scrobTagsLayout->addWidget( tagsBox );
-
-    QHBoxLayout* artistLayout = new QHBoxLayout();
-    artistLayout->addLayout( scrobTagsLayout, 1 );
-    artistLayout->addWidget( ui.artistImage = new HttpImageWidget(), 1, Qt::AlignTop);
-    ui.artistImage->setObjectName("artistImage");
-
-    layout->addLayout( artistLayout );
+    layout->addWidget( tagsBox );
 
     QWidget* listeners = new QWidget();
     {
@@ -188,6 +207,50 @@ ScrobbleInfoWidget::setupUi()
     new QVBoxLayout( this );
     this->layout()->setContentsMargins( 0, 0, 0, 0 );
     this->layout()->addWidget( ui.scrollArea );
+}
+
+void 
+ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
+{
+    if ( ui.scrollArea->verticalScrollBar()->isVisible() )
+        ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+
+    ui.area->hide();
+
+    const unsigned short em_dash = 0x2014;
+    QString title = QString("<a class='title' href=\"%1\">%2</a> ") + QChar(em_dash) + " <a class='title' href=\"%3\">%4</a>";
+    const unicorn::Application* uApp = qobject_cast<unicorn::Application*>(qApp);
+
+    ui.title1->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg(t.artist().www().toString(),
+                                                                                      t.artist(),
+                                                                                      t.www().toString(),
+                                                                                      t.title()));
+    if( !t.album().isNull() )
+    {
+        QString album("from <a class='title' href=\"%1\">%2</a>");
+        ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( t.album().www().toString(),
+                                                                                          t.album().title()));
+    }
+    else
+    {
+        ui.title2->clear();
+    }
+
+    if (t.artist() != previous.artist())
+    {
+        // it is a different artist so clear anything that is artist specific
+        ui.artistImage->clear();
+        ui.artistImage->setHref( QUrl());
+        ui.bioText->clear();
+        ui.onTourBanner->hide();
+        model.similarArtists->clear();
+    }
+    if( t != previous )
+    {
+        ui.topTags->clear();
+        ui.yourTags->clear();
+        model.listeningNow->clear();
+    }
 }
 
 
@@ -253,6 +316,17 @@ ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
     ui.artistImage->setHref( lfm["artist"][ "url" ].text() );
 }
 
+
+void
+ScrobbleInfoWidget::onStopped()
+{
+    ui.area->hide();
+    ui.artistImage->clear();
+    ui.artistImage->setHref(QUrl());
+    ui.title1->clear();
+    ui.title2->clear();
+    ui.onTourBanner->hide();
+}
 
 void
 ScrobbleInfoWidget::onArtistGotEvents(const XmlQuery& lfm)

@@ -125,6 +125,28 @@ TrackWidget::setupUI()
 }
 
 void
+TrackWidget::setFromIPodScrobble( const QList<Track>& tracks )
+{
+    QString format = (tracks.count() == 1 ?
+        tr("%1 track from the iPod '%2'"):
+        tr("%1 tracks from the iPod '%2'"));
+
+    setText( format.arg( QString::number(tracks.count()), tracks[0].extra("deviceId") ) );
+}
+
+void
+TrackWidget::setText( const QString& text )
+{
+    ui.trackText->setText( text );
+}
+
+QString
+TrackWidget::text() const
+{
+    return ui.trackText->text();
+}
+
+void
 TrackWidget::mousePressEvent( QMouseEvent * event )
 {
     emit clicked(this);

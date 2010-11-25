@@ -62,7 +62,7 @@ DeviceScrobbler::handleMessage( const QStringList& message ) {
     int pos = message.indexOf( "--twiddly" );
     const QString& action = message[ pos + 1 ];
     
-    if( action == "started" ) {
+    if( action == "starting" ) {
         emit processingScrobbles();
     }
     else if( action == "no-tracks-found" ) {
@@ -98,9 +98,7 @@ DeviceScrobbler::twiddled( QStringList arguments ) {
     if( arguments.contains( "--twiddled-no-tracks" )) {
         return;
     }
-   // iPod scrobble time!
-   //
-    int pos = arguments.indexOf( "--twiddled" );
+    // iPod scrobble time!
 
     // Check if this iPod has been associated to any of our users
     QString deviceId = arguments[ arguments.indexOf( "--deviceId" ) + 1 ];
@@ -150,8 +148,11 @@ DeviceScrobbler::twiddled( QStringList arguments ) {
     }
 
     if ( !deviceAssociated || thisUser )
+    {
         // This iPod is currently associated to the current user so scrobble!
+        int pos = arguments.indexOf( "--ipod-path" );
         scrobbleIpodFile( arguments[ pos + 1 ] );
+    }
 
 }
 

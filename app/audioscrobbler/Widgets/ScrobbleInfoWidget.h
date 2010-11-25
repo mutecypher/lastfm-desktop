@@ -49,6 +49,9 @@ private slots:
     void onAnchorClicked( const QUrl& link );
     void onBioChanged( const QSizeF& );
 
+    void onTrackStarted(const Track&, const Track&);
+    void onStopped();
+
     void listItemClicked( const QModelIndex& );
 
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
@@ -68,6 +71,8 @@ protected:
          class QListView* listeningNow;
          class QTextBrowser* bioText;
          class QListView* similarArtists;
+         class QLabel* title1;
+         class QLabel* title2;
          class QLabel* yourScrobbles;
          class QLabel* totalScrobbles;
          class DataListWidget* yourTags;

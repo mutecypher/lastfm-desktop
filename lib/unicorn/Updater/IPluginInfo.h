@@ -49,6 +49,7 @@ class UNICORN_DLLEXPORT IPluginInfo
 {
 public:
     IPluginInfo();
+    virtual IPluginInfo* clone() const = 0;
     virtual ~IPluginInfo();
 
     enum BootstrapType{ NoBootstrap = 0, ClientBootstrap, PluginBootstrap };

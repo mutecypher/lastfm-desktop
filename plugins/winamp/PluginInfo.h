@@ -23,6 +23,8 @@ public:
         #endif
         return false;
     }
+
+    IPluginInfo* clone() const { return new WinampPluginInfo( *this ); }
 };
 
 #endif //WINAMP_PLUGIN_INFO_H_

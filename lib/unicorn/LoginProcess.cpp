@@ -74,9 +74,9 @@ TinyWebServer::processRequest()
     QRegExp rx( "token=(\\d|\\w)+" );
     if ( rx.indexIn( m_header ) != -1 )
     {
-        m_token = rx.cap( 0 ).split( "=" )[ 1 ];
+        QString token = rx.cap( 0 ).split( "=" )[ 1 ];
         sendRedirect();
-        emit gotToken( m_token );
+        emit gotToken( token );
     }
 }
 
@@ -85,7 +85,8 @@ TinyWebServer::sendRedirect()
 {
     char* redirectHeader = "HTTP/1.1 302 Found\r\nLocation: http://www.last.fm/\r\n\r\n\0";
     m_clientSocket->write( redirectHeader ) ;
-
+    m_clientSocket->flush();
+    m_clientSocket->close();
 }
 
 
@@ -119,7 +120,6 @@ LoginProcess::authenticate()
     QString callbackUrl = "http://" + m_webServer->serverAddress().toString()
                           + ":" + QString::number( m_webServer->serverPort() );
     m_authUrl.addQueryItem( "api_key", lastfm::ws::ApiKey );
-    m_authUrl.addQueryItem( "token", "" );
     m_authUrl.addQueryItem( "cb", callbackUrl );
 
     if ( QDesktopServices::openUrl( m_authUrl ) )
@@ -143,8 +143,7 @@ LoginProcess::authUrl() const
 void
 LoginProcess::getSession( QString token )
 {
-    m_token = token;
-    connect( unicorn::Session::getSession( m_token ), SIGNAL( finished() ),
+    connect( unicorn::Session::getSession( token ), SIGNAL( finished() ),
              this, SLOT( onGotSession() ) );
 }
 
@@ -236,6 +235,14 @@ LoginProcess::showError() const
     }
 }
 
+
+void
+LoginProcess::onGotDesktopToken()
+{
+    QNetworkReply* reply = qobject_cast<QNetworkReply*>( sender());
+    QString tokenData = reply->readAll();
+    qDebug() << "Got Desktop Token: " << tokenData;
+}
 
 
 }// namespace unicorn

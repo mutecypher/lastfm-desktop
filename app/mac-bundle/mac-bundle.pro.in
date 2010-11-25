@@ -1,0 +1,12 @@
+TEMPLATE = app
+TARGET = Last.fm
+VERSION = 2.0.0
+QT = core gui
+CONFIG += no_override
+
+include( $$ROOT_DIR/admin/include.qmake )
+
+CONFIG += app_bundle
+DEFINES += LASTFM_COLLAPSE_NAMESPACE
+
+ICON = Last.fm.icns

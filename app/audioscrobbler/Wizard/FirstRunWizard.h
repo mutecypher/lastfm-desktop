@@ -22,9 +22,12 @@
 
 #include "IntroPage.h"
 #include "LoginPage.h"
+#include "AuthInProgressPage.h"
 #include "PluginPage.h"
 #include "BootstrapPage.h"
+#include "BootstrapInProgressPage.h"
 #include "WelcomePage.h"
+#include "SystemTrayPage.h"
 
 #include "lib/unicorn/UnicornSettings.h"
 #include <QWizard>
@@ -37,26 +40,31 @@ class FirstRunWizard : public QWizard
 {
     Q_OBJECT
     enum {
-       Page_Intro = 0,
-       Page_Login,
+       Page_Login = 0,
+       Page_AuthInProgress,
        Page_Plugin,
        Page_Bootstrap,
-       Page_Welcome
+       Page_BootstrapInProgress,
+       Page_Welcome,
+       Page_SystemTray
     };
 
 public:
     FirstRunWizard( QWidget* parent = 0 )
     : QWizard( parent )
     {
+        setOption( QWizard::NoBackButtonOnStartPage, true );
         resize( 625, 440 );
         setPixmap( QWizard::BackgroundPixmap, QPixmap( ":/as_watermark.png" ));
-        setPage( Page_Intro, new IntroPage(this));
+        setPage( Page_Login, new LoginPage(this));
+        setPage( Page_AuthInProgress, new AuthInProgressPage( this ));
 #if defined(Q_WS_MAC) || defined(Q_WS_WIN)
         setPage( Page_Plugin, new PluginPage());
 #endif
-        setPage( Page_Login, new LoginPage(this));
         setPage( Page_Bootstrap, new BootstrapPage( this ));
+        setPage( Page_BootstrapInProgress, new BootstrapInProgressPage( this ));
         setPage( Page_Welcome, new WelcomePage( this ) );
+        setPage( Page_SystemTray, new SystemTrayPage( this ));
         connect( this, SIGNAL( rejected() ), this, SLOT( onRejected() ) );
         connect( this, SIGNAL( accepted() ), this, SLOT( onWizardCompleted() ) );
     }
@@ -64,21 +72,33 @@ public:
     int nextId() const
     {
         switch( currentId()) {
-            case Page_Intro:
-                return Page_Login;
-            
             case Page_Login:
+                return Page_AuthInProgress;
+
+            case Page_AuthInProgress:
 #ifdef Q_OS_WIN32
                 return Page_Plugin;
+            
             case Page_Plugin:
                 return Page_Welcome;
 #elif defined Q_WS_MAC
                 return Page_Bootstrap;
+                 
             case Page_Bootstrap:
-                return Page_Welcome;
+                if( !field( "bootstrap_player" ).toString().isEmpty()) {
+                    return Page_BootstrapInProgress;
+                } else {
+                    return Page_Welcome;
+                }
+
+            case Page_BootstrapInProgress:
+                    return Page_Welcome;
 #else Q_WS_X11
                 return Page_Welcome;
 #endif
+
+            case Page_Welcome:
+                return Page_SystemTray;
 
             default:
                 return -1;

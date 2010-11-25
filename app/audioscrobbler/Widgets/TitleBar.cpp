@@ -35,18 +35,16 @@ TitleBar::TitleBar( QWidget* parent )
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
-
-#ifdef Q_OS_MAC
     QPushButton* pb = new QPushButton( "Close" );
     pb->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
-    pb->setShortcut( Qt::CTRL + Qt::Key_H );
     connect( pb, SIGNAL(clicked()), SIGNAL( closeClicked()));
-    
+
+#ifdef Q_OS_MAC
+    pb->setShortcut( Qt::CTRL + Qt::Key_H );
     layout->addWidget( pb );
-    
+#else
     layout->addWidget( new GhostWidget( pb, this ) );
 #endif
-
 
     layout->addStretch( 1 );
     QLabel* title = new QLabel( tr( "Last.fm Scrobbler"), this );
@@ -55,6 +53,8 @@ TitleBar::TitleBar( QWidget* parent )
 
 #ifndef Q_OS_MAC
     layout->addWidget( pb );
+#else
+    layout->addWidget( new GhostWidget( pb, this ) );
 #endif
 }
 
