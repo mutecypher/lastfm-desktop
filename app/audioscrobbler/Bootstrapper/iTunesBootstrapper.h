@@ -34,8 +34,10 @@ class iTunesBootstrapper : public AbstractFileBootstrapper
 
 public:
     iTunesBootstrapper( QObject* parent = NULL );
-
     void bootStrap();
+
+signals:
+    void trackProcessed( int, Track );
 
 private:
     class ITunesDevice* m_iTunesDatabase;

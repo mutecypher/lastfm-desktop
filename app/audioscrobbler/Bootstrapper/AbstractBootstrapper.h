@@ -62,7 +62,6 @@ signals:
 protected slots:
     void onUploadDone();
     void onUploadProgress( qint64 done, qint64 total );
-
 };
 
 #endif //ABSTRACTBOOTSTRAPPER_H

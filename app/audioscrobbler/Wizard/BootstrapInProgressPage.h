@@ -3,8 +3,10 @@
 
 #include <QWizardPage>
 #include "lib/unicorn/Updater/PluginList.h"
+#include <lastfm/Track>
 
 class BootstrapInProgressPage : public QWizardPage {
+    Q_OBJECT
 public:
     BootstrapInProgressPage( QWizard* p );
 
@@ -12,7 +14,16 @@ public:
 
     virtual bool isComplete() const;
 
+protected slots:
+    void startBootstrap();
+    void onTrackProcessed( int percentage, const Track& );
+    void onPercentageUpload( int percentage );
+    void onBootstrapDone( int );
+
 protected:
+    class QProgressBar* m_progressBar;
+    class QLabel* m_label;
+
     bool m_isComplete;
     PluginList m_pluginList;
     class AbstractBootstrapper* m_bootstrapper;
