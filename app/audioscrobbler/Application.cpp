@@ -79,7 +79,7 @@ Application::Application(int& argc, char** argv)
               m_as( 0 ),
               state( Unknown )
 {
-	setQuitOnLastWindowClosed( false );
+    setQuitOnLastWindowClosed( false );
 }
 
 void
@@ -142,11 +142,6 @@ Application::init()
     m_tray->setIcon(trayIcon);
     m_tray->show();
     connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
-    
-
-    /// The login process should be done after the SysTray icon is created
-    /// so that the first run wizard can point to the icon if it is started.
-    initiateLogin();
 
     /// DeviceScrobbler
     m_deviceScrobbler = new DeviceScrobbler;
@@ -312,6 +307,9 @@ Application::init()
 
     // clicking on a system tray message should show the scrobbler
     connect( m_tray, SIGNAL(messageClicked()), m_show_window_action, SLOT(trigger()));
+
+    // Do this last so that when the user logs in all the interested widgets find out
+    initiateLogin();
 
     emit messageReceived( arguments() );
 }
