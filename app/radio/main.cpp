@@ -22,8 +22,8 @@
     //TODO shorten this mother fucker
     //NOTE including Carbon/Carbon.h breaks things as it has sooo many symbols
     //     in the global namespace
-    #include </System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/AE.framework/Versions/A/Headers/AppleEvents.h>
-    static pascal OSErr appleEventHandler( const AppleEvent*, AppleEvent*, long );
+    #include <Carbon/Carbon.h>
+    static pascal OSErr appleEventHandler( const AppleEvent*, AppleEvent*, void* );
 #endif
 
 #include "_version.h"
@@ -124,7 +124,7 @@ int main( int argc, char** argv )
 }
 
 #ifdef Q_WS_MAC
-static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
+static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, void* )
 {
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );
