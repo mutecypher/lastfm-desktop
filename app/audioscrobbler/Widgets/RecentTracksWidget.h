@@ -61,7 +61,7 @@ private slots:
     void disableHover();
     void enableHover();
 
-    void onFoundIPodScrobbles( const QList<Track>& tracks );
+    void onFoundIPodScrobbles( const QList<lastfm::Track>& tracks );
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
 
 private:

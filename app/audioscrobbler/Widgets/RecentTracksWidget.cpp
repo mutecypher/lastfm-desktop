@@ -70,7 +70,7 @@ RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
     setUsername( username );
 
     connect( m_writeTimer, SIGNAL(timeout()), SLOT(doWrite()) );
-    connect( aApp, SIGNAL(foundIPodScrobbles(QList<Track>)), SLOT(onFoundIPodScrobbles(QList<Track>)));
+    connect( aApp, SIGNAL(foundIPodScrobbles(QList<lastfm::Track>)), SLOT(onFoundIPodScrobbles(QList<lastfm::Track>)));
 }
 
 
@@ -271,7 +271,7 @@ RecentTracksWidget::onMoveFinished()
 }
 
 void
-RecentTracksWidget::onFoundIPodScrobbles( const QList<Track>& tracks )
+RecentTracksWidget::onFoundIPodScrobbles( const QList<lastfm::Track>& tracks )
 {
     // Add a TrackWidget that displays info about the iPod scrobble
     TrackWidget* trackWidget = new TrackWidget();

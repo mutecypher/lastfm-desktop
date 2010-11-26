@@ -27,7 +27,7 @@ signals:
     void detectedIPod( const QString& serialNumber );
     void processingScrobbles();
     void noScrobblesFound();
-    void foundScrobbles( const QList<Track>& );
+    void foundScrobbles( const QList<lastfm::Track>& );
 
 public slots:
 #ifdef Q_WS_X11
