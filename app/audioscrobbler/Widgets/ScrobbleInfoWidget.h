@@ -37,7 +37,10 @@ class ScrobbleInfoWidget : public StylableWidget
 public:
     ScrobbleInfoWidget( class ScrobbleInfoFetcher* infoFetcher, QWidget* p = 0 );
 
+    class ScrobbleControls* scrobbleControls() const { return ui.scrobbleControls; }
+
 private slots:
+    void onSetTrack(const Track& track);
     void onTrackGotInfo(const XmlQuery& lfm);
     void onAlbumGotInfo(const XmlQuery& lfm);
     void onArtistGotInfo(const XmlQuery& lfm);
@@ -48,9 +51,6 @@ private slots:
 
     void onAnchorClicked( const QUrl& link );
     void onBioChanged( const QSizeF& );
-
-    void onTrackStarted(const Track&, const Track&);
-    void onStopped();
 
     void listItemClicked( const QModelIndex& );
 
@@ -73,6 +73,7 @@ protected:
          class QListView* similarArtists;
          class QLabel* title1;
          class QLabel* title2;
+         class ScrobbleControls* scrobbleControls;
          class QLabel* yourScrobbles;
          class QLabel* totalScrobbles;
          class DataListWidget* yourTags;

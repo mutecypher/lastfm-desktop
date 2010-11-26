@@ -32,6 +32,7 @@ public:
     void start();
 
 signals:
+    void setTrack(const Track& track);
     void trackGotInfo(const XmlQuery& lfm);
     void albumGotInfo(const XmlQuery& lfm);
     void artistGotInfo(const XmlQuery& lfm);

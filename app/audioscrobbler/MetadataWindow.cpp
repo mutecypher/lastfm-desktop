@@ -175,6 +175,9 @@ MetadataWindow::removeNowPlaying()
     disconnect( ui.nowPlaying->fetcher(), 0, this, 0 );
     disconnect( ui.nowPlaying->infoWidget(), 0, qApp, 0 );
 
+    if ( ui.nowPlaying->track() != Track() )
+        ui.nowPlaying->infoWidget()->scrobbleControls()->setNowPlaying( false );
+
     if ( ui.nowPlaying->track().scrobbleStatus() != lastfm::Track::Null )
         ui.recentTracks->addTrackWidget( ui.nowPlaying );
     else
@@ -184,11 +187,12 @@ MetadataWindow::removeNowPlaying()
 void
 MetadataWindow::addNowPlaying( TrackWidget* trackWidget )
 {
-
     QVBoxLayout* layout = static_cast<QVBoxLayout*>(ui.tracks->layout()->itemAt(0)->layout());
 
     layout->insertWidget( 0, trackWidget );
     trackWidget->setObjectName("nowPlaying");
+
+    trackWidget->infoWidget()->scrobbleControls()->setNowPlaying( true );
 
     connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)));
     connect( ui.nowPlaying->fetcher(), SIGNAL(albumGotInfo(XmlQuery)), SIGNAL(albumGotInfo(XmlQuery)));

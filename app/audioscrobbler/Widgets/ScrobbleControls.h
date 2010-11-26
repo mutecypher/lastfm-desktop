@@ -35,6 +35,8 @@ class ScrobbleControls : public StylableWidget
 public:
     ScrobbleControls();
 
+    void setNowPlaying( bool nowPlaying );
+
 private:
     void setEnabled( bool enabled );
 
@@ -45,14 +47,11 @@ protected:
         QPushButton* share;
     } ui;
 
+public slots:
+    void setLoveChecked( bool checked );
+
 private slots:
     void onLoveChanged( bool checked );
-
-    void onTrackStarted( const Track& , const Track& );
-    void onPaused();
-    void onResumed();
-    void onStopped();
-
 };
 
 #endif //SCROBBLE_CONTROLS_H

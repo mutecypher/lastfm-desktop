@@ -40,7 +40,6 @@ ScrobbleControls::ScrobbleControls()
     ui.love->setCheckable( true );
     ui.love->setToolTip( tr( "Love track" ) );
 
-    connect(ui.love, SIGNAL(clicked(bool)), qApp, SLOT(changeLovedState(bool)));
     connect( ui.love, SIGNAL( toggled( bool ) ), this, SLOT( onLoveChanged( bool ) ) );
     
     layout->addWidget(ui.tag = new QPushButton(tr("tag")));
@@ -57,42 +56,26 @@ ScrobbleControls::ScrobbleControls()
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ), ui.tag, SLOT( click() ) );
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ), ui.love, SLOT( toggle() ) );
 
-    connect( aApp, SIGNAL( busLovedStateChanged(bool)), ui.love, SLOT( setChecked(bool)));
-    connect( qApp, SIGNAL( lovedStateChanged(bool)), ui.love, SLOT( setChecked(bool)));
-
-    connect( aApp, SIGNAL( trackStarted( Track, Track)), SLOT( onTrackStarted( Track, Track )));
-    connect( aApp, SIGNAL( paused() ), SLOT( onPaused() ) );
-    connect( aApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
-    connect( aApp, SIGNAL( stopped() ), SLOT( onStopped() ) );
-
     connect( ui.tag, SIGNAL( clicked()), aApp->tagAction(), SLOT( trigger()));
     connect( ui.share, SIGNAL( clicked()), aApp->shareAction(), SLOT( trigger()));
 
-    setEnabled( false );
-}
-
-void
-ScrobbleControls::onTrackStarted( const Track&, const Track& )
-{
     setEnabled( true );
 }
 
 void
-ScrobbleControls::onPaused()
+ScrobbleControls::setNowPlaying( bool nowPlaying )
 {
-    setEnabled( false );
-}
-
-void
-ScrobbleControls::onResumed()
-{
-    setEnabled( true );
-}
-
-void
-ScrobbleControls::onStopped()
-{
-    setEnabled( false );
+    if ( nowPlaying )
+    {
+        connect( aApp, SIGNAL( busLovedStateChanged(bool)), this, SLOT( setLoveChecked(bool)));
+        connect( aApp, SIGNAL( lovedStateChanged(bool)), this, SLOT( setLoveChecked(bool)));
+        connect( ui.love, SIGNAL(clicked(bool)), aApp, SLOT(changeLovedState(bool)) );
+    }
+    else
+    {
+        disconnect( aApp, 0, this, 0);
+        disconnect( ui.love, 0, aApp, 0 );
+    }
 }
 
 void
@@ -101,6 +84,12 @@ ScrobbleControls::setEnabled( bool enabled )
     ui.love->setEnabled( enabled );
     ui.tag->setEnabled( enabled );
     ui.share->setEnabled( enabled );
+}
+
+void
+ScrobbleControls::setLoveChecked( bool checked )
+{
+    ui.love->setChecked( checked );
 }
 
 void
