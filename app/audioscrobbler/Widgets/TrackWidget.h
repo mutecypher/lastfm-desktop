@@ -40,7 +40,7 @@ public:
     TrackWidget();
     TrackWidget( const Track& track );
 
-    void setFromIPodScrobble( const QList<Track>& tracks );
+    void setFromIPodScrobble( const QList<lastfm::Track>& tracks );
     void setText( const QString& text );
     QString text() const;
 

@@ -125,7 +125,7 @@ TrackWidget::setupUI()
 }
 
 void
-TrackWidget::setFromIPodScrobble( const QList<Track>& tracks )
+TrackWidget::setFromIPodScrobble( const QList<lastfm::Track>& tracks )
 {
     QString format = (tracks.count() == 1 ?
         tr("%1 track from the iPod '%2'"):

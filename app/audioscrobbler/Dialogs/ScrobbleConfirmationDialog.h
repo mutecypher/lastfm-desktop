@@ -14,8 +14,8 @@ class ScrobbleConfirmationDialog : public QDialog
     Q_OBJECT
 public:
 
-    ScrobbleConfirmationDialog( const QList<Track>& tracks, QWidget* parent = 0 );
-    QList<Track> tracksToScrobble() const;
+    ScrobbleConfirmationDialog( const QList<lastfm::Track>& tracks, QWidget* parent = 0 );
+    QList<lastfm::Track> tracksToScrobble() const;
 
 private:
     void setupUi();

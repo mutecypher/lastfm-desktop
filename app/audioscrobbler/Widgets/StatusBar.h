@@ -41,7 +41,7 @@ class StatusBar : public StylableWidget
 
         void onIPodDetected( QString );
         void onProcessingScrobbles();
-        void onFoundScrobbles( QList<Track> );
+        void onFoundScrobbles( QList<lastfm::Track> );
         void onNoScrobblesFound();
 
         void onScrobblesCached( const QList<lastfm::Track>& tracks );

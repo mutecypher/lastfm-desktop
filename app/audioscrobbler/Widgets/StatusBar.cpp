@@ -50,10 +50,12 @@ StatusBar::StatusBar( QWidget* parent )
     DeviceScrobbler* deviceScrobbler = aApp->deviceScrobbler();
     connect( deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected( QString )));
     connect( deviceScrobbler, SIGNAL( processingScrobbles()), SLOT( onProcessingScrobbles()));
-    connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), SLOT( onFoundScrobbles( QList<Track> )));
+    connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), SLOT( onFoundScrobbles( QList<lastfm::Track> )));
     connect( deviceScrobbler, SIGNAL( noScrobblesFound()),SLOT( onNoScrobblesFound()));
 
     layout->addWidget( new QSizeGrip( this ), 0 , Qt::AlignBottom | Qt::AlignRight );
+
+    connect( aApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 }
 
 void
@@ -97,6 +99,9 @@ StatusBar::onProcessingScrobbles()
 void
 StatusBar::onFoundScrobbles( QList<lastfm::Track> tracks )
 {
+    m_scrobbleCount += tracks.count();
+    setStatus();
+
     tracks.count() == 1 ?
         m_mainStatus->setText( tr("%1 scrobble found").arg( tracks.count() ) ):
         m_mainStatus->setText( tr("%1 scrobbles found").arg( tracks.count() ) );
