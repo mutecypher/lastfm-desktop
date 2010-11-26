@@ -34,6 +34,8 @@ ScrobbleInfoFetcher::ScrobbleInfoFetcher( const Track& t, QObject* parent )
 void
 ScrobbleInfoFetcher::start()
     {
+    emit setTrack( m_track );
+
     if ( m_started == false )
     {
         // only fetch everything once
