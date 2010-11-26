@@ -131,8 +131,6 @@ ScrobbleInfoWidget::setupUi()
     ui.area->hide();
     QVBoxLayout* layout = new QVBoxLayout( ui.area );
 
-    QVBoxLayout* scrobTagsLayout = new QVBoxLayout();
-
     QWidget* scrobbles = new QWidget();
     {
         QGridLayout* layout = new QGridLayout( scrobbles );
@@ -149,7 +147,8 @@ ScrobbleInfoWidget::setupUi()
     }
     DataBox* scrobBox = new DataBox( tr( "Scrobbles for this track" ), scrobbles );
     scrobBox->setObjectName( "scrobbles" );
-    scrobTagsLayout->addWidget( scrobBox );
+	
+    layout->addWidget( scrobBox );
 
     QWidget* tags = new QWidget();
     {
@@ -167,7 +166,7 @@ ScrobbleInfoWidget::setupUi()
     }
     DataBox* tagsBox = new DataBox( tr( "Tags for this track" ), tags );
     tagsBox->setObjectName( "tags" );
-    layout->addWidget( tagsBox );
+	layout->addWidget( tagsBox );
 
     QWidget* listeners = new QWidget();
     {
