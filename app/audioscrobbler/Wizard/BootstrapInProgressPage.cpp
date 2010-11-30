@@ -1,6 +1,7 @@
 #include "BootstrapInProgressPage.h"
 #include "../Bootstrapper/iTunesBootstrapper.h"
 #include "../Bootstrapper/PluginBootstrapper.h"
+#include "../Application.h"
 #include <QVBoxLayout>
 #include <QProgressBar>
 #include <QLabel>
@@ -12,6 +13,7 @@ BootstrapInProgressPage::BootstrapInProgressPage( QWizard* parent )
                         :QWizardPage( parent ),
                          m_isComplete( false )
 {
+    connect( aApp, SIGNAL( trackStarted( Track, Track )), SLOT( onTrackStarted( Track )));
     setTitle( "Importing your listening history!" );
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->addStretch();
@@ -20,6 +22,7 @@ BootstrapInProgressPage::BootstrapInProgressPage( QWizard* parent )
     m_progressBar->setValue( 0 );
     m_progressBar->setMaximum( 100 );
     layout->addStretch();
+    connect( aApp, SIGNAL(bootstrapReady(QString)), SLOT( onBootstrapReady(QString)));
 }
 
 void 
@@ -81,4 +84,10 @@ BootstrapInProgressPage::onBootstrapDone( int status )
     if( status == AbstractBootstrapper::Bootstrap_Ok ) {
         wizard()->next();
     }
+}
+
+void
+BootstrapInProgressPage::onTrackStarted( const Track& track )
+{
+    qDebug() << "Track started: " << track;
 }

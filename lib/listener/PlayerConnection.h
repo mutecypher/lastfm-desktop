@@ -77,7 +77,7 @@ signals:
     void paused();
     void resumed();
     void stopped();
-	void bootstrapReady();
+	void bootstrapReady( const QString& playerId );
 
 private slots:
     void onStopped();

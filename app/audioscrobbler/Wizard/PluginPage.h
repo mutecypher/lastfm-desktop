@@ -20,12 +20,13 @@
 #ifndef PLUGIN_PAGE_H
 #define PLUGIN_PAGE_H
 
-#include "lib/unicorn/UpdateInfoFetcher.h"
+#include "lib/unicorn/Updater/PluginList.h"
 
 #include <QWizardPage>
 #include <QVBoxLayout>
 #include <QCheckBox>
 #include <QNetworkReply>
+#include <QLabel>
 #include "../Application.h"
 #include <QDebug>
 
@@ -35,20 +36,27 @@ class PluginPage : public QWizardPage
 public:
     PluginPage()
     {
+        setTitle( "Install some plugins!" );
         new QVBoxLayout( this );
-        QNetworkReply* rep = UpdateInfoFetcher::fetchInfo();
-        connect( rep, SIGNAL(finished()), SLOT(onUpdateInfoFetched()));
     }
 
 
-private slots:
-    void onUpdateInfoFetched()
+    void initializePage()
     {
-        QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
-        UpdateInfoFetcher info( reply );
-        foreach( const Plugin& plugin, info.plugins())
+        QLabel* description = new QLabel( tr( "Some media players need a plugin to be installed in order to scrobble.\n\nIf you do not want to scrobble from any of the detected media players then please uncheck them below:\n\n" )); 
+        description->setWordWrap( true );
+        layout()->addWidget( description );
+        PluginList list;
+        QList<IPluginInfo*> supportedPlugins = list.supportedList();
+        foreach( IPluginInfo* plugin, supportedPlugins)
         {
-            layout()->addWidget( new QCheckBox( plugin.name(), this ));
+            QCheckBox* cb;
+            layout()->addWidget( cb = new QCheckBox( QString::fromStdString( plugin->name()), this ));
+            if( plugin->isInstalled()) {
+                cb->setChecked( true );
+                cb->setDisabled( true );
+                cb->setText( cb->text() + " " + tr( "(Plugin installed or not required)" ));
+            }
         }
     }
 };

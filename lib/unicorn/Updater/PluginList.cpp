@@ -9,7 +9,7 @@ PluginList::availablePlugins() const
         if( plugin->isInstalled() ||
             !plugin->isPlatformSupported() ) continue;
         if( plugin->isAppInstalled() )
-            ret << plugin;
+            ret << plugin->clone();
     }
     return ret;
 }
@@ -37,14 +37,16 @@ PluginList::bootstrappablePlugins() const
     return ret;
 }
 
-PluginList 
+QList<IPluginInfo*>
 PluginList::supportedList() const
 {
-    PluginList that( *this );
-    foreach( IPluginInfo* i, that ) {
-        if( !i->isPlatformSupported()) that.removeAll( i );
+    QList<IPluginInfo*> ret;
+    foreach( IPluginInfo* i, *this ) {
+        if( i->isPlatformSupported()) {
+            ret << i->clone();
+        }
     }
-    return that;
+    return ret;
 }
 
 QString

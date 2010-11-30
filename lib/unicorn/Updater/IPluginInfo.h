@@ -2,6 +2,10 @@
 #define PLUGIN_INFO_H_
 
 #include "lib/DllExportMacro.h"
+#ifdef QT_VERSION
+    #include <QString>
+    #include <QSettings>
+#endif
 
 class Version
 {
@@ -62,6 +66,8 @@ public:
     virtual std::string id() const = 0;
     virtual BootstrapType bootstrapType() const = 0;
 
+    virtual std::string processName() const = 0;
+
 
     // Plugin install path relative to media player's base install path
     virtual std::string pluginPath() const = 0;
@@ -73,7 +79,9 @@ public:
     virtual bool isPlatformSupported() const = 0;
 
 #ifdef QT_VERSION
+    virtual void restartProcess() const;
     virtual bool isAppInstalled() const;
+    virtual QString pluginInstallPath() const = 0;
     virtual bool isInstalled() const;
     bool canBootstrap() const;
 #endif //QT_VERSION

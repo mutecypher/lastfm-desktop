@@ -350,6 +350,7 @@ Application::setConnection(PlayerConnection*c)
     connect(c, SIGNAL(resumed()), SIGNAL(resumed()));
     connect(c, SIGNAL(paused()), SIGNAL(paused()));
     connect(c, SIGNAL(stopped()), SIGNAL(stopped()));
+    connect(c, SIGNAL(bootstrapReady(QString)), SIGNAL( bootstrapReady(QString)));
 
     m_connection = c;
 
