@@ -22,9 +22,29 @@
 PlayerSelectorListWidget::PlayerSelectorListWidget( QWidget* p )
                          :QWidget( p )
 {
+    new QVBoxLayout( this );
+    refresh();
+}
+
+
+void
+PlayerSelectorListWidget::onPluginToggled( bool checked )
+{
+    if( !checked ) return;
+    QAbstractButton* rb = qobject_cast<QAbstractButton*>( sender());
+    m_playerId = rb->objectName();
+    emit playerChanged();
+}
+
+void
+PlayerSelectorListWidget::refresh()
+{
+    foreach(QRadioButton* rb, findChildren<QRadioButton*>()) {
+        rb->deleteLater();
+    }
+
     QList<IPluginInfo*> plugins = m_pluginList.bootstrappablePlugins();
 
-    new QVBoxLayout( this );
     bool first = true;
     QRadioButton* rb;
     foreach( IPluginInfo* plugin, plugins ) {
@@ -44,26 +64,12 @@ PlayerSelectorListWidget::PlayerSelectorListWidget( QWidget* p )
 }
 
 
-void
-PlayerSelectorListWidget::onPluginToggled( bool checked )
-{
-    if( !checked ) return;
-    QAbstractButton* rb = qobject_cast<QAbstractButton*>( sender());
-    m_playerId = rb->objectName();
-    emit playerChanged();
-}
-
-void 
-BootstrapPage::initializePage()
-{
-    setTitle( tr( "Hi, %1" ).arg( aApp->currentSession()->userInfo().name()));
-    foreach( QWidget* w, findChildren<QWidget*>()) {
-        layout()->removeWidget( w );
-        delete w;
-    }
-    delete layout();
+BootstrapPage::BootstrapPage( QWidget* parent )
+              :QWizardPage( parent) 
+{ 
     new QVBoxLayout( this );
 
+    setTitle( tr( "Hi, %1" ).arg( aApp->currentSession()->userInfo().name()));
 
 #ifdef Q_OS_MAC
     QLabel* label = new QLabel( tr( "We recommend importing your listening history from your media player. Please select your prefered option below:")); 
@@ -72,11 +78,19 @@ BootstrapPage::initializePage()
 #endif
     label->setWordWrap( true );
     layout()->addWidget(label);
-    PlayerSelectorListWidget* psl = new PlayerSelectorListWidget( this );
-    layout()->addWidget( psl );
-    registerField( "bootstrap_player", psl, "playerId", SIGNAL( playerChanged() ));
+    m_psl = new PlayerSelectorListWidget( this );
+    layout()->addWidget( m_psl );
+    registerField( "bootstrap_player", m_psl, "playerId", SIGNAL( playerChanged() ));
     layout()->addWidget( new QLabel( tr( "Why? So we can give you better recommendations." )));
     
     ((QBoxLayout*)layout())->addStretch();
+
+}
+
+
+void 
+BootstrapPage::initializePage()
+{
+    m_psl->refresh();
 }
 

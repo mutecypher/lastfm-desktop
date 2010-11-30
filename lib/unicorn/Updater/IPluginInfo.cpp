@@ -2,6 +2,7 @@
 #include <QSettings>
 #include <QStringList>
 #include "IPluginInfo.h"
+#include "KillProcess.h"
 
 
 IPluginInfo::IPluginInfo()
@@ -67,6 +68,15 @@ bool IPluginInfo::canBootstrap() const
 {
 	return (isPlatformSupported() && 
 		   bootstrapType() != NoBootstrap);
+}
+
+
+void IPluginInfo::restartProcess() const
+{
+#ifdef WIN32
+    CKillProcessHelper killer;
+    killer.KillProcess( processName().c_str());
+#endif //WIN32
 }
 
 

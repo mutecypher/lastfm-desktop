@@ -13,6 +13,7 @@ public:
     
     std::string pluginPath() const { return std::string( "plugins" ); }
     std::string displayName() const { return std::string( "MPlayer2" ); }
+    std::string processName() const { return std::string( "winamp.exe" ); }
 
     std::string id() const { return "wa2"; }
     BootstrapType bootstrapType() const { return PluginBootstrap; }
@@ -25,6 +26,20 @@ public:
     }
 
     IPluginInfo* clone() const { return new WinampPluginInfo( *this ); }
+
+#ifdef QT_VERSION
+    QString pluginInstallPath() const
+    {
+    #ifdef Q_OS_WIN
+        QSettings s( QString( "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows"
+                              "\\CurrentVersion\\App Paths\\") + processName(), 
+                     QSettings::NativeFormat );
+        return s.value( "Path" ) + "\\Plugins";
+    #endif 
+        Q_ASSERT( !"There is no winamp on non-windows platforms!" );
+    }
+#endif
+
 };
 
 #endif //WINAMP_PLUGIN_INFO_H_

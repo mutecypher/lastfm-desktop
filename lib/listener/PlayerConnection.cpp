@@ -124,7 +124,7 @@ PlayerConnection::handleCommand( PlayerCommand command, Track t )
                 break;
                 
             case CommandBootstrap:
-				emit bootstrapReady();
+				emit bootstrapReady( id() );
                 break;
         }
         

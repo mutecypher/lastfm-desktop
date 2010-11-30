@@ -36,7 +36,7 @@ PlayerMediator::follow( PlayerConnection* connection )
     connect( connection, SIGNAL(trackStarted( Track, Track )), SLOT(onActivity()) );
     connect( connection, SIGNAL(resumed()), SLOT(onActivity()) );
     connect( connection, SIGNAL(stopped()), SLOT(onActivity()) );
-	connect( connection, SIGNAL(bootstrapReady()), SLOT(onActivity()) );
+	connect( connection, SIGNAL(bootstrapReady(QString)), SLOT(onActivity()) );
     connect( connection, SIGNAL(destroyed()), SLOT(onDestroyed()) );
 
     assess( connection );

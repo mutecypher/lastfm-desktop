@@ -41,6 +41,8 @@ public:
         return m_playerId;
     }
 
+    void refresh();
+
 signals:
     void playerChanged();
 
@@ -56,13 +58,11 @@ class BootstrapPage: public QWizardPage
 {
     Q_OBJECT
 public:
-    BootstrapPage( QWidget* parent = 0 )
-    :QWizardPage( parent) 
-    { 
-        new QVBoxLayout( this );
-    }
-    
+    BootstrapPage( QWidget* parent = 0 );
     void initializePage();
+    
+protected:
+    class PlayerSelectorListWidget* m_psl;
 };
 
 #endif //BOOTSTRAP_WIZARD_H

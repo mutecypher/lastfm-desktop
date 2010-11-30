@@ -19,6 +19,7 @@ protected slots:
     void onTrackProcessed( int percentage, const Track& );
     void onPercentageUpload( int percentage );
     void onBootstrapDone( int );
+    void onTrackStarted( const Track& );
 
 protected:
     class QProgressBar* m_progressBar;

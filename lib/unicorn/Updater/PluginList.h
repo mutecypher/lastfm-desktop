@@ -14,7 +14,7 @@ public:
     QList<IPluginInfo*> installedPlugins() const;
     QList<IPluginInfo*> bootstrappablePlugins() const;
 
-    PluginList supportedList() const;
+    QList<IPluginInfo*> supportedList() const;
     QString availableDescription() const;
 
     IPluginInfo* pluginById( const QString& id ) const;

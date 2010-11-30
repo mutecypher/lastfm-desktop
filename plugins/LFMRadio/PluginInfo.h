@@ -13,6 +13,7 @@ public:
     
     std::string pluginPath() const { return std::string( "" ); }
     std::string displayName() const { return std::string( "" ); }
+    std::string processName() const { return std::string( "radio.exe" ); }
 
     std::string id() const { return "ass"; }
     BootstrapType bootstrapType() const { return NoBootstrap; }
@@ -26,6 +27,14 @@ public:
     bool isInstalled() const { return true; }
 
     IPluginInfo* clone() const{ return new LFMRadioPluginInfo( *this ); }
+
+   #ifdef QT_VERSION
+    QString pluginInstallPath() const
+    {
+        return QString();
+    }
+#endif
+ 
 };
 
 #endif //LFM_PLUGIN_INFO_H_
