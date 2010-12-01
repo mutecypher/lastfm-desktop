@@ -38,6 +38,7 @@ public:
         return s.value( "Install Path" ) + "\\components";
     #endif 
         Q_ASSERT( !"There is no windows mediaplayer on non-windows platforms!" );
+        return "";
     }
 #endif
 };
