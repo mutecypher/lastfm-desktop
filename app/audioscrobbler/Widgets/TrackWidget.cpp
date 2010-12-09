@@ -34,6 +34,9 @@
 
 #include "../Application.h"
 #include "../StopWatch.h"
+#include "../ScrobbleInfoFetcher.h"
+
+#include "ScrobbleInfoWidget.h"
 #include "TrackWidget.h"
 
 #include <lastfm/ws.h>
@@ -42,12 +45,6 @@ TrackWidget::TrackWidget()
     :StylableWidget()
 {
     setupUI();
-
-    // We are only interested in tracks starting and stopping
-    // becasue we have not been created with a track.
-    // Therefore this most me the widget for the now playing track.
-    connect( qApp, SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)));
-    connect( qApp, SIGNAL(stopped()), SLOT(onTrackStopped()));
 }
 
 TrackWidget::TrackWidget( const Track& track )
@@ -55,12 +52,10 @@ TrackWidget::TrackWidget( const Track& track )
 {
     setupUI();
 
-    setTrack( track );
+    doSetTrack( track );
 
     connectTrack();
 
-    m_timestampTimer = new QTimer( this );
-    connect( m_timestampTimer, SIGNAL(timeout()), SLOT(updateTimestamp()));
     updateTimestamp();
 }
 
@@ -84,14 +79,21 @@ TrackWidget::setupUI()
 
     layout->addWidget( ui.as );
 
-    layout->addWidget( ui.trackText = new QLabel( m_track.toString() ) );
+    ui.trackTextArea = new QWidget( this );
+    QHBoxLayout* h1 = new QHBoxLayout( ui.trackTextArea );
+    h1->setSpacing( 0 );
+    h1->setContentsMargins( 0, 0, 0, 0);
+
+    h1->addWidget( ui.trackText = new QLabel( m_track.toString() ) );
     ui.trackText->setObjectName( "trackText" );
 
-    layout->addWidget( ui.correction = new QLabel(), 1 );
+    h1->addWidget( ui.correction = new QLabel() );
     ui.correction->setObjectName( "correction" );
     ui.correction->hide();
 
-    layout->addStretch( 1 );
+    h1->addStretch( 1 );
+
+    layout->addWidget( ui.trackTextArea, 1 );
 
     layout->addWidget( ui.love = new QLabel("love") );
     ui.love->setObjectName( "love" );
@@ -118,13 +120,33 @@ TrackWidget::setupUI()
     layout->addWidget( ui.timestamp = new QLabel() );
     ui.timestamp->setObjectName( "timestamp" );
 
-    QTimer::singleShot( 1, this, SLOT(emitLoaded()));
+    m_timestampTimer = new QTimer( this );
+    connect( m_timestampTimer, SIGNAL(timeout()), SLOT(updateTimestamp()));
+}
+
+void
+TrackWidget::mousePressEvent( QMouseEvent * event )
+{
+    emit clicked(this);
+}
+
+ScrobbleInfoFetcher*
+TrackWidget::fetcher() const
+{
+    return m_fetcher;
+}
+
+ScrobbleInfoWidget*
+TrackWidget::infoWidget() const
+{
+    return m_infoWidget;
 }
 
 void
 TrackWidget::setStatusToCurrentTrack()
 {
     ui.timestamp->setText( aApp->currentConnection()->name() );
+
     ui.as->setMovie( movie.scrobbler_as );
     ui.as->movie()->start();
 
@@ -144,6 +166,8 @@ TrackWidget::onCorrected( QString correction )
 {
     if ( m_track.corrected() )
     {
+
+
         ui.trackText->setText( correction );
         ui.correction->show();
         ui.correction->setToolTip( tr("Auto-corrected from: ") + m_track.toString( lastfm::Track::Original ) );
@@ -156,25 +180,21 @@ TrackWidget::onCorrected( QString correction )
 }
 
 void
-TrackWidget::emitLoaded()
+TrackWidget::setTrack( const Track& track )
 {
-    show();
-    emit loaded();
-}
-
-void
-TrackWidget::onTrackStarted( const Track& track, const Track& /*previousTrack*/ )
-{
-    qDebug() << "New Track " << track.toString();
-    setTrack( track );
+    doSetTrack( track );
     setStatusToCurrentTrack();
     connectTrack();
 }
 
 void
-TrackWidget::setTrack( const Track& track )
+TrackWidget::doSetTrack( const Track& track )
 {
     m_track = track;
+
+    m_fetcher = new ScrobbleInfoFetcher( track, this );
+    m_infoWidget = new ScrobbleInfoWidget( m_fetcher, this );
+    m_infoWidget->hide();
 
     ui.love->setVisible( m_track.isLoved() );
     m_loveAction->setChecked( m_track.isLoved() );
@@ -192,29 +212,19 @@ TrackWidget::connectTrack()
 }
 
 void
-TrackWidget::onTrackStopped()
-{
-    ui.trackText->setText("");
-    ui.timestamp->setText("");
-    ui.as->clear();
-}
-
-void
 TrackWidget::onWatchPaused( bool isPaused )
 {
     if ( isPaused )
     {
-        //ui.title->hide();
-        //ui.playerStatus->hide();
-        //ui.as->hide();
-        //update();
+        ui.timestamp->setText( tr( "%1 paused" ).arg( aApp->currentConnection()->name() ) );
+        ui.as->setMovie( movie.scrobbler_paused );
+        ui.as->movie()->start();
     }
     else
     {
-        //ui.title->show();
-        //ui.playerStatus->show();
-        //ui.as->show();
-        //setStatusToCurrentTrack();
+        ui.timestamp->setText( aApp->currentConnection()->name() );
+        ui.as->setMovie( movie.scrobbler_as );
+        ui.as->movie()->start();
     }
 
     update();
@@ -230,15 +240,12 @@ TrackWidget::onWatchFinished()
 void
 TrackWidget::paintEvent( QPaintEvent* event )
 {
+    StylableWidget::paintEvent( event );
+
     if ( m_track.sameObject( aApp->currentTrack() ) )
     {
         // This is the current track so draw the progress
-
-        StylableWidget::paintEvent( event );
-
         m_stopWatch = aApp->stopWatch();
-        if( !m_stopWatch || m_stopWatch && m_stopWatch->paused())
-            return;
 
         QPainter p( this );
         p.setPen( QColor( Qt::transparent ));
@@ -247,8 +254,6 @@ TrackWidget::paintEvent( QPaintEvent* event )
         float percentage = (m_stopWatch->elapsed()/1000.0f) / m_stopWatch->scrobblePoint();
         p.drawRect( 0, 0, width() * percentage , height());
     }
-    else
-        QWidget::paintEvent( event );
 }
 
 void
@@ -272,9 +277,8 @@ TrackWidget::leaveEvent( class QEvent* )
 void
 TrackWidget::resizeEvent(QResizeEvent* )
 {
-    int width =  layout()->itemAt(1)->sizeHint().width(); // the text
-    //width +=  layout()->itemAt(1); // the correction icon
-    width +=  layout()->itemAt(3)->sizeHint().width(); // the stretch
+    int width =  ui.trackTextArea->width();
+    if (ui.correction->isVisible() ) width -=  ui.correction->width();
 
 
     QFontMetrics fm( ui.trackText->font() );
@@ -284,6 +288,8 @@ TrackWidget::resizeEvent(QResizeEvent* )
 void
 TrackWidget::updateTimestamp()
 {
+    ui.as->clear();
+
     QDateTime now = QDateTime::currentDateTime();
 
     // Full time in the tool tip

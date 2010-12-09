@@ -54,12 +54,12 @@ RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
 
     m_listLayout->setSpacing( 0 );
 
-    QScrollArea* scrollArea = new QScrollArea( this );
-    scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-    scrollArea->setWidget( content );
-    scrollArea->setWidgetResizable( true );
+    m_scrollArea = new QScrollArea( this );
+    m_scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    m_scrollArea->setWidget( content );
+    m_scrollArea->setWidgetResizable( true );
 
-    layout->addWidget( scrollArea );
+    layout->addWidget( m_scrollArea );
 
     connect( m_listLayout, SIGNAL(moveFinished()), SLOT(onMoveFinished()));
 
@@ -69,9 +69,19 @@ RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
     m_writeTimer->setSingleShot( true );
 
     connect( m_writeTimer, SIGNAL(timeout()), SLOT(doWrite()) );
-    connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+    //connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 }
 
+
+int RecentTracksWidget::count() const
+{
+    return m_listLayout->count();
+}
+
+class TrackWidget* RecentTracksWidget::trackWidget( int index ) const
+{
+    return static_cast<TrackWidget*>(m_listLayout->itemAt( index )->widget());
+}
 
 QEasingCurve::Type
 RecentTracksWidget::easingCurve() const
@@ -105,6 +115,7 @@ RecentTracksWidget::onTrackChanged()
 {
     write();
 }
+
 
 void RecentTracksWidget::setUsername( QString username )
 {
@@ -146,16 +157,8 @@ RecentTracksWidget::read()
         if (n.nodeName() == "track")
         {
             Track* track = new Track( n.toElement() );
-            TrackWidget* item = new TrackWidget( *track );
-            item->setOdd( m_rowNum++ % 2);
-            m_listLayout->addWidget( item );
-
-            connect( item, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
-            connect( item, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
-
-            connect( track->signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
-            connect( track->signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onTrackChanged()));
-            connect( track->signalProxy(), SIGNAL(corrected(QString)), SLOT(onTrackChanged()));
+            TrackWidget* trackWidget = new TrackWidget( *track );
+            addTrackWidget( trackWidget );
         }
     }
 
@@ -202,20 +205,28 @@ RecentTracksWidget::doWrite() const
 }
 
 void
-RecentTracksWidget::addCachedTrack( const Track& a_track )
+RecentTracksWidget::addTrackWidget( TrackWidget* trackWidget )
 {
-    TrackWidget* item = new TrackWidget( a_track );
-    item->setOdd( m_rowNum++ % 2);
-    m_listLayout->addWidget( item );
+    trackWidget->setObjectName("recentTrack");
+    trackWidget->setOdd( m_rowNum++ % 2);
+    trackWidget->updateTimestamp();
+    m_listLayout->addWidget( trackWidget );
 
-    connect( a_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
-    connect( a_track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onTrackChanged()));
-    connect( a_track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onTrackChanged()));
+    connect( trackWidget->track().signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
+    connect( trackWidget->track().signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onTrackChanged()));
+    connect( trackWidget->track().signalProxy(), SIGNAL(corrected(QString)), SLOT(onTrackChanged()));
 
-    connect( item, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
-    connect( item, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
+    connect( trackWidget, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
+    connect( trackWidget, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
 
     write();
+}
+
+void
+RecentTracksWidget::addCachedTrack( const Track& a_track )
+{
+    TrackWidget* trackWidget = new TrackWidget( a_track );
+    addTrackWidget( trackWidget );
 }
 
 void
@@ -236,5 +247,17 @@ RecentTracksWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
     foreach ( lastfm::Track track, tracks )
         addCachedTrack( track );
+}
+
+void
+RecentTracksWidget::setScrollBar( QScrollBar* scrollbar )
+{
+    m_scrollArea->setVerticalScrollBar( scrollbar );
+}
+
+QScrollBar*
+RecentTracksWidget::scrollBar() const
+{
+    return m_scrollArea->verticalScrollBar();
 }
 

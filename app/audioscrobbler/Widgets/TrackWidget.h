@@ -29,6 +29,8 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
+class ScrobbleInfoFetcher;
+class ScrobbleInfoWidget;
 class StopWatch;
 
 class TrackWidget : public StylableWidget
@@ -38,6 +40,8 @@ public:
     TrackWidget();
     TrackWidget( const Track& track );
 
+    void setTrack( const Track& track );
+
     Track track() const { return m_track;}
 
     QString status() const { return m_status; }
@@ -45,13 +49,17 @@ public:
     bool odd() const { return m_odd; }
     void setOdd( bool odd ) { m_odd = odd; }
 
-signals:
-    void loaded();
+    ScrobbleInfoFetcher* fetcher() const;
+    ScrobbleInfoWidget* infoWidget() const;
 
+signals:
     void cogMenuAboutToShow();
     void cogMenuAboutToHide();
 
+    void clicked( TrackWidget* );
+
 private:
+    void mousePressEvent ( QMouseEvent * event );
     void enterEvent( class QEvent* event );
     void leaveEvent( class QEvent* event );
     void resizeEvent( class QResizeEvent* event );
@@ -63,8 +71,11 @@ private:
     void setupUI();
     void setStatusToCurrentTrack();
 
-    void setTrack( const Track& track );
+    void doSetTrack( const Track& track );
     void connectTrack();
+
+public slots:
+    void updateTimestamp();
 
 private slots:
     void onLoveToggled( bool loved );
@@ -73,24 +84,18 @@ private slots:
     void onTagClicked();
     void onShareClicked();
 
-    void onTrackStarted( const Track& track, const Track& /*previousTrack*/ );
-    void onTrackStopped();
-
     void onWatchPaused( bool isPaused );
     void onWatchFinished();
-
-    void updateTimestamp();
 
     void onScrobbleStatusChanged();
 
     void onCorrected( QString correction );
 
-    void emitLoaded();
-
 private:
     struct
     {
         class QLabel* as;
+        class QWidget* trackTextArea;
         class QLabel* trackText;
         class QLabel* correction;
         class QLabel* love;
@@ -108,6 +113,8 @@ private:
     class QTimer* m_timestampTimer;
 
     QPointer<StopWatch> m_stopWatch;
+    QPointer<ScrobbleInfoFetcher> m_fetcher;
+    QPointer<ScrobbleInfoWidget> m_infoWidget;
 
     QAction* m_loveAction;
 

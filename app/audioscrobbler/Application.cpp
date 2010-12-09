@@ -142,6 +142,9 @@ Application::init()
     m_tray->show();
     connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
 
+/// DeviceScrobbler
+    m_deviceScrobbler = new DeviceScrobbler;
+
 /// tray menu
     QMenu* menu = new QMenu;
     (menu->addMenu( new UserMenu()))->setText( "Users");
@@ -211,12 +214,6 @@ Application::init()
     m_submit_scrobbles_toggle->setChecked(true);
     m_tray->setContextMenu(menu);
 
-/// ScrobbleInfoFetcher
-    m_fetcher = new ScrobbleInfoFetcher;
-
-/// DeviceScrobbler
-    m_deviceScrobbler = new DeviceScrobbler;
-
 /// MetadataWindow
     m_mw = new MetadataWindow;
     m_mw->addWinThumbBarButton( m_love_action );
@@ -250,15 +247,15 @@ Application::init()
     connect(this, SIGNAL(busLovedStateChanged(bool)), SLOT(onBusLovedStateChanged(bool)));
 
     // tell everyone that is interested that data about the current track has been fetched
-    connect( m_fetcher, SIGNAL(trackGotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)));
-    connect( m_fetcher, SIGNAL(albumGotInfo(XmlQuery)), SIGNAL(albumGotInfo(XmlQuery)));
-    connect( m_fetcher, SIGNAL(artistGotInfo(XmlQuery)), SIGNAL(artistGotInfo(XmlQuery)));
-    connect( m_fetcher, SIGNAL(artistGotEvents(XmlQuery)), SIGNAL(artistGotEvents(XmlQuery)));
-    connect( m_fetcher, SIGNAL(trackGotTopFans(XmlQuery)), SIGNAL(trackGotTopFans(XmlQuery)));
-    connect( m_fetcher, SIGNAL(trackGotTags(XmlQuery)), SIGNAL(trackGotTags(XmlQuery)));
-    connect( m_fetcher, SIGNAL(finished()), SIGNAL(finished()));
+    connect( m_mw, SIGNAL(trackGotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)));
+    connect( m_mw, SIGNAL(albumGotInfo(XmlQuery)), SIGNAL(albumGotInfo(XmlQuery)));
+    connect( m_mw, SIGNAL(artistGotInfo(XmlQuery)), SIGNAL(artistGotInfo(XmlQuery)));
+    connect( m_mw, SIGNAL(artistGotEvents(XmlQuery)), SIGNAL(artistGotEvents(XmlQuery)));
+    connect( m_mw, SIGNAL(trackGotTopFans(XmlQuery)), SIGNAL(trackGotTopFans(XmlQuery)));
+    connect( m_mw, SIGNAL(trackGotTags(XmlQuery)), SIGNAL(trackGotTags(XmlQuery)));
+    connect( m_mw, SIGNAL(finished()), SIGNAL(finished()));
 
-    connect( m_fetcher, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
+    connect( m_mw, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
 
 /// mediator
     m_mediator = new PlayerMediator(this);
@@ -316,14 +313,13 @@ Application::init()
 void
 Application::onSessionChanged( unicorn::Session* /*newSession*/ )
 {
+    disconnect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_as, SLOT( cache( QList<Track> )));
+
     Audioscrobbler* oldAs = m_as;
     m_as = new Audioscrobbler("ass");
     connect( m_as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
+    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )), m_as, SLOT( cache( QList<Track> )));
     delete oldAs;
-
-    m_deviceScrobbler->disconnect( SIGNAL( foundScrobbles(QList<Track> )));
-    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<Track> )),
-             m_as, SLOT( cache( QList<Track> )));
 
     m_deviceScrobbler->checkCachedIPodScrobbles();
 }
@@ -335,7 +331,6 @@ Application::setConnection(PlayerConnection*c)
         // disconnect from all the objects that we connect to below
         disconnect( m_connection, 0, this, 0);
         disconnect( m_connection, 0, m_mw, 0);
-        disconnect( m_connection, 0, m_fetcher, 0);
         if(m_watch)
             m_connection->setElapsed(m_watch->elapsed());
     }
@@ -438,7 +433,7 @@ Application::onPaused()
     Q_ASSERT(m_watch);
     if(m_watch) m_watch->pause();
 
-    resetTrackInfo();
+    //resetTrackInfo();
 }
 
 void
@@ -455,7 +450,7 @@ Application::onResumed()
 
     if(m_watch) m_watch->resume();
 
-    setTrackInfo();
+    //setTrackInfo();
 }
 
 void
@@ -603,12 +598,6 @@ DeviceScrobbler*
 Application::deviceScrobbler() const
 {
     return m_deviceScrobbler.data();
-}
-
-ScrobbleInfoFetcher*
-Application::fetcher() const
-{
-    return m_fetcher;
 }
 
 void 

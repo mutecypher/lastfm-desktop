@@ -69,7 +69,6 @@ namespace audioscrobbler
         QPointer<PlayerConnection> m_connection;
         QPointer<StopWatch> m_watch;
         QPointer<MetadataWindow> m_mw;
-        QPointer<ScrobbleInfoFetcher> m_fetcher;
         QPointer<DeviceScrobbler> m_deviceScrobbler;
 
         Track m_currentTrack;
@@ -104,7 +103,6 @@ namespace audioscrobbler
         PlayerConnection* currentConnection() const;
         DeviceScrobbler* deviceScrobbler() const;
         Track currentTrack() const { return m_currentTrack;}
-        ScrobbleInfoFetcher* fetcher() const;
         
     signals:
         void trackStarted( const Track&, const Track& );
