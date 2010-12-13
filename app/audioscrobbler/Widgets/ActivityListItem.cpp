@@ -26,12 +26,13 @@
 
 #include "lib/unicorn/widgets/GhostWidget.h"
 
+#include "../Application.h"
 #include "ActivityListItem.h"
 #include "IPodScrobbleItem.h"
 #include "TrackItem.h"
 
 ActivityListItem::ActivityListItem( QWidget* parent )
-    :StylableWidget( parent ), m_timestampTimer( 0 )
+    :StylableWidget( parent ), m_timestampTimer( 0 ), m_selected( false )
 {
 }
 
@@ -178,6 +179,21 @@ void
 ActivityListItem::setOdd( bool odd )
 {
     m_odd = odd;
+}
+
+
+bool
+ActivityListItem::selected() const
+{
+    return m_selected;
+}
+
+
+void
+ActivityListItem::setSelected( bool selceted )
+{
+    m_selected = selceted;
+    setStyle(QApplication::style());
 }
 
 

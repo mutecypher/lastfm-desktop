@@ -230,6 +230,10 @@ ActivityListItem[odd=true] {
 	background-color: rgba( 51, 51, 51, 230 );
 }
 
+ActivityListItem[selected=true] {
+	background-color: rgba( 23, 23, 23, 230 );
+}
+
 ActivityListItem {
 	padding: 0px 20px 0px 10px;
 	min-height: 30px;

@@ -31,6 +31,7 @@ class ActivityListItem : public StylableWidget
     Q_OBJECT
     Q_PROPERTY(QString status READ status WRITE setStatus);
     Q_PROPERTY(bool odd READ odd WRITE setOdd);
+    Q_PROPERTY(bool selected READ selected WRITE setSelected);
 
 public:
     ActivityListItem( QWidget* parent = 0 );
@@ -45,6 +46,9 @@ public:
 
     QString status() const;
     void setStatus( QString status );
+
+    bool selected() const;
+    void setSelected( bool selected );
 
 signals:
     void clicked( ActivityListItem* );
@@ -82,6 +86,7 @@ protected:
 private:
     QString m_status;
     bool m_odd;
+    bool m_selected;
 };
 
 #include <QMovie>

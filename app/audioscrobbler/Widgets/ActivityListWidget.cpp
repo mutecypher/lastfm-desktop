@@ -40,7 +40,7 @@
 const int kNumRecentTracks(20);
 
 ActivityListWidget::ActivityListWidget( QString username, QWidget* parent )
-    :StylableWidget( parent ), m_rowNum( 0 )
+    :StylableWidget( parent ), m_rowNum( 0 ), m_currentItem( 0 )
 {  
     QLayout* layout = new QVBoxLayout( this );
     layout->setSpacing(0);
@@ -205,6 +205,8 @@ ActivityListWidget::addItem( ActivityListItem* item )
     m_listLayout->addWidget( item );
 
     connect( item, SIGNAL(clicked(ActivityListItem*)), SIGNAL(itemClicked(ActivityListItem*)));
+    connect( item, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
+
     connect( item, SIGNAL(changed()), SLOT(onItemChanged()));
     connect( item, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
     connect( item, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
@@ -217,6 +219,26 @@ ActivityListWidget::addCachedTrack( const Track& track )
 {
     ActivityListItem* item = new TrackItem( track );
     addItem( item );
+}
+
+void
+ActivityListWidget::clearItemClicked()
+{
+    if ( m_currentItem )
+    {
+        m_currentItem->setSelected( false );
+        m_currentItem = 0;
+    }
+}
+
+void
+ActivityListWidget::onItemClicked( ActivityListItem* item )
+{
+    if ( m_currentItem )
+        m_currentItem->setSelected( false );
+
+    m_currentItem = item;
+    m_currentItem->setSelected( true );
 }
 
 void
