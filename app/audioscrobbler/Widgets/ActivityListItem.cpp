@@ -69,13 +69,13 @@ ActivityListItem::setupUi()
 
     layout->addWidget( ui.as );
 
-    ui.trackTextArea = new QWidget( this );
-    QHBoxLayout* h1 = new QHBoxLayout( ui.trackTextArea );
+    ui.textArea = new QWidget( this );
+    QHBoxLayout* h1 = new QHBoxLayout( ui.textArea );
     h1->setSpacing( 0 );
     h1->setContentsMargins( 0, 0, 0, 0);
 
-    h1->addWidget( ui.trackText = new QLabel( "" ) );
-    ui.trackText->setObjectName( "trackText" );
+    h1->addWidget( ui.text = new QLabel( "" ) );
+    ui.text->setObjectName( "trackText" );
 
     h1->addWidget( ui.correction = new QLabel() );
     ui.correction->setObjectName( "correction" );
@@ -83,7 +83,7 @@ ActivityListItem::setupUi()
 
     h1->addStretch( 1 );
 
-    layout->addWidget( ui.trackTextArea, 1 );
+    layout->addWidget( ui.textArea, 1 );
 
     layout->addWidget( ui.love = new QLabel("love") );
     ui.love->setObjectName( "love" );
@@ -157,14 +157,20 @@ ActivityListItem::mousePressEvent( QMouseEvent * event )
 
 
 void
+ActivityListItem::setText( const QString& text )
+{
+    m_text = text;
+    resizeEvent(0);
+}
+
+void
 ActivityListItem::resizeEvent(QResizeEvent* )
 {
-///    TODO:
-//    int width =  ui.trackTextArea->width();
-//    if (ui.correction->isVisible() ) width -=  ui.correction->width();
+    int width =  ui.textArea->width();
+    if (ui.correction->isVisible() ) width -=  ui.correction->width();
 
-//    QFontMetrics fm( ui.trackText->font() );
-//    ui.trackText->setText( fm.elidedText ( m_track.toString(), Qt::ElideRight, width) );
+    QFontMetrics fm( ui.text->font() );
+    ui.text->setText( fm.elidedText ( m_text, Qt::ElideRight, width) );
 }
 
 

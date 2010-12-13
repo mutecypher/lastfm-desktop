@@ -64,11 +64,13 @@ private:
 protected:
     void setupUi();
 
+    void setText( const QString& text );
+
     struct
     {
         class QLabel* as;
-        class QWidget* trackTextArea;
-        class QLabel* trackText;
+        class QWidget* textArea;
+        class QLabel* text;
         class QLabel* correction;
         class QLabel* love;
         class QLabel* timestamp;
@@ -83,7 +85,8 @@ protected:
     QDateTime m_timestamp;
     class QTimer* m_timestampTimer;
 
-private:
+protected:
+    QString m_text;
     QString m_status;
     bool m_odd;
     bool m_selected;

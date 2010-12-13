@@ -125,13 +125,13 @@ TrackItem::onCorrected( QString correction )
 {
     if ( m_track.corrected() )
     {
-        ui.trackText->setText( correction );
+        setText( correction );
         ui.correction->show();
         ui.correction->setToolTip( tr("Auto-corrected from: ") + m_track.toString( lastfm::Track::Original ) );
     }
     else
     {
-        ui.trackText->setText( m_track.toString() );
+        setText( m_track.toString() );
         ui.correction->hide();
     }
 }
@@ -239,6 +239,6 @@ TrackItem::onScrobbleStatusChanged()
         break;
     }
 
-    ui.trackText->setStyle(QApplication::style());
+    ui.text->setStyle(QApplication::style());
 }
 
