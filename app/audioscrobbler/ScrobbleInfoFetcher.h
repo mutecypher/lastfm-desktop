@@ -18,6 +18,9 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef SCROBBLE_INFO_FETCHER_H
+#define SCROBBLE_INFO_FETCHER_H
+
 #include <QObject>
 
 #include <lastfm/Track>
@@ -29,10 +32,11 @@ class ScrobbleInfoFetcher : public QObject
     Q_OBJECT
 public:
     ScrobbleInfoFetcher( const Track& t, QObject* parent = 0);
+
+public slots:
     void start();
 
 signals:
-    void setTrack(const Track& track);
     void trackGotInfo(const XmlQuery& lfm);
     void albumGotInfo(const XmlQuery& lfm);
     void artistGotInfo(const XmlQuery& lfm);
@@ -60,3 +64,5 @@ private:
     int m_numRequests;
     bool m_started;
 };
+
+#endif // SCROBBLE_INFO_FETCHER_H

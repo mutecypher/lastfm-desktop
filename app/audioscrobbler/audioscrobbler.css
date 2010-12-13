@@ -215,31 +215,31 @@ QTabWidget::pane {
 	min-width: 30px;
 }
 
-RecentTracksWidget {
+ActivityListWidget {
 	/* See QEasingCurve for a full list */
 	qproperty-easingCurve: OutBounce;
 	min-height: 0px;
 	min-width: 40px;
 }
 
-TrackWidget {
+ActivityListItem{
 	min-width: 40px;
 }
 
-TrackWidget[odd=true] {
+ActivityListItem[odd=true] {
 	background-color: rgba( 51, 51, 51, 230 );
 }
 
-TrackWidget {
+ActivityListItem {
 	padding: 0px 20px 0px 10px;
 	min-height: 30px;
 }
 
-TrackWidget:hover {
+ActivityListItem:hover {
 	background-color: rgba( 0, 0, 2, 230 );
 }
 
-TrackWidget HttpImageWidget#art {
+ActivityListItem HttpImageWidget#art {
 	max-width: 34px;
 	max-height: 34px;
 	qproperty-scaledContents: true;
@@ -248,7 +248,7 @@ TrackWidget HttpImageWidget#art {
 	padding: 0px 0px;
 }
 
-TrackWidget QLabel#timestamp {
+ActivityListItem QLabel#timestamp {
 	min-width: 90px;
 	qproperty-alignment: "AlignRight|AlignVCenter";
 }
@@ -264,7 +264,7 @@ QLabel#correction {
 	max-height: 11;
 }
 
-TrackWidget QLabel#love {
+ActivityListItem QLabel#love {
 	color: transparent;
 	qproperty-pixmap: url(:/love-isloved.png);
 	qproperty-scaledContents: true;
@@ -273,7 +273,7 @@ TrackWidget QLabel#love {
 	max-height: 15;
 }
 
-TrackWidget QToolButton#cog {
+ActivityListItem QToolButton#cog {
     qproperty-icon: url(:/cog-rest.png);
 	qproperty-iconSize: 48px 29px;
 	qproperty-popupMode: InstantPopup;
@@ -282,15 +282,15 @@ TrackWidget QToolButton#cog {
 	margin: 0px 0px;
 }
 
-TrackWidget QToolButton::menu-indicator {
+ActivityListItem QToolButton::menu-indicator {
     image: none;
 }
 
-TrackWidget QToolButton#cog:pressed {
+ActivityListItem QToolButton#cog:pressed {
     qproperty-icon: url(:/cog-onpress.png);
 }
 
-TrackWidget QToolButton#cog:hover {
+ActivityListItem QToolButton#cog:hover {
     qproperty-icon: url(:/cog-onhover.png);
 }
 
@@ -409,11 +409,11 @@ QSizeGrip {
     color: #676767;
 }
 
-TrackWidget[status="cached"] QLabel#trackText {
+ActivityListItem[status="cached"] QLabel#trackText {
 	color: #0187c5;
 }
 
-TrackWidget[status="error"] QLabel#trackText {
+ActivityListItem[status="error"] QLabel#trackText {
 	color: #d51007;
 }
 

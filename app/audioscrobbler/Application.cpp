@@ -116,10 +116,8 @@ Application::initiateLogin() throw( StubbornUserException )
 void
 Application::init()
 {
-
     // Initialise the unicorn base class first!
     unicorn::Application::init();
-
 
     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
     diskCache->setCacheDirectory( lastfm::dir::cache().path() );
@@ -278,7 +276,7 @@ Application::init()
 
 #ifdef QT_DBUS_LIB
         DBusListener* dbus = new DBusListener(mediator);
-        connect(dbus, SIGNAL(newConnection(PlayerConnection*)), mediator, SLOT(follow(PlayerConnection*)));
+        connect(dbus, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
 #endif
     }
     catch(std::runtime_error& e){
@@ -397,7 +395,11 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
     delete m_watch;
     m_watch = new StopWatch(timeout);
     m_watch->start();
+
     connect( m_watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
+    connect( m_watch, SIGNAL(paused(bool)), SIGNAL(paused(bool)));
+    connect( m_watch, SIGNAL(frameChanged( int )), SIGNAL(frameChanged( int )));
+    connect( m_watch, SIGNAL(timeout()), SIGNAL(timeout()));
 
     setTrackInfo();
 

@@ -25,8 +25,9 @@
 #include "../Widgets/ProfileWidget.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "../Widgets/ScrobbleInfoWidget.h"
-#include "../Widgets/TrackWidget.h"
-#include "../Widgets/RecentTracksWidget.h"
+#include "../Widgets/NowPlayingItem.h"
+#include "../Widgets/ActivityListWidget.h"
+#include "../Widgets/TrackItem.h"
 #include "../Widgets/StatusBar.h"
 #include "../Widgets/TitleBar.h"
 
@@ -69,10 +70,10 @@ MetadataWindow::MetadataWindow()
 
     layout->addWidget( ui.splitter = new QSplitter( Qt::Vertical, this ), 1 );
 
-    ui.nowPlaying = new TrackWidget();
+    ui.nowPlaying = new NowPlayingItem( Track() );
     ui.nowPlaying->setObjectName("nowPlaying");
 
-    ui.recentTracks = new RecentTracksWidget( lastfm::ws::Username, this );
+    ui.recentTracks = new ActivityListWidget( lastfm::ws::Username, this );
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
     ui.tracks = new QWidget;
@@ -119,6 +120,8 @@ MetadataWindow::MetadataWindow()
 
     ui.message_bar = new MessageBar( centralWidget());
 
+    onItemClicked( ui.nowPlaying );
+
     finishUi();
 
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
@@ -126,73 +129,6 @@ MetadataWindow::MetadataWindow()
     connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
     connect( qApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
     connect( qApp, SIGNAL( stopped() ), SLOT( onStopped() ) );
-
-#ifdef NDEBUG
-    menuBar()->hide();
-#endif
-}
-
-void
-MetadataWindow::onSessionChanged( unicorn::Session* session )
-{
-    ui.recentTracks->setUsername( session->userInfo().name() );
-
-    // connect all the track widgets so we know when they are clicked
-    for ( int i(0) ; i < ui.recentTracks->count() ; ++i )
-        connect( ui.recentTracks->trackWidget(i), SIGNAL(clicked(TrackWidget*)), SLOT(onTrackClicked(TrackWidget*)));
-}
-
-void
-MetadataWindow::onTrackStarted(const Track& t, const Track& previous)
-{
-    m_currentTrack = t;
-
-    centralWidget()->setUpdatesEnabled(false);
-    removeNowPlaying();
-    ui.nowPlaying = new TrackWidget();
-    ui.nowPlaying->setTrack( t );
-    addNowPlaying( ui.nowPlaying );
-    centralWidget()->setUpdatesEnabled(true);
-}
-
-void
-MetadataWindow::onStopped()
-{
-    m_currentTrack = Track();
-
-    centralWidget()->setUpdatesEnabled(false);
-    removeNowPlaying();
-    addNowPlaying( ui.nowPlaying = new TrackWidget() );
-    centralWidget()->setUpdatesEnabled(true);
-}
-
-void
-MetadataWindow::removeNowPlaying()
-{
-    QVBoxLayout* layout = static_cast<QVBoxLayout*>(ui.tracks->layout()->itemAt(0)->layout());
-    layout->removeWidget( ui.nowPlaying );
-
-    disconnect( ui.nowPlaying->fetcher(), 0, this, 0 );
-    disconnect( ui.nowPlaying->infoWidget(), 0, qApp, 0 );
-
-    if ( ui.nowPlaying->track() != Track() )
-        ui.nowPlaying->infoWidget()->scrobbleControls()->setNowPlaying( false );
-
-    if ( ui.nowPlaying->track().scrobbleStatus() != lastfm::Track::Null )
-        ui.recentTracks->addTrackWidget( ui.nowPlaying );
-    else
-        ui.nowPlaying->deleteLater();
-}
-
-void
-MetadataWindow::addNowPlaying( TrackWidget* trackWidget )
-{
-    QVBoxLayout* layout = static_cast<QVBoxLayout*>(ui.tracks->layout()->itemAt(0)->layout());
-
-    layout->insertWidget( 0, trackWidget );
-    trackWidget->setObjectName("nowPlaying");
-
-    trackWidget->infoWidget()->scrobbleControls()->setNowPlaying( true );
 
     connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)));
     connect( ui.nowPlaying->fetcher(), SIGNAL(albumGotInfo(XmlQuery)), SIGNAL(albumGotInfo(XmlQuery)));
@@ -202,26 +138,56 @@ MetadataWindow::addNowPlaying( TrackWidget* trackWidget )
     connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotTags(XmlQuery)), SIGNAL(trackGotTags(XmlQuery)));
     connect( ui.nowPlaying->fetcher(), SIGNAL(finished()), SIGNAL(finished()));
 
-    if ( trackWidget->track() != Track() )
+    connect( ui.recentTracks, SIGNAL(itemClicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
+    connect( ui.nowPlaying, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
+
+#ifdef NDEBUG
+    menuBar()->hide();
+#endif
+}
+
+
+void
+MetadataWindow::onSessionChanged( unicorn::Session* session )
+{
+    ui.recentTracks->setUsername( session->userInfo().name() );
+}
+
+
+void
+MetadataWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )
+{
+    addNowPlayingToActivityList();
+
+    m_currentTrack = t;
+    ui.nowPlaying->setTrack( m_currentTrack );
+
+    onItemClicked( ui.nowPlaying );
+}
+
+
+void
+MetadataWindow::onStopped()
+{
+    addNowPlayingToActivityList();
+
+    m_currentTrack = Track();
+    ui.nowPlaying->setTrack( m_currentTrack );
+
+    onItemClicked( ui.nowPlaying );
+}
+
+
+void
+MetadataWindow::addNowPlayingToActivityList()
+{
+    if ( ui.nowPlaying->track().scrobbleStatus() != lastfm::Track::Null )
     {
-        ui.nowPlaying->fetcher()->start();
-
-        QVBoxLayout* nsLayout = static_cast<QVBoxLayout*>( ui.scrobbleInfo->layout() );
-        if ( true )
-        {
-            // only swap the info widget if we were
-            // viewing the now playing track
-            while ( nsLayout->count() )
-                nsLayout->takeAt( 0 )->widget()->hide();
-
-            nsLayout->addWidget( ui.nowPlaying->infoWidget() );
-            ui.nowPlaying->infoWidget()->show();
-            connect( ui.nowPlaying->infoWidget(), SIGNAL(lovedStateChanged(bool)), qApp, SLOT(changeLovedState(bool)));
-        }
-
-        connect( trackWidget, SIGNAL(clicked(TrackWidget*)), SLOT(onTrackClicked(TrackWidget*)));
+        TrackItem* item = new TrackItem( *ui.nowPlaying );
+        ui.recentTracks->addItem( item );
     }
 }
+
 
 void
 MetadataWindow::onResumed()
@@ -234,17 +200,18 @@ MetadataWindow::onPaused()
 {
 }
 
+
 void
-MetadataWindow::onTrackClicked( TrackWidget* clickedTrack )
+MetadataWindow::onItemClicked( ActivityListItem* clickedItem )
 {
-    QVBoxLayout* nsLayout = static_cast<QVBoxLayout*>( ui.scrobbleInfo->layout() );
+    QVBoxLayout* infoLayout = static_cast<QVBoxLayout*>( ui.scrobbleInfo->layout() );
 
-    while ( nsLayout->count() )
-        nsLayout->takeAt( 0 )->widget()->hide();
+    while ( infoLayout->count() )
+        infoLayout->takeAt( 0 )->widget()->hide();
 
-    nsLayout->addWidget( clickedTrack->infoWidget() );
-    clickedTrack->fetcher()->start();
-    clickedTrack->infoWidget()->show();
+    QWidget* widget = clickedItem->infoWidget();
+    widget->show();
+    infoLayout->addWidget( widget );
 }
 
 
@@ -253,6 +220,7 @@ MetadataWindow::addWinThumbBarButton( QAction* thumbButtonAction )
 {
     m_buttons.append( thumbButtonAction );
 }
+
 
 void
 MetadataWindow::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )

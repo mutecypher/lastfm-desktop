@@ -47,8 +47,8 @@
 
 
 
-ScrobbleInfoWidget::ScrobbleInfoWidget( ScrobbleInfoFetcher* infoFetcher, QWidget* p )
-                   :StylableWidget( p )
+ScrobbleInfoWidget::ScrobbleInfoWidget( const Track& track, ScrobbleInfoFetcher* infoFetcher, QWidget* p )
+    :StylableWidget( p ), m_track( track )
 {
     setupUi();
     
@@ -68,10 +68,11 @@ ScrobbleInfoWidget::ScrobbleInfoWidget( ScrobbleInfoFetcher* infoFetcher, QWidge
     ui.similarArtists->setItemDelegate( new LfmDelegate( ui.similarArtists ));
     ui.listeningNow->setItemDelegate( new LfmDelegate( ui.listeningNow ));
 
+    setTrackDetails( track );
+
     connect( ui.similarArtists, SIGNAL( clicked( QModelIndex )), SLOT( listItemClicked( QModelIndex )));
     connect( ui.listeningNow, SIGNAL( clicked( QModelIndex )), SLOT( listItemClicked( QModelIndex )));
 
-    connect( infoFetcher, SIGNAL(setTrack(Track)), SLOT(onSetTrack(Track)));
     connect( infoFetcher, SIGNAL(trackGotInfo(XmlQuery)), SLOT(onTrackGotInfo(XmlQuery)));
     connect( infoFetcher, SIGNAL(albumGotInfo(XmlQuery)), SLOT(onAlbumGotInfo(XmlQuery)));
     connect( infoFetcher, SIGNAL(artistGotInfo(XmlQuery)), SLOT(onArtistGotInfo(XmlQuery)));
@@ -119,7 +120,7 @@ ScrobbleInfoWidget::setupUi()
         ui.title2->setOpenExternalLinks( true );
         vl->addStretch();
 
-        vl->addWidget( ui.scrobbleControls = new ScrobbleControls() );
+        vl->addWidget( ui.scrobbleControls = new ScrobbleControls( m_track ) );
         
         layout->addLayout( vl , 1);
         layout->addStretch();
@@ -214,7 +215,7 @@ ScrobbleInfoWidget::setupUi()
 }
 
 void
-ScrobbleInfoWidget::onSetTrack( const Track& track )
+ScrobbleInfoWidget::setTrackDetails( const Track& track )
 {
     if ( ui.scrollArea->verticalScrollBar()->isVisible() )
         ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
@@ -235,6 +236,8 @@ ScrobbleInfoWidget::onSetTrack( const Track& track )
         ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( track.album().www().toString(),
                                                                                           track.album().title()));
     }
+
+    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui.scrobbleControls, SLOT(setLoveChecked(bool)));
 }
 
 
@@ -329,6 +332,8 @@ ScrobbleInfoWidget::onTrackGotInfo(const XmlQuery& lfm)
 
     ui.yourScrobbles->setText( QString("%L1").arg(m_userListens));
     ui.totalScrobbles->setText( QString("%L1").arg(m_scrobbles));
+
+    ui.scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
 
     foreach(const XmlQuery& e, lfm["track"]["toptags"].children("tag").mid(0, 5 ))
     {

@@ -35,16 +35,17 @@
 #include "lib/unicorn/widgets/LfmListViewWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"
 
+#include "../Application.h"
 #include "ProfileWidget.h"
 #include "ScrobbleMeter.h"
-#include "RecentTracksWidget.h"
+#include "ActivityListWidget.h"
 #include "ScrobbleControls.h"
 
 using unicorn::Session;
 ProfileWidget::ProfileWidget( QWidget* p )
            :StylableWidget( p )
 {
-    QHBoxLayout* mainLayout = new QHBoxLayout( this);
+    QVBoxLayout* layout = new QVBoxLayout( this);
 
     QWidget* profileBox = new StylableWidget();
     {
@@ -66,124 +67,23 @@ ProfileWidget::ProfileWidget( QWidget* p )
         profileLayout->addLayout( userDetails );
     }
 
-    mainLayout->addWidget( profileBox );
-
-    QWidget* titleBox = new QWidget();
-    {
-        QVBoxLayout* vl = new QVBoxLayout( titleBox );
-        QHBoxLayout* h1 = new QHBoxLayout();
-        h1->addWidget( ui.title1 = new QLabel(), 1);
-        ui.title1->setObjectName( "title1" );
-        ui.title1->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
-        ui.title1->setOpenExternalLinks( true );
-        h1->addWidget( ui.correction = new QLabel() );
-        ui.correction->setObjectName("correction");
-        ui.correction->hide();
-        h1->addStretch( 0 );
-
-        vl->addLayout( h1 );
-
-        vl->addWidget( ui.title2 = new QLabel());
-        ui.title2->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
-        ui.title2->setObjectName( "title2" );
-        ui.title2->setOpenExternalLinks( true );
-
-        vl->addStretch( 1 );
-
-        vl->addWidget( ui.sc = new ScrobbleControls());
-        vl->addStretch();
-    }
-
-    mainLayout->addWidget( titleBox );
+    layout->addWidget( profileBox );
+    layout->addStretch( 1 );
     
     //On first run we won't catch the sessionChanged signal on time
-    //so we should try to get the current session from the unicorn::Application 
+    //so we should try to get the current session from the unicorn::Application
     unicorn::Session* currentSession = qobject_cast<unicorn::Application*>( qApp )->currentSession();
     if ( currentSession )
     {
         onSessionChanged( currentSession );
     }
-    connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
-    connect( qApp, SIGNAL( scrobblesCached(QList<lastfm::Track>)), SLOT( onScrobblesCached(QList<lastfm::Track>)));
 
-    connect( qApp, SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
-    connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
-    connect( qApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
-    connect( qApp, SIGNAL( stopped() ), SLOT( onStopped() ) );
+    connect( aApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
+    connect( aApp, SIGNAL( scrobblesCached(QList<lastfm::Track>)), SLOT( onScrobblesCached(QList<lastfm::Track>)));
 }
+
 
 void
-ProfileWidget::setTrackText()
-{
-    const unsigned short em_dash = 0x2014;
-    QString title = QString("<a class='title' href=\"%1\">%2</a> ") + QChar(em_dash) + " <a class='title' href=\"%3\">%4</a>";
-    const unicorn::Application* uApp = qobject_cast<unicorn::Application*>(qApp);
-
-    ui.title1->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg( m_track.artist().www().toString(), m_track.artist( lastfm::Track::Corrected ), m_track.www().toString(), m_track.title( lastfm::Track::Corrected )));
-    if( !m_track.album().isNull() )
-    {
-        QString album("from <a class='title' href=\"%1\">%2</a>");
-        ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( m_track.album().www().toString(), m_track.album( lastfm::Track::Corrected ).title()));
-    }
-    else
-    {
-        ui.title2->clear();
-    }
-
-    ui.title1->show();
-    ui.title2->show();
-
-    if (m_track.corrected())
-    {
-        ui.correction->show();
-        ui.correction->setToolTip( tr("Auto-corrected from: ") + m_track.toString( lastfm::Track::Original ) );
-    }
-    else
-        ui.correction->hide();
-}
-
-void
-ProfileWidget::onTrackStarted( const Track& t, const Track& /*previous*/ )
-{
-    m_track = t;
-    setTrackText();
-
-    connect( t.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
-}
-
-void
-ProfileWidget::onPaused()
-{
-    ui.title1->hide();
-    ui.title2->hide();
-    ui.correction->hide();
-}
-
-void
-ProfileWidget::onResumed()
-{
-    setTrackText();
-}
-
-void
-ProfileWidget::onStopped()
-{
-    m_track = Track();
-
-    ui.title1->clear();
-    ui.title2->clear();
-    ui.title1->hide();
-    ui.title2->hide();
-    ui.correction->hide();
-}
-
-void
-ProfileWidget::onCorrected( QString /*correction*/ )
-{
-    setTrackText();
-}
-
-void 
 ProfileWidget::onSessionChanged( Session* session )
 {
     if ( !session )
@@ -191,7 +91,7 @@ ProfileWidget::onSessionChanged( Session* session )
 
     qDebug() << "profile widget: session change";
     ui.welcomeLabel->setText( tr( "%1's Profile" ).arg( session->userInfo().name() ) );
-    ui.since->clear(); 
+    ui.since->clear();
     ui.scrobbleMeter->clear();
     ui.avatar->clear();
 
@@ -200,7 +100,7 @@ ProfileWidget::onSessionChanged( Session* session )
              this, SLOT( updateUserInfo( const lastfm::UserDetails& ) ) );
 }
 
-void 
+void
 ProfileWidget::updateUserInfo( const lastfm::UserDetails& userdetails )
 {
     qDebug() << "user info updated";

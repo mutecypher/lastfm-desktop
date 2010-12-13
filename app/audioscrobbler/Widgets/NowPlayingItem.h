@@ -1,6 +1,6 @@
 /*
-   Copyright 2005-2009 Last.fm Ltd. 
-      - Primarily authored by Jono Cole and Doug Mansell
+   Copyright 2005-2009 Last.fm Ltd.
+      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -18,39 +18,45 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCROBBLE_CONTROLS_H
-#define SCROBBLE_CONTROLS_H
+#ifndef TRACK_WIDGET_H_
+#define TRACK_WIDGET_H_
 
-#include "lib/unicorn/StylableWidget.h"
+#include <QWidget>
+#include <QMovie>
+#include <QPointer>
 
 #include <lastfm/Track>
-#include <lastfm/XmlQuery>
 
-namespace unicorn{ class Session; };
-namespace lastfm{ class UserDetails; };
+#include "TrackItem.h"
+#include "lib/unicorn/StylableWidget.h"
 
-class QPushButton;
-class ScrobbleControls : public StylableWidget
+class ScrobbleInfoFetcher;
+class ScrobbleInfoWidget;
+class StopWatch;
+
+class NowPlayingItem : public TrackItem
 {
     Q_OBJECT
 public:
-    ScrobbleControls( const Track& track );
+    NowPlayingItem( const Track& track );
 
-protected:
-    struct {
-        QPushButton* love;
-        QPushButton* tag;
-        QPushButton* share;
-    } ui;
+    void setTrack( const Track& track );
 
-public slots:
-    void setLoveChecked( bool checked );
-
-private slots:
-    void onLoveChanged( bool checked );
+    QWidget* infoWidget() const;
 
 private:
-    Track m_track;
+    void paintEvent( QPaintEvent* event );
+
+private slots:
+    void onWatchPaused( bool isPaused );
+    void onWatchFinished();
+
+    void updateTimestamp();
+
+private:
+    QWidget* profile;
 };
 
-#endif //SCROBBLE_CONTROLS_H
+
+#endif // TRACK_WIDGET_H_
+

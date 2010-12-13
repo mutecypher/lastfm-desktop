@@ -32,13 +32,14 @@
 #include "lib/unicorn/widgets/DataBox.h"
 
 #include "../Application.h"
-#include "RecentTracksWidget.h"
-#include "TrackWidget.h"
+#include "ActivityListWidget.h"
+#include "TrackItem.h"
+#include "IPodScrobbleItem.h"
 
 
 const int kNumRecentTracks(20);
 
-RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
+ActivityListWidget::ActivityListWidget( QString username, QWidget* parent )
     :StylableWidget( parent ), m_rowNum( 0 )
 {  
     QLayout* layout = new QVBoxLayout( this );
@@ -74,25 +75,27 @@ RecentTracksWidget::RecentTracksWidget( QString username, QWidget* parent )
 }
 
 
-int RecentTracksWidget::count() const
+int
+ActivityListWidget::count() const
 {
     return m_listLayout->count();
 }
 
-class TrackWidget* RecentTracksWidget::trackWidget( int index ) const
+class ActivityListItem*
+ActivityListWidget::itemAt( int index ) const
 {
-    return static_cast<TrackWidget*>(m_listLayout->itemAt( index )->widget());
+    return static_cast<ActivityListItem*>(m_listLayout->itemAt( index )->widget());
 }
 
 QEasingCurve::Type
-RecentTracksWidget::easingCurve() const
+ActivityListWidget::easingCurve() const
 {
     return m_easingCurve;
 }
 
 
 void
-RecentTracksWidget::setEasingCurve( QEasingCurve::Type easingCurve )
+ActivityListWidget::setEasingCurve( QEasingCurve::Type easingCurve )
 {
     m_easingCurve = easingCurve;
     m_listLayout->setEasingCurve( m_easingCurve );
@@ -100,25 +103,25 @@ RecentTracksWidget::setEasingCurve( QEasingCurve::Type easingCurve )
 
 
 void
-RecentTracksWidget::disableHover()
+ActivityListWidget::disableHover()
 {
     setUpdatesEnabled( false );
 }
 
 void
-RecentTracksWidget::enableHover()
+ActivityListWidget::enableHover()
 {
     setUpdatesEnabled( true );
 }
 
 void
-RecentTracksWidget::onTrackChanged()
+ActivityListWidget::onItemChanged()
 {
     write();
 }
 
 
-void RecentTracksWidget::setUsername( QString username )
+void ActivityListWidget::setUsername( QString username )
 {
     QString path = lastfm::dir::runtimeData().filePath( username + "_recent_tracks.xml" );
 
@@ -130,7 +133,7 @@ void RecentTracksWidget::setUsername( QString username )
 }
 
 void
-RecentTracksWidget::read()
+ActivityListWidget::read()
 {
     qDebug() << m_path;
 
@@ -143,7 +146,6 @@ RecentTracksWidget::read()
         delete item;
     }
 
-
     QFile file( m_path );
     file.open( QFile::Text | QFile::ReadOnly );
     QTextStream stream( &file );
@@ -154,47 +156,24 @@ RecentTracksWidget::read()
 
     for (QDomNode n = xml.documentElement().lastChild(); !n.isNull(); n = n.previousSibling())
     {
-        // TODO: recognise all the other AbstractType classes
-        if (n.nodeName() == "track")
-        {
-            if (n.attributes().contains("iPodScrobble"))
-            {
-                TrackWidget* trackWidget = new TrackWidget();
-                trackWidget->setText( n.namedItem( "text" ).toElement().text() );
-                trackWidget->setObjectName("iPodScrobble");
-                trackWidget->setOdd( m_rowNum++ % 2);
-
-                m_listLayout->addWidget( trackWidget );
-            }
-            else
-            {
-                Track* track = new Track( n.toElement() );
-                TrackWidget* trackWidget = new TrackWidget( *track );
-                addTrackWidget( trackWidget );
-            }
-        }
+        ActivityListItem* item = ActivityListItem::fromElement( n.toElement() );
+        addItem( item );
     }
 
     m_listLayout->setAnimated( true );
 }
 
 void
-RecentTracksWidget::write() const
+ActivityListWidget::write() const
 {
-    qDebug() << m_path;
-
     m_writeTimer->start( 200 );
 }
 
 void
-RecentTracksWidget::doWrite() const
+ActivityListWidget::doWrite() const
 {
-    qDebug() << m_path;
-
     if ( m_listLayout->count() == 0 )
-    {
         QFile::remove( m_path );
-    }
     else
     {
         QDomDocument xml;
@@ -203,22 +182,7 @@ RecentTracksWidget::doWrite() const
         e.setAttribute( "version", "2" );
 
         for ( int i(0) ; i < m_listLayout->count() ; ++i )
-        {
-            if ( trackWidget(i)->track() != Track() )
-            {
-                e.appendChild( trackWidget(i)->track().toDomElement( xml ) );
-            }
-            else
-            {
-                // This is not a track so must be an iPod scrobble
-                QDomElement item = xml.createElement( "track" );
-                item.setAttribute("iPodScrobble", "1");
-                QDomElement trackText = xml.createElement( "text" );
-                trackText.appendChild( xml.createTextNode( trackWidget(i)->text() ) );
-                item.appendChild( trackText );
-                e.appendChild( item );
-            }
-        }
+            e.appendChild( itemAt(i)->toDomElement( xml ) );
 
         xml.appendChild( e );
 
@@ -233,32 +197,30 @@ RecentTracksWidget::doWrite() const
 }
 
 void
-RecentTracksWidget::addTrackWidget( TrackWidget* trackWidget )
+ActivityListWidget::addItem( ActivityListItem* item )
 {
-    trackWidget->setObjectName("recentTrack");
-    trackWidget->setOdd( m_rowNum++ % 2);
-    trackWidget->updateTimestamp();
-    m_listLayout->addWidget( trackWidget );
+    item->setObjectName("recentTrack");
+    item->setOdd( m_rowNum++ % 2 );
+    item->updateTimestamp();
+    m_listLayout->addWidget( item );
 
-    connect( trackWidget->track().signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackChanged()));
-    connect( trackWidget->track().signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onTrackChanged()));
-    connect( trackWidget->track().signalProxy(), SIGNAL(corrected(QString)), SLOT(onTrackChanged()));
-
-    connect( trackWidget, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
-    connect( trackWidget, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
+    connect( item, SIGNAL(clicked(ActivityListItem*)), SIGNAL(itemClicked(ActivityListItem*)));
+    connect( item, SIGNAL(changed()), SLOT(onItemChanged()));
+    connect( item, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
+    connect( item, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
 
     write();
 }
 
 void
-RecentTracksWidget::addCachedTrack( const Track& a_track )
+ActivityListWidget::addCachedTrack( const Track& track )
 {
-    TrackWidget* trackWidget = new TrackWidget( a_track );
-    addTrackWidget( trackWidget );
+    ActivityListItem* item = new TrackItem( track );
+    addItem( item );
 }
 
 void
-RecentTracksWidget::onMoveFinished()
+ActivityListWidget::onMoveFinished()
 {
     while ( m_listLayout->count() > kNumRecentTracks )
     {
@@ -271,22 +233,23 @@ RecentTracksWidget::onMoveFinished()
 }
 
 void
-RecentTracksWidget::onFoundIPodScrobbles( const QList<lastfm::Track>& tracks )
+ActivityListWidget::onFoundIPodScrobbles( const QList<lastfm::Track>& tracks )
 {
-    // Add a TrackWidget that displays info about the iPod scrobble
-    TrackWidget* trackWidget = new TrackWidget();
-    trackWidget->setFromIPodScrobble( tracks );
-    trackWidget->setObjectName("iPodScrobble");
-    trackWidget->setOdd( m_rowNum++ % 2);
+    // Add a TrackItem that displays info about the iPod scrobble
+    ActivityListItem* item = new IPodScrobbleItem( tracks );
+    item->setObjectName("iPodScrobble");
+    item->setOdd( m_rowNum++ % 2);
 
-    m_listLayout->addWidget( trackWidget );
+    connect( item, SIGNAL(clicked(ActivityListItem*)), SIGNAL(itemClicked(ActivityListItem*)));
+
+    m_listLayout->addWidget( item );
 
     write();
 }
 
 
 void
-RecentTracksWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
+ActivityListWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
     foreach ( lastfm::Track track, tracks )
     {
@@ -298,13 +261,13 @@ RecentTracksWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 }
 
 void
-RecentTracksWidget::setScrollBar( QScrollBar* scrollbar )
+ActivityListWidget::setScrollBar( QScrollBar* scrollbar )
 {
     m_scrollArea->setVerticalScrollBar( scrollbar );
 }
 
 QScrollBar*
-RecentTracksWidget::scrollBar() const
+ActivityListWidget::scrollBar() const
 {
     return m_scrollArea->verticalScrollBar();
 }

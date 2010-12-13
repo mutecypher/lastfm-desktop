@@ -28,7 +28,8 @@
 #include "ScrobbleControls.h"
 #include "../Application.h"
 
-ScrobbleControls::ScrobbleControls()
+ScrobbleControls::ScrobbleControls( const Track& track )
+    :m_track( track )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
@@ -59,48 +60,38 @@ ScrobbleControls::ScrobbleControls()
     connect( ui.tag, SIGNAL( clicked()), aApp->tagAction(), SLOT( trigger()));
     connect( ui.share, SIGNAL( clicked()), aApp->shareAction(), SLOT( trigger()));
 
-    setEnabled( true );
+    connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(setLoveChecked(bool)));
 }
 
-void
-ScrobbleControls::setNowPlaying( bool nowPlaying )
-{
-    if ( nowPlaying )
-    {
-        connect( aApp, SIGNAL( busLovedStateChanged(bool)), this, SLOT( setLoveChecked(bool)));
-        connect( aApp, SIGNAL( lovedStateChanged(bool)), this, SLOT( setLoveChecked(bool)));
-        connect( ui.love, SIGNAL(clicked(bool)), aApp, SLOT(changeLovedState(bool)) );
-    }
-    else
-    {
-        disconnect( aApp, 0, this, 0);
-        disconnect( ui.love, 0, aApp, 0 );
-    }
-}
-
-void
-ScrobbleControls::setEnabled( bool enabled )
-{
-    ui.love->setEnabled( enabled );
-    ui.tag->setEnabled( enabled );
-    ui.share->setEnabled( enabled );
-}
 
 void
 ScrobbleControls::setLoveChecked( bool checked )
 {
+    /// This just changes the state of the love button
+
     ui.love->setChecked( checked );
+
+    if ( checked )
+        ui.love->setToolTip( tr( "Unlove track" ) );
+    else
+        ui.love->setToolTip( tr( "Love track" ) );
 }
+
 
 void
 ScrobbleControls::onLoveChanged( bool checked )
 {
+    /// This changes the state of the love button and
+    /// loves the track on Last.fm
+
+    // change the button state to the new state. Don't worry
+    // it'll get changed back if the web service request fails
+    setLoveChecked( checked );
+
+    MutableTrack track( m_track );
+
     if ( checked )
-    {
-        ui.love->setToolTip( tr( "Unlove track" ) );
-    }
+        track.love();
     else
-    {
-        ui.love->setToolTip( tr( "Love track" ) );
-    }
+        track.unlove();
 }

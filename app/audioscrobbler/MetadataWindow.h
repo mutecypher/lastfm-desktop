@@ -28,8 +28,8 @@ class MetadataWindow : public unicorn::MainWindow
 
         class QSplitter* splitter;
         QWidget* tracks;
-        class TrackWidget* nowPlaying;
-        class RecentTracksWidget* recentTracks;
+        class NowPlayingItem* nowPlaying;
+        class ActivityListWidget* recentTracks;
         QWidget* scrobbleInfo;
     } ui;
 
@@ -56,7 +56,7 @@ private slots:
 
     void onSessionChanged( unicorn::Session* );
 
-    void onTrackClicked( class TrackWidget* );
+    void onItemClicked( class ActivityListItem* clickedItem );
     
 private:
     Track m_currentTrack;
@@ -64,8 +64,7 @@ private:
 
     void setCurrentWidget( QWidget* );
     void addWinThumbBarButtons( QList<QAction*>& );
-    void removeNowPlaying();
-    void addNowPlaying( class TrackWidget* trackWidget );
+    void addNowPlayingToActivityList();
 
     enum {
         TAB_PROFILE,

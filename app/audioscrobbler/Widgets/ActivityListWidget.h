@@ -18,6 +18,9 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef ACTIVITY_LIST_WIDGET_H_
+#define ACTIVITY_LIST_WIDGET_H_
+
 #include <QWidget>
 #include <QList>
 #include <QEasingCurve>
@@ -28,15 +31,15 @@
 namespace lastfm { class Track; };
 using lastfm::Track;
 
-class RecentTracksWidget : public StylableWidget
+class ActivityListWidget : public StylableWidget
 {
     Q_OBJECT
 public:
-    RecentTracksWidget( QString username, QWidget* parent = 0 );
+    ActivityListWidget( QString username, QWidget* parent = 0 );
 
     void setUsername( QString username );
 
-    void addTrackWidget( class TrackWidget* trackWidget );
+    void addItem( class ActivityListItem* TrackItem );
 
     void read();
     void write() const;
@@ -48,13 +51,16 @@ public:
     class QScrollBar* scrollBar() const;
 
     int count() const;
-    class TrackWidget* trackWidget( int index ) const;
+    class ActivityListItem* itemAt( int index ) const;
 
 private:
     void addCachedTrack( const Track& a_track );
 
+signals:
+    void itemClicked( class ActivityListItem* );
+
 private slots:
-    void onTrackChanged();
+    void onItemChanged();
     void onMoveFinished();
     void doWrite() const;
 
@@ -75,3 +81,5 @@ private:
     class QScrollArea* m_scrollArea;
     int m_rowNum;
 };
+
+#endif // ACTIVITY_LIST_WIDGET_H_

@@ -35,12 +35,12 @@ class ScrobbleInfoWidget : public StylableWidget
 {
     Q_OBJECT
 public:
-    ScrobbleInfoWidget( class ScrobbleInfoFetcher* infoFetcher, QWidget* p = 0 );
+    ScrobbleInfoWidget( const Track& track, class ScrobbleInfoFetcher* infoFetcher, QWidget* p = 0 );
 
     class ScrobbleControls* scrobbleControls() const { return ui.scrobbleControls; }
 
 private slots:
-    void onSetTrack(const Track& track);
+
     void onTrackGotInfo(const XmlQuery& lfm);
     void onAlbumGotInfo(const XmlQuery& lfm);
     void onArtistGotInfo(const XmlQuery& lfm);
@@ -59,6 +59,9 @@ private slots:
 
 signals:
     void lovedStateChanged(bool loved);
+
+private:
+    void setTrackDetails( const Track& track );
 
 protected:
     void setupUi();
@@ -81,6 +84,7 @@ protected:
          class QWidget* area;
     } ui;
 
+    Track m_track;
     int m_scrobbles;
     int m_userListens;
 
