@@ -13,6 +13,7 @@ public:
     
     std::string pluginPath() const { return std::string( "components" ); }
     std::string displayName() const { return std::string( "foobar2000" ); }
+    std::string processName() const { return std::string( "foobar2000.exe" ); }
 
     std::string id() const { return std::string( "foo3" ); }
     BootstrapType bootstrapType() const{ return NoBootstrap; }
@@ -25,6 +26,21 @@ public:
     }
 
     IPluginInfo* clone() const { return new FooBar09PluginInfo( *this ); }
+
+#ifdef QT_VERSION
+    QString pluginInstallPath() const
+    {
+    #ifdef Q_OS_WIN
+        QSettings s( QString( "HKEY_LOCAL_MACHINE\\Software\\"
+                              "\\foobar2000"), 
+                     QSettings::NativeFormat );
+        return s.value( "Install Path" ) + "\\components";
+    #endif 
+        Q_ASSERT( !"There is no windows mediaplayer on non-windows platforms!" );
+        return "";
+    }
+#endif
+
 };
 
 #endif //FOOBAR09_PLUGIN_INFO_H_

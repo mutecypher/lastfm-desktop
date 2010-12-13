@@ -13,6 +13,7 @@ public:
     
     std::string pluginPath() const { return std::string( "Plug-Ins" ); }
     std::string displayName() const { return std::string( "iTunes" ); }
+    std::string processName() const { return std::string( "iTunes.exe" ); }
 
     std::string id() const 
     { 
@@ -32,6 +33,22 @@ public:
     }
 
     IPluginInfo* clone() const { return new ITunesPluginInfo( *this ); }
+
+#ifdef QT_VERSION
+    QString pluginInstallPath() const
+    {
+    #ifdef Q_OS_WIN
+        QSettings s( QString( "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows"
+                              "\\CurrentVersion\\App Paths\\") + processName(), 
+                     QSettings::NativeFormat );
+        return s.value( "Path" ) + "\\Plugins";
+    #endif 
+        return "~/Library/iTunes/iTunes Plug-ins";
+    }
+#endif
+
+
+
 };
 
 #endif //ITUNES_PLUGIN_INFO_H_

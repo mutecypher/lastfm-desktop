@@ -124,6 +124,8 @@ namespace audioscrobbler
         void scrobblesCached( const QList<lastfm::Track>& tracks );
         void scrobblesSubmitted( const QList<lastfm::Track>& tracks, int numTracks );
 
+        void bootstrapReady( const QString& playerId );
+
         void lovedStateChanged(bool loved);
 
         // re-route all the info fetchers singals

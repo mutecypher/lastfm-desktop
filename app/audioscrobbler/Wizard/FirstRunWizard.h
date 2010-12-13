@@ -76,12 +76,10 @@ public:
                 return Page_AuthInProgress;
 
             case Page_AuthInProgress:
-#ifdef Q_OS_WIN32
+#if defined(Q_WS_WIN) || defined(Q_WS_MAC)
                 return Page_Plugin;
             
             case Page_Plugin:
-                return Page_Welcome;
-#elif defined Q_WS_MAC
                 return Page_Bootstrap;
                  
             case Page_Bootstrap:
@@ -93,7 +91,7 @@ public:
 
             case Page_BootstrapInProgress:
                     return Page_Welcome;
-#else Q_WS_X11
+#elif defined Q_WS_X11
                 return Page_Welcome;
 #endif
 
