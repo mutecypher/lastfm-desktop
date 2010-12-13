@@ -88,24 +88,6 @@ ActivityListItem::setupUi()
     ui.love->setObjectName( "love" );
     ui.love->hide();
 
-    layout->addWidget( ui.cog = new QToolButton() );
-    ui.cog->setObjectName( "cog" );
-    layout->addWidget( ui.ghostCog = new GhostWidget( ui.cog, this ) );
-    ui.cog->hide();
-    ui.ghostCog->show();
-
-    QMenu* cogMenu = new QMenu( this );
-    m_loveAction = cogMenu->addAction( QIcon(":/love-rest.png"), "Love", this, SLOT(onLoveClicked()) );
-    m_loveAction->setCheckable( true );
-
-    connect( cogMenu, SIGNAL(aboutToShow()), SIGNAL(cogMenuAboutToShow()));
-    connect( cogMenu, SIGNAL(aboutToHide()), SIGNAL(cogMenuAboutToHide()));
-
-    cogMenu->addAction( QIcon(":/tag-rest.png"), "Tag", this, SLOT(onTagClicked()) );
-    cogMenu->addAction( QIcon(":/share-rest.png"), "Share", this, SLOT(onShareClicked()) );
-
-    ui.cog->setMenu( cogMenu );
-
     layout->addWidget( ui.timestamp = new QLabel() );
     ui.timestamp->setObjectName( "timestamp" );
 }
@@ -182,13 +164,6 @@ ActivityListItem::resizeEvent(QResizeEvent* )
 
 //    QFontMetrics fm( ui.trackText->font() );
 //    ui.trackText->setText( fm.elidedText ( m_track.toString(), Qt::ElideRight, width) );
-}
-
-
-QWidget*
-ActivityListItem::infoWidget() const
-{
-    return new QLabel( "NOTHING TO SEE HERE" );
 }
 
 

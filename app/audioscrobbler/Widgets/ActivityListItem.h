@@ -38,7 +38,7 @@ public:
     static ActivityListItem* fromElement( QDomElement element );
     virtual QDomElement toDomElement( QDomDocument xml ) const;
 
-    virtual QWidget* infoWidget() const;
+    virtual QWidget* infoWidget() const = 0;
 
     bool odd() const;
     void setOdd( bool odd );
@@ -67,8 +67,6 @@ protected:
         class QLabel* trackText;
         class QLabel* correction;
         class QLabel* love;
-        class QToolButton* cog;
-        class GhostWidget* ghostCog;
         class QLabel* timestamp;
     } ui;
 
@@ -76,8 +74,6 @@ protected:
         class QMovie* scrobbler_as;
         class QMovie* scrobbler_paused;
     } movie;
-
-    QAction* m_loveAction;
 
 protected:
     QDateTime m_timestamp;

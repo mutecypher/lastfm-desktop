@@ -72,7 +72,6 @@ TrackItem::doSetTrack( const Track& track )
 {
     /// disconnect the old track
     disconnect( m_track.signalProxy(), 0, this, 0 );
-    disconnect( m_track.signalProxy(), 0, m_loveAction, 0 );
 
     m_track = track;
 
@@ -83,14 +82,12 @@ TrackItem::doSetTrack( const Track& track )
 
     /// Set some track specific data for the UI
     ui.love->setVisible( track.isLoved() );
-    m_loveAction->setChecked( track.isLoved() );
 
     onCorrected( track.toString() );
 
     /// conenct up the new track
     connect( track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onLoveToggled(bool)));
-    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), m_loveAction, SLOT(setChecked(bool)));
     connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()) );
 
     // make sure we tell people when we change
@@ -141,26 +138,6 @@ TrackItem::onCorrected( QString correction )
 
 
 void
-TrackItem::enterEvent( class QEvent* )
-{
-    setUpdatesEnabled(false);
-    ui.ghostCog->hide();
-    ui.cog->show();
-    setUpdatesEnabled(true);
-}
-
-
-void
-TrackItem::leaveEvent( class QEvent* )
-{
-    setUpdatesEnabled(false);
-    ui.cog->hide();
-    ui.ghostCog->show();
-    setUpdatesEnabled(true);
-}
-
-
-void
 TrackItem::updateTimestamp()
 {
     if (!m_timestampTimer)
@@ -206,34 +183,6 @@ TrackItem::updateTimestamp()
         ui.timestamp->setText( QString::number( (m_track.timestamp().secsTo( now ) / 60 ) ) + " minutes ago" );
         m_timestampTimer->start( 60 * 1000 );
     }
-}
-
-
-void
-TrackItem::onLoveClicked()
-{
-    MutableTrack track = MutableTrack( m_track );
-
-    if ( track.isLoved() )
-        track.unlove();
-    else
-        track.love();
-}
-
-
-void
-TrackItem::onTagClicked()
-{
-    TagDialog* tagDialog = new TagDialog( m_track, this );
-    tagDialog->show();
-}
-
-
-void
-TrackItem::onShareClicked()
-{
-    ShareDialog* shareDialog = new ShareDialog( m_track, this );
-    shareDialog->show();
 }
 
 

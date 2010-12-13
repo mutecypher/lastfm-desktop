@@ -235,10 +235,6 @@ ActivityListItem {
 	min-height: 30px;
 }
 
-ActivityListItem:hover {
-	background-color: rgba( 0, 0, 2, 230 );
-}
-
 ActivityListItem HttpImageWidget#art {
 	max-width: 34px;
 	max-height: 34px;
@@ -288,10 +284,6 @@ ActivityListItem QToolButton::menu-indicator {
 
 ActivityListItem QToolButton#cog:pressed {
     qproperty-icon: url(:/cog-onpress.png);
-}
-
-ActivityListItem QToolButton#cog:hover {
-    qproperty-icon: url(:/cog-onhover.png);
 }
 
 ProfileWidget #title {
