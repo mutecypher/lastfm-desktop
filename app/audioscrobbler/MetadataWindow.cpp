@@ -185,7 +185,8 @@ MetadataWindow::newTrack( const Track& track )
 void
 MetadataWindow::addNowPlayingToActivityList()
 {
-    if ( ui.nowPlaying->track().scrobbleStatus() != lastfm::Track::Null )
+    if ( ui.nowPlaying->track() != Track()
+        && ui.nowPlaying->track().scrobbleStatus() != lastfm::Track::Null )
     {
         TrackItem* item = new TrackItem( *ui.nowPlaying );
         ui.recentTracks->addItem( item );
