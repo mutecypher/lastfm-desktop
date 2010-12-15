@@ -115,7 +115,12 @@ namespace audioscrobbler
         void paused();
         void stopped();
 
-        void foundIPodScrobbles( const QList<Track>& tracks );
+        // re-route the stopwatch signals
+        void paused( bool );
+        void frameChanged( int millisecs );
+        void timeout();
+
+        void foundIPodScrobbles( const QList<lastfm::Track>& tracks );
         void scrobblesCached( const QList<lastfm::Track>& tracks );
         void scrobblesSubmitted( const QList<lastfm::Track>& tracks, int numTracks );
 

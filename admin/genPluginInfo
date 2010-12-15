@@ -36,6 +36,7 @@ cat << EOF
 
     
     GenPluginList( const GenPluginList& that )
+    :QList<IPluginInfo*>()
     {
         *this = that;
     }

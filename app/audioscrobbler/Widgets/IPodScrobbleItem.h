@@ -1,6 +1,6 @@
 /*
-   Copyright 2005-2009 Last.fm Ltd. 
-      - Primarily authored by Jono Cole and Doug Mansell
+   Copyright 2005-2009 Last.fm Ltd.
+      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -18,39 +18,31 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCROBBLE_CONTROLS_H
-#define SCROBBLE_CONTROLS_H
+#ifndef IPOD_SCROBBLE_ITEM_H_
+#define IPOD_SCROBBLE_ITEM_H_
 
-#include "lib/unicorn/StylableWidget.h"
+#include <QWidget>
 
 #include <lastfm/Track>
-#include <lastfm/XmlQuery>
 
-namespace unicorn{ class Session; };
-namespace lastfm{ class UserDetails; };
+#include "ActivityListItem.h"
 
-class QPushButton;
-class ScrobbleControls : public StylableWidget
+class IPodScrobbleItem : public ActivityListItem
 {
     Q_OBJECT
 public:
-    ScrobbleControls( const Track& track );
+    IPodScrobbleItem( const QList<Track>& tracks );
+    IPodScrobbleItem( const QDomElement& element );
 
-protected:
-    struct {
-        QPushButton* love;
-        QPushButton* tag;
-        QPushButton* share;
-    } ui;
-
-public slots:
-    void setLoveChecked( bool checked );
-
-private slots:
-    void onLoveChanged( bool checked );
+    QWidget* infoWidget() const;
 
 private:
-    Track m_track;
+    QDomElement toDomElement( QDomDocument xml ) const;
+
+private:
+    mutable QWidget* m_scrobbleText;
 };
 
-#endif //SCROBBLE_CONTROLS_H
+
+#endif // IPOD_SCROBBLE_ITEM_H_
+

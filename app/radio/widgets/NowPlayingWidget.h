@@ -25,7 +25,7 @@
 #include <lastfm/Track>
 #include <lastfm/RadioStation>
 
-class TrackWidget;
+class TrackItem;
 class RadioProgressBar;
 class QLabel;
 class QImage;

@@ -28,7 +28,8 @@
 #include "ScrobbleControls.h"
 #include "../Application.h"
 
-ScrobbleControls::ScrobbleControls()
+ScrobbleControls::ScrobbleControls( const Track& track )
+    :m_track( track )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
@@ -40,7 +41,6 @@ ScrobbleControls::ScrobbleControls()
     ui.love->setCheckable( true );
     ui.love->setToolTip( tr( "Love track" ) );
 
-    connect(ui.love, SIGNAL(clicked(bool)), qApp, SLOT(changeLovedState(bool)));
     connect( ui.love, SIGNAL( toggled( bool ) ), this, SLOT( onLoveChanged( bool ) ) );
     
     layout->addWidget(ui.tag = new QPushButton(tr("tag")));
@@ -57,61 +57,41 @@ ScrobbleControls::ScrobbleControls()
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ), ui.tag, SLOT( click() ) );
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ), ui.love, SLOT( toggle() ) );
 
-    connect( aApp, SIGNAL( busLovedStateChanged(bool)), ui.love, SLOT( setChecked(bool)));
-    connect( qApp, SIGNAL( lovedStateChanged(bool)), ui.love, SLOT( setChecked(bool)));
-
-    connect( aApp, SIGNAL( trackStarted( Track, Track)), SLOT( onTrackStarted( Track, Track )));
-    connect( aApp, SIGNAL( paused() ), SLOT( onPaused() ) );
-    connect( aApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
-    connect( aApp, SIGNAL( stopped() ), SLOT( onStopped() ) );
-
     connect( ui.tag, SIGNAL( clicked()), aApp->tagAction(), SLOT( trigger()));
     connect( ui.share, SIGNAL( clicked()), aApp->shareAction(), SLOT( trigger()));
 
-    setEnabled( false );
+    connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(setLoveChecked(bool)));
 }
 
-void
-ScrobbleControls::onTrackStarted( const Track&, const Track& )
-{
-    setEnabled( true );
-}
 
 void
-ScrobbleControls::onPaused()
+ScrobbleControls::setLoveChecked( bool checked )
 {
-    setEnabled( false );
+    /// This just changes the state of the love button
+
+    ui.love->setChecked( checked );
+
+    if ( checked )
+        ui.love->setToolTip( tr( "Unlove track" ) );
+    else
+        ui.love->setToolTip( tr( "Love track" ) );
 }
 
-void
-ScrobbleControls::onResumed()
-{
-    setEnabled( true );
-}
-
-void
-ScrobbleControls::onStopped()
-{
-    setEnabled( false );
-}
-
-void
-ScrobbleControls::setEnabled( bool enabled )
-{
-    ui.love->setEnabled( enabled );
-    ui.tag->setEnabled( enabled );
-    ui.share->setEnabled( enabled );
-}
 
 void
 ScrobbleControls::onLoveChanged( bool checked )
 {
+    /// This changes the state of the love button and
+    /// loves the track on Last.fm
+
+    // change the button state to the new state. Don't worry
+    // it'll get changed back if the web service request fails
+    setLoveChecked( checked );
+
+    MutableTrack track( m_track );
+
     if ( checked )
-    {
-        ui.love->setToolTip( tr( "Unlove track" ) );
-    }
+        track.love();
     else
-    {
-        ui.love->setToolTip( tr( "Love track" ) );
-    }
+        track.unlove();
 }

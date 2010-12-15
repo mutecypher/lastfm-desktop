@@ -19,6 +19,7 @@
 */
 
 #include "ScrobbleInfoWidget.h"
+#include "ScrobbleControls.h"
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QLabel>
@@ -46,8 +47,8 @@
 
 
 
-ScrobbleInfoWidget::ScrobbleInfoWidget( ScrobbleInfoFetcher* infoFetcher, QWidget* p )
-                   :StylableWidget( p )
+ScrobbleInfoWidget::ScrobbleInfoWidget( const Track& track, ScrobbleInfoFetcher* infoFetcher, QWidget* p )
+    :StylableWidget( p ), m_track( track )
 {
     setupUi();
     
@@ -66,6 +67,8 @@ ScrobbleInfoWidget::ScrobbleInfoWidget( ScrobbleInfoFetcher* infoFetcher, QWidge
     
     ui.similarArtists->setItemDelegate( new LfmDelegate( ui.similarArtists ));
     ui.listeningNow->setItemDelegate( new LfmDelegate( ui.listeningNow ));
+
+    setTrackDetails( track );
 
     connect( ui.similarArtists, SIGNAL( clicked( QModelIndex )), SLOT( listItemClicked( QModelIndex )));
     connect( ui.listeningNow, SIGNAL( clicked( QModelIndex )), SLOT( listItemClicked( QModelIndex )));
@@ -99,7 +102,12 @@ ScrobbleInfoWidget::setupUi()
     QWidget* titleBox = new QWidget();
     {
         QHBoxLayout* layout = new QHBoxLayout( titleBox );
-        
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 0 );
+
+        layout->addWidget( ui.artistImage = new HttpImageWidget(), 1);
+        ui.artistImage->setObjectName("artistImage");
+
         QVBoxLayout* vl = new QVBoxLayout();
         vl->addWidget( ui.title1 = new QLabel());
         ui.title1->setObjectName( "title1" );
@@ -111,13 +119,11 @@ ScrobbleInfoWidget::setupUi()
         ui.title2->setObjectName( "title2" );
         ui.title2->setOpenExternalLinks( true );
         vl->addStretch();
+
+        vl->addWidget( ui.scrobbleControls = new ScrobbleControls( m_track ) );
         
         layout->addLayout( vl , 1);
         layout->addStretch();
-        layout->addWidget( ui.artistImage = new HttpImageWidget(), 1);
-        ui.artistImage->setObjectName("artistImage");
-        layout->setContentsMargins( 0, 0, 0, 0 );
-        layout->setSpacing( 0 );
     }
 
     mainLayout->addWidget(titleBox);
@@ -125,8 +131,6 @@ ScrobbleInfoWidget::setupUi()
     mainLayout->addWidget( ui.area = new QWidget( this ) );
     ui.area->hide();
     QVBoxLayout* layout = new QVBoxLayout( ui.area );
-
-    QVBoxLayout* scrobTagsLayout = new QVBoxLayout();
 
     QWidget* scrobbles = new QWidget();
     {
@@ -144,7 +148,8 @@ ScrobbleInfoWidget::setupUi()
     }
     DataBox* scrobBox = new DataBox( tr( "Scrobbles for this track" ), scrobbles );
     scrobBox->setObjectName( "scrobbles" );
-    scrobTagsLayout->addWidget( scrobBox );
+	
+    layout->addWidget( scrobBox );
 
     QWidget* tags = new QWidget();
     {
@@ -162,7 +167,7 @@ ScrobbleInfoWidget::setupUi()
     }
     DataBox* tagsBox = new DataBox( tr( "Tags for this track" ), tags );
     tagsBox->setObjectName( "tags" );
-    layout->addWidget( tagsBox );
+	layout->addWidget( tagsBox );
 
     QWidget* listeners = new QWidget();
     {
@@ -209,8 +214,8 @@ ScrobbleInfoWidget::setupUi()
     this->layout()->addWidget( ui.scrollArea );
 }
 
-void 
-ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
+void
+ScrobbleInfoWidget::setTrackDetails( const Track& track )
 {
     if ( ui.scrollArea->verticalScrollBar()->isVisible() )
         ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
@@ -221,36 +226,18 @@ ScrobbleInfoWidget::onTrackStarted( const Track& t, const Track& previous )
     QString title = QString("<a class='title' href=\"%1\">%2</a> ") + QChar(em_dash) + " <a class='title' href=\"%3\">%4</a>";
     const unicorn::Application* uApp = qobject_cast<unicorn::Application*>(qApp);
 
-    ui.title1->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg(t.artist().www().toString(),
-                                                                                      t.artist(),
-                                                                                      t.www().toString(),
-                                                                                      t.title()));
-    if( !t.album().isNull() )
+    ui.title1->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg(track.artist().www().toString(),
+                                                                                      track.artist(),
+                                                                                      track.www().toString(),
+                                                                                      track.title()));
+    if( !track.album().isNull() )
     {
         QString album("from <a class='title' href=\"%1\">%2</a>");
-        ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( t.album().www().toString(),
-                                                                                          t.album().title()));
-    }
-    else
-    {
-        ui.title2->clear();
+        ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( track.album().www().toString(),
+                                                                                          track.album().title()));
     }
 
-    if (t.artist() != previous.artist())
-    {
-        // it is a different artist so clear anything that is artist specific
-        ui.artistImage->clear();
-        ui.artistImage->setHref( QUrl());
-        ui.bioText->clear();
-        ui.onTourBanner->hide();
-        model.similarArtists->clear();
-    }
-    if( t != previous )
-    {
-        ui.topTags->clear();
-        ui.yourTags->clear();
-        model.listeningNow->clear();
-    }
+    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui.scrobbleControls, SLOT(setLoveChecked(bool)));
 }
 
 
@@ -316,18 +303,6 @@ ScrobbleInfoWidget::onArtistGotInfo(const XmlQuery& lfm)
     ui.artistImage->setHref( lfm["artist"][ "url" ].text() );
 }
 
-
-void
-ScrobbleInfoWidget::onStopped()
-{
-    ui.area->hide();
-    ui.artistImage->clear();
-    ui.artistImage->setHref(QUrl());
-    ui.title1->clear();
-    ui.title2->clear();
-    ui.onTourBanner->hide();
-}
-
 void
 ScrobbleInfoWidget::onArtistGotEvents(const XmlQuery& lfm)
 {
@@ -357,6 +332,8 @@ ScrobbleInfoWidget::onTrackGotInfo(const XmlQuery& lfm)
 
     ui.yourScrobbles->setText( QString("%L1").arg(m_userListens));
     ui.totalScrobbles->setText( QString("%L1").arg(m_scrobbles));
+
+    ui.scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
 
     foreach(const XmlQuery& e, lfm["track"]["toptags"].children("tag").mid(0, 5 ))
     {

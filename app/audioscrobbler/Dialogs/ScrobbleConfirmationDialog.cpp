@@ -11,7 +11,7 @@
 #include <QTableView>
 #include <QVBoxLayout>
 
-ScrobbleConfirmationDialog::ScrobbleConfirmationDialog( const QList<Track>& tracks, QWidget* parent )
+ScrobbleConfirmationDialog::ScrobbleConfirmationDialog( const QList<lastfm::Track>& tracks, QWidget* parent )
     : QDialog( parent )
 {
     m_toggled = true;
@@ -66,7 +66,7 @@ ScrobbleConfirmationDialog::setupUi()
     setMinimumSize( MIN_WIDTH, MIN_HEIGHT );
 }
 
-QList<Track>
+QList<lastfm::Track>
 ScrobbleConfirmationDialog::tracksToScrobble() const
 {
     return m_scrobblesModel->tracksToScrobble();

@@ -35,9 +35,12 @@ class ScrobbleInfoWidget : public StylableWidget
 {
     Q_OBJECT
 public:
-    ScrobbleInfoWidget( class ScrobbleInfoFetcher* infoFetcher, QWidget* p = 0 );
+    ScrobbleInfoWidget( const Track& track, class ScrobbleInfoFetcher* infoFetcher, QWidget* p = 0 );
+
+    class ScrobbleControls* scrobbleControls() const { return ui.scrobbleControls; }
 
 private slots:
+
     void onTrackGotInfo(const XmlQuery& lfm);
     void onAlbumGotInfo(const XmlQuery& lfm);
     void onArtistGotInfo(const XmlQuery& lfm);
@@ -49,9 +52,6 @@ private slots:
     void onAnchorClicked( const QUrl& link );
     void onBioChanged( const QSizeF& );
 
-    void onTrackStarted(const Track&, const Track&);
-    void onStopped();
-
     void listItemClicked( const QModelIndex& );
 
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
@@ -59,6 +59,9 @@ private slots:
 
 signals:
     void lovedStateChanged(bool loved);
+
+private:
+    void setTrackDetails( const Track& track );
 
 protected:
     void setupUi();
@@ -73,6 +76,7 @@ protected:
          class QListView* similarArtists;
          class QLabel* title1;
          class QLabel* title2;
+         class ScrobbleControls* scrobbleControls;
          class QLabel* yourScrobbles;
          class QLabel* totalScrobbles;
          class DataListWidget* yourTags;
@@ -80,6 +84,7 @@ protected:
          class QWidget* area;
     } ui;
 
+    Track m_track;
     int m_scrobbles;
     int m_userListens;
 

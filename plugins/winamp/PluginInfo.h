@@ -37,6 +37,7 @@ public:
         return s.value( "Path" ) + "\\Plugins";
     #endif 
         Q_ASSERT( !"There is no winamp on non-windows platforms!" );
+        return "";
     }
 #endif
 

@@ -69,8 +69,6 @@ BootstrapPage::BootstrapPage( QWidget* parent )
 { 
     new QVBoxLayout( this );
 
-    setTitle( tr( "Hi, %1" ).arg( aApp->currentSession()->userInfo().name()));
-
 #ifdef Q_OS_MAC
     QLabel* label = new QLabel( tr( "We recommend importing your listening history from your media player. Please select your prefered option below:")); 
 #else
@@ -91,6 +89,7 @@ BootstrapPage::BootstrapPage( QWidget* parent )
 void 
 BootstrapPage::initializePage()
 {
+    setTitle( tr( "Hi, %1" ).arg( aApp->currentSession()->userInfo().name()));
     m_psl->refresh();
 }
 

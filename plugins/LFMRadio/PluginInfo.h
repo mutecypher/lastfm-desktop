@@ -28,12 +28,12 @@ public:
 
     IPluginInfo* clone() const{ return new LFMRadioPluginInfo( *this ); }
 
-   #ifdef QT_VERSION
+    #ifdef QT_VERSION
     QString pluginInstallPath() const
     {
         return QString();
     }
-#endif
+    #endif
  
 };
 

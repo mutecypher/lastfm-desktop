@@ -300,7 +300,7 @@ DeviceScrobbler::scrobbleIpodTracks( int trackCount )
         }
     }
 
-    QList<Track> tracks = iPod->tracksToScrobble();
+    QList<lastfm::Track> tracks = iPod->tracksToScrobble();
 
     if ( tracks.count() )
     {
