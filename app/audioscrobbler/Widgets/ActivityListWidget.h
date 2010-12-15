@@ -24,7 +24,6 @@
 #include <QWidget>
 #include <QList>
 #include <QEasingCurve>
-#include <QtSql>
 
 #include "lib/unicorn/StylableWidget.h"
 
