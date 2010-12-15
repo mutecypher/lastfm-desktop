@@ -23,6 +23,7 @@
 #include <QToolButton>
 #include <QMenu>
 #include <QTimer>
+#include <QMouseEvent>
 
 #include "lib/unicorn/widgets/GhostWidget.h"
 
@@ -150,9 +151,10 @@ ActivityListItem::updateTimestamp()
 
 
 void
-ActivityListItem::mousePressEvent( QMouseEvent * event )
+ActivityListItem::mousePressEvent( QMouseEvent* event )
 {
-    emit clicked( this );
+    if ( event->button() == Qt::LeftButton)
+        emit clicked( this );
 }
 
 
