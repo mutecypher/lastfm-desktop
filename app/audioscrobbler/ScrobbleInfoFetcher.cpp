@@ -41,7 +41,7 @@ ScrobbleInfoFetcher::start()
 
         {
             // track.getInfo
-            m_track.getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
+            m_track.getInfo();
             connect( m_track.signalProxy(), SIGNAL(gotInfo(XmlQuery)), SLOT(onTrackGotInfo(XmlQuery)) ) ;
             ++m_numRequests;
         }
