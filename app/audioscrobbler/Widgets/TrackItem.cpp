@@ -53,7 +53,14 @@ TrackItem::TrackItem( const Track& track )
 TrackItem::TrackItem( const TrackItem& that )
 {
     setupUi();
-    doSetTrack( that.m_track );
+
+    m_track = that.m_track;
+    m_fetcher = that.m_fetcher;
+    m_infoWidget = that.m_infoWidget;
+    m_timestamp = that.m_timestamp;
+
+    connectTrack();
+    setDetails();
 }
 
 
@@ -80,25 +87,34 @@ TrackItem::doSetTrack( const Track& track )
     m_infoWidget = new ScrobbleInfoWidget( track, m_fetcher, this );
     m_infoWidget->hide();
 
+    connectTrack();
+    setDetails();
+}
+
+void
+TrackItem::setDetails()
+{
     /// Set some track specific data for the UI
-    ui.love->setVisible( track.isLoved() );
-
-    onCorrected( track.toString() );
-
-    /// conenct up the new track
-    connect( track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
-    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onLoveToggled(bool)));
-    connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()) );
-
-    // make sure we tell people when we change
-    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(changed()));
-    connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SIGNAL(changed()));
-    connect( track.signalProxy(), SIGNAL(corrected(QString)), SIGNAL(changed()));
+    ui.love->setVisible( m_track.isLoved() );
+    onCorrected( m_track.toString() );
+    connectTrack();
 
     // track items need their timestamp updated as they grow old
-    m_timestamp = track.timestamp();
-
+    m_timestamp = m_track.timestamp();
     updateTimestamp();
+}
+
+void
+TrackItem::connectTrack()
+{
+    connect( m_track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
+    connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onLoveToggled(bool)));
+    connect( m_track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()) );
+
+    // make sure we tell people when we change
+    connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(changed()));
+    connect( m_track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SIGNAL(changed()));
+    connect( m_track.signalProxy(), SIGNAL(corrected(QString)), SIGNAL(changed()));
 }
 
 

@@ -57,6 +57,9 @@ signals:
 private:
     QDomElement toDomElement( QDomDocument xml ) const;
 
+    void setDetails();
+    void connectTrack();
+
 protected:
     void doSetTrack( const Track& track );
 
