@@ -64,6 +64,28 @@ TitleBar QPushButton:pressed {
     max-width: 20px;
 }
 
+WelcomeWidget {
+	padding: 10px 10px 10px 10px;
+}
+
+WelcomeWidget #asLogo {
+	qproperty-pixmap: url(":/as.png");
+}
+
+WelcomeWidget QLabel {
+	color: #cccccc;
+	qproperty-wordWrap: true;
+}
+
+WelcomeWidget QLabel#welcome {
+	font-weight: bold;
+	font-size: 28px;
+}
+
+WelcomeWidget QLabel#callToAction {
+	font-size: 18px;
+}
+
 unicorn--MainWindow ProfileWidget,
 QWidget#NowScrobbling {
     min-height: 195px;

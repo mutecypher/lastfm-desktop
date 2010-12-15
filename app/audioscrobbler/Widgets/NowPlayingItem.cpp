@@ -36,7 +36,7 @@
 #include "../StopWatch.h"
 #include "../ScrobbleInfoFetcher.h"
 
-#include "ProfileWidget.h"
+#include "WelcomeWidget.h"
 #include "ScrobbleInfoWidget.h"
 #include "NowPlayingItem.h"
 
@@ -46,7 +46,8 @@
 NowPlayingItem::NowPlayingItem( const Track& track )
     :TrackItem( track )
 {
-    profile = new ProfileWidget();
+    m_nullInfo = new WelcomeWidget( this );
+    m_nullInfo->hide();
 
     connect( aApp, SIGNAL(paused(bool)), SLOT( onWatchPaused(bool)) );
     connect( aApp, SIGNAL(timeout()), SLOT( onWatchFinished()));
@@ -66,7 +67,7 @@ QWidget*
 NowPlayingItem::infoWidget() const
 {
     if ( m_track == Track() )
-        return profile;
+        return m_nullInfo;
 
     return TrackItem::infoWidget();
 }
