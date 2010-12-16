@@ -215,8 +215,8 @@ MetadataWindow::onItemClicked( ActivityListItem* clickedItem )
         infoLayout->takeAt( 0 )->widget()->hide();
 
     QWidget* widget = clickedItem->infoWidget();
-    widget->show();
     infoLayout->addWidget( widget );
+    widget->show();
 
     m_currentActivity = clickedItem;
 }
