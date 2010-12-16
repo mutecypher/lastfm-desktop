@@ -39,9 +39,9 @@ public:
     {
     #ifdef Q_OS_WIN
         QSettings s( QString( "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows"
-                              "\\CurrentVersion\\App Paths\\") + processName(), 
+                              "\\CurrentVersion\\App Paths\\") + QString::fromStdString( processName() ),
                      QSettings::NativeFormat );
-        return s.value( "Path" ) + "\\Plugins";
+        return s.value( "Path" ).toString() + "\\Plugins";
     #endif 
         return "~/Library/iTunes/iTunes Plug-ins";
     }

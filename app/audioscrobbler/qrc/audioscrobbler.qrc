@@ -36,5 +36,6 @@
         <file>as_watermark.png</file>
         <file>pointyarrow.png</file>
         <file>systray_screenshot.png</file>
+		<file>as.png</file>
     </qresource>
 </RCC>

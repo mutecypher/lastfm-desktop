@@ -34,7 +34,7 @@ public:
         QSettings s( QString( "HKEY_LOCAL_MACHINE\\Software\\"
                               "\\foobar2000"), 
                      QSettings::NativeFormat );
-        return s.value( "Install Path" ) + "\\components";
+        return s.value( "Install Path" ).toString() + "\\components";
     #endif 
         Q_ASSERT( !"There is no windows mediaplayer on non-windows platforms!" );
         return "";

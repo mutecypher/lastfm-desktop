@@ -67,6 +67,9 @@ private slots:
     void disableHover();
     void enableHover();
 
+    void clearItemClicked();
+    void onItemClicked( class ActivityListItem* item );
+
     void onFoundIPodScrobbles( const QList<lastfm::Track>& tracks );
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
 
@@ -80,6 +83,8 @@ private:
     class AnimatedListLayout* m_listLayout;
     class QScrollArea* m_scrollArea;
     int m_rowNum;
+
+    class ActivityListItem* m_currentItem;
 };
 
 #endif // ACTIVITY_LIST_WIDGET_H_

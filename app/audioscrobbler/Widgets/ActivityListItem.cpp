@@ -23,15 +23,17 @@
 #include <QToolButton>
 #include <QMenu>
 #include <QTimer>
+#include <QMouseEvent>
 
 #include "lib/unicorn/widgets/GhostWidget.h"
 
+#include "../Application.h"
 #include "ActivityListItem.h"
 #include "IPodScrobbleItem.h"
 #include "TrackItem.h"
 
 ActivityListItem::ActivityListItem( QWidget* parent )
-    :StylableWidget( parent ), m_timestampTimer( 0 )
+    :StylableWidget( parent ), m_timestampTimer( 0 ), m_selected( false )
 {
 }
 
@@ -68,13 +70,13 @@ ActivityListItem::setupUi()
 
     layout->addWidget( ui.as );
 
-    ui.trackTextArea = new QWidget( this );
-    QHBoxLayout* h1 = new QHBoxLayout( ui.trackTextArea );
+    ui.textArea = new QWidget( this );
+    QHBoxLayout* h1 = new QHBoxLayout( ui.textArea );
     h1->setSpacing( 0 );
     h1->setContentsMargins( 0, 0, 0, 0);
 
-    h1->addWidget( ui.trackText = new QLabel( "" ) );
-    ui.trackText->setObjectName( "trackText" );
+    h1->addWidget( ui.text = new QLabel( "" ) );
+    ui.text->setObjectName( "trackText" );
 
     h1->addWidget( ui.correction = new QLabel() );
     ui.correction->setObjectName( "correction" );
@@ -82,29 +84,11 @@ ActivityListItem::setupUi()
 
     h1->addStretch( 1 );
 
-    layout->addWidget( ui.trackTextArea, 1 );
+    layout->addWidget( ui.textArea, 1 );
 
     layout->addWidget( ui.love = new QLabel("love") );
     ui.love->setObjectName( "love" );
     ui.love->hide();
-
-    layout->addWidget( ui.cog = new QToolButton() );
-    ui.cog->setObjectName( "cog" );
-    layout->addWidget( ui.ghostCog = new GhostWidget( ui.cog, this ) );
-    ui.cog->hide();
-    ui.ghostCog->show();
-
-    QMenu* cogMenu = new QMenu( this );
-    m_loveAction = cogMenu->addAction( QIcon(":/love-rest.png"), "Love", this, SLOT(onLoveClicked()) );
-    m_loveAction->setCheckable( true );
-
-    connect( cogMenu, SIGNAL(aboutToShow()), SIGNAL(cogMenuAboutToShow()));
-    connect( cogMenu, SIGNAL(aboutToHide()), SIGNAL(cogMenuAboutToHide()));
-
-    cogMenu->addAction( QIcon(":/tag-rest.png"), "Tag", this, SLOT(onTagClicked()) );
-    cogMenu->addAction( QIcon(":/share-rest.png"), "Share", this, SLOT(onShareClicked()) );
-
-    ui.cog->setMenu( cogMenu );
 
     layout->addWidget( ui.timestamp = new QLabel() );
     ui.timestamp->setObjectName( "timestamp" );
@@ -167,28 +151,28 @@ ActivityListItem::updateTimestamp()
 
 
 void
-ActivityListItem::mousePressEvent( QMouseEvent * event )
+ActivityListItem::mousePressEvent( QMouseEvent* event )
 {
-    emit clicked( this );
+    if ( event->button() == Qt::LeftButton)
+        emit clicked( this );
 }
 
 
 void
-ActivityListItem::resizeEvent(QResizeEvent* )
+ActivityListItem::setText( const QString& text )
 {
-///    TODO:
-//    int width =  ui.trackTextArea->width();
-//    if (ui.correction->isVisible() ) width -=  ui.correction->width();
-
-//    QFontMetrics fm( ui.trackText->font() );
-//    ui.trackText->setText( fm.elidedText ( m_track.toString(), Qt::ElideRight, width) );
+    m_text = text;
+    resizeEvent(0);
 }
 
-
-QWidget*
-ActivityListItem::infoWidget() const
+void
+ActivityListItem::resizeEvent(QResizeEvent* )
 {
-    return new QLabel( "NOTHING TO SEE HERE" );
+    int width =  ui.textArea->width();
+    if (ui.correction->isVisible() ) width -=  ui.correction->width();
+
+    QFontMetrics fm( ui.text->font() );
+    ui.text->setText( fm.elidedText ( m_text, Qt::ElideRight, width) );
 }
 
 
@@ -203,6 +187,21 @@ void
 ActivityListItem::setOdd( bool odd )
 {
     m_odd = odd;
+}
+
+
+bool
+ActivityListItem::selected() const
+{
+    return m_selected;
+}
+
+
+void
+ActivityListItem::setSelected( bool selceted )
+{
+    m_selected = selceted;
+    setStyle(QApplication::style());
 }
 
 

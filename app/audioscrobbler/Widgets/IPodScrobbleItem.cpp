@@ -35,7 +35,7 @@ IPodScrobbleItem::IPodScrobbleItem( const QList<Track>& tracks )
         tr("%1 track from the iPod '%2'"):
         tr("%1 tracks from the iPod '%2'"));
 
-    ui.trackText->setText(format.arg( QString::number(tracks.count()), tracks[0].extra("deviceId") ) );
+    setText( format.arg( QString::number(tracks.count()), tracks[0].extra("deviceId") ) );
 
     m_timestamp = QDateTime::currentDateTime();
     updateTimestamp();
@@ -46,7 +46,7 @@ IPodScrobbleItem::IPodScrobbleItem( const QDomElement& element )
 {
     setupUi();
 
-    ui.trackText->setText( element.firstChildElement("text").text() );
+    setText( element.firstChildElement("text").text() );
     m_timestamp.setTime_t( element.firstChildElement("timestamp").text().toUInt() );
     updateTimestamp();
 }
@@ -56,7 +56,7 @@ QWidget*
 IPodScrobbleItem::infoWidget() const
 {
     if ( !m_scrobbleText )
-        m_scrobbleText = new QLabel( ui.trackText->text() );
+        m_scrobbleText = new QLabel( m_text );
 
     return m_scrobbleText;
 }
@@ -69,7 +69,7 @@ IPodScrobbleItem::toDomElement( QDomDocument xml ) const
     element.setAttribute("iPodScrobble", "1");
 
     QDomElement trackText = xml.createElement( "text" );
-    trackText.appendChild( xml.createTextNode( ui.trackText->text() ) );
+    trackText.appendChild( xml.createTextNode( m_text ) );
     element.appendChild( trackText );
 
     QDomElement timestampText = xml.createElement( "timestamp" );
