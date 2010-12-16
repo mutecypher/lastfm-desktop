@@ -162,6 +162,25 @@ MetadataWindow DataListWidget,
     font-weight: normal;
 }
 
+IPodScrobbleInfoWidget QLabel#iPod {
+	qproperty-pixmap: url(":/as.png");
+}
+
+IPodScrobbleInfoWidget QLabel#title {
+	font-size: 18px;
+	font-weight: bold;
+	color: #cccccc;
+	qproperty-wordWrap: true;
+}
+
+IPodScrobbleInfoWidget QLabel#iPodScrobble {
+	font-size: 11px;
+	color: #cccccc;
+	border-bottom: 1px solid #cccccc;
+	qproperty-wordWrap: true;
+}
+
+
 ScrobbleInfoWidget QPushButton {
     color: transparent;
     background-color: transparent;
