@@ -88,7 +88,7 @@ DeviceScrobbler::iPodDetected( const QStringList& arguments ) {
     
     if( pos > -1 ) serialNumber = arguments[ pos + 1 ];
    
-    //qDebug() << "emitting detectedIPod: " << this;
+    qDebug() << "emitting detectedIPod: " << (int)this;
     emit detectedIPod( serialNumber );
 }
 
