@@ -52,7 +52,6 @@
 
 MetadataWindow::MetadataWindow()
 {
-    setWindowTitle( "Audioscrobbler" );
     setAttribute( Qt::WA_TranslucentBackground );
     
     setWindowFlags( Qt::CustomizeWindowHint | Qt::FramelessWindowHint );
@@ -111,7 +110,7 @@ MetadataWindow::MetadataWindow()
     addDragHandleWidget( titleBar );
     addDragHandleWidget( statusBar );
 
-    setWindowTitle(tr("Last.fm Audioscrobbler"));
+    setWindowTitle(tr("The Scrobbler"));
     setUnifiedTitleAndToolBarOnMac( true );
     setMinimumHeight( 80 );
     resize(20, 500);
