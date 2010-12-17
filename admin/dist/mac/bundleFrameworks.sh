@@ -9,30 +9,30 @@
 # installed relative to the bundle's @executable_path
 
 function deposx {
-    otool -L $1 | sed -n '/\/opt.*/ s/^[^\/]*\([^(]*\) ([^)]*)/\1/p'
+    otool -L "$1" | sed -n '/\/opt.*/ s/^[^\/]*\([^(]*\) ([^)]*)/\1/p'
 }
 
 function getBundleBin {
     if echo $1|grep -q framework; then
-        echo $1/`cat $1/Contents/Info.plist | sed -n '/CFBundleExecutable<\/key>/,/<\/string>/ s/.*<string>\(.*\)<.*/\1/p'|sed s/_debug//`
+        echo $1/`cat "$1/Contents/Info.plist" | sed -n '/CFBundleExecutable<\/key>/,/<\/string>/ s/.*<string>\(.*\)<.*/\1/p'|sed s/_debug//`
     else
-        echo $1/Contents/MacOS/`cat $1/Contents/Info.plist | sed -n '/CFBundleExecutable<\/key>/,/<\/string>/ s/.*<string>\(.*\)<.*/\1/p'`
+        echo $1/Contents/MacOS/`cat "$1/Contents/Info.plist" | sed -n '/CFBundleExecutable<\/key>/,/<\/string>/ s/.*<string>\(.*\)<.*/\1/p'`
     fi
 }
 
 function fixFrameworks {
     echo -n F
-    if [ -d $1 ]; then
-        local bin=`getBundleBin $1`
+    if [ -d "$1" ]; then
+        local bin="`getBundleBin "$1"`"
     else
-        local bin=$1
+        local bin="$1"
     fi
 
     # echo Fixing Frameworks for $bin
 
-    libs=`otool -L $bin|sed -n '/\/opt.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'`
+    libs=`otool -L "$bin"|sed -n '/\/opt.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'`
     
-    mkdir -p $bundlePath/Contents/Frameworks
+    mkdir -p "$bundlePath/Contents/Frameworks"
 
     local lib
     for lib in $libs; do
@@ -53,37 +53,36 @@ function fixFrameworks {
         destFramework=$bundlePath/Contents/Frameworks/$frameworkName
         installFramework=@executable_path/../Frameworks/$frameworkName
         
-        if [ `basename $lib` == `basename $bin` ]; then continue; fi
+        if [ "`basename $lib`" == "`basename $bin`" ]; then continue; fi
 
-        if [ ! -e $bundlePath/Contents/Frameworks/$frameworkName ]; then 
+        if [ ! -e "$bundlePath/Contents/Frameworks/$frameworkName" ]; then 
             #cp -Rf -P /opt/qt/qt.git/lib/QtXml.framework (app name.app)/Contents/Frameworks
-            cp -Rf -P $framework $bundlePath/Contents/Frameworks
+            cp -Rf -P $framework "$bundlePath/Contents/Frameworks"
             #install_name_tool -id /opt/qt/qt.git/lib/QtXml.framework/Contents/QtXml
-            install_name_tool -id $installFramework$frameworkLib $destFramework$frameworkLib
+            install_name_tool -id $installFramework$frameworkLib "$destFramework$frameworkLib"
         fi
         #install_name_tool -change /opt/qt/qt.git/lib/QtXml.framework/Contents/QtXml @executable_path/../Frameworks/QtXml.framework/Contents/QtXml (bin)
-        install_name_tool -change $lib $installFramework$frameworkLib $bin
-        fixLocalLibs $destFramework
-        fixFrameworks $destFramework
+        install_name_tool -change $lib $installFramework$frameworkLib "$bin"
+        fixLocalLibs "$destFramework"
+        fixFrameworks "$destFramework"
     done
 }
 
 function fixLocalLibs {
     echo -n L
-    if [ -d $1 ]; then
-        local bin=`getBundleBin $1`
+    if [ -d "$1" ]; then
+        local bin=`getBundleBin "$1"`
     else
-        local bin=$1
+        local bin="$1"
     fi
     echo Fixing Local Lib for $bin
 
-    local libs=`otool -L $bin | sed -n '/^[^\/]*$/ s/^[[:space:]]*\(.*\) (com.*/\1/p'`
-    local extralibs=`otool -L $bin | sed -n '/\/opt.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'|grep -v framework`
+    local libs=`otool -L "$bin" | sed -n '/^[^\/]*$/ s/^[[:space:]]*\(.*\) (com.*/\1/p'`
+    local extralibs=`otool -L "$bin" | sed -n '/\/opt.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'|grep -v framework`
     local libs="$libs $extralibs"
     local lib
     local cpPath
     for lib in $libs; do
-        echo for lib $lib in libs
         local libPath=$lib
         if [ ! -e $lib ]; then
             cpPath=`locateLib $lib`
@@ -91,12 +90,12 @@ function fixLocalLibs {
             cpPath=$lib
         fi
         lib=`basename $lib`
-        cp -rf $cpPath $bundlePath/Contents/MacOS
-        install_name_tool -id @executable_path/$lib $bundlePath/Contents/MacOS/$lib
-        install_name_tool -change $libPath @executable_path/$lib $bin
+        cp -rf $cpPath "$bundlePath/Contents/MacOS"
+        install_name_tool -id @executable_path/$lib "$bundlePath/Contents/MacOS/$lib"
+        install_name_tool -change $libPath @executable_path/$lib "$bin"
         
-        fixFrameworks $bundlePath/Contents/MacOS/$lib
-        fixLocalLibs $bundlePath/Contents/MacOS/$lib
+        fixFrameworks "$bundlePath/Contents/MacOS/$lib"
+        fixLocalLibs "$bundlePath/Contents/MacOS/$lib"
     done
 }
 
@@ -110,35 +109,35 @@ function locateLib {
     return 1
 }
 
-if [ -d $1 ]; then
-    bundlePath=$1
+if [ -d '$1' ]; then
+    bundlePath="$1"
 else
     bundlePath=$(echo $1 | sed -E "s|^(.*)\.app.*$|\1\.app|g")
 fi
 
-rootdir=`dirname $bundlePath`
+rootdir=`dirname "$bundlePath"`
 binPath=$bundlePath/Contents/MacOS
 
 echo =========== Fix Local Libs ==============
-if [ -d $1 ]; then
-    fixLocalLibs $bundlePath
+if [ -d '$1' ]; then
+    fixLocalLibs "$bundlePath"
 else
-    fixLocalLibs $1
+    fixLocalLibs "$1"
 fi
 
 echo
 
 echo =========== Fix Frameworks ==============
-if [ -d $1 ]; then
-    fixFrameworks $bundlePath
+if [ -d '$1' ]; then
+    fixFrameworks "$bundlePath"
 else
-    fixFrameworks $1
+    fixFrameworks "$1"
 fi
 
 echo
 
 echo ======= Copying image plugins ===========
-mkdir -p $bundlePath/Contents/plugins
+mkdir -p "$bundlePath/Contents/plugins"
 
 plugins="imageformats phonon_backend sqldrivers"
 
@@ -148,9 +147,9 @@ for plugin in $plugins; do
     else
         pluginDir=`qmake --version |sed -n 's/^.*in \(\/.*$\)/\1/p'`/../plugins
     fi
-    cp -R -P $pluginDir/$plugin $bundlePath/Contents/plugins
-    for i in $bundlePath/Contents/plugins/$plugin/*; do
-        fixFrameworks $i
+    cp -R -P $pluginDir/$plugin "$bundlePath/Contents/plugins"
+    for i in "$bundlePath"/Contents/plugins/$plugin/*; do
+        fixFrameworks "$i"
         echo -n P
     done
     echo
@@ -158,5 +157,5 @@ done
 
 
 qtconf=$bundlePath/Contents/Resources/qt.conf
-echo [Paths] > $qtconf
-echo Plugins = plugins >> $qtconf
+echo [Paths] > "$qtconf"
+echo Plugins = plugins >> "$qtconf"
