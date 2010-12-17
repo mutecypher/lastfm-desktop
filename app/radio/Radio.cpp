@@ -69,7 +69,12 @@ Radio::~Radio()
 void
 Radio::play( const RadioStation& station )
 {
-    qDebug() << "play";
+    if( m_state == Paused )
+    {
+        m_mediaObject->play();
+        return;
+    }
+
     if (m_state != Stopped)
     {
         //FIXME filthy! get us to a clean slate
@@ -205,6 +210,15 @@ Radio::stop()
     clear();
     
     changeState( Stopped );
+}
+
+
+void
+Radio::pause()
+{
+    m_mediaObject->pause();
+    
+    changeState( Paused );
 }
 
 
@@ -371,6 +385,9 @@ Radio::changeState( Radio::State const newstate )
 
 		case Stopped:
             emit stopped();
+            break;
+
+        case Paused:
             break;
 	}
 }
