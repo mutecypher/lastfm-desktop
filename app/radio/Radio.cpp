@@ -69,6 +69,7 @@ Radio::~Radio()
 void
 Radio::play( const RadioStation& station )
 {
+    qDebug() << "play";
     if( m_state == Paused )
     {
         m_mediaObject->play();
