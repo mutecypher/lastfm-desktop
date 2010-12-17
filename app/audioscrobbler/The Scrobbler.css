@@ -381,12 +381,12 @@ QLabel#title1, QLabel#title2 {
 
 MetadataWindow #artistImage {
 	origin: top-left;
-    padding: 0px;  
+    padding: 0px;
     border: 1px solid #716f6f; 
-    min-width: 220px;     
-	max-width: 220px;
-	min-height: 160px; 
-    max-height: 160px; 
+    min-width: 175px;     
+	max-width: 175px;
+	min-height: 130px; 
+    max-height: 130px; 
 	qproperty-gradient: false;
 }
 
