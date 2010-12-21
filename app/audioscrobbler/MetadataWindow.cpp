@@ -110,7 +110,7 @@ MetadataWindow::MetadataWindow()
     addDragHandleWidget( titleBar );
     addDragHandleWidget( statusBar );
 
-    setWindowTitle(tr("The Scrobbler"));
+    setWindowTitle(tr("Last.fm Scrobbler"));
     setUnifiedTitleAndToolBarOnMac( true );
     setMinimumHeight( 80 );
     resize(20, 500);

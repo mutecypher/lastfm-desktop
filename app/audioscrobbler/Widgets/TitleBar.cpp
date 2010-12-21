@@ -47,7 +47,7 @@ TitleBar::TitleBar( QWidget* parent )
 #endif
 
     layout->addStretch( 1 );
-    QLabel* title = new QLabel( tr( "The Scrobbler"), this );
+    QLabel* title = new QLabel( tr( "Last.fm Scrobbler"), this );
     layout->addWidget( title, 0, Qt::AlignCenter );
     layout->addStretch( 1 );
 
