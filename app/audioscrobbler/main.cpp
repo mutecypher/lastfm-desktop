@@ -33,8 +33,13 @@ int main( int argc, char** argv )
     try
     {
         audioscrobbler::Application app( argc, argv );
-        
+
         if ( app.sendMessage( app.arguments() ) || app.arguments().contains("--exit") )
+            return 0;
+
+        // It's possible that we were unable to send the
+        // message, but the app is actually running
+        if ( app.isRunning() )
             return 0;
 
         app.init();
