@@ -18,7 +18,7 @@ StylableWidget {
 unicorn--MainWindow ProfileWidget,
 unicorn--MainWindow #NowScrobbling,
 unicorn--MainWindow #navigation,
-unicorn--MainWindow #recentTracks {
+unicorn--MainWindow #activityList {
     background-color: rgba( 38, 38, 38, 230 );
 }
 
@@ -380,8 +380,8 @@ QLabel#title1, QLabel#title2 {
 }
 
 MetadataWindow #artistImage {
-	origin: top-left;
     padding: 0px;  
+    margin-right: 10px;
     border: 1px solid #716f6f; 
     min-width: 220px;     
 	max-width: 220px;
