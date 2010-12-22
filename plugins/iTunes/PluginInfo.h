@@ -34,20 +34,10 @@ public:
 
     IPluginInfo* clone() const { return new ITunesPluginInfo( *this ); }
 
-#ifdef QT_VERSION
-    QString pluginInstallPath() const
+	std::tstring pluginInstallPath() const
     {
-    #ifdef Q_OS_WIN
-        QSettings s( QString( "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows"
-                              "\\CurrentVersion\\App Paths\\") + processName(), 
-                     QSettings::NativeFormat );
-        return s.value( "Path" ) + "\\Plugins";
-    #endif 
-        return "~/Library/iTunes/iTunes Plug-ins";
+		return std::tstring();
     }
-#endif
-
-
 
 };
 

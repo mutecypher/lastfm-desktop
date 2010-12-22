@@ -4,7 +4,6 @@
 #include "IPluginInfo.h"
 #include "KillProcess.h"
 
-
 IPluginInfo::IPluginInfo()
 {
 }
@@ -18,35 +17,8 @@ bool
 IPluginInfo::isAppInstalled() const
 {
 #ifdef Q_OS_WIN
-	QString displayNameValue = QString::fromStdString( displayName() );
-	QSettings s("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\", QSettings::NativeFormat );
-	foreach( QString group, s.childGroups()) {
-		s.beginGroup( group );
-			QString name = s.value( "DisplayName" ).toString();
-			if( name.contains( displayNameValue ) ||
-				group.contains( displayNameValue )) {
-					if( !minVersion().isValid() && 
-						!maxVersion().isValid())
-						return true;
-
-					QStringList verParts = s.value( "DisplayVersion" ).toString().split( "." );
-					QList<int> verInts;
-					foreach( QString part, verParts ) {
-						bool ok;
-						int i = part.toInt( &ok );
-						verInts << (ok ? i : 0);
-					}
-					while (verInts.count() < 4) {
-						verInts << 0;
-					}
-					Version installedVersion( verInts[0], verInts[1], verInts[2], verInts[3] );
-					if( minVersion() < installedVersion &&
-						installedVersion < maxVersion())
-						return true;
-			}
-		s.endGroup();
-	}
-	return false;
+	pluginInstallPath();
+	return true;
 #elif defined Q_OS_MAC
 	return true;
 #endif
@@ -78,6 +50,5 @@ void IPluginInfo::restartProcess() const
     killer.KillProcess( processName().c_str());
 #endif //WIN32
 }
-
 
 #endif //QT_VERSION

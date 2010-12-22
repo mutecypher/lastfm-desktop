@@ -27,20 +27,14 @@ public:
 
     IPluginInfo* clone() const { return new FooBar09PluginInfo( *this ); }
 
-#ifdef QT_VERSION
-    QString pluginInstallPath() const
+	std::tstring pluginInstallPath() const
     {
-    #ifdef Q_OS_WIN
-        QSettings s( QString( "HKEY_LOCAL_MACHINE\\Software\\"
-                              "\\foobar2000"), 
-                     QSettings::NativeFormat );
-        return s.value( "Install Path" ) + "\\components";
+    #ifdef WIN32
+		return programFilesX86().append( L"\\fb2k\\components");
     #endif 
         Q_ASSERT( !"There is no windows mediaplayer on non-windows platforms!" );
-        return "";
+        return std::tstring();
     }
-#endif
-
 };
 
 #endif //FOOBAR09_PLUGIN_INFO_H_

@@ -27,19 +27,15 @@ public:
 
     IPluginInfo* clone() const { return new WmpPluginInfo( *this ); }
 
-#ifdef QT_VERSION
-    QString pluginInstallPath() const
+    std::tstring pluginInstallPath() const
     {
-    #ifdef Q_OS_WIN
-        QSettings s( QString( "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows"
-                              "\\CurrentVersion\\App Paths\\") + processName(), 
-                     QSettings::NativeFormat );
-        return s.value( "Path" ) + "\\Plugins";
-    #endif 
+		#ifdef Q_OS_WIN
+			return programFilesX86() + L"\\Windows Media Player";
+		#endif 
+
         Q_ASSERT( !"There is no windows mediaplayer on non-windows platforms!" );
-        return "";
+        return std::tstring();
     }
-#endif
 };
 
 #endif //WMP_PLUGIN_INFO_H_
