@@ -76,6 +76,7 @@ MetadataWindow::MetadataWindow()
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
     ui.tracks = new QWidget;
+    ui.tracks->setObjectName( "activityList" );
     QHBoxLayout* hl = new QHBoxLayout( ui.tracks );
     QVBoxLayout* vl = new QVBoxLayout;
     hl->setContentsMargins( 0, 0, 0, 0 );

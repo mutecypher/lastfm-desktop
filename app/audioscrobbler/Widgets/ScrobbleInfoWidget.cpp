@@ -100,6 +100,7 @@ ScrobbleInfoWidget::setupUi()
     ui.scrollArea->setWidgetResizable( true );
 
     QWidget* titleBox = new QWidget();
+    titleBox->setObjectName( "titleBox" );
     {
         QHBoxLayout* layout = new QHBoxLayout( titleBox );
         layout->setContentsMargins( 0, 0, 0, 0 );
@@ -118,6 +119,11 @@ ScrobbleInfoWidget::setupUi()
         ui.title2->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
         ui.title2->setObjectName( "title2" );
         ui.title2->setOpenExternalLinks( true );
+
+        vl->addWidget( ui.timestamp = new QLabel() );
+        ui.timestamp->setObjectName( "timestamp" );
+        ui.timestamp->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
+
         vl->addStretch();
 
         vl->addWidget( ui.scrobbleControls = new ScrobbleControls( m_track ) );
@@ -150,6 +156,30 @@ ScrobbleInfoWidget::setupUi()
     scrobBox->setObjectName( "scrobbles" );
 	
     layout->addWidget( scrobBox );
+    
+    QWidget* bio = new QWidget();
+    {
+        QVBoxLayout* layout = new QVBoxLayout( bio );
+        layout->addWidget( ui.bioText = new QTextBrowser() );
+        ui.bioText->setOpenLinks( false );
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 0 );
+    }
+    DataBox* bioBox = new DataBox( tr( "Artist biography" ), bio );
+    bioBox->setObjectName( "bio" );
+    layout->addWidget( bioBox );
+
+    QWidget* simart = new QWidget();
+    {
+        QVBoxLayout* layout = new QVBoxLayout( simart );
+        layout->addWidget( ui.similarArtists = new LfmListView() );
+        ui.similarArtists->setObjectName( "similarArtists" );
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 0 );
+    }
+    DataBox* simartBox = new DataBox( tr( "People who listen to this artist also like" ), simart );
+    simartBox->setObjectName( "similarArtists" );
+    layout->addWidget( simartBox );
 
     QWidget* tags = new QWidget();
     {
@@ -181,30 +211,6 @@ ScrobbleInfoWidget::setupUi()
     DataBox* listenersBox = new DataBox( tr( "Listeners" ), listeners );
     listenersBox->setObjectName( "listeners" );
     layout->addWidget( listenersBox );
-    
-    QWidget* bio = new QWidget();
-    {
-        QVBoxLayout* layout = new QVBoxLayout( bio );
-        layout->addWidget( ui.bioText = new QTextBrowser() );
-        ui.bioText->setOpenLinks( false );
-        layout->setContentsMargins( 0, 0, 0, 0 );
-        layout->setSpacing( 0 );
-    }
-    DataBox* bioBox = new DataBox( tr( "Artist biography" ), bio );
-    bioBox->setObjectName( "bio" );
-    layout->addWidget( bioBox );
-
-    QWidget* simart = new QWidget();
-    {
-        QVBoxLayout* layout = new QVBoxLayout( simart );
-        layout->addWidget( ui.similarArtists = new LfmListView() );
-        ui.similarArtists->setObjectName( "similarArtists" );
-        layout->setContentsMargins( 0, 0, 0, 0 );
-        layout->setSpacing( 0 );
-    }
-    DataBox* simartBox = new DataBox( tr( "People who listen to this artist also like" ), simart );
-    simartBox->setObjectName( "similarArtists" );
-    layout->addWidget( simartBox );
     
     layout->addStretch(1);
 	mainLayout->addStretch(1);

@@ -76,6 +76,7 @@ protected:
          class QListView* similarArtists;
          class QLabel* title1;
          class QLabel* title2;
+         class QLabel* timestamp;
          class ScrobbleControls* scrobbleControls;
          class QLabel* yourScrobbles;
          class QLabel* totalScrobbles;
