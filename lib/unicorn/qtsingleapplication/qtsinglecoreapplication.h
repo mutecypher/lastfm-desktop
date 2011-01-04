@@ -47,9 +47,11 @@
 
 #include <QtCore/QCoreApplication>
 
+#include "lib/DllExportMacro.h"
+
 class QtLocalPeer;
 
-class QtSingleCoreApplication : public QCoreApplication
+class UNICORN_DLLEXPORT QtSingleCoreApplication : public QCoreApplication
 {
     Q_OBJECT
 
