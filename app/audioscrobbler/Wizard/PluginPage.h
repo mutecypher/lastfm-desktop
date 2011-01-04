@@ -61,7 +61,14 @@ public:
 
     void initializePage()
     {
-        const QIcon vistaShield = QApplication::style()->standardIcon(QStyle::SP_VistaShield);
+		QLabel* lbl;
+		layout()->addWidget( lbl = new QLabel( tr( "<p>The alpha release of the Last.fm Scrobbler uses the legacy audioscrobbler media player plugins for windows.</p>"
+								 "<p>Do not uninstall the old Last.fm app during alpha testing but <stront>DO</strong> make sure that it is not running when testing the new app.</p>" )));
+
+		lbl->setTextFormat( Qt::RichText );
+
+		/*
+		const QIcon vistaShield = QApplication::style()->standardIcon(QStyle::SP_VistaShield);
         wizard()->button( QWizard::NextButton )->setIcon( vistaShield );
         QLabel* description = new QLabel( tr( "Some media players need a plugin to be installed in order to scrobble.\n\nIf you do not want to scrobble from any of the detected media players then please uncheck them below:\n\n" )); 
         description->setWordWrap( true );
@@ -78,7 +85,7 @@ public:
                 cb->setDisabled( true );
                 cb->setText( cb->text() + " " + tr( "(Plugin installed or not required)" ));
             }
-        }
+        }*/
     }
 };
 
