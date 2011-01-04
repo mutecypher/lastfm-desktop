@@ -35,7 +35,7 @@ static QLocale qMacLocale();
 
 
 unicorn::CoreApplication::CoreApplication( int& argc, char** argv )
-                      : QCoreApplication( argc, argv )
+                      : QtSingleCoreApplication( argc, argv )
 {
     init();
     
