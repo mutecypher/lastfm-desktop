@@ -41,7 +41,7 @@ ScrobbleInfoFetcher::start()
 
         {
             // track.getInfo
-            m_track.getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
+            m_track.getInfo();
             connect( m_track.signalProxy(), SIGNAL(gotInfo(XmlQuery)), SLOT(onTrackGotInfo(XmlQuery)) ) ;
             ++m_numRequests;
         }
@@ -60,7 +60,7 @@ ScrobbleInfoFetcher::start()
 
         {
             // artist.getInfo
-            QNetworkReply* reply = m_track.artist().getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
+            QNetworkReply* reply = m_track.artist().getInfo();
             m_replies.append(reply);
             connect(reply, SIGNAL(finished()), SLOT(onArtistGotInfo()));
         }
@@ -73,7 +73,7 @@ ScrobbleInfoFetcher::start()
 
         {
             // album.getInfo
-            QNetworkReply* reply = m_track.album().getInfo( lastfm::ws::Username, lastfm::ws::SessionKey );
+            QNetworkReply* reply = m_track.album().getInfo();
             m_replies.append(reply);
             connect(reply, SIGNAL(finished()), SLOT(onAlbumGotInfo()));
         }

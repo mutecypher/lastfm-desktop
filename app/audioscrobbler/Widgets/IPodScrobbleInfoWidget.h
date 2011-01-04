@@ -1,6 +1,6 @@
 /*
-   Copyright 2005-2009 Last.fm Ltd.
-      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
+   Copyright 2005-2009 Last.fm Ltd. 
+      - Primarily authored by Jono Cole
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -18,33 +18,28 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IPOD_SCROBBLE_ITEM_H_
-#define IPOD_SCROBBLE_ITEM_H_
+#ifndef IPOD_SCROBBLE_INFO_WIDGET_H_
+#define IPOD_SCROBBLE_INFO_WIDGET_H_
 
-#include <QWidget>
+#include "lib/unicorn/StylableWidget.h"
 
 #include <lastfm/Track>
 
-#include "ActivityListItem.h"
+namespace unicorn{ class Session; }
+namespace lastfm{ class UserDetails; }
 
-class IPodScrobbleItem : public ActivityListItem
+class IPodScrobbleInfoWidget : public StylableWidget
 {
     Q_OBJECT
+
 public:
-    IPodScrobbleItem( const QList<Track>& tracks );
-    IPodScrobbleItem( const QDomElement& element );
+    IPodScrobbleInfoWidget( const QList<Track>& tracks, QWidget* p = 0 );
 
-    QWidget* infoWidget() const;
-
-private:
-    QDomElement toDomElement( QDomDocument xml ) const;
-    void finishUi();
-
-private:
-    QWidget* m_info;
-    QList<Track> m_tracks;
+protected:
+    struct {
+        class QLabel* iPod;
+        class QLabel* title;
+    } ui;
 };
 
-
-#endif // IPOD_SCROBBLE_ITEM_H_
-
+#endif //IPOD_SCROBBLE_INFO_WIDGET_H_

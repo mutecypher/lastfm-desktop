@@ -1,6 +1,6 @@
 /*
-   Copyright 2005-2009 Last.fm Ltd.
-      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
+   Copyright 2005-2009 Last.fm Ltd. 
+      - Primarily authored by Jono Cole
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -18,33 +18,30 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IPOD_SCROBBLE_ITEM_H_
-#define IPOD_SCROBBLE_ITEM_H_
+#ifndef WELCOME_WIDGET_H_
+#define WELCOME_WIDGET_H_
 
-#include <QWidget>
+#include "lib/unicorn/StylableWidget.h"
 
-#include <lastfm/Track>
+namespace unicorn{ class Session; }
+namespace lastfm{ class UserDetails; }
 
-#include "ActivityListItem.h"
-
-class IPodScrobbleItem : public ActivityListItem
+class WelcomeWidget : public StylableWidget
 {
     Q_OBJECT
+
 public:
-    IPodScrobbleItem( const QList<Track>& tracks );
-    IPodScrobbleItem( const QDomElement& element );
+    WelcomeWidget( QWidget* p = 0 );
 
-    QWidget* infoWidget() const;
+private slots:
+    void onSessionChanged( unicorn::Session* );
 
-private:
-    QDomElement toDomElement( QDomDocument xml ) const;
-    void finishUi();
-
-private:
-    QWidget* m_info;
-    QList<Track> m_tracks;
+protected:
+    struct {
+        class QLabel* as;
+        class QLabel* welcome;
+        class QLabel* callToAction;
+    } ui;
 };
 
-
-#endif // IPOD_SCROBBLE_ITEM_H_
-
+#endif //WELCOME_WIDGET_H_

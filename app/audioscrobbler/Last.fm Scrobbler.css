@@ -18,7 +18,7 @@ StylableWidget {
 unicorn--MainWindow ProfileWidget,
 unicorn--MainWindow #NowScrobbling,
 unicorn--MainWindow #navigation,
-unicorn--MainWindow #recentTracks {
+unicorn--MainWindow #activityList {
     background-color: rgba( 38, 38, 38, 230 );
 }
 
@@ -62,6 +62,28 @@ TitleBar QPushButton:pressed {
     min-height:20px;
     max-height: 20px;
     max-width: 20px;
+}
+
+WelcomeWidget {
+	padding: 10px 10px 10px 10px;
+}
+
+WelcomeWidget #asLogo {
+	qproperty-pixmap: url(":/as.png");
+}
+
+WelcomeWidget QLabel {
+	color: #cccccc;
+	qproperty-wordWrap: true;
+}
+
+WelcomeWidget QLabel#welcome {
+	font-weight: bold;
+	font-size: 28px;
+}
+
+WelcomeWidget QLabel#callToAction {
+	font-size: 18px;
 }
 
 unicorn--MainWindow ProfileWidget,
@@ -139,6 +161,25 @@ MetadataWindow DataListWidget,
     font-size: 11px;
     font-weight: normal;
 }
+
+IPodScrobbleInfoWidget QLabel#iPod {
+	qproperty-pixmap: url(":/as.png");
+}
+
+IPodScrobbleInfoWidget QLabel#title {
+	font-size: 18px;
+	font-weight: bold;
+	color: #cccccc;
+	qproperty-wordWrap: true;
+}
+
+IPodScrobbleInfoWidget QLabel#iPodScrobble {
+	font-size: 11px;
+	color: #cccccc;
+	border-bottom: 1px solid #cccccc;
+	qproperty-wordWrap: true;
+}
+
 
 ScrobbleInfoWidget QPushButton {
     color: transparent;
@@ -222,21 +263,23 @@ ActivityListWidget {
 	min-width: 40px;
 }
 
-ActivityListItem{
+ActivityListItem {
 	min-width: 40px;
+	border-bottom: 1px solid #cccccc;
 }
 
-ActivityListItem[odd=true] {
-	background-color: rgba( 51, 51, 51, 230 );
+NowPlayingItem {
+	/* don't have a border on the now playing */
+	border-bottom: none;
+}
+
+ActivityListItem[selected=true] {
+	background-color: rgba( 23, 23, 23, 230 );
 }
 
 ActivityListItem {
 	padding: 0px 20px 0px 10px;
 	min-height: 30px;
-}
-
-ActivityListItem:hover {
-	background-color: rgba( 0, 0, 2, 230 );
 }
 
 ActivityListItem HttpImageWidget#art {
@@ -290,10 +333,6 @@ ActivityListItem QToolButton#cog:pressed {
     qproperty-icon: url(:/cog-onpress.png);
 }
 
-ActivityListItem QToolButton#cog:hover {
-    qproperty-icon: url(:/cog-onhover.png);
-}
-
 ProfileWidget #title {
     font-size: 20pt;
 }
@@ -341,8 +380,8 @@ QLabel#title1, QLabel#title2 {
 }
 
 MetadataWindow #artistImage {
-	origin: top-left;
     padding: 0px;  
+    margin-right: 10px;
     border: 1px solid #716f6f; 
     min-width: 220px;     
 	max-width: 220px;

@@ -52,7 +52,6 @@
 
 MetadataWindow::MetadataWindow()
 {
-    setWindowTitle( "Audioscrobbler" );
     setAttribute( Qt::WA_TranslucentBackground );
     
     setWindowFlags( Qt::CustomizeWindowHint | Qt::FramelessWindowHint );
@@ -77,6 +76,7 @@ MetadataWindow::MetadataWindow()
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
     ui.tracks = new QWidget;
+    ui.tracks->setObjectName( "activityList" );
     QHBoxLayout* hl = new QHBoxLayout( ui.tracks );
     QVBoxLayout* vl = new QVBoxLayout;
     hl->setContentsMargins( 0, 0, 0, 0 );
@@ -108,12 +108,10 @@ MetadataWindow::MetadataWindow()
     layout->addWidget( statusBar = new StatusBar( this ) );
     statusBar->setObjectName( "StatusBar" );
 
-
-
     addDragHandleWidget( titleBar );
     addDragHandleWidget( statusBar );
 
-    setWindowTitle(tr("Last.fm Audioscrobbler"));
+    setWindowTitle(tr("Last.fm Scrobbler"));
     setUnifiedTitleAndToolBarOnMac( true );
     setMinimumHeight( 80 );
     resize(20, 500);
@@ -138,6 +136,8 @@ MetadataWindow::MetadataWindow()
     connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotTags(XmlQuery)), SIGNAL(trackGotTags(XmlQuery)));
     connect( ui.nowPlaying->fetcher(), SIGNAL(finished()), SIGNAL(finished()));
 
+    connect( ui.nowPlaying, SIGNAL(clicked(ActivityListItem*)), ui.recentTracks, SLOT(clearItemClicked()));
+
     connect( ui.recentTracks, SIGNAL(itemClicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
     connect( ui.nowPlaying, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
 
@@ -157,31 +157,36 @@ MetadataWindow::onSessionChanged( unicorn::Session* session )
 void
 MetadataWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )
 {
-    addNowPlayingToActivityList();
-
-    m_currentTrack = t;
-    ui.nowPlaying->setTrack( m_currentTrack );
-
-    onItemClicked( ui.nowPlaying );
+    newTrack( t );
 }
 
 
 void
 MetadataWindow::onStopped()
 {
+    newTrack( Track() );
+}
+
+void
+MetadataWindow::newTrack( const Track& track )
+{
     addNowPlayingToActivityList();
 
-    m_currentTrack = Track();
+    m_currentTrack = track;
     ui.nowPlaying->setTrack( m_currentTrack );
 
-    onItemClicked( ui.nowPlaying );
+    // only switch the info widget if we are
+    // currently on the now playing track
+    if ( m_currentActivity == ui.nowPlaying )
+        onItemClicked( ui.nowPlaying );
 }
 
 
 void
 MetadataWindow::addNowPlayingToActivityList()
 {
-    if ( ui.nowPlaying->track().scrobbleStatus() != lastfm::Track::Null )
+    if ( ui.nowPlaying->track() != Track()
+        && ui.nowPlaying->track().scrobbleStatus() != lastfm::Track::Null )
     {
         TrackItem* item = new TrackItem( *ui.nowPlaying );
         ui.recentTracks->addItem( item );
@@ -210,8 +215,10 @@ MetadataWindow::onItemClicked( ActivityListItem* clickedItem )
         infoLayout->takeAt( 0 )->widget()->hide();
 
     QWidget* widget = clickedItem->infoWidget();
-    widget->show();
     infoLayout->addWidget( widget );
+    widget->show();
+
+    m_currentActivity = clickedItem;
 }
 
 

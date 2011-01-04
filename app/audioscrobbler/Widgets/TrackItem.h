@@ -55,10 +55,10 @@ signals:
     void cogMenuAboutToHide();
 
 private:
-    void enterEvent( class QEvent* event );
-    void leaveEvent( class QEvent* event );
-
     QDomElement toDomElement( QDomDocument xml ) const;
+
+    void setDetails();
+    void connectTrack();
 
 protected:
     void doSetTrack( const Track& track );
@@ -69,9 +69,6 @@ public slots:
 private slots:
     void onLoveToggled( bool loved );
 
-    void onLoveClicked();
-    void onTagClicked();
-    void onShareClicked();
 
     void onScrobbleStatusChanged();
 

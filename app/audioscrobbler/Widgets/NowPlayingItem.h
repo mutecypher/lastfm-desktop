@@ -54,7 +54,7 @@ private slots:
     void updateTimestamp();
 
 private:
-    QWidget* profile;
+    QWidget* m_nullInfo;
 };
 
 

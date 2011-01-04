@@ -33,6 +33,11 @@ class MetadataWindow : public unicorn::MainWindow
         QWidget* scrobbleInfo;
     } ui;
 
+    enum {
+        TAB_PROFILE,
+        TAB_INFO
+    };
+
 public:
     MetadataWindow();
     const Track& currentTrack() const{ return m_currentTrack; }
@@ -59,18 +64,15 @@ private slots:
     void onItemClicked( class ActivityListItem* clickedItem );
     
 private:
-    Track m_currentTrack;
-    QList<QAction*> m_buttons;
-
+    void newTrack( const Track& track );
     void setCurrentWidget( QWidget* );
     void addWinThumbBarButtons( QList<QAction*>& );
     void addNowPlayingToActivityList();
 
-    enum {
-        TAB_PROFILE,
-        TAB_INFO
-    };
-
+private:
+    Track m_currentTrack;
+    class ActivityListItem* m_currentActivity;
+    QList<QAction*> m_buttons;
 };
 
 #endif //METADATA_WINDOW_H_

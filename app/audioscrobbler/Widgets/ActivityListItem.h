@@ -31,6 +31,7 @@ class ActivityListItem : public StylableWidget
     Q_OBJECT
     Q_PROPERTY(QString status READ status WRITE setStatus);
     Q_PROPERTY(bool odd READ odd WRITE setOdd);
+    Q_PROPERTY(bool selected READ selected WRITE setSelected);
 
 public:
     ActivityListItem( QWidget* parent = 0 );
@@ -38,13 +39,16 @@ public:
     static ActivityListItem* fromElement( QDomElement element );
     virtual QDomElement toDomElement( QDomDocument xml ) const;
 
-    virtual QWidget* infoWidget() const;
+    virtual QWidget* infoWidget() const = 0;
 
     bool odd() const;
     void setOdd( bool odd );
 
     QString status() const;
     void setStatus( QString status );
+
+    bool selected() const;
+    void setSelected( bool selected );
 
 signals:
     void clicked( ActivityListItem* );
@@ -60,15 +64,15 @@ private:
 protected:
     void setupUi();
 
+    void setText( const QString& text );
+
     struct
     {
         class QLabel* as;
-        class QWidget* trackTextArea;
-        class QLabel* trackText;
+        class QWidget* textArea;
+        class QLabel* text;
         class QLabel* correction;
         class QLabel* love;
-        class QToolButton* cog;
-        class GhostWidget* ghostCog;
         class QLabel* timestamp;
     } ui;
 
@@ -77,15 +81,15 @@ protected:
         class QMovie* scrobbler_paused;
     } movie;
 
-    QAction* m_loveAction;
-
 protected:
     QDateTime m_timestamp;
     class QTimer* m_timestampTimer;
 
-private:
+protected:
+    QString m_text;
     QString m_status;
     bool m_odd;
+    bool m_selected;
 };
 
 #include <QMovie>
