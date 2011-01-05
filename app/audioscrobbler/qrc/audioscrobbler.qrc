@@ -2,6 +2,7 @@
     <qresource prefix="/" >
         <file>16x16.png</file>
         <file>22x22.png</file>
+        <file>22x22_transparent.png</file>
         <file>love.png</file>
         <file>systray_icon_rest_mac.png</file>
         <file>systray_icon_pressed_mac.png</file>
