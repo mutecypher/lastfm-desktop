@@ -27,7 +27,7 @@
 
 int main( int argc, char** argv )
 {
-    QCoreApplication::setApplicationName( "Audioscrobbler" );
+    QCoreApplication::setApplicationName( "Last.fm Scrobbler" );
     QCoreApplication::setApplicationVersion( VERSION );
 
     try

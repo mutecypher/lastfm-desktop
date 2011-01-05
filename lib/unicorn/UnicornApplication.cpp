@@ -355,7 +355,7 @@ unicorn::Application::refreshStyleSheet()
         }
 
         if( styleSheet().isEmpty()) {
-            m_cssFileName = applicationDirPath() + CSS_PATH + QFileInfo(applicationFilePath()).baseName() + ".css";
+            m_cssFileName = applicationDirPath() + CSS_PATH + applicationName() + ".css";
             m_cssDir = applicationDirPath() + CSS_PATH;
         }
     }
