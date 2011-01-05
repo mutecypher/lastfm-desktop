@@ -204,7 +204,7 @@ Application::init()
     connect( m_about_action, SIGNAL( triggered() ), SLOT( onAboutTriggered() ) );
     menu->addSeparator();
 
-    QAction* quit = menu->addAction(tr("Quit Audioscrobbler"));
+    QAction* quit = menu->addAction(tr("Quit %1").arg( applicationName()));
 
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
 
