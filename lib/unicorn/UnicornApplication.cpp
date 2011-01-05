@@ -475,7 +475,7 @@ unicorn::Application::appleEventReceived( const QStringList& messages )
 }
 
 pascal OSErr /* static */
-unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, void* )
+unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long )
 {
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );
