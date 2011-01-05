@@ -92,7 +92,8 @@ public:
 
 	virtual std::tstring pluginInstallPath() const = 0;
 
-	static BOOL isWow64()
+#ifdef WIN32
+    static BOOL isWow64()
 	{
 		BOOL bIsWow64 = FALSE;
 
@@ -112,6 +113,7 @@ public:
 		}
 		return bIsWow64;
 	}
+#endif
 
 #ifdef QT_VERSION
     virtual void restartProcess() const;
