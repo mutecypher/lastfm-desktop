@@ -27,31 +27,34 @@ unicorn--MainWindow #ScrobbleStatusRow {
     background: rgba( 20, 20, 20, 240 );
 }
 
-TitleBar {
+TitleBar,
+StatusBar {
     background-clip: border;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 54, 54, 54, 242 ), stop:1 rgba( 39, 39, 39, 242 ));
 
     border: 1px solid;
     border-color: rgba( 39, 39, 39, 242 );
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
 
     background-image: url(:/highlight.png);
     background-position: top right;
     background-repeat: repeat-x;
 
-    min-height: 20px;
-    max-height: 20px;
+    min-height: 18px;
+    max-height: 18px;
+}
+
+TitleBar {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
 }
 
 TitleBar QLabel {
     font-weight: bold;
     font-size: 12px;
     color: #e0e0e0;
-
     min-height: 20px;
     max-height: 20px;
-    margin-top: -3px;
+    margin-top: -4px;
 }
 
 TitleBar QPushButton, 
@@ -62,10 +65,11 @@ TitleBar QPushButton:pressed {
     color: transparent;
     background-color: transparent;
     background-clip: margin;
-    background-origin: margin;
+    background-origin: content;
     background-image: url(:/close.png);
     background-position: center;
     background-repeat: no-repeat;
+    margin-top: -1px;
     min-width: 20px;
     min-height:20px;
     max-height: 20px;
@@ -100,15 +104,9 @@ QWidget#NowScrobbling {
 }
 
 StatusBar {
-    background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #4c4c4c, stop:1 #3d3d3d);
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
-    border: 1px solid #2d2d2d;
-    border-top: 2px solid qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #0e0e0e, stop:1 #686868);
     padding: 0px 0px 0px 22px;
-    margin: 0px;
-    min-height: 20px;
-    max-height: 20px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
 }
 
 StatusBar QLabel{
@@ -117,32 +115,8 @@ StatusBar QLabel{
     color: #cccccc;
 }
 
-QToolButton {
-    border: none;
-    padding:-1px -2px -2px -1px;
-    margin: 0px;
-}
-
-QToolButton[popupMode="1"] {
-    padding-right: 9px;
-}
-
-QToolButton::menu-button {
-    border: 1px solid #141414;
-    padding-left: 3px;
-    width: 7px;
-    background-color: rgba( 255, 255, 255, 200 );
-}
-
-QToolButton::menu-arrow {
-    color: black;
-    left: -3px;
-    margin: 0px;
-}
-
 QScrollArea,
-QScrollArea > QWidget,
-QScrollArea > QWidget > QWidget {
+QScrollArea QWidget#contents {
     background-color: transparent;
     padding: 0px;
     margin: 0px;
@@ -162,8 +136,7 @@ QScrollArea {
 MetadataWindow ProfileWidget .QLabel,
 ScrobbleInfoWidget QLabel,
 MetadataWindow QAbstractItemView,
-MetadataWindow DataListWidget,
-#recentTracks QLabel {
+MetadataWindow DataListWidget {
     color: #cccccc;
     margin: 0px;
     font-size: 11px;
@@ -273,7 +246,8 @@ ActivityListWidget {
 
 ActivityListItem {
 	min-width: 40px;
-	border-bottom: 1px solid #cccccc;
+    background-color: transparent;
+	/*border-bottom: 1px solid #cccccc;*/
 }
 
 NowPlayingItem {
@@ -297,6 +271,11 @@ ActivityListItem HttpImageWidget#art {
 	qproperty-pixmap: url(:/default_album_large.png);
 	margin: 0px 0px;
 	padding: 0px 0px;
+}
+
+ActivityListItem QLabel{
+    color: #949494;
+    font-size:12px;
 }
 
 ActivityListItem QLabel#timestamp {
@@ -413,7 +392,7 @@ QLabel#title2 {
 QScrollBar  {
     background-color: qlineargradient( x1:0, y1:0, x2:1, y2:0, stop:0 #1f1f1f, stop:1 #5a5a5a);
     margin: 0px;
-    width: 15px;
+    width: 16px;
     padding: 0px 0px 0px 0px;
     border-radius: 7px;
     border: 1px solid #1a1a1a;
@@ -486,6 +465,14 @@ LfmListView#listeningNow LfmDelegate {
 
 LfmListView#similarArtists LfmDelegate {
 	qproperty-defaultImage: url(":/default_user.png");
+}
+
+QSplitter::handle {
+    background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #323232, stop:1 #272727 );
+    background-image: url(:/slider_nubbin.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 1px solid #262626;
 }
 
 /*
