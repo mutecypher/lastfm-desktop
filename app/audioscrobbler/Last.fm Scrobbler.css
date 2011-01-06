@@ -28,22 +28,30 @@ unicorn--MainWindow #ScrobbleStatusRow {
 }
 
 TitleBar {
-    border: 1px solid transparent;
-    border-bottom: none;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
     background-clip: border;
-    background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #464646, stop:0.5 #0e0e0e, stop:1 #0e0e0e );
-    border-color: rgba( 38, 38, 38, 240 );
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 54, 54, 54, 242 ), stop:1 rgba( 39, 39, 39, 242 ));
+
+    border: 1px solid;
+    border-color: rgba( 39, 39, 39, 242 );
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+
+    background-image: url(:/highlight.png);
+    background-position: top right;
+    background-repeat: repeat-x;
+
     min-height: 20px;
     max-height: 20px;
 }
 
 TitleBar QLabel {
     font-weight: bold;
-    font-size: 11px;
-    color: #cccccc;
-    margin-right: 20px;
+    font-size: 12px;
+    color: #e0e0e0;
+
+    min-height: 20px;
+    max-height: 20px;
+    margin-top: -3px;
 }
 
 TitleBar QPushButton, 
@@ -386,7 +394,7 @@ MetadataWindow #artistImage {
     min-width: 175px;     
 	max-width: 175px;
 	min-height: 130px; 
-    max-height: 130px; 
+    max-height: 130px;
 	qproperty-gradient: false;
 }
 

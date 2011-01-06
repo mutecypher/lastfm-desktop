@@ -38,5 +38,6 @@
         <file>pointyarrow.png</file>
         <file>systray_screenshot.png</file>
 		<file>as.png</file>
+        <file>highlight.png</file>
     </qresource>
 </RCC>
