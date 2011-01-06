@@ -39,5 +39,6 @@
         <file>systray_screenshot.png</file>
 		<file>as.png</file>
         <file>highlight.png</file>
+        <file>slider_nubbin.png</file>
     </qresource>
 </RCC>
