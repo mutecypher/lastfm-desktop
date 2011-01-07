@@ -258,13 +258,13 @@ ScrobbleInfoWidget::setTrackDetails( const Track& track )
 
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui.scrobbleControls, SLOT(setLoveChecked(bool)));
 
+    // Add the green astrix to the title, if it has been corrected
     if ( track.corrected() )
     {
-        ui.correction->show();
-        ui.correction->setToolTip( tr("Auto-corrected from: %1").arg( track.toString( Track::Original ) ) );
+        QString toolTip = tr("Auto-corrected from: %1").arg( track.toString( Track::Original ) );
+        ui.title1->setText( ui.title1->text() + "<img src=\":/asterisk_small.png\" alt=\"" + toolTip + "\" title=\"" + toolTip + "\" />" );
+        ui.title1->setTextInteractionFlags( ui.title1->textInteractionFlags() | Qt::LinksAccessibleByMouse );
     }
-    else
-        ui.correction->hide();
 }
 
 
