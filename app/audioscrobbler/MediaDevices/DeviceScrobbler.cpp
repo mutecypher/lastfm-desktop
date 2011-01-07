@@ -11,12 +11,14 @@
 
 QString getIpodMountPath();
 
-DeviceScrobbler::DeviceScrobbler() {
+DeviceScrobbler::DeviceScrobbler()
+{
     qDebug() << "Instantiating DeviceScrobbler";
 }
 
 void 
-DeviceScrobbler::checkCachedIPodScrobbles() {
+DeviceScrobbler::checkCachedIPodScrobbles()
+{
     // Check if there are any iPod scrobbles
     unicorn::Session* currentSession = qobject_cast<unicorn::Application*>(qApp)->currentSession();
     if( !currentSession )
@@ -58,28 +60,29 @@ DeviceScrobbler::checkCachedIPodScrobbles() {
 
 
 void 
-DeviceScrobbler::handleMessage( const QStringList& message ) {
+DeviceScrobbler::handleMessage( const QStringList& message )
+{
     int pos = message.indexOf( "--twiddly" );
     const QString& action = message[ pos + 1 ];
     
-    if( action == "starting" ) {
+    if( action == "starting" )
         emit processingScrobbles();
-    }
-    else if( action == "no-tracks-found" ) {
+    else if( action == "no-tracks-found" )
         emit noScrobblesFound();
-    }
-    else if( action == "complete" ) {
+    else if( action == "complete" )
         twiddled( message );
-    }
 }
 
 
 void 
-DeviceScrobbler::iPodDetected( const QStringList& arguments ) {
+DeviceScrobbler::iPodDetected( const QStringList& arguments )
+{
     bool newIpod = false;
 
     int pos = arguments.indexOf( "--ipod-detected" );
-    if( pos == -1 ) {
+
+    if( pos == -1 )
+    {
         pos = arguments.indexOf( "--new-ipod-detected" );
         newIpod = true;
     }
@@ -92,20 +95,10 @@ DeviceScrobbler::iPodDetected( const QStringList& arguments ) {
     emit detectedIPod( serialNumber );
 }
 
-void 
-DeviceScrobbler::twiddled( QStringList arguments ) {
-
-    if( arguments.contains( "--twiddled-no-tracks" )) {
-        return;
-    }
-    // iPod scrobble time!
-
-    // Check if this iPod has been associated to any of our users
-    QString deviceId = arguments[ arguments.indexOf( "--deviceId" ) + 1 ];
-    QString deviceName = arguments[ arguments.indexOf( "--deviceName" ) + 1 ];
-
-    bool deviceAssociated( false );
-    bool thisUser( false );
+lastfm::User
+DeviceScrobbler::associatedUser( QString deviceId )
+{
+    lastfm::User associatedUser( "" );
 
     // Check if the device has been associated with a user
     // and then if it is with the current user
@@ -125,36 +118,83 @@ DeviceScrobbler::twiddled( QStringList arguments ) {
 
             if ( tempDeviceId == deviceId )
             {
-                deviceAssociated = true;
-
-                if ( user.name() == lastfm::ws::Username )
-                    thisUser = true;
-
+                associatedUser = user;
                 break;
             }
         }
         us.endArray();
 
-        if ( deviceAssociated ) break;
+        if ( !associatedUser.name().isEmpty() ) break;
     }
 
-    if ( !deviceAssociated )
+    return associatedUser;
+}
+
+void 
+DeviceScrobbler::twiddled( QStringList arguments )
+{
+    if( arguments.contains( "--twiddled-no-tracks" ) )
+        return;
+
+    // iPod scrobble time!
+
+    // Check if this iPod has been associated to any of our users
+    QString deviceId = arguments[ arguments.indexOf( "--deviceId" ) + 1 ];
+    QString deviceName = arguments[ arguments.indexOf( "--deviceName" ) + 1 ];
+    QString iPodPath = arguments[ arguments.indexOf( "--ipod-path" ) + 1 ];
+
+    // Check if the device has been associated with a user
+    // and then if it is with the current user
+    lastfm::User associatedUser = this->associatedUser( deviceId );
+
+    if ( associatedUser.name().isEmpty() )
     {
         // The device has not been associated yet
-        // so associate to the current user
+
+        // associate to the current user
         IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
         ipod->associateDevice( lastfm::ws::Username );
         delete ipod;
+
+        ScrobbleSetupDialog* scrobbleSetup = new ScrobbleSetupDialog( iPodPath );
+        connect( scrobbleSetup, SIGNAL(clicked(ScrobbleSetupDialog::Button,QString)), SLOT(onScrobbleSetupClicked(ScrobbleSetupDialog::Button,QString)));
+        scrobbleSetup->setModal( true );
+        scrobbleSetup->show();
     }
 
-    if ( !deviceAssociated || thisUser )
+    if ( associatedUser.name().isEmpty() || associatedUser.name() == lastfm::ws::Username )
     {
-        // This iPod is currently associated to the current user so scrobble!
-        int pos = arguments.indexOf( "--ipod-path" );
-        scrobbleIpodFile( arguments[ pos + 1 ] );
+        // This iPod has been associated to the current user
+        // or was already, so scrobble that file!
+
+        scrobbleIpodFile( iPodPath );
+    }
+}
+
+
+void
+DeviceScrobbler::onScrobbleSetupClicked( ScrobbleSetupDialog::Button button, QString iPodFile )
+{
+    // We need to store the result so we can check it next time
+
+    if ( button == ScrobbleSetupDialog::Yes )
+    {
+        // They always want this iPod to scrobble to their account so do nothing
+    }
+    else if ( button == ScrobbleSetupDialog::NotNow )
+    {
+        // They don't want to scrobble this iPod
+    }
+    else
+    {
+        // The button must have been ScrobbleSetupDialog::Never
+
+        // They never want to scrobble this iPod
     }
 
 }
+
+
 
 void 
 DeviceScrobbler::scrobbleIpodFile( QString iPodScrobblesFilename )
@@ -207,6 +247,7 @@ DeviceScrobbler::scrobbleIpodFile( QString iPodScrobblesFilename )
 
     iPodScrobblesFile.remove();
 }
+
 #ifdef Q_WS_X11
 void 
 DeviceScrobbler::onScrobbleIpodTriggered() {
