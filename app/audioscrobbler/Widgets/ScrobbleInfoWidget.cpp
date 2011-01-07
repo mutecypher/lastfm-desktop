@@ -239,8 +239,6 @@ ScrobbleInfoWidget::setTrackDetails( const Track& track )
     if ( ui.scrollArea->verticalScrollBar()->isVisible() )
         ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 
-    ui.area->hide();
-
     const unsigned short em_dash = 0x2014;
     QString title = QString("<a class='title' href=\"%1\">%2</a> ") + QChar(em_dash) + " <a class='title' href=\"%3\">%4</a>";
     const unicorn::Application* uApp = qobject_cast<unicorn::Application*>(qApp);
@@ -261,9 +259,9 @@ ScrobbleInfoWidget::setTrackDetails( const Track& track )
     // Add the green astrix to the title, if it has been corrected
     if ( track.corrected() )
     {
+        // TODO: The hover text doesn't work at the moment.
         QString toolTip = tr("Auto-corrected from: %1").arg( track.toString( Track::Original ) );
         ui.title1->setText( ui.title1->text() + "<img src=\":/asterisk_small.png\" alt=\"" + toolTip + "\" title=\"" + toolTip + "\" />" );
-        ui.title1->setTextInteractionFlags( ui.title1->textInteractionFlags() | Qt::LinksAccessibleByMouse );
     }
 }
 
