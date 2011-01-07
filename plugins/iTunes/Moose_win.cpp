@@ -21,7 +21,7 @@
 #include "Moose.h"
 #include "app/moose.h"
 #include <Windows.h>
-#include <ShFolder.h>
+#include <shlobj.h>
 #include <wchar.h>
 #include "common/c++/Logger.h"
 #include "RegistryUtils.h" // part of ScrobSub

@@ -3,16 +3,14 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QTimeLine>
+#include <QApplication>
+#include <QDesktopWidget>
 
 PointyArrow::PointyArrow()
 {
-    m_pm = new QPixmap( ":/pointyarrow.png" );
-
-    resize( m_pm->size());
     setAttribute( Qt::WA_TranslucentBackground );
     setWindowFlags( Qt::CustomizeWindowHint | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint );
     
-    move( geometry().left(), 40 );
     m_timeline = new QTimeLine( 1000 );
 
 
@@ -22,7 +20,6 @@ PointyArrow::PointyArrow()
 
 PointyArrow::~PointyArrow()
 {
-    delete m_pm;
     delete m_timeline;
 }
 
@@ -30,13 +27,19 @@ void
 PointyArrow::paintEvent( QPaintEvent* event )
 {
     QPainter p( this );
-    p.drawPixmap( QPoint( 0, 0 ), *m_pm );
+    p.drawPixmap( QPoint( 0, 0 ), m_pm );
 }
 
 void 
 PointyArrow::onFrameChanged( int frame )
 {
-    move( geometry().left(), frame );
+    if( m_currentDirection == DirectionUp ||
+        m_currentDirection == DirectionDown ) 
+    {
+        move( geometry().left(), frame );
+    } else {
+        move( frame, geometry().top() );
+    }
 }
 
 void 
@@ -50,9 +53,47 @@ void
 PointyArrow::pointAt( const QPoint& point )
 { 
     m_timeline->stop();
-    move( point.x() - (width() / 2.0f), point.y() + 40 );
+    QRect availRect = qApp->desktop()->availableGeometry( point );
+    QRect screenRect = qApp->desktop()->screenGeometry( point );
+
+    const bool autoHideSysTray = (availRect == screenRect);
+
+    QRect taskbarRect;
+    if( !autoHideSysTray ) {
+        taskbarRect = (QRegion(screenRect) - QRegion(availRect)).rects().first();
+    }
+
+    if( point.x() < availRect.left() ) {
+        //taskbar is left
+        m_currentDirection = DirectionLeft;
+        m_pm = QPixmap( ":/pointyarrow.png" ).transformed(QTransform().rotate(270.0));
+        resize( m_pm.size());
+        move( taskbarRect.right(), point.y() - (height() / 2.0f));
+        m_timeline->setFrameRange( geometry().left(), geometry().left() + 40 );
+    } else if( point.y() < availRect.top() ) {
+        //taskbar is top
+        m_currentDirection = DirectionUp;
+        m_pm = QPixmap( ":/pointyarrow.png" );
+        resize( m_pm.size());
+        move( point.x() - (width() / 2.0f), taskbarRect.bottom() );
+        m_timeline->setFrameRange( geometry().top(), geometry().top() + 40 );
+    } else if( point.x() > availRect.right() ) {
+        //taskbar is right
+        m_currentDirection = DirectionRight;
+        m_pm = QPixmap( ":/pointyarrow.png" ).transformed(QTransform().rotate(90.0));
+        resize( m_pm.size());
+        move( taskbarRect.left()-width(), point.y() - (height() / 2.0f));
+        m_timeline->setFrameRange( geometry().left(), geometry().left() - 40 );
+    } else {
+        //presume that taskbar is at the bottom
+        m_currentDirection = DirectionDown;
+        m_pm = QPixmap( ":/pointyarrow.png" ).transformed(QTransform().rotate(180.0));
+        resize( m_pm.size());
+        move( point.x() - (width() / 2.0f), taskbarRect.top()-height() );
+        m_timeline->setFrameRange( geometry().top(), geometry().top() - 40 );
+    }
+
     m_timeline->setCurveShape( QTimeLine::EaseInOutCurve );
-    m_timeline->setFrameRange( geometry().top(), geometry().top() + 40 );
     m_timeline->start();
     show();
 }

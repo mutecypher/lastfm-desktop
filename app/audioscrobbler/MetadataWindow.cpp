@@ -87,7 +87,11 @@ MetadataWindow::MetadataWindow()
     hl->addLayout( vl );
 
     QScrollBar* scrollBar = ui.recentTracks->scrollBar();
-    hl->addWidget( scrollBar );
+    QWidget* scrollBarContainer = new QWidget();
+    scrollBarContainer->setObjectName( "scrollBarContainer" );
+    (new QVBoxLayout( scrollBarContainer ))->addWidget( scrollBar );
+    scrollBarContainer->layout()->setContentsMargins( 0, 0, 0, 0 );
+    hl->addWidget( scrollBarContainer );
 
     vl->addWidget( ui.nowPlaying );
     vl->addWidget( ui.recentTracks );

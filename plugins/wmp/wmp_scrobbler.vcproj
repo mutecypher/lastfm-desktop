@@ -55,7 +55,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../../ScrobSub"
+				AdditionalIncludeDirectories="../ScrobSub"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -246,6 +246,26 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath="..\..\common\c++\win\scrobSubPipeName.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -369,11 +389,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\resource1.h"
+				RelativePath="..\..\ScrobSub\resource1.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\ScrobSub\resource1.h"
+				RelativePath=".\resource1.h"
 				>
 			</File>
 			<File
@@ -445,6 +465,14 @@
 					RelativePath="..\scrobsub\BlockingClient.cpp"
 					>
 					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
 						Name="Debug|Win32"
 						>
 						<Tool
@@ -460,6 +488,14 @@
 				<File
 					RelativePath="..\scrobsub\Bootstrap.cpp"
 					>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
 						>
@@ -481,6 +517,14 @@
 					RelativePath="..\scrobsub\EncodingUtils.cpp"
 					>
 					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
 						Name="Debug|Win32"
 						>
 						<Tool
@@ -496,6 +540,14 @@
 				<File
 					RelativePath="..\scrobsub\RegistryUtils.cpp"
 					>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
 						>
@@ -520,6 +572,14 @@
 				<File
 					RelativePath="..\scrobsub\ScrobSubmitter.cpp"
 					>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
 						>

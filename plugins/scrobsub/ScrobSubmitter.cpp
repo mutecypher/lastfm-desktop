@@ -38,7 +38,7 @@
 #include <windows.h>
 #include <tchar.h>
 #include <process.h>
-#include <shfolder.h>
+#include <shlobj.h>
 
 #include <iostream>
 #include <sstream>

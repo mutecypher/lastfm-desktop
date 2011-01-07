@@ -96,6 +96,7 @@ ScrobbleInfoWidget::setupUi()
     ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
     
     ui.contents = new QWidget();
+    ui.contents->setObjectName( "contents" );
     QVBoxLayout* mainLayout = new QVBoxLayout( ui.contents );
     
     ui.scrollArea->setWidget( ui.contents );

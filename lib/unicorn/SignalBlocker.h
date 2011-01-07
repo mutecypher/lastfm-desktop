@@ -1,6 +1,7 @@
 #ifndef SIGNAL_BLOCKER_H_
 #define SIGNAL_BLOCKER_H_
 
+#include "lib/DllExportMacro.h"
 #include <QTimer>
 #include <QEventLoop>
 

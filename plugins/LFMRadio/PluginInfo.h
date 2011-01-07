@@ -29,9 +29,9 @@ public:
     IPluginInfo* clone() const{ return new LFMRadioPluginInfo( *this ); }
 
     #ifdef QT_VERSION
-    QString pluginInstallPath() const
+    std::tstring pluginInstallPath() const
     {
-        return QString();
+        return std::tstring();
     }
     #endif
  
