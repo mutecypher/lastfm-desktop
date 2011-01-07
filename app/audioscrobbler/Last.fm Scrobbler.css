@@ -161,6 +161,10 @@ IPodScrobbleInfoWidget QLabel#iPodScrobble {
 	qproperty-wordWrap: true;
 }
 
+QScrollArea > QWidget,
+#scrollBarContainer {
+    background-color: #1b1b1b;
+}
 
 ScrobbleInfoWidget QPushButton {
     color: transparent;
