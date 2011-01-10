@@ -145,9 +145,7 @@ MetadataWindow::MetadataWindow()
     connect( ui.recentTracks, SIGNAL(itemClicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
     connect( ui.nowPlaying, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
 
-#ifdef NDEBUG
     menuBar()->hide();
-#endif
 }
 
 
