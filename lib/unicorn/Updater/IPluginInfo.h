@@ -6,6 +6,18 @@
     #include <QString>
     #include <QSettings>
 #endif
+#ifdef WIN32
+	#include <windows.h>
+	#include <tchar.h>
+	#include <iostream>
+	#include <Shlobj.h>
+#endif
+
+#if defined(WIN32) && defined(UNICODE)
+	#define tstring wstring
+#else
+	#define tstring string
+#endif
 
 class Version
 {
@@ -78,13 +90,54 @@ public:
     // Return true if this plugin is supported on the current platform
     virtual bool isPlatformSupported() const = 0;
 
+	virtual std::tstring pluginInstallPath() const = 0;
+
+#ifdef WIN32
+    static BOOL isWow64()
+	{
+		BOOL bIsWow64 = FALSE;
+
+		//IsWow64Process is not available on all supported versions of Windows.
+		//Use GetModuleHandle to get a handle to the DLL that contains the function
+		//and GetProcAddress to get a pointer to the function if available.
+
+		void* fnIsWow64Process = GetProcAddress(
+			GetModuleHandle(TEXT("kernel32")),"IsWow64Process");
+
+		if(NULL != fnIsWow64Process)
+		{
+			if (!IsWow64Process(GetCurrentProcess(),&bIsWow64))
+			{
+				//handle error
+			}
+		}
+		return bIsWow64;
+	}
+#endif
+
 #ifdef QT_VERSION
     virtual void restartProcess() const;
     virtual bool isAppInstalled() const;
-    virtual QString pluginInstallPath() const = 0;
     virtual bool isInstalled() const;
     bool canBootstrap() const;
 #endif //QT_VERSION
+
+protected:
+#ifdef WIN32
+	std::tstring programFilesX86() const
+    {
+		TCHAR path[MAX_PATH];
+		SHGetSpecialFolderPath( NULL, path, CSIDL_PROGRAM_FILESX86, false );
+		return path;
+	}
+
+	std::tstring programFiles64() const
+	{
+		TCHAR path[MAX_PATH];
+		GetEnvironmentVariable( L"programw6432", path, 255);
+		return path;
+	}
+#endif
 };
 
 #endif //PLUGIN_INFO_H_

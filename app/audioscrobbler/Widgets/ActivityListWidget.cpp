@@ -47,7 +47,7 @@ ActivityListWidget::ActivityListWidget( QString username, QWidget* parent )
     layout->setContentsMargins( 0, 0, 0, 0 );
 
     QWidget* content = new QWidget(this);
-    content->setObjectName( "recentTracks" );
+    content->setObjectName( "contents" );
 
     m_listLayout = new AnimatedListLayout( kNumRecentTracks, content );
     m_listLayout->setSpacing(0);

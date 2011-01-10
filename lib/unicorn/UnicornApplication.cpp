@@ -355,7 +355,7 @@ unicorn::Application::refreshStyleSheet()
         }
 
         if( styleSheet().isEmpty()) {
-            m_cssFileName = applicationDirPath() + CSS_PATH + QFileInfo(applicationFilePath()).baseName() + ".css";
+            m_cssFileName = applicationDirPath() + CSS_PATH + applicationName() + ".css";
             m_cssDir = applicationDirPath() + CSS_PATH;
         }
     }
@@ -475,7 +475,7 @@ unicorn::Application::appleEventReceived( const QStringList& messages )
 }
 
 pascal OSErr /* static */
-unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long )
+unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, void* )
 {
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );

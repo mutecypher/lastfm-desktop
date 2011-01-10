@@ -27,7 +27,9 @@
 #include <QCheckBox>
 #include <QNetworkReply>
 #include <QLabel>
+#include <QStyle>
 #include "../Application.h"
+#include <QProcess>
 #include <QDebug>
 
 class PluginPage : public QWizardPage
@@ -39,10 +41,35 @@ public:
         setTitle( "Install some plugins!" );
         new QVBoxLayout( this );
     }
+	
+	
+	bool validatePage()
+	{
+        QProcess pluginInstaller;
+        qDebug() << "Starting PluginInstaller";
+        pluginInstaller.start( "PluginInstaller.exe" );
+        pluginInstaller.waitForFinished( -1 );
+        qDebug() << "PluginInstaller finished.";
+        cleanupPage();
+        return true;
+	}
 
+    void cleanupPage()
+    {
+        wizard()->button( QWizard::NextButton )->setIcon( QIcon());
+    }
 
     void initializePage()
     {
+		QLabel* lbl;
+		layout()->addWidget( lbl = new QLabel( tr( "<p>The alpha release of the Last.fm Scrobbler uses the legacy audioscrobbler media player plugins for windows.</p>"
+								 "<p>Do not uninstall the old Last.fm app during alpha testing but <stront>DO</strong> make sure that it is not running when testing the new app.</p>" )));
+
+		lbl->setTextFormat( Qt::RichText );
+
+		/*
+		const QIcon vistaShield = QApplication::style()->standardIcon(QStyle::SP_VistaShield);
+        wizard()->button( QWizard::NextButton )->setIcon( vistaShield );
         QLabel* description = new QLabel( tr( "Some media players need a plugin to be installed in order to scrobble.\n\nIf you do not want to scrobble from any of the detected media players then please uncheck them below:\n\n" )); 
         description->setWordWrap( true );
         layout()->addWidget( description );
@@ -50,6 +77,7 @@ public:
         QList<IPluginInfo*> supportedPlugins = list.supportedList();
         foreach( IPluginInfo* plugin, supportedPlugins)
         {
+			if( !plugin->isAppInstalled()) continue;
             QCheckBox* cb;
             layout()->addWidget( cb = new QCheckBox( QString::fromStdString( plugin->name()), this ));
             if( plugin->isInstalled()) {
@@ -57,7 +85,7 @@ public:
                 cb->setDisabled( true );
                 cb->setText( cb->text() + " " + tr( "(Plugin installed or not required)" ));
             }
-        }
+        }*/
     }
 };
 

@@ -53,9 +53,15 @@ public:
     FirstRunWizard( QWidget* parent = 0 )
     : QWizard( parent )
     {
-        setOption( QWizard::NoBackButtonOnStartPage, true );
+		setOption( QWizard::NoBackButtonOnStartPage, true );
         resize( 625, 440 );
-        setPixmap( QWizard::BackgroundPixmap, QPixmap( ":/as_watermark.png" ));
+		#ifdef Q_OS_MAC
+			QWizard::WizardPixmap wpm = QWizard::BackgroundPixmap;
+		#else
+			QWizard::WizardPixmap wpm = QWizard::WatermarkPixmap;
+		#endif
+			
+		setPixmap( wpm, QPixmap( ":/as_watermark.png" ));
         setPage( Page_Login, new LoginPage(this));
         setPage( Page_AuthInProgress, new AuthInProgressPage( this ));
 #if defined(Q_WS_MAC) || defined(Q_WS_WIN)
@@ -80,7 +86,12 @@ public:
                 return Page_Plugin;
             
             case Page_Plugin:
-                return Page_Bootstrap;
+				if( aApp->currentSession() &&
+					aApp->currentSession()->userInfo().canBootstrap() ) {
+					return Page_Bootstrap;
+				} else {
+					return Page_Welcome;
+				}
                  
             case Page_Bootstrap:
                 if( !field( "bootstrap_player" ).toString().isEmpty()) {

@@ -28,16 +28,13 @@ public:
     IPluginInfo* clone() const { return new WinampPluginInfo( *this ); }
 
 #ifdef QT_VERSION
-    QString pluginInstallPath() const
+    std::tstring pluginInstallPath() const
     {
     #ifdef Q_OS_WIN
-        QSettings s( QString( "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows"
-                              "\\CurrentVersion\\App Paths\\") + QString::fromStdString( processName() ),
-                     QSettings::NativeFormat );
-        return s.value( "Path" ).toString() + "\\Plugins";
+	return programFilesX86().append(L"\\WA5\\Plugins");
     #endif 
         Q_ASSERT( !"There is no winamp on non-windows platforms!" );
-        return "";
+        return std::tstring();
     }
 #endif
 

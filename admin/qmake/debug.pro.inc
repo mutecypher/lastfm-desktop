@@ -1,7 +1,7 @@
 CONFIG( debug, debug|release ) {
     mac* {
         #speeds up debug builds by only compiling x86
-        CONFIG += x86
+        CONFIG -= x86
         CONFIG -= ppc
     }
 

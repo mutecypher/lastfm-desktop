@@ -20,6 +20,10 @@
 #ifndef UNICORN_APPLICATION_H
 #define UNICORN_APPLICATION_H
 
+#ifdef __APPLE__
+#include <Carbon/Carbon.h>
+#endif
+
 #include "qtsingleapplication/qtsingleapplication.h"
 
 #include "common/HideStupidWarnings.h"
@@ -183,7 +187,7 @@ namespace unicorn
 #ifdef __APPLE__
         void installCocoaEventHandler() const;
         void appleEventReceived( const QStringList& messages );
-        static short appleEventHandler( const AppleEvent*, AppleEvent*, long );
+        static OSErr appleEventHandler( const AppleEvent*, AppleEvent*, void* );
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
 #endif
 #ifdef WIN32

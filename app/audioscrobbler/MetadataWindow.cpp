@@ -76,6 +76,7 @@ MetadataWindow::MetadataWindow()
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
     ui.tracks = new QWidget;
+    ui.tracks->setObjectName( "activityList" );
     QHBoxLayout* hl = new QHBoxLayout( ui.tracks );
     QVBoxLayout* vl = new QVBoxLayout;
     hl->setContentsMargins( 0, 0, 0, 0 );
@@ -86,7 +87,11 @@ MetadataWindow::MetadataWindow()
     hl->addLayout( vl );
 
     QScrollBar* scrollBar = ui.recentTracks->scrollBar();
-    hl->addWidget( scrollBar );
+    QWidget* scrollBarContainer = new QWidget();
+    scrollBarContainer->setObjectName( "scrollBarContainer" );
+    (new QVBoxLayout( scrollBarContainer ))->addWidget( scrollBar );
+    scrollBarContainer->layout()->setContentsMargins( 0, 0, 0, 0 );
+    hl->addWidget( scrollBarContainer );
 
     vl->addWidget( ui.nowPlaying );
     vl->addWidget( ui.recentTracks );
@@ -110,7 +115,7 @@ MetadataWindow::MetadataWindow()
     addDragHandleWidget( titleBar );
     addDragHandleWidget( statusBar );
 
-    setWindowTitle(tr("The Scrobbler"));
+    setWindowTitle(tr("Last.fm Scrobbler"));
     setUnifiedTitleAndToolBarOnMac( true );
     setMinimumHeight( 80 );
     resize(20, 500);
@@ -214,8 +219,8 @@ MetadataWindow::onItemClicked( ActivityListItem* clickedItem )
         infoLayout->takeAt( 0 )->widget()->hide();
 
     QWidget* widget = clickedItem->infoWidget();
-    widget->show();
     infoLayout->addWidget( widget );
+    widget->show();
 
     m_currentActivity = clickedItem;
 }

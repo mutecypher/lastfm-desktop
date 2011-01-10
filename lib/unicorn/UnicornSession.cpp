@@ -31,7 +31,8 @@ Session::lastSessionData()
     {
         s.beginGroup( username );
         sessionData[ "username" ] = username;
-        sessionData[ "sessionKey" ] = s.value( "SessionKey", "" ).toString();
+		const QString sk = s.value( "SessionKey", "" ).toString();
+        if( !sk.isEmpty()) sessionData[ "sessionKey" ] = sk;
         s.endGroup();
     }
 
