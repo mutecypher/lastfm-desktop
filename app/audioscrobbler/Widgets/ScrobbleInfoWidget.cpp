@@ -85,6 +85,8 @@ ScrobbleInfoWidget::ScrobbleInfoWidget( const Track& track, ScrobbleInfoFetcher*
     connect(ui.bioText, SIGNAL(anchorClicked(QUrl)), SLOT(onAnchorClicked(QUrl)));
 
     connect( qApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+
+    connect( track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onTrackCorrected(QString)));
 }
 
 void 
@@ -110,20 +112,24 @@ ScrobbleInfoWidget::setupUi()
         layout->addWidget( ui.artistImage = new HttpImageWidget(), 1);
         ui.artistImage->setObjectName("artistImage");
 
+        QHBoxLayout* hl = new QHBoxLayout();
+
         QVBoxLayout* vl = new QVBoxLayout();
-        vl->addWidget( ui.title1 = new QLabel());
+        hl->addWidget( ui.title1 = new QLabel());
         ui.title1->setObjectName( "title1" );
         ui.title1->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
         ui.title1->setOpenExternalLinks( true );
+
+        hl->addWidget( ui.correction = new QLabel() );
+        ui.correction->setObjectName( "correction" );
+        ui.correction->hide();
+
+        vl->addLayout( hl );
 
         vl->addWidget( ui.title2 = new QLabel());
         ui.title2->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
         ui.title2->setObjectName( "title2" );
         ui.title2->setOpenExternalLinks( true );
-
-        vl->addWidget( ui.timestamp = new QLabel() );
-        ui.timestamp->setObjectName( "timestamp" );
-        ui.timestamp->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
 
         vl->addStretch();
 
@@ -222,29 +228,41 @@ ScrobbleInfoWidget::setupUi()
 }
 
 void
+ScrobbleInfoWidget::onTrackCorrected( QString )
+{
+    setTrackDetails( m_track );
+}
+
+void
 ScrobbleInfoWidget::setTrackDetails( const Track& track )
 {
     if ( ui.scrollArea->verticalScrollBar()->isVisible() )
         ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 
-    ui.area->hide();
-
     const unsigned short em_dash = 0x2014;
     QString title = QString("<a class='title' href=\"%1\">%2</a> ") + QChar(em_dash) + " <a class='title' href=\"%3\">%4</a>";
     const unicorn::Application* uApp = qobject_cast<unicorn::Application*>(qApp);
 
-    ui.title1->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg(track.artist().www().toString(),
-                                                                                      track.artist(),
+    ui.title1->setText( "<style>" + uApp->loadedStyleSheet() + "</style>" + title.arg(track.artist( Track::Corrected ).www().toString(),
+                                                                                      track.artist( Track::Corrected ),
                                                                                       track.www().toString(),
-                                                                                      track.title()));
+                                                                                      track.title( Track::Corrected )));
     if( !track.album().isNull() )
     {
         QString album("from <a class='title' href=\"%1\">%2</a>");
-        ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( track.album().www().toString(),
-                                                                                          track.album().title()));
+        ui.title2->setText("<style>" + uApp->loadedStyleSheet() + "</style>" + album.arg( track.album( Track::Corrected ).www().toString(),
+                                                                                          track.album( Track::Corrected ).title()));
     }
 
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui.scrobbleControls, SLOT(setLoveChecked(bool)));
+
+    // Add the green astrix to the title, if it has been corrected
+    if ( track.corrected() )
+    {
+        // TODO: The hover text doesn't work at the moment.
+        QString toolTip = tr("Auto-corrected from: %1").arg( track.toString( Track::Original ) );
+        ui.title1->setText( ui.title1->text() + "<img src=\":/asterisk_small.png\" alt=\"" + toolTip + "\" title=\"" + toolTip + "\" />" );
+    }
 }
 
 
