@@ -283,7 +283,7 @@ ActivityListItem QLabel{
 }
 
 ActivityListItem QLabel#timestamp {
-	min-width: 90px;
+	margin-left: 5px;
 	qproperty-alignment: "AlignRight|AlignVCenter";
 }
 
