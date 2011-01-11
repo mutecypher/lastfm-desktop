@@ -7,6 +7,7 @@ DEFINES += LASTFM_COLLAPSE_NAMESPACE
 include( $$ROOT_DIR/admin/include.qmake )
 macx:ICON = ./audioscrobbler.icns
 macx:LIBS += -lz
+macx:QMAKE_INFO_PLIST = "Last.fm Scrobbler.Info.plist"
 win32:LIBS += shell32.lib User32.lib
 
 RC_FILE = audioscrobbler.rc

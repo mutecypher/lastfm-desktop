@@ -130,7 +130,7 @@ TrackItem::infoWidget() const
 {
     // Start the fetcher a bit later so that
     // we switch to the item immediately
-    QTimer::singleShot( 10, m_fetcher, SLOT(start()));
+    QTimer::singleShot( 0, m_fetcher, SLOT(start()));
 
     return m_infoWidget;
 }
