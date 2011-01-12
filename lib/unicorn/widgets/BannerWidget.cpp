@@ -24,9 +24,6 @@ BannerWidget::paintEvent( QPaintEvent* /*e*/ )
     painter.setRenderHint( QPainter::TextAntialiasing );
     painter.setRenderHint( QPainter::Antialiasing );
 
-    //Tiny optimization and means math.h doesn't need to be included
-    //and saves a runtime op. I shouldn't image sin(45) is likely to change anytime soon!
-
     QRect bgRect = m_textRect.adjusted( -20, 0, 20, 0 );
 
     painter.setWorldMatrix( m_transformMatrix );
@@ -53,13 +50,18 @@ BannerWidget::eventFilter( QObject* obj, QEvent* event )
     Q_ASSERT( obj == parentWidget());
     if( event->type() == QEvent::Resize ) {
         clearMask();
-        resize( parentWidget()->size());
-     
+        resize( parentWidget()->contentsRect().size());
+        move( parentWidget()->contentsMargins().left(), parentWidget()->contentsMargins().top());
+
         QFont f = font();
         m_textRect = QFontMetrics( f ).boundingRect( text() );   
 
         m_transformMatrix.reset();
+    
+        //Tiny optimization and means math.h doesn't need to be included
+        //and saves a runtime op. I shouldn't image sin(45) is likely to change anytime soon!
         const float sin45 = 0.707106781186548f;
+
         m_transformMatrix.translate( rect().width() - ((sin45 * m_textRect.width()) + 6 ), (sin45 * m_textRect.height()) - 6 );
         m_transformMatrix.rotate( 45 );
         
