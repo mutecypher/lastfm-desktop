@@ -39,6 +39,8 @@ public:
 
     class ScrobbleControls* scrobbleControls() const { return ui.scrobbleControls; }
 
+    QWidget* basicInfoWidget();
+
 private slots:
 
     void onTrackGotInfo(const XmlQuery& lfm);

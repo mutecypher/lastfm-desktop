@@ -126,6 +126,13 @@ TrackItem::toDomElement( QDomDocument xml ) const
 
 
 QWidget*
+TrackItem::basicInfoWidget() const
+{
+    return infoWidget();
+}
+
+
+QWidget*
 TrackItem::infoWidget() const
 {
     // Start the fetcher a bit later so that

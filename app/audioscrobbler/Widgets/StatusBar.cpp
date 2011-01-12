@@ -53,9 +53,15 @@ StatusBar::StatusBar( QWidget* parent )
     connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), SLOT( onFoundScrobbles( QList<lastfm::Track> )));
     connect( deviceScrobbler, SIGNAL( noScrobblesFound()),SLOT( onNoScrobblesFound()));
 
-    layout->addWidget( new QSizeGrip( this ), 0 , Qt::AlignBottom | Qt::AlignRight );
+    layout->addWidget( ui.sizeGrip = new QSizeGrip( this ), 0 , Qt::AlignBottom | Qt::AlignRight );
 
     connect( aApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+}
+
+void
+StatusBar::setSizeGripVisible( bool visible )
+{
+    ui.sizeGrip->setVisible( visible );
 }
 
 void

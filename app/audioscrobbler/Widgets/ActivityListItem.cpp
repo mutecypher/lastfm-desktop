@@ -37,6 +37,7 @@ ActivityListItem::ActivityListItem( QWidget* parent )
 {
 }
 
+
 ActivityListItem*
 ActivityListItem::fromElement( QDomElement element )
 {
@@ -49,6 +50,14 @@ ActivityListItem::fromElement( QDomElement element )
 
     return item;
 }
+
+
+QWidget*
+ActivityListItem::basicInfoWidget() const
+{
+    return infoWidget();
+}
+
 
 void
 ActivityListItem::setupUi()
@@ -94,12 +103,14 @@ ActivityListItem::setupUi()
     ui.timestamp->setObjectName( "timestamp" );
 }
 
+
 QDomElement
 ActivityListItem::toDomElement( QDomDocument xml ) const
 {
     // The default behaviour is to do nothing
     return QDomElement();
 }
+
 
 void
 ActivityListItem::updateTimestamp()
@@ -164,6 +175,7 @@ ActivityListItem::setText( const QString& text )
     m_text = text;
     resizeEvent(0);
 }
+
 
 void
 ActivityListItem::resizeEvent(QResizeEvent* )

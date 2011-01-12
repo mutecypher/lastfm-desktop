@@ -31,6 +31,8 @@ class StatusBar : public StylableWidget
     public:
         StatusBar( QWidget* parent = 0);
 
+        void setSizeGripVisible( bool visible );
+
     private slots:
         void setStatus();
 
@@ -48,6 +50,11 @@ class StatusBar : public StylableWidget
         void onScrobbleStatusChanged();
 
     private:
+        struct
+        {
+            class QSizeGrip* sizeGrip;
+        } ui;
+
         QLabel* m_inetStatus;
         QLabel* m_mainStatus;
 

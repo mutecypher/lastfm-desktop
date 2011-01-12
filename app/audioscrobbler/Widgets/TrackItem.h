@@ -46,6 +46,8 @@ public:
     TrackItem( const QDomElement& element );
 
     QWidget* infoWidget() const;
+    QWidget* basicInfoWidget() const;
+
     ScrobbleInfoFetcher* fetcher() const { return m_fetcher; }
 
     Track track() const { return m_track; }
