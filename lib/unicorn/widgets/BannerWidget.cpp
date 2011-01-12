@@ -77,3 +77,26 @@ BannerWidget::onClick()
     QDesktopServices::openUrl( m_href );
 }
 
+void 
+BannerWidget::mousePressEvent( QMouseEvent* e )
+{
+    if(! mask().contains( e->pos() )) {
+        e->ignore();
+        return;
+    }
+
+    e->accept();
+    return QAbstractButton::mousePressEvent( e );
+}
+
+void 
+BannerWidget::mouseReleaseEvent( QMouseEvent* e ) {
+    if(! mask().contains( e->pos() )) {
+        e->ignore();
+        return;
+    }
+
+    e->accept();
+
+    return QAbstractButton::mouseReleaseEvent( e );
+}
