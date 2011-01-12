@@ -93,7 +93,7 @@ MetadataWindow::MetadataWindow()
     scrollBarContainer->layout()->setContentsMargins( 0, 0, 0, 0 );
     hl->addWidget( scrollBarContainer );
 
-    vl->addWidget( ui.nowPlaying );
+    //vl->addWidget( ui.nowPlaying );
     vl->addWidget( ui.recentTracks );
 
     ui.splitter->addWidget( ui.tracks );
@@ -146,6 +146,10 @@ MetadataWindow::MetadataWindow()
     connect( ui.nowPlaying, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
 
     menuBar()->hide();
+
+    //for some reason some of the stylesheet is not being applied properly unless reloaded
+    //here. StyleSheets see very flaky to me. :s
+    aApp->refreshStyleSheet();
 }
 
 

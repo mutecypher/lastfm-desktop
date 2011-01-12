@@ -90,7 +90,7 @@ function fixLocalLibs {
             cpPath=$lib
         fi
         lib=`basename $lib`
-        cp -rf $cpPath "$bundlePath/Contents/MacOS"
+        cp -R -f $cpPath "$bundlePath/Contents/MacOS"
         install_name_tool -id @executable_path/$lib "$bundlePath/Contents/MacOS/$lib"
         install_name_tool -change $libPath @executable_path/$lib "$bin"
         

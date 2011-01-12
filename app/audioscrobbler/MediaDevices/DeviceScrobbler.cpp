@@ -224,7 +224,6 @@ DeviceScrobbler::onScrobbleSetupClicked( IpodDevice::Scrobble result, QString de
     delete ipod;
 }
 
-
 void 
 DeviceScrobbler::scrobbleIpodFile( QString iPodScrobblesFilename )
 {

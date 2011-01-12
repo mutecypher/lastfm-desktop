@@ -51,7 +51,6 @@ protected:
     QStringList m_iPodFiles;
     QString m_deviceId;
     QString m_deviceName;
-
 };
 
 #endif // SCROBBLE_SETUP_DIALOG_H

@@ -189,6 +189,8 @@ LfmListView::LfmListView(QWidget *parent):
    m_lastRow(-1)
 {
    setMouseTracking(true);
+   setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+   setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 }
 
 
