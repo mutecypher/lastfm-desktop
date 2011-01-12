@@ -18,6 +18,8 @@ public slots:
     void setHref( const QUrl& url );
 
 protected:
+    void mousePressEvent( QMouseEvent * e );
+    void mouseReleaseEvent( QMouseEvent * e );
     void paintEvent( class QPaintEvent* e );
     void resizeEvent( class QResizeEvent* e );
     bool eventFilter( QObject* obj, QEvent* event );

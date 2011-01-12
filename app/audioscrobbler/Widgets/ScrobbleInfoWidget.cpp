@@ -94,6 +94,7 @@ ScrobbleInfoWidget::setupUi()
 {
     ui.scrollArea = new QScrollArea( this );
     ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+    ui.scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     
     ui.contents = new QWidget();
     ui.contents->setObjectName( "contents" );
