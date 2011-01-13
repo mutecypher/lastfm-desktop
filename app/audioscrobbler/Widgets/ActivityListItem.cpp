@@ -140,23 +140,23 @@ ActivityListItem::updateTimestamp()
     {
         int hoursAgo = m_timestamp.secsTo( now ) / (60 * 60);
         ui.timestamp->setText( tr( "%1 hours ago" ).arg( QString::number( hoursAgo ) ) );
-        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( hoursAgo * 60 * 60 ) ) * 1000 );
+        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( ( (hoursAgo + 1 ) * 60 * 60 ) + 1 ) ) * 1000 );
     }
     else if ( (m_timestamp.secsTo( now ) / (60 * 60) ) == 1 )
     {
         ui.timestamp->setText( tr( "1 hour ago" ) );
-        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( 60 * 60 ) ) * 1000 );
+        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( ( 60 * 60 ) + 1 ) ) * 1000 );
     }
     else if ( (m_timestamp.secsTo( now ) / 60 ) == 1 )
     {
         ui.timestamp->setText( tr( "1 minute ago" ) );
-        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( 60 ) ) * 1000 );
+        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( 60 + 1 ) ) * 1000 );
     }
     else
     {
         int minutesAgo = m_timestamp.secsTo( now ) / 60;
         ui.timestamp->setText( tr( "%1 minutes ago" ).arg( QString::number( minutesAgo ) ) );
-        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( minutesAgo * 60 ) ) * 1000 );
+        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( ( (minutesAgo + 1) * 60 ) + 1 ) ) * 1000 );
     }
 }
 
