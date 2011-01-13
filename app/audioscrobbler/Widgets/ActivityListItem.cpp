@@ -131,32 +131,26 @@ ActivityListItem::updateTimestamp()
     // Full time in the tool tip
     ui.timestamp->setToolTip(m_timestamp.toString( dateFormat ));
 
-    if ( m_timestamp.daysTo( now ) >= 1 )
+    int secondsAgo = m_timestamp.secsTo( now );
+
+    if ( secondsAgo < (60 * 60) )
     {
-        ui.timestamp->setText(m_timestamp.toString( dateFormat ));
-        // We don't need to set the timer because this date will never change
+        // Less than an hour ago
+        int minutesAgo = ( m_timestamp.secsTo( now ) / 60 );
+        ui.timestamp->setText( (minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) ) );
+        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs(((minutesAgo + 1 ) * 60 ) + 1 ) ) * 1000 );
     }
-    else if ( (m_timestamp.secsTo( now ) / (60 * 60) ) > 1 )
+    else if ( secondsAgo < (60 * 60 * 6) || now.date() == m_timestamp.date() )
     {
-        int hoursAgo = m_timestamp.secsTo( now ) / (60 * 60);
-        ui.timestamp->setText( tr( "%1 hours ago" ).arg( QString::number( hoursAgo ) ) );
-        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( ( (hoursAgo + 1 ) * 60 * 60 ) + 1 ) ) * 1000 );
-    }
-    else if ( (m_timestamp.secsTo( now ) / (60 * 60) ) == 1 )
-    {
-        ui.timestamp->setText( tr( "1 hour ago" ) );
-        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( ( 60 * 60 ) + 1 ) ) * 1000 );
-    }
-    else if ( (m_timestamp.secsTo( now ) / 60 ) == 1 )
-    {
-        ui.timestamp->setText( tr( "1 minute ago" ) );
-        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( 60 + 1 ) ) * 1000 );
+        // Less than 6 hours ago or on the same date
+        int hoursAgo = ( m_timestamp.secsTo( now ) / (60 * 60) );
+        ui.timestamp->setText( (hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) ) );
+        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( ( (hoursAgo + 1) * 60 * 60 ) + 1 ) ) * 1000 );
     }
     else
     {
-        int minutesAgo = m_timestamp.secsTo( now ) / 60;
-        ui.timestamp->setText( tr( "%1 minutes ago" ).arg( QString::number( minutesAgo ) ) );
-        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( ( (minutesAgo + 1) * 60 ) + 1 ) ) * 1000 );
+        ui.timestamp->setText(m_timestamp.toString( dateFormat ));
+        // We don't need to set the timer because this date will never change
     }
 }
 
