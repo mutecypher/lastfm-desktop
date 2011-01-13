@@ -65,9 +65,6 @@ private:
 protected:
     void doSetTrack( const Track& track );
 
-public slots:
-    virtual void updateTimestamp();
-
 private slots:
     void onLoveToggled( bool loved );
 
