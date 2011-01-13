@@ -89,6 +89,7 @@ protected:
 protected:
     QString m_text;
     QString m_status;
+    QString m_timestampText;
     bool m_odd;
     bool m_selected;
 };

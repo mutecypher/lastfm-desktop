@@ -304,7 +304,7 @@ ActivityListItem QLabel {
 }
 
 ActivityListItem QLabel#timestamp {
-	margin-left: 5px;
+	min-width: 5px;
 	qproperty-alignment: "AlignRight|AlignVCenter";
 }
 

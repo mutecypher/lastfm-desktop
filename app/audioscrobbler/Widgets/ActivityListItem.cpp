@@ -93,13 +93,15 @@ ActivityListItem::setupUi()
 
     h1->addStretch( 1 );
 
-    layout->addWidget( ui.textArea, 1 );
-
-    layout->addWidget( ui.love = new QLabel("love") );
+    h1->addWidget( ui.love = new QLabel("love") );
     ui.love->setObjectName( "love" );
     ui.love->hide();
 
-    layout->addWidget( ui.timestamp = new QLabel() );
+    layout->addWidget( ui.textArea, 1 );
+
+    layout->addStretch( 0 );
+
+    layout->addWidget( ui.timestamp = new QLabel(), 1 );
     ui.timestamp->setObjectName( "timestamp" );
 }
 
@@ -137,21 +139,24 @@ ActivityListItem::updateTimestamp()
     {
         // Less than an hour ago
         int minutesAgo = ( m_timestamp.secsTo( now ) / 60 );
-        ui.timestamp->setText( (minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) ) );
+        m_timestampText = (minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) );
         m_timestampTimer->start( now.secsTo( m_timestamp.addSecs(((minutesAgo + 1 ) * 60 ) + 1 ) ) * 1000 );
     }
     else if ( secondsAgo < (60 * 60 * 6) || now.date() == m_timestamp.date() )
     {
         // Less than 6 hours ago or on the same date
         int hoursAgo = ( m_timestamp.secsTo( now ) / (60 * 60) );
-        ui.timestamp->setText( (hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) ) );
+        m_timestampText = (hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) );
         m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( ( (hoursAgo + 1) * 60 * 60 ) + 1 ) ) * 1000 );
     }
     else
     {
-        ui.timestamp->setText(m_timestamp.toString( dateFormat ));
+        m_timestampText = m_timestamp.toString( dateFormat );
         // We don't need to set the timer because this date will never change
     }
+
+    // This makes it set the timestamp text
+    resizeEvent(0);
 }
 
 
@@ -174,11 +179,19 @@ ActivityListItem::setText( const QString& text )
 void
 ActivityListItem::resizeEvent(QResizeEvent* )
 {
-    int width =  ui.textArea->width();
-    if (ui.correction->isVisible() ) width -=  ui.correction->width();
+    int textAreaWidth = ( width() * 65 ) / 100;
+
+    ui.textArea->setFixedWidth( textAreaWidth );
+
+    if ( ui.correction->isVisible() )
+        textAreaWidth -=  ui.correction->width();
+
+    textAreaWidth -=  ui.love->width();
 
     QFontMetrics fm( ui.text->font() );
-    ui.text->setText( fm.elidedText ( m_text, Qt::ElideRight, width) );
+    ui.text->setText( fm.elidedText ( m_text, Qt::ElideRight, textAreaWidth ) );
+
+    ui.timestamp->setText( fm.elidedText ( m_timestampText, Qt::ElideRight, ui.timestamp->width() ) );
 }
 
 
