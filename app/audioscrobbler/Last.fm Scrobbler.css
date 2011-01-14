@@ -15,6 +15,7 @@ StylableWidget {
     background-color: transparent;
 }
 
+/* These borders appear on the left and right edges of the app */
 QSplitter {
     border:1px solid qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 146, 146, 146, 153), stop:0.05 #555, stop:1 #555);
     border-top: none;
@@ -38,10 +39,6 @@ StatusBar {
     border: 1px solid #555;
     border-top: none;
 
-    /*background-image: url(:/highlight.png);
-    background-position: top right;
-    background-repeat: repeat-x;*/
-
     min-height: 18px;
     max-height: 18px;
 }
@@ -56,10 +53,7 @@ TitleBar {
     border-top-right-radius: 6px;
 
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 57, 57, 57, 200 ), stop:1 rgba( 62, 62, 62, 200 ));
-    border-top: 1px solid rgba( 175, 175, 175, 216 );
-
     border: 1px solid rgba(146, 146, 146, 153);
-    /*border-top: 1px solid #aaa;*/
     border-bottom: none;
 
     background-image: url(:/titlebar_highlight.png);
@@ -417,7 +411,7 @@ QLabel#title2 {
 }
 
 QScrollBar  {
-    background-color: qlineargradient( x1:0, y1:0, x2:1, y2:0, stop:0 #1f1f1f, stop:1 #5a5a5a);
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #1f1f1f, stop:1 #5a5a5a);
     margin: 0px;
     width: 16px;
     padding: 0px 0px 0px 0px;
@@ -434,7 +428,7 @@ QScrollBar::sub-page {
 }
 
 QScrollBar::handle {
-    background-color: qlineargradient( x1:0, y1:0, x2:1, y2:0, stop:0 #515151, stop:0.5 #535353, stop:1 #515151 );
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #515151, stop:0.5 #535353, stop:1 #515151 );
     min-height: 30px;
     border-radius: 6px;
     margin-left: 1px;
@@ -451,18 +445,26 @@ QSizeGrip {
 }
 
 #nowPlaying {
-    color: #262626;
-    background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #c2dfe7, stop:1 #8ba2a8 );
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(91, 105, 128, 191), stop:1 rgba(75, 87, 107, 191));
+    
+    background-image: url(:/highlight.png);
+    background-position: top right;
+    background-repeat: repeat-x;
+    
+    max-height: 25px;
+    min-height: 25px;
+    border-top: 1px solid #2e3642;
+    qproperty-progressColor: rgba( 255, 255, 255, 20 );
 }
 
 #nowPlaying QLabel#trackText {
-    font-size: 11px;
-    color: black;
+    font-size: 12px;
+    color: #eee;
     background: none;
 }
 
 #nowPlaying QLabel#timestamp {
-    color: #676767;
+    color: #a7b0bd;
 }
 
 ActivityListItem[status="cached"] QLabel#trackText {
