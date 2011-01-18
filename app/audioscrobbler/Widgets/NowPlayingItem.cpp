@@ -44,7 +44,8 @@
 
 
 NowPlayingItem::NowPlayingItem( const Track& track )
-    :TrackItem( track )
+    :TrackItem( track ),
+     m_progressColor( 60, 60, 60 )
 {
     m_nullInfo = new WelcomeWidget( this );
     m_nullInfo->hide();
@@ -117,7 +118,7 @@ NowPlayingItem::paintEvent( QPaintEvent* event )
     {
         QPainter p( this );
         p.setPen( QColor( Qt::transparent ));
-        p.setBrush( QColor( 0, 0, 0, 60 ));
+        p.setBrush( m_progressColor );
 
         float percentage = (aApp->stopWatch()->elapsed()/1000.0f) / aApp->stopWatch()->scrobblePoint();
         p.drawRect( 0, 0, width() * percentage , height());
