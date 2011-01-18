@@ -65,7 +65,13 @@ HttpImageWidget::loadUrl( const QUrl& url, bool scale )
 
 void HttpImageWidget::setHref( const QUrl& url )
 {
+#ifdef Q_OS_MAC
+    //On OSX Percent encoding seems to get applied to the url again.
+    m_href = QUrl::fromPercentEncoding( url.toString().toUtf8() );
+#else
     m_href = url;
+#endif
+
     if( m_href.isValid()) {
         setCursor( Qt::PointingHandCursor );
         connect( this, SIGNAL(clicked()), SLOT(onClick()));
@@ -101,8 +107,7 @@ void HttpImageWidget::onUrlLoaded()
         QPixmap px;
         px.loadFromData(static_cast<QNetworkReply*>(sender())->readAll());
 
-        if ( m_scale )
-        {
+        if ( m_scale ) {
             // Decide which way to scale based on the ratio of height to width
             // of the image and the area that the image is going to be drawn to
             if ( (px.height() * 1000) / px.width() > (height() * 1000) / width() )

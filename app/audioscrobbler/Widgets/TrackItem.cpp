@@ -126,6 +126,13 @@ TrackItem::toDomElement( QDomDocument xml ) const
 
 
 QWidget*
+TrackItem::basicInfoWidget() const
+{
+    return infoWidget();
+}
+
+
+QWidget*
 TrackItem::infoWidget() const
 {
     // Start the fetcher a bit later so that
@@ -149,55 +156,6 @@ TrackItem::onCorrected( QString correction )
     {
         setText( m_track.toString() );
         ui.correction->hide();
-    }
-}
-
-
-void
-TrackItem::updateTimestamp()
-{
-    if (!m_timestampTimer)
-    {
-        m_timestampTimer = new QTimer( this );
-        connect( m_timestampTimer, SIGNAL(timeout()), SLOT(updateTimestamp()));
-    }
-
-    ui.as->clear();
-
-    QDateTime now = QDateTime::currentDateTime();
-
-    // Full time in the tool tip
-    ui.timestamp->setToolTip(m_track.timestamp().toString( "ddd h:ssap" ));
-
-    if ( m_track.timestamp().daysTo( now ) > 1 )
-    {
-        ui.timestamp->setText(m_track.timestamp().toString( "ddd h:ssap" ));
-        m_timestampTimer->start( 24 * 60 * 60 * 1000 );
-    }
-    else if ( m_track.timestamp().daysTo( now ) == 1 )
-    {
-        ui.timestamp->setText( "Yesterday " + m_track.timestamp().toString( "h:ssap" ));
-        m_timestampTimer->start( 24 * 60 * 60 * 1000 );
-    }
-    else if ( (m_track.timestamp().secsTo( now ) / (60 * 60) ) > 1 )
-    {
-        ui.timestamp->setText( QString::number( (m_track.timestamp().secsTo( now ) / (60 * 60) ) ) + " hours ago" );
-        m_timestampTimer->start( 60 * 60 * 1000 );
-    }
-    else if ( (m_track.timestamp().secsTo( now ) / (60 * 60) ) == 1 )
-    {
-        ui.timestamp->setText( "1 hour ago" );
-        m_timestampTimer->start( 60 * 60 * 1000 );
-    }
-    else if ( (m_track.timestamp().secsTo( now ) / 60 ) == 1 )
-    {
-        ui.timestamp->setText( "1 minute ago" );
-        m_timestampTimer->start( 60 * 1000 );
-    }
-    else
-    {
-        ui.timestamp->setText( QString::number( (m_track.timestamp().secsTo( now ) / 60 ) ) + " minutes ago" );
-        m_timestampTimer->start( 60 * 1000 );
     }
 }
 

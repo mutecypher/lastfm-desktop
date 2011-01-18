@@ -49,8 +49,10 @@
 #include <QSplitter>
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QShortcut>
 
 MetadataWindow::MetadataWindow()
+    :m_viewMode( Restore )
 {
     setAttribute( Qt::WA_TranslucentBackground );
     
@@ -62,12 +64,11 @@ MetadataWindow::MetadataWindow()
     layout->setSpacing( 0 );
     layout->setContentsMargins( 0, 0, 0, 0 );
 
-    TitleBar* titleBar;
-    layout->addWidget( titleBar = new TitleBar( this ));
-    titleBar->setObjectName( "titleBar" );
-    connect( titleBar, SIGNAL( closeClicked()), SLOT( close()));
+    ui.titleBar = new TitleBar( this );
+    ui.titleBar->setObjectName( "titleBar" );
+    connect( ui.titleBar, SIGNAL( closeClicked()), SLOT( close()));
 
-    layout->addWidget( ui.splitter = new QSplitter( Qt::Vertical, this ), 1 );
+    ui.splitter = new QSplitter( Qt::Vertical, this );
 
     ui.nowPlaying = new NowPlayingItem( Track() );
     ui.nowPlaying->setObjectName("nowPlaying");
@@ -75,54 +76,26 @@ MetadataWindow::MetadataWindow()
     ui.recentTracks = new ActivityListWidget( lastfm::ws::Username, this );
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
+    ui.scrollBar = ui.recentTracks->scrollBar();
+    ui.scrollBarContainer = new QWidget();
+    ui.scrollBarContainer->setObjectName( "scrollBarContainer" );
+
     ui.tracks = new QWidget;
     ui.tracks->setObjectName( "activityList" );
-    QHBoxLayout* hl = new QHBoxLayout( ui.tracks );
-    QVBoxLayout* vl = new QVBoxLayout;
-    hl->setContentsMargins( 0, 0, 0, 0 );
-    hl->setSpacing( 0 );
-    vl->setContentsMargins( 0, 0, 0, 0 );
-    vl->setSpacing( 0 );
 
-    hl->addLayout( vl );
-
-    QScrollBar* scrollBar = ui.recentTracks->scrollBar();
-    QWidget* scrollBarContainer = new QWidget();
-    scrollBarContainer->setObjectName( "scrollBarContainer" );
-    (new QVBoxLayout( scrollBarContainer ))->addWidget( scrollBar );
-    scrollBarContainer->layout()->setContentsMargins( 0, 0, 0, 0 );
-    hl->addWidget( scrollBarContainer );
-
-    //vl->addWidget( ui.nowPlaying );
-    vl->addWidget( ui.recentTracks );
-
-    ui.splitter->addWidget( ui.tracks );
-
-    ui.splitter->addWidget( ui.scrobbleInfo = new QWidget(this) );
+    ui.scrobbleInfo = new QWidget(this);
     ui.scrobbleInfo->setObjectName( "NowScrobbling" );
-    QVBoxLayout* nsLayout = new QVBoxLayout( ui.scrobbleInfo );
-    nsLayout->setSpacing( 0 );
-    nsLayout->setContentsMargins( 0, 0, 0, 0 );
 
-    ui.splitter->setCollapsible( 0, false );
-    ui.splitter->handle( 1 )->setAutoFillBackground( true );
-    setMinimumWidth( 410 );
+    ui.statusBar = new StatusBar( this );
+    ui.statusBar->setObjectName( "StatusBar" );
 
-    StylableWidget* statusBar;
-    layout->addWidget( statusBar = new StatusBar( this ) );
-    statusBar->setObjectName( "StatusBar" );
-
-    addDragHandleWidget( titleBar );
-    addDragHandleWidget( statusBar );
+    addDragHandleWidget( ui.titleBar );
+    addDragHandleWidget( ui.statusBar );
 
     setWindowTitle(tr("Last.fm Scrobbler"));
     setUnifiedTitleAndToolBarOnMac( true );
-    setMinimumHeight( 80 );
-    resize(20, 500);
 
     ui.message_bar = new MessageBar( centralWidget());
-
-    onItemClicked( ui.nowPlaying );
 
     finishUi();
 
@@ -145,13 +118,110 @@ MetadataWindow::MetadataWindow()
     connect( ui.recentTracks, SIGNAL(itemClicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
     connect( ui.nowPlaying, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
 
+    new QShortcut( Qt::CTRL + Qt::Key_M, this, SLOT(onMinimize()) );
+
     menuBar()->hide();
 
     //for some reason some of the stylesheet is not being applied properly unless reloaded
     //here. StyleSheets see very flaky to me. :s
     aApp->refreshStyleSheet();
+
+    doLayout( m_viewMode );
 }
 
+void
+MetadataWindow::doLayout( ViewMode mode )
+{
+    QVBoxLayout* layout = static_cast<QVBoxLayout*>(centralWidget()->layout());
+    delete layout;
+    layout = new QVBoxLayout( centralWidget() );
+    layout->setSpacing( 0 );
+    layout->setContentsMargins( 0, 0, 0, 0 );
+
+    ui.message_bar->hide();
+    ui.splitter->hide();
+    ui.tracks->hide();
+    ui.recentTracks->hide();
+    ui.scrobbleInfo->hide();
+    ui.nowPlaying->hide();
+
+    if ( mode == Restore )
+    {
+        layout->addWidget( ui.titleBar, 1 );
+        layout->addWidget( ui.splitter, 1 );
+
+        delete ui.tracks->layout();
+        QHBoxLayout* hl = new QHBoxLayout( ui.tracks );
+        QVBoxLayout* vl = new QVBoxLayout;
+        hl->setContentsMargins( 0, 0, 0, 0 );
+        hl->setSpacing( 0 );
+        vl->setContentsMargins( 0, 0, 0, 0 );
+        vl->setSpacing( 0 );
+
+        vl->addWidget( ui.nowPlaying );
+        vl->addWidget( ui.recentTracks );
+
+        hl->addLayout( vl );
+
+        delete ui.scrollBarContainer->layout();
+        (new QVBoxLayout( ui.scrollBarContainer ))->addWidget( ui.scrollBar );
+        ui.scrollBarContainer->layout()->setContentsMargins( 0, 0, 0, 0 );
+        hl->addWidget( ui.scrollBarContainer );
+
+        ui.splitter->addWidget( ui.tracks );
+        ui.splitter->addWidget( ui.scrobbleInfo );
+        QVBoxLayout* nsLayout = new QVBoxLayout( ui.scrobbleInfo );
+        nsLayout->setSpacing( 0 );
+        nsLayout->setContentsMargins( 0, 0, 0, 0 );
+
+        ui.splitter->setCollapsible( 0, false );
+        ui.splitter->handle( 1 )->setAutoFillBackground( true );
+        setMinimumWidth( 410 );
+
+        layout->addWidget( ui.statusBar, 1 );
+
+        setMinimumWidth( 410 );
+
+        setMinimumHeight( 80 );
+        resize(20, 500);
+
+        onItemClicked( ui.nowPlaying );
+
+        ui.statusBar->setSizeGripVisible( true );
+
+        ui.splitter->show();
+        ui.tracks->show();
+        ui.recentTracks->show();
+        ui.scrobbleInfo->show();
+        ui.nowPlaying->show();
+    }
+    else
+    {
+        layout->addWidget( ui.titleBar );
+        layout->addWidget( ui.nowPlaying );
+        layout->addWidget( ui.statusBar );
+
+        onItemClicked( ui.nowPlaying );
+
+        ui.statusBar->setSizeGripVisible( false );
+
+        ui.splitter->hide();
+        ui.tracks->hide();
+        ui.recentTracks->hide();
+        ui.scrobbleInfo->hide();
+        ui.nowPlaying->show();
+
+        resize(20, 20);
+    }
+}
+
+
+void
+MetadataWindow::onMinimize()
+{
+    m_viewMode == Restore ? m_viewMode = Min : m_viewMode = Restore;
+    doLayout( m_viewMode );
+}
 
 void
 MetadataWindow::onSessionChanged( unicorn::Session* session )

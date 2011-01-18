@@ -46,6 +46,8 @@ public:
     TrackItem( const QDomElement& element );
 
     QWidget* infoWidget() const;
+    QWidget* basicInfoWidget() const;
+
     ScrobbleInfoFetcher* fetcher() const { return m_fetcher; }
 
     Track track() const { return m_track; }
@@ -62,9 +64,6 @@ private:
 
 protected:
     void doSetTrack( const Track& track );
-
-public slots:
-    virtual void updateTimestamp();
 
 private slots:
     void onLoveToggled( bool loved );
