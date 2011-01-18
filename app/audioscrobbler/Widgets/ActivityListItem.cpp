@@ -72,9 +72,8 @@ ActivityListItem::setupUi()
     ui.as->setObjectName( "as" );
 
     movie.scrobbler_as = new Movie( ":/scrobbler_as.mng" );
-    movie.scrobbler_paused = new Movie( ":/scrobbler_as_paused.mng" );
+    movie.scrobbler_as->setSpeed( 200 );
     movie.scrobbler_as->setCacheMode( QMovie::CacheAll );
-    movie.scrobbler_paused->setCacheMode( QMovie::CacheAll );
     ui.as->setMovie( movie.scrobbler_as );
 
     layout->addWidget( ui.as );

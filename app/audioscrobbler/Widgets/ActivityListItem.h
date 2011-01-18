@@ -60,9 +60,9 @@ public slots:
 
 private:
     void mousePressEvent( QMouseEvent * event );
-    void resizeEvent( QResizeEvent* event );
 
 protected:
+    void resizeEvent( QResizeEvent* event );
     void setupUi();
 
     void setText( const QString& text );

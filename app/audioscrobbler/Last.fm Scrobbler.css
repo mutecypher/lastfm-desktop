@@ -454,7 +454,7 @@ QSizeGrip {
     max-height: 25px;
     min-height: 25px;
     border-top: 1px solid #2e3642;
-    qproperty-progressColor: rgba( 255, 255, 255, 20 );
+    qproperty-progressColor: rgba( 255, 255, 255, 25 );
 }
 
 #nowPlaying QLabel#trackText {
