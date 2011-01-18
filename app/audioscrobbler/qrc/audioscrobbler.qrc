@@ -7,7 +7,7 @@
         <file>systray_icon_rest_mac.png</file>
         <file>systray_icon_pressed_mac.png</file>
         <file>scrobbler_as.mng</file>
-        <file>scrobbler_as_paused.mng</file>
+        <file>scrobbler_as_paused.png</file>
         <file alias="love-onhover.png">love_hover_31x29.png</file>
         <file alias="love-isloved.png">love_isloved_31x29.png</file>
         <file alias="love-onpress.png">love_pressed_31x29.png</file>

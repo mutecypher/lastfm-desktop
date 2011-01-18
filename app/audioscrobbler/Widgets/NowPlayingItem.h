@@ -57,12 +57,15 @@ private:
 private slots:
     void onWatchPaused( bool isPaused );
     void onWatchFinished();
+    
+    void onFrameChanged();
 
     void updateTimestamp();
 
 private:
     QWidget* m_nullInfo;
     QColor m_progressColor;
+    int m_progressWidth;
 };
 
 
