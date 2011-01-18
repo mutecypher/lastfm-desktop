@@ -81,23 +81,24 @@ NowPlayingItem::onWatchPaused( bool isPaused )
     {
         if ( isPaused )
         {
-            ui.timestamp->setText( tr( "%1 paused" ).arg( aApp->currentConnection()->name() ) );
+            m_timestampText =tr( "%1 paused" ).arg( aApp->currentConnection()->name() );
             ui.as->setPixmap( QPixmap() );
         }
         else
         {
-            ui.timestamp->setText( aApp->currentConnection()->name() );
+            m_timestampText = aApp->currentConnection()->name();
             ui.as->setMovie( movie.scrobbler_as );
             ui.as->movie()->start();
         }
-
+        
         update();
     }
     else
     {
-        ui.timestamp->clear();
+        m_timestampText = "";
         ui.as->clear();
     }
+    resizeEvent( 0 );
 }
 
 
