@@ -53,7 +53,7 @@ NowPlayingItem::NowPlayingItem( const Track& track )
 
     connect( aApp, SIGNAL(paused(bool)), SLOT( onWatchPaused(bool)) );
     connect( aApp, SIGNAL(timeout()), SLOT( onWatchFinished()));
-    connect( aApp, SIGNAL(frameChanged(int)), SLOT(onFrameChanged()));
+    connect( aApp, SIGNAL(frameChanged(int)), SLOT(onFrameChanged(int)));
 
     onWatchPaused( false );
 }
@@ -109,32 +109,23 @@ NowPlayingItem::onWatchFinished()
     ui.timestamp->setText( tr( "Track Scrobbled" ));
 }
 
+
 void
-NowPlayingItem::onFrameChanged()
+NowPlayingItem::onFrameChanged( int frame )
 {
-    if( !aApp->stopWatch() )
-        return;
+    int progress = ( frame * width() ) / ( aApp->stopWatch()->scrobblePoint() * 1000 );
 
-    static int prevWidth = 0;
-
-    float percentage = (aApp->stopWatch()->elapsed()/1000.0f) / aApp->stopWatch()->scrobblePoint();
-
-    m_progressWidth = width() * percentage;
-
-    if( m_progressWidth == prevWidth ) {
-        return;
+    if ( progress != m_progressWidth )
+    {  
+        QRect r;
+        if( progress > m_progressWidth )
+            r = QRect( m_progressWidth, 0, progress - m_progressWidth, height());
+        else
+            r = rect();
+  
+        m_progressWidth = progress;
+        update( r );
     }
-    
-    QRect r;
-    if( m_progressWidth > prevWidth ) {
-        r = QRect( prevWidth, 0, m_progressWidth - prevWidth, height());
-    } else {
-        r = rect();
-    }
-        
-    prevWidth = m_progressWidth;
-
-    update( r );
 }
 
 void
