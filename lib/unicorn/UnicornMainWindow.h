@@ -80,6 +80,7 @@ namespace unicorn
         void checkForUpdates();
         void visitProfile();
         void openLog();
+        void refreshStyleSheet();
 
     protected:
         struct Ui {

@@ -37,6 +37,7 @@ ActivityListItem::ActivityListItem( QWidget* parent )
 {
 }
 
+
 ActivityListItem*
 ActivityListItem::fromElement( QDomElement element )
 {
@@ -49,6 +50,14 @@ ActivityListItem::fromElement( QDomElement element )
 
     return item;
 }
+
+
+QWidget*
+ActivityListItem::basicInfoWidget() const
+{
+    return infoWidget();
+}
+
 
 void
 ActivityListItem::setupUi()
@@ -63,9 +72,8 @@ ActivityListItem::setupUi()
     ui.as->setObjectName( "as" );
 
     movie.scrobbler_as = new Movie( ":/scrobbler_as.mng" );
-    movie.scrobbler_paused = new Movie( ":/scrobbler_as_paused.mng" );
+    movie.scrobbler_as->setSpeed( 200 );
     movie.scrobbler_as->setCacheMode( QMovie::CacheAll );
-    movie.scrobbler_paused->setCacheMode( QMovie::CacheAll );
     ui.as->setMovie( movie.scrobbler_as );
 
     layout->addWidget( ui.as );
@@ -84,15 +92,18 @@ ActivityListItem::setupUi()
 
     h1->addStretch( 1 );
 
-    layout->addWidget( ui.textArea, 1 );
-
-    layout->addWidget( ui.love = new QLabel("love") );
+    h1->addWidget( ui.love = new QLabel("love") );
     ui.love->setObjectName( "love" );
     ui.love->hide();
 
-    layout->addWidget( ui.timestamp = new QLabel() );
+    layout->addWidget( ui.textArea, 1 );
+
+    layout->addStretch( 0 );
+
+    layout->addWidget( ui.timestamp = new QLabel(), 1 );
     ui.timestamp->setObjectName( "timestamp" );
 }
+
 
 QDomElement
 ActivityListItem::toDomElement( QDomDocument xml ) const
@@ -101,12 +112,14 @@ ActivityListItem::toDomElement( QDomDocument xml ) const
     return QDomElement();
 }
 
+
 void
 ActivityListItem::updateTimestamp()
 {
     if (!m_timestampTimer)
     {
         m_timestampTimer = new QTimer( this );
+        m_timestampTimer->setSingleShot( true );
         connect( m_timestampTimer, SIGNAL(timeout()), SLOT(updateTimestamp()));
     }
 
@@ -114,39 +127,35 @@ ActivityListItem::updateTimestamp()
 
     QDateTime now = QDateTime::currentDateTime();
 
-    // Full time in the tool tip
-    ui.timestamp->setToolTip(m_timestamp.toString( "ddd h:ssap" ));
+    QString dateFormat( "d MMM h:mmap" );
 
-    if ( m_timestamp.daysTo( now ) > 1 )
+    // Full time in the tool tip
+    ui.timestamp->setToolTip(m_timestamp.toString( dateFormat ));
+
+    int secondsAgo = m_timestamp.secsTo( now );
+
+    if ( secondsAgo < (60 * 60) )
     {
-        ui.timestamp->setText(m_timestamp.toString( "ddd h:ssap" ));
-        m_timestampTimer->start( 24 * 60 * 60 * 1000 );
+        // Less than an hour ago
+        int minutesAgo = ( m_timestamp.secsTo( now ) / 60 );
+        m_timestampText = (minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) );
+        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs(((minutesAgo + 1 ) * 60 ) + 1 ) ) * 1000 );
     }
-    else if ( m_timestamp.daysTo( now ) == 1 )
+    else if ( secondsAgo < (60 * 60 * 6) || now.date() == m_timestamp.date() )
     {
-        ui.timestamp->setText( "Yesterday " + m_timestamp.toString( "h:ssap" ));
-        m_timestampTimer->start( 24 * 60 * 60 * 1000 );
-    }
-    else if ( (m_timestamp.secsTo( now ) / (60 * 60) ) > 1 )
-    {
-        ui.timestamp->setText( QString::number( (m_timestamp.secsTo( now ) / (60 * 60) ) ) + " hours ago" );
-        m_timestampTimer->start( 60 * 60 * 1000 );
-    }
-    else if ( (m_timestamp.secsTo( now ) / (60 * 60) ) == 1 )
-    {
-        ui.timestamp->setText( "1 hour ago" );
-        m_timestampTimer->start( 60 * 60 * 1000 );
-    }
-    else if ( (m_timestamp.secsTo( now ) / 60 ) == 1 )
-    {
-        ui.timestamp->setText( "1 minute ago" );
-        m_timestampTimer->start( 60 * 1000 );
+        // Less than 6 hours ago or on the same date
+        int hoursAgo = ( m_timestamp.secsTo( now ) / (60 * 60) );
+        m_timestampText = (hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) );
+        m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( ( (hoursAgo + 1) * 60 * 60 ) + 1 ) ) * 1000 );
     }
     else
     {
-        ui.timestamp->setText( QString::number( (m_timestamp.secsTo( now ) / 60 ) ) + " minutes ago" );
-        m_timestampTimer->start( 60 * 1000 );
+        m_timestampText = m_timestamp.toString( dateFormat );
+        // We don't need to set the timer because this date will never change
     }
+
+    // This makes it set the timestamp text
+    resizeEvent(0);
 }
 
 
@@ -165,14 +174,23 @@ ActivityListItem::setText( const QString& text )
     resizeEvent(0);
 }
 
+
 void
 ActivityListItem::resizeEvent(QResizeEvent* )
 {
-    int width =  ui.textArea->width();
-    if (ui.correction->isVisible() ) width -=  ui.correction->width();
+    int textAreaWidth = ( width() * 65 ) / 100;
+
+    ui.textArea->setFixedWidth( textAreaWidth );
+
+    if ( ui.correction->isVisible() )
+        textAreaWidth -=  ui.correction->width();
+
+    textAreaWidth -=  ui.love->width();
 
     QFontMetrics fm( ui.text->font() );
-    ui.text->setText( fm.elidedText ( m_text, Qt::ElideRight, width) );
+    ui.text->setText( fm.elidedText ( m_text, Qt::ElideRight, textAreaWidth ) );
+
+    ui.timestamp->setText( fm.elidedText ( m_timestampText, Qt::ElideRight, ui.timestamp->width() ) );
 }
 
 

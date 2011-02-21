@@ -38,8 +38,8 @@ public slots:
 #endif
 
 private slots:
-    void onScrobbleSetupClicked( ScrobbleSetupDialog::Button button, QString iPodFile );
-    
+    void onScrobbleSetupClicked( IpodDevice::Scrobble result, QString deviceId, QString deviceName, QStringList iPodFiles );
+
 #ifdef Q_WS_X11
     void onCalculatingScrobbles( int trackCount );
     void scrobbleIpodTracks( int trackCount );

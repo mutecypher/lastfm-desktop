@@ -22,6 +22,7 @@
 #define SCROBBLE_SETUP_DIALOG_H
 
 #include "lib/unicorn/dialogs/UnicornDialog.h"
+#include "../MediaDevices/IpodDevice.h"
 
 #include <QDialogButtonBox>
 
@@ -29,17 +30,10 @@ class ScrobbleSetupDialog : public unicorn::Dialog
 {
     Q_OBJECT
 public:
-    enum Button
-    {
-        Yes,
-        NotNow,
-        Never
-    };
-
-    ScrobbleSetupDialog( QString iPodFile, QWidget* parent = 0 );
+    ScrobbleSetupDialog( QString deviceId, QString deviceName, QStringList iPodFiles, QWidget* parent = 0 );
 
 signals:
-    void clicked( ScrobbleSetupDialog::Button result, QString iPodFile );
+    void clicked( IpodDevice::Scrobble result, QString deviceId, QString deviceName, QStringList iPodFiles );
 
 private slots:
     void onClicked( class QAbstractButton* button );
@@ -54,7 +48,9 @@ protected:
         QDialogButtonBox* buttons;
     }ui;
 
-    QString m_iPodFile;
+    QStringList m_iPodFiles;
+    QString m_deviceId;
+    QString m_deviceName;
 };
 
 #endif // SCROBBLE_SETUP_DIALOG_H

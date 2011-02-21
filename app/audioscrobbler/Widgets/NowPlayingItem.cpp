@@ -44,14 +44,16 @@
 
 
 NowPlayingItem::NowPlayingItem( const Track& track )
-    :TrackItem( track )
+    :TrackItem( track ),
+     m_progressColor( 60, 60, 60 ),
+     m_progressWidth( 0 )
 {
     m_nullInfo = new WelcomeWidget( this );
     m_nullInfo->hide();
 
     connect( aApp, SIGNAL(paused(bool)), SLOT( onWatchPaused(bool)) );
     connect( aApp, SIGNAL(timeout()), SLOT( onWatchFinished()));
-    connect( aApp, SIGNAL(frameChanged(int)), SLOT(update()));
+    connect( aApp, SIGNAL(frameChanged(int)), SLOT(onFrameChanged()));
 
     onWatchPaused( false );
 }
@@ -79,24 +81,24 @@ NowPlayingItem::onWatchPaused( bool isPaused )
     {
         if ( isPaused )
         {
-            ui.timestamp->setText( tr( "%1 paused" ).arg( aApp->currentConnection()->name() ) );
-            ui.as->setMovie( movie.scrobbler_paused );
-            ui.as->movie()->start();
+            m_timestampText =tr( "%1 paused" ).arg( aApp->currentConnection()->name() );
+            ui.as->setPixmap( QPixmap() );
         }
         else
         {
-            ui.timestamp->setText( aApp->currentConnection()->name() );
+            m_timestampText = aApp->currentConnection()->name();
             ui.as->setMovie( movie.scrobbler_as );
             ui.as->movie()->start();
         }
-
+        
         update();
     }
     else
     {
-        ui.timestamp->clear();
+        m_timestampText = "";
         ui.as->clear();
     }
+    resizeEvent( 0 );
 }
 
 
@@ -107,21 +109,43 @@ NowPlayingItem::onWatchFinished()
     ui.timestamp->setText( tr( "Track Scrobbled" ));
 }
 
+void
+NowPlayingItem::onFrameChanged()
+{
+    if( !aApp->stopWatch() )
+        return;
+
+    static int prevWidth = 0;
+
+    float percentage = (aApp->stopWatch()->elapsed()/1000.0f) / aApp->stopWatch()->scrobblePoint();
+
+    m_progressWidth = width() * percentage;
+
+    if( m_progressWidth == prevWidth ) {
+        return;
+    }
+    
+    QRect r;
+    if( m_progressWidth > prevWidth ) {
+        r = QRect( prevWidth, 0, m_progressWidth - prevWidth, height());
+    } else {
+        r = rect();
+    }
+        
+    prevWidth = m_progressWidth;
+
+    update( r );
+}
 
 void
 NowPlayingItem::paintEvent( QPaintEvent* event )
 {
     StylableWidget::paintEvent( event );
-
-    if ( aApp->stopWatch() )
-    {
-        QPainter p( this );
-        p.setPen( QColor( Qt::transparent ));
-        p.setBrush( QColor( 0, 0, 0, 60 ));
-
-        float percentage = (aApp->stopWatch()->elapsed()/1000.0f) / aApp->stopWatch()->scrobblePoint();
-        p.drawRect( 0, 0, width() * percentage , height());
-    }
+    QPainter p( this );
+    p.setPen( QColor( Qt::transparent ));
+    p.setBrush( m_progressColor );
+    QMargins margins = contentsMargins();
+    p.drawRect( 0, margins.top(), m_progressWidth, height() - margins.top() - margins.bottom());
 }
 
 void NowPlayingItem::updateTimestamp()

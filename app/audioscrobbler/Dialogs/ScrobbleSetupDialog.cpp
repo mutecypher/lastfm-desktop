@@ -24,8 +24,8 @@
 
 #include "ScrobbleSetupDialog.h"
 
-ScrobbleSetupDialog::ScrobbleSetupDialog( QString iPodFile, QWidget *parent )
-    :Dialog( parent ), m_iPodFile( iPodFile )
+ScrobbleSetupDialog::ScrobbleSetupDialog( QString deviceId, QString deviceName, QStringList iPodFiles, QWidget *parent )
+    :Dialog( parent ), m_deviceId( deviceId ), m_deviceName( deviceName ), m_iPodFiles( iPodFiles )
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
 
@@ -39,9 +39,6 @@ ScrobbleSetupDialog::ScrobbleSetupDialog( QString iPodFile, QWidget *parent )
 
     vl->addWidget( ui.description = new QLabel( tr("This will automatically scrobble tracks you've played on your iPod everytime it's connected.") ) );
     ui.description->setObjectName("description");
-
-    vl->addWidget( ui.dontRemind = new QCheckBox( tr("Don't remind me again") ) );
-    ui.dontRemind->setObjectName("dontRemind");
 
     hl->addLayout( vl );
 
@@ -58,14 +55,14 @@ ScrobbleSetupDialog::ScrobbleSetupDialog( QString iPodFile, QWidget *parent )
 void
 ScrobbleSetupDialog::onClicked( QAbstractButton* button )
 {
-    Button buttonPressed = Yes;
+    IpodDevice::Scrobble buttonPressed = IpodDevice::Yes;
 
     QDialogButtonBox::ButtonRole buttonRole = ui.buttons->buttonRole( button );
 
     if ( buttonRole == QDialogButtonBox::RejectRole )
-        buttonPressed = NotNow;
+        buttonPressed = IpodDevice::NotNow;
     else if ( QDialogButtonBox::NoRole )
-        buttonPressed = Never;
+        buttonPressed = IpodDevice::Never;
 
-    emit clicked( buttonPressed, m_iPodFile );
+    emit clicked( buttonPressed, m_deviceId, m_deviceName, m_iPodFiles );
 }

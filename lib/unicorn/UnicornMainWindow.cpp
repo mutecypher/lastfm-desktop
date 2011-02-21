@@ -78,8 +78,9 @@ unicorn::MainWindow::finishUi()
 
 #ifndef NDEBUG
     QMenu* debug = menuBar()->addMenu( tr("Debug") );
-    QAction* rss = debug->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()) );
-    rss->setShortcut( Qt::CTRL + Qt::Key_R );
+    new QShortcut( Qt::CTRL + Qt::Key_R, this, SLOT(refreshStyleSheet()) );
+    //QAction* rss = debug->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()) );
+    //rss->setShortcut( Qt::CTRL + Qt::Key_R );
 #endif
 
 #ifdef Q_OS_MAC
@@ -91,6 +92,13 @@ unicorn::MainWindow::finishUi()
 
 
     cleverlyPosition();
+}
+
+
+void
+unicorn::MainWindow::refreshStyleSheet()
+{
+    static_cast<unicorn::Application*>(qApp)->refreshStyleSheet();
 }
 
 #ifdef Q_OS_WIN32

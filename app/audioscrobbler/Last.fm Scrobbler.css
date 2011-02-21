@@ -15,9 +15,14 @@ StylableWidget {
     background-color: transparent;
 }
 
-unicorn--MainWindow ProfileWidget,
+/* These borders appear on the left and right edges of the app */
+QSplitter {
+    border:1px solid qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 146, 146, 146, 153), stop:0.05 #555, stop:1 #555);
+    border-top: none;
+    border-bottom: none;
+}
+
 unicorn--MainWindow #NowScrobbling,
-unicorn--MainWindow #navigation,
 unicorn--MainWindow #activityList {
     background-color: rgba( 38, 38, 38, 230 );
 }
@@ -27,15 +32,31 @@ unicorn--MainWindow #ScrobbleStatusRow {
     background: rgba( 20, 20, 20, 240 );
 }
 
-TitleBar,
 StatusBar {
     background-clip: border;
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 54, 54, 54, 242 ), stop:1 rgba( 39, 39, 39, 242 ));
+    background-color: #2c2c2c;
 
-    border: 1px solid;
-    border-color: rgba( 39, 39, 39, 242 );
+    border: 1px solid #555;
+    border-top: none;
 
-    background-image: url(:/highlight.png);
+    min-height: 18px;
+    max-height: 18px;
+}
+
+ScrobbleInfoWidget {
+    /* Appears as the top border for the status bar */
+    border-bottom: 1px solid #1c1c1c;
+}
+
+TitleBar {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 57, 57, 57, 200 ), stop:1 rgba( 62, 62, 62, 200 ));
+    border: 1px solid rgba(146, 146, 146, 153);
+    border-bottom: none;
+
+    background-image: url(:/titlebar_highlight.png);
     background-position: top right;
     background-repeat: repeat-x;
 
@@ -43,18 +64,13 @@ StatusBar {
     max-height: 18px;
 }
 
-TitleBar {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-}
-
 TitleBar QLabel {
     font-weight: bold;
-    font-size: 12px;
-    color: #e0e0e0;
+    font-size: 11px;
+    color: #fff;
     min-height: 20px;
     max-height: 20px;
-    margin-top: -4px;
+    margin-top: -5px;
 }
 
 TitleBar QPushButton, 
@@ -69,7 +85,7 @@ TitleBar QPushButton:pressed {
     background-image: url(:/close.png);
     background-position: center;
     background-repeat: no-repeat;
-    margin-top: -1px;
+    margin-top: -2px;
     min-width: 20px;
     min-height:20px;
     max-height: 20px;
@@ -251,7 +267,6 @@ ActivityListWidget {
 ActivityListItem {
 	min-width: 40px;
     background-color: transparent;
-	/*border-bottom: 1px solid #cccccc;*/
 }
 
 NowPlayingItem {
@@ -277,13 +292,13 @@ ActivityListItem HttpImageWidget#art {
 	padding: 0px 0px;
 }
 
-ActivityListItem QLabel{
+ActivityListItem QLabel {
     color: #949494;
     font-size:12px;
 }
 
 ActivityListItem QLabel#timestamp {
-	min-width: 90px;
+	min-width: 5px;
 	qproperty-alignment: "AlignRight|AlignVCenter";
 }
 
@@ -296,6 +311,7 @@ QLabel#correction {
     background-position: left bottom;
 	max-width: 12;
 	max-height: 11;
+	margin: 0 0 0 5px;
 }
 
 ActivityListItem QLabel#love {
@@ -341,12 +357,12 @@ MetadataWindow QLabel#name {
     color: #afafaf;
 }
 
-DataListWidget QLabel{ padding: 0px; margin: 0px; padding-left: 5px;}
+DataListWidget QLabel{ padding: 0px; margin: 0px; }
 DataListWidget { padding: 0px; margin: 0px; margin-bottom: -4px; }
 
 ScrobbleInfoWidget LfmListView {
-	max-height: 107;
-	min-height: 107;
+	max-height: 108;
+	min-height: 108;
 }
 
 MetadataWindow QLabel#value,
@@ -373,6 +389,7 @@ QLabel#title1, QLabel#title2 {
 MetadataWindow #artistImage {
     padding: 0px;  
     margin-right: 10px;
+    margin-left: 12px;
     border: 1px solid #716f6f; 
     min-width: 175px;     
 	max-width: 175px;
@@ -394,13 +411,15 @@ QLabel#title2 {
 }
 
 QScrollBar  {
-    background-color: qlineargradient( x1:0, y1:0, x2:1, y2:0, stop:0 #1f1f1f, stop:1 #5a5a5a);
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #1f1f1f, stop:1 #5a5a5a);
     margin: 0px;
     width: 16px;
     padding: 0px 0px 0px 0px;
     border-radius: 7px;
     border: 1px solid #1a1a1a;
-	min-height: 0px;
+    border-right: none;
+    border-left: none;
+	min-height: 50px;
 }
 
 QScrollBar::add-page, 
@@ -409,9 +428,10 @@ QScrollBar::sub-page {
 }
 
 QScrollBar::handle {
-    background-color: qlineargradient( x1:0, y1:0, x2:1, y2:0, stop:0 #878787, stop:1 #636464 );
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #515151, stop:0.5 #535353, stop:1 #515151 );
     min-height: 30px;
     border-radius: 6px;
+    margin-left: 1px;
 }
 
 QScrollBar::sub-line,
@@ -425,18 +445,26 @@ QSizeGrip {
 }
 
 #nowPlaying {
-    color: #262626;
-    background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #c2dfe7, stop:1 #8ba2a8 );
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(91, 105, 128, 191), stop:1 rgba(75, 87, 107, 191));
+    
+    background-image: url(:/highlight.png);
+    background-position: top right;
+    background-repeat: repeat-x;
+    
+    max-height: 25px;
+    min-height: 25px;
+    border-top: 1px solid #2e3642;
+    qproperty-progressColor: rgba( 255, 255, 255, 25 );
 }
 
 #nowPlaying QLabel#trackText {
-    font-size: 11px;
-    color: black;
+    font-size: 12px;
+    color: #eee;
     background: none;
 }
 
 #nowPlaying QLabel#timestamp {
-    color: #676767;
+    color: #a7b0bd;
 }
 
 ActivityListItem[status="cached"] QLabel#trackText {
@@ -472,11 +500,15 @@ LfmListView#similarArtists LfmDelegate {
 }
 
 QSplitter::handle {
-    background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #323232, stop:1 #272727 );
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 83, 83, 83, 242 ), stop:1 rgba( 62, 62, 62, 242));
     background-image: url(:/slider_nubbin.png);
     background-repeat: no-repeat;
     background-position: center;
-    border: 1px solid #262626;
+    border-top: 1px solid #636363;
+    border-bottom: 1px solid #232323;
+    border-left: none;
+    border-right: none;
+    height: 6px;
 }
 
 /*
