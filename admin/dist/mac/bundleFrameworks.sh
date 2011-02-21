@@ -57,7 +57,7 @@ function fixFrameworks {
 
         if [ ! -e "$bundlePath/Contents/Frameworks/$frameworkName" ]; then 
             #cp -Rf -P /opt/qt/qt.git/lib/QtXml.framework (app name.app)/Contents/Frameworks
-            cp -Rf -P $framework "$bundlePath/Contents/Frameworks"
+            cp -Rf $framework "$bundlePath/Contents/Frameworks"
             #install_name_tool -id /opt/qt/qt.git/lib/QtXml.framework/Contents/QtXml
             install_name_tool -id $installFramework$frameworkLib "$destFramework$frameworkLib"
         fi
@@ -90,7 +90,7 @@ function fixLocalLibs {
             cpPath=$lib
         fi
         lib=`basename $lib`
-        cp -R -f $cpPath "$bundlePath/Contents/MacOS"
+        cp -L -R -f $cpPath "$bundlePath/Contents/MacOS"
         install_name_tool -id @executable_path/$lib "$bundlePath/Contents/MacOS/$lib"
         install_name_tool -change $libPath @executable_path/$lib "$bin"
         
@@ -147,7 +147,7 @@ for plugin in $plugins; do
     else
         pluginDir=`qmake --version |sed -n 's/^.*in \(\/.*$\)/\1/p'`/../plugins
     fi
-    cp -R -P $pluginDir/$plugin "$bundlePath/Contents/plugins"
+    cp -R $pluginDir/$plugin "$bundlePath/Contents/plugins"
     for i in "$bundlePath"/Contents/plugins/$plugin/*; do
         fixFrameworks "$i"
         echo -n P
