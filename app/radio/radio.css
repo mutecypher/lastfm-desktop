@@ -1,180 +1,14 @@
 @import "../../lib/unicorn/unicorn.css";
 @import "unicorn.css";
 
-YourStationsWidget, RecentStationsWidget,
-QuickStartWidget, MoreStationsWidget, AdvancedOptionsDialog {
-    background: #242424;
-    border-radius: 6px;
-    border-style: solid;
-    border-width: 5px;
-    background-origin: contents;
-    padding-bottom: 20px;
-}
-
-AdvancedOptionsDialog QLabel, AdvancedOptionsDialog QCheckBox {
-	color: #7e7e7c;
-}
-
-RecentStationsWidget > QListView {
-    border:none;
-    background: transparent;
-}
-
-RecentStationsWidget > QListView::item {
-    height: 25px;
-    padding: 0px;
-}
-
-YourStationsWidget > .QLabel,
-RecentStationsWidget > .QLabel,
-QuickStartWidget > .QLabel,
-MoreStationsWidget > .QLabel
-{
-    font-weight: bold;
-    color: white;
-}
-
-QuickStartWidget > QLineEdit {
-    top: 10px;
-    position: relative;
-}
-
-BackForwardControls
-{
-    background-color: #1a1a1a; 
-    /*qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
-                                 stop:0 #211f20, stop:1 #383840 );*/
-    border: none;
-    margin: 0px;
-    padding: 0px;
-}
-
-BackForwardControls #BackForwardsRow {
-    background: qlineargradient( x1:0, y1:0, x2:0, y2:1, 
-                                 stop:0 #727070, stop:1 #353434 );
-    padding:0px;
-    margin:0px;
-    border: none;
-}
-
-QuickStartWidget QPushButton,
-BackForwardControls > * > QPushButton {
-    background: qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
-                                 stop:0 #515050, stop:1 #242424 );
-    border-radius: 3px;
-    color: white;
-    border-width: 2px;
-    padding:3px 5px;
-    margin-bottom: 2px;
-    margin-left: 5px;
-    margin-right: 5px;
-}
-
-BackForwardControls > * > #NowPlayingButton::enabled {
-    background: qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
-                                 stop:0 #cc3333, stop:1 #660000 );
-}
-
-BackForwardControls > * > #NowPlayingButton::disabled {
-    background: transparent;
-    color: transparent;
-}
-
-QuickStartWidget > QPushButton:pressed,
-BackForwardControls > * > QPushButton:pressed {
-    background: qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
-                                 stop:0 #3d3d3d, stop:1 #242424 );
-}
-
-BackForwardControls > * > #NowPlayingButton:pressed {
-    background: qlineargradient( x1:0, y1:0, x2: 0, y2:1, 
-                                 stop:0 #781313, stop:1 #3c0404 );
-}
-
-BackForwardControls > * > QLabel 
-{
-    color: white;
-    font-weight: bold;
-}
-
-PlayableItemWidget, 
-RecentStationsWidget QListView::item {
-    color: #7e7e7c;
-    border: none;
-    text-align: left;
-    background-image: url(:/station-start-rest.png);
-    background-repeat: no-repeat;
-    background-position: left;
-    background-origin:border;
-    padding:5px 0px 5px 30px; 
-    margin: 0px 5px;
-}
-
-PlayableItemWidget:hover, 
-RecentStationsWidget QListView::item:hover {
-    background-image: url(:/station-start-onhover.png);
-}
-
-PlayableItemWidget:pressed, 
-RecentStationsWidget QListView::item:pressed {
-    background-image: url(:/station-start-onpress.png);
-}
-
-NowPlayingWidget QLabel,
-MultiStarterWidget QLabel,
-MultiStarterWidget QCheckBox {
-    color: white;
-}
-
-MoreStationsWidget QPushButton 
-{
-    color: #7e7e7c;
-    border: none;
-    text-align: left;
-    background-repeat: no-repeat;
-    background-position: left;
-    background-origin:border;
-    padding:5px 0px 5px 30px; 
-    margin: 0px 5px;
-}
-
-MoreStationsWidget QPushButton#friends { background-image: url(:/friends_rest_26x27.png); }
-MoreStationsWidget QPushButton#friends:hover { background-image: url(:/friends_hover_26x27.png); }
-MoreStationsWidget QPushButton#friends:pressed { background-image: url(:/friends_pressed_26x27.png); }
-
-MoreStationsWidget QPushButton#playlists { background-image: url(:/playlists_rest_26x27.png); }
-MoreStationsWidget QPushButton#playlists:hover { background-image: url(:/playlists_hover_26x27.png); }
-MoreStationsWidget QPushButton#playlists:pressed { background-image: url(:/playlists_pressed_26x27.png); }
-
-MoreStationsWidget QPushButton#tags { background-image: url(:/tags_rest_26x27.png); }
-MoreStationsWidget QPushButton#tags:hover { background-image: url(:/tags_hover_26x27.png); }
-MoreStationsWidget QPushButton#tags:pressed { background-image: url(:/tags_pressed_26x27.png); }
-
-MoreStationsWidget QPushButton#combos { background-image: url(:/combo_rest_26x27.png); }
-MoreStationsWidget QPushButton#combos:hover { background-image: url(:/combo_hover_26x27.png); }
-MoreStationsWidget QPushButton#combos:pressed { background-image: url(:/combo_pressed_26x27.png); }
-
-PlaybackControlsWidget {
-    border: none;
-}
-
-PlaybackControlsWidget > QLabel {
-    color: transparent;
-    background-color: transparent;
-    background-position: center;
-    background-repeat: no-repeat;
-    border: none;
-	margin: 0px 0px;
-}
-
-PlaybackControlsWidget > QLabel#volumeLeft {
+QLabel#volumeLeft {
     background-image: url(:/vol-left.png);
 	height: 16px;
     min-width: 19px;
 	max-width: 19px;
 }
 
-PlaybackControlsWidget  > QLabel#volumeRight {
+QLabel#volumeRight {
     background-image: url(:/vol-right.png);
 	height: 16px;
     min-width: 19px;
@@ -209,7 +43,7 @@ Phonon--VolumeSlider  QSlider::handle:horizontal:pressed {
     background-image: url(:/vol-handle-onpress.png);
 }
 
-PlaybackControlsWidget > QPushButton {
+#playbackControls QPushButton {
     color: transparent;
     background-color: transparent;
     background-position: center;
@@ -220,306 +54,100 @@ PlaybackControlsWidget > QPushButton {
 	width: 39px;
 }
 
-PlaybackControlsWidget > QPushButton#radioOptions {
-    background-image: url(:/options-off-rest.png);
-	height: 29px;
-    width: 29px;
-}
-
-PlaybackControlsWidget > QPushButton#radioOptions:hover {
-    background-image: url(:/options-off-onhover.png);
-}
-
-PlaybackControlsWidget > QPushButton#radioOptions:pressed {
-    background-image: url(:/options-off-onpressed.png);
-}
-
-PlaybackControlsWidget > QPushButton#radioOptions:checked {
-    background-image: url(:/options-on-rest.png);
-}
-
-PlaybackControlsWidget > QPushButton#radioOptions:checked:hover {
-    background-image: url(:/options-on-onhover.png);
-}
-
-PlaybackControlsWidget > QPushButton#radioOptions:checked:pressed {
-    background-image: url(:/options-on-onpressed.png);
-}
-
-PlaybackControlsWidget > QPushButton#ban {
+#playbackControls QPushButton#ban {
     background-image: url(:/ban-rest.png);
 }
 
-PlaybackControlsWidget > QPushButton#ban:hover {
+#playbackControls QPushButton#ban:hover {
     background-image: url(:/ban-onhover.png);
 }
 
-PlaybackControlsWidget > QPushButton#ban:pressed {
+#playbackControls QPushButton#ban:pressed {
     background-image: url(:/ban-onpress.png);
 }
 
-PlaybackControlsWidget > QPushButton#ban:disabled {
+#playbackControls QPushButton#ban:disabled {
     background-image: url(:/ban-disabled.png);
 }
 
-PlaybackControlsWidget > QPushButton#play {
+#playbackControls QPushButton#play {
     background-image: url(:/play-rest.png);
 }
 
-PlaybackControlsWidget > QPushButton#play:hover {
+#playbackControls QPushButton#play:hover {
     background-image: url(:/play-onhover.png);
 }
 
-PlaybackControlsWidget > QPushButton#play:pressed {
+#playbackControls QPushButton#play:pressed {
     background-image: url(:/play-onpress.png);
 }
 
-PlaybackControlsWidget > QPushButton#play:checked {
+#playbackControls QPushButton#play:checked {
     background-image: url(:/stop-rest.png);
 }
 
-PlaybackControlsWidget > QPushButton#play:hover:checked {
+#playbackControls QPushButton#play:hover:checked {
     background-image: url(:/stop-onhover.png);
 }
 
-PlaybackControlsWidget > QPushButton#play:pressed:checked {
+#playbackControls QPushButton#play:pressed:checked {
     background-image: url(:/stop-onpress.png);
 }
 
-PlaybackControlsWidget > QPushButton#skip {
+#playbackControls QPushButton#skip {
     background-image: url(:/skip-rest.png);
 }
 
-PlaybackControlsWidget > QPushButton#skip:hover {
+#playbackControls QPushButton#skip:hover {
     background-image: url(:/skip-onhover.png);
 }
 
-PlaybackControlsWidget > QPushButton#skip:pressed {
+#playbackControls QPushButton#skip:pressed {
     background-image: url(:/skip-onpress.png);
 }
 
-PlaybackControlsWidget > QPushButton#skip:disabled {
+#playbackControls QPushButton#skip:disabled {
     background-image: url(:/skip-disabled.png);
 }
 
-PlaybackControlsWidget > QToolButton {
-	background-color: transparent;
-    background-position: center;
-    background-repeat: no-repeat;
-    border: none;
-    margin: 0px 0px;
-	height: 29px;
-    width: 48px;
-}
-
-PlaybackControlsWidget > QPushButton#info {
+#playbackControls QPushButton#info {
     background-image: url(:/scrobbler_rest.png);
 	height: 29px;
 	width: 29px;
 }
 
-PlaybackControlsWidget > QPushButton#info:hover {
+#playbackControls QPushButton#info:hover {
     background-image: url(:/scrobbler_hover.png);
 }
 
-PlaybackControlsWidget > QPushButton#info:pressed {
+#playbackControls QPushButton#info:pressed {
     background-image: url(:/scrobbler_pressed.png);
 }
 
-PlaybackControlsWidget > QPushButton#info:disabled {
+#playbackControls QPushButton#info:disabled {
     /*background-image: url(:/scrobbler_.png);*/
 }
 
-PlaybackControlsWidget > QToolButton#cog {
-    background-image: url(:/cog-rest.png);
-}
-
-PlaybackControlsWidget > QToolButton::menu-indicator {
-    image: none;
-}
-
-PlaybackControlsWidget > QToolButton#cog:pressed {
-    background-image: url(:/cog-onpress.png);
-}
-
-PlaybackControlsWidget > QToolButton#cog:hover {
-    background-image: url(:/cog-onhover.png);
-}
-
-QStatusBar::item {
-    border: none;
-}
-
-SourceItemWidget { background-color: #ffffff; }
-
-SourceItemWidget QPushButton
-{
-    color: transparent;
-    background-color: transparent;
-    background-position: center;
-    background-repeat: no-repeat;
-    border: none;
-    margin: 0px;
-    height: 15px;
-    width: 15px;
-	background-image: url(:/delete.png);
-}
-
-SourceItemWidget QLabel { color: #000000; }
-SourceItemWidget QLabel#image,
-SourceItemWidget QLabel#userImage
-{
-    min-height: 34px;
-    min-width: 34px;
-    max-height: 34px;
-    max-width: 34px;
-    border: solid 1px #808080;
-}
-
-SourceItemWidget QLabel#userImage[noImage="true"]
-{
-    background: transparent url(:/default_user_small.png) no-repeat center;
-}
-
-MultiStarterWidget {
-    background-origin: content;
-    background: #333333;
-    border-radius: 5px;
-    padding: 0px;
-    margin-left: 8px;
-    margin-bottom: 6px;
-}
-
-QTabBar {
-    subcontrol-origin: margin;
-    subcontrol-position: left top;
-}
-
-MultiStarterWidget > QTabWidget::tab-bar {
-    subcontrol-position: left top;
-    subcontrol-origin: margin;
-    left: 2px;
-}
-
-MultiStarterWidget > QTabWidget QTabBar::tab {
-    border: none;
-    font-size: 10px;
-    color: #e6e4e4;
-    padding: 3px;
-    margin: 0px 2px;
-    background-color: #4f4f4f;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-}
-
-
-MultiStarterWidget > QTabWidget QTabBar::tab:selected {
-    margin 0px 3px;
-    background-color: qlineargradient( x1:0, y1:0, x2:0, y2:1, stop:0 #9d9c9c, stop:1 #6c6c6c);
-}
-
-MultiStarterWidget > QTabWidget::pane {
-    background-color: qlineargradient( x1:0, y1:0, x2: 0, y2:1,
-                                     stop:0 #6c6c6c, stop:1 #494747);
-    border: none;
-    padding: 12px;
-    margin-top:11px;
-    border-radius: 4px;
-}
-
-MultiStarterWidget QTabWidget::pane SourceSelectorWidget{ 
-    padding: 0px;
-    margin: 0px;
-}
-
-MultiStarterWidget SourceListWidget QGroupBox {
-    background-color: qlineargradient( x1:0, y1:0, x2:0, y2:0, stop:0 #3d3d3d, stop:1 #393939);
-    border-radius: 4px;
-    border-left: 1px solid qconicalgradient( cx:1, cy:0.5, angle:90, 
-                                       stop:0 #040404, stop:0.9 #707070, stop:1 #6e6d6d);
-    border-right: 1px solid qconicalgradient( cx:0, cy:0.5, angle:90, 
-                                       stop:1 #040404, stop:0 #6e6d6d);
-    border-top: 1px solid #000000;
-    border-bottom: 1px solid #6e6d6d;
-    max-height: 50px;
-    min-height: 50px;
-}
-
-MultiStarterWidget SourceListWidget SourceItemWidget {
-    max-height: 46px;
-    min-height: 46px;
-    border-radius: 3px;
-    spacing: 0px;
-}
-
-MultiStarterWidget QLabel#sliderDescription {
-    color: #808080;
-}
-
-MultiStarterTabWidget > QLabel{
+PlayableItemWidget {
     color: #000000;
-}
-
-YouListWidget {
-    border: none;
-    background-color: white;
-    alternate-background-color: #dff4f9;
-    font-size: 4em;
-    font-weight: bold;
-}
-
-YouListWidget::item {
-}
-
-YouListWidget::item:open {
-    background-color: #e9eaea;
-    color: #999999;
-    color: #999999;
-}
-
-RecipientsWidget {
-	background: #FFFFFF;
-	border: 1px solid #BBBBBB;
-	border-color: black;
-	padding: 0;
-}
-
-RecipientsWidget:edit-focus {
-	border-color: blue;
-}
-
-RecipientWidget {
-	background-color: #dddddd;
-	margin: 1px;
-	padding: 2px;
-	border: 0px;
-}
-
-RecipientWidget:hover {
-	background: #cccccc;
-}
-
-RecipientWidget QLabel {
-	background-color: transparent;
-	color: black;
-	font-weight: normal;
-	margin: 1px;
-	padding: 0;
-	border: 0;
-}
-
-RecipientWidget QPushButton {
-	background-color: transparent;
-	background-image: url(:/delete.png);
-	background-repeat: no-repeat;
-    background-position: left;
-	background-origin: margin;
-	color: transparent;
     border: none;
     text-align: left;
-    padding: 0px 0px; 
-    margin: 0px 0px;
-	height: 15px;
-    min-width: 15px;
-	max-width: 15px;
+    background-image: url(:/station-start-rest.png);
+    background-repeat: no-repeat;
+    background-position: left;
+    background-origin:border;
+    padding:5px 0px 5px 30px; 
+    margin: 0px 5px;
+}
+
+PlayableItemWidget:hover  {
+    background-image: url(:/station-start-onhover.png);
+}
+
+PlayableItemWidget:pressed  {
+    background-image: url(:/station-start-onpress.png);
+}
+
+PlayableItemWidget:disabled {
+background-image: url(:/vol-right.png);
 }
