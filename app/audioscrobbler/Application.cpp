@@ -437,6 +437,8 @@ Application::onPaused()
 
     state = Paused;
 
+    m_currentTrack.removeNowPlaying();
+
     Q_ASSERT(m_connection);
     Q_ASSERT(m_watch);
     if(m_watch) m_watch->pause();
@@ -456,9 +458,13 @@ Application::onResumed()
     Q_ASSERT(m_watch);
     Q_ASSERT(m_connection);
 
+    m_currentTrack.updateNowPlaying( m_currentTrack.duration() - (m_watch->elapsed()/1000) );
+
     if(m_watch) m_watch->resume();
 
     //setTrackInfo();
+
+
 }
 
 void

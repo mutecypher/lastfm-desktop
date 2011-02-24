@@ -24,7 +24,7 @@ QSplitter {
 
 unicorn--MainWindow #NowScrobbling,
 unicorn--MainWindow #activityList {
-    background-color: rgba( 38, 38, 38, 230 );
+    background-color: rgba( 38, 38, 38, 235 );
 }
 
 unicorn--MainWindow #ScrobbleStatusRow {
