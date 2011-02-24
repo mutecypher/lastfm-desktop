@@ -97,8 +97,6 @@ MetadataWindow::MetadataWindow()
 
     ui.message_bar = new MessageBar( centralWidget());
 
-    finishUi();
-
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
     connect( qApp, SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
     connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
@@ -127,6 +125,8 @@ MetadataWindow::MetadataWindow()
     aApp->refreshStyleSheet();
 
     doLayout( m_viewMode );
+
+    finishUi();
 }
 
 void
@@ -176,12 +176,9 @@ MetadataWindow::doLayout( ViewMode mode )
 
         ui.splitter->setCollapsible( 0, false );
         ui.splitter->handle( 1 )->setAutoFillBackground( true );
-        setMinimumWidth( 410 );
+        setMinimumWidth( 442 );
 
         layout->addWidget( ui.statusBar, 1 );
-
-        setMinimumWidth( 410 );
-
         setMinimumHeight( 80 );
         resize(20, 500);
 
