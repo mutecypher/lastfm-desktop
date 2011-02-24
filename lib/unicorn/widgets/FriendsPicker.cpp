@@ -32,7 +32,9 @@ FriendsPicker::FriendsPicker( const User& user )
     qDebug() << user;
     
     QVBoxLayout* v = new QVBoxLayout( this );
-    v->addWidget( new HelpTextLineEdit( tr("Search your friends") ) );
+    HelpTextLineEdit* lineEdit = new HelpTextLineEdit;
+    lineEdit->setHelpText( tr("Search your friends") );
+    v->addWidget( lineEdit );
     v->addWidget( ui.list = new QListWidget );
     v->addWidget( ui.buttons = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );
      

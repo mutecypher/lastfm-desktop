@@ -22,9 +22,12 @@
     //TODO shorten this mother fucker
     //NOTE including Carbon/Carbon.h breaks things as it has sooo many symbols
     //     in the global namespace
-    #include <Carbon/Carbon.h>
-    static pascal OSErr appleEventHandler( const AppleEvent*, AppleEvent*, void* );
+    #include </System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/AE.framework/Versions/A/Headers/AppleEvents.h>
+    static pascal OSErr appleEventHandler( const AppleEvent*, AppleEvent*, long );
 #endif
+
+#include <QShortcut>
+#include <QKeySequence>
 
 #include "_version.h"
 #include "Application.h"
@@ -32,8 +35,10 @@
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/qtsingleapplication/qtsinglecoreapplication.h"
 #include "lib/unicorn/UnicornSettings.h"
-#include "MainWindow.h"
+#include "WindowMain.h"
+#include "WindowMini.h"
 #include "Radio.h"
+#include "Actions.h"
 
 void cleanup();
 
@@ -81,7 +86,7 @@ int main( int argc, char** argv )
 
         QObject::connect(&app, SIGNAL(messageReceived(const QStringList&)), &app, SLOT(onMessageReceived(const QStringList&)));
 
-		q = new QMainObject;
+        q = new QMainObject;
         radio = new Radio();
         qAddPostRoutine(cleanup);
 
@@ -95,16 +100,23 @@ int main( int argc, char** argv )
         AEInstallEventHandler( 'GURL', 'GURL', h, 0, false );
       #endif
         
-        MainWindow window;
+        Actions* actions = new Actions();
 
-        app.setActivationWindow( &window );
+        WindowMini windowMini( *actions );
+        WindowMain windowMain( *actions );
 
-        q->connect(&window, SIGNAL(startRadio(RadioStation)), SLOT(onStartRadio(RadioStation)));
-        window.connect(radio, SIGNAL(error(int, QVariant)), SLOT(onRadioError(int, QVariant)) );
+        QObject::connect( &windowMain, SIGNAL(aboutToHide()), &windowMini, SLOT(show()) );
+        QObject::connect( &windowMini, SIGNAL(aboutToHide()), &windowMain, SLOT(show()) );
 
-        window.setWindowTitle( app.applicationName() );
+        app.setActivationWindow( &windowMain );
+        windowMain.setWindowTitle( app.applicationName() );
+        windowMain.show();
 
-        window.show();
+        windowMini.setWindowTitle( app.applicationName() );
+        windowMini.hide();
+
+        //q->connect(&window, SIGNAL(startRadio(RadioStation)), SLOT(onStartRadio(RadioStation)));
+        //window.connect(radio, SIGNAL(error(int, QVariant)), SLOT(onRadioError(int, QVariant)) );
 
         app.parseArguments( app.arguments() );
 
@@ -124,7 +136,7 @@ int main( int argc, char** argv )
 }
 
 #ifdef Q_WS_MAC
-static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, void* )
+static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
 {
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );

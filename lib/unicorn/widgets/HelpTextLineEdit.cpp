@@ -21,12 +21,17 @@
 #include <QPainter>
 
 
-HelpTextLineEdit::HelpTextLineEdit( const QString& text, QWidget* parent )
-                :QLineEdit( parent ), m_text( text )
+HelpTextLineEdit::HelpTextLineEdit( QWidget* parent )
+                :QLineEdit( parent )
 {
     setMinimumWidth( fontMetrics().width( m_text ) + 12 );
 }
 
+void
+HelpTextLineEdit::setHelpText( const QString& text )
+{
+    m_text = text;
+}
 
 void
 HelpTextLineEdit::paintEvent( QPaintEvent* e )
