@@ -21,6 +21,8 @@
 #include <QLayout>
 #include <QLabel>
 
+#include "../Radio.h"
+
 
 PlayableItemWidget::PlayableItemWidget(QString stationTitle, const RadioStation& rs)
     : m_rs(rs)
@@ -42,6 +44,8 @@ PlayableItemWidget::init()
     if( title != m_rs.title() )
         setToolTip( m_rs.title());
     setText(title);
+
+    connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)) );
 }
 
 //virtual 
@@ -49,4 +53,10 @@ void
 PlayableItemWidget::mouseReleaseEvent(QMouseEvent* /*event*/)
 {
     emit startRadio(m_rs);
+}
+
+void
+PlayableItemWidget::onTuningIn( const RadioStation& station )
+{
+    setEnabled( !(station == m_rs) );
 }

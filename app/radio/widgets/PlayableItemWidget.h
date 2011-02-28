@@ -33,8 +33,13 @@ public:
     PlayableItemWidget(QString stationTitle, const RadioStation& rs);
     PlayableItemWidget(const RadioStation& rs);
 
+    const RadioStation& station() const { return m_rs; }
+
 signals:
     void startRadio(RadioStation);
+
+public slots:
+    void onTuningIn( const RadioStation& station );
 
 private:
 //    virtual void mousePressEvent(QMouseEvent* event);

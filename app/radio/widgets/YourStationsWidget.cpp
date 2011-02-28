@@ -28,7 +28,7 @@
 
 YourStationsWidget::YourStationsWidget()
 {
-    
+
     QGridLayout* layout = new QGridLayout( this );
 
     PlayableItemWidget* item;
@@ -49,8 +49,8 @@ YourStationsWidget::YourStationsWidget()
     layout->addWidget(item, 2, 0);
     connect(item, SIGNAL(startRadio(RadioStation)), SIGNAL(startRadio(RadioStation)));
 
-    item = new PlayableItemWidget( tr( "Your Adventure" ), RadioStation::adventure( lastfm::ws::Username ) );
-    item->setToolTip( tr( "Your Adventure" ) );
+    item = new PlayableItemWidget( tr( "Your Mix" ), RadioStation::library( lastfm::ws::Username ) );
+    item->setToolTip( tr( "Your Mix" ) );
     layout->addWidget( item, 2, 1 );
     connect( item, SIGNAL( startRadio( RadioStation ) ), SIGNAL( startRadio( RadioStation ) ) );
 

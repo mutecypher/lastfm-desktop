@@ -24,6 +24,7 @@
 #include "ScrobSocket.h"
 #include <QDebug>
 #include <QProcess>
+#include <QShortcut>
 #ifdef Q_OS_MAC
     #include <CoreServices/CoreServices.h>
 #endif
@@ -70,7 +71,7 @@ Application::Application( int& argc, char** argv )
         AEDisposeDesc( &desc );
 #elif defined Q_OS_WIN
     QProcess* process = new QProcess;
-    process->start( QApplication::applicationDirPath() + "/audioscrobbler.exe", QStringList("--tray") );
+    process->start( QApplication::applicationDirPath() + "/Last.fm Scrobbler.exe", QStringList("--tray") );
 #endif
 }
 
@@ -120,6 +121,7 @@ Application::init()
         process->start( QApplication::applicationDirPath() + "/audioscrobbler.exe", QStringList("--tray") );
     #endif
 }
+
 
 // lastfmlib invokes this directly, for some errors:
 void

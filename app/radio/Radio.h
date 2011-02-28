@@ -54,9 +54,9 @@ public:
 	enum State
 	{
         Stopped,
-		TuningIn,
+        TuningIn,
         Buffering,
-		Playing,
+        Playing,
         Paused
 	};
 
@@ -75,6 +75,7 @@ public slots:
     void stop();
     void mute();
     void pause();
+    void resume();
     void setSupportsDisco( bool supportsDisco );
 
 signals:
