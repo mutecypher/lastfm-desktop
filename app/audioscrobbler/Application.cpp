@@ -20,7 +20,6 @@
 #include "Application.h"
 
 #include "Widgets/PointyArrow.h"
-#include "Widgets/ProfileWidget.h"
 #include "Dialogs/SettingsDialog.h"
 #include "lib/listener/DBusListener.h"
 #include "lib/listener/legacy/LegacyPlayerListener.h"

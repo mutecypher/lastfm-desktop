@@ -116,7 +116,7 @@ WelcomeWidget QLabel#callToAction {
 
 unicorn--MainWindow ProfileWidget,
 QWidget#NowScrobbling {
-    min-height: 195px;
+    min-height: 159px;
 }
 
 StatusBar {
@@ -264,6 +264,10 @@ ActivityListWidget {
 	min-width: 40px;
 }
 
+ActivityListWidget QScrollBar {
+    min-height: 0px;
+}
+
 ActivityListItem {
 	min-width: 40px;
     background-color: transparent;
@@ -338,17 +342,6 @@ ActivityListItem QToolButton::menu-indicator {
 
 ActivityListItem QToolButton#cog:pressed {
     qproperty-icon: url(:/cog-onpress.png);
-}
-
-ProfileWidget #title {
-    font-size: 20pt;
-}
-
-ProfileWidget #avatar {
-    border: 1px solid white;
-    min-height: 64px;
-    min-width: 64px;
-    max-width: 64px;
 }
 
 MetadataWindow QLabel#name {
