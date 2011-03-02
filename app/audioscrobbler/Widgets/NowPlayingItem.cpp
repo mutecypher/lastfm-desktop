@@ -86,7 +86,10 @@ NowPlayingItem::onWatchPaused( bool isPaused )
         }
         else
         {
-            m_timestampText = aApp->currentConnection()->name();
+            if( (aApp->stopWatch()->elapsed()/1000.0f) / aApp->stopWatch()->scrobblePoint() >= 1.0f )
+                m_timestampText = tr( "Track Scrobbled" );
+            else
+                m_timestampText = aApp->currentConnection()->name();
             ui.as->setMovie( movie.scrobbler_as );
             ui.as->movie()->start();
         }
@@ -106,7 +109,8 @@ void
 NowPlayingItem::onWatchFinished()
 {
     connect( ui.as->movie(), SIGNAL(loopFinished()), ui.as->movie(), SLOT(stop()));
-    ui.timestamp->setText( tr( "Track Scrobbled" ));
+    m_timestampText = tr( "Track Scrobbled" );
+    ui.timestamp->setText( m_timestampText );
 }
 
 

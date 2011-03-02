@@ -22,7 +22,6 @@
 #include "Application.h"
 #include "ScrobbleInfoFetcher.h"
 #include "MediaDevices/DeviceScrobbler.h"
-#include "../Widgets/ProfileWidget.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "../Widgets/ScrobbleInfoWidget.h"
 #include "../Widgets/NowPlayingItem.h"
@@ -97,8 +96,6 @@ MetadataWindow::MetadataWindow()
 
     ui.message_bar = new MessageBar( centralWidget());
 
-    finishUi();
-
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
     connect( qApp, SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
     connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
@@ -127,6 +124,8 @@ MetadataWindow::MetadataWindow()
     aApp->refreshStyleSheet();
 
     doLayout( m_viewMode );
+
+    finishUi();
 }
 
 void
@@ -155,6 +154,7 @@ MetadataWindow::doLayout( ViewMode mode )
         QVBoxLayout* vl = new QVBoxLayout;
         hl->setContentsMargins( 0, 0, 0, 0 );
         hl->setSpacing( 0 );
+
         vl->setContentsMargins( 0, 0, 0, 0 );
         vl->setSpacing( 0 );
 
@@ -176,13 +176,9 @@ MetadataWindow::doLayout( ViewMode mode )
 
         ui.splitter->setCollapsible( 0, false );
         ui.splitter->handle( 1 )->setAutoFillBackground( true );
-        setMinimumWidth( 410 );
+        setMinimumWidth( 442 );
 
         layout->addWidget( ui.statusBar, 1 );
-
-        setMinimumWidth( 410 );
-
-        setMinimumHeight( 80 );
         resize(20, 500);
 
         onItemClicked( ui.nowPlaying );

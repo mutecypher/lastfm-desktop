@@ -51,6 +51,8 @@ public:
 
     QColor progressColor() const{ return m_progressColor; }
 
+    void resizeEvent(QResizeEvent *event) { onFrameChanged(); TrackItem::resizeEvent( event ); }
+
 private:
     void paintEvent( QPaintEvent* event );
 

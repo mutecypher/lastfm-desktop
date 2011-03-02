@@ -14,7 +14,6 @@ QString getIpodMountPath();
 
 DeviceScrobbler::DeviceScrobbler()
 {
-    qDebug() << "Instantiating DeviceScrobbler";
 }
 
 void 

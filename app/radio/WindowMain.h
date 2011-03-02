@@ -24,6 +24,8 @@ private slots:
     void onRadioTick( qint64 tick );
     void onTrackSpooled( const Track& track );
     void onTuningIn( const RadioStation& station );
+    void onError( int error , const QVariant& errorData );
+    void onStopped();
 
     void onLoveClicked( bool loved );
     void onLoveTriggered();
@@ -40,8 +42,8 @@ private slots:
     void onNeighboursClicked();
 
     void onGotRecentStations();
-    void onGotTopArtists();
-    void onGotMixStations();
+    void onGotLibraryArtists();
+    void onGotMixArtists();
     void onGotRecommendedArtists();
     void onGotFriendsListeningNow();
     void onGotNeighbours();
@@ -50,6 +52,10 @@ private slots:
 
 private:
     void addWinThumbBarButtons( QList<QAction*>& );
+
+    void createLibraryStations();
+    void createMixStations();
+    void createRecommendedStations();
 
 private:
     Ui::WindowMain* ui;

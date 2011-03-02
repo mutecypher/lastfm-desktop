@@ -31,11 +31,13 @@ PlayableItemWidget::PlayableItemWidget(QString stationTitle, const RadioStation&
     init();
 }
 
+
 PlayableItemWidget::PlayableItemWidget(const RadioStation& rs)
     : m_rs(rs)
 {
     init();
 }
+
 
 void
 PlayableItemWidget::init()
@@ -45,8 +47,10 @@ PlayableItemWidget::init()
         setToolTip( m_rs.title());
     setText(title);
 
-    connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)) );
+    connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
+    connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
 }
+
 
 //virtual 
 void 
@@ -55,8 +59,16 @@ PlayableItemWidget::mouseReleaseEvent(QMouseEvent* /*event*/)
     emit startRadio(m_rs);
 }
 
+
 void
-PlayableItemWidget::onTuningIn( const RadioStation& station )
+PlayableItemWidget::onRadioChanged()
 {
-    setEnabled( !(station == m_rs) );
+    if ( radio->station() == m_rs )
+    {
+        setEnabled( false );
+        setText( radio->station().title() );
+    }
+    else
+        setEnabled( true );
+
 }
