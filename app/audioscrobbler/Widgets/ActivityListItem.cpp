@@ -190,7 +190,7 @@ ActivityListItem::resizeEvent(QResizeEvent* )
     QFontMetrics fm( ui.text->font() );
     ui.text->setText( fm.elidedText ( m_text, Qt::ElideRight, textAreaWidth ) );
 
-    ui.timestamp->setText( fm.elidedText ( m_timestampText, Qt::ElideRight, ui.timestamp->width() ) );
+    ui.timestamp->setText( m_timestampText );
 }
 
 
