@@ -22,6 +22,9 @@ WindowMain::WindowMain( Actions& actions ) :
 {
     SETUP()
 
+    connect( radio, SIGNAL(error(int,QVariant)), SLOT(onError(int, QVariant)));
+    connect( radio, SIGNAL(stopped()), SLOT(onStopped()));
+
     ui->stationEdit->setHelpText( tr("Type an artist or tag and press play") );
 
     connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
@@ -39,9 +42,9 @@ WindowMain::WindowMain( Actions& actions ) :
     // fetch the recent radio stations
     lastfm::User currentUser;
     connect( currentUser.getRecentStations(), SIGNAL(finished()), SLOT(onGotRecentStations()));
-    connect( currentUser.getTopArtists( "3month", 9 ), SIGNAL(finished()), SLOT(onGotTopArtists()));
-    onGotMixStations();
-    connect( currentUser.getRecommendedArtists( 9 ), SIGNAL(finished()), SLOT(onGotRecommendedArtists()));
+    createLibraryStations();
+    createMixStations();
+    createRecommendedStations();
     connect( currentUser.getFriendsListeningNow( 9 ), SIGNAL(finished()), SLOT(onGotFriendsListeningNow()));
     connect( currentUser.getNeighbours( 9 ), SIGNAL(finished()), SLOT(onGotNeighbours()));
 
@@ -160,11 +163,12 @@ WindowMain::onTuningIn( const RadioStation& station )
 
     if ( !found )
     {
-        ui->recentLayout->takeAt( ui->recentLayout->count() - 1 )->widget()->deleteLater();;
+        if ( ui->recentLayout->count() >= 10 )
+            ui->recentLayout->takeAt( ui->recentLayout->count() - 1 )->widget()->deleteLater();;
 
         PlayableItemWidget* item = new PlayableItemWidget( station );
         ui->recentLayout->insertWidget( 0, item );
-        item->onTuningIn( station );
+        item->onRadioChanged();
     }
 }
 
@@ -174,6 +178,21 @@ WindowMain::onTrackSpooled( const Track& track )
 {
     TRACK_SPOOLED()
 }
+
+
+void
+WindowMain::onError(int error, const QVariant& errorText)
+{
+    ui->radioTitle->setText( errorText.toString() + ": " + QString::number(error) );
+}
+
+
+void
+WindowMain::onStopped()
+{
+    ui->radioTitle->setText( tr("Radio Title") );
+}
+
 
 void
 WindowMain::onSwitch()
@@ -232,18 +251,26 @@ WindowMain::onGotRecentStations()
     }
 }
 
+
 void
-WindowMain::onGotTopArtists()
+WindowMain::createLibraryStations()
+{
+    PlayableItemWidget* libraryStationWidget = new PlayableItemWidget( tr("My Library"), RadioStation::library( lastfm::User() ) );
+    ui->libraryLayout->addWidget(libraryStationWidget);
+    connect( libraryStationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
+
+    connect( libraryStationWidget->station().getSampleArtists( 9 ), SIGNAL(finished()), SLOT(onGotLibraryArtists()));
+}
+
+
+void
+WindowMain::onGotLibraryArtists()
 {
     lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
 
-    PlayableItemWidget* recentStationWidget = new PlayableItemWidget( tr("My Library"), RadioStation::library( lastfm::User() ) );
-    ui->libraryLayout->addWidget(recentStationWidget);
-    connect( recentStationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
-
     ui->libraryLayout->addWidget( new QLabel( tr("Containing these artists"), this ) );
 
-    foreach ( lastfm::XmlQuery artist, lfm.children("artist") )
+    foreach ( lastfm::XmlQuery artist, lfm.children("artist").mid( 0, 9 ) )
     {
         PlayableItemWidget* stationWidget = new PlayableItemWidget( tr("%1 Radio").arg( artist["name"].text() ), RadioStation::similar( lastfm::Artist( artist["name"].text() ) ) );
         ui->libraryLayout->addWidget(stationWidget);
@@ -251,16 +278,43 @@ WindowMain::onGotTopArtists()
     }
 }
 
-void
-WindowMain::onGotMixStations()
-{
-    //lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
 
+void
+WindowMain::createMixStations()
+{
     PlayableItemWidget* stationWidget = new PlayableItemWidget( tr("My Mix Radio"), RadioStation::mix( lastfm::User() ) );
     ui->mixLayout->addWidget(stationWidget);
     connect( stationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
 
     ui->mixLayout->addWidget( new QLabel( tr("Containing these artists"), this ) );
+
+    connect( stationWidget->station().getSampleArtists( 9 ), SIGNAL(finished()), SLOT(onGotMixArtists()));
+}
+
+
+void
+WindowMain::onGotMixArtists()
+{
+    lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
+
+    foreach ( lastfm::XmlQuery artist, lfm.children("artist").mid( 0, 9 ) )
+    {
+        PlayableItemWidget* stationWidget = new PlayableItemWidget( tr("%1 Radio").arg( artist["name"].text() ), RadioStation::similar( lastfm::Artist( artist["name"].text() ) ) );
+        ui->mixLayout->addWidget(stationWidget);
+        connect( stationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
+    }
+}
+
+
+void
+WindowMain::createRecommendedStations()
+{
+    PlayableItemWidget* stationWidget = new PlayableItemWidget( tr("My Recommendations"), RadioStation::recommendations( lastfm::User() ) );
+    ui->recLayout->addWidget(stationWidget);
+    connect( stationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
+
+    connect( stationWidget->station().getSampleArtists( 9 ), SIGNAL(finished()), SLOT(onGotRecommendedArtists()));
+
 }
 
 void
@@ -268,19 +322,16 @@ WindowMain::onGotRecommendedArtists()
 {
     lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
 
-    PlayableItemWidget* stationWidget = new PlayableItemWidget( tr("My Recommendations"), RadioStation::recommendations( lastfm::User() ) );
-    ui->recLayout->addWidget(stationWidget);
-    connect( stationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
-
     ui->recLayout->addWidget( new QLabel( tr("Containing these artists"), this ) );
 
-    foreach ( lastfm::XmlQuery artist, lfm.children("artist") )
+    foreach ( lastfm::XmlQuery artist, lfm.children("artist").mid( 0, 9 ) )
     {
         PlayableItemWidget* stationWidget = new PlayableItemWidget( tr("%1 Radio").arg( artist["name"].text() ), RadioStation::similar( lastfm::Artist( artist["name"].text() ) ) );
         ui->recLayout->addWidget(stationWidget);
         connect( stationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
     }
 }
+
 
 void
 WindowMain::onGotFriendsListeningNow()
@@ -300,6 +351,7 @@ WindowMain::onGotFriendsListeningNow()
         connect( stationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
     }
 }
+
 
 void
 WindowMain::onGotNeighbours()

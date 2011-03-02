@@ -369,7 +369,7 @@ Radio::onPhononCurrentSourceChanged( const Phonon::MediaSource& )
 void
 Radio::changeState( Radio::State const newstate )
 {
-	State const oldstate = m_state;
+    State const oldstate = m_state;
 
     if (oldstate == newstate) 
         return;
@@ -379,7 +379,7 @@ Radio::changeState( Radio::State const newstate )
     m_state = newstate; // always assign state properties before you tell other
                         // objects about it
     
-	switch (newstate)
+    switch (newstate)
 	{
         case TuningIn:
             qDebug() << "Tuning to:" << m_station;
@@ -388,14 +388,16 @@ Radio::changeState( Radio::State const newstate )
             
         case Buffering:
             break;
-		case Playing:
+        case Playing:
+            emit resumed();
             break;
 
-		case Stopped:
+        case Stopped:
             emit stopped();
             break;
 
         case Paused:
+            emit paused();
             break;
 	}
 }

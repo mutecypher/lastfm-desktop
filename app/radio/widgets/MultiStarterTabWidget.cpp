@@ -257,7 +257,7 @@ MultiStarterTabWidget::onPlayClicked()
 
     if (rql.length())
     {
-        RadioStation rs = RadioStation::rql(rql);
+        RadioStation rs = RadioStation(rql);
 
         count = 0;
         QString description;

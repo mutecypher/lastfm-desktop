@@ -218,7 +218,7 @@ MainWidget::rawrql()
         &ok);
     if (ok && !rql.isEmpty()) {
         m_rawrqlItems.prepend(rql);
-        RadioStation rs = RadioStation::rql(rql);
+        RadioStation rs = RadioStation(rql);
         onStartRadio(rs);
         emit startRadio(rs);
     }

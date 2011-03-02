@@ -92,6 +92,8 @@ int main( int argc, char** argv )
 
         ScrobSocket* scrobsock = new ScrobSocket("ass");
         scrobsock->connect(radio, SIGNAL(trackSpooled(Track)), SLOT(start(Track)));
+        scrobsock->connect(radio, SIGNAL(paused()), SLOT(pause()));
+        scrobsock->connect(radio, SIGNAL(resumed()), SLOT(resume()));
         scrobsock->connect(radio, SIGNAL(stopped()), SLOT(stop()));
         scrobsock->connect(&app, SIGNAL(aboutToQuit()), scrobsock, SLOT(stop()));
 
@@ -114,9 +116,6 @@ int main( int argc, char** argv )
 
         windowMini.setWindowTitle( app.applicationName() );
         windowMini.hide();
-
-        //q->connect(&window, SIGNAL(startRadio(RadioStation)), SLOT(onStartRadio(RadioStation)));
-        //window.connect(radio, SIGNAL(error(int, QVariant)), SLOT(onRadioError(int, QVariant)) );
 
         app.parseArguments( app.arguments() );
 
