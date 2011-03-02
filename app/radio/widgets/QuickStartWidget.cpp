@@ -50,7 +50,9 @@ QuickStartWidget::QuickStartWidget()
     QHBoxLayout* h1 = new QHBoxLayout();
     QPushButton* button = new AAQPushButton(tr("Play"));
     button->setToolTip( tr( "Play source" ) );
-    h1->addWidget(m_edit = new HelpTextLineEdit( tr("Type an artist or tag"), this ) );
+    m_edit = new HelpTextLineEdit( this );
+    m_edit->setHelpText( tr("Type an artist or tag") );
+    h1->addWidget( m_edit );
     h1->addWidget(button);
 
     layout->addWidget( new QLabel( tr("Quick start") ), 0, Qt::AlignCenter );

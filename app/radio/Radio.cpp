@@ -221,6 +221,14 @@ Radio::pause()
     changeState( Paused );
 }
 
+void
+Radio::resume()
+{
+    m_mediaObject->play();
+
+    changeState( Playing );
+}
+
 
 void
 Radio::clear()
@@ -275,7 +283,7 @@ Radio::onPhononStateChanged( Phonon::State newstate, Phonon::State oldstate )
 			// tuning in state;
             if (m_mediaObject->queue().size() == 0) {
                 qDebug() << "queue empty, going to TuningIn";
-                changeState( TuningIn );
+                changeState( Paused );
             }
 			break;
 			
@@ -397,7 +405,7 @@ void
 Radio::setStationName( const QString& s )
 {
     m_station.setTitle( s );
-    emit tuningIn( m_station );
+    //emit tuningIn( m_station );
 }
 
 

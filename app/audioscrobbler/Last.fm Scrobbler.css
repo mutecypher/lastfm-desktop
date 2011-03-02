@@ -17,7 +17,7 @@ StylableWidget {
 
 /* These borders appear on the left and right edges of the app */
 QSplitter {
-    border:1px solid qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 146, 146, 146, 153), stop:0.05 #555, stop:1 #555);
+    border:1px solid qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 146, 146, 146, 223), stop:0.05 #555, stop:1 #555);
     border-top: none;
     border-bottom: none;
 }

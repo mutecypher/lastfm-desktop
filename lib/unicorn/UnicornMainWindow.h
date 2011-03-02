@@ -83,8 +83,8 @@ namespace unicorn
         void refreshStyleSheet();
 
     protected:
-        struct Ui {
-            Ui() : account( 0 ), profile( 0 )
+        struct UI {
+            UI() : account( 0 ), profile( 0 )
             {}
 
             QMenu* account;
@@ -92,7 +92,7 @@ namespace unicorn
             OneDialogPointer<UpdateDialog> update;
             OneDialogPointer<AboutDialog> about;
             
-        } ui;
+        } base_ui;
 
 #ifdef Q_OS_WIN32
         bool canUseTaskBar;
