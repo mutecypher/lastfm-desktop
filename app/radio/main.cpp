@@ -17,11 +17,12 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifdef __APPLE__
-    // first to prevent compilation errors with Qt 4.5.0
-    //TODO shorten this mother fucker
-    //NOTE including Carbon/Carbon.h breaks things as it has sooo many symbols
-    //     in the global namespace
+#include <QtGlobal>
+
+#ifdef Q_OS_MAC_64
+    #include <Carbon/Carbon.h>
+    static pascal OSErr appleEventHandler( const AppleEvent*, AppleEvent*, void* );
+#elif defined Q_OS_MAC
     #include </System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/AE.framework/Versions/A/Headers/AppleEvents.h>
     static pascal OSErr appleEventHandler( const AppleEvent*, AppleEvent*, long );
 #endif
@@ -135,8 +136,13 @@ int main( int argc, char** argv )
     }
 }
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
+#ifdef Q_OS_MAC_64
+static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, void* )
+#else
 static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
+#endif //Q_OS_MAC_64
+
 {
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );
@@ -160,7 +166,7 @@ static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
             return unimpErr;
     }
 }
-#endif
+#endif //Q_OS_MAC
 
 
 void cleanup()

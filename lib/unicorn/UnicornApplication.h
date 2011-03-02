@@ -30,6 +30,10 @@
 #include <QDebug>
 #include <QMainWindow>
 
+#ifdef Q_OS_MAC_64
+#include <Carbon/Carbon.h>
+#endif
+
 namespace lastfm{
     class UserDetails;
     class InternetConnectionMonitor;
@@ -183,8 +187,13 @@ namespace unicorn
 #ifdef __APPLE__
         void installCocoaEventHandler() const;
         void appleEventReceived( const QStringList& messages );
-        static short appleEventHandler( const AppleEvent*, AppleEvent*, long );
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
+
+#ifdef Q_OS_MAC_64
+        static OSErr appleEventHandler( const AppleEvent*, AppleEvent*, void* );
+#else
+        static short appleEventHandler( const AppleEvent*, AppleEvent*, long );
+#endif
 #endif
 #ifdef WIN32
         static bool winEventFilter ( void* );
