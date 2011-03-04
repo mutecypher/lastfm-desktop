@@ -126,7 +126,9 @@ void
 NowPlayingItem::onFrameChanged( int frame )
 {
     m_lastFrame = frame;
-    int progress = ( frame * width() ) / ( aApp->stopWatch()->scrobblePoint() * 1000 );
+    int progress = 0;
+    if ( aApp->stopWatch() )
+        progress = ( frame * width() ) / ( aApp->stopWatch()->scrobblePoint() * 1000 );
 
     if ( progress != m_progressWidth )
     {  
