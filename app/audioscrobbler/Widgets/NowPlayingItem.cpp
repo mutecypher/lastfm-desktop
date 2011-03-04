@@ -46,7 +46,8 @@
 NowPlayingItem::NowPlayingItem( const Track& track )
     :TrackItem( track ),
      m_progressColor( 60, 60, 60 ),
-     m_progressWidth( 0 )
+     m_progressWidth( 0 ),
+     m_lastFrame( 0 )
 {
     m_nullInfo = new WelcomeWidget( this );
     m_nullInfo->hide();
@@ -114,9 +115,17 @@ NowPlayingItem::onWatchFinished()
 }
 
 
+void NowPlayingItem::resizeEvent(QResizeEvent *event)
+{
+    onFrameChanged( m_lastFrame );
+    TrackItem::resizeEvent( event );
+}
+
+
 void
 NowPlayingItem::onFrameChanged( int frame )
 {
+    m_lastFrame = frame;
     int progress = ( frame * width() ) / ( aApp->stopWatch()->scrobblePoint() * 1000 );
 
     if ( progress != m_progressWidth )
