@@ -262,7 +262,7 @@ WindowMain::onGotRecentStations()
 void
 WindowMain::createLibraryStations()
 {
-    PlayableItemWidget* libraryStationWidget = new PlayableItemWidget( tr("My Library"), RadioStation::library( lastfm::User() ) );
+    PlayableItemWidget* libraryStationWidget = new PlayableItemWidget( tr("My Library Radio"), RadioStation::library( lastfm::User() ) );
     ui->libraryLayout->addWidget(libraryStationWidget);
     connect( libraryStationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
 
@@ -316,7 +316,7 @@ WindowMain::onGotMixArtists()
 void
 WindowMain::createRecommendedStations()
 {
-    PlayableItemWidget* stationWidget = new PlayableItemWidget( tr("My Recommendations"), RadioStation::recommendations( lastfm::User() ) );
+    PlayableItemWidget* stationWidget = new PlayableItemWidget( tr("My Recommended Radio"), RadioStation::recommendations( lastfm::User() ) );
     ui->recLayout->addWidget(stationWidget);
     connect( stationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
 
@@ -345,7 +345,7 @@ WindowMain::onGotFriendsListeningNow()
 {
     lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
 
-    PlayableItemWidget* recentStationWidget = new PlayableItemWidget( tr("My Friends' Radio"), RadioStation::friends( lastfm::User() ) );
+    PlayableItemWidget* recentStationWidget = new PlayableItemWidget( tr("My Friends%1 Radio").arg( QChar( 0x2019 ) ), RadioStation::friends( lastfm::User() ) );
     ui->friendsLayout->addWidget(recentStationWidget);
     connect( recentStationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
 
@@ -353,7 +353,7 @@ WindowMain::onGotFriendsListeningNow()
 
     foreach ( lastfm::XmlQuery user, lfm.children("user") )
     {
-        PlayableItemWidget* stationWidget = new PlayableItemWidget( tr("%1's Library").arg( user["name"].text() ), RadioStation::library( lastfm::User( user["name"].text() ) ) );
+        PlayableItemWidget* stationWidget = new PlayableItemWidget( tr("%1%2s Library Radio").arg( user["name"].text(), QChar( 0x2019 ) ), RadioStation::library( lastfm::User( user["name"].text() ) ) );
         ui->friendsLayout->addWidget(stationWidget);
         connect( stationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
     }
@@ -365,7 +365,7 @@ WindowMain::onGotNeighbours()
 {
     lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
 
-    PlayableItemWidget* recentStationWidget = new PlayableItemWidget( tr("My Neighbours' Radio"), RadioStation::neighbourhood( lastfm::User() ) );
+    PlayableItemWidget* recentStationWidget = new PlayableItemWidget( tr("My Neighbours%1 Radio").arg( QChar( 0x2019 ) ), RadioStation::neighbourhood( lastfm::User() ) );
     ui->neighboursLayout->addWidget(recentStationWidget);
     connect( recentStationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
 
@@ -373,7 +373,7 @@ WindowMain::onGotNeighbours()
 
     foreach ( lastfm::XmlQuery user, lfm.children("user") )
     {
-        PlayableItemWidget* stationWidget = new PlayableItemWidget( tr("%1's Library").arg( user["name"].text() ), RadioStation::library( lastfm::User( user["name"].text() ) ) );
+        PlayableItemWidget* stationWidget = new PlayableItemWidget( tr("%1%2s Library Radio").arg( user["name"].text(), QChar( 0x2019 ) ), RadioStation::library( lastfm::User( user["name"].text() ) ) );
         ui->neighboursLayout->addWidget(stationWidget);
         connect( stationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
     }

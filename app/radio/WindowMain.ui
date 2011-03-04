@@ -202,14 +202,14 @@
           <item>
            <widget class="QRadioButton" name="friends">
             <property name="text">
-             <string>Friends'</string>
+             <string>Friends’</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QRadioButton" name="neighbours">
             <property name="text">
-             <string>Neighbours'</string>
+             <string>Neighbours’</string>
             </property>
            </widget>
           </item>

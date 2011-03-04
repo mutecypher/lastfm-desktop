@@ -27,7 +27,7 @@
 PlayableItemWidget::PlayableItemWidget(QString stationTitle, const RadioStation& rs)
     : m_rs(rs)
 {
-    m_rs.setTitle( stationTitle);
+    m_rs.setTitle( stationTitle );
     init();
 }
 
@@ -45,7 +45,7 @@ PlayableItemWidget::init()
     QString title = fontMetrics().elidedText( m_rs.title(), Qt::ElideRight, 200 );
     if( title != m_rs.title() )
         setToolTip( m_rs.title());
-    setText(title);
+    setText( title );
 
     connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
     connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
