@@ -406,9 +406,9 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="edit">
+          <widget class="QPushButton" name="filter">
            <property name="text">
-            <string>Edit</string>
+            <string>Filter</string>
            </property>
           </widget>
          </item>

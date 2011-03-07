@@ -28,6 +28,9 @@ private slots:
     void onTuningIn( const RadioStation& station );
     void onTrackSpooled( const Track& track );
 
+    void onEditClicked();
+    void onFilterClicked();
+
     void onActionsChanged();
 
     void onSwitch();

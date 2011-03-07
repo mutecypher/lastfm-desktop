@@ -32,6 +32,9 @@ private slots:
     void onBanClicked();
     void onBanFinished();
 
+    void onEditClicked();
+    void onFilterClicked();
+
     void onActionsChanged();
 
     void onRecentClicked();

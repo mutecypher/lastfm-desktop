@@ -54,6 +54,8 @@ else \
 ui->setupUi(this); \
 finishUi(); \
 \
+connect( ui->filter, SIGNAL(clicked()), SLOT(onFilterClicked()));\
+\
 connect( ui->love, SIGNAL(clicked()), m_actions->m_loveAction, SLOT(trigger())); \
 connect( ui->ban, SIGNAL(clicked()), m_actions->m_banAction, SLOT(trigger())); \
 connect( ui->play, SIGNAL(clicked()), m_actions->m_playAction, SLOT(trigger())); \
@@ -116,5 +118,16 @@ if ( lfm.attribute( "status" ) != "ok" ) \
 } \
 \
 radio->skip();
+
+#define ON_FILTER_CLICKED() \
+TagFilterDialog tagFilter( radio->station(), this ); \
+if ( tagFilter.exec() == QDialog::Accepted ) \
+{ \
+    RadioStation station = radio->station(); \
+    station.setTagFilter( tagFilter.tag() ); \
+    radio->playNext( station ); \
+}
+
+#define ON_EDIT_CLICKED()
 
 #endif // WINDOWMACRO_H

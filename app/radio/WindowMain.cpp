@@ -7,6 +7,8 @@
 #include "WindowMain.h"
 #include "ui_WindowMain.h"
 
+#include "widgets/TagFilterDialog.h"
+
 #include "widgets/PlayableItemWidget.h"
 #include "Actions.h"
 
@@ -138,6 +140,19 @@ WindowMain::onBanFinished()
 
 
 void
+WindowMain::onFilterClicked()
+{
+    ON_FILTER_CLICKED()
+}
+
+
+void
+WindowMain::onEditClicked()
+{
+    ON_EDIT_CLICKED()
+}
+
+void
 WindowMain::onRadioTick( qint64 tick )
 {
     RADIO_TICK()
@@ -249,6 +264,8 @@ void
 WindowMain::onGotRecentStations()
 {
     lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
+
+    qDebug() << lfm;
 
     foreach ( const lastfm::XmlQuery& station , lfm.children("station") )
     {
