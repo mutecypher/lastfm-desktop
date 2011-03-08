@@ -176,7 +176,7 @@ MetadataWindow::doLayout( ViewMode mode )
 
         ui.splitter->setCollapsible( 0, false );
         ui.splitter->handle( 1 )->setAutoFillBackground( true );
-        setMinimumWidth( 442 );
+        setMinimumWidth( 455 );
 
         layout->addWidget( ui.statusBar, 1 );
         resize(20, 500);

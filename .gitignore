@@ -17,4 +17,6 @@ Makefile*
 /app/radio/radio.pro
 /lib/listener/listener.pro
 /lib/unicorn/unicorn.pro
-
+/app/mac-bundle/mac-bundle.pro
+/app/win-plugin-installer/win-plugin-installer.pro
+/lib/unicorn/Updater/gen_PluginList.h
