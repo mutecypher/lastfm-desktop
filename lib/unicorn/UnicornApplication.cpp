@@ -487,7 +487,7 @@ unicorn::Application::appleEventReceived( const QStringList& messages )
 }
 
 pascal OSErr /* static */
-#ifdef Q_OS_MAC_64
+#ifdef Q_OS_MAC64
 unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, void* )
 #else
 unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long )

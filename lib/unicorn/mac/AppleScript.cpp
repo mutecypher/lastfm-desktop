@@ -42,7 +42,7 @@ AppleScript::~AppleScript()
 bool //static
 AppleScript::isAppleScriptAvailable()
 {
-#ifdef Q_OS_MAC_64
+#ifdef Q_OS_MAC64
     SInt32 r;
 #else
     long r;

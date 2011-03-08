@@ -30,7 +30,7 @@
 #include <QDebug>
 #include <QMainWindow>
 
-#ifdef Q_OS_MAC_64
+#ifdef Q_OS_MAC64
 #include <Carbon/Carbon.h>
 #endif
 
@@ -190,7 +190,7 @@ namespace unicorn
         void appleEventReceived( const QStringList& messages );
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
 
-#ifdef Q_OS_MAC_64
+#ifdef Q_OS_MAC64
         static OSErr appleEventHandler( const AppleEvent*, AppleEvent*, void* );
 #else
         static short appleEventHandler( const AppleEvent*, AppleEvent*, long );

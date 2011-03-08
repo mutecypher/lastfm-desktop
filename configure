@@ -1,5 +1,4 @@
 #!/bin/bash
-
 source admin/utils.bash
 
 #################################################################### functions
@@ -56,11 +55,8 @@ do
         --bundle)
             echo "Will force bundle generation"
             BUNDLE=1;;
-	--64bit)
-	    echo "Building 64bit specific version"
-	    SIXTYFOURBIT=1;;
         --help | -h | --usage)
-            echo "options include: --release, --tests, --xcode, --vs, --bundle, --64bit"
+            echo "options include: --release, --tests, --xcode, --vs, --bundle"
             exit;;
     esac
     
@@ -145,12 +141,7 @@ else
                 configFlags='CONFIG-=release app_bundle'
             fi
 	    
-	    if [ $SIXTYFOURBIT ]; then
-		configFlags="$configFlags CONFIG+=x86_64"
-	    fi
-
-            $(echo qmake -config debug -spec macx-g++ -recursive Last.fm.pro "$configFlags" "$EXTRA_QMAKE_FLAGS") || die "Configure failed."
-            # qmake -config debug -spec macx-g++ -recursive Last.fm.pro "$configFlags" "$EXTRA_QMAKE_FLAGS" || die "Configure failed."
+            qmake -config debug -spec macx-g++ -recursive Last.fm.pro "$configFlags" "$EXTRA_QMAKE_FLAGS" || die "Configure failed."
             BUILD_CMD='make'        
         fi;;
             
