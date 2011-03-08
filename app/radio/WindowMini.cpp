@@ -6,6 +6,8 @@
 #include "WindowMini.h"
 #include "ui_WindowMini.h"
 
+#include "widgets/TagFilterDialog.h"
+
 #include <lastfm/XmlQuery>
 
 #include "Radio.h"
@@ -78,6 +80,19 @@ void
 WindowMini::onTrackSpooled( const Track& track )
 {
     TRACK_SPOOLED()
+}
+
+void
+WindowMini::onFilterClicked()
+{
+    ON_FILTER_CLICKED()
+}
+
+
+void
+WindowMini::onEditClicked()
+{
+    ON_EDIT_CLICKED()
 }
 
 void

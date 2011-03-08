@@ -12,7 +12,16 @@ if( !track.isNull() && track.source() == Track::LastFmRadio ) \
     ui->ban->setEnabled( true ); \
     ui->info->setEnabled( true ); \
 \
+    ui->love->setEnabled( true ); \
+    ui->ban->setEnabled( true ); \
+    ui->info->setEnabled( true ); \
+\
     ui->play->setChecked( true ); \
+    m_actions->m_loveAction->setChecked( track.isLoved() ); \
+\
+    connect( qApp, SIGNAL(busLovedStateChanged(bool)), ui->love, SLOT(setChecked(bool)) ); \
+    connect( ui->love, SIGNAL(clicked(bool)), qApp, SLOT(sendBusLovedStateChanged(bool)) ); \
+    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool))); \
 \
     ui->play->setChecked( true ); \
     ui->radioTitle->setText( tr("Playing %1").arg( radio->station().title() ) ); \
@@ -45,10 +54,16 @@ else \
 ui->setupUi(this); \
 finishUi(); \
 \
+connect( ui->filter, SIGNAL(clicked()), SLOT(onFilterClicked()));\
+\
 connect( ui->love, SIGNAL(clicked()), m_actions->m_loveAction, SLOT(trigger())); \
 connect( ui->ban, SIGNAL(clicked()), m_actions->m_banAction, SLOT(trigger())); \
 connect( ui->play, SIGNAL(clicked()), m_actions->m_playAction, SLOT(trigger())); \
 connect( ui->skip, SIGNAL(clicked()), m_actions->m_skipAction, SLOT(trigger())); \
+connect( m_actions->m_loveAction, SIGNAL(changed()), SLOT(onActionsChanged())); \
+connect( m_actions->m_playAction, SIGNAL(changed()), SLOT(onActionsChanged())); \
+connect( m_actions->m_skipAction, SIGNAL(changed()), SLOT(onActionsChanged())); \
+connect( m_actions->m_banAction, SIGNAL(changed()), SLOT(onActionsChanged())); \
 \
 m_actions->doConnect( this ); \
 \
@@ -103,5 +118,16 @@ if ( lfm.attribute( "status" ) != "ok" ) \
 } \
 \
 radio->skip();
+
+#define ON_FILTER_CLICKED() \
+TagFilterDialog tagFilter( radio->station(), this ); \
+if ( tagFilter.exec() == QDialog::Accepted ) \
+{ \
+    RadioStation station = radio->station(); \
+    station.setTagFilter( tagFilter.tag() ); \
+    radio->playNext( station ); \
+}
+
+#define ON_EDIT_CLICKED()
 
 #endif // WINDOWMACRO_H

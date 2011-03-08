@@ -34,9 +34,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="filter">
         <property name="text">
-         <string>PushButton</string>
+         <string>Filter</string>
         </property>
        </widget>
       </item>
@@ -75,6 +75,9 @@
               <widget class="QPushButton" name="love">
                <property name="text">
                 <string>Love</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
                </property>
               </widget>
              </item>

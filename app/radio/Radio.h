@@ -84,12 +84,14 @@ signals:
     void tuningIn( const RadioStation& );
     void trackSpooled( const Track& );
     void buffering( int );
+    void paused();
+    void resumed();
     void stopped();
     void supportsDisco( bool supportsDisco );
 	
-	/** the error is one of lastfm::ws::Error, 
+    /** the error is one of lastfm::ws::Error,
       * if UnknownError, then data is a fatal error from Phonon */
-	void error( int, const QVariant& data = QVariant() );
+    void error( int, const QVariant& data = QVariant() );
     void tick( qint64 );
 
 private slots:

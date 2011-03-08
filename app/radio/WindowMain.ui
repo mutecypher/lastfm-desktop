@@ -202,14 +202,14 @@
           <item>
            <widget class="QRadioButton" name="friends">
             <property name="text">
-             <string>Friends'</string>
+             <string>Friends’</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QRadioButton" name="neighbours">
             <property name="text">
-             <string>Neighbours'</string>
+             <string>Neighbours’</string>
             </property>
            </widget>
           </item>
@@ -406,9 +406,9 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="edit">
+          <widget class="QPushButton" name="filter">
            <property name="text">
-            <string>Edit</string>
+            <string>Filter</string>
            </property>
           </widget>
          </item>
@@ -556,6 +556,9 @@
              <widget class="QPushButton" name="love">
               <property name="text">
                <string>Love</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
              </widget>
             </item>

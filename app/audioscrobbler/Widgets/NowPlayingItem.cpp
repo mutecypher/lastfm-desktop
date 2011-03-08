@@ -46,14 +46,15 @@
 NowPlayingItem::NowPlayingItem( const Track& track )
     :TrackItem( track ),
      m_progressColor( 60, 60, 60 ),
-     m_progressWidth( 0 )
+     m_progressWidth( 0 ),
+     m_lastFrame( 0 )
 {
     m_nullInfo = new WelcomeWidget( this );
     m_nullInfo->hide();
 
     connect( aApp, SIGNAL(paused(bool)), SLOT( onWatchPaused(bool)) );
     connect( aApp, SIGNAL(timeout()), SLOT( onWatchFinished()));
-    connect( aApp, SIGNAL(frameChanged(int)), SLOT(onFrameChanged()));
+    connect( aApp, SIGNAL(frameChanged(int)), SLOT(onFrameChanged(int)));
 
     onWatchPaused( false );
 }
@@ -113,32 +114,33 @@ NowPlayingItem::onWatchFinished()
     ui.timestamp->setText( m_timestampText );
 }
 
-void
-NowPlayingItem::onFrameChanged()
+
+void NowPlayingItem::resizeEvent(QResizeEvent *event)
 {
-    if( !aApp->stopWatch() )
-        return;
+    onFrameChanged( m_lastFrame );
+    TrackItem::resizeEvent( event );
+}
 
-    static int prevWidth = 0;
 
-    float percentage = (aApp->stopWatch()->elapsed()/1000.0f) / aApp->stopWatch()->scrobblePoint();
+void
+NowPlayingItem::onFrameChanged( int frame )
+{
+    m_lastFrame = frame;
+    int progress = 0;
+    if ( aApp->stopWatch() )
+        progress = ( frame * width() ) / ( aApp->stopWatch()->scrobblePoint() * 1000 );
 
-    m_progressWidth = width() * percentage;
-
-    if( m_progressWidth == prevWidth ) {
-        return;
+    if ( progress != m_progressWidth )
+    {  
+        QRect r;
+        if( progress > m_progressWidth )
+            r = QRect( m_progressWidth, 0, progress - m_progressWidth, height());
+        else
+            r = rect();
+  
+        m_progressWidth = progress;
+        update( r );
     }
-    
-    QRect r;
-    if( m_progressWidth > prevWidth ) {
-        r = QRect( prevWidth, 0, m_progressWidth - prevWidth, height());
-    } else {
-        r = rect();
-    }
-        
-    prevWidth = m_progressWidth;
-
-    update( r );
 }
 
 void

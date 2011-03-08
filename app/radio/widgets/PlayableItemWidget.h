@@ -39,7 +39,7 @@ signals:
     void startRadio(RadioStation);
 
 public slots:
-    void onTuningIn( const RadioStation& station );
+    void onRadioChanged();
 
 private:
 //    virtual void mousePressEvent(QMouseEvent* event);
