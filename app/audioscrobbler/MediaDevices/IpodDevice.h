@@ -26,10 +26,22 @@ class IpodDevice: public MediaDevice
 {
     Q_OBJECT
 public:
-    IpodDevice( const QString& deviceId, const QString& deviceName );
+    // DO NOT CHANGE THIS: IT WILL MESS UP IPOD SCROBBLE SETTINGS
+    enum Scrobble
+    {
+        Unknown,
+        Yes,
+        NotNow,
+        Never
+    };
+
+    IpodDevice( const QString& deviceId, const QString& deviceName);
 
     virtual QString deviceId() const;
     virtual QString deviceName() const;
+
+    void setScrobble( Scrobble scrobble );
+    Scrobble scrobble();
 
 #ifdef Q_WS_X11
     /**
@@ -37,6 +49,10 @@ public:
      */
     virtual QString mountPath() const{ return QString(); }
 #endif
+
+private:
+    void setSetting( QString key, QVariant value );
+    QVariant setting( QString key, QVariant defaultValue );
 
 private:
     QString m_deviceId;

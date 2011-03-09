@@ -60,10 +60,10 @@ unicorn::MainWindow::~MainWindow()
 void
 unicorn::MainWindow::finishUi()
 {
-    ui.account = menuBar()->addMenu( User().name() );
-    ui.profile = ui.account->addAction( tr("Visit &Profile"), this, SLOT(visitProfile()) );
-    ui.account->addSeparator();
-    QAction* quit = ui.account->addAction( tr("&Quit"), qApp, SLOT(quit()) );
+    base_ui.account = menuBar()->addMenu( User().name() );
+    base_ui.profile = base_ui.account->addAction( tr("Visit &Profile"), this, SLOT(visitProfile()) );
+    base_ui.account->addSeparator();
+    QAction* quit = base_ui.account->addAction( tr("&Quit"), qApp, SLOT(quit()) );
     quit->setMenuRole( QAction::QuitRole );
 #ifdef Q_OS_WIN
     quit->setShortcut( Qt::ALT + Qt::Key_F4 );
@@ -71,15 +71,16 @@ unicorn::MainWindow::finishUi()
     quit->setShortcut( Qt::CTRL + Qt::Key_Q );
 #endif
 
-    menuBar()->insertMenu( menuBar()->actions().first(), ui.account );
+    menuBar()->insertMenu( menuBar()->actions().first(), base_ui.account );
     QMenu* help = menuBar()->addMenu( tr("Help") );
     QAction* about = help->addAction( tr("About"), this, SLOT(about()) );
     QAction* c4u = help->addAction( tr("Check for Updates"), this, SLOT(checkForUpdates()) );
 
 #ifndef NDEBUG
     QMenu* debug = menuBar()->addMenu( tr("Debug") );
-    QAction* rss = debug->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()) );
-    rss->setShortcut( Qt::CTRL + Qt::Key_R );
+    new QShortcut( Qt::CTRL + Qt::Key_R, this, SLOT(refreshStyleSheet()) );
+    //QAction* rss = debug->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()) );
+    //rss->setShortcut( Qt::CTRL + Qt::Key_R );
 #endif
 
 #ifdef Q_OS_MAC
@@ -87,10 +88,17 @@ unicorn::MainWindow::finishUi()
     c4u->setMenuRole( QAction::ApplicationSpecificRole );
 #endif
 
-    ui.update = new UpdateDialog( this );
+    base_ui.update = new UpdateDialog( this );
 
 
     cleverlyPosition();
+}
+
+
+void
+unicorn::MainWindow::refreshStyleSheet()
+{
+    static_cast<unicorn::Application*>(qApp)->refreshStyleSheet();
 }
 
 #ifdef Q_OS_WIN32
@@ -162,13 +170,13 @@ unicorn::MainWindow::updateThumbButtons()
 void
 unicorn::MainWindow::onGotUserInfo( const lastfm::UserDetails& details )
 {
-    ui.account->setTitle( details );
+    base_ui.account->setTitle( details );
     QString const text = details.getInfoString();
-    if (text.size() && ui.account) {
-        QAction* a = ui.account->addAction( text );
+    if (text.size() && base_ui.account) {
+        QAction* a = base_ui.account->addAction( text );
         a->setEnabled( false );
         a->setObjectName( "UserBlurb" );
-        ui.account->insertAction( ui.profile, a );
+        base_ui.account->insertAction( base_ui.profile, a );
     }
 }
 
@@ -183,16 +191,16 @@ unicorn::MainWindow::visitProfile()
 void
 unicorn::MainWindow::about()
 {
-    if (!ui.about) ui.about = new AboutDialog( this );
-    ui.about.show();
+    if (!base_ui.about) base_ui.about = new AboutDialog( this );
+    base_ui.about.show();
 }
 
 
 void
 unicorn::MainWindow::checkForUpdates()
 {
-    if (!ui.update) ui.update = new UpdateDialog( this );
-    ui.update.show();
+    if (!base_ui.update) base_ui.update = new UpdateDialog( this );
+    base_ui.update.show();
 }
 
 
@@ -262,8 +270,8 @@ unicorn::MainWindow::showEvent( QShowEvent* )
 void
 unicorn::MainWindow::onSessionChanged( Session* session )
 {
-    ui.account->findChild<QAction*>("UserBlurb")->deleteLater();
-    ui.account->setTitle( session->userInfo().name() );
+    base_ui.account->findChild<QAction*>("UserBlurb")->deleteLater();
+    base_ui.account->setTitle( session->userInfo().name() );
 }
 
 void 

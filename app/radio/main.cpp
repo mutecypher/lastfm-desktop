@@ -17,14 +17,18 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifdef __APPLE__
-    // first to prevent compilation errors with Qt 4.5.0
-    //TODO shorten this mother fucker
-    //NOTE including Carbon/Carbon.h breaks things as it has sooo many symbols
-    //     in the global namespace
+#include <QtGlobal>
+
+#ifdef Q_OS_MAC64
     #include <Carbon/Carbon.h>
     static pascal OSErr appleEventHandler( const AppleEvent*, AppleEvent*, void* );
+#elif defined Q_OS_MAC32
+    #include </System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/AE.framework/Versions/A/Headers/AppleEvents.h>
+    static pascal OSErr appleEventHandler( const AppleEvent*, AppleEvent*, long );
 #endif
+
+#include <QShortcut>
+#include <QKeySequence>
 
 #include "_version.h"
 #include "Application.h"
@@ -32,8 +36,10 @@
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/qtsingleapplication/qtsinglecoreapplication.h"
 #include "lib/unicorn/UnicornSettings.h"
-#include "MainWindow.h"
+#include "WindowMain.h"
+#include "WindowMini.h"
 #include "Radio.h"
+#include "Actions.h"
 
 void cleanup();
 
@@ -81,12 +87,14 @@ int main( int argc, char** argv )
 
         QObject::connect(&app, SIGNAL(messageReceived(const QStringList&)), &app, SLOT(onMessageReceived(const QStringList&)));
 
-		q = new QMainObject;
+        q = new QMainObject;
         radio = new Radio();
         qAddPostRoutine(cleanup);
 
         ScrobSocket* scrobsock = new ScrobSocket("ass");
         scrobsock->connect(radio, SIGNAL(trackSpooled(Track)), SLOT(start(Track)));
+        scrobsock->connect(radio, SIGNAL(paused()), SLOT(pause()));
+        scrobsock->connect(radio, SIGNAL(resumed()), SLOT(resume()));
         scrobsock->connect(radio, SIGNAL(stopped()), SLOT(stop()));
         scrobsock->connect(&app, SIGNAL(aboutToQuit()), scrobsock, SLOT(stop()));
 
@@ -95,16 +103,20 @@ int main( int argc, char** argv )
         AEInstallEventHandler( 'GURL', 'GURL', h, 0, false );
       #endif
         
-        MainWindow window;
+        Actions* actions = new Actions();
 
-        app.setActivationWindow( &window );
+        WindowMini windowMini( *actions );
+        WindowMain windowMain( *actions );
 
-        q->connect(&window, SIGNAL(startRadio(RadioStation)), SLOT(onStartRadio(RadioStation)));
-        window.connect(radio, SIGNAL(error(int, QVariant)), SLOT(onRadioError(int, QVariant)) );
+        QObject::connect( &windowMain, SIGNAL(aboutToHide()), &windowMini, SLOT(show()) );
+        QObject::connect( &windowMini, SIGNAL(aboutToHide()), &windowMain, SLOT(show()) );
 
-        window.setWindowTitle( app.applicationName() );
+        app.setActivationWindow( &windowMain );
+        windowMain.setWindowTitle( app.applicationName() );
+        windowMain.show();
 
-        window.show();
+        windowMini.setWindowTitle( app.applicationName() );
+        windowMini.hide();
 
         app.parseArguments( app.arguments() );
 
@@ -123,8 +135,13 @@ int main( int argc, char** argv )
     }
 }
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
+#ifdef Q_OS_MAC64
 static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, void* )
+#elif defined Q_OS_MAC32
+static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
+#endif //Q_OS_MAC64/32
+
 {
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );
@@ -148,7 +165,7 @@ static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, void* )
             return unimpErr;
     }
 }
-#endif
+#endif //Q_OS_MAC
 
 
 void cleanup()

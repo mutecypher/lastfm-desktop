@@ -20,7 +20,6 @@
 #include "Application.h"
 
 #include "Widgets/PointyArrow.h"
-#include "Widgets/ProfileWidget.h"
 #include "Dialogs/SettingsDialog.h"
 #include "lib/listener/DBusListener.h"
 #include "lib/listener/legacy/LegacyPlayerListener.h"
@@ -41,8 +40,9 @@
 #include "lib/unicorn/dialogs/ShareDialog.h"
 #include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
-#include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/widgets/UserMenu.h"
+
+#include "AudioscrobblerSettings.h"
 #include "Wizard/FirstRunWizard.h"
 
 #include <lastfm/Audioscrobbler>
@@ -76,8 +76,9 @@ using audioscrobbler::Application;
 
 Application::Application(int& argc, char** argv) 
             : unicorn::Application(argc, argv),
+              state( Unknown ),
               m_as( 0 ),
-              state( Unknown )
+              m_raiseHotKeyId( (void*)-1 )
 {
     setQuitOnLastWindowClosed( false );
 }
@@ -220,14 +221,11 @@ Application::init()
     m_mw->addWinThumbBarButton( m_tag_action );
     m_mw->addWinThumbBarButton( m_share_action );
 
-#ifdef Q_WS_MAC
-    const int sKeyCode = 1;
-#elif defined Q_WS_WIN
-    const int sKeyCode = 83;
-#endif
 
+     m_toggle_window_action = new QAction( this ), SLOT( trigger());
 #ifndef Q_OS_LINUX
-    installHotKey( Qt::ControlModifier | Qt::MetaModifier, sKeyCode, m_toggle_window_action = new QAction( this ), SLOT( trigger()));
+     AudioscrobblerSettings settings;
+     setRaiseHotKey( settings.raiseShortcutModifiers(), settings.raiseShortcutKey());
 #endif
     //although the shortcuts are actually set on the ScrobbleControls widget,
     //setting it here adds the shortkey text to the trayicon menu
@@ -235,6 +233,7 @@ Application::init()
     m_tag_action->setShortcut( Qt::CTRL + Qt::Key_T );
     m_share_action->setShortcut( Qt::CTRL + Qt::Key_S );
     m_love_action->setShortcut( Qt::CTRL + Qt::Key_L );
+
 
     // make the love buttons sychronised
     connect(this, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
@@ -310,6 +309,14 @@ Application::init()
     initiateLogin();
 
     emit messageReceived( arguments() );
+}
+
+void
+Application::setRaiseHotKey( Qt::KeyboardModifiers mods, int key) {
+    if( m_raiseHotKeyId >= 0 ) {
+        unInstallHotKey( m_raiseHotKeyId );
+    }
+    m_raiseHotKeyId = installHotKey( mods, key, m_toggle_window_action, SLOT(trigger()));
 }
 
 
@@ -437,6 +444,8 @@ Application::onPaused()
 
     state = Paused;
 
+    m_currentTrack.removeNowPlaying();
+
     Q_ASSERT(m_connection);
     Q_ASSERT(m_watch);
     if(m_watch) m_watch->pause();
@@ -456,9 +465,13 @@ Application::onResumed()
     Q_ASSERT(m_watch);
     Q_ASSERT(m_connection);
 
+    m_currentTrack.updateNowPlaying( m_currentTrack.duration() - (m_watch->elapsed()/1000) );
+
     if(m_watch) m_watch->resume();
 
     //setTrackInfo();
+
+
 }
 
 void

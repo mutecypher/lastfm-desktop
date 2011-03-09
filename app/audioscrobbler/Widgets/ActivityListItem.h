@@ -40,6 +40,7 @@ public:
     virtual QDomElement toDomElement( QDomDocument xml ) const;
 
     virtual QWidget* infoWidget() const = 0;
+    virtual QWidget* basicInfoWidget() const;
 
     bool odd() const;
     void setOdd( bool odd );
@@ -59,9 +60,9 @@ public slots:
 
 private:
     void mousePressEvent( QMouseEvent * event );
-    void resizeEvent( QResizeEvent* event );
 
 protected:
+    void resizeEvent( QResizeEvent* event );
     void setupUi();
 
     void setText( const QString& text );
@@ -88,6 +89,7 @@ protected:
 protected:
     QString m_text;
     QString m_status;
+    QString m_timestampText;
     bool m_odd;
     bool m_selected;
 };

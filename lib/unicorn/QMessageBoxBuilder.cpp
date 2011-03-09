@@ -53,9 +53,11 @@ unicorn::MessageDialog::MessageDialog( QWidget* parent )
 
     l->addWidget( checkbox = new QCheckBox( tr( "Don't ask this again" )), 2, 1, 1, 1 );
     checkbox->setVisible( false );
+    checkbox->setFocusPolicy( Qt::NoFocus );
     l->addWidget( buttons = new QDialogButtonBox, 3, 0, 1, 2 );
     buttons->setStandardButtons( QDialogButtonBox::Ok );
     connect( buttons, SIGNAL( clicked(QAbstractButton*)), SLOT( onButtonClicked(QAbstractButton*)));
+    buttons->setFocus( Qt::ActiveWindowFocusReason );
 }
 
 

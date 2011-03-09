@@ -44,14 +44,17 @@
 
 
 NowPlayingItem::NowPlayingItem( const Track& track )
-    :TrackItem( track )
+    :TrackItem( track ),
+     m_progressColor( 60, 60, 60 ),
+     m_progressWidth( 0 ),
+     m_lastFrame( 0 )
 {
     m_nullInfo = new WelcomeWidget( this );
     m_nullInfo->hide();
 
     connect( aApp, SIGNAL(paused(bool)), SLOT( onWatchPaused(bool)) );
     connect( aApp, SIGNAL(timeout()), SLOT( onWatchFinished()));
-    connect( aApp, SIGNAL(frameChanged(int)), SLOT(update()));
+    connect( aApp, SIGNAL(frameChanged(int)), SLOT(onFrameChanged(int)));
 
     onWatchPaused( false );
 }
@@ -79,24 +82,27 @@ NowPlayingItem::onWatchPaused( bool isPaused )
     {
         if ( isPaused )
         {
-            ui.timestamp->setText( tr( "%1 paused" ).arg( aApp->currentConnection()->name() ) );
-            ui.as->setMovie( movie.scrobbler_paused );
-            ui.as->movie()->start();
+            m_timestampText =tr( "%1 paused" ).arg( aApp->currentConnection()->name() );
+            ui.as->setPixmap( QPixmap() );
         }
         else
         {
-            ui.timestamp->setText( aApp->currentConnection()->name() );
+            if( (aApp->stopWatch()->elapsed()/1000.0f) / aApp->stopWatch()->scrobblePoint() >= 1.0f )
+                m_timestampText = tr( "Track Scrobbled" );
+            else
+                m_timestampText = aApp->currentConnection()->name();
             ui.as->setMovie( movie.scrobbler_as );
             ui.as->movie()->start();
         }
-
+        
         update();
     }
     else
     {
-        ui.timestamp->clear();
+        m_timestampText = "";
         ui.as->clear();
     }
+    resizeEvent( 0 );
 }
 
 
@@ -104,24 +110,48 @@ void
 NowPlayingItem::onWatchFinished()
 {
     connect( ui.as->movie(), SIGNAL(loopFinished()), ui.as->movie(), SLOT(stop()));
-    ui.timestamp->setText( tr( "Track Scrobbled" ));
+    m_timestampText = tr( "Track Scrobbled" );
+    ui.timestamp->setText( m_timestampText );
 }
 
+
+void NowPlayingItem::resizeEvent(QResizeEvent *event)
+{
+    onFrameChanged( m_lastFrame );
+    TrackItem::resizeEvent( event );
+}
+
+
+void
+NowPlayingItem::onFrameChanged( int frame )
+{
+    m_lastFrame = frame;
+    int progress = 0;
+    if ( aApp->stopWatch() )
+        progress = ( frame * width() ) / ( aApp->stopWatch()->scrobblePoint() * 1000 );
+
+    if ( progress != m_progressWidth )
+    {  
+        QRect r;
+        if( progress > m_progressWidth )
+            r = QRect( m_progressWidth, 0, progress - m_progressWidth, height());
+        else
+            r = rect();
+  
+        m_progressWidth = progress;
+        update( r );
+    }
+}
 
 void
 NowPlayingItem::paintEvent( QPaintEvent* event )
 {
     StylableWidget::paintEvent( event );
-
-    if ( aApp->stopWatch() )
-    {
-        QPainter p( this );
-        p.setPen( QColor( Qt::transparent ));
-        p.setBrush( QColor( 0, 0, 0, 60 ));
-
-        float percentage = (aApp->stopWatch()->elapsed()/1000.0f) / aApp->stopWatch()->scrobblePoint();
-        p.drawRect( 0, 0, width() * percentage , height());
-    }
+    QPainter p( this );
+    p.setPen( QColor( Qt::transparent ));
+    p.setBrush( m_progressColor );
+    QMargins margins = contentsMargins();
+    p.drawRect( 0, margins.top(), m_progressWidth, height() - margins.top() - margins.bottom());
 }
 
 void NowPlayingItem::updateTimestamp()

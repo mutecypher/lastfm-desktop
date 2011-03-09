@@ -20,10 +20,6 @@
 #ifndef UNICORN_APPLICATION_H
 #define UNICORN_APPLICATION_H
 
-#ifdef __APPLE__
-#include <Carbon/Carbon.h>
-#endif
-
 #include "qtsingleapplication/qtsingleapplication.h"
 
 #include "common/HideStupidWarnings.h"
@@ -33,6 +29,10 @@
 #include "PlayBus.h"
 #include <QDebug>
 #include <QMainWindow>
+
+#ifdef Q_OS_MAC64
+#include <Carbon/Carbon.h>
+#endif
 
 namespace lastfm{
     class UserDetails;
@@ -158,7 +158,8 @@ namespace unicorn
         Session* currentSession() { return m_currentSession; }
 
         static unicorn::Application* instance(){ return (unicorn::Application*)qApp; }
-        void installHotKey( Qt::KeyboardModifiers, quint32, QObject* receiver, const char* slot );
+        void* installHotKey( Qt::KeyboardModifiers, quint32, QObject* receiver, const char* slot );
+        void unInstallHotKey( void* id );
         bool isInternetConnectionUp() const;
 
     public slots:
@@ -187,8 +188,13 @@ namespace unicorn
 #ifdef __APPLE__
         void installCocoaEventHandler() const;
         void appleEventReceived( const QStringList& messages );
-        static OSErr appleEventHandler( const AppleEvent*, AppleEvent*, void* );
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
+
+#ifdef Q_OS_MAC64
+        static OSErr appleEventHandler( const AppleEvent*, AppleEvent*, void* );
+#else
+        static short appleEventHandler( const AppleEvent*, AppleEvent*, long );
+#endif
 #endif
 #ifdef WIN32
         static bool winEventFilter ( void* );

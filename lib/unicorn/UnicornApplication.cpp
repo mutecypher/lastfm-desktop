@@ -61,8 +61,8 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
                       m_wizardRunning( true ),
-                      m_icm( 0 ),
-                      m_currentSession( 0 )
+                      m_currentSession( 0 ),
+                      m_icm( 0 )
 {
 }
 
@@ -378,7 +378,7 @@ unicorn::Application::refreshStyleSheet()
     }
 }
 
-void 
+void*
 unicorn::Application::installHotKey( Qt::KeyboardModifiers modifiers, quint32 virtualKey, QObject* receiver, const char* slot )
 {
     qDebug() << "Installing HotKey";
@@ -404,6 +404,7 @@ unicorn::Application::installHotKey( Qt::KeyboardModifiers modifiers, quint32 vi
     EventHotKeyRef hkRef;
 
     RegisterEventHotKey( virtualKey, appleMod, hotKeyID, GetApplicationEventTarget(), 0, &hkRef );
+    return hkRef;
 #elif defined WIN32
 	quint32 winMod = 0;
     if( modifiers.testFlag( Qt::ShiftModifier ))
@@ -416,6 +417,17 @@ unicorn::Application::installHotKey( Qt::KeyboardModifiers modifiers, quint32 vi
         winMod |= MOD_WIN;
 		
 	RegisterHotKey( NULL, id, winMod, virtualKey);
+    return id;
+#endif
+}
+
+void
+unicorn::Application::unInstallHotKey( void* id )
+{
+#ifdef __APPLE__
+    UnregisterEventHotKey( (EventHotKeyRef)id );
+#else
+    UnregisterHotKey( NULL, id );
 #endif
 }
 
@@ -475,7 +487,11 @@ unicorn::Application::appleEventReceived( const QStringList& messages )
 }
 
 pascal OSErr /* static */
+#ifdef Q_OS_MAC64
 unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, void* )
+#else
+unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long )
+#endif
 {
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );

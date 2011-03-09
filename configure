@@ -1,5 +1,4 @@
 #!/bin/bash
-
 source admin/utils.bash
 
 #################################################################### functions
@@ -137,11 +136,11 @@ else
             fi
 
             if [ -d /Developer/Applications/Qt ] || [ $BUNDLE ]; then
-                configFlags='CONFIG -= release'
+                configFlags='CONFIG-=release'
             else
-                configFlags='CONFIG -= release app_bundle'
+                configFlags='CONFIG-=release app_bundle'
             fi
-
+	    
             qmake -config debug -spec macx-g++ -recursive Last.fm.pro "$configFlags" "$EXTRA_QMAKE_FLAGS" || die "Configure failed."
             BUILD_CMD='make'        
         fi;;

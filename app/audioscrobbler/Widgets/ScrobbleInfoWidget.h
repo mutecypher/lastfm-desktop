@@ -39,6 +39,8 @@ public:
 
     class ScrobbleControls* scrobbleControls() const { return ui.scrobbleControls; }
 
+    QWidget* basicInfoWidget();
+
 private slots:
 
     void onTrackGotInfo(const XmlQuery& lfm);
@@ -48,6 +50,8 @@ private slots:
     void onTrackGotTopFans(const XmlQuery& lfm);
     void onTrackGotTags(const XmlQuery& lfm);
     void onFinished();
+
+    void onTrackCorrected( QString correction );
 
     void onAnchorClicked( const QUrl& link );
     void onBioChanged( const QSizeF& );
@@ -76,7 +80,7 @@ protected:
          class QListView* similarArtists;
          class QLabel* title1;
          class QLabel* title2;
-         class QLabel* timestamp;
+         class QLabel* correction;
          class ScrobbleControls* scrobbleControls;
          class QLabel* yourScrobbles;
          class QLabel* totalScrobbles;

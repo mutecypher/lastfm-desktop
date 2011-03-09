@@ -78,6 +78,8 @@ namespace audioscrobbler
         Track m_currentTrack;
         Track m_trackToScrobble;
 
+        void* m_raiseHotKeyId;
+
         AboutDialog* m_aboutDialog;
         
         QAction* m_submit_scrobbles_toggle;
@@ -108,6 +110,7 @@ namespace audioscrobbler
         DeviceScrobbler* deviceScrobbler() const;
         Track currentTrack() const { return m_currentTrack;}
         QSystemTrayIcon* tray() const { return m_tray.data(); }
+        void setRaiseHotKey( Qt::KeyboardModifiers mods, int key );
         
     signals:
         void trackStarted( const Track&, const Track& );

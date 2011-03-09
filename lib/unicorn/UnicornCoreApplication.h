@@ -21,13 +21,13 @@
 #define UNICORN_CORE_APPLICATION_H
 
 #include "lib/DllExportMacro.h"
-#include <QCoreApplication>
+#include "qtsingleapplication/qtsinglecoreapplication.h"
 #include <QFileInfo>
 
 
 namespace unicorn
 {
-    class UNICORN_DLLEXPORT CoreApplication : public QCoreApplication
+    class UNICORN_DLLEXPORT CoreApplication : public QtSingleCoreApplication
     {
         Q_DISABLE_COPY(CoreApplication);
 

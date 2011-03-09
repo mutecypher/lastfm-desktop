@@ -1,5 +1,6 @@
 /*
-   Copyright 2005-2009 Last.fm Ltd. 
+   Copyright 2010 Last.fm Ltd.
+      - Primarily authored by Jono Cole, Michael Coffey, and William Viana
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -17,39 +18,26 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef KEYBOARD_SETTINGS_WIDGET_H_
+#define KEYBOARD_SETTINGS_WIDGET_H_
 
-#include "lib/unicorn/UnicornMainWindow.h"
-#include <lastfm/RadioStation>
+#include "SettingsWidget.h"
 
-namespace unicorn{ class Session; }
-using unicorn::Session;
-class MessageBar;
-
-class MainWindow : public unicorn::MainWindow
+class KeyboardSettingsWidget: public SettingsWidget
 {
-    Q_OBJECT
-
+Q_OBJECT
 public:
-    MainWindow();
-
-signals:
-    void startRadio(const RadioStation&);
+    KeyboardSettingsWidget( QWidget* parent = 0 );
 
 public slots:
-    void onRadioError(int code, const QVariant& data);
-
-protected slots:
-    void onSessionChanged( unicorn::Session* s );
+    virtual void saveSettings();
 
 private:
-    void addWinThumbBarButtons( QList<QAction*>& );
+    void setupUi();
+    void populateLanguages();
 
 private:
-    class MainWidget* m_mainWidget;
-    class PlaybackControlsWidget* m_pcw;
-    MessageBar* m_messageBar;
+    class ShortCutEdit* sce;
 };
 
-#endif // MAINWINDOW_H
+#endif //KEYBOARD_SETTINGS_WIDGET_H_

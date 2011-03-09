@@ -26,10 +26,11 @@
 
 class UNICORN_DLLEXPORT HelpTextLineEdit : public QLineEdit
 {
-    QString const m_text;
+    QString m_text;
 
 public:
-    HelpTextLineEdit( const QString& helpText = "", QWidget* parent = 0 );
+    HelpTextLineEdit( QWidget* parent = 0 );
+    void setHelpText( const QString& text );
     
 protected:
     virtual void paintEvent( QPaintEvent* );

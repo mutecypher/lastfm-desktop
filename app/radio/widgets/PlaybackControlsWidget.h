@@ -55,8 +55,7 @@ public:
         QToolButton* cog;
         QAction* tagAction;
         QAction* shareAction;
-    } 
-	ui;
+    } ui;
 
     class QAction* m_loveAction;
     class QAction* m_banAction;
@@ -73,7 +72,7 @@ private:
     void createActions();
 
 public slots:
-	void onRadioStopped();
+    void onRadioStopped();
     void onRadioTuningIn( const class RadioStation& );
     void onTrackSpooled( const Track& track );
 
@@ -96,8 +95,6 @@ public slots:
 
 signals:
     void startRadio(RadioStation);
-
-    void lovedStateChanged(bool loved);
 };
 
 

@@ -47,3 +47,79 @@ IpodDevice::deviceName() const
 {
     return m_deviceName;
 }
+
+void
+IpodDevice::setScrobble( Scrobble scrobble )
+{
+    setSetting( "scrobble", scrobble );
+}
+
+IpodDevice::Scrobble
+IpodDevice::scrobble()
+{
+    return static_cast<Scrobble>(setting( "scrobble", Unknown ).toInt());
+}
+
+void
+IpodDevice::setSetting( QString key, QVariant value )
+{
+    // Find the setting for this
+    QList<lastfm::User> roster = unicorn::Settings().userRoster();
+
+    bool found = false;
+
+    foreach( lastfm::User user, roster )
+    {
+        unicorn::UserSettings us( user.name() );
+        int count = us.beginReadArray( "associatedDevices" );
+
+        for ( int i = 0; i < count; i++ )
+        {
+            us.setArrayIndex( i );
+
+            if ( us.value( "deviceId" ).toString() == m_deviceId )
+            {
+                us.setValue( key, value );
+                found = true;
+                break;
+            }
+        }
+        us.endArray();
+
+        if ( found ) break;
+    }
+}
+
+QVariant
+IpodDevice::setting( QString key, QVariant defaultValue )
+{
+    QVariant value;
+
+    // Find the setting for this
+    QList<lastfm::User> roster = unicorn::Settings().userRoster();
+
+    bool found = false;
+
+    foreach( lastfm::User user, roster )
+    {
+        unicorn::UserSettings us( user.name() );
+        int count = us.beginReadArray( "associatedDevices" );
+
+        for ( int i = 0; i < count; i++ )
+        {
+            us.setArrayIndex( i );
+
+            if ( us.value( "deviceId" ).toString() == m_deviceId )
+            {
+                value = us.value( key, defaultValue );
+                found = true;
+                break;
+            }
+        }
+        us.endArray();
+
+        if ( found ) break;
+    }
+
+    return value;
+}

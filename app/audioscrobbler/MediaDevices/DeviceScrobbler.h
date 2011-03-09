@@ -1,14 +1,17 @@
 #ifndef DEVICE_SCROBBLER_H_
 #define DEVICE_SCROBBLER_H_
 
+#include <QDialogButtonBox>
+
+#include "../Dialogs/ScrobbleSetupDialog.h"
 #include "lib/unicorn/UnicornSession.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include <lastfm/User>
 #include "IpodDevice.h"
 
 #ifdef Q_WS_X11
-#include "IpodDevice_linux.h"
 #include <QPointer>
+#include "IpodDevice_linux.h"
 #endif
 
 using unicorn::Session;
@@ -35,7 +38,8 @@ public slots:
 #endif
 
 private slots:
-    
+    void onScrobbleSetupClicked( IpodDevice::Scrobble result, QString deviceId, QString deviceName, QStringList iPodFiles );
+
 #ifdef Q_WS_X11
     void onCalculatingScrobbles( int trackCount );
     void scrobbleIpodTracks( int trackCount );
@@ -49,6 +53,8 @@ private:
 
 
     void scrobbleIpodFile( QString iPodScrobblesFilename );
+
+    lastfm::User associatedUser( QString deviceId );
 };
 
 #endif //DEVICE_SCROBBLER_H_

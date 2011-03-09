@@ -221,6 +221,14 @@ Radio::pause()
     changeState( Paused );
 }
 
+void
+Radio::resume()
+{
+    m_mediaObject->play();
+
+    changeState( Playing );
+}
+
 
 void
 Radio::clear()
@@ -275,7 +283,7 @@ Radio::onPhononStateChanged( Phonon::State newstate, Phonon::State oldstate )
 			// tuning in state;
             if (m_mediaObject->queue().size() == 0) {
                 qDebug() << "queue empty, going to TuningIn";
-                changeState( TuningIn );
+                changeState( Paused );
             }
 			break;
 			
@@ -361,7 +369,7 @@ Radio::onPhononCurrentSourceChanged( const Phonon::MediaSource& )
 void
 Radio::changeState( Radio::State const newstate )
 {
-	State const oldstate = m_state;
+    State const oldstate = m_state;
 
     if (oldstate == newstate) 
         return;
@@ -371,7 +379,7 @@ Radio::changeState( Radio::State const newstate )
     m_state = newstate; // always assign state properties before you tell other
                         // objects about it
     
-	switch (newstate)
+    switch (newstate)
 	{
         case TuningIn:
             qDebug() << "Tuning to:" << m_station;
@@ -380,14 +388,16 @@ Radio::changeState( Radio::State const newstate )
             
         case Buffering:
             break;
-		case Playing:
+        case Playing:
+            emit resumed();
             break;
 
-		case Stopped:
+        case Stopped:
             emit stopped();
             break;
 
         case Paused:
+            emit paused();
             break;
 	}
 }
@@ -397,7 +407,7 @@ void
 Radio::setStationName( const QString& s )
 {
     m_station.setTitle( s );
-    emit tuningIn( m_station );
+    //emit tuningIn( m_station );
 }
 
 

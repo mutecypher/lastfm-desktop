@@ -22,6 +22,7 @@
 #include "../Widgets/AccountSettingsWidget.h"
 #include "../Widgets/IpodSettingsWidget.h"
 #include "../Widgets/ScrobbleSettingsWidget.h"
+#include "../Widgets/KeyboardSettingsWidget.h"
 
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
@@ -52,16 +53,19 @@ SettingsDialog::setupUi()
 
     ui.pageList->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::MinimumExpanding ) );
     ui.pageList->setFixedWidth( PAGE_LIST_WIDTH );
+    ui.pageList->setAttribute( Qt::WA_MacShowFocusRect, false );
 
     ui.pageList->addItem( tr( "Account" ) );
     ui.pageList->setStyleSheet( "color: black;" );
     ui.pageList->addItem( tr( "Scrobbling" ) );
     ui.pageList->addItem( tr( "iPod" ) );
+    ui.pageList->addItem( tr( "Keyboard Shortcuts" ) );
     ui.pageList->setCurrentRow( 0 );
 
     ui.pageStack->addWidget( ui.accountSettings = new AccountSettingsWidget( this ) );
     ui.pageStack->addWidget( ui.scrobbleSettings = new ScrobbleSettingsWidget( this ) );
     ui.pageStack->addWidget( ui.ipodSettings = new IpodSettingsWidget( this ) );
+    ui.pageStack->addWidget( ui.keyboardSettings = new KeyboardSettingsWidget( this ) );
     ui.pageStack->setCurrentIndex( 0 );
 
     connect( ui.pageList, SIGNAL( currentRowChanged( int ) ), ui.pageStack, SLOT( setCurrentIndex( int ) ) );
@@ -82,10 +86,12 @@ SettingsDialog::setupUi()
     connect( this, SIGNAL( saveNeeded() ), ui.scrobbleSettings, SLOT( saveSettings() ) );
     connect( this, SIGNAL( saveNeeded() ), ui.ipodSettings, SLOT( saveSettings() ) );
     connect( this, SIGNAL( saveNeeded() ), ui.accountSettings, SLOT( saveSettings() ) );
+    connect( this, SIGNAL( saveNeeded() ), ui.keyboardSettings, SLOT( saveSettings() ) );
 
     connect( ui.scrobbleSettings, SIGNAL( settingsChanged() ), this, SLOT( onSettingsChanged() ) );
     connect( ui.ipodSettings, SIGNAL( settingsChanged() ), this, SLOT( onSettingsChanged() ) );
     connect( ui.accountSettings, SIGNAL( settingsChanged() ), this, SLOT( onSettingsChanged() ) );
+    connect( ui.keyboardSettings, SIGNAL( settingsChanged() ), this, SLOT( onSettingsChanged() ) );
 
     connect( ui.buttons, SIGNAL( accepted() ), this, SLOT( onAccepted() ) );
     connect( ui.buttons, SIGNAL( rejected() ), this, SLOT( reject() ) );
