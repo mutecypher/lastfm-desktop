@@ -180,7 +180,7 @@
           </layout>
          </item>
          <item>
-          <widget class="QLabel" name="details">
+          <widget class="QLabel" name="trackTitle">
            <property name="text">
             <string>Artist - Track</string>
            </property>

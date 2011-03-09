@@ -24,9 +24,8 @@ if( !track.isNull() && track.source() == Track::LastFmRadio ) \
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool))); \
 \
     ui->play->setChecked( true ); \
-    ui->radioTitle->setText( tr("Playing %1").arg( radio->station().title() ) ); \
-    ui->details->setText( track.toString() ); \
-    ui->context->setText( track.context() ); \
+    ui->radioTitle->setText( radio->station().title() ); \
+    ui->trackTitle->setText( track.toString() ); \
 \
     ui->bar->setMinimum( 0 ); \
     ui->bar->setMaximum( track.duration() ); \
@@ -54,8 +53,6 @@ else \
 ui->setupUi(this); \
 finishUi(); \
 \
-connect( ui->filter, SIGNAL(clicked()), SLOT(onFilterClicked()));\
-\
 connect( ui->love, SIGNAL(clicked()), m_actions->m_loveAction, SLOT(trigger())); \
 connect( ui->ban, SIGNAL(clicked()), m_actions->m_banAction, SLOT(trigger())); \
 connect( ui->play, SIGNAL(clicked()), m_actions->m_playAction, SLOT(trigger())); \
@@ -82,6 +79,8 @@ if ( checked ) \
     radio->resume(); \
 else \
     radio->pause();
+
+#define SKIP_CLICKED() radio->skip();
 
 #define RADIO_TICK() \
 ui->bar->setValue( tick / 1000 ); \
@@ -117,7 +116,7 @@ if ( lfm.attribute( "status" ) != "ok" ) \
 { \
 } \
 \
-radio->skip();
+m_actions->m_skipAction->trigger();
 
 #define ON_FILTER_CLICKED() \
 TagFilterDialog tagFilter( radio->station(), this ); \

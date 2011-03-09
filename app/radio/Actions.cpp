@@ -41,7 +41,6 @@ Actions::Actions()
         m_skipAction->setIcon( skipIcon );
 
         m_skipAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Right ) );
-        connect( m_skipAction, SIGNAL(triggered(bool)), radio, SLOT(skip()) );
     }
 }
 
@@ -55,4 +54,5 @@ Actions::doConnect( QObject* object )
     connect( m_playAction, SIGNAL(triggered(bool)), object, SLOT(onPlayClicked(bool)) );
     connect( m_playAction, SIGNAL(changed()), object, SLOT(onActionsChanged()) );
     connect( m_skipAction, SIGNAL(changed()), object, SLOT(onActionsChanged()) );
+    connect( m_skipAction, SIGNAL(triggered(bool)), object, SLOT(onSkipClicked()) );
 }

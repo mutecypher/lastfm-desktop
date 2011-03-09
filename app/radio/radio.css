@@ -151,3 +151,67 @@ PlayableItemWidget:pressed  {
 PlayableItemWidget:disabled {
 background-image: url(:/vol-right.png);
 }
+
+#frame {
+	border-bottom: 1px solid black;
+}
+
+#controlFrame {
+	border-top: 1px solid #B3B5B4;
+	border-right: 1px solid #323230;
+	border-bottom: 1px solid #323230;
+	border-left: 1px solid #323230;
+	background-color: qlineargradient( x1:0, y1:1, x2:0, y2:0, stop:0 #5D5D5D, stop:1 #7E7C7D );
+}
+
+#details {
+	background-color: black;
+	border-radius: 3px;
+}
+
+#details QLabel {
+	color: white;
+}
+
+QProgressBar {
+	background-color: #718087;
+	border: none;
+	border-radius: 0px;
+	height: 1px;
+	min-height: 5px;
+	margin: 5px 0px;
+}
+
+QProgressBar::chunk {
+    background-color: #B8D7DC;
+ }
+ 
+ QScrollBar  {
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #1f1f1f, stop:1 #5a5a5a);
+    margin: 0px;
+    width: 16px;
+    padding: 0px 0px 0px 0px;
+    border-radius: 7px;
+    border: 1px solid #1a1a1a;
+    border-right: none;
+    border-left: none;
+	min-height: 50px;
+}
+
+QScrollBar::add-page, 
+QScrollBar::sub-page {
+    background: none;
+}
+
+QScrollBar::handle {
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #515151, stop:0.5 #535353, stop:1 #515151 );
+    min-height: 30px;
+    border-radius: 6px;
+    margin-left: 1px;
+}
+
+QScrollBar::sub-line,
+QScrollBar::add-line {
+    height: 0px;
+}
+
