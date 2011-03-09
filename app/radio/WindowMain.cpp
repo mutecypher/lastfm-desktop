@@ -1,6 +1,7 @@
 
 #include <QShortcut>
 #include <QToolBar>
+#include <QListWidgetItem>
 
 #include "WindowMacro.h"
 
@@ -24,6 +25,11 @@ WindowMain::WindowMain( Actions& actions ) :
     m_actions( &actions )
 {
     SETUP()
+
+    setWindowFlags( Qt::CustomizeWindowHint | Qt::FramelessWindowHint );
+
+    addDragHandleWidget( ui->quickstartFrame );
+    addDragHandleWidget( ui->controlFrame );
 
     connect( radio, SIGNAL(error(int,QVariant)), SLOT(onError(int, QVariant)));
     connect( radio, SIGNAL(stopped()), SLOT(onStopped()));
@@ -115,6 +121,12 @@ WindowMain::onPlayClicked( bool checked )
 
 
 void
+WindowMain::onSkipClicked()
+{
+    SKIP_CLICKED()
+}
+
+void
 WindowMain::onLoveClicked( bool loved )
 {
     LOVE_CLICKED()
@@ -164,35 +176,35 @@ WindowMain::onTuningIn( const RadioStation& station )
 {
     ON_TUNING_IN()
 
-    // check if the widget is already in the recent list
-    //
-    bool found = false;
+//    // check if the widget is already in the recent list
+//    //
+//    bool found = false;
 
-    for ( int i = 0 ; i < ui->recentLayout->count() ; ++i )
-    {
-        PlayableItemWidget* item = qobject_cast<PlayableItemWidget*>( ui->recentLayout->itemAt( i )->widget() );
-        if ( item )
-        {
-            if ( item->station() == station )
-            {
-                // The station is already in the list
-                // so move it to the front
-                ui->recentLayout->insertWidget( 0, ui->recentLayout->takeAt( i )->widget() );
-                found = true;
-                break;
-            }
-        }
-    }
+//    for ( int i = 0 ; i < ui->recentLayout->count() ; ++i )
+//    {
+//        PlayableItemWidget* item = qobject_cast<PlayableItemWidget*>( ui->recentLayout->itemAt( i )->widget() );
+//        if ( item )
+//        {
+//            if ( item->station() == station )
+//            {
+//                // The station is already in the list
+//                // so move it to the front
+//                ui->recentLayout->insertWidget( 0, ui->recentLayout->takeAt( i )->widget() );
+//                found = true;
+//                break;
+//            }
+//        }
+//    }
 
-    if ( !found )
-    {
-        if ( ui->recentLayout->count() >= 10 )
-            ui->recentLayout->takeAt( ui->recentLayout->count() - 1 )->widget()->deleteLater();;
+//    if ( !found )
+//    {
+//        if ( ui->recentLayout->count() >= 10 )
+//            ui->recentLayout->takeAt( ui->recentLayout->count() - 1 )->widget()->deleteLater();;
 
-        PlayableItemWidget* item = new PlayableItemWidget( station );
-        ui->recentLayout->insertWidget( 0, item );
-        item->onRadioChanged();
-    }
+//        PlayableItemWidget* item = new PlayableItemWidget( station );
+//        ui->recentLayout->insertWidget( 0, item );
+//        item->onRadioChanged();
+//    }
 }
 
 
@@ -270,9 +282,14 @@ WindowMain::onGotRecentStations()
     foreach ( const lastfm::XmlQuery& station , lfm.children("station") )
     {
         RadioStation recentStation( station["url"].text() );
-        PlayableItemWidget* stationWidget = new PlayableItemWidget( station["name"].text(), recentStation );
-        ui->recentLayout->addWidget(stationWidget);
-        connect( stationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
+        recentStation.setTitle( station["name"].text() );
+        ui->recentList->addStation( recentStation );
+
+
+//        RadioStation recentStation( station["url"].text() );
+//        PlayableItemWidget* stationWidget = new PlayableItemWidget( station["name"].text(), recentStation );
+//        ui->recentLayout->addWidget(stationWidget);
+//        connect( stationWidget, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
     }
 }
 

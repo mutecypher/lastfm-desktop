@@ -31,6 +31,7 @@ private slots:
     void onLoveTriggered();
     void onBanClicked();
     void onBanFinished();
+    void onSkipClicked();
 
     void onEditClicked();
     void onFilterClicked();
