@@ -417,7 +417,7 @@ unicorn::Application::installHotKey( Qt::KeyboardModifiers modifiers, quint32 vi
         winMod |= MOD_WIN;
 		
 	RegisterHotKey( NULL, id, winMod, virtualKey);
-    return id;
+    return reinterpret_cast<void*>(id);
 #endif
 }
 
@@ -427,7 +427,7 @@ unicorn::Application::unInstallHotKey( void* id )
 #ifdef __APPLE__
     UnregisterEventHotKey( (EventHotKeyRef)id );
 #else
-    UnregisterHotKey( NULL, id );
+    UnregisterHotKey( NULL, (int)id );
 #endif
 }
 
