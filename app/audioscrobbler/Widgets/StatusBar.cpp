@@ -29,7 +29,7 @@
 #include "../Application.h"
 
 StatusBar::StatusBar( QWidget* parent )
-    :StylableWidget( parent ), m_scrobbleCount(0)
+    :StylableWidget( parent ), m_scrobbleCount(-1)
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
@@ -67,7 +67,11 @@ StatusBar::setSizeGripVisible( bool visible )
 void
 StatusBar::setStatus()
 {
-    m_mainStatus->setText( tr("Logged in as %1 (%2 scrobbles)").arg( lastfm::ws::Username, QString("%L1").arg( m_scrobbleCount ) ) );
+    if( m_scrobbleCount > 0 ) {
+        m_mainStatus->setText( tr("Logged in as %1 (%2 scrobbles)").arg( lastfm::ws::Username, QString("%L1").arg( m_scrobbleCount ) ) );
+    } else {
+        m_mainStatus->setText( tr("Logged in as %1").arg( lastfm::ws::Username ));
+    }
 }
 
 void
