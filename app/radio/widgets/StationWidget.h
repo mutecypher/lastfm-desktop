@@ -18,6 +18,16 @@ public:
     ~StationWidget();
 
     void addStation( const RadioStation& station );
+    void recentStation( const RadioStation& station );
+
+private:
+    void resizeEvent ( QResizeEvent * event );
+
+    class QTreeWidgetItem* createItem( const RadioStation& station );
+
+private slots:
+    void onItemClicked( class QTreeWidgetItem* item, int column );
+    void onTuningIn( const RadioStation& station );
 
 private:
     Ui::StationWidget *ui;

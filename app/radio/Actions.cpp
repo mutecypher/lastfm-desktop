@@ -28,7 +28,7 @@ Actions::Actions()
         m_playAction = new QAction( tr( "Play" ), this );
         m_playAction->setCheckable( true );
         QIcon playIcon;
-        playIcon.addFile( ":/stop-rest.png", QSize(), QIcon::Normal, QIcon::On );
+        playIcon.addFile( ":/pause-rest.png", QSize(), QIcon::Normal, QIcon::On );
         playIcon.addFile( ":/play-rest.png", QSize(), QIcon::Normal, QIcon::Off );
         m_playAction->setIcon( playIcon );
 

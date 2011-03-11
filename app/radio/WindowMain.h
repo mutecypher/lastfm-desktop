@@ -60,6 +60,8 @@ private:
     void createLibraryStations();
     void createMixStations();
     void createRecommendedStations();
+    void createFriendsStations();
+    void createNeighboursStations();
 
 private:
     Ui::WindowMain* ui;
