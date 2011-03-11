@@ -31,13 +31,6 @@ WindowMain::WindowMain( Actions& actions ) :
     connect( radio, SIGNAL(error(int,QVariant)), SLOT(onError(int, QVariant)));
     connect( radio, SIGNAL(stopped()), SLOT(onStopped()));
 
-#ifdef Q_OS_MAC
-    QToolBar* toolbar = addToolBar(tr(""));
-    toolbar->addWidget( ui->quickstartFrame );
-    ui->quickstartFrame->setFrameStyle( QFrame::NoFrame );
-    ui->quickstartFrame->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
-#endif
-
     ui->stationEdit->setHelpText( tr("Type an artist or tag and press play") );
 
     connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));

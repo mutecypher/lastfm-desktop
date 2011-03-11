@@ -61,8 +61,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>230</width>
-            <height>324</height>
+            <width>232</width>
+            <height>289</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -525,9 +525,6 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <property name="margin">
-          <number>0</number>
-         </property>
          <item>
           <spacer name="horizontalSpacer_4">
            <property name="orientation">
@@ -557,7 +554,7 @@
              <item>
               <widget class="QFrame" name="playbackControls">
                <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
+                <enum>QFrame::NoFrame</enum>
                </property>
                <property name="frameShadow">
                 <enum>QFrame::Raised</enum>
@@ -596,6 +593,19 @@
                  </widget>
                 </item>
                 <item>
+                 <spacer name="horizontalSpacer_9">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
                  <widget class="QPushButton" name="ban">
                   <property name="enabled">
                    <bool>false</bool>
@@ -606,11 +616,37 @@
                  </widget>
                 </item>
                 <item>
+                 <spacer name="horizontalSpacer_10">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
                  <widget class="QPushButton" name="info">
                   <property name="text">
                    <string>Info</string>
                   </property>
                  </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_11">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
                 </item>
                 <item>
                  <widget class="QPushButton" name="play">
@@ -624,6 +660,19 @@
                    <bool>false</bool>
                   </property>
                  </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_12">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
                 </item>
                 <item>
                  <widget class="QPushButton" name="skip">
@@ -726,8 +775,8 @@
  <customwidgets>
   <customwidget>
    <class>Phonon::VolumeSlider</class>
-   <extends>QSlider</extends>
-   <header location="global">Phonon/VolumeSlider.h</header>
+   <extends>QWidget</extends>
+   <header location="global">phonon/volumeslider.h</header>
   </customwidget>
   <customwidget>
    <class>HelpTextLineEdit</class>
