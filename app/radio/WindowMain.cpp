@@ -32,6 +32,7 @@ WindowMain::WindowMain( Actions& actions ) :
     connect( radio, SIGNAL(stopped()), SLOT(onStopped()));
 
     ui->stationEdit->setHelpText( tr("Type an artist or tag and press play") );
+    ui->stationEdit->setAttribute( Qt::WA_MacShowFocusRect, false );
 
     connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
 
@@ -61,6 +62,8 @@ WindowMain::WindowMain( Actions& actions ) :
     ui->details->setCurrentWidget( ui->quickstartPage );
 
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ), this, SLOT(onSwitch()));
+    
+    addDragHandleWidget( ui->controlFrame );
 }
 
 
