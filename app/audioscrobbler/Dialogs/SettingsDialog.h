@@ -53,6 +53,7 @@ protected:
         class AccountSettingsWidget* accountSettings;
         class IpodSettingsWidget* ipodSettings;
         class ScrobbleSettingsWidget* scrobbleSettings;
+        class KeyboardSettingsWidget* keyboardSettings;
     }ui;
 
 };

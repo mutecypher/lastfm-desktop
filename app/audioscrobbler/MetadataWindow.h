@@ -14,7 +14,6 @@ class QLabel;
 class ScrobbleControls;
 class FirstRunWizard;
 class MessageBar;
-class ProfileWidget;
 class SlideOverLayout;
 class UserToolButton;
 

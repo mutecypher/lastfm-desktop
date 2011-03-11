@@ -30,6 +30,10 @@
 #include <QDebug>
 #include <QMainWindow>
 
+#ifdef Q_OS_MAC64
+#include <Carbon/Carbon.h>
+#endif
+
 namespace lastfm{
     class UserDetails;
     class InternetConnectionMonitor;
@@ -154,7 +158,8 @@ namespace unicorn
         Session* currentSession() { return m_currentSession; }
 
         static unicorn::Application* instance(){ return (unicorn::Application*)qApp; }
-        void installHotKey( Qt::KeyboardModifiers, quint32, QObject* receiver, const char* slot );
+        void* installHotKey( Qt::KeyboardModifiers, quint32, QObject* receiver, const char* slot );
+        void unInstallHotKey( void* id );
         bool isInternetConnectionUp() const;
 
     public slots:
@@ -183,8 +188,13 @@ namespace unicorn
 #ifdef __APPLE__
         void installCocoaEventHandler() const;
         void appleEventReceived( const QStringList& messages );
-        static short appleEventHandler( const AppleEvent*, AppleEvent*, long );
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
+
+#ifdef Q_OS_MAC64
+        static OSErr appleEventHandler( const AppleEvent*, AppleEvent*, void* );
+#else
+        static short appleEventHandler( const AppleEvent*, AppleEvent*, long );
+#endif
 #endif
 #ifdef WIN32
         static bool winEventFilter ( void* );

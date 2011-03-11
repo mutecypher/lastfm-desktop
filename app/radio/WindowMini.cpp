@@ -1,10 +1,13 @@
 
 #include <QShortcut>
+#include <QStatusBar>
 
 #include "WindowMacro.h"
 
 #include "WindowMini.h"
 #include "ui_WindowMini.h"
+
+#include "widgets/TagFilterDialog.h"
 
 #include <lastfm/XmlQuery>
 
@@ -17,6 +20,8 @@ WindowMini::WindowMini( Actions& actions ) :
     m_actions( &actions )
 {
     SETUP()
+
+    setFixedSize( 450, 70 );
 
     ui->context->hide();
 
@@ -81,6 +86,19 @@ WindowMini::onTrackSpooled( const Track& track )
 }
 
 void
+WindowMini::onFilterClicked()
+{
+    ON_FILTER_CLICKED()
+}
+
+
+void
+WindowMini::onEditClicked()
+{
+    ON_EDIT_CLICKED()
+}
+
+void
 WindowMini::onSwitch()
 {
     emit aboutToHide();
@@ -103,4 +121,9 @@ WindowMini::onActionsChanged()
     ui->ban->setChecked( m_actions->m_banAction->isChecked() );
     ui->play->setChecked( m_actions->m_playAction->isChecked() );
     ui->skip->setChecked( m_actions->m_skipAction->isChecked() );
+
+    ui->love->setEnabled( m_actions->m_loveAction->isEnabled() );
+    ui->ban->setEnabled( m_actions->m_banAction->isEnabled() );
+    ui->play->setEnabled( m_actions->m_playAction->isEnabled() );
+    ui->skip->setEnabled( m_actions->m_skipAction->isEnabled() );
 }

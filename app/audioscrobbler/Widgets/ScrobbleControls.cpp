@@ -22,10 +22,13 @@
 #include <QPushButton>
 #include <QToolButton>
 #include <QAction>
-
 #include <QShortcut>
 
+#include "lib/unicorn/dialogs/ShareDialog.h"
+#include "lib/unicorn/dialogs/TagDialog.h"
+
 #include "ScrobbleControls.h"
+
 #include "../Application.h"
 
 ScrobbleControls::ScrobbleControls( const Track& track )
@@ -57,8 +60,8 @@ ScrobbleControls::ScrobbleControls( const Track& track )
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ), ui.tag, SLOT( click() ) );
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ), ui.love, SLOT( toggle() ) );
 
-    connect( ui.tag, SIGNAL( clicked()), aApp->tagAction(), SLOT( trigger()));
-    connect( ui.share, SIGNAL( clicked()), aApp->shareAction(), SLOT( trigger()));
+    connect( ui.tag, SIGNAL( clicked()), SLOT( onTag()));
+    connect( ui.share, SIGNAL( clicked()), SLOT( onShare()));
 
     connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(setLoveChecked(bool)));
 }
@@ -94,4 +97,22 @@ ScrobbleControls::onLoveChanged( bool checked )
         track.love();
     else
         track.unlove();
+}
+
+void 
+ScrobbleControls::onShare()
+{
+    ShareDialog* sd = new ShareDialog( m_track, window() );
+    sd->raise();
+    sd->show();
+    sd->activateWindow();
+}
+
+void
+ScrobbleControls::onTag()
+{
+    TagDialog* td = new TagDialog( m_track, window() );
+    td->raise();
+    td->show();
+    td->activateWindow();
 }

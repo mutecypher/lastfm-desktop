@@ -42,7 +42,11 @@ AppleScript::~AppleScript()
 bool //static
 AppleScript::isAppleScriptAvailable()
 {
+#ifdef Q_OS_MAC64
+    SInt32 r;
+#else
     long r;
+#endif
     if (Gestalt( gestaltAppleScriptAttr, &r ) != noErr)
         r = 0;
     return (r & (1 << gestaltAppleScriptPresent)) != 0;

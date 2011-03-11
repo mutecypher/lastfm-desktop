@@ -178,7 +178,11 @@ ActivityListItem::setText( const QString& text )
 void
 ActivityListItem::resizeEvent(QResizeEvent* )
 {
-    int textAreaWidth = ( width() * 65 ) / 100;
+    int textAreaWidth;
+    if( !ui.timestamp->text().isEmpty())
+        textAreaWidth = ( width() * 65 ) / 100;
+    else
+        textAreaWidth = width();
 
     ui.textArea->setFixedWidth( textAreaWidth );
 
@@ -190,7 +194,7 @@ ActivityListItem::resizeEvent(QResizeEvent* )
     QFontMetrics fm( ui.text->font() );
     ui.text->setText( fm.elidedText ( m_text, Qt::ElideRight, textAreaWidth ) );
 
-    ui.timestamp->setText( fm.elidedText ( m_timestampText, Qt::ElideRight, ui.timestamp->width() ) );
+    ui.timestamp->setText( m_timestampText );
 }
 
 

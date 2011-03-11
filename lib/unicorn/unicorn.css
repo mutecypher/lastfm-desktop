@@ -1,6 +1,5 @@
-QPushButton#love { background-image: url(:/love-rest.png); }
+QPushButton#love { background-image: url(:/love-rest.png); width: 32px; }
 QPushButton#love:hover { background-image: url(:/love-onhover.png); }
-QPushButton#love:pressed { background-image: url(:/love-onpress.png); }
 QPushButton#love:checked { background-image: url(:/love-isloved.png); } 
 QPushButton#love:pressed { background-image: url(:/love-onpress.png); }
 QPushButton#love:disabled { background-image: url(:/love-disabled.png); } 

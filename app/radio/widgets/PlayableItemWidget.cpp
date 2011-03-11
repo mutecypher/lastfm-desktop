@@ -27,9 +27,10 @@
 PlayableItemWidget::PlayableItemWidget(QString stationTitle, const RadioStation& rs)
     : m_rs(rs)
 {
-    m_rs.setTitle( stationTitle);
+    m_rs.setTitle( stationTitle );
     init();
 }
+
 
 PlayableItemWidget::PlayableItemWidget(const RadioStation& rs)
     : m_rs(rs)
@@ -37,16 +38,21 @@ PlayableItemWidget::PlayableItemWidget(const RadioStation& rs)
     init();
 }
 
+
 void
 PlayableItemWidget::init()
 {
     QString title = fontMetrics().elidedText( m_rs.title(), Qt::ElideRight, 200 );
     if( title != m_rs.title() )
         setToolTip( m_rs.title());
-    setText(title);
+    setText( title );
 
-    connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)) );
+    connect( this, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
+
+    connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
+    connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
 }
+
 
 //virtual 
 void 
@@ -55,8 +61,16 @@ PlayableItemWidget::mouseReleaseEvent(QMouseEvent* /*event*/)
     emit startRadio(m_rs);
 }
 
+
 void
-PlayableItemWidget::onTuningIn( const RadioStation& station )
+PlayableItemWidget::onRadioChanged()
 {
-    setEnabled( !(station == m_rs) );
+    if ( radio->station() == m_rs )
+    {
+        setEnabled( false );
+        setText( radio->station().title() );
+    }
+    else
+        setEnabled( true );
+
 }
