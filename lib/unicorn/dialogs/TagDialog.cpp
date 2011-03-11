@@ -43,8 +43,8 @@ TagDialog::TagDialog( const Track& track, QWidget *parent )
     layout()->setSizeConstraint( QLayout::SetFixedSize );
     setSizeGripEnabled( false );
 
-    connect( User().getTopTags(), SIGNAL(finished()), SLOT(onUserGotTopTags()) );
-    connect( m_track.getTopTags(), SIGNAL(finished()), SLOT(onTrackGotTopTags()) );
+    //connect( User().getTopTags(), SIGNAL(finished()), SLOT(onUserGotTopTags()) );
+    //connect( m_track.getTopTags(), SIGNAL(finished()), SLOT(onTrackGotTopTags()) );
 	
     ui.buttons->button( QDialogButtonBox::Ok )->setText( tr("Tag") );
 
@@ -143,7 +143,7 @@ TagDialog::setupUi()
 
     v->addWidget( ui.tagsWidget = new ItemSelectorWidget( ItemSelectorWidget::Tag, this ) );
 
-    {
+    /*{
         v->addWidget( ui.popularTagsBox = new QGroupBox( tr("Popular tags"), this ) );
         ui.popularTagsBox->setCheckable( true );
         ui.popularTagsBox->setChecked( false );
@@ -167,7 +167,7 @@ TagDialog::setupUi()
         layout->setContentsMargins( 0, 0, 0, 0 );
         ui.yourTagsBox->setLayout( layout );
         connect(ui.yourTagsBox, SIGNAL(toggled(bool)), SLOT(onTagBoxToggled(bool)));
-    }
+    }*/
     
     v->addStretch();
 

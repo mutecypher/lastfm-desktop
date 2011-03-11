@@ -42,8 +42,8 @@ ScrobbleInfoFetcher::start()
         {
             // track.getInfo
             m_track.getInfo();
-            connect( m_track.signalProxy(), SIGNAL(gotInfo(XmlQuery)), SLOT(onTrackGotInfo(XmlQuery)) ) ;
             ++m_numRequests;
+            connect( m_track.signalProxy(), SIGNAL(gotInfo(XmlQuery)), SLOT(onTrackGotInfo(XmlQuery)) ) ;
         }
         {
             // track.getTopFans

@@ -58,6 +58,8 @@ TrackItem::TrackItem( const TrackItem& that )
     m_fetcher = that.m_fetcher;
     m_infoWidget = that.m_infoWidget;
     m_timestamp = that.m_timestamp;
+    m_status = that.m_status;
+    setToolTip( that.toolTip() );
 
     connectTrack();
     setDetails();
@@ -89,6 +91,7 @@ TrackItem::doSetTrack( const Track& track )
 
     connectTrack();
     setDetails();
+    onScrobbleStatusChanged();
 }
 
 void

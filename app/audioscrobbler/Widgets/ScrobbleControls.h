@@ -48,6 +48,8 @@ public slots:
 
 private slots:
     void onLoveChanged( bool checked );
+    void onShare();
+    void onTag();
 
 private:
     Track m_track;
