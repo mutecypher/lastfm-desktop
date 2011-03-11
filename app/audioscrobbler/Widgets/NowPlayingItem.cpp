@@ -83,6 +83,7 @@ NowPlayingItem::onWatchPaused( bool isPaused )
         if ( isPaused )
         {
             m_timestampText =tr( "%1 paused" ).arg( aApp->currentConnection()->name() );
+            resizeEvent( 0 );
             ui.as->setPixmap( QPixmap() );
         }
         else
@@ -91,6 +92,7 @@ NowPlayingItem::onWatchPaused( bool isPaused )
                 m_timestampText = tr( "Track Scrobbled" );
             else
                 m_timestampText = aApp->currentConnection()->name();
+            resizeEvent( 0 );
             ui.as->setMovie( movie.scrobbler_as );
             ui.as->movie()->start();
         }
@@ -99,7 +101,9 @@ NowPlayingItem::onWatchPaused( bool isPaused )
     }
     else
     {
+        setText( tr("You're not scrobbling any songs right now - check out your recent tracks below") );
         m_timestampText = "";
+        resizeEvent( 0 );
         ui.as->clear();
     }
     resizeEvent( 0 );
