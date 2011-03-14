@@ -559,9 +559,9 @@
                <property name="frameShadow">
                 <enum>QFrame::Raised</enum>
                </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,0,0">
                 <property name="spacing">
-                 <number>0</number>
+                 <number>10</number>
                 </property>
                 <property name="margin">
                  <number>0</number>
@@ -593,19 +593,6 @@
                  </widget>
                 </item>
                 <item>
-                 <spacer name="horizontalSpacer_9">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
                  <widget class="QPushButton" name="ban">
                   <property name="enabled">
                    <bool>false</bool>
@@ -616,37 +603,11 @@
                  </widget>
                 </item>
                 <item>
-                 <spacer name="horizontalSpacer_10">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
                  <widget class="QPushButton" name="info">
                   <property name="text">
                    <string>Info</string>
                   </property>
                  </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_11">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
                 </item>
                 <item>
                  <widget class="QPushButton" name="play">
@@ -660,19 +621,6 @@
                    <bool>false</bool>
                   </property>
                  </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_12">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
                 </item>
                 <item>
                  <widget class="QPushButton" name="skip">

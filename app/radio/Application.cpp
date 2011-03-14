@@ -34,51 +34,14 @@ using moralistfad::Application;
 Application::Application( int& argc, char** argv ) 
     : unicorn::Application( argc, argv )
 {
-#ifdef Q_OS_MAC
-        FSRef appRef;
-        LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
-
-        AEDesc desc;
-        const char* data = "tray";
-        AECreateDesc( typeChar, data, sizeof( data ), &desc );
-        
-        LSApplicationParameters params;
-        params.version = 0;
-        params.flags = kLSLaunchAndHide;
-        params.application = &appRef;
-        params.asyncLaunchRefCon = NULL;
-        params.environment = NULL;
-        CFStringRef arg = CFSTR( "--tray" );
-        CFArrayRef args = CFArrayCreate( NULL, ((const void**)&arg), 1, NULL);
-        params.argv = args;
-        
-        AEAddressDesc target;
-        AECreateDesc( typeApplicationBundleID, CFSTR( "fm.last.audioscrobbler" ), 22, &target);
-        
-        AppleEvent event;
-        AECreateAppleEvent ( kCoreEventClass,
-                                  kAEReopenApplication ,
-                                  &target,
-                                  kAutoGenerateReturnID,
-                                  kAnyTransactionID,
-                                  &event );
-
-        AEPutParamDesc( &event, keyAEPropData, &desc );
-        
-        params.initialEvent = &event;
-        
-        LSOpenApplication( &params, NULL );
-        AEDisposeDesc( &desc );
-#elif defined Q_OS_WIN
-    QProcess* process = new QProcess;
-    process->start( QApplication::applicationDirPath() + "/Last.fm Scrobbler.exe", QStringList("--tray") );
-#endif
 }
 
 void
 Application::init()
 {
     unicorn::Application::init();
+
+    setQuitOnLastWindowClosed( true );
 
     initiateLogin();
     #ifdef Q_OS_MAC
@@ -118,7 +81,7 @@ Application::init()
             AEDisposeDesc( &desc );
     #elif defined Q_OS_WIN
         QProcess* process = new QProcess;
-        process->start( QApplication::applicationDirPath() + "/audioscrobbler.exe", QStringList("--tray") );
+        process->start( QApplication::applicationDirPath() + "/Last.fm Scrobbler.exe", QStringList("--tray") );
     #endif
 }
 

@@ -7,8 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>568</width>
-    <height>83</height>
+    <height>92</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -16,7 +22,7 @@
   <widget class="QWidget" name="controlFrameMini">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
     <property name="spacing">
-     <number>0</number>
+     <number>5</number>
     </property>
     <property name="sizeConstraint">
      <enum>QLayout::SetMinimumSize</enum>
@@ -48,11 +54,23 @@
        <property name="sizeConstraint">
         <enum>QLayout::SetMinimumSize</enum>
        </property>
-       <property name="margin">
+       <property name="leftMargin">
         <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>5</number>
        </property>
        <item>
         <layout class="QHBoxLayout" name="buttonsLayout">
+         <property name="spacing">
+          <number>15</number>
+         </property>
          <item>
           <widget class="QPushButton" name="love">
            <property name="enabled">
@@ -158,7 +176,7 @@
     <item>
      <widget class="QFrame" name="detailsMini">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -220,7 +238,7 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <layout class="QHBoxLayout" name="progressLayout">
          <property name="spacing">
           <number>3</number>
          </property>
@@ -259,8 +277,8 @@
  <customwidgets>
   <customwidget>
    <class>Phonon::VolumeSlider</class>
-   <extends>QSlider</extends>
-   <header location="global">Phonon/VolumeSlider.h</header>
+   <extends>QWidget</extends>
+   <header location="global">phonon/volumeslider.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

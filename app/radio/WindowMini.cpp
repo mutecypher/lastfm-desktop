@@ -1,6 +1,7 @@
 
 #include <QShortcut>
 #include <QStatusBar>
+#include <QToolBar>
 
 #include "WindowMacro.h"
 
@@ -21,7 +22,8 @@ WindowMini::WindowMini( Actions& actions ) :
 {
     SETUP()
 
-    setFixedSize( 450, minimumHeight() );
+    setFixedSize( 400, minimumHeight() );
+    ui->playbackControls->setFixedWidth( ui->playbackControls->minimumWidth() );
 
     ui->context->hide();
 }

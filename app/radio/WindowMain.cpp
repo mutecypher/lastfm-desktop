@@ -2,6 +2,7 @@
 #include <QShortcut>
 #include <QToolBar>
 #include <QListWidgetItem>
+#include <QMenuBar>
 
 #include "WindowMacro.h"
 
