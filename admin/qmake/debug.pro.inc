@@ -1,11 +1,6 @@
 CONFIG( debug, debug|release ) {
     mac* {
         #speeds up debug builds by only compiling x86
-        CONFIG( x86_64 ) {
-            DEFINES += Q_OS_MAC_64
-        } else {
-            CONFIG += x86
-        }
         CONFIG -= ppc
     }
 
