@@ -107,7 +107,7 @@ Radio::play( const RadioStation& station )
 
     connect( m_tuner, SIGNAL(title( QString )), SLOT(setStationName( QString )) );
     connect( m_tuner, SIGNAL(supportsDisco( bool )), SLOT(setSupportsDisco( bool )) );
-	connect( m_tuner, SIGNAL(trackAvailable()), SLOT(enqueue()) );
+    connect( m_tuner, SIGNAL(trackAvailable()), SLOT(enqueue()) );
     connect( m_tuner, SIGNAL(error( lastfm::ws::Error )), SLOT(onTunerError( lastfm::ws::Error )) );
 
     changeState( TuningIn );
@@ -407,7 +407,7 @@ void
 Radio::setStationName( const QString& s )
 {
     m_station.setTitle( s );
-    //emit tuningIn( m_station );
+    emit tuningIn( m_station );
 }
 
 

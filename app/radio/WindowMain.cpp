@@ -59,8 +59,6 @@ WindowMain::WindowMain( Actions& actions ) :
     ui->library->click();
 
     ui->details->setCurrentWidget( ui->quickstartPage );
-
-    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ), this, SLOT(onSwitch()));
 }
 
 
@@ -112,6 +110,14 @@ WindowMain::onStartClicked()
 
     ui->stationEdit->clear();
 }
+
+
+void
+WindowMain::onSpace()
+{
+    SPACE()
+}
+
 
 void
 WindowMain::onPlayClicked( bool checked )
@@ -250,8 +256,6 @@ void
 WindowMain::onGotRecentStations()
 {
     lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
-
-    qDebug() << lfm;
 
     foreach ( const lastfm::XmlQuery& station , lfm.children("station").mid( 0, 20 ) )
     {

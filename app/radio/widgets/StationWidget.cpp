@@ -53,7 +53,10 @@ void
 StationWidget::recentStation( const RadioStation& station )
 {
     // check if the widget is already in the recent list
-    //
+
+    // Don't add if the station title is blank.
+    if ( station.title().isEmpty() )
+        return;
 
     QList<QTreeWidgetItem*> items = ui->treeWidget->findItems( station.title(), Qt::MatchExactly, 0 );
 

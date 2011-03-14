@@ -54,6 +54,8 @@ private slots:
 
     void onSwitch();
 
+    void onSpace();
+
 private:
     void addWinThumbBarButtons( QList<QAction*>& );
 
