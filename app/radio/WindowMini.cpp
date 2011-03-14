@@ -21,7 +21,7 @@ WindowMini::WindowMini( Actions& actions ) :
 {
     SETUP()
 
-    setFixedSize( 450, 70 );
+    setFixedSize( 450, minimumHeight() );
 
     ui->context->hide();
 }
