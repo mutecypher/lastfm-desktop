@@ -20,6 +20,7 @@ signals:
 
 private slots:
     void onPlayClicked( bool checked );
+    void onSkipClicked();
     void onLoveClicked( bool loved );
     void onLoveTriggered();
     void onBanClicked();

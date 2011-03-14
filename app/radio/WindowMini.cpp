@@ -24,8 +24,6 @@ WindowMini::WindowMini( Actions& actions ) :
     setFixedSize( 450, 70 );
 
     ui->context->hide();
-
-    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ), this, SLOT(onSwitch()));
 }
 
 WindowMini::~WindowMini()
@@ -46,6 +44,11 @@ WindowMini::onPlayClicked( bool checked )
     PLAY_CLICKED()
 }
 
+void
+WindowMini::onSkipClicked()
+{
+    SKIP_CLICKED()
+}
 
 void
 WindowMini::onLoveClicked( bool loved )
