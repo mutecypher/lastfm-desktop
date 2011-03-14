@@ -60,7 +60,7 @@ WindowMain::WindowMain( Actions& actions ) :
     ui->library->click();
 
     ui->details->setCurrentWidget( ui->quickstartPage );
-    
+
     addDragHandleWidget( ui->controlFrame );
 }
 
