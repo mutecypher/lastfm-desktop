@@ -33,6 +33,13 @@ WindowMini::~WindowMini()
     delete ui;
 }
 
+
+void
+WindowMini::onSpace()
+{
+    SPACE()
+}
+
 void
 WindowMini::onPlayClicked( bool checked )
 {

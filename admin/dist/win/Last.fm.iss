@@ -31,7 +31,7 @@ ShowLanguageDialog=yes
 WizardImageFile=wizard.bmp
 WizardSmallImageFile=wizard_small.bmp
 SetupIconFile=installer.ico
-UninstallDisplayIcon={app}\audioscrobbler.exe
+UninstallDisplayIcon="{app}\Last.fm Scrobbler.exe"
 AppModifyPath="{app}\UninsHs.exe" /m0=LastFM
 WizardImageBackColor=$ffffff
 WizardImageStretch=no
@@ -79,8 +79,8 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 ; Main files
-Source: "..\..\..\_bin\radio.exe"; DestDir: "{app}"; Components: Radio ; Flags: ignoreversion; BeforeInstall: ExitApp('{app}\radio.exe')
-Source: "..\..\..\_bin\audioscrobbler.exe"; DestDir: "{app}"; Components: Audioscrobbler ; Flags: ignoreversion; BeforeInstall: ExitApp('{app}\audioscrobbler.exe')
+Source: "..\..\..\_bin\Last.fm Radio.exe"; DestDir: "{app}"; Components: Radio ; Flags: ignoreversion; BeforeInstall: ExitApp('{app}\Last.fm R')
+Source: "..\..\..\_bin\Last.fm Scrobbler.exe"; DestDir: "{app}"; Components: Audioscrobbler ; Flags: ignoreversion; BeforeInstall: ExitApp('{app}\Last.fm Scrobbler.exe')
 Source: "..\..\..\_bin\iPodScrobbler.exe"; DestDir: "{app}"; Components: Audioscrobbler ; Flags: ignoreversion
 
 ;libraries
@@ -110,8 +110,8 @@ Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\phonon
 
 ;The stylesheets
 Source: "..\..\..\lib\unicorn\unicorn.css"; DestDir: "{app}"; Components: Unicorn; Flags: ignoreversion
-Source: "..\..\..\app\audioscrobbler\audioscrobbler.css"; DestDir: "{app}"; Components: Audioscrobbler; Flags: ignoreversion
-Source: "..\..\..\app\radio\radio.css"; DestDir: "{app}"; Components: Radio; Flags: ignoreversion
+Source: "..\..\..\app\audioscrobbler\Last.fm Scrobbler.css"; DestDir: "{app}"; Components: Audioscrobbler; Flags: ignoreversion
+Source: "..\..\..\app\radio\Last.fm Radio.css"; DestDir: "{app}"; Components: Radio; Flags: ignoreversion
 
 ;The add/modify/remove file
 Source: "UninsHs.exe"; DestDir: "{app}"; Flags: onlyifdoesntexist
@@ -120,12 +120,12 @@ Source: "UninsHs.exe"; DestDir: "{app}"; Flags: onlyifdoesntexist
 
 [Registry]
 Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Version"; ValueData: "{cm:Version}"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\audioscrobbler.exe"; Components: Audioscrobbler; Flags: uninsdeletekey
+Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\Last.fm Scrobbler.exe"; Components: Audioscrobbler; Flags: uninsdeletekey
 
 ; Register last.fm protocol only if it isn't already
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: ""; ValueData: "URL:lastfm"; Components: Radio; Flags: uninsdeletekey
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Components: Radio; Flags: uninsdeletekey
-Root: HKCR; Subkey: "lastfm\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\radio.exe"" ""%1"""; Components: Radio; Flags: uninsdeletekey
+Root: HKCR; Subkey: "lastfm\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\Last.fm Radio"" ""%1"""; Components: Radio; Flags: uninsdeletekey
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Components: Radio; Flags: uninsdeletekey
 
 ; Register Last.fm in the control panel
@@ -134,17 +134,17 @@ Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: 
 Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: "InfoTip"; ValueData: "Last.fm Audioscobbler"; Components: Audioscrobbler; Flags: uninsdeletekey
 Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: "System.ApplicationName"; ValueData: "fm.last.audioscrobbler"; Components: Audioscrobbler; Flags: uninsdeletekey
 Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: "System.ControlPanel.Category"; ValueData: "8"; Components: Audioscrobbler; Flags: uninsdeletekey
-Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\audioscrobbler.exe, -2"; Components: Audioscrobbler; Flags: uninsdeletekey
-Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}\Shell\Open\Command"; ValueType: string; ValueName: ""; ValueData: "{app}\audioscrobbler.exe --settings"; Components: Audioscrobbler; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Last.fm Scrobbler.exe, -2"; Components: Audioscrobbler; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}\Shell\Open\Command"; ValueType: string; ValueName: ""; ValueData: "{app}\Last.fm Scrobbler.exe --settings"; Components: Audioscrobbler; Flags: uninsdeletekey
 
 ; This is just for deleting keys at uninstall
 Root: HKCU; Subkey: "Software\Last.fm"; Flags: dontcreatekey uninsdeletekey
 Root: HKLM; Subkey: "Software\Last.fm"; Flags: dontcreatekey uninsdeletekey
 
 [Icons]
-Name: "{group}\Last.fm Radio"; Components: Radio; Filename: "{app}\radio.exe"
-Name: "{group}\Last.fm Audioscrobbler"; Components: Audioscrobbler; Filename: "{app}\audioscrobbler.exe"
-Name: "{commondesktop}\Last.fm Radio"; Filename: "{app}\radio.exe"; Components: Radio; Tasks: desktopicon
+Name: "{group}\Last.fm Radio"; Components: Radio; Filename: "{app}\Last.fm Radio.exe"
+Name: "{group}\Last.fm Audioscrobbler"; Components: Audioscrobbler; Filename: "{app}\Last.fm Scrobbler.exe"
+Name: "{commondesktop}\Last.fm Radio"; Filename: "{app}\Last.fm Radio.exe"; Components: Radio; Tasks: desktopicon
 
 ;Uninstall
 Name: "{group}\Uninstall Last.fm"; Filename: "{uninstallexe}"
@@ -152,19 +152,19 @@ Name: "{group}\Uninstall Last.fm"; Filename: "{app}\UninsHs.exe"; Parameters: "/
 
 ; The OnlyBelowVersion flag disables this on Vista as an admin-run installer can't install a quick launch
 ; icon to the standard user's folder location. Sucks.
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"; Filename: "{app}\radio.exe"; OnlyBelowVersion: 0,6; Tasks: quicklaunchicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"; Filename: "{app}\Last.fm Radio.exe"; OnlyBelowVersion: 0,6; Tasks: quicklaunchicon
 
 
 [Run]
-Filename: "{app}\audioscrobbler.exe"; Description: "Last.fm Audioscrbbler"; Flags: nowait postinstall
+Filename: "{app}\Last.fm Scrobbler.exe"; Description: "Last.fm Audioscrbbler"; Flags: nowait postinstall
 Filename: "{app}\UninsHs.exe"; Parameters: "/r0=LastFM,{language},{srcexe},{app}\Installer.exe"; Flags: runminimized runhidden nowait
 
 [InstallDelete]
 ;All the files that are not in fixed components (so the Radio compontent is actually removed on modify)
 Type: Files; Name: "{commondesktop}\Last.fm Radio.lnk"
-Type: Files; Name: "{app}\radio.exe"
+Type: Files; Name: "{app}\Last.fm Radio.exe"
 Type: Files; Name: "{app}\phonon4.dll"
-Type: Files; Name: "{app}\radio.css"
+Type: Files; Name: "{app}\Last.fm Radio.css"
 Type: Files; Name: "{app}\phonon_backend\phonon_ds94.dll"
 Type: dirifempty; Name: "{app}\phonon_backend\"
 
@@ -185,8 +185,8 @@ Type: dirifempty; Name: "{commonappdata}\Last.fm"
 
 ; This is the FIRST step of uninstallation
 [UninstallRun]
-Filename: "{app}\radio.exe"; Parameters: "--exit"
-Filename: "{app}\audioscrobbler.exe"; Parameters: "--exit"
+Filename: "{app}\Last.fm Radio.exe"; Parameters: "--exit"
+Filename: "{app}\Last.fm Scrobbler.exe"; Parameters: "--exit"
 
 [Code]
 // Global variables
@@ -240,8 +240,8 @@ procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssInstall then
     begin
-      ExitApp( '{app}\radio.exe' );
-      ExitApp( '{app}\audioscrobbler.exe' );
+      ExitApp( '{app}\Last.fm Radio.exe' );
+      ExitApp( '{app}\Last.fm Scrobbler.exe' );
     end;
 end;
 

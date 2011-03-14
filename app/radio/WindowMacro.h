@@ -70,16 +70,27 @@ connect( radio, SIGNAL(tick(qint64)), SLOT(onRadioTick(qint64))); \
 \
 ui->volumeSlider->setAudioOutput( radio->audioOutput() ); \
 ui->volumeSlider->setMuteVisible( false ); \
-menuWidget()->hide();
+menuWidget()->hide();\
+\
+new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ), this, SLOT(onSwitch())); \
+new QShortcut( QKeySequence( Qt::Key_Space ), this, SLOT(onSpace()));
 
 #define ON_TUNING_IN() \
 ui->radioTitle->setText( tr("Tuning %1").arg( station.title() ) ); \
 ui->play->setChecked( true ); \
 m_actions->m_playAction->setChecked( true );
 
+#define SPACE() \
+m_actions->m_playAction->trigger();
+
 #define PLAY_CLICKED() \
 if ( checked ) \
-    radio->resume(); \
+{ \
+    if ( radio->state() == Radio::Stopped ) \
+        radio->play( RadioStation( "" ) ); \
+    else \
+        radio->resume(); \
+} \
 else \
     radio->pause();
 
