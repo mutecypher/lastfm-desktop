@@ -61,8 +61,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>232</width>
-            <height>289</height>
+            <width>230</width>
+            <height>326</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -269,7 +269,7 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="dummyPage">
           <property name="sizePolicy">
@@ -352,6 +352,9 @@
              </item>
              <item>
               <widget class="QPushButton" name="start">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>Play</string>
                </property>
@@ -669,11 +672,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="Phonon::VolumeSlider" name="volumeSlider">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
+              <widget class="Phonon::VolumeSlider" name="volumeSlider" native="true"/>
              </item>
              <item>
               <widget class="QLabel" name="volumeBars">

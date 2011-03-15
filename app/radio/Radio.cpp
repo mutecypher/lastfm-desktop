@@ -85,8 +85,7 @@ Radio::play( const RadioStation& station )
         m_state = oldstate;
     }
 
-	delete m_tuner;
-    m_tuner = 0;
+    delete m_tuner;
 
     if (0 == m_audioOutput)  {
         if (!initRadio()) {
@@ -95,7 +94,7 @@ Radio::play( const RadioStation& station )
         }
     }
 
-	m_station = station;
+    m_station = station;
 
     // Make sure the radio station has the radio options from the settings
     bool ok;
@@ -202,9 +201,9 @@ Radio::stop()
     delete m_tuner;
     
     m_mediaObject->blockSignals( true ); //prevent the error state due to setting current source to null
-	m_mediaObject->stop();
-	m_mediaObject->clearQueue();
-	m_mediaObject->setCurrentSource( QUrl() );
+    m_mediaObject->stop();
+    m_mediaObject->clearQueue();
+    m_mediaObject->setCurrentSource( QUrl() );
     m_mediaObject->blockSignals( false );
 
     clear();
@@ -324,7 +323,12 @@ Radio::phononEnqueue()
         // consume next track from the track source. a null track 
         // response means wait until the trackAvailable signal
         Track t = m_tuner->takeNextTrack();
-        if (t.isNull()) break;
+        if (t.isNull())
+        {
+            m_track = t;
+            changeState( TuningIn );
+            break;
+        }
 
         // Invalid urls won't trigger the correct phonon
         // state changes, so we must filter them.
@@ -524,7 +528,7 @@ Radio::initRadio()
         return false;
     } 
 
-    mediaObject->setTickInterval( 1000 );
+    mediaObject->setTickInterval( 100 );
     connect( mediaObject, SIGNAL(stateChanged( Phonon::State, Phonon::State )), SLOT(onPhononStateChanged( Phonon::State, Phonon::State )) );
     connect( mediaObject, SIGNAL(bufferStatus(int)), SLOT(onBuffering(int)));
     connect( mediaObject, SIGNAL(currentSourceChanged( Phonon::MediaSource )), SLOT(onPhononCurrentSourceChanged( Phonon::MediaSource )) );

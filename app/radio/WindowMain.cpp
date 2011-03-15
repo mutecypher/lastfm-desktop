@@ -39,6 +39,7 @@ WindowMain::WindowMain( Actions& actions ) :
 
     connect( ui->start, SIGNAL(clicked()), SLOT(onStartClicked()));
     connect( ui->stationEdit, SIGNAL(returnPressed()), ui->start, SLOT(click()));
+    connect( ui->stationEdit, SIGNAL(textChanged(QString)), SLOT(onStationEditTextChanged(QString)));
 
     connect( ui->recent, SIGNAL(clicked()), SLOT(onRecentClicked()));
     connect( ui->library, SIGNAL(clicked()), SLOT(onLibraryClicked()));
@@ -101,12 +102,14 @@ void
 WindowMain::onStartClicked()
 {
     QString trimmedText = ui->stationEdit->text().trimmed();
+
     if( trimmedText.startsWith("lastfm://")) {
         radio->play( RadioStation( trimmedText ) );
         return;
     }
 
-    if (ui->stationEdit->text().length()) {
+    if ( ui->stationEdit->text().length() )
+    {
         StationSearch* s = new StationSearch();
         connect(s, SIGNAL(searchResult(RadioStation)), radio, SLOT(play(RadioStation)));
         s->startSearch(ui->stationEdit->text());
@@ -115,6 +118,12 @@ WindowMain::onStartClicked()
     ui->stationEdit->clear();
 }
 
+
+void
+WindowMain::onStationEditTextChanged( const QString& text )
+{
+    ui->start->setEnabled( text.count() > 0 );
+}
 
 void
 WindowMain::onSpace()

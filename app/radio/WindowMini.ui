@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>568</width>
-    <height>92</height>
+    <width>609</width>
+    <height>106</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,7 +20,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="controlFrameMini">
-   <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
     <property name="spacing">
      <number>5</number>
     </property>
@@ -142,11 +142,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="Phonon::VolumeSlider" name="volumeSlider">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
+          <widget class="Phonon::VolumeSlider" name="volumeSlider" native="true"/>
          </item>
          <item>
           <widget class="QLabel" name="volumeBars">

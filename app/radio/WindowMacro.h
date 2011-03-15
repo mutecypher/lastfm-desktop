@@ -25,7 +25,7 @@ if( !track.isNull() && track.source() == Track::LastFmRadio ) \
     ui->trackTitle->setText( track.toString() ); \
 \
     ui->bar->setMinimum( 0 ); \
-    ui->bar->setMaximum( track.duration() ); \
+    ui->bar->setMaximum( track.duration() * 1000 ); \
     ui->bar->setValue( 0 ); \
 \
     QTime t( 0, 0 ); \
@@ -78,7 +78,9 @@ new QShortcut( QKeySequence( Qt::Key_Space ), this, SLOT(onSpace()));
 #define ON_TUNING_IN() \
 ui->radioTitle->setText( tr("Tuning %1").arg( station.title() ) ); \
 ui->play->setChecked( true ); \
-m_actions->m_playAction->setChecked( true );
+m_actions->m_playAction->setChecked( true ); \
+ui->album->setText( radio->currentTrack().isNull() ? "" : tr("from %1").arg( radio->currentTrack().album() ) ); \
+ui->trackTitle->setText( radio->currentTrack().isNull() ? "" : radio->currentTrack().toString() );
 
 #define SPACE() \
 m_actions->m_playAction->trigger();
@@ -97,7 +99,7 @@ else \
 #define SKIP_CLICKED() radio->skip();
 
 #define RADIO_TICK() \
-ui->bar->setValue( tick / 1000 ); \
+ui->bar->setValue( tick ); \
 \
 if( tick > 0 ) \
 { \
@@ -105,7 +107,7 @@ if( tick > 0 ) \
     time = time.addSecs( ( tick / 1000 ) ); \
     ui->time->setText( time.toString( "mm:ss" ) ); \
     QTime timeToGo( 0, 0 ); \
-    timeToGo = timeToGo.addSecs( ui->bar->maximum() - ( tick / 1000 ) ); \
+    timeToGo = timeToGo.addSecs( ( ui->bar->maximum() - tick ) / 1000 ); \
     ui->timeToGo->setText( timeToGo.toString( "-mm:ss" ) ); \
 }
 

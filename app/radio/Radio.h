@@ -63,7 +63,7 @@ public:
     RadioStation station() const { return m_station; }
     Track currentTrack() const {return m_track;}
 
-	State state() const { return m_state; }
+    State state() const { return m_state; }
 
     Phonon::AudioOutput* audioOutput() const { return m_audioOutput; }
 
@@ -97,7 +97,7 @@ signals:
 private slots:
     void enqueue();
     void onPhononStateChanged( Phonon::State, Phonon::State );
-	void onPhononCurrentSourceChanged( const Phonon::MediaSource &);
+    void onPhononCurrentSourceChanged( const Phonon::MediaSource &);
     void onTunerError( lastfm::ws::Error );
     void phononEnqueue();
     void onBuffering( int );
@@ -116,16 +116,16 @@ private:
     bool initRadio();
     void deInitRadio();
     
-	/** emits signals if appropriate */
-	void changeState( State );
+    /** emits signals if appropriate */
+    void changeState( State );
 	
     QPointer<lastfm::RadioTuner> m_tuner;
-	Phonon::AudioOutput* m_audioOutput;
-	Phonon::MediaObject* m_mediaObject;
+    Phonon::AudioOutput* m_audioOutput;
+    Phonon::MediaObject* m_mediaObject;
     Phonon::Path m_path;
-	Radio::State m_state;
-	Track m_track;
-	RadioStation m_station;
+    Radio::State m_state;
+    Track m_track;
+    RadioStation m_station;
     bool m_bErrorRecover;
 
     double m_prevVolume;

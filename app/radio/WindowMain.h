@@ -33,6 +33,8 @@ private slots:
     void onBanFinished();
     void onSkipClicked();
 
+    void onStationEditTextChanged( const QString& text );
+
     void onEditClicked();
     void onFilterClicked();
 

@@ -95,6 +95,8 @@ void
 WindowMini::onTrackSpooled( const Track& track )
 {
     TRACK_SPOOLED()
+
+    ui->trackTitle->setText( ui->trackTitle->fontMetrics().elidedText( track.toString(), Qt::ElideRight, ui->detailsMini->width() ) );
 }
 
 void

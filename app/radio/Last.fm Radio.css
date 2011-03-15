@@ -126,6 +126,10 @@ QPushButton#start:pressed {
     background-image: url(:/play-radio-large-onpress.png);
 }
 
+QPushButton#start:disabled {
+    background-image: url(:/play-radio-large-onpress.png);
+}
+
 PlayableItemWidget {
     color: #000000;
     border: none;
