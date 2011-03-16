@@ -22,6 +22,12 @@ WindowMini::WindowMini( Actions& actions ) :
 {
     SETUP()
 
+    ui->love->setToolTip( ui->love->isChecked() ? tr("Unlove") : tr("Love") );
+    ui->ban->setToolTip( tr("Ban") );
+    ui->info->setToolTip( tr("Info") );
+    ui->play->setToolTip( ui->play->isChecked() ? tr("Pause") : tr("Play") );
+    ui->skip->setToolTip( tr("Skip") );
+
     setFixedSize( 400, minimumHeight() );
     ui->playbackControls->setFixedWidth( ui->playbackControls->minimumWidth() );
 
@@ -131,13 +137,5 @@ WindowMini::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
 void
 WindowMini::onActionsChanged()
 {
-    ui->love->setChecked( m_actions->m_loveAction->isChecked() );
-    ui->ban->setChecked( m_actions->m_banAction->isChecked() );
-    ui->play->setChecked( m_actions->m_playAction->isChecked() );
-    ui->skip->setChecked( m_actions->m_skipAction->isChecked() );
-
-    ui->love->setEnabled( m_actions->m_loveAction->isEnabled() );
-    ui->ban->setEnabled( m_actions->m_banAction->isEnabled() );
-    ui->play->setEnabled( m_actions->m_playAction->isEnabled() );
-    ui->skip->setEnabled( m_actions->m_skipAction->isEnabled() );
+    ON_ACTIONS_CHANGED()
 }

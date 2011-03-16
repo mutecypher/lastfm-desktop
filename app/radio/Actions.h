@@ -10,7 +10,8 @@ class Actions : public QObject
 public:
     Actions();
 
-    void doConnect( QObject* object );
+    void connectActionChanges( QObject* object );
+    void connectTriggers( QObject* object );
 
     class QAction* m_loveAction;
     class QAction* m_banAction;

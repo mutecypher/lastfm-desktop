@@ -63,7 +63,7 @@ connect( m_actions->m_playAction, SIGNAL(changed()), SLOT(onActionsChanged())); 
 connect( m_actions->m_skipAction, SIGNAL(changed()), SLOT(onActionsChanged())); \
 connect( m_actions->m_banAction, SIGNAL(changed()), SLOT(onActionsChanged())); \
 \
-m_actions->doConnect( this ); \
+m_actions->connectActionChanges( this ); \
 \
 connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) ); \
 connect( radio, SIGNAL(tick(qint64)), SLOT(onRadioTick(qint64))); \
@@ -150,5 +150,29 @@ if ( tagFilter.exec() == QDialog::Accepted ) \
 }
 
 #define ON_EDIT_CLICKED()
+
+#define ON_ACTIONS_CHANGED() \
+ \
+ui->love->setChecked( m_actions->m_loveAction->isChecked() ); \
+ui->ban->setChecked( m_actions->m_banAction->isChecked() ); \
+ui->play->setChecked( m_actions->m_playAction->isChecked() ); \
+ui->skip->setChecked( m_actions->m_skipAction->isChecked() ); \
+ \
+ui->love->setEnabled( m_actions->m_loveAction->isEnabled() ); \
+ui->ban->setEnabled( m_actions->m_banAction->isEnabled() ); \
+ui->play->setEnabled( m_actions->m_playAction->isEnabled() ); \
+ui->skip->setEnabled( m_actions->m_skipAction->isEnabled() ); \
+ \
+ui->love->setToolTip( ui->love->isChecked() ? tr("Unlove") : tr("Love") ); \
+ui->ban->setToolTip( tr("Ban") ); \
+ui->info->setToolTip( tr("Info") ); \
+ui->play->setToolTip( ui->play->isChecked() ? tr("Pause") : tr("Play") ); \
+ui->skip->setToolTip( tr("Skip") ); \
+ \
+ui->love->setText( ui->love->isChecked() ? tr("Unlove") : tr("Love") ); \
+ui->ban->setText( tr("Ban") ); \
+ui->info->setText( tr("Info") ); \
+ui->play->setText( ui->play->isChecked() ? tr("Pause") : tr("Play") ); \
+ui->skip->setText( tr("Skip") );
 
 #endif // WINDOWMACRO_H

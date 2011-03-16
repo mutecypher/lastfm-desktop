@@ -3,6 +3,7 @@
 #include <QToolBar>
 #include <QListWidgetItem>
 #include <QMenuBar>
+#include <QProcess>
 
 #include "WindowMacro.h"
 
@@ -27,7 +28,9 @@ WindowMain::WindowMain( Actions& actions ) :
 {
     SETUP()
 
-    //setWindowFlags( Qt::CustomizeWindowHint | Qt::FramelessWindowHint );
+    m_actions->connectTriggers( this );
+
+    connect( ui->info, SIGNAL(clicked()), SLOT(onInfoClicked()));
 
     connect( radio, SIGNAL(error(int,QVariant)), SLOT(onError(int, QVariant)));
     connect( radio, SIGNAL(stopped()), SLOT(onStopped()));
@@ -57,6 +60,11 @@ WindowMain::WindowMain( Actions& actions ) :
     createFriendsStations();
     createNeighboursStations();
 
+    ui->love->setToolTip( ui->love->isChecked() ? tr("Unlove") : tr("Love") );
+    ui->ban->setToolTip( tr("Ban") );
+    ui->info->setToolTip( tr("Info") );
+    ui->play->setToolTip( ui->play->isChecked() ? tr("Pause") : tr("Play") );
+    ui->skip->setToolTip( tr("Skip") );
 
     // always start on the recent tab
     ui->library->click();
@@ -80,15 +88,7 @@ WindowMain::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
 void
 WindowMain::onActionsChanged()
 {
-    ui->love->setChecked( m_actions->m_loveAction->isChecked() );
-    ui->ban->setChecked( m_actions->m_banAction->isChecked() );
-    ui->play->setChecked( m_actions->m_playAction->isChecked() );
-    ui->skip->setChecked( m_actions->m_skipAction->isChecked() );
-
-    ui->love->setEnabled( m_actions->m_loveAction->isEnabled() );
-    ui->ban->setEnabled( m_actions->m_banAction->isEnabled() );
-    ui->play->setEnabled( m_actions->m_playAction->isEnabled() );
-    ui->skip->setEnabled( m_actions->m_skipAction->isEnabled() );
+    ON_ACTIONS_CHANGED()
 }
 
 
@@ -171,6 +171,29 @@ WindowMain::onBanFinished()
 
 
 void
+WindowMain::onInfoClicked()
+{
+#ifdef Q_OS_WIN32
+    AllowSetForegroundWindow(ASFW_ANY);
+#endif
+
+#ifndef Q_OS_MAC
+    QString path = qApp->applicationDirPath() + "/Last.fm Scrobbler";
+#ifdef Q_OS_WIN
+    path += ".exe";
+    path.prepend("\"");
+    path.append("\"");
+#endif
+    QProcess::startDetached( path );
+#else
+    FSRef appRef;
+    LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
+    OSStatus status = LSOpenFSRef( &appRef, NULL );
+#endif
+}
+
+
+void
 WindowMain::onFilterClicked()
 {
     ON_FILTER_CLICKED()
@@ -218,7 +241,11 @@ WindowMain::onError(int error, const QVariant& errorText)
 void
 WindowMain::onStopped()
 {
-    ui->radioTitle->setText( tr("Radio Title") );
+    m_actions->m_playAction->setChecked( false );
+
+    ui->love->setEnabled( false );
+    ui->ban->setEnabled( false );
+    ui->skip->setEnabled( false );
 }
 
 

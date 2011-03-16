@@ -45,17 +45,20 @@ Actions::Actions()
 }
 
 void
-Actions::doConnect( QObject* object )
+Actions::connectTriggers( QObject* object )
 {
     connect( m_loveAction, SIGNAL(triggered(bool)), object, SLOT(onLoveClicked(bool)) );
-    connect( m_loveAction, SIGNAL(changed()), object, SLOT(onActionsChanged()) );
-
     connect( m_banAction, SIGNAL(triggered(bool)), object, SLOT(onBanClicked()) );
-    connect( m_banAction, SIGNAL(changed()), object, SLOT(onActionsChanged()) );
-
     connect( m_playAction, SIGNAL(triggered(bool)), object, SLOT(onPlayClicked(bool)) );
-    connect( m_playAction, SIGNAL(changed()), object, SLOT(onActionsChanged()) );
-
-    connect( m_skipAction, SIGNAL(changed()), object, SLOT(onActionsChanged()) );
     connect( m_skipAction, SIGNAL(triggered(bool)), object, SLOT(onSkipClicked()) );
+}
+
+void
+Actions::connectActionChanges( QObject* object )
+{
+    connect( m_loveAction, SIGNAL(changed()), object, SLOT(onActionsChanged()) );
+    connect( m_banAction, SIGNAL(changed()), object, SLOT(onActionsChanged()) );
+    connect( m_playAction, SIGNAL(changed()), object, SLOT(onActionsChanged()) );
+    connect( m_skipAction, SIGNAL(changed()), object, SLOT(onActionsChanged()) );
+
 }

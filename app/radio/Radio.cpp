@@ -156,7 +156,7 @@ Radio::skip()
         MutableTrack( m_track ).setExtra( "rating", "S" );
     
     // attempt to refill the phonon queue if it's empty
-	if (m_mediaObject->queue().isEmpty())
+    if (m_mediaObject->queue().isEmpty())
         phononEnqueue();
     
 	QList<Phonon::MediaSource> q = m_mediaObject->queue();
@@ -215,17 +215,25 @@ Radio::stop()
 void
 Radio::pause()
 {
-    m_mediaObject->pause();
-    
-    changeState( Paused );
+    Q_ASSERT( m_mediaObject );
+
+    if ( m_mediaObject )
+    {
+        m_mediaObject->pause();
+        changeState( Paused );
+    }
 }
 
 void
 Radio::resume()
 {
-    m_mediaObject->play();
+    Q_ASSERT( m_mediaObject );
 
-    changeState( Playing );
+    if ( m_mediaObject )
+    {
+        m_mediaObject->play();
+        changeState( Playing );
+    }
 }
 
 
@@ -264,30 +272,35 @@ Radio::onPhononStateChanged( Phonon::State newstate, Phonon::State oldstate )
     switch (newstate)
     {
         case Phonon::ErrorState:
-			if (m_mediaObject->errorType() == Phonon::FatalError) {
+            if (m_mediaObject->errorType() == Phonon::FatalError)
+            {
                 qWarning() << "Phonon fatal error:" << m_mediaObject->errorString();
                 emit error( lastfm::ws::UnknownError, QVariant( m_mediaObject->errorString() ));
                 deInitRadio();
                 changeState( Radio::Stopped );
-            } else {
+            }
+            else
+            {
                 // seems we need to clear the error state before trying to play again.
                 m_bErrorRecover = true;
                 m_mediaObject->stop();
             }
             break;
 			
-		case Phonon::PausedState:
-			// if the play queue runs out we get this for some reason
-			// this means we are fetching new tracks still, we should show a 
-			// tuning in state;
-            if (m_mediaObject->queue().size() == 0) {
+        case Phonon::PausedState:
+            // if the play queue runs out we get this for some reason
+            // this means we are fetching new tracks still, we should show a
+            // tuning in state;
+            if (m_mediaObject->queue().size() == 0)
+            {
                 qDebug() << "queue empty, going to TuningIn";
                 changeState( Paused );
             }
-			break;
+            break;
 			
         case Phonon::StoppedState:
-            if (m_bErrorRecover) {
+            if (m_bErrorRecover)
+            {
                 m_bErrorRecover = false;
                 skip();
             }
@@ -297,12 +310,12 @@ Radio::onPhononStateChanged( Phonon::State newstate, Phonon::State oldstate )
             changeState( Buffering );
             break;
 
-		case Phonon::PlayingState:
+        case Phonon::PlayingState:
             changeState( Playing );
             break;
 
-		case Phonon::LoadingState:
-			break;
+        case Phonon::LoadingState:
+            break;
     }
 }
 
@@ -448,30 +461,9 @@ Radio::onVolumeChanged(qreal vol)
 void
 Radio::onFinished()
 {
-    // the play queue has come to a natural end
-#ifdef Q_WS_X11
-    qDebug() << "finished";
-    for(;;)
-    {
-        Track t = m_tuner->takeNextTrack();
-        if (t.isNull()) break;
-
-        // Invalid urls won't trigger the correct phonon
-        // state changes, so we must filter them.
-        if (!t.url().isValid()) continue;
-        
-        m_track = t;
-        Phonon::MediaSource ms( t.url() );
-
-
-        m_mediaObject->clearQueue();
-        m_mediaObject->setCurrentSource( ms );
-        m_mediaObject->play();
-        break;
-    }
-#else
-    qDebug() << ".";
-#endif
+    // A track has finished and there is nothing else in the queue
+    // try to go to the next track
+    skip();
 }
 
 
