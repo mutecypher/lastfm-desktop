@@ -143,7 +143,7 @@ Root: HKLM; Subkey: "Software\Last.fm"; Flags: dontcreatekey uninsdeletekey
 
 [Icons]
 Name: "{group}\Last.fm Radio"; Components: Radio; Filename: "{app}\Last.fm Radio.exe"
-Name: "{group}\Last.fm Audioscrobbler"; Components: Audioscrobbler; Filename: "{app}\Last.fm Scrobbler.exe"
+Name: "{group}\Last.fm Scrobbler"; Components: Audioscrobbler; Filename: "{app}\Last.fm Scrobbler.exe"
 Name: "{commondesktop}\Last.fm Radio"; Filename: "{app}\Last.fm Radio.exe"; Components: Radio; Tasks: desktopicon
 
 ;Uninstall
@@ -156,7 +156,7 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"; Filename
 
 
 [Run]
-Filename: "{app}\Last.fm Scrobbler.exe"; Description: "Last.fm Audioscrbbler"; Flags: nowait postinstall
+Filename: "{app}\Last.fm Scrobbler.exe"; Description: "Last.fm Scrobbler"; Flags: nowait postinstall
 Filename: "{app}\UninsHs.exe"; Parameters: "/r0=LastFM,{language},{srcexe},{app}\Installer.exe"; Flags: runminimized runhidden nowait
 
 [InstallDelete]
