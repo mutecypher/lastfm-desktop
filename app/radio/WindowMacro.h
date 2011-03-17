@@ -24,13 +24,14 @@ if( !track.isNull() && track.source() == Track::LastFmRadio ) \
     ui->album->setText( tr("from %1").arg( track.album() ) ); \
     ui->trackTitle->setText( track.toString() ); \
 \
+    int trackDuration = track.duration(); \
     ui->bar->setMinimum( 0 ); \
-    ui->bar->setMaximum( track.duration() * 1000 ); \
+    ui->bar->setMaximum( trackDuration * 1000 ); \
     ui->bar->setValue( 0 ); \
 \
     QTime t( 0, 0 ); \
     ui->time->setText( t.toString( "mm:ss" )); \
-    t = t.addSecs( track.duration() ); \
+    t = t.addSecs( trackDuration ); \
     ui->timeToGo->setText( t.toString( "-mm:ss" )); \
     ui->time->setVisible( true ); \
     ui->timeToGo->setVisible( true ); \
@@ -99,7 +100,7 @@ else \
 #define SKIP_CLICKED() radio->skip();
 
 #define RADIO_TICK() \
-ui->bar->setValue( tick ); \
+ui->bar->setValue( ui->bar->maximum() < tick ? ui->bar->maximum() : tick ); \
 \
 if( tick > 0 ) \
 { \
@@ -107,7 +108,7 @@ if( tick > 0 ) \
     time = time.addSecs( ( tick / 1000 ) ); \
     ui->time->setText( time.toString( "mm:ss" ) ); \
     QTime timeToGo( 0, 0 ); \
-    timeToGo = timeToGo.addSecs( ( ui->bar->maximum() - tick ) / 1000 ); \
+    timeToGo = timeToGo.addSecs( ui->bar->maximum() < tick ? 0 : ( ui->bar->maximum() - tick ) / 1000 ); \
     ui->timeToGo->setText( timeToGo.toString( "-mm:ss" ) ); \
 }
 
