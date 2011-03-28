@@ -28,8 +28,8 @@ WindowMini::WindowMini( Actions& actions ) :
     ui->play->setToolTip( ui->play->isChecked() ? tr("Pause") : tr("Play") );
     ui->skip->setToolTip( tr("Skip") );
 
-    setFixedSize( 400, minimumHeight() );
-    ui->playbackControls->setFixedWidth( ui->playbackControls->minimumWidth() );
+    setFixedSize( 500, minimumHeight() );
+    //ui->playbackControls->setFixedWidth( ui->playbackControls->minimumWidth() );
 
     ui->context->hide();
 }
@@ -43,79 +43,88 @@ WindowMini::~WindowMini()
 void
 WindowMini::onSpace()
 {
-    SPACE()
+    SPACE();
 }
 
 void
 WindowMini::onPlayClicked( bool checked )
 {
-    PLAY_CLICKED()
+    PLAY_CLICKED();
 }
 
 void
 WindowMini::onSkipClicked()
 {
-    SKIP_CLICKED()
+    SKIP_CLICKED();
 }
 
 void
 WindowMini::onLoveClicked( bool loved )
 {
-    LOVE_CLICKED()
+    LOVE_CLICKED();
 }
 
 void
 WindowMini::onLoveTriggered()
 {
-    LOVE_TRIGGERED()
+    LOVE_TRIGGERED();
 }
 
 void
 WindowMini::onBanClicked()
 {
-    BAN_CLICKED()
+    BAN_CLICKED();
 }
 
 void
 WindowMini::onBanFinished()
 {
-    BAN_FINISHED()
+    BAN_FINISHED();
 }
 
 
 void
 WindowMini::onRadioTick( qint64 tick )
 {
-    RADIO_TICK()
+    RADIO_TICK();
 }
 
 
 void
 WindowMini::onTuningIn( const RadioStation& station )
 {
-    ON_TUNING_IN()
+    ON_TUNING_IN();
 }
 
+void
+WindowMini::onStopped()
+{
+    ON_STOPPED();
+}
 
 void
 WindowMini::onTrackSpooled( const Track& track )
 {
-    TRACK_SPOOLED()
-
-    ui->trackTitle->setText( ui->trackTitle->fontMetrics().elidedText( track.toString(), Qt::ElideRight, ui->detailsMini->width() ) );
+    TRACK_SPOOLED();
 }
 
 void
 WindowMini::onFilterClicked()
 {
-    ON_FILTER_CLICKED()
+    ON_FILTER_CLICKED();
 }
 
 
 void
 WindowMini::onEditClicked()
 {
-    ON_EDIT_CLICKED()
+    ON_EDIT_CLICKED();
+}
+
+void
+WindowMini::onError(int error, const QVariant& errorText)
+{
+    ON_ERROR();
 }
 
 void

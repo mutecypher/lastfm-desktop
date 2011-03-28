@@ -28,6 +28,8 @@ private slots:
     void onRadioTick( qint64 tick );
     void onTuningIn( const RadioStation& station );
     void onTrackSpooled( const Track& track );
+    void onStopped();
+    void onError( int errorCode, const QVariant& errorText );
 
     void onEditClicked();
     void onFilterClicked();

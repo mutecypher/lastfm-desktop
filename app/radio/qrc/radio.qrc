@@ -1,50 +1,70 @@
 <RCC>
     <qresource prefix="/" >
+        <file alias="love-rest.png" >controls-love-off-REST.png</file>
+        <file alias="love-onhover.png" >controls-love-off-HOVER.png</file>
+        <file alias="love-onpress.png" >controls-love-off-PRESS.png</file>
+		<file alias="love-isloved.png" >controls-love-on-REST.png</file>
+		<file alias="love-isloved-onhover.png" >controls-love-on-HOVER.png</file>
+        <file alias="love-isloved-onpress.png" >controls-love-on-PRESS.png</file>
+		<file alias="love-disabled.png" >controls-love-off-DISABLED.png</file>
+		
+		<file alias="ban-rest.png" >controls-ban-REST.png</file>
+        <file alias="ban-onhover.png" >controls-ban-HOVER.png</file>
+        <file alias="ban-onpress.png" >controls-ban-PRESS.png</file>
+		<file alias="ban-disabled.png" >controls-ban-DISABLED.png</file>
+		
+		<file alias="info-rest.png" >controls-info-REST.png</file>
+		<file alias="info-onhover.png" >controls-info-HOVER.png</file>
+		<file alias="info-onpressed.png" >controls-info-PRESS.png</file>
+		<file alias="info-disabled.png" >controls-info-DISABLED.png</file>
+		
+		<file alias="play-rest.png" >controls-play-REST.png</file>
+        <file alias="play-onhover.png" >controls-play-HOVER.png</file>
+        <file alias="play-onpress.png" >controls-play-PRESS.png</file>
+		<file alias="pause-rest.png" >controls-pause-REST.png</file>
+		<file alias="pause-onhover.png" >controls-pause-HOVER.png</file>
+        <file alias="pause-onpress.png" >controls-pause-PRESS.png</file>
+		
+		<file alias="skip-rest.png" >controls-skip-REST.png</file>
+		<file alias="skip-onhover.png" >controls-skip-HOVER.png</file>
+        <file alias="skip-onpress.png" >controls-skip-PRESS.png</file>
+		<file alias="skip-disabled.png" >controls-skip-DISABLED.png</file>
+		
+		<file alias="station-start-rest.png" >play_radio_rest.png</file>
         <file alias="station-start-onhover.png" >play_radio_hover.png</file>
         <file alias="station-start-onpress.png" >play_radio_press.png</file>
-        <file alias="station-start-rest.png" >play_radio_rest.png</file>
-		
-        <file alias="ban-onhover.png" >ban_hover_34x32.png</file>
-        <file alias="ban-onpress.png" >ban_press_34x32.png</file>
-        <file alias="ban-rest.png" >ban_rest_34x32.png</file>
-		<file alias="ban-disabled.png" >ban_disabled_34x32.png</file>
-		
-        <file alias="love-isloved.png" >love_is_loved_36x32.png</file>
-        <file alias="love-onhover.png" >love_hover_36x32.png</file>
-        <file alias="love-onpress.png" >love_press_36x32.png</file>
-		<file alias="love-disabled.png" >love_disabled_36x32.png</file>
-        <file alias="love-rest.png" >love_rest_36x32.png</file>
-		
-        <file alias="play-onhover.png" >play_hover_31x32.png</file>
-        <file alias="play-onpress.png" >play_press_31x32.png</file>
-        <file alias="play-rest.png" >play_rest_31x32.png</file>
 		
 		<file alias="play-radio-large-rest.png" >play_radio_large_rest.png</file>
         <file alias="play-radio-large-onhover.png" >play_radio_large_hover.png</file>
         <file alias="play-radio-large-onpress.png" >play_radio_large_press.png</file>
 		
-        <file alias="pause-onhover.png" >pause_hover_31x32.png</file>
-        <file alias="pause-onpress.png" >pause_press_31x32.png</file>
-        <file alias="pause-rest.png" >pause_rest_31x32.png</file>
-		
-        <file alias="skip-onhover.png" >skip_hover_38x32.png</file>
-        <file alias="skip-onpress.png" >skip_press_38x32.png</file>
-        <file alias="skip-rest.png" >skip_rest_38x32.png</file>
-		<file alias="skip-disabled.png" >skip_disabled_38x32.png</file>
-		
 		<file alias="vol-handle-rest.png" >volume_knob_rest.png</file>
 		<file alias="vol-handle-onpress.png" >volume_knob_active.png</file>
 		<file alias="vol-rail.png" >volume_slot_off.png</file>
-
-		<file alias="info-rest.png" >info_rest_25x32.png</file>
-		<file alias="info-onhover.png" >info_hover_25x32.png</file>
-		<file alias="info-onpressed.png" >info_press_25x32.png</file>
-		
-		<file alias="radio-icon.png" >radio_icon.png</file>
 		
 		<file alias="watermark-fullsize.png" >watermark_fullsize.png</file>
 		<file alias="watermark-minimised.png" >watermark_minimised.png</file>
 		
-		<file alias="volume-full-icon.png" >volume_full_icon.png</file>
+		<file alias="volume-icon.png" >volume-icon.png</file>
+		<file alias="volume-mute.png" >volume_mute.png</file>
+		<file alias="volume-low.png" >volume_low.png</file>
+		<file alias="volume-med.png" >volume_med.png</file>
+		<file alias="volume-high.png" >volume_high.png</file>
+		
+		<file alias="on-tour.png" >on_tour.png</file>
+		
+		<file alias="now-playing.png" >now-playing-REST.png</file>
+		<file alias="now-playing-onpress.png" >now-playing-PRESS.png</file>
+		
+		<file alias="back.png" >back-REST.png</file>
+		<file alias="back-onhover.png" >back-HOVER.png</file>
+		<file alias="back-onpress.png" >back-PRESS.png</file>
+		
+		<file alias="taskbar-love.png" >taskbar-love-OFF-16x16.png</file>
+		<file alias="taskbar-love-on.png" >taskbar-love-ON-16x16.png</file>
+		<file alias="taskbar-ban.png" >taskbar-ban-16x16.png</file>
+		<file alias="taskbar-info.png" >taskbar-info-16x16.png</file>
+		<file alias="taskbar-play.png" >taskbar-play-16x16.png</file>
+		<file alias="taskbar-skip.png" >taskbar-skip-16x16.png</file>
     </qresource>
 </RCC>

@@ -10,8 +10,8 @@ Actions::Actions()
         m_loveAction = new QAction( tr( "Love" ), this );
         m_loveAction->setCheckable( true );
         QIcon loveIcon;
-        loveIcon.addFile( ":/love-isloved.png", QSize(), QIcon::Normal, QIcon::On );
-        loveIcon.addFile( ":/love-rest.png", QSize(), QIcon::Normal, QIcon::Off );
+        loveIcon.addFile( ":/taskbar-love-on.png", QSize(), QIcon::Normal, QIcon::On );
+        loveIcon.addFile( ":/taskbar-love.png", QSize(), QIcon::Normal, QIcon::Off );
         m_loveAction->setIcon( loveIcon );
 
         m_loveAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ) );
@@ -19,7 +19,7 @@ Actions::Actions()
     {
         m_banAction = new QAction( tr( "Ban" ), this );
         QIcon banIcon;
-        banIcon.addFile( ":/ban-rest.png" );
+        banIcon.addFile( ":/taskbar-ban.png" );
         m_banAction->setIcon( banIcon );
 
         m_banAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_B ) );
@@ -28,8 +28,8 @@ Actions::Actions()
         m_playAction = new QAction( tr( "Play" ), this );
         m_playAction->setCheckable( true );
         QIcon playIcon;
-        playIcon.addFile( ":/pause-rest.png", QSize(), QIcon::Normal, QIcon::On );
-        playIcon.addFile( ":/play-rest.png", QSize(), QIcon::Normal, QIcon::Off );
+        playIcon.addFile( ":/taskbar-pause.png", QSize(), QIcon::Normal, QIcon::On );
+        playIcon.addFile( ":/taskbar-play.png", QSize(), QIcon::Normal, QIcon::Off );
         m_playAction->setIcon( playIcon );
 
         m_playAction->setShortcut( QKeySequence(Qt::Key_Space) );
@@ -37,7 +37,7 @@ Actions::Actions()
     {
         m_skipAction = new QAction( tr( "Skip" ), this );
         QIcon skipIcon;
-        skipIcon.addFile( ":/skip-rest.png" );
+        skipIcon.addFile( ":/taskbar-skip.png" );
         m_skipAction->setIcon( skipIcon );
 
         m_skipAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Right ) );

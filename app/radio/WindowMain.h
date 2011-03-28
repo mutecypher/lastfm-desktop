@@ -27,12 +27,18 @@ private slots:
     void onError( int error , const QVariant& errorData );
     void onStopped();
 
+    void onGotRecentStations();
+    void onGotEvents();
+
     void onLoveClicked( bool loved );
     void onLoveTriggered();
     void onBanClicked();
     void onBanFinished();
     void onSkipClicked();
     void onInfoClicked();
+
+    void onBackClicked();
+    void onNowPlayingClicked();
 
     void onStationEditTextChanged( const QString& text );
 
@@ -41,32 +47,12 @@ private slots:
 
     void onActionsChanged();
 
-    void onRecentClicked();
-    void onLibraryClicked();
-    void onMixClicked();
-    void onRecommendedClicked();
-    void onFriendsClicked();
-    void onNeighboursClicked();
-
-    void onGotRecentStations();
-    void onGotLibraryArtists();
-    void onGotMixArtists();
-    void onGotRecommendedArtists();
-    void onGotFriendsListeningNow();
-    void onGotNeighbours();
-
     void onSwitch();
 
     void onSpace();
 
 private:
     void addWinThumbBarButtons( QList<QAction*>& );
-
-    void createLibraryStations();
-    void createMixStations();
-    void createRecommendedStations();
-    void createFriendsStations();
-    void createNeighboursStations();
 
 private:
     Ui::WindowMain* ui;

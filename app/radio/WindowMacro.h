@@ -20,9 +20,17 @@ if( !track.isNull() && track.source() == Track::LastFmRadio ) \
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool))); \
 \
     ui->play->setChecked( true ); \
+\
+    ui->trackTitle->setText( QString( "%1 %2 %3" ).arg( \
+    Label::anchor( track.artist().www().toString(), track.artist().name()), \
+    QChar( 0x2013 ), \
+    Label::anchor( track.www().toString(), track.title()) ) ); \
+    \
+    ui->album->setText( QString( "from %1" ).arg( Label::anchor( track.album().www().toString(), track.album().title() ) ) ); \
+\
     ui->radioTitle->setText( radio->station().title() ); \
-    ui->album->setText( tr("from %1").arg( track.album() ) ); \
-    ui->trackTitle->setText( track.toString() ); \
+\
+    setWindowTitle( QString( "Last.fm Radio - %1 - %2" ).arg( radio->station().title(), track.toString() ) ); \
 \
     int trackDuration = track.duration(); \
     ui->bar->setMinimum( 0 ); \
@@ -68,6 +76,13 @@ m_actions->connectActionChanges( this ); \
 \
 connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) ); \
 connect( radio, SIGNAL(tick(qint64)), SLOT(onRadioTick(qint64))); \
+connect( radio, SIGNAL(stopped()), SLOT(onStopped())); \
+connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation))); \
+connect( radio, SIGNAL(error(int,QVariant)), SLOT(onError(int, QVariant))); \
+\
+ui->trackTitle->setOpenExternalLinks( true); \
+ui->album->setOpenExternalLinks( true); \
+ui->context->setOpenExternalLinks( true); \
 \
 ui->volumeSlider->setAudioOutput( radio->audioOutput() ); \
 ui->volumeSlider->setMuteVisible( false ); \
@@ -81,7 +96,9 @@ ui->radioTitle->setText( tr("Tuning %1").arg( station.title() ) ); \
 ui->play->setChecked( true ); \
 m_actions->m_playAction->setChecked( true ); \
 ui->album->setText( radio->currentTrack().isNull() ? "" : tr("from %1").arg( radio->currentTrack().album() ) ); \
-ui->trackTitle->setText( radio->currentTrack().isNull() ? "" : radio->currentTrack().toString() );
+ui->trackTitle->setText( radio->currentTrack().isNull() ? "" : radio->currentTrack().toString() ); \
+\
+setWindowTitle( QString( "Last.fm Radio - %1" ).arg( station.title() ) );
 
 #define SPACE() \
 m_actions->m_playAction->trigger();
@@ -92,10 +109,16 @@ if ( checked ) \
     if ( radio->state() == Radio::Stopped ) \
         radio->play( RadioStation( "" ) ); \
     else \
+    { \
         radio->resume(); \
+        setWindowTitle( QString( "Last.fm Radio - %1 - %2" ).arg( radio->station().title(), radio->currentTrack().toString() ) ); \
+    } \
 } \
 else \
-    radio->pause();
+{ \
+    radio->pause(); \
+    setWindowTitle( QString( "Last.fm Radio - %1" ).arg( radio->station().title() ) ); \
+}
 
 #define SKIP_CLICKED() radio->skip();
 
@@ -175,5 +198,20 @@ ui->ban->setText( tr("Ban") ); \
 ui->info->setText( tr("Info") ); \
 ui->play->setText( ui->play->isChecked() ? tr("Pause") : tr("Play") ); \
 ui->skip->setText( tr("Skip") );
+
+#define ON_STOPPED() \
+m_actions->m_playAction->setChecked( false ); \
+ \
+ui->love->setEnabled( false ); \
+ui->ban->setEnabled( false ); \
+ui->skip->setEnabled( false ); \
+ \
+ui->trackTitle->clear(); \
+ui->album->clear(); \
+ \
+setWindowTitle( "Last.fm Radio" );
+
+#define ON_ERROR() \
+ui->radioTitle->setText( errorText.toString() + ": " + QString::number(error) );
 
 #endif // WINDOWMACRO_H

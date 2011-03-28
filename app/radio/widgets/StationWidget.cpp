@@ -9,8 +9,9 @@ StationWidget::StationWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect( ui->treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*, int)), SLOT(onItemClicked(QTreeWidgetItem*, int)));
+    connect( ui->treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), SLOT(onItemDoubleClicked(QTreeWidgetItem*, int)));
     connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)) );
+    connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)));
 
     resizeEvent( 0 );
 }
@@ -23,16 +24,15 @@ StationWidget::~StationWidget()
 
 
 QTreeWidgetItem*
-StationWidget::createItem( const RadioStation& station )
+StationWidget::createItem( const RadioStation& station, const QString& description )
 {
     QIcon icon;
-    icon.addFile(";/station-start-rest.png", QSize(17, 17), QIcon::Normal);
-    icon.addFile(":/station-start-onhover.png", QSize(17, 17), QIcon::Active);
-    icon.addFile(":/station-start-onpress.png", QSize(17, 17), QIcon::Selected);
+    icon.addFile(";/station-start-rest.png", QSize(17, 17), QIcon::Normal, QIcon::On);
+    icon.addFile(":/station-start-onpress.png", QSize(17, 17), QIcon::Normal, QIcon::Off);
 
     QStringList columns;
     columns << station.title();
-    columns << "Context";
+    columns << description;
     QTreeWidgetItem* item = new QTreeWidgetItem( columns );
     item->setData( 0, Qt::UserRole, station.title());
     item->setData( 0, Qt::UserRole + 1, station.url());
@@ -43,9 +43,9 @@ StationWidget::createItem( const RadioStation& station )
 
 
 void
-StationWidget::addStation( const RadioStation& station )
+StationWidget::addStation( const RadioStation& station, const QString& description )
 {
-    ui->treeWidget->addTopLevelItem( createItem( station ) );
+    ui->treeWidget->addTopLevelItem( createItem( station, description ) );
 }
 
 
@@ -58,49 +58,86 @@ StationWidget::recentStation( const RadioStation& station )
     if ( station.title().isEmpty() )
         return;
 
+    QTreeWidgetItem* item = 0;
+
+    QTreeWidgetItemIterator it( ui->treeWidget );
+    while (*it)
+    {
+        if ( (*it)->data( 0, Qt::UserRole ) == station.title() )
+        {
+            item = *it;
+            break;
+        }
+
+        ++it;
+    }
+
     QList<QTreeWidgetItem*> items = ui->treeWidget->findItems( station.title(), Qt::MatchExactly, 0 );
 
-    if ( items.count() == 0 )
+    if ( item )
+    {
+        // Found so move it to the begninning
+        ui->treeWidget->insertTopLevelItem( 0, ui->treeWidget->takeTopLevelItem( ui->treeWidget->indexOfTopLevelItem( item ) ) );
+    }
+    else
     {
         // not found so add to the beginning and remove the last element
-        ui->treeWidget->insertTopLevelItem( 0, createItem( station ) );
+        ui->treeWidget->insertTopLevelItem( 0, createItem( station, "" ) );
 
         while ( ui->treeWidget->topLevelItemCount() > 20 )
             ui->treeWidget->takeTopLevelItem( ui->treeWidget->topLevelItemCount() - 1 );
     }
-    else
-    {
-        // Found so move it to the begninning
-        ui->treeWidget->insertTopLevelItem( 0, ui->treeWidget->takeTopLevelItem( ui->treeWidget->indexOfTopLevelItem( items[0] ) ) );
-    }
 
-    ui->treeWidget->setCurrentItem( ui->treeWidget->topLevelItem( 0 ) );
+    onTuningIn( station );
+}
+
+
+void
+StationWidget::onTrackSpooled( const Track& /*track*/ )
+{
+    onTuningIn( radio->station() );
 }
 
 
 void
 StationWidget::onTuningIn( const RadioStation& station )
-{
-    QList<QTreeWidgetItem*> items = ui->treeWidget->findItems( station.title(), Qt::MatchExactly, 0 );
+{   
+    // Disable items with the same station url
+    QTreeWidgetItemIterator it( ui->treeWidget );
+    while (*it)
+    {
+        if ( (*it)->data( 0, Qt::UserRole ) == station.title() )
+            (*it)->setFlags( (*it)->flags() & ~Qt::ItemIsEnabled );
+        else
+            (*it)->setFlags( (*it)->flags() | Qt::ItemIsEnabled );
 
-    if ( items.count() == 0 )
-        ui->treeWidget->setCurrentItem( 0 );
-    else
-        ui->treeWidget->setCurrentItem( items[0] );
+        ++it;
+    }
 }
 
 
 void
-StationWidget::onItemClicked( QTreeWidgetItem* item, int column )
+StationWidget::onItemDoubleClicked( QTreeWidgetItem* item, int column )
 {
-    RadioStation station( item->data( column, Qt::UserRole + 1 ).toString() );
-    station.setTitle( item->data( column, Qt::UserRole ).toString() );
-    radio->play( station );
+    if ( column == 0 && ( item->flags() & Qt::ItemIsEnabled ) )
+    {
+        // Enable all items
+        QTreeWidgetItemIterator it( ui->treeWidget );
+        while (*it)
+            (*it++)->setFlags( item->flags() | Qt::ItemIsEnabled );
+
+        // disable the selected item
+        item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
+
+        RadioStation station( item->data( column, Qt::UserRole + 1 ).toString() );
+        station.setTitle( item->data( column, Qt::UserRole ).toString() );
+        radio->play( station );
+    }
 }
 
 
 void
 StationWidget::resizeEvent( QResizeEvent * event )
 {
-    ui->treeWidget->setColumnWidth( 0, (width() * 7) / 10 );
+    ui->treeWidget->setColumnWidth( 0, (width() * 4) / 10 );
 }

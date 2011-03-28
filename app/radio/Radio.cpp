@@ -159,27 +159,28 @@ Radio::skip()
     if (m_mediaObject->queue().isEmpty())
         phononEnqueue();
     
-	QList<Phonon::MediaSource> q = m_mediaObject->queue();
+    QList<Phonon::MediaSource> q = m_mediaObject->queue();
+
     if (q.size())
-	{
-		Phonon::MediaSource source = q.takeFirst();
+    {
+        Phonon::MediaSource source = q.takeFirst();
 #ifdef Q_WS_X11
         m_mediaObject->clearQueue();
 #else
         m_mediaObject->setQueue( q );
 #endif
-		m_mediaObject->setCurrentSource( source );
-		m_mediaObject->play();
-	}
+        m_mediaObject->setCurrentSource( source );
+        m_mediaObject->play();
+    }
     else if (m_state != Stopped)
     {
         qDebug() << "queue empty";
-	    // we are still waiting for a playlist to come back from the tuner
-	    m_mediaObject->blockSignals( true );    //don't tell outside world that we stopped
-	    m_mediaObject->stop();
-	    m_mediaObject->setCurrentSource( QUrl() );
-	    m_mediaObject->blockSignals( false );
-	    changeState( TuningIn );
+        // we are still waiting for a playlist to come back from the tuner
+        m_mediaObject->blockSignals( true );    //don't tell outside world that we stopped
+        m_mediaObject->stop();
+        m_mediaObject->setCurrentSource( QUrl() );
+        m_mediaObject->blockSignals( false );
+        changeState( TuningIn );
     }
 }
 

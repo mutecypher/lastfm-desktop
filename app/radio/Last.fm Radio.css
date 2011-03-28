@@ -30,6 +30,8 @@ Phonon--VolumeSlider  QSlider::handle:horizontal:pressed {
     background-image: url(:/vol-handle-onpress.png);
 }
 
+
+
 QPushButton {
     color: transparent;
     background-color: transparent;
@@ -37,12 +39,19 @@ QPushButton {
     background-repeat: no-repeat;
     border: none;
     margin: 0px 0px;
-	height: 32px;
+	min-width: 0px;
+	padding: 0px;
+}
+
+#playbackControls QPushButton {
+	min-height: 42px;
+	min-width: 42px;
+	max-height: 42px;
+	max-width: 42px;
 }
 
 #playbackControls QPushButton#ban {
     background-image: url(:/ban-rest.png);
-	width: 34px;
 }
 
 #playbackControls QPushButton#ban:hover {
@@ -59,7 +68,6 @@ QPushButton {
 
 #playbackControls QPushButton#play {
     background-image: url(:/play-rest.png);
-	width: 31px;
 }
 
 #playbackControls QPushButton#play:hover {
@@ -84,7 +92,6 @@ QPushButton {
 
 #playbackControls QPushButton#skip {
     background-image: url(:/skip-rest.png);
-	width: 38px;
 }
 
 #playbackControls QPushButton#skip:hover {
@@ -101,7 +108,6 @@ QPushButton {
 
 #playbackControls QPushButton#info {
     background-image: url(:/info-rest.png);
-	width: 25px;
 }
 
 #playbackControls QPushButton#info:hover {
@@ -128,6 +134,47 @@ QPushButton#start:pressed {
 
 QPushButton#start:disabled {
     background-image: url(:/play-radio-large-onpress.png);
+}
+
+QPushButton#back {
+	background-image: url(:/back.png);
+	min-width: 37px;
+	min-height: 23px;
+}
+
+QPushButton#back:hover {
+	background-image: url(:/back-onhover.png);
+}
+
+QPushButton#back:pressed {
+	background-image: url(:/back-onpress.png);
+}
+
+QPushButton#nowPlaying {
+	background-image: url(:/now-playing.png);
+	width: 96px;
+	height: 23px;
+}
+
+QPushButton#nowPlaying:pressed {
+	background-image: url(:/now-playing-onpress.png);
+}
+
+QLabel#onTour {
+	background-color: #d71007;
+	color: white;
+	border-radius: 3px;
+	text-align: center;
+	font: 9px;
+	padding: 1px;
+	border: none;
+	margin: 0px;
+	max-height: 11px;
+}
+
+GhostWidget {
+    color: transparent;
+    background-color: transparent;
 }
 
 PlayableItemWidget {
@@ -162,6 +209,11 @@ background-image: url(:/vol-right.png);
 #controlFrame {
 	border-top: 1px solid #B3B5B4;
 }
+
+#details {
+	min-height: 80px;
+	max-height: 80px;
+}
 	
 #details,
 #detailsMini {
@@ -183,16 +235,16 @@ background-image: url(:/vol-right.png);
 }
 
 QProgressBar {
-	background-color: #718087;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(91, 105, 128, 191), stop:1 rgba(75, 87, 107, 191));;
 	border: none;
 	border-radius: 0px;
 	height: 1px;
 	min-height: 5px;
-	margin: 5px 0px;
+	margin: 6px 0px 5px;
 }
 
 QProgressBar::chunk {
-    background-color: #B8D7DC;
+    background-color: rgba( 255, 255, 255, 25 );
  }
  
 
@@ -220,7 +272,7 @@ QTreeView::item:focus::text {
 QTreeView::item:pressed  {
 }
 
-QTreeView::item:selected {
+QTreeView::item:disabled {
 	background-color: #FFFCCA;
 }
 
@@ -268,7 +320,7 @@ QRadioButton::indicator:checked:pressed {
 }
 
 #volumeBars {
-	qproperty-pixmap: url(:/volume-full-icon.png);
+	qproperty-pixmap: url(:/volume-high.png);
 	padding-bottom: 2px;
 }
 
