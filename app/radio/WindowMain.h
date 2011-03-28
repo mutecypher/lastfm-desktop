@@ -20,7 +20,6 @@ signals:
 
 private slots:
     void onStartClicked();
-    void onPlayClicked( bool checked );
     void onRadioTick( qint64 tick );
     void onTrackSpooled( const Track& track );
     void onTuningIn( const RadioStation& station );
@@ -31,11 +30,13 @@ private slots:
     void onGotEvents();
 
     void onLoveClicked( bool loved );
-    void onLoveTriggered();
+    void onLoveTriggered( bool loved );
     void onBanClicked();
     void onBanFinished();
     void onSkipClicked();
     void onInfoClicked();
+    void onPlayClicked( bool checked );
+    void onPlayTriggered( bool checked );
 
     void onBackClicked();
     void onNowPlayingClicked();

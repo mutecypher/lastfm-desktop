@@ -1,4 +1,5 @@
 
+#include <QProcess>
 #include <QShortcut>
 #include <QStatusBar>
 #include <QToolBar>
@@ -20,17 +21,9 @@ WindowMini::WindowMini( Actions& actions ) :
     ui(new Ui::WindowMini),
     m_actions( &actions )
 {
-    SETUP()
-
-    ui->love->setToolTip( ui->love->isChecked() ? tr("Unlove") : tr("Love") );
-    ui->ban->setToolTip( tr("Ban") );
-    ui->info->setToolTip( tr("Info") );
-    ui->play->setToolTip( ui->play->isChecked() ? tr("Pause") : tr("Play") );
-    ui->skip->setToolTip( tr("Skip") );
+    SETUP();
 
     setFixedSize( 500, minimumHeight() );
-    //ui->playbackControls->setFixedWidth( ui->playbackControls->minimumWidth() );
-
     ui->context->hide();
 }
 
@@ -53,6 +46,12 @@ WindowMini::onPlayClicked( bool checked )
 }
 
 void
+WindowMini::onPlayTriggered( bool checked )
+{
+    PLAY_TRIGGERED();
+}
+
+void
 WindowMini::onSkipClicked()
 {
     SKIP_CLICKED();
@@ -65,7 +64,7 @@ WindowMini::onLoveClicked( bool loved )
 }
 
 void
-WindowMini::onLoveTriggered()
+WindowMini::onLoveTriggered( bool loved )
 {
     LOVE_TRIGGERED();
 }
@@ -128,6 +127,28 @@ WindowMini::onError(int error, const QVariant& errorText)
 }
 
 void
+WindowMini::onInfoClicked()
+{
+#ifdef Q_OS_WIN32
+    AllowSetForegroundWindow(ASFW_ANY);
+#endif
+
+#ifndef Q_OS_MAC
+    QString path = qApp->applicationDirPath() + "/Last.fm Scrobbler";
+#ifdef Q_OS_WIN
+    path += ".exe";
+    path.prepend("\"");
+    path.append("\"");
+#endif
+    QProcess::startDetached( path );
+#else
+    FSRef appRef;
+    LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
+    OSStatus status = LSOpenFSRef( &appRef, NULL );
+#endif
+}
+
+void
 WindowMini::onSwitch()
 {
     emit aboutToHide();
@@ -147,4 +168,10 @@ void
 WindowMini::onActionsChanged()
 {
     ON_ACTIONS_CHANGED()
+}
+
+void
+WindowMini::onGotEvents()
+{
+    GOT_EVENTS();
 }

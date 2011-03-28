@@ -60,5 +60,4 @@ Actions::connectActionChanges( QObject* object )
     connect( m_banAction, SIGNAL(changed()), object, SLOT(onActionsChanged()) );
     connect( m_playAction, SIGNAL(changed()), object, SLOT(onActionsChanged()) );
     connect( m_skipAction, SIGNAL(changed()), object, SLOT(onActionsChanged()) );
-
 }

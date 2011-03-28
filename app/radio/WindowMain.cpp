@@ -30,16 +30,12 @@ WindowMain::WindowMain( Actions& actions ) :
 
     m_actions->connectTriggers( this );
 
-    connect( ui->info, SIGNAL(clicked()), SLOT(onInfoClicked()));
-
     ui->stationEdit->setHelpText( tr("Type an artist or tag and press play") );
     ui->stationEdit->setAttribute( Qt::WA_MacShowFocusRect, false );
 
     connect( ui->start, SIGNAL(clicked()), SLOT(onStartClicked()));
     connect( ui->stationEdit, SIGNAL(returnPressed()), ui->start, SLOT(click()));
     connect( ui->stationEdit, SIGNAL(textChanged(QString)), SLOT(onStationEditTextChanged(QString)));
-
-    ui->onTour->hide();
 
     // fetch the recent radio stations
     lastfm::User currentUser;
@@ -63,13 +59,7 @@ WindowMain::WindowMain( Actions& actions ) :
     neighbourhood.setTitle( tr( "My Neighbours%1 Radio" ).arg( QChar( 0x2019 ) ) );
     ui->stations->addStation( neighbourhood, tr("Music from listeners like you") );
 
-    connect( currentUser.getRecentStations( 20 ), SIGNAL(finished()), SLOT(onGotRecentStations()));
-
-    ui->love->setToolTip( ui->love->isChecked() ? tr("Unlove") : tr("Love") );
-    ui->ban->setToolTip( tr("Ban") );
-    ui->info->setToolTip( tr("Info") );
-    ui->play->setToolTip( ui->play->isChecked() ? tr("Pause") : tr("Play") );
-    ui->skip->setToolTip( tr("Skip") );
+    connect( currentUser.getRecentStations( 10 ), SIGNAL(finished()), SLOT(onGotRecentStations()));
 
     connect( ui->back, SIGNAL(clicked()), SLOT(onBackClicked()) );
     ui->backGhost->setOrigin( ui->back );
@@ -162,10 +152,18 @@ WindowMain::onPlayClicked( bool checked )
 
 
 void
+WindowMain::onPlayTriggered( bool checked )
+{
+    PLAY_TRIGGERED();
+}
+
+
+void
 WindowMain::onSkipClicked()
 {
     SKIP_CLICKED();
 }
+
 
 void
 WindowMain::onLoveClicked( bool loved )
@@ -174,7 +172,7 @@ WindowMain::onLoveClicked( bool loved )
 }
 
 void
-WindowMain::onLoveTriggered()
+WindowMain::onLoveTriggered( bool loved )
 {
     LOVE_TRIGGERED();
 }
@@ -300,9 +298,6 @@ WindowMain::onTrackSpooled( const Track& track )
     }
     else
         ui->context->clear();
-
-    ui->onTour->hide();
-    connect( track.artist().getEvents( 1 ), SIGNAL(finished()), SLOT(onGotEvents()) ) ;
 }
 
 
@@ -333,7 +328,7 @@ WindowMain::onGotRecentStations()
 {
     lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
 
-    foreach ( const lastfm::XmlQuery& station , lfm.children("station").mid( 0, 20 ) )
+    foreach ( const lastfm::XmlQuery& station , lfm["recentstations"].children("station").mid( 0, 20 ) )
     {
         if ( ! (station["url"].text().contains("user/" + lastfm::ws::Username + "/") &&
              !station["url"].text().contains("/tag/") ) )
@@ -348,14 +343,6 @@ WindowMain::onGotRecentStations()
 void
 WindowMain::onGotEvents()
 {
-    XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
-
-    if ( lfm["events"].children("event").count() > 0
-         && lfm["events"].attribute("artist") == radio->currentTrack().artist() )
-    {
-        ui->onTour->show();
-        ui->onTour->setOpenExternalLinks( true );
-        ui->onTour->setText( Label::anchor( radio->currentTrack().artist().www().toString(), tr( "ON TOUR" ) ) );
-    }
+    GOT_EVENTS();
 }
 

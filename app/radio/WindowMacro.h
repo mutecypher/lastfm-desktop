@@ -18,8 +18,11 @@ if( !track.isNull() && track.source() == Track::LastFmRadio ) \
     connect( qApp, SIGNAL(busLovedStateChanged(bool)), ui->love, SLOT(setChecked(bool)) ); \
     connect( ui->love, SIGNAL(clicked(bool)), qApp, SLOT(sendBusLovedStateChanged(bool)) ); \
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool))); \
+    connect( ui->info, SIGNAL(clicked()), SLOT(onInfoClicked())); \
 \
     ui->play->setChecked( true ); \
+\
+    ui->onTour->hide(); \
 \
     ui->trackTitle->setText( QString( "%1 %2 %3" ).arg( \
     Label::anchor( track.artist().www().toString(), track.artist().name()), \
@@ -53,7 +56,10 @@ else \
 \
     ui->time->setHidden( true ); \
     ui->timeToGo->setHidden( true ); \
-}
+} \
+\
+ui->onTour->hide(); \
+connect( track.artist().getEvents( 1 ), SIGNAL(finished()), SLOT(onGotEvents()) ) ;
 
 #define SETUP() \
 ui->setupUi(this); \
@@ -71,6 +77,12 @@ connect( m_actions->m_loveAction, SIGNAL(changed()), SLOT(onActionsChanged())); 
 connect( m_actions->m_playAction, SIGNAL(changed()), SLOT(onActionsChanged())); \
 connect( m_actions->m_skipAction, SIGNAL(changed()), SLOT(onActionsChanged())); \
 connect( m_actions->m_banAction, SIGNAL(changed()), SLOT(onActionsChanged())); \
+\
+ui->love->setToolTip( ui->love->isChecked() ? tr("Unlove") : tr("Love") ); \
+ui->ban->setToolTip( tr("Ban") ); \
+ui->info->setToolTip( tr("Info") ); \
+ui->play->setToolTip( ui->play->isChecked() ? tr("Pause") : tr("Play") ); \
+ui->skip->setToolTip( tr("Skip") ); \
 \
 m_actions->connectActionChanges( this ); \
 \
@@ -111,14 +123,22 @@ if ( checked ) \
     else \
     { \
         radio->resume(); \
-        setWindowTitle( QString( "Last.fm Radio - %1 - %2" ).arg( radio->station().title(), radio->currentTrack().toString() ) ); \
     } \
 } \
 else \
 { \
     radio->pause(); \
-    setWindowTitle( QString( "Last.fm Radio - %1" ).arg( radio->station().title() ) ); \
 }
+
+#define PLAY_TRIGGERED() \
+if ( checked ) \
+{ \
+    if ( radio->state() != Radio::Stopped ) \
+        setWindowTitle( QString( "Last.fm Radio - %1 - %2" ).arg( radio->station().title(), radio->currentTrack().toString() ) ); \
+} \
+else \
+    setWindowTitle( QString( "Last.fm Radio - %1" ).arg( radio->station().title() ) );
+
 
 #define SKIP_CLICKED() radio->skip();
 
@@ -213,5 +233,16 @@ setWindowTitle( "Last.fm Radio" );
 
 #define ON_ERROR() \
 ui->radioTitle->setText( errorText.toString() + ": " + QString::number(error) );
+
+#define GOT_EVENTS() \
+XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll(); \
+ \
+if ( lfm["events"].children("event").count() > 0 \
+     && lfm["events"].attribute("artist") == radio->currentTrack().artist() ) \
+{ \
+    ui->onTour->show(); \
+    ui->onTour->setOpenExternalLinks( true ); \
+    ui->onTour->setText( Label::anchor( radio->currentTrack().artist().www().toString(), tr( "ON TOUR" ) ) ); \
+}
 
 #endif // WINDOWMACRO_H
