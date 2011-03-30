@@ -55,7 +55,9 @@ TitleBar::TitleBar( QWidget* parent )
 #ifndef Q_OS_MAC
     layout->addWidget( pb );
 #else
-    layout->addWidget( new GhostWidget( pb, this ) );
+    GhostWidget* gw;
+    layout->addWidget( gw = new GhostWidget( this ) );
+    gw->setOrigin( pb );
 #endif
 }
 
