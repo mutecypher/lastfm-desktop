@@ -20,46 +20,40 @@ signals:
 
 private slots:
     void onStartClicked();
-    void onPlayClicked( bool checked );
     void onRadioTick( qint64 tick );
     void onTrackSpooled( const Track& track );
     void onTuningIn( const RadioStation& station );
     void onError( int error , const QVariant& errorData );
     void onStopped();
 
+    void onGotRecentStations();
+    void onGotEvents();
+
     void onLoveClicked( bool loved );
-    void onLoveTriggered();
+    void onLoveTriggered( bool loved );
     void onBanClicked();
     void onBanFinished();
     void onSkipClicked();
+    void onInfoClicked();
+    void onPlayClicked( bool checked );
+    void onPlayTriggered( bool checked );
+
+    void onBackClicked();
+    void onNowPlayingClicked();
+
+    void onStationEditTextChanged( const QString& text );
 
     void onEditClicked();
     void onFilterClicked();
 
     void onActionsChanged();
 
-    void onRecentClicked();
-    void onLibraryClicked();
-    void onMixClicked();
-    void onRecommendedClicked();
-    void onFriendsClicked();
-    void onNeighboursClicked();
-
-    void onGotRecentStations();
-    void onGotLibraryArtists();
-    void onGotMixArtists();
-    void onGotRecommendedArtists();
-    void onGotFriendsListeningNow();
-    void onGotNeighbours();
-
     void onSwitch();
+
+    void onSpace();
 
 private:
     void addWinThumbBarButtons( QList<QAction*>& );
-
-    void createLibraryStations();
-    void createMixStations();
-    void createRecommendedStations();
 
 private:
     Ui::WindowMain* ui;

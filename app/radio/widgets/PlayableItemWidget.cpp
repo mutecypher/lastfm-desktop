@@ -47,6 +47,8 @@ PlayableItemWidget::init()
         setToolTip( m_rs.title());
     setText( title );
 
+    connect( this, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
+
     connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
     connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
 }

@@ -54,6 +54,7 @@
 #include <QFileInfo>
 #include <QLocale>
 #include <QRegExp>
+#include <QStyle>
 #include <QTimer>
 #include <QTranslator>
 
@@ -376,6 +377,10 @@ unicorn::Application::refreshStyleSheet()
         loadStyleSheet( f );
         pos += rx.matchedLength();
     }
+
+//    QStyle* style = style();
+//    style->set
+//    setStyle( style );
 }
 
 void*

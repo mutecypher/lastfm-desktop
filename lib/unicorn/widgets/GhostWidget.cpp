@@ -2,8 +2,13 @@
 #include <QResizeEvent>
 #include <QDebug>
 
-GhostWidget::GhostWidget( QWidget* origin, QWidget* parent )
-            :StylableWidget( parent )
+GhostWidget::GhostWidget( QWidget* parent )
+    :QWidget( parent )
+{
+}
+
+void
+GhostWidget::setOrigin( QWidget* origin )
 {
     setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
     setFixedSize( origin->sizeHint() );

@@ -178,7 +178,11 @@ ActivityListItem::setText( const QString& text )
 void
 ActivityListItem::resizeEvent(QResizeEvent* )
 {
-    int textAreaWidth = ( width() * 65 ) / 100;
+    int textAreaWidth;
+    if( !ui.timestamp->text().isEmpty())
+        textAreaWidth = ( width() * 65 ) / 100;
+    else
+        textAreaWidth = width();
 
     ui.textArea->setFixedWidth( textAreaWidth );
 

@@ -85,8 +85,7 @@ Radio::play( const RadioStation& station )
         m_state = oldstate;
     }
 
-	delete m_tuner;
-    m_tuner = 0;
+    delete m_tuner;
 
     if (0 == m_audioOutput)  {
         if (!initRadio()) {
@@ -95,7 +94,7 @@ Radio::play( const RadioStation& station )
         }
     }
 
-	m_station = station;
+    m_station = station;
 
     // Make sure the radio station has the radio options from the settings
     bool ok;
@@ -107,7 +106,7 @@ Radio::play( const RadioStation& station )
 
     connect( m_tuner, SIGNAL(title( QString )), SLOT(setStationName( QString )) );
     connect( m_tuner, SIGNAL(supportsDisco( bool )), SLOT(setSupportsDisco( bool )) );
-	connect( m_tuner, SIGNAL(trackAvailable()), SLOT(enqueue()) );
+    connect( m_tuner, SIGNAL(trackAvailable()), SLOT(enqueue()) );
     connect( m_tuner, SIGNAL(error( lastfm::ws::Error )), SLOT(onTunerError( lastfm::ws::Error )) );
 
     changeState( TuningIn );
@@ -157,30 +156,31 @@ Radio::skip()
         MutableTrack( m_track ).setExtra( "rating", "S" );
     
     // attempt to refill the phonon queue if it's empty
-	if (m_mediaObject->queue().isEmpty())
+    if (m_mediaObject->queue().isEmpty())
         phononEnqueue();
     
-	QList<Phonon::MediaSource> q = m_mediaObject->queue();
+    QList<Phonon::MediaSource> q = m_mediaObject->queue();
+
     if (q.size())
-	{
-		Phonon::MediaSource source = q.takeFirst();
+    {
+        Phonon::MediaSource source = q.takeFirst();
 #ifdef Q_WS_X11
         m_mediaObject->clearQueue();
 #else
         m_mediaObject->setQueue( q );
 #endif
-		m_mediaObject->setCurrentSource( source );
-		m_mediaObject->play();
-	}
+        m_mediaObject->setCurrentSource( source );
+        m_mediaObject->play();
+    }
     else if (m_state != Stopped)
     {
         qDebug() << "queue empty";
-	    // we are still waiting for a playlist to come back from the tuner
-	    m_mediaObject->blockSignals( true );    //don't tell outside world that we stopped
-	    m_mediaObject->stop();
-	    m_mediaObject->setCurrentSource( QUrl() );
-	    m_mediaObject->blockSignals( false );
-	    changeState( TuningIn );
+        // we are still waiting for a playlist to come back from the tuner
+        m_mediaObject->blockSignals( true );    //don't tell outside world that we stopped
+        m_mediaObject->stop();
+        m_mediaObject->setCurrentSource( QUrl() );
+        m_mediaObject->blockSignals( false );
+        changeState( TuningIn );
     }
 }
 
@@ -202,9 +202,9 @@ Radio::stop()
     delete m_tuner;
     
     m_mediaObject->blockSignals( true ); //prevent the error state due to setting current source to null
-	m_mediaObject->stop();
-	m_mediaObject->clearQueue();
-	m_mediaObject->setCurrentSource( QUrl() );
+    m_mediaObject->stop();
+    m_mediaObject->clearQueue();
+    m_mediaObject->setCurrentSource( QUrl() );
     m_mediaObject->blockSignals( false );
 
     clear();
@@ -216,17 +216,25 @@ Radio::stop()
 void
 Radio::pause()
 {
-    m_mediaObject->pause();
-    
-    changeState( Paused );
+    Q_ASSERT( m_mediaObject );
+
+    if ( m_mediaObject )
+    {
+        m_mediaObject->pause();
+        changeState( Paused );
+    }
 }
 
 void
 Radio::resume()
 {
-    m_mediaObject->play();
+    Q_ASSERT( m_mediaObject );
 
-    changeState( Playing );
+    if ( m_mediaObject )
+    {
+        m_mediaObject->play();
+        changeState( Playing );
+    }
 }
 
 
@@ -265,30 +273,35 @@ Radio::onPhononStateChanged( Phonon::State newstate, Phonon::State oldstate )
     switch (newstate)
     {
         case Phonon::ErrorState:
-			if (m_mediaObject->errorType() == Phonon::FatalError) {
+            if (m_mediaObject->errorType() == Phonon::FatalError)
+            {
                 qWarning() << "Phonon fatal error:" << m_mediaObject->errorString();
                 emit error( lastfm::ws::UnknownError, QVariant( m_mediaObject->errorString() ));
                 deInitRadio();
                 changeState( Radio::Stopped );
-            } else {
+            }
+            else
+            {
                 // seems we need to clear the error state before trying to play again.
                 m_bErrorRecover = true;
                 m_mediaObject->stop();
             }
             break;
 			
-		case Phonon::PausedState:
-			// if the play queue runs out we get this for some reason
-			// this means we are fetching new tracks still, we should show a 
-			// tuning in state;
-            if (m_mediaObject->queue().size() == 0) {
+        case Phonon::PausedState:
+            // if the play queue runs out we get this for some reason
+            // this means we are fetching new tracks still, we should show a
+            // tuning in state;
+            if (m_mediaObject->queue().size() == 0)
+            {
                 qDebug() << "queue empty, going to TuningIn";
                 changeState( Paused );
             }
-			break;
+            break;
 			
         case Phonon::StoppedState:
-            if (m_bErrorRecover) {
+            if (m_bErrorRecover)
+            {
                 m_bErrorRecover = false;
                 skip();
             }
@@ -298,12 +311,12 @@ Radio::onPhononStateChanged( Phonon::State newstate, Phonon::State oldstate )
             changeState( Buffering );
             break;
 
-		case Phonon::PlayingState:
+        case Phonon::PlayingState:
             changeState( Playing );
             break;
 
-		case Phonon::LoadingState:
-			break;
+        case Phonon::LoadingState:
+            break;
     }
 }
 
@@ -324,7 +337,12 @@ Radio::phononEnqueue()
         // consume next track from the track source. a null track 
         // response means wait until the trackAvailable signal
         Track t = m_tuner->takeNextTrack();
-        if (t.isNull()) break;
+        if (t.isNull())
+        {
+            m_track = t;
+            changeState( TuningIn );
+            break;
+        }
 
         // Invalid urls won't trigger the correct phonon
         // state changes, so we must filter them.
@@ -407,7 +425,7 @@ void
 Radio::setStationName( const QString& s )
 {
     m_station.setTitle( s );
-    //emit tuningIn( m_station );
+    emit tuningIn( m_station );
 }
 
 
@@ -444,30 +462,9 @@ Radio::onVolumeChanged(qreal vol)
 void
 Radio::onFinished()
 {
-    // the play queue has come to a natural end
-#ifdef Q_WS_X11
-    qDebug() << "finished";
-    for(;;)
-    {
-        Track t = m_tuner->takeNextTrack();
-        if (t.isNull()) break;
-
-        // Invalid urls won't trigger the correct phonon
-        // state changes, so we must filter them.
-        if (!t.url().isValid()) continue;
-        
-        m_track = t;
-        Phonon::MediaSource ms( t.url() );
-
-
-        m_mediaObject->clearQueue();
-        m_mediaObject->setCurrentSource( ms );
-        m_mediaObject->play();
-        break;
-    }
-#else
-    qDebug() << ".";
-#endif
+    // A track has finished and there is nothing else in the queue
+    // try to go to the next track
+    skip();
 }
 
 
@@ -524,7 +521,7 @@ Radio::initRadio()
         return false;
     } 
 
-    mediaObject->setTickInterval( 1000 );
+    mediaObject->setTickInterval( 100 );
     connect( mediaObject, SIGNAL(stateChanged( Phonon::State, Phonon::State )), SLOT(onPhononStateChanged( Phonon::State, Phonon::State )) );
     connect( mediaObject, SIGNAL(bufferStatus(int)), SLOT(onBuffering(int)));
     connect( mediaObject, SIGNAL(currentSourceChanged( Phonon::MediaSource )), SLOT(onPhononCurrentSourceChanged( Phonon::MediaSource )) );

@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = radio
+TARGET = "Last.fm Radio"
 VERSION = 2.0.0
 QT = core gui xml network phonon
 CONFIG += lastfm unicorn

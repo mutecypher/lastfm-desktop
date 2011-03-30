@@ -1,5 +1,8 @@
 
+#include <QProcess>
 #include <QShortcut>
+#include <QStatusBar>
+#include <QToolBar>
 
 #include "WindowMacro.h"
 
@@ -18,11 +21,10 @@ WindowMini::WindowMini( Actions& actions ) :
     ui(new Ui::WindowMini),
     m_actions( &actions )
 {
-    SETUP()
+    SETUP();
 
+    setFixedSize( 500, minimumHeight() );
     ui->context->hide();
-
-    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ), this, SLOT(onSwitch()));
 }
 
 WindowMini::~WindowMini()
@@ -30,69 +32,120 @@ WindowMini::~WindowMini()
     delete ui;
 }
 
+
+void
+WindowMini::onSpace()
+{
+    SPACE();
+}
+
 void
 WindowMini::onPlayClicked( bool checked )
 {
-    PLAY_CLICKED()
+    PLAY_CLICKED();
 }
 
+void
+WindowMini::onPlayTriggered( bool checked )
+{
+    PLAY_TRIGGERED();
+}
+
+void
+WindowMini::onSkipClicked()
+{
+    SKIP_CLICKED();
+}
 
 void
 WindowMini::onLoveClicked( bool loved )
 {
-    LOVE_CLICKED()
+    LOVE_CLICKED();
 }
 
 void
-WindowMini::onLoveTriggered()
+WindowMini::onLoveTriggered( bool loved )
 {
-    LOVE_TRIGGERED()
+    LOVE_TRIGGERED();
 }
 
 void
 WindowMini::onBanClicked()
 {
-    BAN_CLICKED()
+    BAN_CLICKED();
 }
 
 void
 WindowMini::onBanFinished()
 {
-    BAN_FINISHED()
+    BAN_FINISHED();
 }
 
 
 void
 WindowMini::onRadioTick( qint64 tick )
 {
-    RADIO_TICK()
+    RADIO_TICK();
 }
 
 
 void
 WindowMini::onTuningIn( const RadioStation& station )
 {
-    ON_TUNING_IN()
+    ON_TUNING_IN();
 }
 
+void
+WindowMini::onStopped()
+{
+    ON_STOPPED();
+}
 
 void
 WindowMini::onTrackSpooled( const Track& track )
 {
-    TRACK_SPOOLED()
+    TRACK_SPOOLED();
 }
 
 void
 WindowMini::onFilterClicked()
 {
-    ON_FILTER_CLICKED()
+    ON_FILTER_CLICKED();
 }
 
 
 void
 WindowMini::onEditClicked()
 {
-    ON_EDIT_CLICKED()
+    ON_EDIT_CLICKED();
+}
+
+void
+WindowMini::onError(int error, const QVariant& errorText)
+{
+    ON_ERROR();
+}
+
+void
+WindowMini::onInfoClicked()
+{
+#ifdef Q_OS_WIN32
+    AllowSetForegroundWindow(ASFW_ANY);
+#endif
+
+#ifndef Q_OS_MAC
+    QString path = qApp->applicationDirPath() + "/Last.fm Scrobbler";
+#ifdef Q_OS_WIN
+    path += ".exe";
+    path.prepend("\"");
+    path.append("\"");
+#endif
+    QProcess::startDetached( path );
+#else
+    FSRef appRef;
+    LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
+    OSStatus status = LSOpenFSRef( &appRef, NULL );
+#endif
 }
 
 void
@@ -114,8 +167,11 @@ WindowMini::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
 void
 WindowMini::onActionsChanged()
 {
-    ui->love->setChecked( m_actions->m_loveAction->isChecked() );
-    ui->ban->setChecked( m_actions->m_banAction->isChecked() );
-    ui->play->setChecked( m_actions->m_playAction->isChecked() );
-    ui->skip->setChecked( m_actions->m_skipAction->isChecked() );
+    ON_ACTIONS_CHANGED()
+}
+
+void
+WindowMini::onGotEvents()
+{
+    GOT_EVENTS();
 }
