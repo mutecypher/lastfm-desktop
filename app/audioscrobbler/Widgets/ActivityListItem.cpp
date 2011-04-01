@@ -94,14 +94,22 @@ ActivityListItem::setupUi()
 
     h1->addWidget( ui.love = new QLabel("love") );
     ui.love->setObjectName( "love" );
+    ui.love->setToolTip( tr( "A loved track" ) );
     ui.love->hide();
 
     layout->addWidget( ui.textArea, 1 );
 
-    layout->addStretch( 0 );
+    ui.timestampArea = new QWidget( this );
+    QHBoxLayout* h2 = new QHBoxLayout( ui.timestampArea );
+    h2->setSpacing( 0 );
+    h2->setContentsMargins( 0, 0, 0, 0);
 
-    layout->addWidget( ui.timestamp = new QLabel(), 1 );
+    h2->addStretch( 0 );
+
+    h2->addWidget( ui.timestamp = new QLabel(), 1 );
     ui.timestamp->setObjectName( "timestamp" );
+
+    layout->addWidget( ui.timestampArea, 1 );
 }
 
 

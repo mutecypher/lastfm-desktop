@@ -71,6 +71,7 @@ protected:
     {
         class QLabel* as;
         class QWidget* textArea;
+        class QWidget* timestampArea;
         class QLabel* text;
         class QLabel* correction;
         class QLabel* love;

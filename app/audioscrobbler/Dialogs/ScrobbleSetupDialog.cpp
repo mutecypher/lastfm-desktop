@@ -50,6 +50,8 @@ ScrobbleSetupDialog::ScrobbleSetupDialog( QString deviceId, QString deviceName, 
     ui.buttons->addButton( tr("Yes"), QDialogButtonBox::YesRole );
     ui.buttons->addButton( tr("Not now"), QDialogButtonBox::RejectRole );
     ui.buttons->addButton( tr("Never"), QDialogButtonBox::NoRole );
+
+    connect( ui.buttons, SIGNAL(clicked(QAbstractButton*)), SLOT(onClicked(QAbstractButton*)));
 }
 
 void
@@ -61,8 +63,10 @@ ScrobbleSetupDialog::onClicked( QAbstractButton* button )
 
     if ( buttonRole == QDialogButtonBox::RejectRole )
         buttonPressed = IpodDevice::NotNow;
-    else if ( QDialogButtonBox::NoRole )
+    else if ( buttonRole == QDialogButtonBox::NoRole )
         buttonPressed = IpodDevice::Never;
 
     emit clicked( buttonPressed, m_deviceId, m_deviceName, m_iPodFiles );
+
+    done( 0 );
 }

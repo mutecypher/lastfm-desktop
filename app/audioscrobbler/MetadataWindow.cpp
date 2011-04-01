@@ -195,6 +195,10 @@ MetadataWindow::doLayout( ViewMode mode )
     {
         layout->addWidget( ui.titleBar );
         layout->addWidget( ui.nowPlaying );
+        layout->addWidget( ui.scrobbleInfo );
+        QVBoxLayout* nsLayout = new QVBoxLayout( ui.scrobbleInfo );
+        nsLayout->setSpacing( 0 );
+        nsLayout->setContentsMargins( 0, 0, 0, 0 );
         layout->addWidget( ui.statusBar );
 
         onItemClicked( ui.nowPlaying );
@@ -204,10 +208,10 @@ MetadataWindow::doLayout( ViewMode mode )
         ui.splitter->hide();
         ui.tracks->hide();
         ui.recentTracks->hide();
-        ui.scrobbleInfo->hide();
+        ui.scrobbleInfo->show();
         ui.nowPlaying->show();
 
-        resize(20, 20);
+        //resize(20, 20);
     }
 }
 

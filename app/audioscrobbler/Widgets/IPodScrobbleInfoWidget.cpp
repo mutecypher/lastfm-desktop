@@ -27,7 +27,6 @@ IPodScrobbleInfoWidget::IPodScrobbleInfoWidget( const QList<Track>& tracks, QWid
     :StylableWidget( p )
 {
     QVBoxLayout* layout = new QVBoxLayout( this);
-
     QWidget* welcomeBox = new StylableWidget();
     {
         QHBoxLayout* h1 = new QHBoxLayout( welcomeBox );
@@ -41,14 +40,31 @@ IPodScrobbleInfoWidget::IPodScrobbleInfoWidget( const QList<Track>& tracks, QWid
             tr("%1 track from the iPod \"%2\""):
             tr("%1 tracks from the iPod \"%2\""));
 
-        v1->addWidget( ui.title = new QLabel( format.arg( QString::number(tracks.count()), tracks[0].extra("deviceId") ), this ) );
+        v1->addWidget( ui.title = new QLabel( format.arg( QString::number(tracks.count()), tracks[0].extra("deviceId") ) ) );
         ui.title->setObjectName( "title" );
 
         foreach ( const Track& track, tracks )
         {
-            QLabel* trackLabel = new QLabel( track.toString(), this );
-            v1->addWidget( trackLabel );
-            trackLabel->setObjectName("iPodScrobble");
+            // Create a row in the info widget for
+            // each track that was scrobbled
+
+            StylableWidget* row = new StylableWidget( this );
+            row->setObjectName( "iPodInfoTrack" );
+            QHBoxLayout* trackLayout = new QHBoxLayout( row );
+
+            // add things to the layout
+            trackLayout->addWidget( new QLabel( track.toString() ) );
+
+            int playCount = track.extra( "playCount" ).toInt();
+
+            if ( playCount > 0 )
+                trackLayout->addWidget( new QLabel( tr( "(%1x)" ).arg( playCount ) ) );
+
+            trackLayout->addStretch( 1 );
+
+            trackLayout->addWidget( new QLabel( track.timestamp().toString( "d MMM h:mmap" ) ) );
+
+            v1->addLayout( trackLayout );
         }
 
         v1->addStretch( 1 );

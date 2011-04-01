@@ -43,7 +43,9 @@ TitleBar::TitleBar( QWidget* parent )
     pb->setShortcut( Qt::CTRL + Qt::Key_H );
     layout->addWidget( pb );
 #else
-    layout->addWidget( new GhostWidget( pb, this ) );
+    GhostWidget* ghost = new GhostWidget( this );
+    ghost->setOrigin( pb );
+    layout->addWidget( ghost );
 #endif
 
     layout->addStretch( 1 );
@@ -55,7 +57,9 @@ TitleBar::TitleBar( QWidget* parent )
 #ifndef Q_OS_MAC
     layout->addWidget( pb );
 #else
-    layout->addWidget( new GhostWidget( pb, this ) );
+    GhostWidget* ghost = new GhostWidget( this );
+    ghost->setOrigin( pb );
+    layout->addWidget( ghost );
 #endif
 }
 

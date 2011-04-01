@@ -19,8 +19,8 @@
 */
 
 #include "KeyboardSettingsWidget.h"
-#include "AudioscrobblerSettings.h"
-#include "Application.h"
+#include "../AudioscrobblerSettings.h"
+#include "../Application.h"
 
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/UnicornApplication.h"
