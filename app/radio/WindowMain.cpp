@@ -24,6 +24,10 @@
 #include <lastfm/XmlQuery>
 #include <lastfm/User>
 
+#ifdef Q_OS_MAC
+#include "ApplicationServices/ApplicationServices.h"
+#endif
+
 WindowMain::WindowMain( Actions& actions ) :
     unicorn::MainWindow(),
     ui(new Ui::WindowMain),

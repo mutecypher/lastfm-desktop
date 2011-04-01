@@ -16,6 +16,10 @@
 #include "Radio.h"
 #include "Actions.h"
 
+#ifdef Q_OS_MAC
+#include "ApplicationServices/ApplicationServices.h"
+#endif
+
 WindowMini::WindowMini( Actions& actions ) :
         unicorn::MainWindow(),
     ui(new Ui::WindowMini),
