@@ -31,7 +31,7 @@
     #define MOOSE_HKEY  L"Software\\Last.fm\\Last.fm"
     #define MOOSE_PLUGIN_HKEY_A MOOSE_HKEY_A "\\Plugins\\itw"
 #else
-    #define MOOSE_PREFS_PLIST "fm.last.Audioscrobbler"
+    #define MOOSE_PREFS_PLIST "fm.last.scrobbler"
     #include <vector>
     #include <string>
     #include <CoreServices/CoreServices.h>
@@ -110,7 +110,7 @@ namespace Moose
     Moose::twiddlyPath()
     {
         FSRef appRef;
-        LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
+        LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.scrobbler" ), NULL, &appRef, NULL );
         
         char path[PATH_MAX];
         FSRefMakePath( &appRef, (unsigned char*)path, PATH_MAX );

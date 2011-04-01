@@ -170,7 +170,13 @@ Radio::skip()
         m_mediaObject->setQueue( q );
 #endif
         m_mediaObject->setCurrentSource( source );
-        m_mediaObject->play();
+        //if the error returns a 403 permission denied error, the mediaObject is uninitialised
+        if( m_mediaObject )
+            m_mediaObject->play();
+        else {
+            initRadio();
+            play( RadioStation());
+        }
     }
     else if (m_state != Stopped)
     {
@@ -545,6 +551,9 @@ Radio::deInitRadio()
     qDebug() << "deInitRadio";
     // try to deleteLater and phonon crashes. poo.
     // leak em...  :(
+    
+    m_audioOutput->deleteLater();
     m_audioOutput = 0;
+    m_mediaObject->deleteLater();
     m_mediaObject = 0;
 }

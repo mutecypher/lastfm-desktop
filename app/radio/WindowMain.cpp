@@ -1,9 +1,12 @@
-
 #include <QShortcut>
 #include <QToolBar>
 #include <QListWidgetItem>
 #include <QMenuBar>
 #include <QProcess>
+
+#ifdef Q_OS_MAC
+    #include <CoreServices/CoreServices.h>
+#endif
 
 #include "WindowMacro.h"
 
@@ -210,7 +213,7 @@ WindowMain::onInfoClicked()
     QProcess::startDetached( path );
 #else
     FSRef appRef;
-    LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
+    LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.scrobbler" ), NULL, &appRef, NULL );
     OSStatus status = LSOpenFSRef( &appRef, NULL );
 #endif
 }

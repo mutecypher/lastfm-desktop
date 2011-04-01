@@ -47,7 +47,7 @@ Application::init()
 
 #ifdef Q_OS_MAC
     FSRef appRef;
-    LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
+    LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.scrobbler" ), NULL, &appRef, NULL );
 
     AEDesc desc;
     const char* data = "tray";
@@ -64,7 +64,7 @@ Application::init()
     params.argv = args;
 
     AEAddressDesc target;
-    AECreateDesc( typeApplicationBundleID, CFSTR( "fm.last.audioscrobbler" ), 22, &target);
+    AECreateDesc( typeApplicationBundleID, CFSTR( "fm.last.scrobbler" ), 22, &target);
 
     AppleEvent event;
     AECreateAppleEvent ( kCoreEventClass,

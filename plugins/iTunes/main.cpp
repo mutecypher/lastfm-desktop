@@ -177,7 +177,7 @@ static void cleanup()
 static bool isClientInstalled()
 {
 	FSRef appRef;
-	OSStatus status = LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.audioscrobbler" ), NULL, &appRef, NULL );
+	OSStatus status = LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.scrobbler" ), NULL, &appRef, NULL );
 	return status != kLSApplicationNotFoundErr;
 }
 
