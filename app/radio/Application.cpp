@@ -149,8 +149,14 @@ Application::parseArguments( const QStringList& args )
                 break;
 
             case Skip:
+                radio->skip();
+                break;
+
             case Pause:
-                qDebug() << "Unimplemented:" << arg;
+                if ( radio->state() == Radio::Playing )
+                    radio->pause();
+                else if ( radio->state() == Radio::Paused )
+                    radio->resume();
                 break;
 
             case Unknown:
