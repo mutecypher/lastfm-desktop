@@ -17,7 +17,7 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,0">
+   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,1,0">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -25,7 +25,34 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="StationWidget" name="stations" native="true">
+     <widget class="QWidget" name="widget" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QPushButton" name="library">
+         <property name="text">
+          <string>Your Library Radio</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="mix">
+         <property name="text">
+          <string>Your Mix Radio</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="recommended">
+         <property name="text">
+          <string>Your Recommended Radio</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="StationPanelWidget" name="stations" native="true">
       <layout class="QHBoxLayout" name="stationLayout">
        <property name="spacing">
         <number>0</number>
@@ -573,12 +600,6 @@
    <header>lib/unicorn/widgets/HelpTextLineEdit.h</header>
   </customwidget>
   <customwidget>
-   <class>StationWidget</class>
-   <extends>QWidget</extends>
-   <header>widgets/StationWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>Label</class>
    <extends>QLabel</extends>
    <header>lib/unicorn/widgets/label.h</header>
@@ -587,6 +608,12 @@
    <class>GhostWidget</class>
    <extends>QWidget</extends>
    <header>lib/unicorn/widgets/GhostWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>StationPanelWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/StationPanelWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

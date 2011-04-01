@@ -283,6 +283,13 @@ QTreeView::item:focus {
 	border-style: none;
 }
 
+QTreeView::item:selected {
+    background-color: #BFDFF4;
+	color:black;
+	border: none;
+	border-style: none;
+}
+
 #scrollAreaWidgetContents {
 	background-color: #f2f2f2;
 }
@@ -324,3 +331,8 @@ QRadioButton::indicator:checked:pressed {
 	padding-bottom: 2px;
 }
 
+#stationEdit {
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 3px 5px;
+}

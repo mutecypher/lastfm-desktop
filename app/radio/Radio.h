@@ -98,7 +98,7 @@ private slots:
     void enqueue();
     void onPhononStateChanged( Phonon::State, Phonon::State );
     void onPhononCurrentSourceChanged( const Phonon::MediaSource &);
-    void onTunerError( lastfm::ws::Error );
+    void onTunerError( lastfm::ws::Error, const QString& message );
     void phononEnqueue();
     void onBuffering( int );
     void onFinished();

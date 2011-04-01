@@ -44,8 +44,6 @@ if( !track.isNull() && track.source() == Track::LastFmRadio ) \
     ui->time->setText( t.toString( "mm:ss" )); \
     t = t.addSecs( trackDuration ); \
     ui->timeToGo->setText( t.toString( "-mm:ss" )); \
-    ui->time->setVisible( true ); \
-    ui->timeToGo->setVisible( true ); \
 } \
 else \
 { \
@@ -54,8 +52,16 @@ else \
     if( !ui->time->text().isEmpty()) \
         update(); \
 \
-    ui->time->setHidden( true ); \
-    ui->timeToGo->setHidden( true ); \
+    QTime t( 0, 0 ); \
+    ui->time->setText( t.toString( "mm:ss" )); \
+    ui->timeToGo->setText( t.toString( "-mm:ss" )); \
+    \
+    ui->trackTitle->clear(); \
+    ui->album->clear(); \
+    ui->context->clear(); \
+    ui->radioTitle->clear(); \
+    \
+    setWindowTitle( QString( "Last.fm Radio" ) ); \
 } \
 \
 ui->onTour->hide(); \
@@ -98,7 +104,6 @@ ui->context->setOpenExternalLinks( true); \
 \
 ui->volumeSlider->setAudioOutput( radio->audioOutput() ); \
 ui->volumeSlider->setMuteVisible( false ); \
-menuWidget()->hide();\
 \
 new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ), this, SLOT(onSwitch())); \
 new QShortcut( QKeySequence( Qt::Key_Space ), this, SLOT(onSpace()));
@@ -109,6 +114,8 @@ ui->play->setChecked( true ); \
 m_actions->m_playAction->setChecked( true ); \
 ui->album->setText( radio->currentTrack().isNull() ? "" : tr("from %1").arg( radio->currentTrack().album() ) ); \
 ui->trackTitle->setText( radio->currentTrack().isNull() ? "" : radio->currentTrack().toString() ); \
+\
+ui->onTour->hide(); \
 \
 setWindowTitle( QString( "Last.fm Radio - %1" ).arg( station.title() ) );
 
@@ -230,6 +237,7 @@ ui->trackTitle->clear(); \
 ui->album->clear(); \
  \
 setWindowTitle( "Last.fm Radio" );
+
 
 #define ON_ERROR() \
 ui->radioTitle->setText( errorText.toString() + ": " + QString::number(error) );

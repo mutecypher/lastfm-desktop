@@ -29,6 +29,10 @@ private slots:
     void onGotRecentStations();
     void onGotEvents();
 
+    void onLibraryClicked();
+    void onMixClicked();
+    void onRecomendedClicked();
+
     void onLoveClicked( bool loved );
     void onLoveTriggered( bool loved );
     void onBanClicked();

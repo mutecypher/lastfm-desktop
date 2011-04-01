@@ -23,6 +23,8 @@ WindowMini::WindowMini( Actions& actions ) :
 {
     SETUP();
 
+    menuWidget()->hide();
+
     setFixedSize( 500, minimumHeight() );
     ui->context->hide();
 }

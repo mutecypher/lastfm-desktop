@@ -37,35 +37,17 @@ WindowMain::WindowMain( Actions& actions ) :
     connect( ui->stationEdit, SIGNAL(returnPressed()), ui->start, SLOT(click()));
     connect( ui->stationEdit, SIGNAL(textChanged(QString)), SLOT(onStationEditTextChanged(QString)));
 
-    // fetch the recent radio stations
-    lastfm::User currentUser;
-    RadioStation library = RadioStation::library( currentUser );
-    library.setTitle( tr("My Library") );
-    ui->stations->addStation( library, tr("The music you know and love")  );
-
-    RadioStation mix = RadioStation::mix( currentUser );
-    mix.setTitle( tr( "My Mix Radio" ) );
-    ui->stations->addStation( mix, tr("Your library + new music") );
-
-    RadioStation recommendations = RadioStation::recommendations( currentUser );
-    recommendations.setTitle( tr( "My Recomendation Radio" ) );
-    ui->stations->addStation( recommendations, tr("New music from Last.fm") );
-
-    RadioStation friends = RadioStation::friends( currentUser );
-    friends.setTitle( tr( "My Friends%1 Radio" ).arg( QChar( 0x2019 ) ) );
-    ui->stations->addStation( friends, tr("Music your friends like") );
-
-    RadioStation neighbourhood = RadioStation::neighbourhood( currentUser );
-    neighbourhood.setTitle( tr( "My Neighbours%1 Radio" ).arg( QChar( 0x2019 ) ) );
-    ui->stations->addStation( neighbourhood, tr("Music from listeners like you") );
-
-    connect( currentUser.getRecentStations( 10 ), SIGNAL(finished()), SLOT(onGotRecentStations()));
+    connect( ui->library, SIGNAL(clicked()), SLOT(onLibraryClicked()) );
+    connect( ui->mix, SIGNAL(clicked()), SLOT(onMixClicked()) );
+    connect( ui->recommended, SIGNAL(clicked()), SLOT(onRecomendedClicked()) );
 
     connect( ui->back, SIGNAL(clicked()), SLOT(onBackClicked()) );
     ui->backGhost->setOrigin( ui->back );
 
     connect( ui->nowPlaying, SIGNAL(clicked()), SLOT(onNowPlayingClicked()) );
     ui->nowPlayingGhost->setOrigin( ui->nowPlaying );
+
+    ui->nowPlaying->hide();
 
     ui->details->setCurrentWidget( ui->quickstartPage );
 
@@ -80,6 +62,27 @@ WindowMain::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
     thumbButtonActions.append( m_actions->m_banAction );
     thumbButtonActions.append( m_actions->m_playAction );
     thumbButtonActions.append( m_actions->m_skipAction );
+}
+
+
+void
+WindowMain::onLibraryClicked()
+{
+    radio->play( RadioStation::library( User().name() ) );
+}
+
+
+void
+WindowMain::onMixClicked()
+{
+    radio->play( RadioStation::mix( User().name() ) );
+}
+
+
+void
+WindowMain::onRecomendedClicked()
+{
+    radio->play( RadioStation::recommendations( User().name() ) );
 }
 
 
@@ -252,6 +255,8 @@ WindowMain::onTrackSpooled( const Track& track )
 {
     TRACK_SPOOLED();
 
+    ui->nowPlaying->show();
+
     lastfm::TrackContext context = track.context();
 
     if (context.values().count() > 0)
@@ -267,7 +272,7 @@ WindowMain::onTrackSpooled( const Track& track )
                 {
                 default:
                 case 1: contextString = tr( "Because you listen to %1" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ) ); break;
-                case 2: contextString = tr( "Because you listen to %1, and %2" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ) ); break;
+                case 2: contextString = tr( "Because you listen to %1 and %2" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ) ); break;
                 case 3: contextString = tr( "Because you listen to %1, %2, and %3" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ) , Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ) ); break;
                 case 4: contextString = tr( "Because you listen to %1, %2, %3, and %4" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ), Label::anchor( Artist( context.values().at(3) ).www().toString(), context.values().at(3) ) ); break;
                 case 5: contextString = tr( "Because you listen to %1, %2, %3, %4, and %5" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ), Label::anchor( Artist( context.values().at(3) ).www().toString(), context.values().at(3) ), Label::anchor( Artist( context.values().at(4) ).www().toString(), context.values().at(4) ) ); break;
@@ -285,7 +290,7 @@ WindowMain::onTrackSpooled( const Track& track )
                 {
                 default:
                 case 1: contextString = tr( "From %2%1s library" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ) ); break;
-                case 2: contextString = tr( "From %2, and %3%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ) ); break;
+                case 2: contextString = tr( "From %2 and %3%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ) ); break;
                 case 3: contextString = tr( "From %2, %3, and %4%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ), userLibrary( context.values().at(2), track.artist().name() ) ); break;
                 case 4: contextString = tr( "From %2, %3, %4, and %5%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ),userLibrary(  context.values().at(1), track.artist().name() ), userLibrary( context.values().at(2), track.artist().name() ), userLibrary( context.values().at(3), track.artist().name() ) ); break;
                 case 5: contextString = tr( "From %2, %3, %4, %5, and %6%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ), userLibrary( context.values().at(2), track.artist().name() ), userLibrary( context.values().at(3), track.artist().name() ), userLibrary( context.values().at(4), track.artist().name() ) ); break;
@@ -313,6 +318,9 @@ void
 WindowMain::onStopped()
 {
     ON_STOPPED();
+
+    ui->nowPlaying->hide();
+    //ui->details->setCurrentWidget( ui->quickstartPage );
 }
 
 
@@ -326,18 +334,18 @@ WindowMain::onSwitch()
 void
 WindowMain::onGotRecentStations()
 {
-    lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
+//    lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
 
-    foreach ( const lastfm::XmlQuery& station , lfm["recentstations"].children("station").mid( 0, 20 ) )
-    {
-        if ( ! (station["url"].text().contains("user/" + lastfm::ws::Username + "/") &&
-             !station["url"].text().contains("/tag/") ) )
-        {
-            RadioStation recentStation( station["url"].text() );
-            recentStation.setTitle( station["name"].text() );
-            ui->stations->addStation( recentStation, tr("Recent") );
-        }
-    }
+//    foreach ( const lastfm::XmlQuery& station , lfm["recentstations"].children("station").mid( 0, 20 ) )
+//    {
+//        if ( ! (station["url"].text().contains("user/" + lastfm::ws::Username + "/") &&
+//             !station["url"].text().contains("/tag/") ) )
+//        {
+//            RadioStation recentStation( station["url"].text() );
+//            recentStation.setTitle( station["name"].text() );
+//            ui->stations->addStation( recentStation, tr("Recent") );
+//        }
+//    }
 }
 
 void

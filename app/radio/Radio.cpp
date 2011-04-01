@@ -107,7 +107,7 @@ Radio::play( const RadioStation& station )
     connect( m_tuner, SIGNAL(title( QString )), SLOT(setStationName( QString )) );
     connect( m_tuner, SIGNAL(supportsDisco( bool )), SLOT(setSupportsDisco( bool )) );
     connect( m_tuner, SIGNAL(trackAvailable()), SLOT(enqueue()) );
-    connect( m_tuner, SIGNAL(error( lastfm::ws::Error )), SLOT(onTunerError( lastfm::ws::Error )) );
+    connect( m_tuner, SIGNAL(error( lastfm::ws::Error, QString )), SLOT(onTunerError( lastfm::ws::Error, QString )) );
 
     changeState( TuningIn );
 }
@@ -186,13 +186,13 @@ Radio::skip()
 
 
 void
-Radio::onTunerError( lastfm::ws::Error e )
+Radio::onTunerError( lastfm::ws::Error e, const QString& message )
 {
     // otherwise leave things be, we'll stop when we run out of content
     if (m_state == TuningIn)
-		stop();
+        stop();
 
-	emit error( e );
+    emit error( e, message );
 }
 
 

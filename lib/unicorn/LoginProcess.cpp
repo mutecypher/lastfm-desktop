@@ -94,7 +94,7 @@ TinyWebServer::sendRedirect()
 LoginProcess::LoginProcess( QObject* parent )
     : QObject( parent )
     , m_webServer( 0 )
-    , m_lastError( lastfm::ws::NoError )
+    , m_lastError( lastfm::ws::ParseError( lastfm::ws::NoError, "" ) )
     , m_lastNetworkError( QNetworkReply::NoError )
 {
 }

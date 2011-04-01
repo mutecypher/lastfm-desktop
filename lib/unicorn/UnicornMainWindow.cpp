@@ -78,9 +78,8 @@ unicorn::MainWindow::finishUi()
 
 #ifndef NDEBUG
     QMenu* debug = menuBar()->addMenu( tr("Debug") );
-    new QShortcut( Qt::CTRL + Qt::Key_R, this, SLOT(refreshStyleSheet()) );
-    //QAction* rss = debug->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()) );
-    //rss->setShortcut( Qt::CTRL + Qt::Key_R );
+    QAction* rss = debug->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()) );
+    rss->setShortcut( Qt::CTRL + Qt::Key_R );
 #endif
 
 #ifdef Q_OS_MAC

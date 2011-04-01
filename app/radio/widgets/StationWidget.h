@@ -20,18 +20,30 @@ public:
     void addStation( const RadioStation& station, const QString& description );
     void recentStation( const RadioStation& station );
 
-private:
-    void resizeEvent ( QResizeEvent * event );
+    class QTreeView* treeView() const;
 
-    class QTreeWidgetItem* createItem( const RadioStation& station, const QString& description );
+private:
+    void resizeEvent( QResizeEvent * event );
+    void contextMenuEvent( QContextMenuEvent* event );
+
+    RadioStation getStation();
 
 private slots:
-    void onItemDoubleClicked( class QTreeWidgetItem* item, int column );
+    void onDoubleClicked( const class QModelIndex& index );
     void onTuningIn( const RadioStation& station );
     void onTrackSpooled( const Track& track );
 
+    void onPlay();
+    void onPlayNext();
+    void onTagFilter();
+
 private:
     Ui::StationWidget *ui;
+
+    QAction* m_playAction;
+    QAction* m_playNextAction;
+
+    class StationListModel* m_model;
 };
 
 #endif // STATIONWIDGET_H
