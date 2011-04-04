@@ -20,7 +20,7 @@ StationPanelWidget::StationPanelWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_friendsProxyModel = new FriendsSortFilterProxyModel( this );
+    m_friendsProxyModel = new FriendsSortFilterProxyModel( *ui->friendsList->treeView()->selectionModel(), this );
 
     m_friendsProxyModel->setSourceModel( ui->friendsList->treeView()->model() );
     ui->friendsList->treeView()->setModel( m_friendsProxyModel );

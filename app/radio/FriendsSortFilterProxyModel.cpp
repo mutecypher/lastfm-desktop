@@ -1,11 +1,14 @@
 
 
-#include "FriendsSortFilterProxyModel.h"
+#include <QItemSelectionModel>
 
+#include "FriendsSortFilterProxyModel.h"
 #include "StationListModel.h"
 
-FriendsSortFilterProxyModel::FriendsSortFilterProxyModel( QObject* parent )
-    :QSortFilterProxyModel( parent )
+
+
+FriendsSortFilterProxyModel::FriendsSortFilterProxyModel(  const QItemSelectionModel& selectionModel, QObject* parent )
+    :QSortFilterProxyModel( parent ), m_selectionModel( selectionModel )
 {
 }
 
@@ -21,10 +24,16 @@ FriendsSortFilterProxyModel::lessThan(const QModelIndex& left, const QModelIndex
 
 
 bool
-FriendsSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const
+FriendsSortFilterProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex& sourceParent ) const
 {
+    if ( m_selectionModel.rowIntersectsSelection( sourceRow, sourceModel()->index(sourceRow, 0, sourceParent) ) )
+        return true;
+
     QRegExp re = filterRegExp();
     re.setCaseSensitivity( Qt::CaseInsensitive );
     QString title = sourceModel()->index(sourceRow, 0, sourceParent).data( StationListModel::TitleRole ).toString();
-    return ( re.indexIn( title ) != -1 );
+    if ( re.indexIn( title ) != -1 )
+        return true;
+
+    return false;
 }
