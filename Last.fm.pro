@@ -3,7 +3,6 @@ CONFIG += ordered
 SUBDIRS = lib/unicorn \
           lib/listener \
           app/audioscrobbler \
-          app/radio \
           app/twiddly
           #app/boffin
 

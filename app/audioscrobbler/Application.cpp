@@ -18,6 +18,12 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Application.h"
+#include "lib/unicorn/QMessageBoxBuilder.h"
+#include "Radio.h"
+#include "ScrobSocket.h"
+#include <QDebug>
+#include <QProcess>
+#include <QShortcut>
 
 #include "Widgets/PointyArrow.h"
 #include "Dialogs/SettingsDialog.h"
@@ -56,7 +62,7 @@
 #include <QMenu>
 #include <QDebug>
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN32g
 #include "windows.h"
 #endif
 
@@ -648,10 +654,52 @@ Application::toggleWindow()
     else
         showWindow();
 }
+  
+
+// lastfmlib invokes this directly, for some errors:
+void
+Application::onWsError( lastfm::ws::Error e )
+{
+    switch (e)
+    {
+        case lastfm::ws::InvalidSessionKey:
+            quit();
+            break;
+        default:
+            break;
+    }
+}
+  
+  
+enum Argument
+{
+    LastFmUrl,
+    Pause, //toggles pause
+    Skip,
+    Exit,
+    Unknown
+};
+  
+  
+Argument argument( const QString& arg )
+{
+    if (arg == "--pause") return Pause;
+    if (arg == "--skip") return Skip;
+    if (arg == "--exit") return Exit;
+
+    QUrl url( arg );
+    //TODO show error if invalid schema and that
+    if (url.isValid() && url.scheme() == "lastfm") return LastFmUrl;
+
+    return Unknown;
+}
+
     
 void
-Application::onMessageReceived(const QStringList& message)
+Application::onMessageReceived( const QStringList& message )
 {
+    parseArguments( message );
+
     qDebug() << "Messages: " << message;
 
     if ( message.contains( "--twiddly" ))
@@ -683,6 +731,42 @@ Application::onMessageReceived(const QStringList& message)
     }
 }
 
+
+void
+Application::parseArguments( const QStringList& args )
+{
+    qDebug() << args;
+
+    if (args.size() <= 1)
+        return;
+
+    foreach (QString const arg, args.mid( 1 ))
+        switch (argument( arg ))
+        {
+        case Argument::LastFmUrl:
+            radio->play( RadioStation( arg ) );
+            break;
+
+        case Argument::Exit:
+            exit();
+            break;
+
+        case Argument::Skip:
+            radio->skip();
+            break;
+
+        case Argument::Pause:
+            if ( radio->state() == Radio::Playing )
+                radio->pause();
+            else if ( radio->state() == Radio::Paused )
+                radio->resume();
+            break;
+
+        case Argument::Unknown:
+            qDebug() << "Unknown argument:" << arg;
+            break;
+        }
+}
 
 void 
 Application::quit()

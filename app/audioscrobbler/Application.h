@@ -26,6 +26,8 @@
 #include "lib/unicorn/UnicornApplication.h"
 #include <QPointer>
 #include <QSystemTrayIcon>
+#include <lastfm/ws.h>
+
 
 class AboutDialog;
 class MetadataWindow;
@@ -140,6 +142,9 @@ namespace audioscrobbler
         void trackGotTags(const XmlQuery& lfm);
 
         void finished();
+		
+        void error( const QString& message );
+        void status( const QString& message, const QString& id );
 
     public slots:
         void quit();
@@ -149,6 +154,7 @@ namespace audioscrobbler
         void onBusLovedStateChanged(bool);
 
         void onTrackGotInfo(const XmlQuery& );
+        void parseArguments( const QStringList& args );
 
     protected:
         virtual void initiateLogin()throw( StubbornUserException );
@@ -183,7 +189,12 @@ namespace audioscrobbler
         void showWindow();
         void toggleWindow();
 
+
         void onMessageReceived(const QStringList& message);
+		
+		/** all webservices connect to this and emit in the case of bad errors that
+	     * need to be handled at a higher level */
+	    void onWsError( lastfm::ws::Error );
     };
 }
 
