@@ -37,7 +37,7 @@ private slots:
 private:
     Ui::StationPanelWidget *ui;
 
-    class QSortFilterProxyModel* m_friendsProxyModel;
+    class FriendsSortFilterProxyModel* m_friendsProxyModel;
 };
 
 #endif // STATIONPANELWIDGET_H

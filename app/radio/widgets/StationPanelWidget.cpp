@@ -1,7 +1,6 @@
 
 
 #include <QDebug>
-#include <QSortFilterProxyModel>
 #include <QTreeWidget>
 
 #include <lastfm/User>
@@ -20,10 +19,12 @@ StationPanelWidget::StationPanelWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_friendsProxyModel = new FriendsSortFilterProxyModel( *ui->friendsList->treeView()->selectionModel(), this );
+    m_friendsProxyModel = new FriendsSortFilterProxyModel( this );
 
     m_friendsProxyModel->setSourceModel( ui->friendsList->treeView()->model() );
     ui->friendsList->treeView()->setModel( m_friendsProxyModel );
+
+    m_friendsProxyModel->setSelectionModel( ui->friendsList->treeView()->selectionModel() );
 
     connect( ui->friendsSort, SIGNAL(clicked()), SLOT(onFriendsSortClicked()) );
 
@@ -44,21 +45,23 @@ StationPanelWidget::StationPanelWidget(QWidget *parent) :
     connect( User().getTopArtists( "3month", 50 ), SIGNAL(finished()), SLOT(onGotArtists()));
     connect( RadioStation::library( User().name() ).getTagSuggestions( 50 ), SIGNAL(finished()), SLOT(onGotTags()));
 
-
     // always start on the recent tab
     ui->recent->click();
 }
+
 
 StationPanelWidget::~StationPanelWidget()
 {
     delete ui;
 }
-	
+
+
 void
 StationPanelWidget::onTuningIn( const RadioStation& station )
 {
     ui->recentList->recentStation( station );
 }
+
 
 void
 StationPanelWidget::onRecentClicked()
@@ -73,17 +76,20 @@ StationPanelWidget::onFriendsClicked()
     ui->stackedWidget->setCurrentWidget( ui->friendsPage );
 }
 
+
 void
 StationPanelWidget::onNeighboursClicked()
 {
     ui->stackedWidget->setCurrentWidget( ui->neighboursPage );
 }
 
+
 void
 StationPanelWidget::onArtistsClicked()
 {
     ui->stackedWidget->setCurrentWidget( ui->artistsPage );
 }
+
 
 void
 StationPanelWidget::onTagsClicked()
