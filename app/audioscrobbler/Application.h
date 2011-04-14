@@ -21,21 +21,25 @@
 #ifndef AUDIOSCROBBLER_APPLICATION_H_
 #define AUDIOSCROBBLER_APPLICATION_H_
 
-#include <lastfm/global.h>
-#include <lastfm/Track>
-#include "lib/unicorn/UnicornApplication.h"
 #include <QPointer>
 #include <QSystemTrayIcon>
+
+#include <lastfm/global.h>
+#include <lastfm/Track>
 #include <lastfm/ws.h>
+
+#include "lib/unicorn/UnicornApplication.h"
 
 class AboutDialog;
 class MetadataWindow;
+class RadioWidget;
 class PlayerConnection;
 class PlayerMediator;
 class QAction;
 class ScrobbleInfoFetcher;
 class StopWatch;
 class DeviceScrobbler;
+class Drawer;
 
 #ifdef Q_WS_X11
     class IpodDeviceLinux;
@@ -74,6 +78,8 @@ namespace audioscrobbler
         QPointer<PlayerConnection> m_connection;
         QPointer<StopWatch> m_watch;
         QPointer<MetadataWindow> m_mw;
+        QPointer<Drawer> m_drawer;
+        QPointer<RadioWidget> m_radioWidget;
         QPointer<DeviceScrobbler> m_deviceScrobbler;
 
         Track m_currentTrack;
@@ -89,6 +95,9 @@ namespace audioscrobbler
         QAction* m_love_action;
         QAction* m_tag_action;
         QAction* m_share_action;
+        QAction* m_banAction;
+        QAction* m_playAction;
+        QAction* m_skipAction;
         QAction* m_show_window_action;
         QAction* m_toggle_window_action;
         QAction* m_scrobble_ipod_action;
@@ -154,6 +163,8 @@ namespace audioscrobbler
 
         void onTrackGotInfo(const XmlQuery& );
         void parseArguments( const QStringList& args );
+
+        void showRadioDrawer( bool show );
 
     protected:
         virtual void initiateLogin()throw( StubbornUserException );

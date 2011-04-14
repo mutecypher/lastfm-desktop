@@ -31,20 +31,16 @@ RadioWidget::RadioWidget()
 {
     ui->setupUi(this);
 
-    createActions();
+//    createActions();
 
-    m_loveAction->setEnabled( false );
-    m_banAction->setEnabled( false );
-    m_skipAction->setEnabled( false );
-
-    connect( ui->love, SIGNAL(clicked()), m_loveAction, SLOT(trigger()));
-    connect( ui->ban, SIGNAL(clicked()), m_banAction, SLOT(trigger()));
-    connect( ui->play, SIGNAL(clicked()), m_playAction, SLOT(trigger()));
-    connect( ui->skip, SIGNAL(clicked()), m_skipAction, SLOT(trigger()));
-    connect( m_loveAction, SIGNAL(changed()), SLOT(onActionsChanged()));
-    connect( m_playAction, SIGNAL(changed()), SLOT(onActionsChanged()));
-    connect( m_skipAction, SIGNAL(changed()), SLOT(onActionsChanged()));
-    connect( m_banAction, SIGNAL(changed()), SLOT(onActionsChanged()));
+//    connect( ui->love, SIGNAL(clicked()), m_loveAction, SLOT(trigger()));
+//    connect( ui->ban, SIGNAL(clicked()), m_banAction, SLOT(trigger()));
+//    connect( ui->play, SIGNAL(clicked()), m_playAction, SLOT(trigger()));
+//    connect( ui->skip, SIGNAL(clicked()), m_skipAction, SLOT(trigger()));
+//    connect( m_loveAction, SIGNAL(changed()), SLOT(onActionsChanged()));
+//    connect( m_playAction, SIGNAL(changed()), SLOT(onActionsChanged()));
+//    connect( m_skipAction, SIGNAL(changed()), SLOT(onActionsChanged()));
+//    connect( m_banAction, SIGNAL(changed()), SLOT(onActionsChanged()));
 
     ui->love->setToolTip( ui->love->isChecked() ? tr("Unlove") : tr("Love") );
     ui->ban->setToolTip( tr("Ban") );
@@ -91,68 +87,58 @@ RadioWidget::RadioWidget()
 }
 
 
-void
-RadioWidget::createActions()
-{
-    {
-        m_loveAction = new QAction( tr( "Love" ), this );
-        m_loveAction->setCheckable( true );
-        QIcon loveIcon;
-        loveIcon.addFile( ":/taskbar-love-on.png", QSize(), QIcon::Normal, QIcon::On );
-        loveIcon.addFile( ":/taskbar-love.png", QSize(), QIcon::Normal, QIcon::Off );
-        m_loveAction->setIcon( loveIcon );
+//void
+//RadioWidget::createActions()
+//{
+//    {
+//        m_loveAction = new QAction( tr( "Love" ), this );
+//        m_loveAction->setCheckable( true );
+//        QIcon loveIcon;
+//        loveIcon.addFile( ":/taskbar-love-on.png", QSize(), QIcon::Normal, QIcon::On );
+//        loveIcon.addFile( ":/taskbar-love.png", QSize(), QIcon::Normal, QIcon::Off );
+//        m_loveAction->setIcon( loveIcon );
 
-        m_loveAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ) );
-    }
-    {
-        m_banAction = new QAction( tr( "Ban" ), this );
-        QIcon banIcon;
-        banIcon.addFile( ":/taskbar-ban.png" );
-        m_banAction->setIcon( banIcon );
+//        m_loveAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ) );
+//    }
+//    {
+//        m_banAction = new QAction( tr( "Ban" ), this );
+//        QIcon banIcon;
+//        banIcon.addFile( ":/taskbar-ban.png" );
+//        m_banAction->setIcon( banIcon );
 
-        m_banAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_B ) );
-    }
-    {
-        m_playAction = new QAction( tr( "Play" ), this );
-        m_playAction->setCheckable( true );
-        QIcon playIcon;
-        playIcon.addFile( ":/taskbar-pause.png", QSize(), QIcon::Normal, QIcon::On );
-        playIcon.addFile( ":/taskbar-play.png", QSize(), QIcon::Normal, QIcon::Off );
-        m_playAction->setIcon( playIcon );
+//        m_banAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_B ) );
+//    }
+//    {
+//        m_playAction = new QAction( tr( "Play" ), this );
+//        m_playAction->setCheckable( true );
+//        QIcon playIcon;
+//        playIcon.addFile( ":/taskbar-pause.png", QSize(), QIcon::Normal, QIcon::On );
+//        playIcon.addFile( ":/taskbar-play.png", QSize(), QIcon::Normal, QIcon::Off );
+//        m_playAction->setIcon( playIcon );
 
-        m_playAction->setShortcut( QKeySequence(Qt::Key_Space) );
-    }
-    {
-        m_skipAction = new QAction( tr( "Skip" ), this );
-        QIcon skipIcon;
-        skipIcon.addFile( ":/taskbar-skip.png" );
-        m_skipAction->setIcon( skipIcon );
+//        m_playAction->setShortcut( QKeySequence(Qt::Key_Space) );
+//    }
+//    {
+//        m_skipAction = new QAction( tr( "Skip" ), this );
+//        QIcon skipIcon;
+//        skipIcon.addFile( ":/taskbar-skip.png" );
+//        m_skipAction->setIcon( skipIcon );
 
-        m_skipAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Right ) );
-    }
+//        m_skipAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Right ) );
+//    }
 
-    // connect the triggers
-    connect( m_loveAction, SIGNAL(triggered(bool)), SLOT(onLoveClicked(bool)) );
-    connect( m_banAction, SIGNAL(triggered(bool)), SLOT(onBanClicked()) );
-    connect( m_playAction, SIGNAL(triggered(bool)), SLOT(onPlayClicked(bool)) );
-    connect( m_skipAction, SIGNAL(triggered(bool)), SLOT(onSkipClicked()) );
+//    // connect the triggers
+//    connect( m_loveAction, SIGNAL(triggered(bool)), SLOT(onLoveClicked(bool)) );
+//    connect( m_banAction, SIGNAL(triggered(bool)), SLOT(onBanClicked()) );
+//    connect( m_playAction, SIGNAL(triggered(bool)), SLOT(onPlayClicked(bool)) );
+//    connect( m_skipAction, SIGNAL(triggered(bool)), SLOT(onSkipClicked()) );
 
-    // connect the action changes
-    connect( m_loveAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
-    connect( m_banAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
-    connect( m_playAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
-    connect( m_skipAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
-}
-
-
-void
-RadioWidget::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
-{
-    thumbButtonActions.append( m_loveAction );
-    thumbButtonActions.append( m_banAction );
-    thumbButtonActions.append( m_playAction );
-    thumbButtonActions.append( m_skipAction );
-}
+//    // connect the action changes
+//    connect( m_loveAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
+//    connect( m_banAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
+//    connect( m_playAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
+//    connect( m_skipAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
+//}
 
 
 void
@@ -179,27 +165,27 @@ RadioWidget::onRecomendedClicked()
 void
 RadioWidget::onActionsChanged()
 {
-   ui->love->setChecked( m_loveAction->isChecked() );
-   ui->ban->setChecked( m_banAction->isChecked() );
-   ui->play->setChecked( m_playAction->isChecked() );
-   ui->skip->setChecked( m_skipAction->isChecked() );
+//   ui->love->setChecked( m_loveAction->isChecked() );
+//   ui->ban->setChecked( m_banAction->isChecked() );
+//   ui->play->setChecked( m_playAction->isChecked() );
+//   ui->skip->setChecked( m_skipAction->isChecked() );
 
-   ui->love->setEnabled( m_loveAction->isEnabled() );
-   ui->ban->setEnabled( m_banAction->isEnabled() );
-   ui->play->setEnabled( m_playAction->isEnabled() );
-   ui->skip->setEnabled( m_skipAction->isEnabled() );
+//   ui->love->setEnabled( m_loveAction->isEnabled() );
+//   ui->ban->setEnabled( m_banAction->isEnabled() );
+//   ui->play->setEnabled( m_playAction->isEnabled() );
+//   ui->skip->setEnabled( m_skipAction->isEnabled() );
 
-   ui->love->setToolTip( ui->love->isChecked() ? tr("Unlove") : tr("Love") );
-   ui->ban->setToolTip( tr("Ban") );
-   ui->info->setToolTip( tr("Info") );
-   ui->play->setToolTip( ui->play->isChecked() ? tr("Pause") : tr("Play") );
-   ui->skip->setToolTip( tr("Skip") );
+//   ui->love->setToolTip( ui->love->isChecked() ? tr("Unlove") : tr("Love") );
+//   ui->ban->setToolTip( tr("Ban") );
+//   ui->info->setToolTip( tr("Info") );
+//   ui->play->setToolTip( ui->play->isChecked() ? tr("Pause") : tr("Play") );
+//   ui->skip->setToolTip( tr("Skip") );
 
-   ui->love->setText( ui->love->isChecked() ? tr("Unlove") : tr("Love") );
-   ui->ban->setText( tr("Ban") );
-   ui->info->setText( tr("Info") );
-   ui->play->setText( ui->play->isChecked() ? tr("Pause") : tr("Play") );
-   ui->skip->setText( tr("Skip") );
+//   ui->love->setText( ui->love->isChecked() ? tr("Unlove") : tr("Love") );
+//   ui->ban->setText( tr("Ban") );
+//   ui->info->setText( tr("Info") );
+//   ui->play->setText( ui->play->isChecked() ? tr("Pause") : tr("Play") );
+//   ui->skip->setText( tr("Skip") );
 }
 
 
@@ -253,7 +239,7 @@ RadioWidget::onStationEditTextChanged( const QString& text )
 void
 RadioWidget::onSpace()
 {
-    m_playAction->trigger();
+    //m_playAction->trigger();
 }
 
 
@@ -332,7 +318,7 @@ RadioWidget::onBanFinished()
     {
     }
 
-    m_skipAction->trigger();
+    //m_skipAction->trigger();
 }
 
 
@@ -400,7 +386,7 @@ RadioWidget::onTuningIn( const RadioStation& station )
 {
     ui->radioTitle->setText( tr("Tuning %1").arg( station.title() ) );
     ui->play->setChecked( true );
-    m_playAction->setChecked( true );
+    //m_playAction->setChecked( true );
     ui->album->setText( radio->currentTrack().isNull() ? "" : tr("from %1").arg( radio->currentTrack().album() ) );
     ui->trackTitle->setText( radio->currentTrack().isNull() ? "" : radio->currentTrack().toString() );
 
@@ -422,13 +408,13 @@ RadioWidget::onTrackSpooled( const Track& track )
 {
     if( !track.isNull() && track.source() == Track::LastFmRadio )
     {
-        m_playAction->setEnabled( true );
-        m_loveAction->setEnabled( true );
-        m_banAction->setEnabled( true );
-        m_skipAction->setEnabled( true );
+//        m_playAction->setEnabled( true );
+//        m_loveAction->setEnabled( true );
+//        m_banAction->setEnabled( true );
+//        m_skipAction->setEnabled( true );
 
-        m_playAction->setChecked( true );
-        m_loveAction->setChecked( track.isLoved() );
+//        m_playAction->setChecked( true );
+//        m_loveAction->setChecked( track.isLoved() );
 
         connect( qApp, SIGNAL(busLovedStateChanged(bool)), ui->love, SLOT(setChecked(bool)) );
         connect( ui->love, SIGNAL(clicked(bool)), qApp, SLOT(sendBusLovedStateChanged(bool)) );
@@ -544,7 +530,7 @@ RadioWidget::onError( int error, const QVariant& errorText )
 void
 RadioWidget::onStopped()
 {
-    m_playAction->setChecked( false );
+    //m_playAction->setChecked( false );
 
     ui->love->setEnabled( false );
     ui->ban->setEnabled( false );

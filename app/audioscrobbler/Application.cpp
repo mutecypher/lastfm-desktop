@@ -26,6 +26,8 @@
 #include <QShortcut>
 
 #include "Widgets/PointyArrow.h"
+#include "Widgets/RadioWidget.h"
+#include "Widgets/Drawer.h"
 #include "Dialogs/SettingsDialog.h"
 #include "lib/listener/DBusListener.h"
 #include "lib/listener/legacy/LegacyPlayerListener.h"
@@ -37,6 +39,7 @@
 #include "ScrobbleInfoFetcher.h"
 #include "StopWatch.h"
 #include "../Widgets/ScrobbleControls.h"
+
 
 #ifdef Q_WS_MAC
 #include "lib/listener/mac/ITunesListener.h"
@@ -225,6 +228,12 @@ Application::init()
     m_mw->addWinThumbBarButton( m_love_action );
     m_mw->addWinThumbBarButton( m_tag_action );
     m_mw->addWinThumbBarButton( m_share_action );
+
+    m_drawer = new Drawer( m_mw );
+
+    new QVBoxLayout( m_drawer );
+
+    m_drawer->layout()->addWidget( m_radioWidget = new RadioWidget );
 
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
 #ifndef Q_OS_LINUX
@@ -563,6 +572,15 @@ Application::onVisitProfileTriggered()
     QDesktopServices::openUrl( User().www() );
 }
 
+
+void
+Application::showRadioDrawer( bool show )
+{
+    if ( show )
+        m_drawer->show();
+    else
+        m_drawer->close();
+}
 
 void
 Application::onFaqTriggered()

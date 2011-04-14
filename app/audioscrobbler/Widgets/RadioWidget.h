@@ -57,16 +57,7 @@ private slots:
     void onSpace();
 
 private:
-    void addWinThumbBarButtons( QList<QAction*>& );
-    void createActions();
-
-private:
     Ui::RadioWidget* ui;
-
-    QAction* m_loveAction;
-    QAction* m_banAction;
-    QAction* m_playAction;
-    QAction* m_skipAction;
 };
 
 #endif // RadioWidget_H
