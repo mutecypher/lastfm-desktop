@@ -27,6 +27,7 @@
 #include <QPointer>
 #include <QSystemTrayIcon>
 #include <lastfm/ws.h>
+#include "WindowMain.h"
 
 
 class AboutDialog;
@@ -75,6 +76,7 @@ namespace audioscrobbler
         QPointer<PlayerConnection> m_connection;
         QPointer<StopWatch> m_watch;
         QPointer<MetadataWindow> m_mw;
+        QPointer<WindowMain> m_radio;
         QPointer<DeviceScrobbler> m_deviceScrobbler;
 
         Track m_currentTrack;

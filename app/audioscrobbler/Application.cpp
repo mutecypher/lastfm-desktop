@@ -117,7 +117,6 @@ Application::initiateLogin() throw( StubbornUserException )
         m_tray->hide();
         m_tray->show();
     }
-
 }
 
 void
@@ -227,8 +226,14 @@ Application::init()
     m_mw->addWinThumbBarButton( m_tag_action );
     m_mw->addWinThumbBarButton( m_share_action );
 
+    WindowMain windowMain;
 
-     m_toggle_window_action = new QAction( this ), SLOT( trigger());
+    setActivationWindow( m_mw );
+
+    windowMain.setWindowTitle( applicationName() );
+    windowMain.show();
+
+    m_toggle_window_action = new QAction( this ), SLOT( trigger());
 #ifndef Q_OS_LINUX
      AudioscrobblerSettings settings;
      setRaiseHotKey( settings.raiseShortcutModifiers(), settings.raiseShortcutKey());

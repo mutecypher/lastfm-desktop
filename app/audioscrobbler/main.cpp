@@ -44,19 +44,7 @@
 
 void cleanup();
 
-class QMainObject : public QObject
-{
-	Q_OBJECT
-	
-public slots:
-    void onStartRadio(RadioStation rs)
-	{
-		radio->play( rs );
-	}
-};
-
 Radio* radio;
-QMainObject* q;
 
 namespace lastfm
 {
@@ -89,7 +77,7 @@ int main( int argc, char** argv )
             return 0;
 
         app.init();
-        q = new QMainObject;
+
         radio = new Radio();
         qAddPostRoutine(cleanup);
 
@@ -104,12 +92,6 @@ int main( int argc, char** argv )
         AEEventHandlerUPP h = NewAEEventHandlerUPP( appleEventHandler );
         AEInstallEventHandler( 'GURL', 'GURL', h, 0, false );
       #endif
-        
-        WindowMain windowMain;
-
-        app.setActivationWindow( &windowMain );
-        windowMain.setWindowTitle( app.applicationName() );
-        windowMain.show();
 
         app.parseArguments( app.arguments() );
 
