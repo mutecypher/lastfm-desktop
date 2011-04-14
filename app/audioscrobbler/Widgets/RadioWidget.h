@@ -1,19 +1,19 @@
-#ifndef WINDOWMAIN_H
-#define WINDOWMAIN_H
+#ifndef RADIOWIDGET_H
+#define RADIOWIDGET_H
 
 #include <lastfm/RadioStation>
 
 #include "lib/unicorn/UnicornMainWindow.h"
 
-namespace Ui { class WindowMain; }
+namespace Ui { class RadioWidget; }
 
-class WindowMain : public unicorn::MainWindow
+class RadioWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit WindowMain();
-    ~WindowMain();
+    explicit RadioWidget();
+    ~RadioWidget();
 
 signals:
     void aboutToHide();
@@ -61,7 +61,7 @@ private:
     void createActions();
 
 private:
-    Ui::WindowMain* ui;
+    Ui::RadioWidget* ui;
 
     QAction* m_loveAction;
     QAction* m_banAction;
@@ -69,4 +69,4 @@ private:
     QAction* m_skipAction;
 };
 
-#endif // WINDOWMAIN_H
+#endif // RadioWidget_H

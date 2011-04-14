@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WindowMain</class>
- <widget class="QMainWindow" name="WindowMain">
+ <class>RadioWidget</class>
+ <widget class="QWidget" name="RadioWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,9 +12,6 @@
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
-  </property>
-  <property name="unifiedTitleAndToolBarOnMac">
-   <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,1,0">
@@ -84,7 +81,7 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="dummyPage">
           <property name="sizePolicy">
@@ -613,7 +610,7 @@
   <customwidget>
    <class>StationPanelWidget</class>
    <extends>QWidget</extends>
-   <header>widgets/StationPanelWidget.h</header>
+   <header>../widgets/StationPanelWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

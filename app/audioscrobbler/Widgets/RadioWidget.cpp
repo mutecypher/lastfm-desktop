@@ -8,12 +8,12 @@
     #include <CoreServices/CoreServices.h>
 #endif
 
-#include "WindowMain.h"
-#include "ui_WindowMain.h"
+#include "RadioWidget.h"
+#include "ui_RadioWidget.h"
 
-#include "widgets/TagFilterDialog.h"
+#include "TagFilterDialog.h"
 
-#include "widgets/PlayableItemWidget.h"
+#include "PlayableItemWidget.h"
 
 #include "../Radio.h"
 #include "../StationSearch.h"
@@ -26,12 +26,10 @@
 #endif
 
 
-WindowMain::WindowMain() :
-    unicorn::MainWindow(),
-    ui(new Ui::WindowMain)
+RadioWidget::RadioWidget()
+    :ui(new Ui::RadioWidget)
 {
     ui->setupUi(this);
-    finishUi();
 
     createActions();
 
@@ -90,13 +88,11 @@ WindowMain::WindowMain() :
     ui->nowPlaying->hide();
 
     ui->details->setCurrentWidget( ui->quickstartPage );
-
-    addDragHandleWidget( ui->controlFrame );
 }
 
 
 void
-WindowMain::createActions()
+RadioWidget::createActions()
 {
     {
         m_loveAction = new QAction( tr( "Love" ), this );
@@ -150,7 +146,7 @@ WindowMain::createActions()
 
 
 void
-WindowMain::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
+RadioWidget::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
 {
     thumbButtonActions.append( m_loveAction );
     thumbButtonActions.append( m_banAction );
@@ -160,28 +156,28 @@ WindowMain::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
 
 
 void
-WindowMain::onLibraryClicked()
+RadioWidget::onLibraryClicked()
 {
     radio->play( RadioStation::library( User().name() ) );
 }
 
 
 void
-WindowMain::onMixClicked()
+RadioWidget::onMixClicked()
 {
     radio->play( RadioStation::mix( User().name() ) );
 }
 
 
 void
-WindowMain::onRecomendedClicked()
+RadioWidget::onRecomendedClicked()
 {
     radio->play( RadioStation::recommendations( User().name() ) );
 }
 
 
 void
-WindowMain::onActionsChanged()
+RadioWidget::onActionsChanged()
 {
    ui->love->setChecked( m_loveAction->isChecked() );
    ui->ban->setChecked( m_banAction->isChecked() );
@@ -208,27 +204,27 @@ WindowMain::onActionsChanged()
 
 
 void
-WindowMain::onBackClicked()
+RadioWidget::onBackClicked()
 {
     ui->details->setCurrentWidget( ui->quickstartPage );
 }
 
 
 void
-WindowMain::onNowPlayingClicked()
+RadioWidget::onNowPlayingClicked()
 {
     ui->details->setCurrentWidget( ui->detailsPage );
 }
 
 
-WindowMain::~WindowMain()
+RadioWidget::~RadioWidget()
 {
     delete ui;
 }
 
 
 void
-WindowMain::onStartClicked()
+RadioWidget::onStartClicked()
 {
     QString trimmedText = ui->stationEdit->text().trimmed();
 
@@ -249,20 +245,20 @@ WindowMain::onStartClicked()
 
 
 void
-WindowMain::onStationEditTextChanged( const QString& text )
+RadioWidget::onStationEditTextChanged( const QString& text )
 {
     ui->start->setEnabled( text.count() > 0 );
 }
 
 void
-WindowMain::onSpace()
+RadioWidget::onSpace()
 {
     m_playAction->trigger();
 }
 
 
 void
-WindowMain::onPlayClicked( bool checked )
+RadioWidget::onPlayClicked( bool checked )
 {
     if ( checked )
     {
@@ -281,7 +277,7 @@ WindowMain::onPlayClicked( bool checked )
 
 
 void
-WindowMain::onPlayTriggered( bool checked )
+RadioWidget::onPlayTriggered( bool checked )
 {
     if ( checked )
     {
@@ -294,14 +290,14 @@ WindowMain::onPlayTriggered( bool checked )
 
 
 void
-WindowMain::onSkipClicked()
+RadioWidget::onSkipClicked()
 {
     radio->skip();
 }
 
 
 void
-WindowMain::onLoveClicked( bool loved )
+RadioWidget::onLoveClicked( bool loved )
 {
     MutableTrack track( radio->currentTrack() );
 
@@ -314,21 +310,21 @@ WindowMain::onLoveClicked( bool loved )
 }
 
 void
-WindowMain::onLoveTriggered( bool loved )
+RadioWidget::onLoveTriggered( bool loved )
 {
     ui->love->setChecked( loved );
     onLoveClicked( loved );
 }
 
 void
-WindowMain::onBanClicked()
+RadioWidget::onBanClicked()
 {
     QNetworkReply* banReply = MutableTrack( radio->currentTrack() ).ban();
     connect(banReply, SIGNAL(finished()), SLOT(onBanFinished()));
 }
 
 void
-WindowMain::onBanFinished()
+RadioWidget::onBanFinished()
 {
     lastfm::XmlQuery lfm(lastfm::ws::parse(static_cast<QNetworkReply*>(sender())));
 
@@ -341,7 +337,7 @@ WindowMain::onBanFinished()
 
 
 void
-WindowMain::onInfoClicked()
+RadioWidget::onInfoClicked()
 {
 #ifdef Q_OS_WIN32
     AllowSetForegroundWindow(ASFW_ANY);
@@ -364,7 +360,7 @@ WindowMain::onInfoClicked()
 
 
 void
-WindowMain::onFilterClicked()
+RadioWidget::onFilterClicked()
 {
     TagFilterDialog tagFilter( radio->station(), this );
     if ( tagFilter.exec() == QDialog::Accepted )
@@ -377,13 +373,13 @@ WindowMain::onFilterClicked()
 
 
 void
-WindowMain::onEditClicked()
+RadioWidget::onEditClicked()
 {
 
 }
 
 void
-WindowMain::onRadioTick( qint64 tick )
+RadioWidget::onRadioTick( qint64 tick )
 {
     ui->bar->setValue( ui->bar->maximum() < tick ? ui->bar->maximum() : tick );
 
@@ -400,7 +396,7 @@ WindowMain::onRadioTick( qint64 tick )
 
 
 void
-WindowMain::onTuningIn( const RadioStation& station )
+RadioWidget::onTuningIn( const RadioStation& station )
 {
     ui->radioTitle->setText( tr("Tuning %1").arg( station.title() ) );
     ui->play->setChecked( true );
@@ -422,7 +418,7 @@ QString userLibrary( const QString& user, const QString& artist )
 
 
 void
-WindowMain::onTrackSpooled( const Track& track )
+RadioWidget::onTrackSpooled( const Track& track )
 {
     if( !track.isNull() && track.source() == Track::LastFmRadio )
     {
@@ -539,14 +535,14 @@ WindowMain::onTrackSpooled( const Track& track )
 
 
 void
-WindowMain::onError( int error, const QVariant& errorText )
+RadioWidget::onError( int error, const QVariant& errorText )
 {
     ui->radioTitle->setText( errorText.toString() + ": " + QString::number(error) );
 }
 
 
 void
-WindowMain::onStopped()
+RadioWidget::onStopped()
 {
     m_playAction->setChecked( false );
 
@@ -565,14 +561,14 @@ WindowMain::onStopped()
 
 
 void
-WindowMain::onSwitch()
+RadioWidget::onSwitch()
 {
     emit aboutToHide();
     hide();
 }
 
 void
-WindowMain::onGotRecentStations()
+RadioWidget::onGotRecentStations()
 {
 //    lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
 
@@ -589,7 +585,7 @@ WindowMain::onGotRecentStations()
 }
 
 void
-WindowMain::onGotEvents()
+RadioWidget::onGotEvents()
 {
     XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
 

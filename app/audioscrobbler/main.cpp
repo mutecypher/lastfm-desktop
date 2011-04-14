@@ -38,7 +38,6 @@
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/qtsingleapplication/qtsinglecoreapplication.h"
 #include "lib/unicorn/UnicornSettings.h"
-#include "WindowMain.h"
 #include "Radio.h"
 #include "app/moose.h"
 
@@ -76,8 +75,6 @@ int main( int argc, char** argv )
         if ( app.isRunning() )
             return 0;
 
-        app.init();
-
         radio = new Radio();
         qAddPostRoutine(cleanup);
 
@@ -92,6 +89,8 @@ int main( int argc, char** argv )
         AEEventHandlerUPP h = NewAEEventHandlerUPP( appleEventHandler );
         AEInstallEventHandler( 'GURL', 'GURL', h, 0, false );
       #endif
+
+        app.init();
 
         app.parseArguments( app.arguments() );
 

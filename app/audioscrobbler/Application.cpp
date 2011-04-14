@@ -226,13 +226,6 @@ Application::init()
     m_mw->addWinThumbBarButton( m_tag_action );
     m_mw->addWinThumbBarButton( m_share_action );
 
-    WindowMain windowMain;
-
-    setActivationWindow( m_mw );
-
-    windowMain.setWindowTitle( applicationName() );
-    windowMain.show();
-
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
 #ifndef Q_OS_LINUX
      AudioscrobblerSettings settings;
