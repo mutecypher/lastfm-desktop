@@ -39,9 +39,7 @@
 #include "lib/unicorn/qtsingleapplication/qtsinglecoreapplication.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include "WindowMain.h"
-#include "WindowMini.h"
 #include "Radio.h"
-#include "Actions.h"
 #include "app/moose.h"
 
 void cleanup();
@@ -107,20 +105,11 @@ int main( int argc, char** argv )
         AEInstallEventHandler( 'GURL', 'GURL', h, 0, false );
       #endif
         
-        Actions* actions = new Actions();
-
-        WindowMini windowMini( *actions );
-        WindowMain windowMain( *actions );
-
-        QObject::connect( &windowMain, SIGNAL(aboutToHide()), &windowMini, SLOT(show()) );
-        QObject::connect( &windowMini, SIGNAL(aboutToHide()), &windowMain, SLOT(show()) );
+        WindowMain windowMain;
 
         app.setActivationWindow( &windowMain );
         windowMain.setWindowTitle( app.applicationName() );
         windowMain.show();
-
-        windowMini.setWindowTitle( app.applicationName() );
-        windowMini.hide();
 
         app.parseArguments( app.arguments() );
 

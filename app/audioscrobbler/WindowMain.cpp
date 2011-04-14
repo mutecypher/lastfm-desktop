@@ -8,15 +8,12 @@
     #include <CoreServices/CoreServices.h>
 #endif
 
-#include "WindowMacro.h"
-
 #include "WindowMain.h"
 #include "ui_WindowMain.h"
 
 #include "widgets/TagFilterDialog.h"
 
 #include "widgets/PlayableItemWidget.h"
-#include "Actions.h"
 
 #include "../Radio.h"
 #include "../StationSearch.h"
@@ -28,14 +25,50 @@
 #include "ApplicationServices/ApplicationServices.h"
 #endif
 
-WindowMain::WindowMain( Actions& actions ) :
-    unicorn::MainWindow(),
-    ui(new Ui::WindowMain),
-    m_actions( &actions )
-{
-    SETUP();
 
-    m_actions->connectTriggers( this );
+WindowMain::WindowMain() :
+    unicorn::MainWindow(),
+    ui(new Ui::WindowMain)
+{
+    ui->setupUi(this);
+    finishUi();
+
+    createActions();
+
+    m_loveAction->setEnabled( false );
+    m_banAction->setEnabled( false );
+    m_skipAction->setEnabled( false );
+
+    connect( ui->love, SIGNAL(clicked()), m_loveAction, SLOT(trigger()));
+    connect( ui->ban, SIGNAL(clicked()), m_banAction, SLOT(trigger()));
+    connect( ui->play, SIGNAL(clicked()), m_playAction, SLOT(trigger()));
+    connect( ui->skip, SIGNAL(clicked()), m_skipAction, SLOT(trigger()));
+    connect( m_loveAction, SIGNAL(changed()), SLOT(onActionsChanged()));
+    connect( m_playAction, SIGNAL(changed()), SLOT(onActionsChanged()));
+    connect( m_skipAction, SIGNAL(changed()), SLOT(onActionsChanged()));
+    connect( m_banAction, SIGNAL(changed()), SLOT(onActionsChanged()));
+
+    ui->love->setToolTip( ui->love->isChecked() ? tr("Unlove") : tr("Love") );
+    ui->ban->setToolTip( tr("Ban") );
+    ui->info->setToolTip( tr("Info") );
+    ui->play->setToolTip( ui->play->isChecked() ? tr("Pause") : tr("Play") );
+    ui->skip->setToolTip( tr("Skip") );
+
+    connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) );
+    connect( radio, SIGNAL(tick(qint64)), SLOT(onRadioTick(qint64)));
+    connect( radio, SIGNAL(stopped()), SLOT(onStopped()));
+    connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
+    connect( radio, SIGNAL(error(int,QVariant)), SLOT(onError(int, QVariant)));
+
+    ui->trackTitle->setOpenExternalLinks( true);
+    ui->album->setOpenExternalLinks( true);
+    ui->context->setOpenExternalLinks( true);
+
+    ui->volumeSlider->setAudioOutput( radio->audioOutput() );
+    ui->volumeSlider->setMuteVisible( false );
+
+    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ), this, SLOT(onSwitch()));
+    new QShortcut( QKeySequence( Qt::Key_Space ), this, SLOT(onSpace()));
 
     ui->stationEdit->setHelpText( tr("Type an artist or tag and press play") );
     ui->stationEdit->setAttribute( Qt::WA_MacShowFocusRect, false );
@@ -63,12 +96,66 @@ WindowMain::WindowMain( Actions& actions ) :
 
 
 void
+WindowMain::createActions()
+{
+    {
+        m_loveAction = new QAction( tr( "Love" ), this );
+        m_loveAction->setCheckable( true );
+        QIcon loveIcon;
+        loveIcon.addFile( ":/taskbar-love-on.png", QSize(), QIcon::Normal, QIcon::On );
+        loveIcon.addFile( ":/taskbar-love.png", QSize(), QIcon::Normal, QIcon::Off );
+        m_loveAction->setIcon( loveIcon );
+
+        m_loveAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ) );
+    }
+    {
+        m_banAction = new QAction( tr( "Ban" ), this );
+        QIcon banIcon;
+        banIcon.addFile( ":/taskbar-ban.png" );
+        m_banAction->setIcon( banIcon );
+
+        m_banAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_B ) );
+    }
+    {
+        m_playAction = new QAction( tr( "Play" ), this );
+        m_playAction->setCheckable( true );
+        QIcon playIcon;
+        playIcon.addFile( ":/taskbar-pause.png", QSize(), QIcon::Normal, QIcon::On );
+        playIcon.addFile( ":/taskbar-play.png", QSize(), QIcon::Normal, QIcon::Off );
+        m_playAction->setIcon( playIcon );
+
+        m_playAction->setShortcut( QKeySequence(Qt::Key_Space) );
+    }
+    {
+        m_skipAction = new QAction( tr( "Skip" ), this );
+        QIcon skipIcon;
+        skipIcon.addFile( ":/taskbar-skip.png" );
+        m_skipAction->setIcon( skipIcon );
+
+        m_skipAction->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Right ) );
+    }
+
+    // connect the triggers
+    connect( m_loveAction, SIGNAL(triggered(bool)), SLOT(onLoveClicked(bool)) );
+    connect( m_banAction, SIGNAL(triggered(bool)), SLOT(onBanClicked()) );
+    connect( m_playAction, SIGNAL(triggered(bool)), SLOT(onPlayClicked(bool)) );
+    connect( m_skipAction, SIGNAL(triggered(bool)), SLOT(onSkipClicked()) );
+
+    // connect the action changes
+    connect( m_loveAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
+    connect( m_banAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
+    connect( m_playAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
+    connect( m_skipAction, SIGNAL(changed()), SLOT(onActionsChanged()) );
+}
+
+
+void
 WindowMain::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
 {
-    thumbButtonActions.append( m_actions->m_loveAction );
-    thumbButtonActions.append( m_actions->m_banAction );
-    thumbButtonActions.append( m_actions->m_playAction );
-    thumbButtonActions.append( m_actions->m_skipAction );
+    thumbButtonActions.append( m_loveAction );
+    thumbButtonActions.append( m_banAction );
+    thumbButtonActions.append( m_playAction );
+    thumbButtonActions.append( m_skipAction );
 }
 
 
@@ -96,7 +183,27 @@ WindowMain::onRecomendedClicked()
 void
 WindowMain::onActionsChanged()
 {
-    ON_ACTIONS_CHANGED();
+   ui->love->setChecked( m_loveAction->isChecked() );
+   ui->ban->setChecked( m_banAction->isChecked() );
+   ui->play->setChecked( m_playAction->isChecked() );
+   ui->skip->setChecked( m_skipAction->isChecked() );
+
+   ui->love->setEnabled( m_loveAction->isEnabled() );
+   ui->ban->setEnabled( m_banAction->isEnabled() );
+   ui->play->setEnabled( m_playAction->isEnabled() );
+   ui->skip->setEnabled( m_skipAction->isEnabled() );
+
+   ui->love->setToolTip( ui->love->isChecked() ? tr("Unlove") : tr("Love") );
+   ui->ban->setToolTip( tr("Ban") );
+   ui->info->setToolTip( tr("Info") );
+   ui->play->setToolTip( ui->play->isChecked() ? tr("Pause") : tr("Play") );
+   ui->skip->setToolTip( tr("Skip") );
+
+   ui->love->setText( ui->love->isChecked() ? tr("Unlove") : tr("Love") );
+   ui->ban->setText( tr("Ban") );
+   ui->info->setText( tr("Info") );
+   ui->play->setText( ui->play->isChecked() ? tr("Pause") : tr("Play") );
+   ui->skip->setText( tr("Skip") );
 }
 
 
@@ -150,53 +257,86 @@ WindowMain::onStationEditTextChanged( const QString& text )
 void
 WindowMain::onSpace()
 {
-    SPACE();
+    m_playAction->trigger();
 }
 
 
 void
 WindowMain::onPlayClicked( bool checked )
 {
-    PLAY_CLICKED();
+    if ( checked )
+    {
+        if ( radio->state() == Radio::Stopped )
+            radio->play( RadioStation( "" ) );
+        else
+        {
+            radio->resume();
+        }
+    }
+    else
+    {
+        radio->pause();
+    }
 }
 
 
 void
 WindowMain::onPlayTriggered( bool checked )
 {
-    PLAY_TRIGGERED();
+    if ( checked )
+    {
+        if ( radio->state() != Radio::Stopped )
+            setWindowTitle( QString( "Last.fm Radio - %1 - %2" ).arg( radio->station().title(), radio->currentTrack().toString() ) );
+    }
+    else
+        setWindowTitle( QString( "Last.fm Radio - %1" ).arg( radio->station().title() ) );
 }
 
 
 void
 WindowMain::onSkipClicked()
 {
-    SKIP_CLICKED();
+    radio->skip();
 }
 
 
 void
 WindowMain::onLoveClicked( bool loved )
 {
-    LOVE_CLICKED();
+    MutableTrack track( radio->currentTrack() );
+
+    if ( loved )
+        track.love();
+    else
+        track.unlove();
+
+    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool)));
 }
 
 void
 WindowMain::onLoveTriggered( bool loved )
 {
-    LOVE_TRIGGERED();
+    ui->love->setChecked( loved );
+    onLoveClicked( loved );
 }
 
 void
 WindowMain::onBanClicked()
 {
-    BAN_CLICKED();
+    QNetworkReply* banReply = MutableTrack( radio->currentTrack() ).ban();
+    connect(banReply, SIGNAL(finished()), SLOT(onBanFinished()));
 }
 
 void
 WindowMain::onBanFinished()
 {
-    BAN_FINISHED();
+    lastfm::XmlQuery lfm(lastfm::ws::parse(static_cast<QNetworkReply*>(sender())));
+
+    if ( lfm.attribute( "status" ) != "ok" )
+    {
+    }
+
+    m_skipAction->trigger();
 }
 
 
@@ -226,27 +366,51 @@ WindowMain::onInfoClicked()
 void
 WindowMain::onFilterClicked()
 {
-    ON_FILTER_CLICKED()
+    TagFilterDialog tagFilter( radio->station(), this );
+    if ( tagFilter.exec() == QDialog::Accepted )
+    {
+        RadioStation station = radio->station();
+        station.setTagFilter( tagFilter.tag() );
+        radio->playNext( station );
+    }
 }
 
 
 void
 WindowMain::onEditClicked()
 {
-    ON_EDIT_CLICKED();
+
 }
 
 void
 WindowMain::onRadioTick( qint64 tick )
 {
-    RADIO_TICK();
+    ui->bar->setValue( ui->bar->maximum() < tick ? ui->bar->maximum() : tick );
+
+    if( tick > 0 )
+    {
+        QTime time( 0, 0 );
+        time = time.addSecs( ( tick / 1000 ) );
+        ui->time->setText( time.toString( "mm:ss" ) );
+        QTime timeToGo( 0, 0 );
+        timeToGo = timeToGo.addSecs( ui->bar->maximum() < tick ? 0 : ( ui->bar->maximum() - tick ) / 1000 );
+        ui->timeToGo->setText( timeToGo.toString( "-mm:ss" ) );
+    }
 }
 
 
 void
 WindowMain::onTuningIn( const RadioStation& station )
 {
-    ON_TUNING_IN();
+    ui->radioTitle->setText( tr("Tuning %1").arg( station.title() ) );
+    ui->play->setChecked( true );
+    m_playAction->setChecked( true );
+    ui->album->setText( radio->currentTrack().isNull() ? "" : tr("from %1").arg( radio->currentTrack().album() ) );
+    ui->trackTitle->setText( radio->currentTrack().isNull() ? "" : radio->currentTrack().toString() );
+
+    ui->onTour->hide();
+
+    setWindowTitle( QString( "Last.fm Radio - %1" ).arg( station.title() ) );
 
     ui->details->setCurrentWidget( ui->detailsPage );
 }
@@ -260,7 +424,67 @@ QString userLibrary( const QString& user, const QString& artist )
 void
 WindowMain::onTrackSpooled( const Track& track )
 {
-    TRACK_SPOOLED();
+    if( !track.isNull() && track.source() == Track::LastFmRadio )
+    {
+        m_playAction->setEnabled( true );
+        m_loveAction->setEnabled( true );
+        m_banAction->setEnabled( true );
+        m_skipAction->setEnabled( true );
+
+        m_playAction->setChecked( true );
+        m_loveAction->setChecked( track.isLoved() );
+
+        connect( qApp, SIGNAL(busLovedStateChanged(bool)), ui->love, SLOT(setChecked(bool)) );
+        connect( ui->love, SIGNAL(clicked(bool)), qApp, SLOT(sendBusLovedStateChanged(bool)) );
+        connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool)));
+        connect( ui->info, SIGNAL(clicked()), SLOT(onInfoClicked()));
+
+        ui->play->setChecked( true );
+
+        ui->onTour->hide();
+
+        ui->trackTitle->setText( QString( "%1 %2 %3" ).arg(
+        Label::anchor( track.artist().www().toString(), track.artist().name()),
+        QChar( 0x2013 ),
+        Label::anchor( track.www().toString(), track.title()) ) );
+
+        ui->album->setText( QString( "from %1" ).arg( Label::anchor( track.album().www().toString(), track.album().title() ) ) );
+
+        ui->radioTitle->setText( radio->station().title() );
+
+        setWindowTitle( QString( "Last.fm Radio - %1 - %2" ).arg( radio->station().title(), track.toString() ) );
+
+        int trackDuration = track.duration();
+        ui->bar->setMinimum( 0 );
+        ui->bar->setMaximum( trackDuration * 1000 );
+        ui->bar->setValue( 0 );
+
+        QTime t( 0, 0 );
+        ui->time->setText( t.toString( "mm:ss" ));
+        t = t.addSecs( trackDuration );
+        ui->timeToGo->setText( t.toString( "-mm:ss" ));
+    }
+    else
+    {
+        ui->play->setChecked( false );
+
+        if( !ui->time->text().isEmpty())
+            update();
+
+        QTime t( 0, 0 );
+        ui->time->setText( t.toString( "mm:ss" ));
+        ui->timeToGo->setText( t.toString( "-mm:ss" ));
+
+        ui->trackTitle->clear();
+        ui->album->clear();
+        ui->context->clear();
+        ui->radioTitle->clear();
+
+        setWindowTitle( QString( "Last.fm Radio" ) );
+    }
+
+    ui->onTour->hide();
+    connect( track.artist().getEvents( 1 ), SIGNAL(finished()), SLOT(onGotEvents()) ) ;
 
     ui->nowPlaying->show();
 
@@ -317,14 +541,23 @@ WindowMain::onTrackSpooled( const Track& track )
 void
 WindowMain::onError( int error, const QVariant& errorText )
 {
-    ON_ERROR();
+    ui->radioTitle->setText( errorText.toString() + ": " + QString::number(error) );
 }
 
 
 void
 WindowMain::onStopped()
 {
-    ON_STOPPED();
+    m_playAction->setChecked( false );
+
+    ui->love->setEnabled( false );
+    ui->ban->setEnabled( false );
+    ui->skip->setEnabled( false );
+
+    ui->trackTitle->clear();
+    ui->album->clear();
+
+    setWindowTitle( "Last.fm Radio" );
 
     ui->nowPlaying->hide();
     //ui->details->setCurrentWidget( ui->quickstartPage );
@@ -358,6 +591,14 @@ WindowMain::onGotRecentStations()
 void
 WindowMain::onGotEvents()
 {
-    GOT_EVENTS();
+    XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
+
+    if ( lfm["events"].children("event").count() > 0
+         && lfm["events"].attribute("artist") == radio->currentTrack().artist() )
+    {
+        ui->onTour->show();
+        ui->onTour->setOpenExternalLinks( true );
+        ui->onTour->setText( Label::anchor( radio->currentTrack().artist().www().toString(), tr( "ON TOUR" ) ) );
+    }
 }
 

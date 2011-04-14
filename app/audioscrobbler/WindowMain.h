@@ -12,7 +12,7 @@ class WindowMain : public unicorn::MainWindow
     Q_OBJECT
 
 public:
-    explicit WindowMain( class Actions& actions );
+    explicit WindowMain();
     ~WindowMain();
 
 signals:
@@ -58,11 +58,15 @@ private slots:
 
 private:
     void addWinThumbBarButtons( QList<QAction*>& );
+    void createActions();
 
 private:
     Ui::WindowMain* ui;
 
-    class Actions* m_actions;
+    QAction* m_loveAction;
+    QAction* m_banAction;
+    QAction* m_playAction;
+    QAction* m_skipAction;
 };
 
 #endif // WINDOWMAIN_H
