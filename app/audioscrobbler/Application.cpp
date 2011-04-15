@@ -356,6 +356,10 @@ Application::init()
     initiateLogin();
 
     emit messageReceived( arguments() );
+
+#ifdef CLIENT_ROOM_RADIO
+    new SkipListener( this );
+#endif
 }
 
 void
