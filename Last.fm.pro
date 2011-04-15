@@ -6,7 +6,7 @@ SUBDIRS = lib/unicorn \
           app/twiddly
           #app/boffin
 
-mac:SUBDIRS += app/mac-bundle
+#mac:SUBDIRS += app/mac-bundle
 win32:SUBDIRS += app/win-plugin-installer
 
 linux*:SUBDIRS -= app/twiddly

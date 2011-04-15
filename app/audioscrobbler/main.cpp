@@ -148,6 +148,3 @@ void cleanup()
 	    unicorn::AppSettings().setValue( "Volume", radio->audioOutput()->volume() );
     }
 }
-
-
-#include "main.moc"

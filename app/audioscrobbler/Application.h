@@ -63,6 +63,15 @@ namespace audioscrobbler
     {
         Q_OBJECT
 
+        enum Argument
+        {
+            LastFmUrl,
+            Pause, //toggles pause
+            Skip,
+            Exit,
+            ArgUnknown
+        };
+
         enum State
         {
             Unknown,
@@ -95,9 +104,9 @@ namespace audioscrobbler
         QAction* m_love_action;
         QAction* m_tag_action;
         QAction* m_share_action;
-        QAction* m_banAction;
-        QAction* m_playAction;
-        QAction* m_skipAction;
+        QAction* m_ban_action;
+        QAction* m_play_action;
+        QAction* m_skip_action;
         QAction* m_show_window_action;
         QAction* m_toggle_window_action;
         QAction* m_scrobble_ipod_action;
@@ -115,6 +124,10 @@ namespace audioscrobbler
         QAction* loveAction() const{ return m_love_action; }
         QAction* tagAction() const{ return m_tag_action; }
         QAction* shareAction() const{ return m_share_action; }
+        QAction* banAction() const{ return m_ban_action; }
+        QAction* playAction() const{ return m_play_action; }
+        QAction* skipAction() const{ return m_skip_action; }
+
         StopWatch* stopWatch() const;
         PlayerConnection* currentConnection() const;
         DeviceScrobbler* deviceScrobbler() const;
@@ -172,6 +185,7 @@ namespace audioscrobbler
     private:
         void setTrackInfo();
         void resetTrackInfo();
+        static Argument argument( const QString& arg );
 
     private slots:
         void onTrayActivated(QSystemTrayIcon::ActivationReason);

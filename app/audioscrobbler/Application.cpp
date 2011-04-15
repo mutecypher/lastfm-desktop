@@ -171,15 +171,46 @@ Application::init()
     m_love_action->setEnabled( false );
     connect( m_love_action, SIGNAL(triggered(bool)), SLOT(changeLovedState(bool)));
 
-    m_tag_action = menu->addAction(tr("Tag")+ELLIPSIS);
-    m_tag_action->setIcon( QIcon( ":/tag-rest.png" ) );
-    m_tag_action->setEnabled( false );
-    connect( m_tag_action, SIGNAL(triggered()), SLOT(onTagTriggered()));
+    {
+        m_tag_action = menu->addAction(tr("Tag")+ELLIPSIS);
+        m_tag_action->setIcon( QIcon( ":/tag-rest.png" ) );
+        m_tag_action->setEnabled( false );
+        connect( m_tag_action, SIGNAL(triggered()), SLOT(onTagTriggered()));
+    }
 
-    m_share_action = menu->addAction(tr("Share")+ELLIPSIS);
-    m_share_action->setIcon( QIcon( ":/share-rest.png" ) );
-    m_share_action->setEnabled( false );
-    connect( m_share_action, SIGNAL(triggered()), SLOT(onShareTriggered()));
+    {
+        m_share_action = menu->addAction(tr("Share")+ELLIPSIS);
+        m_share_action->setIcon( QIcon( ":/share-rest.png" ) );
+        m_share_action->setEnabled( false );
+        connect( m_share_action, SIGNAL(triggered()), SLOT(onShareTriggered()));
+    }
+
+    {
+        m_ban_action = new QAction( tr( "Ban" ), this );
+        QIcon banIcon;
+        banIcon.addFile( ":/taskbar-ban.png" );
+        m_ban_action->setIcon( banIcon );
+
+        //connect( m_ban_action, SIGNAL(triggered()), SLOT(onBanTriggered()));
+    }
+    {
+        m_play_action = new QAction( tr( "Play" ), this );
+        m_play_action->setCheckable( true );
+        QIcon playIcon;
+        playIcon.addFile( ":/taskbar-pause.png", QSize(), QIcon::Normal, QIcon::On );
+        playIcon.addFile( ":/taskbar-play.png", QSize(), QIcon::Normal, QIcon::Off );
+        m_play_action->setIcon( playIcon );
+
+        //connect( m_play_action, SIGNAL(triggered(bool)), SLOT(onPlayTriggered(bool)));
+    }
+    {
+        m_skip_action = new QAction( tr( "Skip" ), this );
+        QIcon skipIcon;
+        skipIcon.addFile( ":/taskbar-skip.png" );
+        m_skip_action->setIcon( skipIcon );
+
+        //connect( m_skip_action, SIGNAL(triggered()), SLOT(onSkipTriggered()));
+    }
 
 #ifdef Q_WS_X11
     menu->addSeparator();
@@ -228,6 +259,9 @@ Application::init()
     m_mw->addWinThumbBarButton( m_love_action );
     m_mw->addWinThumbBarButton( m_tag_action );
     m_mw->addWinThumbBarButton( m_share_action );
+    m_mw->addWinThumbBarButton( m_ban_action );
+    m_mw->addWinThumbBarButton( m_play_action );
+    m_mw->addWinThumbBarButton( m_skip_action );
 
     m_drawer = new Drawer( m_mw );
 
@@ -685,19 +719,9 @@ Application::onWsError( lastfm::ws::Error e )
             break;
     }
 }
+
   
-  
-enum Argument
-{
-    LastFmUrl,
-    Pause, //toggles pause
-    Skip,
-    Exit,
-    Unknown
-};
-  
-  
-Argument argument( const QString& arg )
+Application::Argument Application::argument( const QString& arg )
 {
     if (arg == "--pause") return Pause;
     if (arg == "--skip") return Skip;
@@ -707,7 +731,7 @@ Argument argument( const QString& arg )
     //TODO show error if invalid schema and that
     if (url.isValid() && url.scheme() == "lastfm") return LastFmUrl;
 
-    return Unknown;
+    return ArgUnknown;
 }
 
     
@@ -759,26 +783,26 @@ Application::parseArguments( const QStringList& args )
     foreach (QString const arg, args.mid( 1 ))
         switch (argument( arg ))
         {
-        case Argument::LastFmUrl:
+        case LastFmUrl:
             radio->play( RadioStation( arg ) );
             break;
 
-        case Argument::Exit:
+        case Exit:
             exit();
             break;
 
-        case Argument::Skip:
+        case Skip:
             radio->skip();
             break;
 
-        case Argument::Pause:
+        case Pause:
             if ( radio->state() == Radio::Playing )
                 radio->pause();
             else if ( radio->state() == Radio::Paused )
                 radio->resume();
             break;
 
-        case Argument::Unknown:
+        case ArgUnknown:
             qDebug() << "Unknown argument:" << arg;
             break;
         }
