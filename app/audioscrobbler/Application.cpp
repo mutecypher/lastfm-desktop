@@ -39,6 +39,7 @@
 #include "ScrobbleInfoFetcher.h"
 #include "StopWatch.h"
 #include "../Widgets/ScrobbleControls.h"
+#include "SkipListener.h"
 
 
 #ifdef Q_WS_MAC

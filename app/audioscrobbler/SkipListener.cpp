@@ -10,7 +10,10 @@ SkipListener::SkipListener(QObject *parent) :
 {
     m_server = new QTcpServer( this );
 
-    m_server->listen( QHostAddress("localhost"), 54321 );
+    bool success = m_server->listen( QHostAddress::Any, 54321 );
+
+    if ( !success )
+        qDebug() << m_server->errorString();
 
     connect( m_server, SIGNAL(newConnection()), SLOT(onNewConnection()));
 
@@ -29,11 +32,16 @@ SkipListener::onNewConnection()
 {
     QTcpSocket* socket = m_server->nextPendingConnection();
 
+    socket->waitForReadyRead();
     QString data = socket->readAll();
+
+    qDebug() << data;
 
     if ( !m_users.contains( data ) )
         m_users.append( data );
 
     if ( m_users.count() >= 2 )
         radio->skip();
+
+    socket->close();
 }
