@@ -5,10 +5,12 @@
 
 #include <lastfm/User>
 #include <lastfm/XmlQuery>
+#include <lastfm/Tasteometer>
 
 #include "../Radio.h"
 #include "../FriendsSortFilterProxyModel.h"
 #include "../StationListModel.h"
+#include "../Application.h"
 
 #include "StationPanelWidget.h"
 #include "ui_StationPanelWidget.h"
@@ -38,12 +40,7 @@ StationPanelWidget::StationPanelWidget(QWidget *parent) :
 
     connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
 
-    // start fetching things
-    connect( User().getRecentStations( 20 ), SIGNAL(finished()), SLOT(onGotRecentStations()) );
-    connect( User().getFriends( true, 50 ), SIGNAL(finished()), SLOT(onGotFriends()));
-    connect( User().getNeighbours( 50 ), SIGNAL(finished()), SLOT(onGotNeighbours()));
-    connect( User().getTopArtists( "3month", 50 ), SIGNAL(finished()), SLOT(onGotArtists()));
-    connect( RadioStation::library( User().name() ).getTagSuggestions( 50 ), SIGNAL(finished()), SLOT(onGotTags()));
+    connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChange(unicorn::Session*)));
 
     // always start on the recent tab
     ui->recent->click();
@@ -55,6 +52,22 @@ StationPanelWidget::~StationPanelWidget()
     delete ui;
 }
 
+
+void
+StationPanelWidget::onSessionChange( unicorn::Session* newSession )
+{
+    // start fetching things
+    RadioStation yourLibrary = RadioStation::library( User() );
+    yourLibrary.setTitle( "Your Library Radio" );
+    ui->friendsList->addStation( yourLibrary, "You" );
+    ui->friendsList->setTasteometerCompareScore( User().name(), 1 );
+
+    connect( User().getRecentStations( 20 ), SIGNAL(finished()), SLOT(onGotRecentStations()) );
+    connect( User().getFriends( true, 50 ), SIGNAL(finished()), SLOT(onGotFriends()));
+    connect( User().getNeighbours( 50 ), SIGNAL(finished()), SLOT(onGotNeighbours()));
+    connect( User().getTopArtists( "3month", 50 ), SIGNAL(finished()), SLOT(onGotArtists()));
+    connect( RadioStation::library( User().name() ).getTagSuggestions( 50 ), SIGNAL(finished()), SLOT(onGotTags()));
+}
 
 void
 StationPanelWidget::onTuningIn( const RadioStation& station )
@@ -101,11 +114,19 @@ StationPanelWidget::onTagsClicked()
 void
 StationPanelWidget::onFriendsSortClicked()
 {
+    Qt::SortOrder sortOrder = Qt::AscendingOrder;
+
     if ( m_friendsProxyModel->sortRole() == StationListModel::TitleRole )
         m_friendsProxyModel->setSortRole( StationListModel::TimestampRole );
+    else if ( m_friendsProxyModel->sortRole() == StationListModel::TimestampRole )
+    {
+        m_friendsProxyModel->setSortRole( StationListModel::TasteometerScoreRole );
+        sortOrder = Qt::DescendingOrder;
+    }
     else
         m_friendsProxyModel->setSortRole( StationListModel::TitleRole );
-    m_friendsProxyModel->sort( 0 );
+
+    m_friendsProxyModel->sort( 0, sortOrder );
 }
 
 
@@ -134,9 +155,13 @@ StationPanelWidget::onGotFriends()
         MutableTrack( track ).setArtist( user["recenttrack"]["artist"]["name"].text() );
         MutableTrack( track ).setTitle( user["recenttrack"]["name"].text() );
 
-        RadioStation station = RadioStation::library( lastfm::User( user["name"].text() ) );
+        lastfm::User usersFriend = lastfm::User( user["name"].text() );
+        RadioStation station = RadioStation::library( usersFriend );
         station.setTitle( tr("%1%2s Library Radio").arg( user["name"].text(), QChar( 0x2019 ) ) );
         ui->friendsList->addStation( station, user["realname"].text() + " - " + track.toString() );
+
+        // fetch the user's tasteometer score with the current user
+        connect( lastfm::Tasteometer::compare( User(), usersFriend ), SIGNAL(finished()), SLOT(onGetTasteometerCompare()));
     }
 
     int page = lfm["friends"].attribute( "page" ).toInt();
@@ -145,6 +170,20 @@ StationPanelWidget::onGotFriends()
 
     if ( page != totalPages )
         connect( User().getFriends( true, perPage, page + 1 ), SIGNAL(finished()), SLOT(onGotFriends()) );
+}
+
+
+void
+StationPanelWidget::onGetTasteometerCompare()
+{
+    lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
+
+    qDebug() << lfm;
+
+    float score = lfm["comparison"]["result"]["score"].text().toFloat();
+    QString usersFriend = lfm["comparison"]["input"].children("user").at( 1 )["name"].text();
+
+    ui->friendsList->setTasteometerCompareScore( usersFriend, score );
 }
 
 

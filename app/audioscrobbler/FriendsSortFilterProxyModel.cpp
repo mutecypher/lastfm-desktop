@@ -42,6 +42,8 @@ FriendsSortFilterProxyModel::lessThan(const QModelIndex& left, const QModelIndex
 {
     if ( sortRole() == StationListModel::TimestampRole )
         return left.data( sortRole() ).toDateTime() < right.data( sortRole() ).toDateTime();
+    else if ( sortRole() == StationListModel::TasteometerScoreRole )
+        return left.data( sortRole() ).toFloat() < right.data( sortRole() ).toFloat();
 
     return left.data( sortRole() ).toString() < right.data( sortRole() ).toString();
 }

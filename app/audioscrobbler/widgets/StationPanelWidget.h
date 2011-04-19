@@ -4,6 +4,7 @@
 #include <QWidget>
 
 #include <lastfm/RadioStation>
+#include "lib/unicorn/UnicornSession.h"
 
 namespace Ui {
     class StationPanelWidget;
@@ -33,6 +34,10 @@ private slots:
     void onGotTags();
 
     void onFriendsSortClicked();
+
+    void onGetTasteometerCompare();
+
+    void onSessionChange( unicorn::Session* newSession );
 
 private:
     Ui::StationPanelWidget *ui;

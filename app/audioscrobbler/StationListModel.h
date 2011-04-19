@@ -17,6 +17,7 @@ private:
         QString name;
         QDateTime timestamp;
         QIcon icon;
+        float tasteometerScore;
     };
 
 public:
@@ -25,7 +26,8 @@ public:
         TitleRole = Qt::UserRole,
         UrlRole,
         TimestampRole,
-        NameRole
+        NameRole,
+        TasteometerScoreRole
     };
 
     explicit StationListModel(QObject *parent = 0);
@@ -33,12 +35,13 @@ public:
     void addItem( const RadioStation& station, const QString& description );
 
     QVariant data ( const QModelIndex & index, int role ) const;
+    int rowCount( const QModelIndex & parent = QModelIndex() ) const;
+    QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex() ) const;
 
-private:
-    QModelIndex index( int row, int column, const QModelIndex& parent ) const;
+private:    
     QModelIndex parent( const QModelIndex & index ) const;
-    int rowCount( const QModelIndex & parent ) const;
     int columnCount( const QModelIndex & parent ) const;
+    bool setData( const QModelIndex & index, const QVariant & value, int role );
 
 private:
     QList<Data> m_model;

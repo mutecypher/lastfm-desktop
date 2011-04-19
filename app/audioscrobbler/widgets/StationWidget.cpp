@@ -169,6 +169,35 @@ void
 StationWidget::addStation( const RadioStation& station, const QString& description )
 {
     m_model->addItem( station, description );
+
+    QString stationUrl = station.url();
+
+    if ( stationUrl.startsWith("lastfm://user/") )
+    {
+        int endPos = stationUrl.indexOf( "/" , 14 );
+        if ( endPos == -1 )
+            endPos = stationUrl.length();
+
+        QMap<int, QVariant> map;
+        map[StationListModel::NameRole] = stationUrl.mid( 14, endPos - 14 );
+        m_model->setItemData( m_model->index( m_model->rowCount() - 1, 0), map );
+    }
+}
+
+
+void
+StationWidget::setTasteometerCompareScore( const QString& user, float score )
+{
+    for ( int i(0) ; i < m_model->rowCount() ; ++i )
+    {
+        QString userName = m_model->data( m_model->index( i, 0 ), StationListModel::NameRole ).toString();
+        if ( user ==  userName )
+        {
+            QMap<int, QVariant> map;
+            map[StationListModel::TasteometerScoreRole] = score;
+            m_model->setItemData( m_model->index( i, 0 ), map );
+        }
+    }
 }
 
 

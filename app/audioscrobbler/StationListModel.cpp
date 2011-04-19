@@ -49,6 +49,28 @@ StationListModel::columnCount( const QModelIndex & parent ) const
     return 2;
 }
 
+bool
+StationListModel::setData ( const QModelIndex & index, const QVariant & value, int role )
+{
+    bool result = false;
+
+    if ( role == NameRole )
+    {
+        m_model[ index.row() ].name = value.toString();
+        result = true;
+    }
+    else if ( role == TasteometerScoreRole )
+    {
+        m_model[ index.row() ].tasteometerScore = value.toFloat();
+        m_model[ index.row() ].description.insert( 0, QString( "%1 " ).arg( value.toFloat() * 100, 0, 'f', 2, '0' ) );
+        result = true;
+    }
+
+    if (result)
+        emit dataChanged(index, index);
+
+    return result;
+}
 
 QVariant
 StationListModel::data( const QModelIndex & index, int role ) const
@@ -78,6 +100,9 @@ StationListModel::data( const QModelIndex & index, int role ) const
         break;
     case NameRole:
         data = m_model[index.row()].name;
+        break;
+    case TasteometerScoreRole:
+        data = m_model[index.row()].tasteometerScore;
         break;
     }
 
