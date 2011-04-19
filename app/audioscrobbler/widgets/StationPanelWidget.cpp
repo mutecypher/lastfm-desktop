@@ -51,6 +51,12 @@ StationPanelWidget::~StationPanelWidget()
 void
 StationPanelWidget::onSessionChanged( unicorn::Session* newSession )
 {
+    ui->recentList->clear();
+    ui->tagsList->clear();
+    ui->friendsList->clear();
+    ui->neighboursList->clear();
+    ui->artistsList->clear();
+
     // start fetching things
     RadioStation yourLibrary = RadioStation::library( User() );
     yourLibrary.setTitle( "Your Library Radio" );
@@ -63,13 +69,6 @@ StationPanelWidget::onSessionChanged( unicorn::Session* newSession )
     connect( User().getTopArtists( "3month", 50 ), SIGNAL(finished()), SLOT(onGotArtists()));
     connect( RadioStation::library( User().name() ).getTagSuggestions( 50 ), SIGNAL(finished()), SLOT(onGotTags()));
 }
-
-void
-StationPanelWidget::onTuningIn( const RadioStation& station )
-{
-    ui->recentList->recentStation( station );
-}
-
 
 void
 StationPanelWidget::onTuningIn( const RadioStation& station )
@@ -129,7 +128,6 @@ StationPanelWidget::onGotFriends()
 
         // fetch the user's tasteometer score with the current user
         connect( lastfm::Tasteometer::compare( User(), usersFriend ), SIGNAL(finished()), SLOT(onGotTasteometerCompare()));
-        ui->friendsList->addStation( station, track.toString() );
     }
 
     int page = lfm["friends"].attribute( "page" ).toInt();

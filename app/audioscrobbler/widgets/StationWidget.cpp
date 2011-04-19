@@ -203,6 +203,7 @@ StationWidget::setTasteometerCompareScore( const QString& user, float score )
             QMap<int, QVariant> map;
             map[StationListModel::TasteometerScoreRole] = score;
             m_model->setItemData( m_model->index( i, 0 ), map );
+            break;
         }
     }
 }

@@ -56,7 +56,7 @@ StationListModel::columnCount( const QModelIndex & parent ) const
 }
 
 bool
-StationListModel::setData ( const QModelIndex & index, const QVariant & value, int role )
+StationListModel::setData( const QModelIndex & index, const QVariant & value, int role )
 {
     bool result = false;
 
