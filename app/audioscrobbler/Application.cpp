@@ -158,11 +158,13 @@ Application::init()
     /// tray menu
     QMenu* menu = new QMenu;
     (menu->addMenu( new UserMenu()))->setText( "Users");
+
     m_show_window_action = menu->addAction( tr("Show Scrobbler"));
     m_show_window_action->setShortcut( Qt::CTRL + Qt::META + Qt::Key_S );
     menu->addSeparator();
     m_artist_action = menu->addAction( "" );
     m_title_action = menu->addAction(tr("Ready"));
+
     m_love_action = menu->addAction(tr("Love"));
     m_love_action->setCheckable( true );
     QIcon loveIcon;
@@ -245,6 +247,13 @@ Application::init()
     connect( m_about_action, SIGNAL( triggered() ), SLOT( onAboutTriggered() ) );
     menu->addSeparator();
 
+#ifndef NDEBUG
+    QAction* rss = menu->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()) );
+    rss->setShortcut( Qt::CTRL + Qt::Key_R );
+
+    menu->addSeparator();
+#endif
+
     QAction* quit = menu->addAction(tr("Quit %1").arg( applicationName()));
 
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
@@ -257,18 +266,15 @@ Application::init()
 
 /// MetadataWindow
     m_mw = new MetadataWindow;
-    m_mw->addWinThumbBarButton( m_love_action );
     m_mw->addWinThumbBarButton( m_tag_action );
     m_mw->addWinThumbBarButton( m_share_action );
+    m_mw->addWinThumbBarButton( m_love_action );
     m_mw->addWinThumbBarButton( m_ban_action );
     m_mw->addWinThumbBarButton( m_play_action );
     m_mw->addWinThumbBarButton( m_skip_action );
 
-    m_drawer = new Drawer( m_mw );
-
-    new QVBoxLayout( m_drawer );
-
-    m_drawer->layout()->addWidget( m_radioWidget = new RadioWidget );
+    QVBoxLayout* drawerLayout = new QVBoxLayout( m_drawer = new Drawer( m_mw ) );
+    drawerLayout->addWidget( m_radioWidget = new RadioWidget );
 
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
 #ifndef Q_OS_LINUX

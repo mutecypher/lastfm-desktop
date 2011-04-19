@@ -7,10 +7,10 @@ Drawer::Drawer( QWidget* parent )
     : QWidget( parent, Qt::Drawer | Qt::FramelessWindowHint )
     {
 #ifdef FAKE_DRAWER
-    timeLine = new QTimeLine( 1000, this );
-    timeLine->setUpdateInterval( 1 );
-    connect( timeLine, SIGNAL(frameChanged( int )), SLOT(onFrameChanged( int )));
-    connect( timeLine, SIGNAL(finished()), SLOT(onTimeLineFinished()));
+    m_timeLine = new QTimeLine( 1000, this );
+    m_timeLine->setUpdateInterval( 1 );
+    connect( m_timeLine, SIGNAL(frameChanged( int )), SLOT(onFrameChanged( int )));
+    connect( m_timeLine, SIGNAL(finished()), SLOT(onTimeLineFinished()));
     parent->setMouseTracking( true );
     parent->installEventFilter( this );
     eventFilter( parent, 0 );
@@ -23,7 +23,7 @@ bool
 Drawer::eventFilter( QObject* obj, QEvent* event )
 {
     QWidget* parent = static_cast<QWidget*>(obj);
-    if( event == 0 ||   //called from constructor
+    if( event == 0 ||   // called from constructor
         event->type() == QEvent::Move ||
         event->type() == QEvent::Resize ) {
         if( !isVisible() ) {
@@ -33,33 +33,29 @@ Drawer::eventFilter( QObject* obj, QEvent* event )
             move( QPoint( parent->frameGeometry().right(), parent->geometry().y()));
             resize( width(), parent->size().height());
         }
-        timeLine->setFrameRange( parentWidget()->frameGeometry().left(), parentWidget()->frameGeometry().right());
+        m_timeLine->setFrameRange( parentWidget()->frameGeometry().left(), parentWidget()->frameGeometry().right());
     }
+
     return false;
 }
 
-bool
-Drawer::event( QEvent* event )
+void
+Drawer::showEvent( QShowEvent* event )
 {
-    switch( event->type() )
-    {
-        case QEvent::Show:
-            parentWidget()->raise();
-            timeLine->setDirection(QTimeLine::Forward);
-            timeLine->setEasingCurve( QEasingCurve::OutExpo );
-            timeLine->start();
-        break;
-        case QEvent::Close:
-            parentWidget()->raise();
-            timeLine->setDirection(QTimeLine::Backward);
-            timeLine->setEasingCurve( QEasingCurve::InBounce );
-            timeLine->start();
-            event->setAccepted( false );
-            return true;
-        break;
-    }
+    parentWidget()->raise();
+    m_timeLine->setDirection(QTimeLine::Forward);
+    m_timeLine->setEasingCurve( QEasingCurve::OutExpo );
+    m_timeLine->start();
+}
 
-    return false;
+void
+Drawer::closeEvent( QCloseEvent* event )
+{
+    parentWidget()->raise();
+    m_timeLine->setDirection(QTimeLine::Backward);
+    m_timeLine->setEasingCurve( QEasingCurve::InBounce );
+    m_timeLine->start();
+    event->setAccepted( false );
 }
 
 void
@@ -75,7 +71,7 @@ Drawer::onFrameChanged( int frame )
 void
 Drawer::onTimeLineFinished()
 {
-    if( timeLine->direction() == QTimeLine::Backward)
+    if( m_timeLine->direction() == QTimeLine::Backward)
         hide();
 }
 

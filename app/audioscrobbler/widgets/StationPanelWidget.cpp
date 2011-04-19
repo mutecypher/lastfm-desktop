@@ -7,6 +7,7 @@
 #include <lastfm/XmlQuery>
 #include <lastfm/Tasteometer>
 
+#include "../Application.h"
 #include "../Radio.h"
 #include "../FriendsSortFilterProxyModel.h"
 #include "../StationListModel.h"
@@ -32,18 +33,12 @@ StationPanelWidget::StationPanelWidget(QWidget *parent) :
 
     connect( ui->friendsFilter, SIGNAL(textChanged(QString)), m_friendsProxyModel, SLOT(setFilterFixedString(QString)));
 
-    connect( ui->recent, SIGNAL(clicked()), SLOT(onRecentClicked()));
-    connect( ui->friends, SIGNAL(clicked()), SLOT(onFriendsClicked()));
-    connect( ui->neighbours, SIGNAL(clicked()), SLOT(onNeighboursClicked()));
-    connect( ui->artists, SIGNAL(clicked()), SLOT(onArtistsClicked()));
-    connect( ui->tags, SIGNAL(clicked()), SLOT(onTagsClicked()));
-
     connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
 
-    connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChange(unicorn::Session*)));
+    connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)) );
 
     // always start on the recent tab
-    ui->recent->click();
+    ui->stationTabWidget->setCurrentWidget( ui->recentTab );
 }
 
 
@@ -54,7 +49,7 @@ StationPanelWidget::~StationPanelWidget()
 
 
 void
-StationPanelWidget::onSessionChange( unicorn::Session* newSession )
+StationPanelWidget::onSessionChanged( unicorn::Session* newSession )
 {
     // start fetching things
     RadioStation yourLibrary = RadioStation::library( User() );
@@ -77,37 +72,9 @@ StationPanelWidget::onTuningIn( const RadioStation& station )
 
 
 void
-StationPanelWidget::onRecentClicked()
+StationPanelWidget::onTuningIn( const RadioStation& station )
 {
-    ui->stackedWidget->setCurrentWidget( ui->recentPage );
-}
-
-
-void
-StationPanelWidget::onFriendsClicked()
-{
-    ui->stackedWidget->setCurrentWidget( ui->friendsPage );
-}
-
-
-void
-StationPanelWidget::onNeighboursClicked()
-{
-    ui->stackedWidget->setCurrentWidget( ui->neighboursPage );
-}
-
-
-void
-StationPanelWidget::onArtistsClicked()
-{
-    ui->stackedWidget->setCurrentWidget( ui->artistsPage );
-}
-
-
-void
-StationPanelWidget::onTagsClicked()
-{
-    ui->stackedWidget->setCurrentWidget( ui->tagsPage );
+    ui->recentList->recentStation( station );
 }
 
 
@@ -158,10 +125,11 @@ StationPanelWidget::onGotFriends()
         lastfm::User usersFriend = lastfm::User( user["name"].text() );
         RadioStation station = RadioStation::library( usersFriend );
         station.setTitle( tr("%1%2s Library Radio").arg( user["name"].text(), QChar( 0x2019 ) ) );
-        ui->friendsList->addStation( station, user["realname"].text() + " - " + track.toString() );
+        ui->friendsList->addStation( station, track.toString() );
 
         // fetch the user's tasteometer score with the current user
-        connect( lastfm::Tasteometer::compare( User(), usersFriend ), SIGNAL(finished()), SLOT(onGetTasteometerCompare()));
+        connect( lastfm::Tasteometer::compare( User(), usersFriend ), SIGNAL(finished()), SLOT(onGotTasteometerCompare()));
+        ui->friendsList->addStation( station, track.toString() );
     }
 
     int page = lfm["friends"].attribute( "page" ).toInt();
@@ -174,7 +142,7 @@ StationPanelWidget::onGotFriends()
 
 
 void
-StationPanelWidget::onGetTasteometerCompare()
+StationPanelWidget::onGotTasteometerCompare()
 {
     lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
 

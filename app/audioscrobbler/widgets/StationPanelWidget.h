@@ -6,6 +6,8 @@
 #include <lastfm/RadioStation>
 #include "lib/unicorn/UnicornSession.h"
 
+#include "lib/unicorn/UnicornSession.h"
+
 namespace Ui {
     class StationPanelWidget;
 }
@@ -21,12 +23,6 @@ public:
 private slots:
     void onTuningIn( const RadioStation& station );
 
-    void onRecentClicked();
-    void onFriendsClicked();
-    void onNeighboursClicked();
-    void onArtistsClicked();
-    void onTagsClicked();
-
     void onGotRecentStations();
     void onGotFriends();
     void onGotNeighbours();
@@ -34,10 +30,10 @@ private slots:
     void onGotTags();
 
     void onFriendsSortClicked();
+	
+    void onGotTasteometerCompare();
 
-    void onGetTasteometerCompare();
-
-    void onSessionChange( unicorn::Session* newSession );
+    void onSessionChanged( unicorn::Session* newSession );
 
 private:
     Ui::StationPanelWidget *ui;

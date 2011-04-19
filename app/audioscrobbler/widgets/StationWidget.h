@@ -21,6 +21,8 @@ public:
     void recentStation( const RadioStation& station );
     void setTasteometerCompareScore( const QString& user, float score );
 
+    void clear();
+
     class QTreeView* treeView() const;
 
 private:

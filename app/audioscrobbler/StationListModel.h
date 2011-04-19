@@ -34,6 +34,8 @@ public:
 
     void addItem( const RadioStation& station, const QString& description );
 
+    void clear();
+
     QVariant data ( const QModelIndex & index, int role ) const;
     int rowCount( const QModelIndex & parent = QModelIndex() ) const;
     QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex() ) const;

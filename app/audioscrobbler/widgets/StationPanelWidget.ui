@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>594</width>
-    <height>506</height>
+    <width>460</width>
+    <height>487</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,76 +21,15 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QFrame" name="stationTypes">
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
+    <widget class="QTabWidget" name="stationTabWidget">
+     <property name="currentIndex">
+      <number>4</number>
      </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <property name="spacing">
-       <number>0</number>
-      </property>
-      <property name="margin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QRadioButton" name="recent">
-        <property name="text">
-         <string>Recent</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="friends">
-        <property name="text">
-         <string>Friends</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="neighbours">
-        <property name="text">
-         <string>Neighbours</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="artists">
-        <property name="text">
-         <string>Artists</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="tags">
-        <property name="text">
-         <string>Tags</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>0</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QStackedWidget" name="stackedWidget">
-     <widget class="QWidget" name="page"/>
-     <widget class="QWidget" name="recentPage">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+     <widget class="QWidget" name="recentTab">
+      <attribute name="title">
+       <string>Recent</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -102,8 +41,27 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="friendsPage">
-      <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,0">
+     <widget class="QWidget" name="tagsTab">
+      <attribute name="title">
+       <string>Tags</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="StationWidget" name="tagsList" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="friendsTab">
+      <attribute name="title">
+       <string>Friends</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -129,8 +87,11 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="neighboursPage">
-      <layout class="QVBoxLayout" name="verticalLayout_4">
+     <widget class="QWidget" name="nieghboursTab">
+      <attribute name="title">
+       <string>Neighbours</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_9">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -142,8 +103,11 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="artistsPage">
-      <layout class="QVBoxLayout" name="verticalLayout_5">
+     <widget class="QWidget" name="artistTab">
+      <attribute name="title">
+       <string>Artists</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_10">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -152,19 +116,6 @@
        </property>
        <item>
         <widget class="StationWidget" name="artistsList" native="true"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tagsPage">
-      <layout class="QVBoxLayout" name="verticalLayout_6">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="margin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="StationWidget" name="tagsList" native="true"/>
        </item>
       </layout>
      </widget>

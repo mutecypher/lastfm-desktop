@@ -24,7 +24,7 @@ QSplitter {
 
 unicorn--MainWindow #NowScrobbling,
 unicorn--MainWindow #activityList {
-    background-color: rgba( 38, 38, 38, 235 );
+    background-color: #eeeeee;
 }
 
 unicorn--MainWindow #ScrobbleStatusRow {
@@ -34,13 +34,14 @@ unicorn--MainWindow #ScrobbleStatusRow {
 
 StatusBar {
     background-clip: border;
-    background-color: #2c2c2c;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 200, 200, 200, 255 ), stop:1 rgba( 145, 145, 145, 255 ));
+    
 
     border: 1px solid #555;
     border-top: none;
 
-    min-height: 18px;
-    max-height: 18px;
+    min-height: 22px;
+    max-height: 22px;
 }
 
 ScrobbleInfoWidget {
@@ -52,22 +53,18 @@ TitleBar {
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
 
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 57, 57, 57, 200 ), stop:1 rgba( 62, 62, 62, 200 ));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 200, 200, 200, 255 ), stop:1 rgba( 145, 145, 145, 255 ));
     border: 1px solid rgba(146, 146, 146, 153);
     border-bottom: none;
 
-    background-image: url(:/titlebar_highlight.png);
-    background-position: top right;
-    background-repeat: repeat-x;
-
-    min-height: 18px;
-    max-height: 18px;
+    min-height: 22px;
+    max-height: 22px;
 }
 
 TitleBar QLabel {
     font-weight: bold;
     font-size: 11px;
-    color: #fff;
+    color: black;
     min-height: 20px;
     max-height: 20px;
     margin-top: -5px;
@@ -101,7 +98,7 @@ WelcomeWidget #asLogo {
 }
 
 WelcomeWidget QLabel {
-	color: #cccccc;
+	color: black;
 	qproperty-wordWrap: true;
 }
 
@@ -128,7 +125,7 @@ StatusBar {
 StatusBar QLabel{
     font-weight: bold;
     font-size: 11px;
-    color: #cccccc;
+    color: black;
 }
 
 QScrollArea,
@@ -153,7 +150,7 @@ MetadataWindow ProfileWidget .QLabel,
 ScrobbleInfoWidget QLabel,
 MetadataWindow QAbstractItemView,
 MetadataWindow DataListWidget {
-    color: #cccccc;
+    color: black;
     margin: 0px;
     font-size: 11px;
     font-weight: normal;
@@ -212,8 +209,8 @@ DataBox {
 }
 
 DataBox #header {
-    border-top: 1px solid #cccccc;
-    border-bottom: 1px solid #cccccc;
+    border-top: 1px solid #999999;
+    border-bottom: 1px solid #999999;
     padding: 2px 0px;
     margin-bottom: 10px;
 }
@@ -279,7 +276,7 @@ NowPlayingItem {
 }
 
 ActivityListItem[selected=true] {
-	background-color: rgba( 23, 23, 23, 230 );
+	background-color: #BFDFF4;
 }
 
 ActivityListItem {
@@ -297,7 +294,7 @@ ActivityListItem HttpImageWidget#art {
 }
 
 ActivityListItem QLabel {
-    color: #949494;
+    color: black;
     font-size:12px;
 }
 
@@ -327,27 +324,11 @@ ActivityListItem QLabel#love {
 	max-height: 15;
 }
 
-ActivityListItem QToolButton#cog {
-    qproperty-icon: url(:/cog-rest.png);
-	qproperty-iconSize: 48px 29px;
-	qproperty-popupMode: InstantPopup;
-	width: 24px;
-	height: 17px;
-	margin: 0px 0px;
-}
-
-ActivityListItem QToolButton::menu-indicator {
-    image: none;
-}
-
-ActivityListItem QToolButton#cog:pressed {
-    qproperty-icon: url(:/cog-onpress.png);
-}
 
 MetadataWindow QLabel#name {
     margin-top: 4px;
     padding-top:2px;
-    color: #afafaf;
+    color: black;
 }
 
 DataListWidget QLabel{ padding: 0px; margin: 0px; }
@@ -372,7 +353,7 @@ QTextBrowser {
     background-color: transparent;
 }
 QTextBrowser, QLabel#title1, QLabel#title2 {
-    color: #e6e6e6;
+    color: black;
 }
 
 QLabel#title1, QLabel#title2 {
@@ -404,7 +385,7 @@ QLabel#title2 {
 }
 
 QScrollBar  {
-    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #1f1f1f, stop:1 #5a5a5a);
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #ababab, stop:1 #f0f0f0);
     margin: 0px;
     width: 16px;
     padding: 0px 0px 0px 0px;
@@ -421,7 +402,7 @@ QScrollBar::sub-page {
 }
 
 QScrollBar::handle {
-    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #515151, stop:0.5 #535353, stop:1 #515151 );
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #9DD8FA, stop:0.5 #9CC9E1, stop:1 #9CC5EB );
     min-height: 30px;
     border-radius: 6px;
     margin-left: 1px;
@@ -493,7 +474,7 @@ LfmListView#similarArtists LfmDelegate {
 }
 
 QSplitter::handle {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 83, 83, 83, 242 ), stop:1 rgba( 62, 62, 62, 242));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 200, 200, 200, 255 ), stop:1 rgba( 145, 145, 145, 255 ));
     background-image: url(:/slider_nubbin.png);
     background-repeat: no-repeat;
     background-position: center;

@@ -17,21 +17,18 @@ Q_OBJECT
 public:
     Drawer( QWidget* parent );
 
-protected:
-
 #ifdef FAKE_DRAWER
+protected:
     bool eventFilter( QObject* obj, QEvent* event );
-    bool event( QEvent* event );
-#endif
+    void showEvent( QShowEvent* event );
+    void closeEvent( QCloseEvent* event );
 
 private slots:
-#ifdef FAKE_DRAWER
     void onFrameChanged( int frame );
     void onTimeLineFinished();
-#endif
+
 private:
-#ifdef FAKE_DRAWER
-    QTimeLine* timeLine;
+    QTimeLine* m_timeLine;
 #endif
 };
 

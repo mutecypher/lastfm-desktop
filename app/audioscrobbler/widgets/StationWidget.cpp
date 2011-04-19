@@ -39,6 +39,13 @@ QTreeView* StationWidget::treeView() const
     return ui->treeView;
 }
 
+void
+StationWidget::clear()
+{
+    m_model->clear();
+}
+
+
 RadioStation
 StationWidget::getStation()
 {

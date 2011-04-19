@@ -6,6 +6,12 @@ StationListModel::StationListModel(QObject *parent)
 }
 
 
+void StationListModel::clear()
+{
+    m_model.clear();
+    emit layoutChanged();
+}
+
 void
 StationListModel::addItem( const RadioStation& station, const QString& description )
 {

@@ -5,8 +5,8 @@
 
 #include "Radio.h"
 
-SkipListener::SkipListener(QObject *parent) :
-    QObject(parent)
+SkipListener::SkipListener(QObject *parent)
+    :QObject(parent)
 {
     m_server = new QTcpServer( this );
 
@@ -26,6 +26,7 @@ SkipListener::onTrackSpooled()
 {
     m_users.clear();
 }
+
 
 void
 SkipListener::onNewConnection()
