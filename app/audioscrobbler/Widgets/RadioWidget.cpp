@@ -479,7 +479,7 @@ RadioWidget::onTrackSpooled( const Track& track )
 
         QString ircMessage = QString( "#last.clientradio %1 %2" ).arg( track.toString(), strippedContextString );
 
-        if (context.values().count() == 4)
+        if ( context.values().count() == ( radio->station().url().count( "," ) + 1 ) )
             ircMessage.append( " BINGO!" );
 
         QTcpSocket socket;
