@@ -183,7 +183,7 @@ UserSearch::onGetFriendsFinished()
     else
     {
         // get the next page of friends
-        connect(User().getFriends( friendPage.perPage, friendPage.page + 1 ), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
+        connect(User().getFriends( false, friendPage.perPage, friendPage.page + 1 ), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
     }
 }
 

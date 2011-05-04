@@ -3,11 +3,10 @@ CONFIG += ordered
 SUBDIRS = lib/unicorn \
           lib/listener \
           app/audioscrobbler \
-          app/radio \
           app/twiddly
           #app/boffin
 
-mac:SUBDIRS += app/mac-bundle
+#mac:SUBDIRS += app/mac-bundle
 win32:SUBDIRS += app/win-plugin-installer
 
 linux*:SUBDIRS -= app/twiddly

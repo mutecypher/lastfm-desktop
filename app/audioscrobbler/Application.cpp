@@ -18,8 +18,16 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Application.h"
+#include "lib/unicorn/QMessageBoxBuilder.h"
+#include "Radio.h"
+#include "ScrobSocket.h"
+#include <QDebug>
+#include <QProcess>
+#include <QShortcut>
 
 #include "Widgets/PointyArrow.h"
+#include "Widgets/RadioWidget.h"
+#include "Widgets/Drawer.h"
 #include "Dialogs/SettingsDialog.h"
 #include "lib/listener/DBusListener.h"
 #include "lib/listener/legacy/LegacyPlayerListener.h"
@@ -31,6 +39,8 @@
 #include "ScrobbleInfoFetcher.h"
 #include "StopWatch.h"
 #include "../Widgets/ScrobbleControls.h"
+#include "SkipListener.h"
+
 
 #ifdef Q_WS_MAC
 #include "lib/listener/mac/ITunesListener.h"
@@ -56,7 +66,7 @@
 #include <QMenu>
 #include <QDebug>
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN32g
 #include "windows.h"
 #endif
 
@@ -111,7 +121,6 @@ Application::initiateLogin() throw( StubbornUserException )
         m_tray->hide();
         m_tray->show();
     }
-
 }
 
 void
@@ -149,11 +158,13 @@ Application::init()
     /// tray menu
     QMenu* menu = new QMenu;
     (menu->addMenu( new UserMenu()))->setText( "Users");
+
     m_show_window_action = menu->addAction( tr("Show Scrobbler"));
     m_show_window_action->setShortcut( Qt::CTRL + Qt::META + Qt::Key_S );
     menu->addSeparator();
     m_artist_action = menu->addAction( "" );
     m_title_action = menu->addAction(tr("Ready"));
+
     m_love_action = menu->addAction(tr("Love"));
     m_love_action->setCheckable( true );
     QIcon loveIcon;
@@ -163,15 +174,46 @@ Application::init()
     m_love_action->setEnabled( false );
     connect( m_love_action, SIGNAL(triggered(bool)), SLOT(changeLovedState(bool)));
 
-    m_tag_action = menu->addAction(tr("Tag")+ELLIPSIS);
-    m_tag_action->setIcon( QIcon( ":/tag-rest.png" ) );
-    m_tag_action->setEnabled( false );
-    connect( m_tag_action, SIGNAL(triggered()), SLOT(onTagTriggered()));
+    {
+        m_tag_action = menu->addAction(tr("Tag")+ELLIPSIS);
+        m_tag_action->setIcon( QIcon( ":/tag-rest.png" ) );
+        m_tag_action->setEnabled( false );
+        connect( m_tag_action, SIGNAL(triggered()), SLOT(onTagTriggered()));
+    }
 
-    m_share_action = menu->addAction(tr("Share")+ELLIPSIS);
-    m_share_action->setIcon( QIcon( ":/share-rest.png" ) );
-    m_share_action->setEnabled( false );
-    connect( m_share_action, SIGNAL(triggered()), SLOT(onShareTriggered()));
+    {
+        m_share_action = menu->addAction(tr("Share")+ELLIPSIS);
+        m_share_action->setIcon( QIcon( ":/share-rest.png" ) );
+        m_share_action->setEnabled( false );
+        connect( m_share_action, SIGNAL(triggered()), SLOT(onShareTriggered()));
+    }
+
+    {
+        m_ban_action = new QAction( tr( "Ban" ), this );
+        QIcon banIcon;
+        banIcon.addFile( ":/taskbar-ban.png" );
+        m_ban_action->setIcon( banIcon );
+
+        //connect( m_ban_action, SIGNAL(triggered()), SLOT(onBanTriggered()));
+    }
+    {
+        m_play_action = new QAction( tr( "Play" ), this );
+        m_play_action->setCheckable( true );
+        QIcon playIcon;
+        playIcon.addFile( ":/taskbar-pause.png", QSize(), QIcon::Normal, QIcon::On );
+        playIcon.addFile( ":/taskbar-play.png", QSize(), QIcon::Normal, QIcon::Off );
+        m_play_action->setIcon( playIcon );
+
+        //connect( m_play_action, SIGNAL(triggered(bool)), SLOT(onPlayTriggered(bool)));
+    }
+    {
+        m_skip_action = new QAction( tr( "Skip" ), this );
+        QIcon skipIcon;
+        skipIcon.addFile( ":/taskbar-skip.png" );
+        m_skip_action->setIcon( skipIcon );
+
+        //connect( m_skip_action, SIGNAL(triggered()), SLOT(onSkipTriggered()));
+    }
 
 #ifdef Q_WS_X11
     menu->addSeparator();
@@ -205,6 +247,13 @@ Application::init()
     connect( m_about_action, SIGNAL( triggered() ), SLOT( onAboutTriggered() ) );
     menu->addSeparator();
 
+#ifndef NDEBUG
+    QAction* rss = menu->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()) );
+    rss->setShortcut( Qt::CTRL + Qt::Key_R );
+
+    menu->addSeparator();
+#endif
+
     QAction* quit = menu->addAction(tr("Quit %1").arg( applicationName()));
 
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
@@ -217,12 +266,17 @@ Application::init()
 
 /// MetadataWindow
     m_mw = new MetadataWindow;
-    m_mw->addWinThumbBarButton( m_love_action );
     m_mw->addWinThumbBarButton( m_tag_action );
     m_mw->addWinThumbBarButton( m_share_action );
+    m_mw->addWinThumbBarButton( m_love_action );
+    m_mw->addWinThumbBarButton( m_ban_action );
+    m_mw->addWinThumbBarButton( m_play_action );
+    m_mw->addWinThumbBarButton( m_skip_action );
 
+    QVBoxLayout* drawerLayout = new QVBoxLayout( m_drawer = new Drawer( m_mw ) );
+    drawerLayout->addWidget( m_radioWidget = new RadioWidget );
 
-     m_toggle_window_action = new QAction( this ), SLOT( trigger());
+    m_toggle_window_action = new QAction( this ), SLOT( trigger());
 #ifndef Q_OS_LINUX
      AudioscrobblerSettings settings;
      setRaiseHotKey( settings.raiseShortcutModifiers(), settings.raiseShortcutKey());
@@ -309,6 +363,10 @@ Application::init()
     initiateLogin();
 
     emit messageReceived( arguments() );
+
+#ifdef CLIENT_ROOM_RADIO
+    new SkipListener( this );
+#endif
 }
 
 void
@@ -561,6 +619,15 @@ Application::onVisitProfileTriggered()
 
 
 void
+Application::showRadioDrawer( bool show )
+{
+    if ( show )
+        m_drawer->show();
+    else
+        m_drawer->close();
+}
+
+void
 Application::onFaqTriggered()
 {
     QDesktopServices::openUrl( "http://" + tr( "www.last.fm" ) + "/help/faq/" );
@@ -648,10 +715,42 @@ Application::toggleWindow()
     else
         showWindow();
 }
+  
+
+// lastfmlib invokes this directly, for some errors:
+void
+Application::onWsError( lastfm::ws::Error e )
+{
+    switch (e)
+    {
+        case lastfm::ws::InvalidSessionKey:
+            quit();
+            break;
+        default:
+            break;
+    }
+}
+
+  
+Application::Argument Application::argument( const QString& arg )
+{
+    if (arg == "--pause") return Pause;
+    if (arg == "--skip") return Skip;
+    if (arg == "--exit") return Exit;
+
+    QUrl url( arg );
+    //TODO show error if invalid schema and that
+    if (url.isValid() && url.scheme() == "lastfm") return LastFmUrl;
+
+    return ArgUnknown;
+}
+
     
 void
-Application::onMessageReceived(const QStringList& message)
+Application::onMessageReceived( const QStringList& message )
 {
+    parseArguments( message );
+
     qDebug() << "Messages: " << message;
 
     if ( message.contains( "--twiddly" ))
@@ -683,6 +782,42 @@ Application::onMessageReceived(const QStringList& message)
     }
 }
 
+
+void
+Application::parseArguments( const QStringList& args )
+{
+    qDebug() << args;
+
+    if (args.size() <= 1)
+        return;
+
+    foreach (QString const arg, args.mid( 1 ))
+        switch (argument( arg ))
+        {
+        case LastFmUrl:
+            radio->play( RadioStation( arg ) );
+            break;
+
+        case Exit:
+            exit();
+            break;
+
+        case Skip:
+            radio->skip();
+            break;
+
+        case Pause:
+            if ( radio->state() == Radio::Playing )
+                radio->pause();
+            else if ( radio->state() == Radio::Paused )
+                radio->resume();
+            break;
+
+        case ArgUnknown:
+            qDebug() << "Unknown argument:" << arg;
+            break;
+        }
+}
 
 void 
 Application::quit()

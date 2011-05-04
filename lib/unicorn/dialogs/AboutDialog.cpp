@@ -43,8 +43,7 @@ AboutDialog::AboutDialog( QWidget* parent )
 
     QStringList authors, raw_authors;
     raw_authors << "Jono Cole" << "jonocole" << "jono@last.fm"
-                << "Michael Coffey" << "eartle" << "michaelc@last.fm"
-                << "Hannah Donovan" << "han" << "hannah@last.fm";
+                << "Michael Coffey" << "eartle" << "michaelc@last.fm";
 
 
     QStringListIterator i( raw_authors );
@@ -58,9 +57,12 @@ AboutDialog::AboutDialog( QWidget* parent )
     }
 
     QStringList alumni, raw_alumni;
-    raw_alumni << "Max Howell" << "mxcl"
-                <<  "Doug Mansell" << "dougma"
-                << "Matt Brown" << "irvinebrown";
+    raw_alumni  << "Doug Mansell" << "dougma"
+                << "Hannah Donovan" << "han"
+                << "Matt Brown" << "irvinebrown"
+                << "Max Howell" << "mxcl"
+                << "William Viana Soares" << "vianasw";
+
 
 
     QStringListIterator j( raw_alumni );

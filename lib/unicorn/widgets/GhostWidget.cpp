@@ -12,16 +12,29 @@ GhostWidget::setOrigin( QWidget* origin )
 {
     setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
     setFixedSize( origin->sizeHint() );
+    setVisible( origin->isVisible() );
     origin->installEventFilter( this );
 }
 
 bool 
 GhostWidget::eventFilter( QObject* /*obj*/, QEvent* event )
 {
-    if( event->type() == QEvent::Resize ) {
+    switch ( event->type() )
+    {
+    case QEvent::Resize:
+        {
         QResizeEvent* re = static_cast<QResizeEvent*>( event );
         setFixedSize( re->size() );
+        }
+        break;
+    case QEvent::Show:
+        show();
+        break;
+    case QEvent::Hide:
+        hide();
+        break;
     }
+
     return false;
 }
 

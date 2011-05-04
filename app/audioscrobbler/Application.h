@@ -21,20 +21,25 @@
 #ifndef AUDIOSCROBBLER_APPLICATION_H_
 #define AUDIOSCROBBLER_APPLICATION_H_
 
-#include <lastfm/global.h>
-#include <lastfm/Track>
-#include "lib/unicorn/UnicornApplication.h"
 #include <QPointer>
 #include <QSystemTrayIcon>
 
+#include <lastfm/global.h>
+#include <lastfm/Track>
+#include <lastfm/ws.h>
+
+#include "lib/unicorn/UnicornApplication.h"
+
 class AboutDialog;
 class MetadataWindow;
+class RadioWidget;
 class PlayerConnection;
 class PlayerMediator;
 class QAction;
 class ScrobbleInfoFetcher;
 class StopWatch;
 class DeviceScrobbler;
+class Drawer;
 
 #ifdef Q_WS_X11
     class IpodDeviceLinux;
@@ -58,6 +63,15 @@ namespace audioscrobbler
     {
         Q_OBJECT
 
+        enum Argument
+        {
+            LastFmUrl,
+            Pause, //toggles pause
+            Skip,
+            Exit,
+            ArgUnknown
+        };
+
         enum State
         {
             Unknown,
@@ -73,6 +87,8 @@ namespace audioscrobbler
         QPointer<PlayerConnection> m_connection;
         QPointer<StopWatch> m_watch;
         QPointer<MetadataWindow> m_mw;
+        QPointer<Drawer> m_drawer;
+        QPointer<RadioWidget> m_radioWidget;
         QPointer<DeviceScrobbler> m_deviceScrobbler;
 
         Track m_currentTrack;
@@ -88,6 +104,9 @@ namespace audioscrobbler
         QAction* m_love_action;
         QAction* m_tag_action;
         QAction* m_share_action;
+        QAction* m_ban_action;
+        QAction* m_play_action;
+        QAction* m_skip_action;
         QAction* m_show_window_action;
         QAction* m_toggle_window_action;
         QAction* m_scrobble_ipod_action;
@@ -105,6 +124,10 @@ namespace audioscrobbler
         QAction* loveAction() const{ return m_love_action; }
         QAction* tagAction() const{ return m_tag_action; }
         QAction* shareAction() const{ return m_share_action; }
+        QAction* banAction() const{ return m_ban_action; }
+        QAction* playAction() const{ return m_play_action; }
+        QAction* skipAction() const{ return m_skip_action; }
+
         StopWatch* stopWatch() const;
         PlayerConnection* currentConnection() const;
         DeviceScrobbler* deviceScrobbler() const;
@@ -140,6 +163,9 @@ namespace audioscrobbler
         void trackGotTags(const XmlQuery& lfm);
 
         void finished();
+		
+        void error( const QString& message );
+        void status( const QString& message, const QString& id );
 
     public slots:
         void quit();
@@ -149,6 +175,9 @@ namespace audioscrobbler
         void onBusLovedStateChanged(bool);
 
         void onTrackGotInfo(const XmlQuery& );
+        void parseArguments( const QStringList& args );
+
+        void showRadioDrawer( bool show );
 
     protected:
         virtual void initiateLogin()throw( StubbornUserException );
@@ -156,6 +185,7 @@ namespace audioscrobbler
     private:
         void setTrackInfo();
         void resetTrackInfo();
+        static Argument argument( const QString& arg );
 
     private slots:
         void onTrayActivated(QSystemTrayIcon::ActivationReason);
@@ -183,7 +213,12 @@ namespace audioscrobbler
         void showWindow();
         void toggleWindow();
 
+
         void onMessageReceived(const QStringList& message);
+		
+		/** all webservices connect to this and emit in the case of bad errors that
+	     * need to be handled at a higher level */
+	    void onWsError( lastfm::ws::Error );
     };
 }
 

@@ -76,20 +76,12 @@ unicorn::MainWindow::finishUi()
     QAction* about = help->addAction( tr("About"), this, SLOT(about()) );
     QAction* c4u = help->addAction( tr("Check for Updates"), this, SLOT(checkForUpdates()) );
 
-#ifndef NDEBUG
-    QMenu* debug = menuBar()->addMenu( tr("Debug") );
-    new QShortcut( Qt::CTRL + Qt::Key_R, this, SLOT(refreshStyleSheet()) );
-    //QAction* rss = debug->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()) );
-    //rss->setShortcut( Qt::CTRL + Qt::Key_R );
-#endif
-
 #ifdef Q_OS_MAC
     about->setMenuRole( QAction::AboutRole );
     c4u->setMenuRole( QAction::ApplicationSpecificRole );
 #endif
 
     base_ui.update = new UpdateDialog( this );
-
 
     cleverlyPosition();
 }

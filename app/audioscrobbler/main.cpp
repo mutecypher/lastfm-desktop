@@ -17,19 +17,52 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <QtGlobal>
 
+#ifdef Q_OS_MAC64
+    #include <Carbon/Carbon.h>
+    static pascal OSErr appleEventHandler( const AppleEvent*, AppleEvent*, void* );
+#elif defined Q_OS_MAC32
+    #include </System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/AE.framework/Versions/A/Headers/AppleEvents.h>
+    static pascal OSErr appleEventHandler( const AppleEvent*, AppleEvent*, long );
+#endif
+
+#include <QShortcut>
+#include <QKeySequence>
 #include <QStringList>
 #include <QRegExp>
 
 #include "_version.h"
 #include "Application.h"
+#include "ScrobSocket.h"
+#include "lib/unicorn/UnicornApplication.h"
+#include "lib/unicorn/qtsingleapplication/qtsinglecoreapplication.h"
+#include "lib/unicorn/UnicornSettings.h"
+#include "Radio.h"
 #include "app/moose.h"
 
+void cleanup();
+
+Radio* radio;
+
+namespace lastfm
+{
+    extern LASTFM_DLLEXPORT QByteArray UserAgent;
+}
 int main( int argc, char** argv )
 {
-    QCoreApplication::setApplicationName( "Last.fm Scrobbler" );
-    QCoreApplication::setApplicationVersion( VERSION );
+    QtSingleCoreApplication::setApplicationName( "Last.fm" );
+    QtSingleCoreApplication::setApplicationVersion( VERSION );
 
+    // ATTENTION! Under no circumstance change these strings! --mxcl
+#ifdef WIN32
+    lastfm::UserAgent = "Last.fm Client " VERSION " (Windows)";
+#elif __APPLE__
+    lastfm::UserAgent = "Last.fm Client " VERSION " (OS X)";
+#elif defined (Q_WS_X11)
+    lastfm::UserAgent = "Last.fm Client " VERSION " (X11)";
+#endif
+	
     try
     {
         audioscrobbler::Application app( argc, argv );
@@ -42,12 +75,76 @@ int main( int argc, char** argv )
         if ( app.isRunning() )
             return 0;
 
+        radio = new Radio();
+        qAddPostRoutine(cleanup);
+
+        ScrobSocket* scrobsock = new ScrobSocket("ass");
+        scrobsock->connect(radio, SIGNAL(trackSpooled(Track)), SLOT(start(Track)));
+        scrobsock->connect(radio, SIGNAL(paused()), SLOT(pause()));
+        scrobsock->connect(radio, SIGNAL(resumed()), SLOT(resume()));
+        scrobsock->connect(radio, SIGNAL(stopped()), SLOT(stop()));
+        scrobsock->connect(&app, SIGNAL(aboutToQuit()), scrobsock, SLOT(stop()));
+
+      #ifdef Q_WS_MAC
+        AEEventHandlerUPP h = NewAEEventHandlerUPP( appleEventHandler );
+        AEInstallEventHandler( 'GURL', 'GURL', h, 0, false );
+      #endif
+
         app.init();
-        return app.exec();
+
+        app.parseArguments( app.arguments() );
+
+        int result = app.exec();
+        scrobsock->stop();
+        return result;
+    }
+    catch (std::exception& e)
+    {
+        qDebug() << "unhandled exception " << e.what();
     }
     catch (unicorn::Application::StubbornUserException&)
     {
         // user wouldn't log in
         return 0;
+    }
+}
+
+#ifdef Q_OS_MAC
+#ifdef Q_OS_MAC64
+static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, void* )
+#elif defined Q_OS_MAC32
+static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
+#endif //Q_OS_MAC64/32
+
+{
+    OSType id = typeWildCard;
+    AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );
+    
+    switch (id)
+    {
+        case 'GURL':
+        {
+            DescType type;
+            Size size;
+
+            char buf[1024];
+            AEGetParamPtr( e, keyDirectObject, typeChar, &type, &buf, 1023, &size );
+            buf[size] = '\0';
+
+            radio->play( RadioStation( QString::fromUtf8( buf ) ) );
+            return noErr;
+        }
+            
+        default:
+            return unimpErr;
+    }
+}
+#endif //Q_OS_MAC
+
+
+void cleanup()
+{
+    if (radio && radio->audioOutput()) {
+	    unicorn::AppSettings().setValue( "Volume", radio->audioOutput()->volume() );
     }
 }

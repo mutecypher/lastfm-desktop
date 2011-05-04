@@ -37,17 +37,21 @@ TitleBar::TitleBar( QWidget* parent )
 
     QPushButton* pb = new QPushButton( "Close" );
     pb->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
-    connect( pb, SIGNAL(clicked()), SIGNAL( closeClicked()));
+    pb->setCheckable( true );
+    connect( pb, SIGNAL(clicked(bool)), aApp, SLOT(showRadioDrawer(bool)));
+    //connect( pb, SIGNAL(clicked()), SIGNAL( closeClicked()));
 
 #ifdef Q_OS_MAC
     pb->setShortcut( Qt::CTRL + Qt::Key_H );
     layout->addWidget( pb );
 #else
-    layout->addWidget( new GhostWidget( pb, this ) );
+    GhostWidget* ghost = new GhostWidget( this );
+    ghost->setOrigin( pb );
+    layout->addWidget( ghost );
 #endif
 
     layout->addStretch( 1 );
-    QLabel* title = new QLabel( tr("Last.fm Scrobbler"), this );
+    QLabel* title = new QLabel( QApplication::applicationName(), this );
     title->setMargin( 0 );
     layout->addWidget( title, 0 );
     layout->addStretch( 1 );
