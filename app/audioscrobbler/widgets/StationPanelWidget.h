@@ -20,6 +20,9 @@ public:
     explicit StationPanelWidget(QWidget *parent = 0);
     ~StationPanelWidget();
 
+private:
+    void refresh();
+
 private slots:
     void onTuningIn( const RadioStation& station );
 
@@ -39,6 +42,7 @@ private:
     Ui::StationPanelWidget *ui;
 
     class FriendsSortFilterProxyModel* m_friendsProxyModel;
+    User m_currentUser;
 };
 
 #endif // STATIONPANELWIDGET_H

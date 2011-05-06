@@ -39,6 +39,8 @@ StationPanelWidget::StationPanelWidget(QWidget *parent) :
 
     // always start on the recent tab
     ui->stationTabWidget->setCurrentWidget( ui->recentTab );
+
+    refresh();
 }
 
 
@@ -50,6 +52,17 @@ StationPanelWidget::~StationPanelWidget()
 
 void
 StationPanelWidget::onSessionChanged( unicorn::Session* newSession )
+{
+    if ( m_currentUser == User() )
+        return;
+
+    m_currentUser = User();
+
+    refresh();
+}
+
+void
+StationPanelWidget::refresh()
 {
     ui->recentList->clear();
     ui->tagsList->clear();
