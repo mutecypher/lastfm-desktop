@@ -516,7 +516,7 @@ Phonon--VolumeSlider  QSlider::handle:horizontal:pressed {
 
 
 
-QPushButton {
+#playbackControls QPushButton {
     color: transparent;
     background-color: transparent;
     background-position: center;
