@@ -22,9 +22,6 @@
 #include <QUrl>
 using std::invalid_argument;
 
-// ignore the warning about the exception specification
-#pragma warning( disable : 4290 )
-
 PlayerCommandParser::PlayerCommandParser( QString line ) throw( std::invalid_argument )
 {
     line = line.trimmed();

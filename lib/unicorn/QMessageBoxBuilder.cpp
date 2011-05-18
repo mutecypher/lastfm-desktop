@@ -75,6 +75,8 @@ unicorn::MessageDialog::onButtonClicked(QAbstractButton* b)
         case QDialogButtonBox::NoRole:
             reject();
             break;
+        default:
+            break;
     }
 }
 
