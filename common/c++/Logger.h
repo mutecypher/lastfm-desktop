@@ -46,7 +46,7 @@ public:
     explicit Logger( const COMMON_CHAR* filename, Severity severity = Info );
     ~Logger();
 
-    static Logger& the() { return *instance; }
+    static Logger& the();
 
     void log( Severity level, const std::string& message, const char* function, int line );
     void log( Severity level, const std::wstring& message, const char* function, int line );

@@ -106,7 +106,7 @@ static inline std::string time()
 void
 Logger::log( const char* message )
 {
-    if (!mFileOut)
+    if (!mFileOut.is_open())
         return;
 
 #ifdef WIN32
@@ -176,4 +176,9 @@ Logger::truncate( const COMMON_CHAR* path ) //static
     ofstream outFile( path );
     outFile << sFile << flush;
     outFile.close();
+}
+
+Logger&  //static
+Logger::the() {
+    return *instance;
 }
