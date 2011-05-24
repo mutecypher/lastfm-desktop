@@ -26,7 +26,6 @@ HEADERS = TwiddlyApplication.h \
 
 mac {
     SOURCES += ITunesLibrary_mac.cpp
-    HEADERS += ITunesLibrary_mac.h
 }
 
 win32 {
