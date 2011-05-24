@@ -22,7 +22,7 @@
 
 #include "lib/DllExportMacro.h"
 #include "PlayerCommand.h"
-#include "app/client/State.h" //FIXME
+#include "State.h"
 #include <lastfm/Track>
 #include <QTimer>
 

@@ -21,7 +21,7 @@
 #include "IPod.h"
 #include "app/twiddly.h"
 #include "TwiddlyApplication.h"
-#include "app/client/Settings.h"
+#include "Settings.h"
 #include "lib/unicorn/UnicornCoreApplication.h"
 #include "plugins/iTunes/ITunesExceptions.h"
 #include <lastfm/misc.h>

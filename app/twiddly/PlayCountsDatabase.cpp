@@ -22,7 +22,7 @@
 #include "TwiddlyApplication.h"
 #include "IPod.h"
 #include "ITunesLibrary.h"
-#include "app/client/Settings.h"
+#include "Settings.h"
 #include "common/qt/msleep.cpp"
 #include "common/c++/fileCreationTime.cpp"
 #include "lib/unicorn/UnicornSettings.h"
