@@ -265,9 +265,13 @@ ActivityListWidget QScrollBar {
     min-height: 0px;
 }
 
-ActivityListItem {
+ActivityListItem, NowPlayingItem #detailsFrame {
 	min-width: 40px;
+	min-height: 40px;
+	max-height: 200px;
     background-color: transparent;
+	border-bottom: 1px solid #999999;
+	padding: 0px 20px 0px 10px;
 }
 
 NowPlayingItem {
@@ -279,28 +283,27 @@ ActivityListItem[selected=true] {
 	background-color: #BFDFF4;
 }
 
-ActivityListItem {
-	padding: 0px 20px 0px 10px;
-	min-height: 30px;
-}
-
-ActivityListItem HttpImageWidget#art {
-	max-width: 34px;
-	max-height: 34px;
-	qproperty-scaledContents: true;
-	qproperty-pixmap: url(:/default_album_large.png);
-	margin: 0px 0px;
-	padding: 0px 0px;
-}
 
 ActivityListItem QLabel {
     color: black;
     font-size:12px;
 }
 
-ActivityListItem QLabel#timestamp {
+NowPlayingItem QLabel {
+    color: white;
+}
+
+ActivityListItem QLabel#player {
 	min-width: 5px;
 	qproperty-alignment: "AlignRight|AlignVCenter";
+}
+
+ActivityListItem[status="cached"] QLabel#text {
+	color: #0187c5;
+}
+
+ActivityListItem[status="error"] QLabel#text {
+	color: #d51007;
 }
 
 QLabel#correction {
@@ -419,16 +422,11 @@ QSizeGrip {
 }
 
 #nowPlaying {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(91, 105, 128, 191), stop:1 rgba(75, 87, 107, 191));
-    
-    background-image: url(:/highlight.png);
-    background-position: top right;
-    background-repeat: repeat-x;
-    
-    max-height: 25px;
-    min-height: 25px;
-    border-top: 1px solid #2e3642;
-    qproperty-progressColor: rgba( 255, 255, 255, 25 );
+    background-color: black;
+       
+    border-top: 1px solid black;
+    qproperty-progressColor: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #5B6980, stop:1 #4C586C);
+	qproperty-scrobblePointColor: rgba( 128, 128, 128, 128 );
 }
 
 #nowPlaying QLabel#trackText {
@@ -441,12 +439,8 @@ QSizeGrip {
     color: #a7b0bd;
 }
 
-ActivityListItem[status="cached"] QLabel#trackText {
-	color: #0187c5;
-}
-
-ActivityListItem[status="error"] QLabel#trackText {
-	color: #d51007;
+#nowPlaying [selected=true] {
+    background-color: #BFDFF4;
 }
 
 QWizard QLabel#errorMsg {
@@ -525,6 +519,10 @@ Phonon--VolumeSlider  QSlider::handle:horizontal:pressed {
     margin: 0px 0px;
 	min-width: 0px;
 	padding: 0px;
+}
+
+PlaybackControlsWidget {
+	background-color: black;
 }
 
 #playbackControls QPushButton {
@@ -618,30 +616,6 @@ QPushButton#start:pressed {
 
 QPushButton#start:disabled {
     background-image: url(:/play-radio-large-onpress.png);
-}
-
-QPushButton#back {
-	background-image: url(:/back.png);
-	min-width: 37px;
-	min-height: 23px;
-}
-
-QPushButton#back:hover {
-	background-image: url(:/back-onhover.png);
-}
-
-QPushButton#back:pressed {
-	background-image: url(:/back-onpress.png);
-}
-
-QPushButton#nowPlaying {
-	background-image: url(:/now-playing.png);
-	width: 96px;
-	height: 23px;
-}
-
-QPushButton#nowPlaying:pressed {
-	background-image: url(:/now-playing-onpress.png);
 }
 
 QLabel#onTour {

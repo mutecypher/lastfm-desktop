@@ -31,10 +31,12 @@
 #include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/widgets/GhostWidget.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
+#include "lib/unicorn/widgets/Label.h"
 
 #include "../Application.h"
 #include "../StopWatch.h"
 #include "../ScrobbleInfoFetcher.h"
+#include "../Radio.h"
 
 #include "WelcomeWidget.h"
 #include "ScrobbleInfoWidget.h"
@@ -42,10 +44,13 @@
 
 #include <lastfm/ws.h>
 
+#include "ui_ActivityListItem.h"
+
 
 NowPlayingItem::NowPlayingItem( const Track& track )
     :TrackItem( track ),
-     m_progressColor( 60, 60, 60 ),
+     m_progressColor(),
+     m_scrobblePointColor( "blue" ),
      m_progressWidth( 0 ),
      m_lastFrame( 0 )
 {
@@ -75,6 +80,13 @@ NowPlayingItem::infoWidget() const
     return TrackItem::infoWidget();
 }
 
+
+QString userLibrary( const QString& user, const QString& artist )
+{
+    return Label::anchor( QString("http://www.last.fm/user/%1/library/music/%2").arg( user, artist ), user );
+}
+
+
 void
 NowPlayingItem::onWatchPaused( bool isPaused )
 {
@@ -82,19 +94,88 @@ NowPlayingItem::onWatchPaused( bool isPaused )
     {
         if ( isPaused )
         {
-            m_timestampText =tr( "%1 paused" ).arg( aApp->currentConnection()->name() );
+            m_statusText = tr( "Paused" );
             resizeEvent( 0 );
-            ui.as->setPixmap( QPixmap() );
+            ui->as->setPixmap( QPixmap() );
         }
         else
         {
             if( (aApp->stopWatch()->elapsed()/1000.0f) / aApp->stopWatch()->scrobblePoint() >= 1.0f )
-                m_timestampText = tr( "Track Scrobbled" );
+                m_statusText = tr( "Track Scrobbled" );
             else
-                m_timestampText = aApp->currentConnection()->name();
+            {
+                //Set to the context if it's a radio track
+                lastfm::TrackContext context = m_track.context();
+
+                if (context.values().count() > 0)
+                {
+
+                    QString contextString;
+
+                    switch ( context.type() )
+                    {
+                    case lastfm::TrackContext::Artist:
+                        {
+                        switch ( context.values().count() )
+                            {
+                            default:
+                            case 1: contextString = tr( "because you listen to %1" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ) ); break;
+                            case 2: contextString = tr( "because you listen to %1 and %2" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ) ); break;
+                            case 3: contextString = tr( "because you listen to %1, %2, and %3" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ) , Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ) ); break;
+                            case 4: contextString = tr( "because you listen to %1, %2, %3, and %4" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ), Label::anchor( Artist( context.values().at(3) ).www().toString(), context.values().at(3) ) ); break;
+                            case 5: contextString = tr( "because you listen to %1, %2, %3, %4, and %5" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ), Label::anchor( Artist( context.values().at(3) ).www().toString(), context.values().at(3) ), Label::anchor( Artist( context.values().at(4) ).www().toString(), context.values().at(4) ) ); break;
+                            }
+                        }
+                        break;
+                    case lastfm::TrackContext::User:
+                        // Whitelist multi-user station
+                        if ( !radio->station().url().startsWith("lastfm://users/") )
+                            break;
+                    case lastfm::TrackContext::Friend:
+                    case lastfm::TrackContext::Neighbour:
+                        {
+                        switch ( context.values().count() )
+                            {
+                            default:
+                            case 1: contextString = tr( "from %2%1s library" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), m_track.artist().name() ) ); break;
+                            case 2: contextString = tr( "from %2 and %3%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), m_track.artist().name() ), userLibrary( context.values().at(1), m_track.artist().name() ) ); break;
+                            case 3: contextString = tr( "from %2, %3, and %4%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), m_track.artist().name() ), userLibrary( context.values().at(1), m_track.artist().name() ), userLibrary( context.values().at(2), m_track.artist().name() ) ); break;
+                            case 4: contextString = tr( "from %2, %3, %4, and %5%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), m_track.artist().name() ),userLibrary(  context.values().at(1), m_track.artist().name() ), userLibrary( context.values().at(2), m_track.artist().name() ), userLibrary( context.values().at(3), m_track.artist().name() ) ); break;
+                            case 5: contextString = tr( "from %2, %3, %4, %5, and %6%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), m_track.artist().name() ), userLibrary( context.values().at(1), m_track.artist().name() ), userLibrary( context.values().at(2), m_track.artist().name() ), userLibrary( context.values().at(3), m_track.artist().name() ), userLibrary( context.values().at(4), m_track.artist().name() ) ); break;
+                            }
+                        }
+                        break;
+                    }
+
+                    m_statusText = contextString;
+
+#ifdef CLIENT_ROOM_RADIO
+                    QString strippedContextString = contextString;
+
+                    QRegExp re( "<[^>]*>" );
+
+                    strippedContextString.replace( re, "" );
+
+                    QString ircMessage = QString( "#last.clientradio %1 %2" ).arg( track.toString(), strippedContextString );
+
+                    if ( context.values().count() == ( radio->station().url().count( "," ) + 1 ) )
+                        ircMessage.append( " BINGO!" );
+
+                    QTcpSocket socket;
+                    socket.connectToHost( "localhost", 12345 );
+                    socket.waitForConnected();
+                    socket.write( ircMessage.toUtf8() );
+                    socket.flush();
+                    socket.close();
+#endif
+                }
+                else
+                    m_statusText.clear();
+            }
+
             resizeEvent( 0 );
-            ui.as->setMovie( movie.scrobbler_as );
-            ui.as->movie()->start();
+            ui->as->setMovie( movie.scrobbler_as );
+            ui->as->movie()->start();
         }
         
         update();
@@ -102,9 +183,9 @@ NowPlayingItem::onWatchPaused( bool isPaused )
     else
     {
         setText( tr("You're not scrobbling any songs right now - check out your recent tracks below") );
-        m_timestampText = "";
+        m_statusText = "";
         resizeEvent( 0 );
-        ui.as->clear();
+        ui->as->clear();
     }
     resizeEvent( 0 );
 }
@@ -113,9 +194,9 @@ NowPlayingItem::onWatchPaused( bool isPaused )
 void
 NowPlayingItem::onWatchFinished()
 {
-    connect( ui.as->movie(), SIGNAL(loopFinished()), ui.as->movie(), SLOT(stop()));
-    m_timestampText = tr( "Track Scrobbled" );
-    ui.timestamp->setText( m_timestampText );
+    connect( ui->as->movie(), SIGNAL(loopFinished()), ui->as->movie(), SLOT(stop()));
+    //m_statusText = tr( "Track Scrobbled" );
+    //ui->status->setText( m_timestampText );
 }
 
 
@@ -125,6 +206,14 @@ void NowPlayingItem::resizeEvent(QResizeEvent *event)
     TrackItem::resizeEvent( event );
 }
 
+QRect
+NowPlayingItem::updateRect() const
+{
+    QRect rect = ui->detailsFrame->geometry();
+    rect.setLeft( 0 );
+    rect.setRight( m_progressWidth );
+    return rect;
+}
 
 void
 NowPlayingItem::onFrameChanged( int frame )
@@ -132,13 +221,13 @@ NowPlayingItem::onFrameChanged( int frame )
     m_lastFrame = frame;
     int progress = 0;
     if ( aApp->stopWatch() )
-        progress = ( frame * width() ) / ( aApp->stopWatch()->scrobblePoint() * 1000 );
+        progress = ( frame * width() ) / ( aApp->stopWatch()->duration() * 1000 );
 
     if ( progress != m_progressWidth )
     {  
         QRect r;
         if( progress > m_progressWidth )
-            r = QRect( m_progressWidth, 0, progress - m_progressWidth, height());
+            r = updateRect();
         else
             r = rect();
   
@@ -153,9 +242,18 @@ NowPlayingItem::paintEvent( QPaintEvent* event )
     StylableWidget::paintEvent( event );
     QPainter p( this );
     p.setPen( QColor( Qt::transparent ));
-    p.setBrush( m_progressColor );
-    QMargins margins = contentsMargins();
-    p.drawRect( 0, margins.top(), m_progressWidth, height() - margins.top() - margins.bottom());
+    p.setBrush( m_progressColor );    
+    p.drawRect( updateRect() );
+
+    if ( aApp->stopWatch() )
+    {
+        p.setPen( m_scrobblePointColor );
+
+        int scrobblePoint = ( aApp->stopWatch()->scrobblePoint() * width() ) / ( aApp->stopWatch()->duration() );
+
+        p.drawLine( QPoint( scrobblePoint, updateRect().top() ),
+                    QPoint( scrobblePoint, updateRect().bottom()) );
+    }
 }
 
 void NowPlayingItem::updateTimestamp()

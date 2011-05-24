@@ -18,40 +18,30 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QCheckBox>
-
 #include "ScrobbleSetupDialog.h"
+#include "ui_ScrobbleSetupDialog.h"
 
-ScrobbleSetupDialog::ScrobbleSetupDialog( QString deviceId, QString deviceName, QStringList iPodFiles, QWidget *parent )
-    :Dialog( parent ), m_deviceId( deviceId ), m_deviceName( deviceName ), m_iPodFiles( iPodFiles )
+ScrobbleSetupDialog::ScrobbleSetupDialog( QString deviceId, QString deviceName, QStringList iPodFiles, QWidget* parent )
+    :unicorn::Dialog( parent ),
+    ui( new Ui::ScrobbleSetupDialog ),
+    m_deviceId( deviceId ),
+    m_deviceName( deviceName ),
+    m_iPodFiles( iPodFiles )
 {
-    QVBoxLayout* layout = new QVBoxLayout( this );
+    ui->setupUi(this);
 
-    QHBoxLayout* hl = new QHBoxLayout();
-    hl->addWidget( ui.iPod = new QLabel("") );
-    ui.iPod->setObjectName("iPod");
+//    vl->addWidget( ui.title = new QLabel( tr("Do you want to scrobble the iPod '%1'?").arg( "Coffey's iPod" )  ) );
+//    ui.title->setObjectName("title");
 
-    QVBoxLayout* vl = new QVBoxLayout();
-    vl->addWidget( ui.title = new QLabel( tr("Do you want to scrobble the iPod '%1'?").arg( "Coffey's iPod" )  ) );
-    ui.title->setObjectName("title");
+//    vl->addWidget( ui.description = new QLabel( tr("This will automatically scrobble tracks you've played on your iPod everytime it's connected.") ) );
+//    ui.description->setObjectName("description");
 
-    vl->addWidget( ui.description = new QLabel( tr("This will automatically scrobble tracks you've played on your iPod everytime it's connected.") ) );
-    ui.description->setObjectName("description");
+    connect( ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onClicked(QAbstractButton*)));
+}
 
-    hl->addLayout( vl );
-
-    layout->addLayout( hl );
-
-    layout->addWidget( ui.buttons = new QDialogButtonBox() );
-    ui.buttons->setObjectName("buttons");
-
-    ui.buttons->addButton( tr("Yes"), QDialogButtonBox::YesRole );
-    ui.buttons->addButton( tr("Not now"), QDialogButtonBox::RejectRole );
-    ui.buttons->addButton( tr("Never"), QDialogButtonBox::NoRole );
-
-    connect( ui.buttons, SIGNAL(clicked(QAbstractButton*)), SLOT(onClicked(QAbstractButton*)));
+ScrobbleSetupDialog::~ScrobbleSetupDialog()
+{
+    delete ui;
 }
 
 void
@@ -59,7 +49,7 @@ ScrobbleSetupDialog::onClicked( QAbstractButton* button )
 {
     IpodDevice::Scrobble buttonPressed = IpodDevice::Yes;
 
-    QDialogButtonBox::ButtonRole buttonRole = ui.buttons->buttonRole( button );
+    QDialogButtonBox::ButtonRole buttonRole = ui->buttonBox->buttonRole( button );
 
     if ( buttonRole == QDialogButtonBox::RejectRole )
         buttonPressed = IpodDevice::NotNow;

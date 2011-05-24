@@ -18,39 +18,37 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCROBBLE_SETUP_DIALOG_H
-#define SCROBBLE_SETUP_DIALOG_H
+#ifndef SCROBBLESETUPDIALOG_H
+#define SCROBBLESETUPDIALOG_H
 
 #include "lib/unicorn/dialogs/UnicornDialog.h"
+
 #include "../MediaDevices/IpodDevice.h"
 
-#include <QDialogButtonBox>
+namespace Ui {
+    class ScrobbleSetupDialog;
+}
 
 class ScrobbleSetupDialog : public unicorn::Dialog
 {
     Q_OBJECT
+
 public:
-    ScrobbleSetupDialog( QString deviceId, QString deviceName, QStringList iPodFiles, QWidget* parent = 0 );
+    explicit ScrobbleSetupDialog( QString deviceId, QString deviceName, QStringList iPodFiles, QWidget* parent = 0 );
+    ~ScrobbleSetupDialog();
 
 signals:
-    void clicked( IpodDevice::Scrobble result, QString deviceId, QString deviceName, QStringList iPodFiles );
+    void clicked( IpodDevice::Scrobble, const QString&, const QString&, const QStringList& );
 
 private slots:
     void onClicked( class QAbstractButton* button );
 
-protected:
-    struct
-    {
-        class QLabel* iPod;
-        class QLabel* title;
-        class QLabel* description;
-        class QCheckBox* dontRemind;
-        QDialogButtonBox* buttons;
-    }ui;
+private:
+    Ui::ScrobbleSetupDialog *ui;
 
     QStringList m_iPodFiles;
     QString m_deviceId;
     QString m_deviceName;
 };
 
-#endif // SCROBBLE_SETUP_DIALOG_H
+#endif // SCROBBLESETUPDIALOG_H

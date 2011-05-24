@@ -29,6 +29,7 @@
 #include "../Widgets/TrackItem.h"
 #include "../Widgets/StatusBar.h"
 #include "../Widgets/TitleBar.h"
+#include "../Widgets/PlaybackControlsWidget.h"
 
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/MessageBar.h"
@@ -51,7 +52,6 @@
 #include <QShortcut>
 
 MetadataWindow::MetadataWindow()
-    :m_viewMode( Restore )
 {
     setAttribute( Qt::WA_TranslucentBackground );
     
@@ -68,6 +68,10 @@ MetadataWindow::MetadataWindow()
     connect( ui.titleBar, SIGNAL( closeClicked()), SLOT( close()));
 
     ui.splitter = new QSplitter( Qt::Vertical, this );
+
+    ui.playbackControls = new PlaybackControlsWidget( this );
+    ui.playbackControls->setObjectName("playbackControls");
+    ui.playbackControls->hide();
 
     ui.nowPlaying = new NowPlayingItem( Track() );
     ui.nowPlaying->setObjectName("nowPlaying");
@@ -115,112 +119,53 @@ MetadataWindow::MetadataWindow()
     connect( ui.recentTracks, SIGNAL(itemClicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
     connect( ui.nowPlaying, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
 
-    new QShortcut( Qt::CTRL + Qt::Key_M, this, SLOT(onMinimize()) );
-
     menuBar()->hide();
 
     //for some reason some of the stylesheet is not being applied properly unless reloaded
     //here. StyleSheets see very flaky to me. :s
     aApp->refreshStyleSheet();
 
-    doLayout( m_viewMode );
+    layout->addWidget( ui.titleBar, 1 );
+    layout->addWidget( ui.splitter, 1 );
+
+    delete ui.tracks->layout();
+    QHBoxLayout* hl = new QHBoxLayout( ui.tracks );
+    QVBoxLayout* vl = new QVBoxLayout;
+    hl->setContentsMargins( 0, 0, 0, 0 );
+    hl->setSpacing( 0 );
+
+    vl->setContentsMargins( 0, 0, 0, 0 );
+    vl->setSpacing( 0 );
+
+    vl->addWidget( ui.playbackControls );
+    vl->addWidget( ui.nowPlaying );
+    vl->addWidget( ui.recentTracks );
+
+    hl->addLayout( vl );
+
+    delete ui.scrollBarContainer->layout();
+    (new QVBoxLayout( ui.scrollBarContainer ))->addWidget( ui.scrollBar );
+    ui.scrollBarContainer->layout()->setContentsMargins( 0, 0, 0, 0 );
+    hl->addWidget( ui.scrollBarContainer );
+
+    ui.splitter->addWidget( ui.tracks );
+    ui.splitter->addWidget( ui.scrobbleInfo );
+    QVBoxLayout* nsLayout = new QVBoxLayout( ui.scrobbleInfo );
+    nsLayout->setSpacing( 0 );
+    nsLayout->setContentsMargins( 0, 0, 0, 0 );
+
+    ui.splitter->setCollapsible( 0, false );
+    ui.splitter->handle( 1 )->setAutoFillBackground( true );
+    setMinimumWidth( 455 );
+
+    layout->addWidget( ui.statusBar, 1 );
+    resize(20, 500);
+
+    onItemClicked( ui.nowPlaying );
+
+    ui.statusBar->setSizeGripVisible( true );
 
     finishUi();
-}
-
-void
-MetadataWindow::doLayout( ViewMode mode )
-{
-    QVBoxLayout* layout = static_cast<QVBoxLayout*>(centralWidget()->layout());
-    delete layout;
-    layout = new QVBoxLayout( centralWidget() );
-    layout->setSpacing( 0 );
-    layout->setContentsMargins( 0, 0, 0, 0 );
-
-    ui.message_bar->hide();
-    ui.splitter->hide();
-    ui.tracks->hide();
-    ui.recentTracks->hide();
-    ui.scrobbleInfo->hide();
-    ui.nowPlaying->hide();
-
-    if ( mode == Restore )
-    {
-        layout->addWidget( ui.titleBar, 1 );
-        layout->addWidget( ui.splitter, 1 );
-
-        delete ui.tracks->layout();
-        QHBoxLayout* hl = new QHBoxLayout( ui.tracks );
-        QVBoxLayout* vl = new QVBoxLayout;
-        hl->setContentsMargins( 0, 0, 0, 0 );
-        hl->setSpacing( 0 );
-
-        vl->setContentsMargins( 0, 0, 0, 0 );
-        vl->setSpacing( 0 );
-
-        vl->addWidget( ui.nowPlaying );
-        vl->addWidget( ui.recentTracks );
-
-        hl->addLayout( vl );
-
-        delete ui.scrollBarContainer->layout();
-        (new QVBoxLayout( ui.scrollBarContainer ))->addWidget( ui.scrollBar );
-        ui.scrollBarContainer->layout()->setContentsMargins( 0, 0, 0, 0 );
-        hl->addWidget( ui.scrollBarContainer );
-
-        ui.splitter->addWidget( ui.tracks );
-        ui.splitter->addWidget( ui.scrobbleInfo );
-        QVBoxLayout* nsLayout = new QVBoxLayout( ui.scrobbleInfo );
-        nsLayout->setSpacing( 0 );
-        nsLayout->setContentsMargins( 0, 0, 0, 0 );
-
-        ui.splitter->setCollapsible( 0, false );
-        ui.splitter->handle( 1 )->setAutoFillBackground( true );
-        setMinimumWidth( 455 );
-
-        layout->addWidget( ui.statusBar, 1 );
-        resize(20, 500);
-
-        onItemClicked( ui.nowPlaying );
-
-        ui.statusBar->setSizeGripVisible( true );
-
-        ui.splitter->show();
-        ui.tracks->show();
-        ui.recentTracks->show();
-        ui.scrobbleInfo->show();
-        ui.nowPlaying->show();
-    }
-    else
-    {
-        layout->addWidget( ui.titleBar );
-        layout->addWidget( ui.nowPlaying );
-        layout->addWidget( ui.scrobbleInfo );
-        QVBoxLayout* nsLayout = new QVBoxLayout( ui.scrobbleInfo );
-        nsLayout->setSpacing( 0 );
-        nsLayout->setContentsMargins( 0, 0, 0, 0 );
-        layout->addWidget( ui.statusBar );
-
-        onItemClicked( ui.nowPlaying );
-
-        ui.statusBar->setSizeGripVisible( false );
-
-        ui.splitter->hide();
-        ui.tracks->hide();
-        ui.recentTracks->hide();
-        ui.scrobbleInfo->show();
-        ui.nowPlaying->show();
-
-        //resize(20, 20);
-    }
-}
-
-
-void
-MetadataWindow::onMinimize()
-{
-    m_viewMode == Restore ? m_viewMode = Min : m_viewMode = Restore;
-    doLayout( m_viewMode );
 }
 
 void
@@ -233,6 +178,10 @@ MetadataWindow::onSessionChanged( unicorn::Session* session )
 void
 MetadataWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )
 {
+    // hide the playback controls if a radio track has started
+    if ( t.source() != Track::LastFmRadio )
+        ui.playbackControls->hide();
+
     newTrack( t );
 }
 

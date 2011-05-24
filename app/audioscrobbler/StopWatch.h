@@ -41,7 +41,7 @@ public:
     /** The StopWatch starts off paused, call resume() to start.
       * The watch will not timeout() if elapsed is greater that the 
       * scrobble point */
-    StopWatch( ScrobblePoint timeout_in_seconds );
+    StopWatch( uint duration_in_seconds, ScrobblePoint timeout_in_seconds );
 
     void start();
     void pause();
@@ -53,15 +53,22 @@ public:
     uint elapsed() const;
 
     ScrobblePoint scrobblePoint() const { return m_point; }
+    uint duration() const { return m_duration; }
     
 signals:
     void paused( bool );
     void frameChanged( int millisecs );
+    void scrobble();
     void timeout();
+
+private slots:
+    void onFrameChanged( int frame );
 
 private: 
     class QTimeLine* m_timeline;
+    uint m_duration;
     ScrobblePoint m_point;
+    bool m_scrobbled;
 };
 
 #endif

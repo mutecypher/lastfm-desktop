@@ -41,6 +41,7 @@
 
 #include <lastfm/ws.h>
 
+#include "ui_ActivityListItem.h"
 
 TrackItem::TrackItem( const Track& track )
     :ActivityListItem()
@@ -98,13 +99,17 @@ void
 TrackItem::setDetails()
 {
     /// Set some track specific data for the UI
-    ui.love->setVisible( m_track.isLoved() );
+    ui->love->setVisible( m_track.isLoved() );
     onCorrected( m_track.toString() );
     connectTrack();
 
     // track items need their timestamp updated as they grow old
     m_timestamp = m_track.timestamp();
     updateTimestamp();
+
+    ui->player->setText( m_track.source() == Track::LastFmRadio ?
+                         tr( "Last.fm Radio" ):
+                         m_track.extra( "playerName" ) );
 }
 
 void
@@ -152,13 +157,13 @@ TrackItem::onCorrected( QString correction )
     if ( m_track.corrected() )
     {
         setText( correction );
-        ui.correction->show();
-        ui.correction->setToolTip( tr("Auto-corrected from: ") + m_track.toString( lastfm::Track::Original ) );
+        ui->correction->show();
+        ui->correction->setToolTip( tr("Auto-corrected from: ") + m_track.toString( lastfm::Track::Original ) );
     }
     else
     {
         setText( m_track.toString() );
-        ui.correction->hide();
+        ui->correction->hide();
     }
 }
 
@@ -166,7 +171,7 @@ TrackItem::onCorrected( QString correction )
 void
 TrackItem::onLoveToggled( bool loved )
 {
-    ui.love->setVisible( loved );
+    ui->love->setVisible( loved );
 }
 
 
@@ -216,6 +221,6 @@ TrackItem::onScrobbleStatusChanged()
         break;
     }
 
-    ui.text->setStyle(QApplication::style());
+    ui->text->setStyle(QApplication::style());
 }
 

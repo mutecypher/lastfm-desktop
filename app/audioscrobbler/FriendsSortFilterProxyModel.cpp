@@ -54,25 +54,13 @@ FriendsSortFilterProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex&
 {
     if ( m_selectionModel )
     {
-        bool selected = false;
-
-        qDebug() << "Source parent row: " << sourceParent.row();
-
-        foreach ( QModelIndex index, m_selectionModel->selectedRows() )
-        {
-            qDebug() << "Selected row: " << index.row();
-
-            if ( index.row() == sourceParent.row() )
-                selected = true;
-        }
-
-        if ( selected )
+        if ( m_selectionModel->rowIntersectsSelection( sourceRow, sourceParent ) )
             return true;
     }
 
     QRegExp re = filterRegExp();
     re.setCaseSensitivity( Qt::CaseInsensitive );
-    QString title = sourceModel()->index(sourceRow, 0, sourceParent).data( StationListModel::TitleRole ).toString();
+    QString title = sourceModel()->index(sourceRow, 0, sourceParent).data( StationListModel::NameRole ).toString();
     if ( re.indexIn( title ) != -1 )
         return true;
 

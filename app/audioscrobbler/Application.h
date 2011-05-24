@@ -189,7 +189,7 @@ namespace audioscrobbler
 
     private slots:
         void onTrayActivated(QSystemTrayIcon::ActivationReason);
-        void onStopWatchTimedOut();
+        void onScrobble();
         void setConnection(PlayerConnection*);
 
         void onCorrected(QString correction);
@@ -203,6 +203,7 @@ namespace audioscrobbler
         void onAboutTriggered();
         void onPrefsTriggered();
 
+        void onTrackStarted( const Track& );
         void onTrackStarted(const Track&, const Track&);
         void onPaused();
         void onResumed();

@@ -64,23 +64,26 @@ StationPanelWidget::onSessionChanged( unicorn::Session* newSession )
 void
 StationPanelWidget::refresh()
 {
-    ui->recentList->clear();
-    ui->tagsList->clear();
-    ui->friendsList->clear();
-    ui->neighboursList->clear();
-    ui->artistsList->clear();
+    if ( !User().name().isEmpty() )
+    {
+        ui->recentList->clear();
+        ui->tagsList->clear();
+        ui->friendsList->clear();
+        ui->neighboursList->clear();
+        ui->artistsList->clear();
 
-    // start fetching things
-    RadioStation yourLibrary = RadioStation::library( User() );
-    yourLibrary.setTitle( "Your Library Radio" );
-    ui->friendsList->addStation( yourLibrary, "You" );
-    ui->friendsList->setTasteometerCompareScore( User().name(), 1 );
+        // start fetching things
+        RadioStation yourLibrary = RadioStation::library( User() );
+        yourLibrary.setTitle( "Your Library Radio" );
+        ui->friendsList->addStation( yourLibrary, "You" );
+        ui->friendsList->setTasteometerCompareScore( User().name(), 1 );
 
-    connect( User().getRecentStations( 20 ), SIGNAL(finished()), SLOT(onGotRecentStations()) );
-    connect( User().getFriends( true, 50 ), SIGNAL(finished()), SLOT(onGotFriends()));
-    connect( User().getNeighbours( 50 ), SIGNAL(finished()), SLOT(onGotNeighbours()));
-    connect( User().getTopArtists( "3month", 50 ), SIGNAL(finished()), SLOT(onGotArtists()));
-    connect( RadioStation::library( User().name() ).getTagSuggestions( 50 ), SIGNAL(finished()), SLOT(onGotTags()));
+        connect( User().getRecentStations( 7 ), SIGNAL(finished()), SLOT(onGotRecentStations()) );
+        connect( User().getFriends( true, 50 ), SIGNAL(finished()), SLOT(onGotFriends()));
+        connect( User().getNeighbours( 50 ), SIGNAL(finished()), SLOT(onGotNeighbours()));
+        connect( User().getTopArtists( "3month", 50 ), SIGNAL(finished()), SLOT(onGotArtists()));
+        connect( RadioStation::library( User().name() ).getTagSuggestions( 50 ), SIGNAL(finished()), SLOT(onGotTags()));
+    }
 }
 
 void
@@ -138,9 +141,6 @@ StationPanelWidget::onGotFriends()
         RadioStation station = RadioStation::library( usersFriend );
         station.setTitle( tr("%1%2s Library Radio").arg( user["name"].text(), QChar( 0x2019 ) ) );
         ui->friendsList->addStation( station, track.toString() );
-
-        // fetch the user's tasteometer score with the current user
-        connect( lastfm::Tasteometer::compare( User(), usersFriend ), SIGNAL(finished()), SLOT(onGotTasteometerCompare()));
     }
 
     int page = lfm["friends"].attribute( "page" ).toInt();
@@ -155,14 +155,7 @@ StationPanelWidget::onGotFriends()
 void
 StationPanelWidget::onGotTasteometerCompare()
 {
-    lastfm::XmlQuery lfm = lastfm::XmlQuery( static_cast<QNetworkReply*>( sender() )->readAll() );
 
-    qDebug() << lfm;
-
-    float score = lfm["comparison"]["result"]["score"].text().toFloat();
-    QString usersFriend = lfm["comparison"]["input"].children("user").at( 1 )["name"].text();
-
-    ui->friendsList->setTasteometerCompareScore( usersFriend, score );
 }
 
 

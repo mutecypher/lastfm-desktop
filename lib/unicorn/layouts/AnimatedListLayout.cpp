@@ -80,10 +80,10 @@ AnimatedListLayout::addItem( QLayoutItem* item )
 
         // make sure we don't draw the item in the list until
         // it has been added properly
-        QRect itemRect = contentsRect();
-        itemRect.setHeight( 2 );
-        itemRect.translate( -3, -3);
-        item->setGeometry( itemRect );
+        //QRect itemRect = contentsRect();
+        //itemRect.setHeight( 2 );
+        //itemRect.translate( -3, -3);
+        //item->setGeometry( itemRect );
     }
     else
     {
@@ -105,7 +105,7 @@ AnimatedListLayout::onItemLoaded()
     foreach ( QLayoutItem* item , m_newItemList )
     {
         m_itemList.prepend( item );
-        cumHeight += item->sizeHint().height();
+        cumHeight += 40;
     }
 
     m_newItemList.clear();
@@ -179,8 +179,9 @@ AnimatedListLayout::setGeometry(const QRect &rect)
 
 
 void 
-AnimatedListLayout::doLayout( const QRect& rect, int vOffset )
+AnimatedListLayout::doLayout( const QRect& /*rect*/, int vOffset )
 {
+    QRect rect = parentWidget()->rect();
     int cumHeight = 0;
 
     // make sure that all the unloaded items are off the screen

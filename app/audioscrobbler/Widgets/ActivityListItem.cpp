@@ -32,8 +32,10 @@
 #include "IPodScrobbleItem.h"
 #include "TrackItem.h"
 
+#include "ui_ActivityListItem.h"
+
 ActivityListItem::ActivityListItem( QWidget* parent )
-    :StylableWidget( parent ), m_timestampTimer( 0 ), m_selected( false )
+    :StylableWidget( parent ), ui(new Ui::ActivityListItem), m_timestampTimer( 0 ), m_selected( false )
 {
 }
 
@@ -62,54 +64,17 @@ ActivityListItem::basicInfoWidget() const
 void
 ActivityListItem::setupUi()
 {
-    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+    ui->setupUi( this );
 
-    QHBoxLayout* layout = new QHBoxLayout( this );
-    layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
-
-    ui.as = new QLabel();
-    ui.as->setObjectName( "as" );
+    ui->love->hide();
+    ui->correction->hide();
 
     movie.scrobbler_as = new Movie( ":/scrobbler_as.mng" );
     movie.scrobbler_as->setSpeed( 200 );
     movie.scrobbler_as->setCacheMode( QMovie::CacheAll );
-    ui.as->setMovie( movie.scrobbler_as );
+    ui->as->setMovie( movie.scrobbler_as );
 
-    layout->addWidget( ui.as );
-
-    ui.textArea = new QWidget( this );
-    QHBoxLayout* h1 = new QHBoxLayout( ui.textArea );
-    h1->setSpacing( 0 );
-    h1->setContentsMargins( 0, 0, 0, 0);
-
-    h1->addWidget( ui.text = new QLabel( "" ) );
-    ui.text->setObjectName( "trackText" );
-
-    h1->addWidget( ui.correction = new QLabel() );
-    ui.correction->setObjectName( "correction" );
-    ui.correction->hide();
-
-    h1->addStretch( 1 );
-
-    h1->addWidget( ui.love = new QLabel("love") );
-    ui.love->setObjectName( "love" );
-    ui.love->setToolTip( tr( "A loved track" ) );
-    ui.love->hide();
-
-    layout->addWidget( ui.textArea, 1 );
-
-    ui.timestampArea = new QWidget( this );
-    QHBoxLayout* h2 = new QHBoxLayout( ui.timestampArea );
-    h2->setSpacing( 0 );
-    h2->setContentsMargins( 0, 0, 0, 0);
-
-    h2->addStretch( 0 );
-
-    h2->addWidget( ui.timestamp = new QLabel(), 1 );
-    ui.timestamp->setObjectName( "timestamp" );
-
-    layout->addWidget( ui.timestampArea, 1 );
+    ui->love->setToolTip( tr( "A loved track" ) );
 }
 
 
@@ -131,14 +96,14 @@ ActivityListItem::updateTimestamp()
         connect( m_timestampTimer, SIGNAL(timeout()), SLOT(updateTimestamp()));
     }
 
-    ui.as->clear();
+    ui->as->clear();
 
     QDateTime now = QDateTime::currentDateTime();
 
     QString dateFormat( "d MMM h:mmap" );
 
     // Full time in the tool tip
-    ui.timestamp->setToolTip(m_timestamp.toString( dateFormat ));
+    ui->status->setToolTip(m_timestamp.toString( dateFormat ));
 
     int secondsAgo = m_timestamp.secsTo( now );
 
@@ -146,19 +111,19 @@ ActivityListItem::updateTimestamp()
     {
         // Less than an hour ago
         int minutesAgo = ( m_timestamp.secsTo( now ) / 60 );
-        m_timestampText = (minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) );
+        m_statusText = (minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) );
         m_timestampTimer->start( now.secsTo( m_timestamp.addSecs(((minutesAgo + 1 ) * 60 ) + 1 ) ) * 1000 );
     }
     else if ( secondsAgo < (60 * 60 * 6) || now.date() == m_timestamp.date() )
     {
         // Less than 6 hours ago or on the same date
         int hoursAgo = ( m_timestamp.secsTo( now ) / (60 * 60) );
-        m_timestampText = (hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) );
+        m_statusText = (hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) );
         m_timestampTimer->start( now.secsTo( m_timestamp.addSecs( ( (hoursAgo + 1) * 60 * 60 ) + 1 ) ) * 1000 );
     }
     else
     {
-        m_timestampText = m_timestamp.toString( dateFormat );
+        m_statusText = m_timestamp.toString( dateFormat );
         // We don't need to set the timer because this date will never change
     }
 
@@ -187,22 +152,25 @@ void
 ActivityListItem::resizeEvent(QResizeEvent* )
 {
     int textAreaWidth;
-    if( !ui.timestamp->text().isEmpty())
+    if( !ui->player->text().isEmpty())
         textAreaWidth = ( width() * 65 ) / 100;
     else
         textAreaWidth = width();
 
-    ui.textArea->setFixedWidth( textAreaWidth );
+    ui->textArea->setFixedWidth( textAreaWidth );
 
-    if ( ui.correction->isVisible() )
-        textAreaWidth -=  ui.correction->width();
+    textAreaWidth -=  ui->love->width();
 
-    textAreaWidth -=  ui.love->width();
+    QFontMetrics fm( ui->text->font() );
+    //ui->status->setText( fm.elidedText ( m_statusText, Qt::ElideRight, textAreaWidth ) );
+    ui->status->setText( m_statusText );
 
-    QFontMetrics fm( ui.text->font() );
-    ui.text->setText( fm.elidedText ( m_text, Qt::ElideRight, textAreaWidth ) );
+    if ( ui->correction->isVisible() )
+        textAreaWidth -=  ui->correction->width();
 
-    ui.timestamp->setText( m_timestampText );
+    ui->text->setText( fm.elidedText ( m_text, Qt::ElideRight, textAreaWidth ) );
+
+
 }
 
 

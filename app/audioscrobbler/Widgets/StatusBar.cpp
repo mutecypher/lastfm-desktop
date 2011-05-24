@@ -91,7 +91,7 @@ StatusBar::onConnectionUp()
 void
 StatusBar::onConnectionDown()
 {
-    m_inetStatus->setText( QString::fromUtf8(":(" ) + tr( "Offline"));
+    m_inetStatus->setText( QString::fromUtf8( ":(" ) + tr( "Offline"));
 }
 
 void

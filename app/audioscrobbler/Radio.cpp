@@ -343,6 +343,7 @@ Radio::phononEnqueue()
         // consume next track from the track source. a null track 
         // response means wait until the trackAvailable signal
         Track t = m_tuner->takeNextTrack();
+
         if (t.isNull())
         {
             m_track = t;

@@ -24,6 +24,7 @@
 #include <QWidget>
 #include <QMovie>
 #include <QPointer>
+#include <QBrush>
 
 #include <lastfm/Track>
 
@@ -37,7 +38,9 @@ class StopWatch;
 class NowPlayingItem : public TrackItem
 {
     Q_OBJECT
-    Q_PROPERTY( QColor progressColor READ progressColor WRITE setProgressColor );
+    Q_PROPERTY( QBrush progressColor READ progressColor WRITE setProgressColor );
+    Q_PROPERTY( QColor scrobblePointColor READ scrobblePointColor WRITE setScrobblePointColor );
+
 public:
     NowPlayingItem( const Track& track );
 
@@ -45,16 +48,18 @@ public:
 
     QWidget* infoWidget() const;
 
-    void setProgressColor( const QColor& color ) {
-        m_progressColor = color;
-    }
+    void setProgressColor( const QBrush& color ) { m_progressColor = color; }
+    QBrush progressColor() const{ return m_progressColor; }
 
-    QColor progressColor() const{ return m_progressColor; }
+    void setScrobblePointColor( const QColor& scrobblePointColor ) { m_scrobblePointColor = scrobblePointColor; }
+    QColor scrobblePointColor() const { return m_scrobblePointColor;}
 
     void resizeEvent(QResizeEvent *event);
 
 private:
     void paintEvent( QPaintEvent* event );
+
+    QRect updateRect() const;
 
 private slots:
     void onWatchPaused( bool isPaused );
@@ -66,7 +71,8 @@ private slots:
 private:
     QWidget* m_nullInfo;
     int m_progress;
-    QColor m_progressColor;
+    QBrush m_progressColor;
+    QColor m_scrobblePointColor;
     int m_progressWidth;
     int m_lastFrame;
 };

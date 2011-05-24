@@ -26,6 +26,8 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
+namespace Ui { class ActivityListItem; }
+
 class ActivityListItem : public StylableWidget
 {
     Q_OBJECT
@@ -67,17 +69,6 @@ protected:
 
     void setText( const QString& text );
 
-    struct
-    {
-        class QLabel* as;
-        class QWidget* textArea;
-        class QWidget* timestampArea;
-        class QLabel* text;
-        class QLabel* correction;
-        class QLabel* love;
-        class QLabel* timestamp;
-    } ui;
-
     struct {
         class QMovie* scrobbler_as;
         class QMovie* scrobbler_paused;
@@ -88,9 +79,10 @@ protected:
     class QTimer* m_timestampTimer;
 
 protected:
+    Ui::ActivityListItem* ui;
     QString m_text;
     QString m_status;
-    QString m_timestampText;
+    QString m_statusText;
     bool m_odd;
     bool m_selected;
 };

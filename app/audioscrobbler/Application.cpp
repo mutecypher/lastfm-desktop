@@ -274,6 +274,9 @@ Application::init()
     m_mw->addWinThumbBarButton( m_skip_action );
 
     QVBoxLayout* drawerLayout = new QVBoxLayout( m_drawer = new Drawer( m_mw ) );
+    drawerLayout->setContentsMargins( 0, 0, 0, 0 );
+    drawerLayout->setSpacing( 0 );
+
     drawerLayout->addWidget( m_radioWidget = new RadioWidget );
 
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
@@ -336,6 +339,16 @@ Application::init()
         qWarning() << e.what();
         //TODO user visible warning
     }
+
+    // connect the radio up so it scrobbles
+    connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onTrackStarted(Track)));
+    connect( radio, SIGNAL(paused()), SLOT(onPaused()));
+    connect( radio, SIGNAL(resumed()), SLOT(onResumed()));
+    connect( radio, SIGNAL(stopped()), SLOT(onStopped()));
+
+    connect( radio, SIGNAL(resumed()), SIGNAL(resumed()));
+    connect( radio, SIGNAL(paused()), SIGNAL(paused()));
+    connect( radio, SIGNAL(stopped()), SIGNAL(stopped()));
 
 
     connect( m_show_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
@@ -427,6 +440,13 @@ Application::setConnection(PlayerConnection*c)
 }
 
 void
+Application::onTrackStarted( const Track& track )
+{
+    onTrackStarted( track, m_currentTrack );
+    emit trackStarted( track, m_currentTrack );
+}
+
+void
 Application::onTrackStarted(const Track& t, const Track& oldtrack)
 {
     // This stops the loving of tracks in the recent tracks list affecting the current track
@@ -434,7 +454,7 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
 
     state = Playing;
 
-    Q_ASSERT(m_connection);
+    //Q_ASSERT(m_connection);
 
     //TODO move to playerconnection
     if(t.isNull()){
@@ -459,10 +479,10 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
 
     ScrobblePoint timeout( m_currentTrack.duration() * trackLengthPercent );
     delete m_watch;
-    m_watch = new StopWatch(timeout);
+    m_watch = new StopWatch(m_currentTrack.duration(), timeout);
     m_watch->start();
 
-    connect( m_watch, SIGNAL(timeout()), SLOT(onStopWatchTimedOut()));
+    connect( m_watch, SIGNAL(scrobble()), SLOT(onScrobble()));
     connect( m_watch, SIGNAL(paused(bool)), SIGNAL(paused(bool)));
     connect( m_watch, SIGNAL(frameChanged( int )), SIGNAL(frameChanged( int )));
     connect( m_watch, SIGNAL(timeout()), SIGNAL(timeout()));
@@ -482,14 +502,14 @@ Application::onTrackStarted(const Track& t, const Track& oldtrack)
 void
 Application::onTrackGotInfo(const XmlQuery& lfm)
 {
-    Q_ASSERT(m_connection);
+    //Q_ASSERT(m_connection);
     MutableTrack( m_connection->track() ).setFromLfm( lfm );
 }
 
 void
-Application::onStopWatchTimedOut()
+Application::onScrobble()
 {
-    Q_ASSERT(m_connection);
+    //Q_ASSERT(m_connection);
     if( m_as ) m_as->cache( m_trackToScrobble );
 }
 
@@ -504,7 +524,7 @@ Application::onPaused()
 
     m_currentTrack.removeNowPlaying();
 
-    Q_ASSERT(m_connection);
+    //Q_ASSERT(m_connection);
     Q_ASSERT(m_watch);
     if(m_watch) m_watch->pause();
 
@@ -521,7 +541,7 @@ Application::onResumed()
     state = Playing;
 
     Q_ASSERT(m_watch);
-    Q_ASSERT(m_connection);
+    //Q_ASSERT(m_connection);
 
     m_currentTrack.updateNowPlaying( m_currentTrack.duration() - (m_watch->elapsed()/1000) );
 
@@ -542,7 +562,7 @@ Application::onStopped()
     state = Stopped;
 
     Q_ASSERT(m_watch);
-    Q_ASSERT(m_connection);
+    //Q_ASSERT(m_connection);
         
     delete m_watch;
     if( m_as ) m_as->submit();

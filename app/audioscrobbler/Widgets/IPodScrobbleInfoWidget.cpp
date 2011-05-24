@@ -34,7 +34,7 @@ IPodScrobbleInfoWidget::IPodScrobbleInfoWidget( const QList<Track>& tracks, QWid
         h1->addWidget( ui.iPod = new QLabel( "", this ) );
         ui.iPod->setObjectName("iPod");
 
-        QVBoxLayout* v1 = new QVBoxLayout();
+        QVBoxLayout* v1 = new QVBoxLayout( this );
 
         QString format = (tracks.count() == 1 ?
             tr("%1 track from the iPod \"%2\""):
@@ -64,7 +64,7 @@ IPodScrobbleInfoWidget::IPodScrobbleInfoWidget( const QList<Track>& tracks, QWid
 
             trackLayout->addWidget( new QLabel( track.timestamp().toString( "d MMM h:mmap" ) ) );
 
-            v1->addLayout( trackLayout );
+            v1->addWidget( row );
         }
 
         v1->addStretch( 1 );

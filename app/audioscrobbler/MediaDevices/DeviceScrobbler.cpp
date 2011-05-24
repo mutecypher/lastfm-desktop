@@ -56,7 +56,8 @@ DeviceScrobbler::checkCachedIPodScrobbles()
 
                 IpodDevice::Scrobble scrobble = ipod->scrobble();
 
-                if ( scrobble == IpodDevice::NotNow )
+                if ( scrobble == IpodDevice::NotNow
+                     || scrobble == IpodDevice::Unknown )
                 {
                     // The user isn't sure if they want to scrobble this iPod yet so ask them
                     ScrobbleSetupDialog* scrobbleSetup = new ScrobbleSetupDialog( deviceId, deviceName, iPodFiles );
@@ -171,7 +172,8 @@ DeviceScrobbler::twiddled( QStringList arguments )
             IpodDevice::Scrobble iPodScrobble = ipod->scrobble();
             delete ipod;
 
-            if ( iPodScrobble == IpodDevice::NotNow )
+            if ( iPodScrobble == IpodDevice::NotNow
+                 || iPodScrobble == IpodDevice::Unknown)
                 showSetup = true;
             else
                 onScrobbleSetupClicked( iPodScrobble, deviceId, deviceName, QStringList( iPodPath ) );

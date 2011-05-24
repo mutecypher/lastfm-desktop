@@ -21,16 +21,26 @@
 #include <QTimeLine>
 
 
-StopWatch::StopWatch( ScrobblePoint timeout )
-    : m_point( timeout )
+StopWatch::StopWatch( uint duration, ScrobblePoint timeout )
+    : m_duration( duration ), m_point( timeout ), m_scrobbled(false)
 {    
-    m_timeline = new QTimeLine( m_point * 1000, this );
-    m_timeline->setFrameRange(0, m_point * 1000);
+    m_timeline = new QTimeLine( duration * 1000, this );
+    m_timeline->setFrameRange( 0, duration * 1000 );
     m_timeline->setEasingCurve( QEasingCurve::Linear );
     m_timeline->setUpdateInterval( 20 );
 
     connect( m_timeline, SIGNAL(finished()), SIGNAL(timeout()) );
     connect( m_timeline, SIGNAL(frameChanged(int)), SIGNAL(frameChanged(int)));
+    connect( m_timeline, SIGNAL(frameChanged(int)), SLOT(onFrameChanged(int)));
+}
+
+void StopWatch::onFrameChanged( int frame )
+{
+    if ( !m_scrobbled && frame >= (m_point * 1000) )
+    {
+        emit scrobble();
+        m_scrobbled = true;
+    }
 }
 
 bool

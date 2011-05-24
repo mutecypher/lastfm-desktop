@@ -63,7 +63,7 @@ StationWidget::getStation()
         QList<User> users;
         QList<Tag> tags;
 
-        foreach( QModelIndex index, ui->treeView->selectionModel()->selectedIndexes() )
+        foreach( QModelIndex index, ui->treeView->selectionModel()->selectedRows() )
         {
             QString stationUrl = ui->treeView->model()->data( index, StationListModel::UrlRole ).toString();
 
