@@ -1,5 +1,6 @@
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <qmath.h>
 
 #include "SkipListener.h"
 
@@ -24,7 +25,7 @@ SkipListener::SkipListener(QObject *parent)
 void
 SkipListener::onTrackSpooled()
 {
-    m_users.clear();
+    m_skippers.clear();
 }
 
 
@@ -38,10 +39,12 @@ SkipListener::onNewConnection()
 
     qDebug() << data;
 
-    if ( !m_users.contains( data ) )
-        m_users.append( data );
+    if ( !m_skippers.contains( data ) )
+        m_skippers.append( data );
 
-    if ( m_users.count() >= 2 )
+    int totalUsers = radio->station().url().count(",") + 1;
+
+    if ( m_skippers.count()  >= qCeil( totalUsers / 2.0f ) )
         radio->skip();
 
     socket->close();

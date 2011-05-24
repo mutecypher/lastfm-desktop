@@ -18,7 +18,7 @@ private slots:
 
 private:
     class QTcpServer* m_server;
-    QStringList m_users;
+    QStringList m_skippers;
 };
 
 #endif // SKIPLISTENER_H
