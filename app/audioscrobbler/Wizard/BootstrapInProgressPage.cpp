@@ -41,6 +41,9 @@ BootstrapInProgressPage::initializePage()
         case IPluginInfo::PluginBootstrap:
             m_bootstrapper = new PluginBootstrapper( bootstrapId, this );
         break;
+
+        default:
+        break;
     }
     
     connect( m_bootstrapper, SIGNAL( percentageUploaded( int )), SLOT( onPercentageUpload( int )));

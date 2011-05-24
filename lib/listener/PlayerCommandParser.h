@@ -26,7 +26,9 @@
 #include <stdexcept>
 
 // ignore the warning about the exception specification
+#ifdef Q_OS_WIN
 #pragma warning( disable : 4290 )
+#endif
 
 class PlayerCommandParser
 {

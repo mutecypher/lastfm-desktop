@@ -33,6 +33,8 @@ GhostWidget::eventFilter( QObject* /*obj*/, QEvent* event )
     case QEvent::Hide:
         hide();
         break;
+    default:
+        break;
     }
 
     return false;
