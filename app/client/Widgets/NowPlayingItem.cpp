@@ -57,9 +57,9 @@ NowPlayingItem::NowPlayingItem( const Track& track )
     m_nullInfo = new WelcomeWidget( this );
     m_nullInfo->hide();
 
-    connect( aApp, SIGNAL(paused(bool)), SLOT( onWatchPaused(bool)) );
-    connect( aApp, SIGNAL(timeout()), SLOT( onWatchFinished()));
-    connect( aApp, SIGNAL(frameChanged(int)), SLOT(onFrameChanged(int)));
+    connect( scrobbleService, SIGNAL(paused(bool)), SLOT( onWatchPaused(bool)) );
+    connect( scrobbleService, SIGNAL(timeout()), SLOT( onWatchFinished()));
+    connect( scrobbleService, SIGNAL(frameChanged(int)), SLOT(onFrameChanged(int)));
 
     onWatchPaused( false );
 }

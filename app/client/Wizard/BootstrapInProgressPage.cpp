@@ -1,4 +1,5 @@
 #include "BootstrapInProgressPage.h"
+#include "Services/ScrobbleService.h"
 #include "../Bootstrapper/iTunesBootstrapper.h"
 #include "../Bootstrapper/PluginBootstrapper.h"
 #include "../Application.h"
@@ -13,7 +14,7 @@ BootstrapInProgressPage::BootstrapInProgressPage( QWizard* parent )
                         :QWizardPage( parent ),
                          m_isComplete( false )
 {
-    connect( aApp, SIGNAL( trackStarted( Track, Track )), SLOT( onTrackStarted( Track )));
+    connect( scrobbleService, SIGNAL( trackStarted( Track, Track )), SLOT( onTrackStarted( Track )));
     setTitle( "Importing your listening history!" );
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->addStretch();
@@ -22,7 +23,7 @@ BootstrapInProgressPage::BootstrapInProgressPage( QWizard* parent )
     m_progressBar->setValue( 0 );
     m_progressBar->setMaximum( 100 );
     layout->addStretch();
-    connect( aApp, SIGNAL(bootstrapReady(QString)), SLOT( onBootstrapReady(QString)));
+    connect( scrobbleService, SIGNAL(bootstrapReady(QString)), SLOT( onBootstrapReady(QString)));
 }
 
 void 

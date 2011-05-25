@@ -20,11 +20,6 @@ signals:
 
 private slots:
     void onStartClicked();
-//    void onRadioTick( qint64 tick );
-//    void onTrackSpooled( const Track& track );
-//    void onTuningIn( const RadioStation& station );
-//    void onError( int error , const QVariant& errorData );
-//    void onStopped();
 
     void onLibraryClicked();
     void onMixClicked();

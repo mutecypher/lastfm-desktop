@@ -20,6 +20,7 @@
 #include "MetadataWindow.h"
 
 #include "Application.h"
+#include "Services/ScrobbleService.h"
 #include "ScrobbleInfoFetcher.h"
 #include "MediaDevices/DeviceScrobbler.h"
 #include "../Widgets/ScrobbleControls.h"
@@ -101,10 +102,10 @@ MetadataWindow::MetadataWindow()
     ui.message_bar = new MessageBar( centralWidget());
 
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
-    connect( qApp, SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
-    connect( qApp, SIGNAL( paused() ), SLOT( onPaused() ) );
-    connect( qApp, SIGNAL( resumed() ), SLOT( onResumed() ) );
-    connect( qApp, SIGNAL( stopped() ), SLOT( onStopped() ) );
+    connect( scrobbleService, SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
+    connect( scrobbleService, SIGNAL( paused() ), SLOT( onPaused() ) );
+    connect( scrobbleService, SIGNAL( resumed() ), SLOT( onResumed() ) );
+    connect( scrobbleService, SIGNAL( stopped() ), SLOT( onStopped() ) );
 
     connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)));
     connect( ui.nowPlaying->fetcher(), SIGNAL(albumGotInfo(XmlQuery)), SIGNAL(albumGotInfo(XmlQuery)));

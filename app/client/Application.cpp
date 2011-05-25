@@ -305,11 +305,6 @@ Application::init()
     connect( radio, SIGNAL(resumed()), scrobbleService, SLOT(onResumed()));
     connect( radio, SIGNAL(stopped()), scrobbleService, SLOT(onStopped()));
 
-    connect( radio, SIGNAL(resumed()), SIGNAL(resumed()));
-    connect( radio, SIGNAL(paused()), SIGNAL(paused()));
-    connect( radio, SIGNAL(stopped()), SIGNAL(stopped()));
-
-
     connect( m_show_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
     connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( toggleWindow()), Qt::QueuedConnection );
 

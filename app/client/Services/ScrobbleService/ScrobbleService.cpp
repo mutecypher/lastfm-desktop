@@ -35,8 +35,6 @@
 
 ScrobbleService::ScrobbleService()
 {
-    if( lastfm::ws::Username.isEmpty()) return;
-
 /// mediator
     m_mediator = new PlayerMediator(this);
     connect( m_mediator, SIGNAL(activeConnectionChanged( PlayerConnection* )), SLOT(setConnection( PlayerConnection* )) );
@@ -193,6 +191,7 @@ ScrobbleService::onPaused()
     if(m_watch) m_watch->pause();
 
     //resetTrackInfo();
+    emit paused();
 }
 
 void
@@ -211,6 +210,7 @@ ScrobbleService::onStopped()
     if( m_as ) m_as->submit();
 
     //resetTrackInfo();
+    emit stopped();
 }
 
 void
@@ -230,7 +230,7 @@ ScrobbleService::onResumed()
     if(m_watch) m_watch->resume();
 
     //setTrackInfo();
-
+    emit resumed();
 }
 
 void

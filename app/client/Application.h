@@ -115,16 +115,6 @@ namespace audioscrobbler
         void setRaiseHotKey( Qt::KeyboardModifiers mods, int key );
         
     signals:
-        void trackStarted( const Track&, const Track& );
-        void resumed();
-        void paused();
-        void stopped();
-
-        // re-route the stopwatch signals
-        void paused( bool );
-        void frameChanged( int millisecs );
-        void timeout();
-
         void lovedStateChanged(bool loved);
 
         // re-route all the info fetchers singals

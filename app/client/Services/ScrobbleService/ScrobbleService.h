@@ -70,10 +70,13 @@ signals:
     void foundIPodScrobbles( const QList<lastfm::Track>& tracks );
     void bootstrapReady( const QString& playerId );
 
+    void paused( bool );
+    void frameChanged( int );
+    void timeout();
+
 
 protected slots:
     void setConnection( PlayerConnection* );
-    
     void onTrackStarted( const Track& );
     void onTrackStarted( const Track&, const Track& );
     void onPaused();
