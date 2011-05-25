@@ -38,8 +38,7 @@ TitleBar::TitleBar( QWidget* parent )
     QPushButton* pb = new QPushButton( "Close" );
     pb->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
     pb->setCheckable( true );
-    connect( pb, SIGNAL(clicked(bool)), aApp, SLOT(showRadioDrawer(bool)));
-    //connect( pb, SIGNAL(clicked()), SIGNAL( closeClicked()));
+    connect( pb, SIGNAL(clicked()), SIGNAL( closeClicked()));
 
 #ifdef Q_OS_MAC
     pb->setShortcut( Qt::CTRL + Qt::Key_H );

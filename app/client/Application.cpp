@@ -256,11 +256,9 @@ Application::init()
     m_mw->addWinThumbBarButton( m_play_action );
     m_mw->addWinThumbBarButton( m_skip_action );
 
-    QVBoxLayout* drawerLayout = new QVBoxLayout( m_drawer = new Drawer( m_mw ) );
-    drawerLayout->setContentsMargins( 0, 0, 0, 0 );
-    drawerLayout->setSpacing( 0 );
-
-    drawerLayout->addWidget( m_radioWidget = new RadioWidget );
+    m_drawer = new Drawer( m_mw );
+    m_drawer->setWidget( m_radioWidget = new RadioWidget );
+    m_mw->addDockWidget( Qt::RightDockWidgetArea, m_drawer );
 
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
 #ifndef Q_OS_LINUX

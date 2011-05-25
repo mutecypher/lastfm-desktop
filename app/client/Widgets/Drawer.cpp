@@ -4,8 +4,9 @@
 
 
 Drawer::Drawer( QWidget* parent )
-    : QWidget( parent, Qt::Drawer | Qt::FramelessWindowHint )
+    : QDockWidget( parent, Qt::Drawer | Qt::FramelessWindowHint )
     {
+    hide();
 #ifdef FAKE_DRAWER
     m_timeLine = new QTimeLine( 1000, this );
     m_timeLine->setUpdateInterval( 1 );

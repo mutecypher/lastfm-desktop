@@ -179,7 +179,8 @@ QScrollArea > QWidget,
     background-color: #1b1b1b;
 }
 
-ScrobbleInfoWidget QPushButton {
+ScrobbleInfoWidget QPushButton,
+RadioWidget QPushButton {
     color: transparent;
     background-color: transparent;
     background-position: center;

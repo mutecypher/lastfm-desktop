@@ -1,7 +1,7 @@
 #ifndef DRAWER_H_
 #define DRAWER_H_
 
-#include <QWidget>
+#include <QDockWidget>
 #include <QResizeEvent>
 #include <QMoveEvent>
 #include <QTimeLine>
@@ -12,7 +12,7 @@
 #include <windows.h>
 #endif
 
-class Drawer : public QWidget {
+class Drawer : public QDockWidget {
 Q_OBJECT
 public:
     Drawer( QWidget* parent );

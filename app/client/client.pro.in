@@ -2,7 +2,7 @@ TEMPLATE = app
 TARGET = "Last.fm"
 VERSION = 2.0.0
 QT = core gui xml network sql phonon
-CONFIG += lastfm unicorn listener no_dock_icon
+CONFIG += lastfm unicorn listener
 win32:LIBS += user32.lib
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 
