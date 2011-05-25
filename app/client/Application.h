@@ -146,8 +146,6 @@ namespace audioscrobbler
         virtual void initiateLogin()throw( StubbornUserException );
 
     private:
-        void setTrackInfo();
-        void resetTrackInfo();
         static Argument argument( const QString& arg );
 
     private slots:
@@ -166,6 +164,8 @@ namespace audioscrobbler
         void showWindow();
         void toggleWindow();
 
+        void onTrackStarted( const Track&, const Track& );
+        void onTrackPaused( bool );
 
         void onMessageReceived(const QStringList& message);
 		

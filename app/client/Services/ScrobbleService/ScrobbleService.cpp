@@ -163,8 +163,6 @@ ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
     connect( m_watch, SIGNAL(frameChanged( int )), SIGNAL(frameChanged( int )));
     connect( m_watch, SIGNAL(timeout()), SIGNAL(timeout()));
 
-    //setTrackInfo();
-
     qDebug() << "********** AS = " << m_as;
     if( m_as ) {
         m_as->submit();
@@ -172,7 +170,6 @@ ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
         m_as->nowPlaying( t );
     }
 
-    connect( t.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
 }
 
 void
@@ -189,8 +186,7 @@ ScrobbleService::onPaused()
     //Q_ASSERT(m_connection);
     Q_ASSERT(m_watch);
     if(m_watch) m_watch->pause();
-
-    //resetTrackInfo();
+    
     emit paused();
 }
 

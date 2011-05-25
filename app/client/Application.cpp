@@ -309,6 +309,9 @@ Application::init()
     connect( this, SIGNAL(messageReceived(QStringList)), SLOT(onMessageReceived(QStringList)) );
     connect( this, SIGNAL( sessionChanged( unicorn::Session* ) ), scrobbleService, SLOT( onSessionChanged( unicorn::Session* ) ) );
 
+    connect( scrobbleService, SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)));
+    connect( scrobbleService, SIGNAL(paused(bool)), SLOT(onTrackPaused(bool)));
+
     //We're not going to catch the first session change as it happened in the unicorn application before
     //we could connect to the signal!
 
@@ -353,45 +356,50 @@ Application::onTrackGotInfo(const XmlQuery& lfm)
 void
 Application::onCorrected(QString /*correction*/)
 {
-    setTrackInfo();
+    onTrackStarted( scrobbleService->currentTrack(), scrobbleService->currentTrack());
 }
 
 
 void
-Application::setTrackInfo()
+Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
 { 
     QFontMetrics fm( font() );
-    QString durationString = " [" + m_currentTrack.durationString() + "]";
+    QString durationString = " [" + track.durationString() + "]";
 
     int actionOffsets = fm.width( durationString );
     int actionWidth = m_tray->contextMenu()->actionGeometry( m_artist_action ).width() - actionOffsets;
 
-    QString artistActionText = fm.elidedText( m_currentTrack.artist( lastfm::Track::Corrected ), Qt::ElideRight, actionWidth );
-    QString titleActionText = fm.elidedText( m_currentTrack.title( lastfm::Track::Corrected), Qt::ElideRight, actionWidth - fm.width( durationString ) );
+    QString artistActionText = fm.elidedText( track.artist( lastfm::Track::Corrected ), Qt::ElideRight, actionWidth );
+    QString titleActionText = fm.elidedText( track.title( lastfm::Track::Corrected), Qt::ElideRight, actionWidth - fm.width( durationString ) );
 
     m_artist_action->setText( artistActionText );
-    m_artist_action->setToolTip( m_currentTrack.artist( lastfm::Track::Corrected ) );
+    m_artist_action->setToolTip( track.artist( lastfm::Track::Corrected ) );
     m_title_action->setText( titleActionText + durationString );
-    m_title_action->setToolTip( m_currentTrack.title( lastfm::Track::Corrected ) + " [" + m_currentTrack.durationString() + "]" );
+    m_title_action->setToolTip( track.title( lastfm::Track::Corrected ) + " [" + track.durationString() + "]" );
 
-    m_tray->setToolTip( m_currentTrack.toString() );
+    m_tray->setToolTip( track.toString() );
 
     m_love_action->setEnabled( true );
     m_tag_action->setEnabled( true );
     m_share_action->setEnabled( true );
 
     // make sure that if the love state changes we update all the buttons
-    connect( m_currentTrack.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(lovedStateChanged(bool)) );
+    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(lovedStateChanged(bool)) );
+    connect( track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
 }
 
 void
-Application::resetTrackInfo()
+Application::onTrackPaused( bool paused )
 {
-    m_artist_action->setText( "" );
-    m_title_action->setText( tr( "Ready" ));
-    m_love_action->setEnabled( false );
-    m_tag_action->setEnabled( false );
-    m_share_action->setEnabled( false );
+    if( paused ) {
+        m_artist_action->setText( "" );
+        m_title_action->setText( tr( "Ready" ));
+        m_love_action->setEnabled( false );
+        m_tag_action->setEnabled( false );
+        m_share_action->setEnabled( false );
+    } else {
+        onTrackStarted( scrobbleService->currentTrack(), scrobbleService->currentTrack());
+    }
 }
 
 void 
