@@ -38,12 +38,14 @@
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/qtsingleapplication/qtsinglecoreapplication.h"
 #include "lib/unicorn/UnicornSettings.h"
-#include "Radio.h"
+#include "Services/ScrobbleService.h"
+#include "Services/RadioService.h"
 #include "app/moose.h"
 
 void cleanup();
 
-Radio* radio;
+RadioService* radio;
+ScrobbleService* scrobbleService;
 
 namespace lastfm
 {
@@ -75,7 +77,8 @@ int main( int argc, char** argv )
         if ( app.isRunning() )
             return 0;
 
-        radio = new Radio();
+        radio = new RadioService();
+        scrobbleService = new ScrobbleService();
 
         qAddPostRoutine(cleanup);
 

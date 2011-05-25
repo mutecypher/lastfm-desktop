@@ -33,12 +33,8 @@
 class AboutDialog;
 class MetadataWindow;
 class RadioWidget;
-class PlayerConnection;
-class PlayerMediator;
 class QAction;
 class ScrobbleInfoFetcher;
-class StopWatch;
-class DeviceScrobbler;
 class Drawer;
 
 #ifdef Q_WS_X11
@@ -72,24 +68,11 @@ namespace audioscrobbler
             ArgUnknown
         };
 
-        enum State
-        {
-            Unknown,
-            Stopped,
-            Paused,
-            Playing
-        } state;
-        
         // we delete these so QPointers
         QPointer<QSystemTrayIcon> m_tray;
-        QPointer<Audioscrobbler> m_as;
-        QPointer<PlayerMediator> m_mediator;
-        QPointer<PlayerConnection> m_connection;
-        QPointer<StopWatch> m_watch;
         QPointer<MetadataWindow> m_mw;
         QPointer<Drawer> m_drawer;
         QPointer<RadioWidget> m_radioWidget;
-        QPointer<DeviceScrobbler> m_deviceScrobbler;
 
         Track m_currentTrack;
         Track m_trackToScrobble;
@@ -128,10 +111,6 @@ namespace audioscrobbler
         QAction* playAction() const{ return m_play_action; }
         QAction* skipAction() const{ return m_skip_action; }
 
-        StopWatch* stopWatch() const;
-        PlayerConnection* currentConnection() const;
-        DeviceScrobbler* deviceScrobbler() const;
-        Track currentTrack() const { return m_currentTrack;}
         QSystemTrayIcon* tray() const { return m_tray.data(); }
         void setRaiseHotKey( Qt::KeyboardModifiers mods, int key );
         
@@ -145,12 +124,6 @@ namespace audioscrobbler
         void paused( bool );
         void frameChanged( int millisecs );
         void timeout();
-
-        void foundIPodScrobbles( const QList<lastfm::Track>& tracks );
-        void scrobblesCached( const QList<lastfm::Track>& tracks );
-        void scrobblesSubmitted( const QList<lastfm::Track>& tracks, int numTracks );
-
-        void bootstrapReady( const QString& playerId );
 
         void lovedStateChanged(bool loved);
 
@@ -189,9 +162,6 @@ namespace audioscrobbler
 
     private slots:
         void onTrayActivated(QSystemTrayIcon::ActivationReason);
-        void onScrobble();
-        void setConnection(PlayerConnection*);
-
         void onCorrected(QString correction);
 
         void onTagTriggered();
@@ -202,14 +172,6 @@ namespace audioscrobbler
         void onForumsTriggered();
         void onAboutTriggered();
         void onPrefsTriggered();
-
-        void onTrackStarted( const Track& );
-        void onTrackStarted(const Track&, const Track&);
-        void onPaused();
-        void onResumed();
-        void onStopped();
-
-        void onSessionChanged( unicorn::Session* newSession );
 
         void showWindow();
         void toggleWindow();

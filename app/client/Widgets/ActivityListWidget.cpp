@@ -31,7 +31,7 @@
 #include "lib/unicorn/layouts/AnimatedListLayout.h"
 #include "lib/unicorn/widgets/DataBox.h"
 
-#include "../Application.h"
+#include "Services/ScrobbleService.h"
 #include "ActivityListWidget.h"
 #include "TrackItem.h"
 #include "IPodScrobbleItem.h"
@@ -71,7 +71,7 @@ ActivityListWidget::ActivityListWidget( QString username, QWidget* parent )
     setUsername( username );
 
     connect( m_writeTimer, SIGNAL(timeout()), SLOT(doWrite()) );
-    connect( aApp, SIGNAL(foundIPodScrobbles(QList<lastfm::Track>)), SLOT(onFoundIPodScrobbles(QList<lastfm::Track>)));
+    connect( scrobbleService, SIGNAL(foundIPodScrobbles(QList<lastfm::Track>)), SLOT(onFoundIPodScrobbles(QList<lastfm::Track>)));
 }
 
 

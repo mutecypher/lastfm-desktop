@@ -33,7 +33,6 @@
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 
 #include "../Application.h"
-#include "../StopWatch.h"
 #include "../ScrobbleInfoFetcher.h"
 
 #include "ScrobbleInfoWidget.h"

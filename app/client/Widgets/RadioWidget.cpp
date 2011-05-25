@@ -17,7 +17,7 @@
 #include "PlayableItemWidget.h"
 
 #include "../Application.h"
-#include "../Radio.h"
+#include "Services/RadioService.h"
 #include "../StationSearch.h"
 
 #include <lastfm/XmlQuery>

@@ -7,7 +7,7 @@
 #include "StationWidget.h"
 #include "ui_StationWidget.h"
 
-#include "../radio.h"
+#include "Services/RadioService.h"
 
 StationWidget::StationWidget(QWidget *parent) :
     QWidget(parent),
@@ -154,7 +154,7 @@ StationWidget::contextMenuEvent( QContextMenuEvent* event )
 
         contextMenu->addAction( numSelected == 1 ? tr("Play %1").arg( title ) : tr("Play Multi Radio"), this, SLOT(onPlay()));
 
-        if ( radio->state() == Radio::Playing )
+        if ( radio->state() == RadioService::Playing )
             contextMenu->addAction( numSelected == 1 ? tr("Play %1 next").arg( title ) : tr("Play Multi Radio next"), this, SLOT(onPlayNext()));
     }
 

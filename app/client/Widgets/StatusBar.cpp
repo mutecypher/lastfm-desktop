@@ -25,7 +25,8 @@
 
 #include "StatusBar.h"
 
-#include "../MediaDevices/DeviceScrobbler.h"
+#include "Services/ScrobbleService.h"
+#include "MediaDevices/DeviceScrobbler.h"
 #include "../Application.h"
 
 StatusBar::StatusBar( QWidget* parent )
@@ -47,15 +48,17 @@ StatusBar::StatusBar( QWidget* parent )
 
     connect( aApp, SIGNAL( gotUserInfo(lastfm::UserDetails)), SLOT( onGotUserInfo(lastfm::UserDetails) ) );
 
-    DeviceScrobbler* deviceScrobbler = aApp->deviceScrobbler();
-    connect( deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected( QString )));
-    connect( deviceScrobbler, SIGNAL( processingScrobbles()), SLOT( onProcessingScrobbles()));
-    connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), SLOT( onFoundScrobbles( QList<lastfm::Track> )));
-    connect( deviceScrobbler, SIGNAL( noScrobblesFound()),SLOT( onNoScrobblesFound()));
+    DeviceScrobbler* deviceScrobbler = scrobbleService->deviceScrobbler();
+    if( deviceScrobbler ) {
+        connect( deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected( QString )));
+        connect( deviceScrobbler, SIGNAL( processingScrobbles()), SLOT( onProcessingScrobbles()));
+        connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), SLOT( onFoundScrobbles( QList<lastfm::Track> )));
+        connect( deviceScrobbler, SIGNAL( noScrobblesFound()),SLOT( onNoScrobblesFound()));
+    }
 
     layout->addWidget( ui.sizeGrip = new QSizeGrip( this ), 0 , Qt::AlignBottom | Qt::AlignRight );
 
-    connect( aApp, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+    connect( scrobbleService, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 }
 
 void

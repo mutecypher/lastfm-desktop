@@ -17,8 +17,8 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef RADIO_H
-#define RADIO_H
+#ifndef RADIO_SERVICE_H
+#define RADIO_SERVICE_H
 
 #include <lastfm/Track>
 #include <lastfm/RadioStation>
@@ -42,14 +42,14 @@ namespace Phonon
 
 /** @author <max@last.fm>
  */
-class Radio : public QObject
+class RadioService : public QObject
 {
     Q_OBJECT
     Q_ENUMS(State)
 
 public:
-    Radio();
-    ~Radio();
+    RadioService();
+    ~RadioService();
 	
 	enum State
 	{
@@ -123,7 +123,7 @@ private:
     Phonon::AudioOutput* m_audioOutput;
     Phonon::MediaObject* m_mediaObject;
     Phonon::Path m_path;
-    Radio::State m_state;
+    RadioService::State m_state;
     Track m_track;
     RadioStation m_station;
     bool m_bErrorRecover;
@@ -133,9 +133,9 @@ private:
 
 
 #include <QDebug>
-inline QDebug operator<<( QDebug d, Radio::State s )
+inline QDebug operator<<( QDebug d, RadioService::State s )
 {
-    return d << lastfm::qMetaEnumString<Radio>( s, "State" );
+    return d << lastfm::qMetaEnumString<RadioService>( s, "State" );
 }
 inline QDebug operator<<( QDebug d, Phonon::State s )
 {
@@ -154,9 +154,9 @@ inline QDebug operator<<( QDebug d, Phonon::State s )
 }
 
 
-Q_DECLARE_METATYPE( Radio::State );
+Q_DECLARE_METATYPE( RadioService::State );
 
 
-extern Radio* radio;
+extern RadioService* radio;
 
-#endif
+#endif //RADIO_SERVICE_H_

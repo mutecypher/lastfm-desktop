@@ -1,6 +1,6 @@
 /*
-   Copyright 2005-2009 Last.fm Ltd. 
-      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
+   Copyright 2005-2010 Last.fm Ltd. 
+      - Primarily authored by Jono Cole and Michael Coffey
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -19,8 +19,9 @@
 */
 #include "Application.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
-#include "Radio.h"
-#include "ScrobSocket.h"
+#include "Services/RadioService.h"
+#include "Services/ScrobbleService.h"
+#include "lib/listener/PlayerConnection.h"
 #include <QDebug>
 #include <QProcess>
 #include <QShortcut>
@@ -29,22 +30,11 @@
 #include "Widgets/RadioWidget.h"
 #include "Widgets/Drawer.h"
 #include "Dialogs/SettingsDialog.h"
-#include "lib/listener/DBusListener.h"
-#include "lib/listener/legacy/LegacyPlayerListener.h"
-#include "lib/listener/PlayerConnection.h"
-#include "lib/listener/PlayerListener.h"
-#include "lib/listener/PlayerMediator.h"
-#include "MediaDevices/DeviceScrobbler.h"
+
 #include "MetadataWindow.h"
 #include "ScrobbleInfoFetcher.h"
-#include "StopWatch.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "SkipListener.h"
-
-
-#ifdef Q_WS_MAC
-#include "lib/listener/mac/ITunesListener.h"
-#endif
 
 #include "lib/unicorn/dialogs/AboutDialog.h"
 #include "lib/unicorn/dialogs/ShareDialog.h"
@@ -55,7 +45,6 @@
 #include "AudioscrobblerSettings.h"
 #include "Wizard/FirstRunWizard.h"
 
-#include <lastfm/Audioscrobbler>
 #include <lastfm/XmlQuery>
 
 #include <QRegExp>
@@ -86,8 +75,6 @@ using audioscrobbler::Application;
 
 Application::Application(int& argc, char** argv) 
             : unicorn::Application(argc, argv),
-              state( Unknown ),
-              m_as( 0 ),
               m_raiseHotKeyId( (void*)-1 )
 {
     setQuitOnLastWindowClosed( false );
@@ -150,10 +137,6 @@ Application::init()
     m_tray->setIcon(trayIcon);
     m_tray->show();
     connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
-
-    /// DeviceScrobbler
-    m_deviceScrobbler = new DeviceScrobbler;
-    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<lastfm::Track>)), this, SIGNAL( foundIPodScrobbles(QList<lastfm::Track>) ));
 
     /// tray menu
     QMenu* menu = new QMenu;
@@ -218,7 +201,7 @@ Application::init()
 #ifdef Q_WS_X11
     menu->addSeparator();
     m_scrobble_ipod_action = menu->addAction( tr( "Scrobble iPod..." ) );
-    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), m_deviceScrobbler, SLOT( onScrobbleIpodTriggered() ) );
+    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), scrobbleService->deviceScrobbler(), SLOT( onScrobbleIpodTriggered() ) );
 #endif
 
     menu->addSeparator();
@@ -313,38 +296,14 @@ Application::init()
 
     connect( m_mw, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
 
-/// mediator
-    m_mediator = new PlayerMediator(this);
-    connect( m_mediator, SIGNAL(activeConnectionChanged( PlayerConnection* )), SLOT(setConnection( PlayerConnection* )) );
 
-/// listeners
-    try{
-#ifdef Q_OS_MAC
-        ITunesListener* itunes = new ITunesListener(m_mediator);
-        connect(itunes, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
-        itunes->start();
-#endif
-
-        QObject* o = new PlayerListener(m_mediator);
-        connect(o, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
-        o = new LegacyPlayerListener(m_mediator);
-        connect(o, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
-
-#ifdef QT_DBUS_LIB
-        DBusListener* dbus = new DBusListener(mediator);
-        connect(dbus, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
-#endif
-    }
-    catch(std::runtime_error& e){
-        qWarning() << e.what();
-        //TODO user visible warning
-    }
 
     // connect the radio up so it scrobbles
-    connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onTrackStarted(Track)));
-    connect( radio, SIGNAL(paused()), SLOT(onPaused()));
-    connect( radio, SIGNAL(resumed()), SLOT(onResumed()));
-    connect( radio, SIGNAL(stopped()), SLOT(onStopped()));
+#warning This code bypasses the mediator - FIXME
+    connect( radio, SIGNAL(trackSpooled(Track)), scrobbleService, SLOT(onTrackStarted(Track)));
+    connect( radio, SIGNAL(paused()), scrobbleService, SLOT(onPaused()));
+    connect( radio, SIGNAL(resumed()), scrobbleService, SLOT(onResumed()));
+    connect( radio, SIGNAL(stopped()), scrobbleService, SLOT(onStopped()));
 
     connect( radio, SIGNAL(resumed()), SIGNAL(resumed()));
     connect( radio, SIGNAL(paused()), SIGNAL(paused()));
@@ -355,7 +314,7 @@ Application::init()
     connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( toggleWindow()), Qt::QueuedConnection );
 
     connect( this, SIGNAL(messageReceived(QStringList)), SLOT(onMessageReceived(QStringList)) );
-    connect( this, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
+    connect( this, SIGNAL( sessionChanged( unicorn::Session* ) ), scrobbleService, SLOT( onSessionChanged( unicorn::Session* ) ) );
 
     //We're not going to catch the first session change as it happened in the unicorn application before
     //we could connect to the signal!
@@ -390,191 +349,20 @@ Application::setRaiseHotKey( Qt::KeyboardModifiers mods, int key) {
     m_raiseHotKeyId = installHotKey( mods, key, m_toggle_window_action, SLOT(trigger()));
 }
 
-
-void
-Application::onSessionChanged( unicorn::Session* /*newSession*/ )
-{
-    disconnect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), m_as, SLOT( cache( QList<lastfm::Track> )));
-
-    Audioscrobbler* oldAs = m_as;
-    m_as = new Audioscrobbler("ass");
-    connect( m_as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
-    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), m_as, SLOT( cacheBatch( QList<lastfm::Track> )));
-    delete oldAs;
-
-    m_deviceScrobbler->checkCachedIPodScrobbles();
-}
-
-void
-Application::setConnection(PlayerConnection*c)
-{
-    if( m_connection ){
-        // disconnect from all the objects that we connect to below
-        disconnect( m_connection, 0, this, 0);
-        disconnect( m_connection, 0, m_mw, 0);
-        if(m_watch)
-            m_connection->setElapsed(m_watch->elapsed());
-    }
-
-    //
-    connect(c, SIGNAL(trackStarted(Track, Track)), SLOT(onTrackStarted(Track, Track)));
-    connect(c, SIGNAL(paused()), SLOT(onPaused()));
-    connect(c, SIGNAL(resumed()), SLOT(onResumed()));
-    connect(c, SIGNAL(stopped()), SLOT(onStopped()));
-
-    connect(c, SIGNAL(trackStarted(Track, Track)), SIGNAL(trackStarted(Track, Track)));
-    connect(c, SIGNAL(resumed()), SIGNAL(resumed()));
-    connect(c, SIGNAL(paused()), SIGNAL(paused()));
-    connect(c, SIGNAL(stopped()), SIGNAL(stopped()));
-    connect(c, SIGNAL(bootstrapReady(QString)), SIGNAL( bootstrapReady(QString)));
-
-    m_connection = c;
-
-    if(c->state() == Playing || c->state() == Paused){
-        c->forceTrackStarted(Track());
-    }
-
-    if( c->state() == Paused ) {
-        c->forcePaused();
-    }
-}
-
-void
-Application::onTrackStarted( const Track& track )
-{
-    onTrackStarted( track, m_currentTrack );
-    emit trackStarted( track, m_currentTrack );
-}
-
-void
-Application::onTrackStarted(const Track& t, const Track& oldtrack)
-{
-    // This stops the loving of tracks in the recent tracks list affecting the current track
-    disconnect( m_currentTrack.signalProxy(), SIGNAL(loveToggled(bool)), this, SIGNAL(lovedStateChanged(bool)) );
-
-    state = Playing;
-
-    //Q_ASSERT(m_connection);
-
-    //TODO move to playerconnection
-    if(t.isNull()){
-        qWarning() << "Can't start null track!";
-        return;
-    }
-
-    m_currentTrack = t;
-
-    double trackLengthPercent = unicorn::UserSettings().value( "scrobblePoint", 50 ).toDouble() / 100.0;
-
-    //This is to prevent the next track being scrobbled
-    //instead of the track just listened
-    if ( trackLengthPercent == 100 && !oldtrack.isNull() )
-    {
-        m_trackToScrobble = oldtrack;
-    }
-    else
-    {
-        m_trackToScrobble = t;
-    }
-
-    ScrobblePoint timeout( m_currentTrack.duration() * trackLengthPercent );
-    delete m_watch;
-    m_watch = new StopWatch(m_currentTrack.duration(), timeout);
-    m_watch->start();
-
-    connect( m_watch, SIGNAL(scrobble()), SLOT(onScrobble()));
-    connect( m_watch, SIGNAL(paused(bool)), SIGNAL(paused(bool)));
-    connect( m_watch, SIGNAL(frameChanged( int )), SIGNAL(frameChanged( int )));
-    connect( m_watch, SIGNAL(timeout()), SIGNAL(timeout()));
-
-    setTrackInfo();
-
-    qDebug() << "********** AS = " << m_as;
-    if( m_as ) {
-        m_as->submit();
-        qDebug() << "************** Now Playing..";
-        m_as->nowPlaying( t );
-    }
-
-    connect( t.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
-}
-
 void
 Application::onTrackGotInfo(const XmlQuery& lfm)
 {
     //Q_ASSERT(m_connection);
-    MutableTrack( m_connection->track() ).setFromLfm( lfm );
+    MutableTrack( scrobbleService->currentConnection()->track() ).setFromLfm( lfm );
 }
 
-void
-Application::onScrobble()
-{
-    //Q_ASSERT(m_connection);
-    if( m_as ) m_as->cache( m_trackToScrobble );
-}
-
-void
-Application::onPaused()
-{
-    // We can sometimes get a stopped before a play when the
-    // media player is playing before the scrobbler is started
-    if ( state == Unknown ) return;
-
-    state = Paused;
-
-    m_currentTrack.removeNowPlaying();
-
-    //Q_ASSERT(m_connection);
-    Q_ASSERT(m_watch);
-    if(m_watch) m_watch->pause();
-
-    //resetTrackInfo();
-}
-
-void
-Application::onResumed()
-{
-    // We can sometimes get a stopped before a play when the
-    // media player is playing before the scrobbler is started
-    if ( state == Unknown ) return;
-
-    state = Playing;
-
-    Q_ASSERT(m_watch);
-    //Q_ASSERT(m_connection);
-
-    m_currentTrack.updateNowPlaying( m_currentTrack.duration() - (m_watch->elapsed()/1000) );
-
-    if(m_watch) m_watch->resume();
-
-    //setTrackInfo();
-
-
-}
-
-void
-Application::onStopped()
-{
-    // We can sometimes get a stopped before a play when the
-    // media player is playing before the scrobbler is started
-    if ( state == Unknown ) return;
-
-    state = Stopped;
-
-    Q_ASSERT(m_watch);
-    //Q_ASSERT(m_connection);
-        
-    delete m_watch;
-    if( m_as ) m_as->submit();
-
-    resetTrackInfo();
-}
 
 void
 Application::onCorrected(QString /*correction*/)
 {
     setTrackInfo();
 }
+
 
 void
 Application::setTrackInfo()
@@ -690,24 +478,6 @@ Application::onBusLovedStateChanged( bool loved )
     MutableTrack( m_currentTrack ).setLoved( loved );
 }
 
-PlayerConnection*
-Application::currentConnection() const
-{
-    return m_connection;
-}
-
-StopWatch* 
-Application::stopWatch() const
-{
-    return m_watch;
-}
-
-DeviceScrobbler* 
-Application::deviceScrobbler() const
-{
-    return m_deviceScrobbler.data();
-}
-
 void 
 Application::onTrayActivated( QSystemTrayIcon::ActivationReason reason ) 
 {
@@ -775,7 +545,7 @@ Application::onMessageReceived( const QStringList& message )
 
     if ( message.contains( "--twiddly" ))
     {
-        m_deviceScrobbler->handleMessage( message );
+        scrobbleService->handleTwiddlyMessage( message );
     }
     else if ( message.contains( "--exit" ) )
     {
@@ -789,7 +559,7 @@ Application::onMessageReceived( const QStringList& message )
     else if ( message.contains( "--new-ipod-detected" ) ||
               message.contains( "--ipod-detected" ))
     {
-        m_deviceScrobbler->iPodDetected( message );
+        scrobbleService->handleIPodDetectedMessage( message );
     }
 
     if ( !(message.contains( "--tray" ) || message.contains( "--settings" )))
@@ -827,9 +597,9 @@ Application::parseArguments( const QStringList& args )
             break;
 
         case Pause:
-            if ( radio->state() == Radio::Playing )
+            if ( radio->state() == RadioService::Playing )
                 radio->pause();
-            else if ( radio->state() == Radio::Paused )
+            else if ( radio->state() == RadioService::Paused )
                 radio->resume();
             break;
 

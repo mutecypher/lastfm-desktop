@@ -25,20 +25,20 @@
 #include <phonon/mediaobject.h>
 #include <phonon/backendcapabilities.h>
 
-#include "Radio.h"
+#include "RadioService.h"
 #include "lib/unicorn/UnicornSettings.h"
 
-Radio::Radio( )
+RadioService::RadioService( )
      : m_audioOutput( 0 ),
        m_mediaObject( 0 ),
-       m_state( Radio::Stopped ),
+       m_state( RadioService::Stopped ),
        m_bErrorRecover( false )
 {
     initRadio();
 }
 
 
-Radio::~Radio()
+RadioService::~RadioService()
 {    
     // I'm not confident about the sleep code on Windows --mxcl
 #ifndef WIN32
@@ -67,7 +67,7 @@ Radio::~Radio()
 // if the station is the same as current station (ie: the user hit stop then start)
 // then we *don't* retune.  norman is quite emphatic about this.  :)
 void
-Radio::play( const RadioStation& station )
+RadioService::play( const RadioStation& station )
 {
     if( m_state == Paused && station.url() == "" )
     {
@@ -114,7 +114,7 @@ Radio::play( const RadioStation& station )
 
 // play this radio station after the current track has finished
 void
-Radio::playNext( const RadioStation& station )
+RadioService::playNext( const RadioStation& station )
 {
     if (m_state == Playing)
     {
@@ -132,7 +132,7 @@ Radio::playNext( const RadioStation& station )
 
 
 void
-Radio::enqueue()
+RadioService::enqueue()
 {  
     qDebug() << "enqueue";
     if (m_state == Stopped) {
@@ -147,7 +147,7 @@ Radio::enqueue()
 }
 
 void
-Radio::skip()
+RadioService::skip()
 {
     if (!m_mediaObject)
         return;
@@ -192,7 +192,7 @@ Radio::skip()
 
 
 void
-Radio::onTunerError( lastfm::ws::Error e, const QString& message )
+RadioService::onTunerError( lastfm::ws::Error e, const QString& message )
 {
     // otherwise leave things be, we'll stop when we run out of content
     if (m_state == TuningIn)
@@ -203,7 +203,7 @@ Radio::onTunerError( lastfm::ws::Error e, const QString& message )
 
 
 void
-Radio::stop()
+RadioService::stop()
 {
     delete m_tuner;
     
@@ -220,7 +220,7 @@ Radio::stop()
 
 
 void
-Radio::pause()
+RadioService::pause()
 {
     Q_ASSERT( m_mediaObject );
 
@@ -232,7 +232,7 @@ Radio::pause()
 }
 
 void
-Radio::resume()
+RadioService::resume()
 {
     Q_ASSERT( m_mediaObject );
 
@@ -245,7 +245,7 @@ Radio::resume()
 
 
 void
-Radio::clear()
+RadioService::clear()
 {
     m_track = Track();
     m_station = RadioStation();
@@ -254,7 +254,7 @@ Radio::clear()
 
 
 void
-Radio::mute()
+RadioService::mute()
 {
     if( m_audioOutput->volume() > 0 )
     {
@@ -268,7 +268,7 @@ Radio::mute()
 }
 
 void
-Radio::onPhononStateChanged( Phonon::State newstate, Phonon::State oldstate )
+RadioService::onPhononStateChanged( Phonon::State newstate, Phonon::State oldstate )
 {
     qDebug() << oldstate << " -> " << newstate;
     if (m_mediaObject == 0) {
@@ -284,7 +284,7 @@ Radio::onPhononStateChanged( Phonon::State newstate, Phonon::State oldstate )
                 qWarning() << "Phonon fatal error:" << m_mediaObject->errorString();
                 emit error( lastfm::ws::UnknownError, QVariant( m_mediaObject->errorString() ));
                 deInitRadio();
-                changeState( Radio::Stopped );
+                changeState( RadioService::Stopped );
             }
             else
             {
@@ -328,7 +328,7 @@ Radio::onPhononStateChanged( Phonon::State newstate, Phonon::State oldstate )
 
 
 void
-Radio::phononEnqueue()
+RadioService::phononEnqueue()
 {
     qDebug() << "phononEnqueue";
     qDebug() << "queue size: " << m_mediaObject->queue().size();
@@ -379,7 +379,7 @@ Radio::phononEnqueue()
 // onPhononCurrentSourceChanged happens always (even if the source is
 // unplayable), so we use it to update our now playing track.
 void
-Radio::onPhononCurrentSourceChanged( const Phonon::MediaSource& )
+RadioService::onPhononCurrentSourceChanged( const Phonon::MediaSource& )
 {
     MutableTrack( m_track ).stamp();
     if (m_mediaObject->state() == Phonon::PlayingState) {
@@ -392,7 +392,7 @@ Radio::onPhononCurrentSourceChanged( const Phonon::MediaSource& )
 
 
 void
-Radio::changeState( Radio::State const newstate )
+RadioService::changeState( RadioService::State const newstate )
 {
     State const oldstate = m_state;
 
@@ -429,7 +429,7 @@ Radio::changeState( Radio::State const newstate )
 
 
 void
-Radio::setStationName( const QString& s )
+RadioService::setStationName( const QString& s )
 {
     m_station.setTitle( s );
     emit tuningIn( m_station );
@@ -437,37 +437,37 @@ Radio::setStationName( const QString& s )
 
 
 void
-Radio::setSupportsDisco( bool supportsDiscovery )
+RadioService::setSupportsDisco( bool supportsDiscovery )
 {
     emit supportsDisco( supportsDiscovery );
 }
 
 void
-Radio::onBuffering( int percent_filled )
+RadioService::onBuffering( int percent_filled )
 {
     Q_UNUSED(percent_filled);
 }
 
 void
-Radio::onMutedChanged(bool muted)
+RadioService::onMutedChanged(bool muted)
 {
     unicorn::AppSettings().setValue("Muted", muted);
 }
 
 void
-Radio::onOutputDeviceChanged(const Phonon::AudioOutputDevice& newDevice)
+RadioService::onOutputDeviceChanged(const Phonon::AudioOutputDevice& newDevice)
 {
     qDebug() << "name: " << newDevice.name() << " description: " << newDevice.description();
 }
 
 void
-Radio::onVolumeChanged(qreal vol)
+RadioService::onVolumeChanged(qreal vol)
 {
     unicorn::AppSettings().setValue("Volume", vol);
 }
 
 void
-Radio::onFinished()
+RadioService::onFinished()
 {
     // A track has finished and there is nothing else in the queue
     // try to go to the next track
@@ -477,7 +477,7 @@ Radio::onFinished()
 
 // returns true on successful initialisation
 bool 
-Radio::initRadio()
+RadioService::initRadio()
 {
     qDebug() << "initRadio";
 	Phonon::AudioOutput* audioOutput = new Phonon::AudioOutput( Phonon::MusicCategory, this );
@@ -547,7 +547,7 @@ Radio::initRadio()
 }
 
 void
-Radio::deInitRadio()
+RadioService::deInitRadio()
 {
     qDebug() << "deInitRadio";
     // try to deleteLater and phonon crashes. poo.

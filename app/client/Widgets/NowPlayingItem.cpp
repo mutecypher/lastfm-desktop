@@ -34,9 +34,9 @@
 #include "lib/unicorn/widgets/Label.h"
 
 #include "../Application.h"
-#include "../StopWatch.h"
 #include "../ScrobbleInfoFetcher.h"
-#include "../Radio.h"
+#include "Services/RadioService.h"
+#include "Services/ScrobbleService.h"
 
 #include "WelcomeWidget.h"
 #include "ScrobbleInfoWidget.h"
@@ -100,7 +100,7 @@ NowPlayingItem::onWatchPaused( bool isPaused )
         }
         else
         {
-            if( (aApp->stopWatch()->elapsed()/1000.0f) / aApp->stopWatch()->scrobblePoint() >= 1.0f )
+            if( (scrobbleService->stopWatch()->elapsed()/1000.0f) / scrobbleService->stopWatch()->scrobblePoint() >= 1.0f )
                 m_statusText = tr( "Track Scrobbled" );
             else
             {
@@ -220,8 +220,8 @@ NowPlayingItem::onFrameChanged( int frame )
 {
     m_lastFrame = frame;
     int progress = 0;
-    if ( aApp->stopWatch() )
-        progress = ( frame * width() ) / ( aApp->stopWatch()->duration() * 1000 );
+    if ( scrobbleService->stopWatch() )
+        progress = ( frame * width() ) / ( scrobbleService->stopWatch()->duration() * 1000 );
 
     if ( progress != m_progressWidth )
     {  
@@ -245,11 +245,11 @@ NowPlayingItem::paintEvent( QPaintEvent* event )
     p.setBrush( m_progressColor );    
     p.drawRect( updateRect() );
 
-    if ( aApp->stopWatch() )
+    if ( scrobbleService->stopWatch() )
     {
         p.setPen( m_scrobblePointColor );
 
-        int scrobblePoint = ( aApp->stopWatch()->scrobblePoint() * width() ) / ( aApp->stopWatch()->duration() );
+        int scrobblePoint = ( scrobbleService->stopWatch()->scrobblePoint() * width() ) / ( scrobbleService->stopWatch()->duration() );
 
         p.drawLine( QPoint( scrobblePoint, updateRect().top() ),
                     QPoint( scrobblePoint, updateRect().bottom()) );

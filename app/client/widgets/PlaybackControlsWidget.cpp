@@ -2,7 +2,7 @@
 #include <QShortcut>
 
 #include "../Application.h"
-#include "../Radio.h"
+#include "Services/RadioService.h"
 
 #include "PlaybackControlsWidget.h"
 #include "ui_PlaybackControlsWidget.h"
@@ -90,7 +90,7 @@ PlaybackControlsWidget::onPlayClicked( bool checked )
 {
     if ( checked )
     {
-        if ( radio->state() == Radio::Stopped )
+        if ( radio->state() == RadioService::Stopped )
             radio->play( RadioStation( "" ) );
         else
         {
@@ -109,7 +109,7 @@ PlaybackControlsWidget::onPlayTriggered( bool checked )
 {
     if ( checked )
     {
-        if ( radio->state() != Radio::Stopped )
+        if ( radio->state() != RadioService::Stopped )
             setWindowTitle( QString( "Last.fm Radio - %1 - %2" ).arg( radio->station().title(), radio->currentTrack().toString() ) );
     }
     else

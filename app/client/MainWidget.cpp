@@ -26,7 +26,7 @@
 #include "widgets/NowPlayingWidget.h"
 #include "widgets/MultiStarterWidget.h"
 #include "widgets/RadioListWidget.h"
-#include "Radio.h"
+#include "Services/RadioService.h"
 #include "../PlaylistModel.h"
 
 
@@ -67,7 +67,7 @@ MainWidget::onSlideStarted( QLayoutItem* next, QLayoutItem* /*prev*/ )
 void 
 MainWidget::onStartRadio(RadioStation rs)
 {
-    if( radio->state() != Radio::Stopped ) {
+    if( radio->state() != RadioService::Stopped ) {
         foreach( NowPlayingWidget* npw, findChildren<NowPlayingWidget*>())
         {
             m_layout->removeWidget( npw->parentWidget() );
