@@ -182,17 +182,14 @@ ITunesListener::callback( CFDictionaryRef info )
     switch (m_state)
     {
         case Paused:
-            qDebug() << "PAUSE!!!!!!!!!!!!!!!!!!!";
             m_connection->pause();
             break;
 
         case Stopped:
-            qDebug() << "STOP!!!!!!!!!!!!!!!!!!!";
             m_connection->stop();
             break;
             
         case Playing:
-            qDebug() << "PLAY!!!!!!!!!!!!!!!!!!!";
             if (!isMusic())
             {
                 qDebug() << "Ignoring current track because it isn't music.";
