@@ -258,7 +258,6 @@ Application::init()
 
     m_drawer = new Drawer( m_mw );
     m_drawer->setWidget( m_radioWidget = new RadioWidget );
-    m_mw->addDockWidget( Qt::RightDockWidgetArea, m_drawer );
 
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
 #ifndef Q_OS_LINUX
@@ -430,10 +429,19 @@ Application::onVisitProfileTriggered()
 void
 Application::showRadioDrawer( bool show )
 {
-    if ( show )
+    if ( show ) {
+        int width = m_drawer->width();
+        int screenRight = desktop()->screenGeometry( m_mw ).right();
+        if( ( m_mw->geometry().right() + width ) > screenRight ) {
+            m_mw->addDockWidget( Qt::LeftDockWidgetArea, m_drawer );
+        } else {
+            m_mw->addDockWidget( Qt::RightDockWidgetArea, m_drawer );
+        }
         m_drawer->show();
-    else
+    } else {
+        m_mw->removeDockWidget( m_drawer );
         m_drawer->close();
+    }
 }
 
 void
