@@ -266,7 +266,7 @@ ActivityListWidget QScrollBar {
     min-height: 0px;
 }
 
-ActivityListItem, NowPlayingItem #detailsFrame {
+ActivityListItem {
 	min-width: 40px;
 	min-height: 40px;
 	max-height: 200px;
