@@ -81,12 +81,6 @@ NowPlayingItem::infoWidget() const
 }
 
 
-QString userLibrary( const QString& user, const QString& artist )
-{
-    return Label::anchor( QString("http://www.last.fm/user/%1/library/music/%2").arg( user, artist ), user );
-}
-
-
 void
 NowPlayingItem::onWatchPaused( bool isPaused )
 {
@@ -105,72 +99,7 @@ NowPlayingItem::onWatchPaused( bool isPaused )
             else
             {
                 //Set to the context if it's a radio track
-                lastfm::TrackContext context = m_track.context();
-
-                if (context.values().count() > 0)
-                {
-
-                    QString contextString;
-
-                    switch ( context.type() )
-                    {
-                    case lastfm::TrackContext::Artist:
-                        {
-                        switch ( context.values().count() )
-                            {
-                            default:
-                            case 1: contextString = tr( "because you listen to %1" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ) ); break;
-                            case 2: contextString = tr( "because you listen to %1 and %2" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ) ); break;
-                            case 3: contextString = tr( "because you listen to %1, %2, and %3" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ) , Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ) ); break;
-                            case 4: contextString = tr( "because you listen to %1, %2, %3, and %4" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ), Label::anchor( Artist( context.values().at(3) ).www().toString(), context.values().at(3) ) ); break;
-                            case 5: contextString = tr( "because you listen to %1, %2, %3, %4, and %5" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ), Label::anchor( Artist( context.values().at(3) ).www().toString(), context.values().at(3) ), Label::anchor( Artist( context.values().at(4) ).www().toString(), context.values().at(4) ) ); break;
-                            }
-                        }
-                        break;
-                    case lastfm::TrackContext::User:
-                        // Whitelist multi-user station
-                        if ( !radio->station().url().startsWith("lastfm://users/") )
-                            break;
-                    case lastfm::TrackContext::Friend:
-                    case lastfm::TrackContext::Neighbour:
-                        {
-                        switch ( context.values().count() )
-                            {
-                            default:
-                            case 1: contextString = tr( "from %2%1s library" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), m_track.artist().name() ) ); break;
-                            case 2: contextString = tr( "from %2 and %3%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), m_track.artist().name() ), userLibrary( context.values().at(1), m_track.artist().name() ) ); break;
-                            case 3: contextString = tr( "from %2, %3, and %4%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), m_track.artist().name() ), userLibrary( context.values().at(1), m_track.artist().name() ), userLibrary( context.values().at(2), m_track.artist().name() ) ); break;
-                            case 4: contextString = tr( "from %2, %3, %4, and %5%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), m_track.artist().name() ),userLibrary(  context.values().at(1), m_track.artist().name() ), userLibrary( context.values().at(2), m_track.artist().name() ), userLibrary( context.values().at(3), m_track.artist().name() ) ); break;
-                            case 5: contextString = tr( "from %2, %3, %4, %5, and %6%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), m_track.artist().name() ), userLibrary( context.values().at(1), m_track.artist().name() ), userLibrary( context.values().at(2), m_track.artist().name() ), userLibrary( context.values().at(3), m_track.artist().name() ), userLibrary( context.values().at(4), m_track.artist().name() ) ); break;
-                            }
-                        }
-                        break;
-                    }
-
-                    m_statusText = contextString;
-
-#ifdef CLIENT_ROOM_RADIO
-                    QString strippedContextString = contextString;
-
-                    QRegExp re( "<[^>]*>" );
-
-                    strippedContextString.replace( re, "" );
-
-                    QString ircMessage = QString( "#last.clientradio %1 %2" ).arg( track.toString(), strippedContextString );
-
-                    if ( context.values().count() == ( radio->station().url().count( "," ) + 1 ) )
-                        ircMessage.append( " BINGO!" );
-
-                    QTcpSocket socket;
-                    socket.connectToHost( "localhost", 12345 );
-                    socket.waitForConnected();
-                    socket.write( ircMessage.toUtf8() );
-                    socket.flush();
-                    socket.close();
-#endif
-                }
-                else
-                    m_statusText.clear();
+                m_statusText = contextString( m_track );
             }
 
             resizeEvent( 0 );

@@ -52,6 +52,8 @@ public:
 
     Track track() const { return m_track; }
 
+    static QString contextString( const Track& track );
+
 signals:
     void cogMenuAboutToShow();
     void cogMenuAboutToHide();

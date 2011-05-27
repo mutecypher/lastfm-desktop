@@ -25,11 +25,13 @@
 #include <QDebug>
 #include <QProcess>
 #include <QShortcut>
+#include <QTcpSocket>
 
 #include "Widgets/PointyArrow.h"
 #include "Widgets/RadioWidget.h"
 #include "Widgets/Drawer.h"
 #include "Dialogs/SettingsDialog.h"
+#include "Widgets/TrackItem.h"
 
 #include "MetadataWindow.h"
 #include "ScrobbleInfoFetcher.h"
@@ -294,7 +296,7 @@ Application::init()
 
     connect( m_mw, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
 
-
+    connect( scrobbleService, SIGNAL(trackStarted(Track,Track)), SLOT(onTrackSpooled(Track,Track)));
 
     // connect the radio up so it scrobbles
 #warning This code bypasses the mediator - FIXME
@@ -386,6 +388,30 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
     // make sure that if the love state changes we update all the buttons
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(lovedStateChanged(bool)) );
     connect( track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
+}
+
+void
+Application::onTrackSpooled( const Track& track, const Track& /*oldTrack*/ )
+{
+#ifdef CLIENT_ROOM_RADIO
+    QString strippedContextString = TrackItem::contextString( track );
+
+    QRegExp re( "<[^>]*>" );
+
+    strippedContextString.replace( re, "" );
+
+    QString ircMessage = QString( "#last.clientradio %1 %2" ).arg( track.toString(), strippedContextString );
+
+    if ( track.context().values().count() == ( radio->station().url().count( "," ) + 1 ) )
+        ircMessage.append( " BINGO!" );
+
+    QTcpSocket socket;
+    socket.connectToHost( "localhost", 12345 );
+    socket.waitForConnected();
+    socket.write( ircMessage.toUtf8() );
+    socket.flush();
+    socket.close();
+#endif
 }
 
 void

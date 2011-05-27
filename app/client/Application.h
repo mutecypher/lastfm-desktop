@@ -167,6 +167,8 @@ namespace audioscrobbler
         void onTrackStarted( const Track&, const Track& );
         void onTrackPaused( bool );
 
+        void onTrackSpooled( const Track& , const Track& );
+
         void onMessageReceived(const QStringList& message);
 		
 		/** all webservices connect to this and emit in the case of bad errors that
