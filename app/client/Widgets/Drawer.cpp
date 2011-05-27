@@ -1,6 +1,7 @@
 
 
 #include "Drawer.h"
+#include <QDebug>
 
 
 Drawer::Drawer( QWidget* parent )
@@ -8,6 +9,8 @@ Drawer::Drawer( QWidget* parent )
     {
     hide();
 #ifdef FAKE_DRAWER
+    connect( this, SIGNAL( dockLocationChanged(Qt::DockWidgetArea)),
+                   SLOT( onDockLocationChanged(Qt::DockWidgetArea)));
     m_timeLine = new QTimeLine( 1000, this );
     m_timeLine->setUpdateInterval( 1 );
     connect( m_timeLine, SIGNAL(frameChanged( int )), SLOT(onFrameChanged( int )));
@@ -18,7 +21,18 @@ Drawer::Drawer( QWidget* parent )
 #endif
     }
 
+
+
 #ifdef FAKE_DRAWER
+void 
+Drawer::onDockLocationChanged( Qt::DockWidgetArea area ) {
+    m_dockWidgetArea = area;
+    if( area == Qt::RightDockWidgetArea ) {
+        m_timeLine->setFrameRange( parentWidget()->frameGeometry().left(), parentWidget()->frameGeometry().right());
+    } else {
+        m_timeLine->setFrameRange( parentWidget()->frameGeometry().left(), parentWidget()->frameGeometry().left() - parentWidget()->frameGeometry().right());
+    }
+}
 
 bool
 Drawer::eventFilter( QObject* obj, QEvent* event )
@@ -34,7 +48,7 @@ Drawer::eventFilter( QObject* obj, QEvent* event )
             move( QPoint( parent->frameGeometry().right(), parent->geometry().y()));
             resize( width(), parent->size().height());
         }
-        m_timeLine->setFrameRange( parentWidget()->frameGeometry().left(), parentWidget()->frameGeometry().right());
+//        m_timeLine->setFrameRange( parentWidget()->frameGeometry().left(), parentWidget()->frameGeometry().right());
     }
 
     return false;
@@ -43,6 +57,7 @@ Drawer::eventFilter( QObject* obj, QEvent* event )
 void
 Drawer::showEvent( QShowEvent* event )
 {
+    qDebug() << "Allowed Areas" << allowedAreas();
     parentWidget()->raise();
     m_timeLine->setDirection(QTimeLine::Forward);
     m_timeLine->setEasingCurve( QEasingCurve::OutExpo );

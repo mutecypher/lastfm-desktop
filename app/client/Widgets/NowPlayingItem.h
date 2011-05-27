@@ -59,7 +59,7 @@ public:
 private:
     void paintEvent( QPaintEvent* event );
 
-    QRect updateRect() const;
+    QRect updateRect(int) const;
 
 private slots:
     void onWatchPaused( bool isPaused );
@@ -74,6 +74,7 @@ private:
     QBrush m_progressColor;
     QColor m_scrobblePointColor;
     int m_progressWidth;
+    QRect m_progressRect;
     int m_lastFrame;
 };
 

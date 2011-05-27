@@ -26,9 +26,12 @@ protected:
 private slots:
     void onFrameChanged( int frame );
     void onTimeLineFinished();
+    void onDockLocationChanged( Qt::DockWidgetArea );
 
 private:
     QTimeLine* m_timeLine;
+    QDockWidgetArea m_dockWidgetArea;
+
 #endif
 };
 

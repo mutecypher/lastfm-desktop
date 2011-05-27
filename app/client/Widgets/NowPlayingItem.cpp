@@ -131,16 +131,17 @@ NowPlayingItem::onWatchFinished()
 
 void NowPlayingItem::resizeEvent(QResizeEvent *event)
 {
+    m_progressWidth = 0;
     onFrameChanged( m_lastFrame );
     TrackItem::resizeEvent( event );
 }
 
 QRect
-NowPlayingItem::updateRect() const
+NowPlayingItem::updateRect( int progress ) const
 {
     QRect rect = ui->detailsFrame->geometry();
-    rect.setLeft( 0 );
-    rect.setRight( m_progressWidth );
+    rect.setLeft( m_progressWidth );
+    rect.setRight( progress + 3 );
     return rect;
 }
 
@@ -149,19 +150,25 @@ NowPlayingItem::onFrameChanged( int frame )
 {
     m_lastFrame = frame;
     int progress = 0;
-    if ( scrobbleService->stopWatch() )
-        progress = ( frame * width() ) / ( scrobbleService->stopWatch()->duration() * 1000 );
+
+    if ( scrobbleService->stopWatch() ) {
+        progress = ( frame * width() ) / ( scrobbleService->stopWatch()->duration() * 1000.0 );
+    }
 
     if ( progress != m_progressWidth )
     {  
-        QRect r;
+        m_progressRect = updateRect( progress );
+        QRect updateRect;
         if( progress > m_progressWidth )
-            r = updateRect();
-        else
-            r = rect();
+            updateRect = m_progressRect;
+        else {
+            updateRect = rect();
+            m_progressRect = rect();
+            m_progressRect.setRight( m_progressWidth );
+        }
   
-        m_progressWidth = progress;
-        update( r );
+        m_progressWidth = progress + 3;
+        update( updateRect );
     }
 }
 
@@ -171,8 +178,17 @@ NowPlayingItem::paintEvent( QPaintEvent* event )
     StylableWidget::paintEvent( event );
     QPainter p( this );
     p.setPen( QColor( Qt::transparent ));
-    p.setBrush( m_progressColor );    
-    p.drawRect( updateRect() );
+    p.setBrush( m_progressColor );
+    QRect actualRect = m_progressRect.adjusted( 0, 0, -3, 0 );
+    p.drawRect( actualRect );
+
+    QRect fadeRect = m_progressRect.adjusted( m_progressRect.width() - 3, 0, 0, 0 );
+    QLinearGradient semiGradient( fadeRect.left(), 0.0f, fadeRect.right(), 0.0f);
+    semiGradient.setColorAt( 0.0, m_progressColor.gradient()->stops().first().second );
+    semiGradient.setColorAt( 1.0, Qt::transparent );
+    p.setBrush( semiGradient );
+    
+    p.drawRect( fadeRect );
 
     if ( scrobbleService->stopWatch() )
     {
@@ -180,8 +196,8 @@ NowPlayingItem::paintEvent( QPaintEvent* event )
 
         int scrobblePoint = ( scrobbleService->stopWatch()->scrobblePoint() * width() ) / ( scrobbleService->stopWatch()->duration() );
 
-        p.drawLine( QPoint( scrobblePoint, updateRect().top() ),
-                    QPoint( scrobblePoint, updateRect().bottom()) );
+        p.drawLine( QPoint( scrobblePoint, rect().top() ),
+                    QPoint( scrobblePoint, rect().bottom()) );
     }
 }
 
