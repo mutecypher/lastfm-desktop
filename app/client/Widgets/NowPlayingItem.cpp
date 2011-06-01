@@ -184,7 +184,10 @@ NowPlayingItem::paintEvent( QPaintEvent* event )
 
     QRect fadeRect = m_progressRect.adjusted( m_progressRect.width() - 3, 0, 0, 0 );
     QLinearGradient semiGradient( fadeRect.left(), 0.0f, fadeRect.right(), 0.0f);
-    semiGradient.setColorAt( 0.0, m_progressColor.gradient()->stops().first().second );
+    if( m_progressColor.gradient())
+        semiGradient.setColorAt( 0.0, m_progressColor.gradient()->stops().first().second );
+    else
+        semiGradient.setColorAt( 0.0, m_progressColor.color() );
     semiGradient.setColorAt( 1.0, Qt::transparent );
     p.setBrush( semiGradient );
     
