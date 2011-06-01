@@ -27,6 +27,7 @@
 
 #include "RadioService.h"
 #include "lib/unicorn/UnicornSettings.h"
+#include <QCoreApplication>
 
 RadioService::RadioService( )
      : m_audioOutput( 0 ),
@@ -35,13 +36,16 @@ RadioService::RadioService( )
        m_bErrorRecover( false )
 {
     initRadio();
+    connect( qApp, SIGNAL( aboutToQuit()), SLOT( fadeOut() ));
 }
 
-
-RadioService::~RadioService()
-{    
+void 
+RadioService::fadeOut()
+{
     // I'm not confident about the sleep code on Windows --mxcl
 #ifndef WIN32
+    //if this is the singleton object then likelyhood is that any signals
+    //connected to this object point to objects which have been destroyed
 	if (m_mediaObject->state() != Phonon::PlayingState)
         return;
 
@@ -59,6 +63,11 @@ RadioService::~RadioService()
 		Thread::msleep( 7 );
     }
 #endif
+}
+
+
+RadioService::~RadioService()
+{    
 }
 
 // fixme:

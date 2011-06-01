@@ -44,8 +44,6 @@
 
 void cleanup();
 
-RadioService* radio;
-ScrobbleService* scrobbleService;
 
 namespace lastfm
 {
@@ -77,16 +75,13 @@ int main( int argc, char** argv )
         if ( app.isRunning() )
             return 0;
 
-        radio = new RadioService();
-        scrobbleService = new ScrobbleService();
-
         qAddPostRoutine(cleanup);
 
 //        ScrobSocket* scrobsock = new ScrobSocket("ass");
-//        scrobsock->connect(radio, SIGNAL(trackSpooled(Track)), SLOT(start(Track)));
-//        scrobsock->connect(radio, SIGNAL(paused()), SLOT(pause()));
-//        scrobsock->connect(radio, SIGNAL(resumed()), SLOT(resume()));
-//        scrobsock->connect(radio, SIGNAL(stopped()), SLOT(stop()));
+//        scrobsock->connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(start(Track)));
+//        scrobsock->connect( &RadioService::instance(), SIGNAL(paused()), SLOT(pause()));
+//        scrobsock->connect( &RadioService::instance(), SIGNAL(resumed()), SLOT(resume()));
+//        scrobsock->connect( &RadioService::instance(), SIGNAL(stopped()), SLOT(stop()));
 //        scrobsock->connect(&app, SIGNAL(aboutToQuit()), scrobsock, SLOT(stop()));
 
       #ifdef Q_WS_MAC
@@ -135,7 +130,7 @@ static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
             AEGetParamPtr( e, keyDirectObject, typeChar, &type, &buf, 1023, &size );
             buf[size] = '\0';
 
-            radio->play( RadioStation( QString::fromUtf8( buf ) ) );
+            RadioService::instance().play( RadioStation( QString::fromUtf8( buf ) ) );
             return noErr;
         }
             
@@ -148,7 +143,7 @@ static pascal OSErr appleEventHandler( const AppleEvent* e, AppleEvent*, long )
 
 void cleanup()
 {
-    if (radio && radio->audioOutput()) {
-	    unicorn::AppSettings().setValue( "Volume", radio->audioOutput()->volume() );
+    if (RadioService::instance().audioOutput()) {
+	    unicorn::AppSettings().setValue( "Volume", RadioService::instance().audioOutput()->volume() );
     }
 }

@@ -18,7 +18,7 @@ SkipListener::SkipListener(QObject *parent)
 
     connect( m_server, SIGNAL(newConnection()), SLOT(onNewConnection()));
 
-    connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled()));
+    connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled()));
 }
 
 
@@ -42,10 +42,10 @@ SkipListener::onNewConnection()
     if ( !m_skippers.contains( data ) )
         m_skippers.append( data );
 
-    int totalUsers = radio->station().url().count(",") + 1;
+    int totalUsers = RadioService::instance().station().url().count(",") + 1;
 
     if ( m_skippers.count()  >= qCeil( totalUsers / 2.0f ) )
-        radio->skip();
+        RadioService::instance().skip();
 
     socket->close();
 }

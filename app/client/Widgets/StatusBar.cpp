@@ -48,7 +48,7 @@ StatusBar::StatusBar( QWidget* parent )
 
     connect( aApp, SIGNAL( gotUserInfo(lastfm::UserDetails)), SLOT( onGotUserInfo(lastfm::UserDetails) ) );
 
-    DeviceScrobbler* deviceScrobbler = scrobbleService->deviceScrobbler();
+    DeviceScrobbler* deviceScrobbler = ScrobbleService::instance().deviceScrobbler();
     if( deviceScrobbler ) {
         connect( deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected( QString )));
         connect( deviceScrobbler, SIGNAL( processingScrobbles()), SLOT( onProcessingScrobbles()));
@@ -58,7 +58,7 @@ StatusBar::StatusBar( QWidget* parent )
 
     layout->addWidget( ui.sizeGrip = new QSizeGrip( this ), 0 , Qt::AlignBottom | Qt::AlignRight );
 
-    connect( scrobbleService, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+    connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 }
 
 void

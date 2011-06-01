@@ -19,8 +19,8 @@ StationWidget::StationWidget(QWidget *parent) :
     ui->treeView->setModel( m_model );
 
     connect( ui->treeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(onDoubleClicked(QModelIndex)));
-    connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)) );
-    connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)));
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)) );
+    connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)));
 
     setContextMenuPolicy( Qt::DefaultContextMenu );
 
@@ -111,7 +111,7 @@ StationWidget::getStation()
 void
 StationWidget::onPlay()
 {
-    radio->play( getStation() );
+    RadioService::instance().play( getStation() );
 
 }
 
@@ -119,14 +119,14 @@ StationWidget::onPlay()
 void
 StationWidget::onPlayNext()
 {
-    radio->playNext( getStation() );
+    RadioService::instance().playNext( getStation() );
 }
 
 
 void
 StationWidget::onTagFilter()
 {
-    RadioStation station = radio->station();
+    RadioStation station = RadioService::instance().station();
 
     QString stationUrl = ui->treeView->model()->data( ui->treeView->selectionModel()->selectedIndexes().at( 0 ), StationListModel::UrlRole ).toString();
 
@@ -137,7 +137,7 @@ StationWidget::onTagFilter()
     QString tag = stationUrl.mid( 20, endPos - 20 );
 
     station.setTagFilter( tag );
-    radio->playNext( station );
+    RadioService::instance().playNext( station );
 }
 
 
@@ -154,7 +154,7 @@ StationWidget::contextMenuEvent( QContextMenuEvent* event )
 
         contextMenu->addAction( numSelected == 1 ? tr("Play %1").arg( title ) : tr("Play Multi Radio"), this, SLOT(onPlay()));
 
-        if ( radio->state() == RadioService::Playing )
+        if ( RadioService::instance().state() == RadioService::Playing )
             contextMenu->addAction( numSelected == 1 ? tr("Play %1 next").arg( title ) : tr("Play Multi Radio next"), this, SLOT(onPlayNext()));
     }
 
@@ -163,8 +163,8 @@ StationWidget::contextMenuEvent( QContextMenuEvent* event )
     // Tag filter?
     if ( numSelected == 1
          && ui->treeView->model()->data( ui->treeView->selectionModel()->selectedIndexes().at( 0 ), StationListModel::UrlRole ).toString().startsWith("lastfm://globaltags/")
-         && !radio->station().url().startsWith("lastfm://globalTags/")
-         && !radio->station().url().startsWith("lastfm://tag/"))
+         && !RadioService::instance().station().url().startsWith("lastfm://globalTags/")
+         && !RadioService::instance().station().url().startsWith("lastfm://tag/"))
         contextMenu->addAction( "Tag filter", this, SLOT(onTagFilter()));
 
     if ( contextMenu->actions().count() )
@@ -253,7 +253,7 @@ StationWidget::recentStation( const RadioStation& station )
 void
 StationWidget::onTrackSpooled( const Track& /*track*/ )
 {
-    onTuningIn( radio->station() );
+    onTuningIn( RadioService::instance().station() );
 }
 
 
@@ -278,7 +278,7 @@ void
 StationWidget::onDoubleClicked( const QModelIndex & index )
 {
     if ( ui->treeView->model()->flags( index ) & Qt::ItemIsEnabled )
-        radio->play( getStation() );
+        RadioService::instance().play( getStation() );
 }
 
 

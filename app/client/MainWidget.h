@@ -140,7 +140,7 @@ public:
     BackForwardControls(const QString& backLabel, const QString& mainLabel, NowPlayingState* nowPlaying, QWidget* child)
         :m_mainLabel(0)
     {
-        connect(radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
+        connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
 
         QVBoxLayout* layout = new QVBoxLayout(this);
         layout->setContentsMargins( 0, 0, 0, 0 );

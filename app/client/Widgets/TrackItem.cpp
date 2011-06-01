@@ -255,7 +255,7 @@ TrackItem::contextString( const Track& track )
             break;
         case lastfm::TrackContext::User:
             // Whitelist multi-user station
-            if ( !radio->station().url().startsWith("lastfm://users/") )
+            if ( !RadioService::instance().station().url().startsWith("lastfm://users/") )
                 break;
         case lastfm::TrackContext::Friend:
         case lastfm::TrackContext::Neighbour:

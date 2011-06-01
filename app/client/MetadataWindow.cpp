@@ -116,10 +116,10 @@ MetadataWindow::MetadataWindow()
     ui.message_bar = new MessageBar( centralWidget());
 
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
-    connect( scrobbleService, SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
-    connect( scrobbleService, SIGNAL( paused() ), SLOT( onPaused() ) );
-    connect( scrobbleService, SIGNAL( resumed() ), SLOT( onResumed() ) );
-    connect( scrobbleService, SIGNAL( stopped() ), SLOT( onStopped() ) );
+    connect( &ScrobbleService::instance(), SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
+    connect( &ScrobbleService::instance(), SIGNAL( paused() ), SLOT( onPaused() ) );
+    connect( &ScrobbleService::instance(), SIGNAL( resumed() ), SLOT( onResumed() ) );
+    connect( &ScrobbleService::instance(), SIGNAL( stopped() ), SLOT( onStopped() ) );
 
     connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)));
     connect( ui.nowPlaying->fetcher(), SIGNAL(albumGotInfo(XmlQuery)), SIGNAL(albumGotInfo(XmlQuery)));

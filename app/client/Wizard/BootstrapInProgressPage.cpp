@@ -14,7 +14,7 @@ BootstrapInProgressPage::BootstrapInProgressPage( QWizard* parent )
                         :QWizardPage( parent ),
                          m_isComplete( false )
 {
-    connect( scrobbleService, SIGNAL( trackStarted( Track, Track )), SLOT( onTrackStarted( Track )));
+    connect( &ScrobbleService::instance(), SIGNAL( trackStarted( Track, Track )), SLOT( onTrackStarted( Track )));
     setTitle( "Importing your listening history!" );
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->addStretch();
@@ -23,7 +23,7 @@ BootstrapInProgressPage::BootstrapInProgressPage( QWizard* parent )
     m_progressBar->setValue( 0 );
     m_progressBar->setMaximum( 100 );
     layout->addStretch();
-    connect( scrobbleService, SIGNAL(bootstrapReady(QString)), SLOT( onBootstrapReady(QString)));
+    connect( &ScrobbleService::instance(), SIGNAL(bootstrapReady(QString)), SLOT( onBootstrapReady(QString)));
 }
 
 void 

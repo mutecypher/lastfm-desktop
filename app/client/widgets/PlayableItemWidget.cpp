@@ -46,10 +46,10 @@ PlayableItemWidget::init()
         setToolTip( m_rs.title());
     setText( title );
 
-    connect( this, SIGNAL(startRadio(RadioStation)), radio, SLOT(play(RadioStation)) );
+    connect( this, SIGNAL(startRadio(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)) );
 
-    connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
-    connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
+    connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
 }
 
 
@@ -64,10 +64,10 @@ PlayableItemWidget::mouseReleaseEvent(QMouseEvent* /*event*/)
 void
 PlayableItemWidget::onRadioChanged()
 {
-    if ( radio->station() == m_rs )
+    if ( RadioService::instance().station() == m_rs )
     {
         setEnabled( false );
-        setText( radio->station().title() );
+        setText( RadioService::instance().station().title() );
     }
     else
         setEnabled( true );

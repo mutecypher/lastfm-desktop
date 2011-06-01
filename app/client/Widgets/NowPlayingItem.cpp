@@ -57,9 +57,9 @@ NowPlayingItem::NowPlayingItem( const Track& track )
     m_nullInfo = new WelcomeWidget( this );
     m_nullInfo->hide();
 
-    connect( scrobbleService, SIGNAL(paused(bool)), SLOT( onWatchPaused(bool)) );
-    connect( scrobbleService, SIGNAL(timeout()), SLOT( onWatchFinished()));
-    connect( scrobbleService, SIGNAL(frameChanged(int)), SLOT(onFrameChanged(int)));
+    connect( &ScrobbleService::instance(), SIGNAL(paused(bool)), SLOT( onWatchPaused(bool)) );
+    connect( &ScrobbleService::instance(), SIGNAL(timeout()), SLOT( onWatchFinished()));
+    connect( &ScrobbleService::instance(), SIGNAL(frameChanged(int)), SLOT(onFrameChanged(int)));
 
     onWatchPaused( false );
 }
@@ -94,7 +94,7 @@ NowPlayingItem::onWatchPaused( bool isPaused )
         }
         else
         {
-            if( (scrobbleService->stopWatch()->elapsed()/1000.0f) / scrobbleService->stopWatch()->scrobblePoint() >= 1.0f )
+            if( (ScrobbleService::instance().stopWatch()->elapsed()/1000.0f) / ScrobbleService::instance().stopWatch()->scrobblePoint() >= 1.0f )
                 m_statusText = tr( "Track Scrobbled" );
             else
             {
@@ -151,8 +151,8 @@ NowPlayingItem::onFrameChanged( int frame )
     m_lastFrame = frame;
     int progress = 0;
 
-    if ( scrobbleService->stopWatch() ) {
-        progress = ( frame * width() ) / ( scrobbleService->stopWatch()->duration() * 1000.0 );
+    if ( ScrobbleService::instance().stopWatch() ) {
+        progress = ( frame * width() ) / ( ScrobbleService::instance().stopWatch()->duration() * 1000.0 );
     }
 
     if ( progress != m_progressWidth )
@@ -193,11 +193,11 @@ NowPlayingItem::paintEvent( QPaintEvent* event )
     
     p.drawRect( fadeRect );
 
-    if ( scrobbleService->stopWatch() )
+    if ( ScrobbleService::instance().stopWatch() )
     {
         p.setPen( m_scrobblePointColor );
 
-        int scrobblePoint = ( scrobbleService->stopWatch()->scrobblePoint() * width() ) / ( scrobbleService->stopWatch()->duration() );
+        int scrobblePoint = ( ScrobbleService::instance().stopWatch()->scrobblePoint() * width() ) / ( ScrobbleService::instance().stopWatch()->duration() );
 
         p.drawLine( QPoint( scrobblePoint, rect().top() ),
                     QPoint( scrobblePoint, rect().bottom()) );

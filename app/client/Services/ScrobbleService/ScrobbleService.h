@@ -54,6 +54,8 @@ public:
         Paused,
         Playing
     };
+    
+    static ScrobbleService& instance() { static ScrobbleService s; return s; }
 
 public slots:
     void onSessionChanged( unicorn::Session* );
@@ -95,6 +97,5 @@ protected:
     Track m_trackToScrobble;
 };
 
-extern ScrobbleService* scrobbleService;
 
 #endif //SCROBBLE_SERVICE_H_

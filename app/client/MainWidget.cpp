@@ -34,8 +34,8 @@ MainWidget::MainWidget( QWidget* parent )
            :StylableWidget( parent )
 {
     m_nowPlaying = new NowPlayingState();
-    connect(radio, SIGNAL(tuningIn(RadioStation)), m_nowPlaying, SLOT(onTuningIn(RadioStation)));
-    connect(radio, SIGNAL(stopped()), m_nowPlaying, SLOT(onStopped()));
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), m_nowPlaying, SLOT(onTuningIn(RadioStation)));
+    connect( &RadioService::instance(), SIGNAL(stopped()), m_nowPlaying, SLOT(onStopped()));
 
     m_layout = new SideBySideLayout( this );
     connect( m_layout, SIGNAL(moveStarted(QLayoutItem*, QLayoutItem*)), SLOT(onSlideStarted(QLayoutItem*, QLayoutItem*)));
@@ -67,7 +67,7 @@ MainWidget::onSlideStarted( QLayoutItem* next, QLayoutItem* /*prev*/ )
 void 
 MainWidget::onStartRadio(RadioStation rs)
 {
-    if( radio->state() != RadioService::Stopped ) {
+    if( RadioService::instance().state() != RadioService::Stopped ) {
         foreach( NowPlayingWidget* npw, findChildren<NowPlayingWidget*>())
         {
             m_layout->removeWidget( npw->parentWidget() );
@@ -78,17 +78,17 @@ MainWidget::onStartRadio(RadioStation rs)
     qApp->processEvents();
 
     NowPlayingWidget* w = new NowPlayingWidget;
-    connect(radio, SIGNAL(tuningIn( RadioStation )), w, SLOT(onTuningIn( RadioStation )));
-    connect(radio, SIGNAL(trackSpooled( Track )), w, SLOT(onTrackSpooled( Track )));
-    connect(radio, SIGNAL(tick( qint64 )), w, SIGNAL( tick( qint64 )));
-    connect(radio, SIGNAL(buffering( int )), w, SLOT(onBuffering( int )));
-//    connect(radio, SIGNAL(stopped()), w, SLOT(onStopped()));
+    connect( &RadioService::instance(), SIGNAL(tuningIn( RadioStation )), w, SLOT(onTuningIn( RadioStation )));
+    connect( &RadioService::instance(), SIGNAL(trackSpooled( Track )), w, SLOT(onTrackSpooled( Track )));
+    connect( &RadioService::instance(), SIGNAL(tick( qint64 )), w, SIGNAL( tick( qint64 )));
+    connect( &RadioService::instance(), SIGNAL(buffering( int )), w, SLOT(onBuffering( int )));
+//    connect( &RadioService::instance(), SIGNAL(stopped()), w, SLOT(onStopped()));
 
     BackForwardControls* ctrl = new BackForwardControls(tr("Back"), rs.title(), NULL, w);
     connect( this, SIGNAL( sessionChanged( unicorn::Session* ) ),
              ctrl, SLOT( onSessionChanged( unicorn::Session* ) ) );
     connect(ctrl, SIGNAL(back()), SLOT(onBack()));
-    connect(radio, SIGNAL(stopped()), SLOT(onBackDelete()));
+    connect( &RadioService::instance(), SIGNAL(stopped()), SLOT(onBackDelete()));
     m_layout->addWidget(ctrl);
     m_layout->moveForward();
 }

@@ -85,7 +85,7 @@ ScrobbleInfoWidget::ScrobbleInfoWidget( const Track& track, ScrobbleInfoFetcher*
     connect(ui.bioText->document()->documentLayout(), SIGNAL( documentSizeChanged(QSizeF)), SLOT( onBioChanged(QSizeF)));
     connect(ui.bioText, SIGNAL(anchorClicked(QUrl)), SLOT(onAnchorClicked(QUrl)));
 
-    connect( scrobbleService, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+    connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 
     connect( track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onTrackCorrected(QString)));
 }

@@ -33,7 +33,7 @@ StationPanelWidget::StationPanelWidget(QWidget *parent) :
 
     connect( ui->friendsFilter, SIGNAL(textChanged(QString)), m_friendsProxyModel, SLOT(setFilterFixedString(QString)));
 
-    connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)) );
 

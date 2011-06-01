@@ -59,21 +59,21 @@ RadioWidget::~RadioWidget()
 void
 RadioWidget::onLibraryClicked()
 {
-    radio->play( RadioStation::library( User().name() ) );
+    RadioService::instance().play( RadioStation::library( User().name() ) );
 }
 
 
 void
 RadioWidget::onMixClicked()
 {
-    radio->play( RadioStation::mix( User().name() ) );
+    RadioService::instance().play( RadioStation::mix( User().name() ) );
 }
 
 
 void
 RadioWidget::onRecomendedClicked()
 {
-    radio->play( RadioStation::recommendations( User().name() ) );
+    RadioService::instance().play( RadioStation::recommendations( User().name() ) );
 }
 
 
@@ -83,14 +83,14 @@ RadioWidget::onStartClicked()
     QString trimmedText = ui->stationEdit->text().trimmed();
 
     if( trimmedText.startsWith("lastfm://")) {
-        radio->play( RadioStation( trimmedText ) );
+        RadioService::instance().play( RadioStation( trimmedText ) );
         return;
     }
 
     if ( ui->stationEdit->text().length() )
     {
         StationSearch* s = new StationSearch();
-        connect(s, SIGNAL(searchResult(RadioStation)), radio, SLOT(play(RadioStation)));
+        connect(s, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)));
         s->startSearch(ui->stationEdit->text());
     }
 
@@ -112,16 +112,16 @@ RadioWidget::onStationEditTextChanged( const QString& text )
 //{
 //    if ( checked )
 //    {
-//        if ( radio->state() == Radio::Stopped )
-//            radio->play( RadioStation( "" ) );
+//        if ( RadioService::instance().state() == Radio::Stopped )
+//            RadioService::instance().play( RadioStation( "" ) );
 //        else
 //        {
-//            radio->resume();
+//            RadioService::instance().resume();
 //        }
 //    }
 //    else
 //    {
-//        radio->pause();
+//        RadioService::instance().pause();
 //    }
 //}
 
@@ -129,12 +129,12 @@ RadioWidget::onStationEditTextChanged( const QString& text )
 void
 RadioWidget::onFilterClicked()
 {
-    TagFilterDialog tagFilter( radio->station(), this );
+    TagFilterDialog tagFilter( RadioService::instance().station(), this );
     if ( tagFilter.exec() == QDialog::Accepted )
     {
-        RadioStation station = radio->station();
+        RadioStation station = RadioService::instance().station();
         station.setTagFilter( tagFilter.tag() );
-        radio->playNext( station );
+        RadioService::instance().playNext( station );
     }
 }
 

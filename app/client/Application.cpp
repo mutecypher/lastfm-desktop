@@ -203,7 +203,7 @@ Application::init()
 #ifdef Q_WS_X11
     menu->addSeparator();
     m_scrobble_ipod_action = menu->addAction( tr( "Scrobble iPod..." ) );
-    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), scrobbleService->deviceScrobbler(), SLOT( onScrobbleIpodTriggered() ) );
+    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), ScrobbleService::instance().deviceScrobbler(), SLOT( onScrobbleIpodTriggered() ) );
 #endif
 
     menu->addSeparator();
@@ -295,23 +295,23 @@ Application::init()
 
     connect( m_mw, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
 
-    connect( scrobbleService, SIGNAL(trackStarted(Track,Track)), SLOT(onTrackSpooled(Track,Track)));
+    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackSpooled(Track,Track)));
 
     // connect the radio up so it scrobbles
 #warning This code bypasses the mediator - FIXME
-    connect( radio, SIGNAL(trackSpooled(Track)), scrobbleService, SLOT(onTrackStarted(Track)));
-    connect( radio, SIGNAL(paused()), scrobbleService, SLOT(onPaused()));
-    connect( radio, SIGNAL(resumed()), scrobbleService, SLOT(onResumed()));
-    connect( radio, SIGNAL(stopped()), scrobbleService, SLOT(onStopped()));
+    connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), &ScrobbleService::instance(), SLOT(onTrackStarted(Track)));
+    connect( &RadioService::instance(), SIGNAL(paused()), &ScrobbleService::instance(), SLOT(onPaused()));
+    connect( &RadioService::instance(), SIGNAL(resumed()), &ScrobbleService::instance(), SLOT(onResumed()));
+    connect( &RadioService::instance(), SIGNAL(stopped()), &ScrobbleService::instance(), SLOT(onStopped()));
 
     connect( m_show_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
     connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( toggleWindow()), Qt::QueuedConnection );
 
     connect( this, SIGNAL(messageReceived(QStringList)), SLOT(onMessageReceived(QStringList)) );
-    connect( this, SIGNAL( sessionChanged( unicorn::Session* ) ), scrobbleService, SLOT( onSessionChanged( unicorn::Session* ) ) );
+    connect( this, SIGNAL( sessionChanged( unicorn::Session* ) ), &ScrobbleService::instance(), SLOT( onSessionChanged( unicorn::Session* ) ) );
 
-    connect( scrobbleService, SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)));
-    connect( scrobbleService, SIGNAL(paused(bool)), SLOT(onTrackPaused(bool)));
+    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)));
+    connect( &ScrobbleService::instance(), SIGNAL(paused(bool)), SLOT(onTrackPaused(bool)));
 
     //We're not going to catch the first session change as it happened in the unicorn application before
     //we could connect to the signal!
@@ -350,14 +350,14 @@ void
 Application::onTrackGotInfo(const XmlQuery& lfm)
 {
     //Q_ASSERT(m_connection);
-    MutableTrack( scrobbleService->currentConnection()->track() ).setFromLfm( lfm );
+    MutableTrack( ScrobbleService::instance().currentConnection()->track() ).setFromLfm( lfm );
 }
 
 
 void
 Application::onCorrected(QString /*correction*/)
 {
-    onTrackStarted( scrobbleService->currentTrack(), scrobbleService->currentTrack());
+    onTrackStarted( ScrobbleService::instance().currentTrack(), ScrobbleService::instance().currentTrack());
 }
 
 
@@ -401,7 +401,7 @@ Application::onTrackSpooled( const Track& track, const Track& /*oldTrack*/ )
 
     QString ircMessage = QString( "#last.clientradio %1 %2" ).arg( track.toString(), strippedContextString );
 
-    if ( track.context().values().count() == ( radio->station().url().count( "," ) + 1 ) )
+    if ( track.context().values().count() == ( RadioService::instance().station().url().count( "," ) + 1 ) )
         ircMessage.append( " BINGO!" );
 
     QTcpSocket socket;
@@ -423,7 +423,7 @@ Application::onTrackPaused( bool paused )
         m_tag_action->setEnabled( false );
         m_share_action->setEnabled( false );
     } else {
-        onTrackStarted( scrobbleService->currentTrack(), scrobbleService->currentTrack());
+        onTrackStarted( ScrobbleService::instance().currentTrack(), ScrobbleService::instance().currentTrack());
     }
 }
 
@@ -580,7 +580,7 @@ Application::onMessageReceived( const QStringList& message )
 
     if ( message.contains( "--twiddly" ))
     {
-        scrobbleService->handleTwiddlyMessage( message );
+        ScrobbleService::instance().handleTwiddlyMessage( message );
     }
     else if ( message.contains( "--exit" ) )
     {
@@ -594,7 +594,7 @@ Application::onMessageReceived( const QStringList& message )
     else if ( message.contains( "--new-ipod-detected" ) ||
               message.contains( "--ipod-detected" ))
     {
-        scrobbleService->handleIPodDetectedMessage( message );
+        ScrobbleService::instance().handleIPodDetectedMessage( message );
     }
 
     if ( !(message.contains( "--tray" ) || message.contains( "--settings" )))
@@ -620,7 +620,7 @@ Application::parseArguments( const QStringList& args )
         switch (argument( arg ))
         {
         case LastFmUrl:
-            radio->play( RadioStation( arg ) );
+            RadioService::instance().play( RadioStation( arg ) );
             break;
 
         case Exit:
@@ -628,14 +628,14 @@ Application::parseArguments( const QStringList& args )
             break;
 
         case Skip:
-            radio->skip();
+            RadioService::instance().skip();
             break;
 
         case Pause:
-            if ( radio->state() == RadioService::Playing )
-                radio->pause();
-            else if ( radio->state() == RadioService::Paused )
-                radio->resume();
+            if ( RadioService::instance().state() == RadioService::Playing )
+                RadioService::instance().pause();
+            else if ( RadioService::instance().state() == RadioService::Paused )
+                RadioService::instance().resume();
             break;
 
         case ArgUnknown:

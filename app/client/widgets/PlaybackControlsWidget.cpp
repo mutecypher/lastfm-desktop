@@ -26,11 +26,11 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     connect( aApp->playAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
     connect( aApp->skipAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
 
-    connect( radio, SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) );
-    //connect( radio, SIGNAL(tick(qint64)), SLOT(onRadioTick(qint64)));
-    connect( radio, SIGNAL(stopped()), SLOT(onStopped()));
-    connect( radio, SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
-    connect( radio, SIGNAL(error(int,QVariant)), SLOT(onError(int, QVariant)));
+    connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) );
+    //connect( &RadioService::instance(), SIGNAL(tick(qint64)), SLOT(onRadioTick(qint64)));
+    connect( &RadioService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
+    connect( &RadioService::instance(), SIGNAL(error(int,QVariant)), SLOT(onError(int, QVariant)));
 
     onActionsChanged();
 
@@ -40,7 +40,7 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     connect( ui->play, SIGNAL(clicked()), aApp->playAction(), SLOT(trigger()));
     connect( ui->skip, SIGNAL(clicked()), aApp->skipAction(), SLOT(trigger()));
 
-    ui->volumeSlider->setAudioOutput( radio->audioOutput() );
+    ui->volumeSlider->setAudioOutput( RadioService::instance().audioOutput() );
     ui->volumeSlider->setMuteVisible( false );
 
     new QShortcut( QKeySequence( Qt::Key_Space ), this, SLOT(onSpace()));
@@ -90,16 +90,16 @@ PlaybackControlsWidget::onPlayClicked( bool checked )
 {
     if ( checked )
     {
-        if ( radio->state() == RadioService::Stopped )
-            radio->play( RadioStation( "" ) );
+        if ( RadioService::instance().state() == RadioService::Stopped )
+            RadioService::instance().play( RadioStation( "" ) );
         else
         {
-            radio->resume();
+            RadioService::instance().resume();
         }
     }
     else
     {
-        radio->pause();
+        RadioService::instance().pause();
     }
 }
 
@@ -109,25 +109,25 @@ PlaybackControlsWidget::onPlayTriggered( bool checked )
 {
     if ( checked )
     {
-        if ( radio->state() != RadioService::Stopped )
-            setWindowTitle( QString( "Last.fm Radio - %1 - %2" ).arg( radio->station().title(), radio->currentTrack().toString() ) );
+        if ( RadioService::instance().state() != RadioService::Stopped )
+            setWindowTitle( QString( "Last.fm Radio - %1 - %2" ).arg( RadioService::instance().station().title(), RadioService::instance().currentTrack().toString() ) );
     }
     else
-        setWindowTitle( QString( "Last.fm Radio - %1" ).arg( radio->station().title() ) );
+        setWindowTitle( QString( "Last.fm Radio - %1" ).arg( RadioService::instance().station().title() ) );
 }
 
 
 void
 PlaybackControlsWidget::onSkipClicked()
 {
-    radio->skip();
+    RadioService::instance().skip();
 }
 
 
 void
 PlaybackControlsWidget::onLoveClicked( bool loved )
 {
-    MutableTrack track( radio->currentTrack() );
+    MutableTrack track( RadioService::instance().currentTrack() );
 
     if ( loved )
         track.love();
@@ -149,7 +149,7 @@ PlaybackControlsWidget::onLoveTriggered( bool loved )
 void
 PlaybackControlsWidget::onBanClicked()
 {
-    QNetworkReply* banReply = MutableTrack( radio->currentTrack() ).ban();
+    QNetworkReply* banReply = MutableTrack( RadioService::instance().currentTrack() ).ban();
     connect(banReply, SIGNAL(finished()), SLOT(onBanFinished()));
 }
 
@@ -195,7 +195,7 @@ PlaybackControlsWidget::onTrackSpooled( const Track& track )
 
         ui->play->setChecked( true );
 
-        ui->title->setText( radio->station().title() );
+        ui->title->setText( RadioService::instance().station().title() );
     }
     else
     {

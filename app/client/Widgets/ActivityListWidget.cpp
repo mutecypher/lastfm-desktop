@@ -71,7 +71,7 @@ ActivityListWidget::ActivityListWidget( QString username, QWidget* parent )
     setUsername( username );
 
     connect( m_writeTimer, SIGNAL(timeout()), SLOT(doWrite()) );
-    connect( scrobbleService, SIGNAL(foundIPodScrobbles(QList<lastfm::Track>)), SLOT(onFoundIPodScrobbles(QList<lastfm::Track>)));
+    connect( &ScrobbleService::instance(), SIGNAL(foundIPodScrobbles(QList<lastfm::Track>)), SLOT(onFoundIPodScrobbles(QList<lastfm::Track>)));
 }
 
 

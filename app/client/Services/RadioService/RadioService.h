@@ -69,6 +69,8 @@ public:
 
     void playNext( const RadioStation& station );
 
+    static RadioService& instance(){ static RadioService r; return r; }
+
 public slots:
     void play( const RadioStation& station );
     void skip();
@@ -77,6 +79,7 @@ public slots:
     void pause();
     void resume();
     void setSupportsDisco( bool supportsDisco );
+    void fadeOut();
 
 signals:
     /** emitted up to twice, as first time may not have a title for the station
@@ -156,7 +159,5 @@ inline QDebug operator<<( QDebug d, Phonon::State s )
 
 Q_DECLARE_METATYPE( RadioService::State );
 
-
-extern RadioService* radio;
 
 #endif //RADIO_SERVICE_H_
