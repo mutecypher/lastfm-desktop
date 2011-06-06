@@ -25,7 +25,7 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include <lastfm/misc.h>
 #ifdef Q_OS_MAC
-    #define AUDIOSCROBBLER_BUNDLEID "fm.last.scrobbler"
+    #define AUDIOSCROBBLER_BUNDLEID "fm.last.Last.fm"
     #include <ApplicationServices/ApplicationServices.h>
 
     //This macro clashes with Qt headers
@@ -98,7 +98,7 @@ namespace moose
 
 
         AEAddressDesc target;
-        AECreateDesc( typeApplicationBundleID, CFSTR( AUDIOSCROBBLER_BUNDLEID ), 22, &target);
+        AECreateDesc( typeApplicationBundleID, CFSTR( AUDIOSCROBBLER_BUNDLEID ), 16, &target);
 
         AppleEvent event;
         AECreateAppleEvent ( kCoreEventClass,

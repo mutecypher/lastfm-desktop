@@ -3,7 +3,7 @@ LIBS += -lunicorn -llastfm
 QT = core xml sql
 
 macx:CONFIG( app_bundle ) {
-    DESTDIR = "$$DESTDIR/Last.fm Scrobbler.app/Contents/MacOS"
+    DESTDIR = "$$DESTDIR/Last.fm.app/Contents/MacOS"
     QMAKE_POST_LINK += $$ROOT_DIR/admin/dist/mac/bundleFrameworks.sh \"$$DESTDIR/$$TARGET\"
 }
 

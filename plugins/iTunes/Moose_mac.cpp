@@ -18,7 +18,7 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#define AUDIOSCROBBLER_BUNDLEID "fm.last.scrobbler"
+#define AUDIOSCROBBLER_BUNDLEID "fm.last.Last.fm"
 #include "Moose.h"
 #include "common/c++/Logger.h"
 #include <sys/stat.h>
@@ -66,10 +66,10 @@ Moose::applicationPath()
     FSRefMakePath( &appRef, (unsigned char*)path, PATH_MAX );
     
     if ( path == NULL )
-        return "/Applications/audioscrobbler.app";
+        return "/Applications/Last.Fm.app/Contents/MacOS/Last.fm";
 
     std::string s = path;
-    s.append( "/Contents/MacOS/audioscrobbler" );
+    s.append( "/Contents/MacOS/Last.fm" );
     return s;
 }
 
@@ -164,7 +164,7 @@ Moose::launchAudioscrobbler( const std::vector<std::string>& vargs )
     
   
     AEAddressDesc target;
-    AECreateDesc( typeApplicationBundleID, CFSTR( AUDIOSCROBBLER_BUNDLEID ), 22, &target);
+    AECreateDesc( typeApplicationBundleID, CFSTR( AUDIOSCROBBLER_BUNDLEID ), 16, &target);
     
     AppleEvent event;
     AECreateAppleEvent ( kCoreEventClass,
