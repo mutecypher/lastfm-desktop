@@ -108,8 +108,6 @@ MetadataWindow::MetadataWindow()
     ui.statusBar->setObjectName( "StatusBar" );
 
 
-    addDragHandleWidget( ui.statusBar );
-
     setWindowTitle( aApp->applicationName() );
     setUnifiedTitleAndToolBarOnMac( true );
 
@@ -175,12 +173,10 @@ MetadataWindow::MetadataWindow()
     ui.splitter->handle( 1 )->setAutoFillBackground( true );
     setMinimumWidth( 455 );
 
-    layout->addWidget( ui.statusBar, 1 );
+    setStatusBar( ui.statusBar );
     resize(20, 500);
 
     onItemClicked( ui.nowPlaying );
-
-    ui.statusBar->setSizeGripVisible( true );
 
     finishUi();
 }

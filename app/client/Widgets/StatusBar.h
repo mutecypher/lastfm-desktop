@@ -18,14 +18,14 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "lib/unicorn/StylableWidget.h"
+#include <QStatusBar>
 
 #include <lastfm/Track>
 #include <lastfm/UserDetails>
 
 class QLabel;
 
-class StatusBar : public StylableWidget
+class StatusBar : public QStatusBar
 {
     Q_OBJECT
     public:
@@ -56,7 +56,6 @@ class StatusBar : public StylableWidget
         } ui;
 
         QLabel* m_inetStatus;
-        QLabel* m_mainStatus;
 
         int m_scrobbleCount;
 };
