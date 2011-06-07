@@ -7,7 +7,7 @@
 #include "StationWidget.h"
 #include "ui_StationWidget.h"
 
-#include "Services/RadioService.h"
+#include "../Services/RadioService.h"
 
 StationWidget::StationWidget(QWidget *parent) :
     QWidget(parent),

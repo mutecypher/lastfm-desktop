@@ -357,35 +357,6 @@ QLabel#title2 {
     padding:12px 10px 0px -2px;
 }
 
-QScrollBar  {
-    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #ababab, stop:1 #f0f0f0);
-    margin: 0px;
-    width: 16px;
-    padding: 0px 0px 0px 0px;
-    border-radius: 7px;
-    border: 1px solid #1a1a1a;
-    border-right: none;
-    border-left: none;
-	min-height: 50px;
-}
-
-QScrollBar::add-page, 
-QScrollBar::sub-page {
-    background: none;
-}
-
-QScrollBar::handle {
-    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #9DD8FA, stop:0.5 #9CC9E1, stop:1 #9CC5EB );
-    min-height: 30px;
-    border-radius: 6px;
-    margin-left: 1px;
-}
-
-QScrollBar::sub-line,
-QScrollBar::add-line {
-    height: 0px;
-}
-
 QSizeGrip {
 	margin: 0px 2px 2px 0px;
     color: #808080;

@@ -2,7 +2,7 @@
 #include <QShortcut>
 
 #include "../Application.h"
-#include "Services/RadioService.h"
+#include "../Services/RadioService.h"
 
 #include "PlaybackControlsWidget.h"
 #include "ui_PlaybackControlsWidget.h"

@@ -27,7 +27,7 @@
 #include "lib/listener/PlayerConnection.h"
 #include "lib/listener/PlayerListener.h"
 #include "lib/listener/PlayerMediator.h"
-#include "MediaDevices/DeviceScrobbler.h"
+#include "../MediaDevices/DeviceScrobbler.h"
 #include "StopWatch.h"
 #ifdef Q_WS_MAC
 #include "lib/listener/mac/ITunesListener.h"
@@ -126,7 +126,7 @@ void
 ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
 {
     // This stops the loving of tracks in the recent tracks list affecting the current track
-   #warning check this list //disconnect( m_currentTrack.signalProxy(), SIGNAL(loveToggled(bool)), this, SIGNAL(lovedStateChanged(bool)) );
+#pragma message ( "check this list //disconnect( m_currentTrack.signalProxy(), SIGNAL(loveToggled(bool)), this, SIGNAL(lovedStateChanged(bool)) );" )
 
     state = Playing;
 
@@ -184,7 +184,7 @@ ScrobbleService::onPaused()
     m_currentTrack.removeNowPlaying();
 
     //Q_ASSERT(m_connection);
-    Q_ASSERT(m_watch);
+    //Q_ASSERT(m_watch);
     if(m_watch) m_watch->pause();
     
     emit paused();
@@ -199,7 +199,7 @@ ScrobbleService::onStopped()
 
     state = Stopped;
 
-    Q_ASSERT(m_watch);
+    //Q_ASSERT(m_watch);
     //Q_ASSERT(m_connection);
         
     delete m_watch;
@@ -218,7 +218,7 @@ ScrobbleService::onResumed()
 
     state = Playing;
 
-    Q_ASSERT(m_watch);
+    //Q_ASSERT(m_watch);
     //Q_ASSERT(m_connection);
 
     m_currentTrack.updateNowPlaying( m_currentTrack.duration() - (m_watch->elapsed()/1000) );

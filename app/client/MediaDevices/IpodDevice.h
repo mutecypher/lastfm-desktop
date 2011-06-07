@@ -27,21 +27,16 @@ class IpodDevice: public MediaDevice
     Q_OBJECT
 public:
     // DO NOT CHANGE THIS: IT WILL MESS UP IPOD SCROBBLE SETTINGS
-    enum Scrobble
-    {
-        Unknown,
-        Yes,
-        NotNow,
-        Never
-    };
-
     IpodDevice( const QString& deviceId, const QString& deviceName);
 
     virtual QString deviceId() const;
     virtual QString deviceName() const;
 
-    void setScrobble( Scrobble scrobble );
-    Scrobble scrobble();
+    void setScrobble( bool scrobble );
+    bool scrobble();
+
+    void setAlwaysAsk( bool alwaysAsk );
+    bool alwaysAsk();
 
 #ifdef Q_WS_X11
     /**

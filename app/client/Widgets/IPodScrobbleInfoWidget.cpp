@@ -57,7 +57,7 @@ IPodScrobbleInfoWidget::IPodScrobbleInfoWidget( const QList<Track>& tracks, QWid
 
             int playCount = track.extra( "playCount" ).toInt();
 
-            if ( playCount > 0 )
+            if ( playCount > 1 )
                 trackLayout->addWidget( new QLabel( tr( "(%1x)" ).arg( playCount ) ) );
 
             trackLayout->addStretch( 1 );

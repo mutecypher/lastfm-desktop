@@ -57,17 +57,16 @@ MetadataWindow::MetadataWindow()
 {
     setAttribute( Qt::WA_TranslucentBackground );
 
-#ifndef Q_OS_MAC
-    setWindowFlags( Qt::CustomizeWindowHint | Qt::FramelessWindowHint );
-#else
+#ifdef Q_OS_MAC
     setUnifiedTitleAndToolBarOnMac( true );
+#endif
 
     QToolBar* toolbar = addToolBar( "Options" );
     QAction* radioAction = toolbar->addAction( "Radio" );
     radioAction->setCheckable( true );
-    connect( radioAction, SIGNAL(triggered(bool)), aApp, SLOT(showRadioDrawer(bool)));
+    connect( radioAction, SIGNAL(triggered(bool)), aApp, SLOT(setRadioDrawerVisible(bool)));
     toolbar->setFloatable( false );
-#endif
+    toolbar->setMovable( false );
     
     setCentralWidget(new QWidget);
 
@@ -75,12 +74,12 @@ MetadataWindow::MetadataWindow()
     layout->setSpacing( 0 );
     layout->setContentsMargins( 0, 0, 0, 0 );
 
-#ifndef Q_OS_MAC
-    ui.titleBar = new TitleBar( this );
-    ui.titleBar->setObjectName( "titleBar" );
-    connect( ui.titleBar, SIGNAL( closeClicked() ), SLOT( close() ) );
-    addDragHandleWidget( ui.titleBar );
-#endif
+//#ifndef Q_OS_MAC
+//    ui.titleBar = new TitleBar( this );
+//    ui.titleBar->setObjectName( "titleBar" );
+//    connect( ui.titleBar, SIGNAL( closeClicked() ), SLOT( close() ) );
+//    addDragHandleWidget( ui.titleBar );
+//#endif
 
     ui.splitter = new QSplitter( Qt::Vertical, this );
 
@@ -138,9 +137,9 @@ MetadataWindow::MetadataWindow()
     //here. StyleSheets see very flaky to me. :s
     aApp->refreshStyleSheet();
 
-#ifndef Q_OS_MAC
-    layout->addWidget( ui.titleBar, 1 );
-#endif
+//#ifndef Q_OS_MAC
+//    layout->addWidget( ui.titleBar, 1 );
+//#endif
     layout->addWidget( ui.splitter, 1 );
 
     delete ui.tracks->layout();
@@ -179,6 +178,12 @@ MetadataWindow::MetadataWindow()
     onItemClicked( ui.nowPlaying );
 
     finishUi();
+}
+
+void
+MetadataWindow::closeEvent( QCloseEvent* /*event*/ )
+{
+    aApp->hideRadioDrawer();
 }
 
 void

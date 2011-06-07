@@ -2,6 +2,7 @@
 
 #include "Drawer.h"
 #include <QDebug>
+#include <QMainWindow>
 
 
 Drawer::Drawer( QWidget* parent )
@@ -30,7 +31,7 @@ Drawer::onDockLocationChanged( Qt::DockWidgetArea area ) {
     if( area == Qt::RightDockWidgetArea ) {
         m_timeLine->setFrameRange( parentWidget()->frameGeometry().left(), parentWidget()->frameGeometry().right());
     } else {
-        m_timeLine->setFrameRange( parentWidget()->frameGeometry().left(), parentWidget()->frameGeometry().left() - parentWidget()->frameGeometry().right());
+        m_timeLine->setFrameRange( parentWidget()->frameGeometry().left(), parentWidget()->frameGeometry().left() - width());
     }
 }
 
@@ -45,8 +46,12 @@ Drawer::eventFilter( QObject* obj, QEvent* event )
             resize( parent->size());
             move( parent->geometry().topLeft());
         } else {
-            move( QPoint( parent->frameGeometry().right(), parent->geometry().y()));
+            if( m_dockWidgetArea == Qt::RightDockWidgetArea )
+                move( QPoint( parent->frameGeometry().right(), parent->geometry().y()));
+            else
+                move( QPoint( parent->frameGeometry().left() - width(), parent->geometry().y()));
             resize( width(), parent->size().height());
+
         }
 //        m_timeLine->setFrameRange( parentWidget()->frameGeometry().left(), parentWidget()->frameGeometry().right());
     }

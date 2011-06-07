@@ -20,7 +20,7 @@
 #include "PlayableItemWidget.h"
 #include <QLayout>
 #include <QLabel>
-#include "Services/RadioService.h"
+#include "../Services/RadioService.h"
 
 
 PlayableItemWidget::PlayableItemWidget(QString stationTitle, const RadioStation& rs)

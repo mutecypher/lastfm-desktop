@@ -25,8 +25,8 @@
 
 #include "StatusBar.h"
 
-#include "Services/ScrobbleService.h"
-#include "MediaDevices/DeviceScrobbler.h"
+#include "../Services/ScrobbleService.h"
+#include "../MediaDevices/DeviceScrobbler.h"
 #include "../Application.h"
 
 StatusBar::StatusBar( QWidget* parent )

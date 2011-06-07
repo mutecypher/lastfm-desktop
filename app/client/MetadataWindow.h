@@ -73,6 +73,7 @@ private:
     void setCurrentWidget( QWidget* );
     void addWinThumbBarButtons( QList<QAction*>& );
     void addNowPlayingToActivityList();
+    void closeEvent( QCloseEvent* event );
 
 private:
     Track m_currentTrack;

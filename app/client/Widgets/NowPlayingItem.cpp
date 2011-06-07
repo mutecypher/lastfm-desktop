@@ -35,8 +35,8 @@
 
 #include "../Application.h"
 #include "../ScrobbleInfoFetcher.h"
-#include "Services/RadioService.h"
-#include "Services/ScrobbleService.h"
+#include "../Services/RadioService.h"
+#include "../Services/ScrobbleService.h"
 
 #include "WelcomeWidget.h"
 #include "ScrobbleInfoWidget.h"

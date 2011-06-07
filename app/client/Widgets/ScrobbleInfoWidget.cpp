@@ -37,7 +37,7 @@
 #include <lastfm/ws.h>
 #include "../Application.h"
 #include "../ScrobbleInfoFetcher.h"
-#include "Services/ScrobbleService.h"
+#include "../Services/ScrobbleService.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/DataListWidget.h"

@@ -8,7 +8,7 @@
 #include <lastfm/Tasteometer>
 
 #include "../Application.h"
-#include "Services/RadioService.h"
+#include "../Services/RadioService.h"
 #include "../FriendsSortFilterProxyModel.h"
 #include "../StationListModel.h"
 #include "../Application.h"

@@ -199,6 +199,9 @@ TrackItem::onScrobbleStatusChanged()
 
     switch ( m_track.scrobbleError() )
     {
+    case Track::None:
+        // don't do anything
+        break;
     case Track::FilteredArtistName:
         setToolTip( tr("Artist name did not pass filters") );
         break;
@@ -218,6 +221,9 @@ TrackItem::onScrobbleStatusChanged()
         setToolTip( tr("Stream auth was invalid") );
         break;
     default:
+        // if it was none of the above errors (scrobble filters etc)
+        // it was an error with the scrobble submission as a whole (malformed request etc)
+        setToolTip( m_track.scrobbleErrorText() );
         break;
     }
 

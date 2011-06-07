@@ -38,7 +38,7 @@ public:
     ~ScrobbleSetupDialog();
 
 signals:
-    void clicked( IpodDevice::Scrobble, const QString&, const QString&, const QStringList& );
+    void clicked( bool scrobble, bool alwaysAsk, const QString&, const QString&, const QStringList& );
 
 private slots:
     void onClicked( class QAbstractButton* button );

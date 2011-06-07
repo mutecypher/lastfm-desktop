@@ -31,7 +31,7 @@
 #include "lib/unicorn/layouts/AnimatedListLayout.h"
 #include "lib/unicorn/widgets/DataBox.h"
 
-#include "Services/ScrobbleService.h"
+#include "../Services/ScrobbleService.h"
 #include "ActivityListWidget.h"
 #include "TrackItem.h"
 #include "IPodScrobbleItem.h"

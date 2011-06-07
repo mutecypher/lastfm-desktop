@@ -30,7 +30,7 @@ private slots:
 
 private:
     QTimeLine* m_timeLine;
-    QDockWidgetArea m_dockWidgetArea;
+    Qt::DockWidgetArea m_dockWidgetArea;
 
 #endif
 };

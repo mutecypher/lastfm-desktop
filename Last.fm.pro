@@ -7,7 +7,6 @@ SUBDIRS = lib/unicorn \
           #app/boffin
 
 #mac:SUBDIRS += app/mac-bundle
-win32:SUBDIRS += app/win-plugin-installer
 
 linux*:SUBDIRS -= app/twiddly
 #mac:SUBDIRS += app/audioscrobbler/PrefPane

@@ -140,7 +140,8 @@ namespace audioscrobbler
         void onTrackGotInfo(const XmlQuery& );
         void parseArguments( const QStringList& args );
 
-        void showRadioDrawer( bool show );
+        void setRadioDrawerVisible( bool visible );
+        void hideRadioDrawer();
 
     protected:
         virtual void initiateLogin()throw( StubbornUserException );

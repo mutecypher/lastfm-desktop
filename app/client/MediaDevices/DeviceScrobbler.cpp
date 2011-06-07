@@ -54,18 +54,15 @@ DeviceScrobbler::checkCachedIPodScrobbles()
                 foreach ( QFileInfo fileInfo, list )
                     iPodFiles << fileInfo.filePath();
 
-                IpodDevice::Scrobble scrobble = ipod->scrobble();
-
-                if ( scrobble == IpodDevice::NotNow
-                     || scrobble == IpodDevice::Unknown )
+                if ( ipod->alwaysAsk() )
                 {
                     // The user isn't sure if they want to scrobble this iPod yet so ask them
                     ScrobbleSetupDialog* scrobbleSetup = new ScrobbleSetupDialog( deviceId, deviceName, iPodFiles );
-                    connect( scrobbleSetup, SIGNAL(clicked(IpodDevice::Scrobble,QString,QString,QStringList)), SLOT(onScrobbleSetupClicked(IpodDevice::Scrobble,QString,QString,QStringList)));
+                    connect( scrobbleSetup, SIGNAL(clicked(bool,bool,QString,QString,QStringList)), SLOT(onScrobbleSetupClicked(bool,bool,QString,QString,QStringList)));
                     scrobbleSetup->show();
                 }
                 else
-                    onScrobbleSetupClicked( scrobble, deviceId, deviceName, iPodFiles );
+                    onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), deviceId, deviceName, iPodFiles );
             }
         }
 
@@ -169,14 +166,14 @@ DeviceScrobbler::twiddled( QStringList arguments )
         if ( associatedUser.name() == lastfm::ws::Username )
         {
             IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
-            IpodDevice::Scrobble iPodScrobble = ipod->scrobble();
-            delete ipod;
 
-            if ( iPodScrobble == IpodDevice::NotNow
-                 || iPodScrobble == IpodDevice::Unknown)
+
+            if ( ipod->alwaysAsk() )
                 showSetup = true;
             else
-                onScrobbleSetupClicked( iPodScrobble, deviceId, deviceName, QStringList( iPodPath ) );
+                onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), deviceId, deviceName, QStringList( iPodPath ) );
+
+            delete ipod;
         }
         else
         {
@@ -193,14 +190,14 @@ DeviceScrobbler::twiddled( QStringList arguments )
     {
         // The device has not been associated yet
         ScrobbleSetupDialog* scrobbleSetup = new ScrobbleSetupDialog( deviceId, deviceName, QStringList( iPodPath ) );
-        connect( scrobbleSetup, SIGNAL(clicked(IpodDevice::Scrobble,QString,QString,QStringList)), SLOT(onScrobbleSetupClicked(IpodDevice::Scrobble,QString,QString,QStringList)));
+        connect( scrobbleSetup, SIGNAL(clicked(bool,bool,QString,QString,QStringList)), SLOT(onScrobbleSetupClicked(bool,bool,QString,QString,QStringList)));
         scrobbleSetup->show();
     }
 }
 
 
 void
-DeviceScrobbler::onScrobbleSetupClicked( IpodDevice::Scrobble result, QString deviceId, QString deviceName, QStringList iPodFiles )
+DeviceScrobbler::onScrobbleSetupClicked( bool scrobble, bool alwaysAsk, QString deviceId, QString deviceName, QStringList iPodFiles )
 {
     // We need to store the result so we can check it next time
     IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
@@ -208,7 +205,7 @@ DeviceScrobbler::onScrobbleSetupClicked( IpodDevice::Scrobble result, QString de
     if ( !ipod->isDeviceKnown() )
         ipod->associateDevice( lastfm::ws::Username );
 
-    if ( result == IpodDevice::Yes )
+    if ( scrobble )
     {
         foreach ( QString iPodFile, iPodFiles )
             scrobbleIpodFile( iPodFile );
@@ -219,7 +216,8 @@ DeviceScrobbler::onScrobbleSetupClicked( IpodDevice::Scrobble result, QString de
             QFile::remove( iPodFile );
     }
 
-    ipod->setScrobble( result );
+    ipod->setScrobble( scrobble );
+    ipod->setAlwaysAsk( alwaysAsk );
 
     delete ipod;
 }

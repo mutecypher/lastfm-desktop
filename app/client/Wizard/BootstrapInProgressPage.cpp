@@ -1,5 +1,5 @@
 #include "BootstrapInProgressPage.h"
-#include "Services/ScrobbleService.h"
+#include "../Services/ScrobbleService.h"
 #include "../Bootstrapper/iTunesBootstrapper.h"
 #include "../Bootstrapper/PluginBootstrapper.h"
 #include "../Application.h"

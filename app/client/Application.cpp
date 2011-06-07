@@ -306,7 +306,7 @@ Application::init()
     connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackSpooled(Track,Track)));
 
     // connect the radio up so it scrobbles
-#warning This code bypasses the mediator - FIXME
+#pragma message ( "This code bypasses the mediator - FIXME" )
     connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), &ScrobbleService::instance(), SLOT(onTrackStarted(Track)));
     connect( &RadioService::instance(), SIGNAL(paused()), &ScrobbleService::instance(), SLOT(onPaused()));
     connect( &RadioService::instance(), SIGNAL(resumed()), &ScrobbleService::instance(), SLOT(onResumed()));
@@ -461,7 +461,7 @@ Application::onVisitProfileTriggered()
 
 
 void
-Application::showRadioDrawer( bool show )
+Application::setRadioDrawerVisible( bool show )
 {
     if ( show ) {
         int width = m_drawer->width();
@@ -473,10 +473,17 @@ Application::showRadioDrawer( bool show )
         }
         m_drawer->show();
     } else {
-        m_mw->removeDockWidget( m_drawer );
         m_drawer->close();
     }
 }
+
+
+void
+Application::hideRadioDrawer()
+{
+    m_drawer->hide();
+}
+
 
 void
 Application::onFaqTriggered()

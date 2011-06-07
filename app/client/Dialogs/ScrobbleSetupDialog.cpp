@@ -47,16 +47,12 @@ ScrobbleSetupDialog::~ScrobbleSetupDialog()
 void
 ScrobbleSetupDialog::onClicked( QAbstractButton* button )
 {
-    IpodDevice::Scrobble buttonPressed = IpodDevice::Yes;
-
     QDialogButtonBox::ButtonRole buttonRole = ui->buttonBox->buttonRole( button );
 
-    if ( buttonRole == QDialogButtonBox::RejectRole )
-        buttonPressed = IpodDevice::NotNow;
-    else if ( buttonRole == QDialogButtonBox::NoRole )
-        buttonPressed = IpodDevice::Never;
+    bool scrobble = buttonRole == QDialogButtonBox::YesRole;
+    bool alwaysAsk = !ui->neverAskAgain->isChecked();
 
-    emit clicked( buttonPressed, m_deviceId, m_deviceName, m_iPodFiles );
+    emit clicked( scrobble, alwaysAsk, m_deviceId, m_deviceName, m_iPodFiles );
 
     done( 0 );
 }
