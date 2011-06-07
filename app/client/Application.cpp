@@ -57,7 +57,7 @@
 #include <QMenu>
 #include <QDebug>
 
-#ifdef Q_OS_WIN32g
+#ifdef Q_OS_WIN32
 #include "windows.h"
 #endif
 
@@ -72,6 +72,7 @@ using audioscrobbler::Application;
 #elif defined( Q_WS_WIN )
     #define AS_TRAY_ICON ":22x22.png"
 #elif defined( Q_WS_MAC )
+    #include "Services/ITunesPluginInstaller/ITunesPluginInstaller.h"
     #define AS_TRAY_ICON ":systray_icon_rest_mac.png"
 #endif
 
@@ -117,6 +118,13 @@ Application::init()
 {
     // Initialise the unicorn base class first!
     unicorn::Application::init();
+
+#ifdef Q_WS_MAC
+    {
+        ITunesPluginInstaller installer;
+        installer.install();
+    }
+#endif
 
     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
     diskCache->setCacheDirectory( lastfm::dir::cache().path() );
@@ -605,6 +613,7 @@ Application::onMessageReceived( const QStringList& message )
         SetForegroundWindow(m_mw->winId());
 #endif
     }
+
 }
 
 
