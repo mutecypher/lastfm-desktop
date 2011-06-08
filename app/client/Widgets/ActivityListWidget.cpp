@@ -263,6 +263,7 @@ ActivityListWidget::onFoundIPodScrobbles( const QList<lastfm::Track>& tracks )
     item->setOdd( m_rowNum++ % 2);
 
     connect( item, SIGNAL(clicked(ActivityListItem*)), SIGNAL(itemClicked(ActivityListItem*)));
+    connect( item, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
 
     m_listLayout->addWidget( item );
 
