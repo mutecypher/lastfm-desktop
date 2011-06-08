@@ -30,46 +30,6 @@ ScrobbleInfoWidget {
     border-bottom: 1px solid #1c1c1c;
 }
 
-TitleBar {
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 200, 200, 200, 255 ), stop:1 rgba( 145, 145, 145, 255 ));
-    border: 1px solid rgba(146, 146, 146, 153);
-    border-bottom: none;
-
-    min-height: 22px;
-    max-height: 22px;
-}
-
-TitleBar QLabel {
-    font-weight: bold;
-    font-size: 11px;
-    color: black;
-    min-height: 20px;
-    max-height: 20px;
-    margin-top: -5px;
-}
-
-TitleBar QPushButton, 
-TitleBar QPushButton:pressed {
-    margin: 0px;
-    padding: 0px;
-    border: none;
-    color: transparent;
-    background-color: transparent;
-    background-clip: margin;
-    background-origin: content;
-    background-image: url(:/close.png);
-    background-position: center;
-    background-repeat: no-repeat;
-    margin-top: -2px;
-    min-width: 20px;
-    min-height:20px;
-    max-height: 20px;
-    max-width: 20px;
-}
-
 WelcomeWidget {
 	padding: 10px 10px 10px 10px;
 }
@@ -150,18 +110,77 @@ QScrollArea > QWidget,
 
 ScrobbleInfoWidget QPushButton,
 RadioWidget QPushButton {
-    color: transparent;
     background-color: transparent;
-    background-position: center;
+    color: transparent;
+    background-position: top;
     background-repeat: no-repeat;
     border: none;
-    margin: 5px 15px;
+    margin: 5px 5px;
     padding: 0px;
     height: 25px;
 	min-height: 5px;
     width: 40;
 }
 
+RadioWidget QPushButton#library {
+    color: black;
+    background-image: url(":/tune_library.png");
+    margin-top: 0px;
+    padding-top:50px;
+    height: 60px;
+}
+
+RadioWidget QPushButton#library:pressed {
+    background-image: url(":/tune_library_onpress.png");
+    margin-top: 0px;
+    height: 69px;
+}
+
+RadioWidget QPushButton#library:hover {
+    background-image: url(":/tune_library_onhover.png");
+    margin-top: 0px;
+    height: 69px;
+}
+
+RadioWidget QPushButton#mix {
+    color: black;
+    background-image: url(":/tune_mix.png");
+    margin-top: 0px;
+    padding-top:50px;
+    height: 60px;
+}
+
+RadioWidget QPushButton#mix:pressed {
+    background-image: url(":/tune_mix_onpress.png");
+    margin-top: 0px;
+    height: 69px;
+}
+
+RadioWidget QPushButton#mix:hover {
+    background-image: url(":/tune_mix_onhover.png");
+    margin-top: 0px;
+    height: 69px;
+}
+
+RadioWidget QPushButton#recommended {
+    color: black;
+    background-image: url(":/tune_recs.png");
+    margin-top: 0px;
+    padding-top:50px;
+    height: 60px;
+}
+
+RadioWidget QPushButton#recommended:pressed {
+    background-image: url(":/tune_recs_onpress.png");
+    margin-top: 0px;
+    height: 69px;
+}
+
+RadioWidget QPushButton#recommended:hover {
+    background-image: url(":/tune_recs_onhover.png");
+    margin-top: 0px;
+    height: 69px;
+}
 ScrobbleInfoWidget QListView,
 ProfileWidget QTreeView  {
     background-color: transparent;
@@ -440,7 +459,7 @@ Phonon--VolumeSlider QSlider::handle:horizontal {
 	background-position: center;
     background-repeat: no-repeat;
 	height: 16px;
-    width: 16px;
+    /*width: 16px;*/
 	margin: 0px 0px;
 	border: none;
 }
@@ -459,11 +478,12 @@ Phonon--VolumeSlider  QSlider::handle:horizontal:pressed {
     border: none;
     margin: 0px 0px;
 	min-width: 0px;
-	padding: 0px;
+	padding: 0px 5px;
 }
 
 PlaybackControlsWidget {
 	background-color: black;
+    border-bottom: 1px solid #555;
 }
 
 #playbackControls QPushButton {
@@ -634,7 +654,7 @@ background-image: url(:/vol-right.png);
 }
 
 QProgressBar {
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(91, 105, 128, 191), stop:1 rgba(75, 87, 107, 191));;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(91, 105, 128, 191), stop:1 rgba(75, 87, 107, 191));
 	border: none;
 	border-radius: 0px;
 	height: 1px;
