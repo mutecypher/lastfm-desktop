@@ -43,7 +43,7 @@ IPodScrobbleInfoWidget::IPodScrobbleInfoWidget( const QList<Track>& tracks, QWid
         v1->addWidget( ui.title = new QLabel( format.arg( QString::number(tracks.count()), tracks[0].extra("deviceId") ) ) );
         ui.title->setObjectName( "title" );
 
-        foreach ( const Track& track, tracks )
+        for ( int i = 0 ; i < tracks.count() ; ++i )
         {
             // Create a row in the info widget for
             // each track that was scrobbled
@@ -53,18 +53,21 @@ IPodScrobbleInfoWidget::IPodScrobbleInfoWidget( const QList<Track>& tracks, QWid
             QHBoxLayout* trackLayout = new QHBoxLayout( row );
 
             // add things to the layout
-            trackLayout->addWidget( new QLabel( track.toString() ) );
+            trackLayout->addWidget( new QLabel( tracks[i].toString() ) );
 
-            int playCount = track.extra( "playCount" ).toInt();
+            int playCount = tracks[i].extra( "playCount" ).toInt();
 
             if ( playCount > 1 )
                 trackLayout->addWidget( new QLabel( tr( "(%1x)" ).arg( playCount ) ) );
 
             trackLayout->addStretch( 1 );
 
-            trackLayout->addWidget( new QLabel( track.timestamp().toString( "d MMM h:mmap" ) ) );
+            trackLayout->addWidget( new QLabel( tracks[i].timestamp().toString( "d MMM h:mmap" ) ) );
 
             v1->addWidget( row );
+
+            // skip repeats of the same track
+            i += playCount - 1;
         }
 
         v1->addStretch( 1 );

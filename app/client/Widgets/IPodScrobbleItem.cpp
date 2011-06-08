@@ -26,6 +26,8 @@
 #include "IPodScrobbleInfoWidget.h"
 #include "IPodScrobbleItem.h"
 
+#include "ui_ActivityListItem.h"
+
 
 IPodScrobbleItem::IPodScrobbleItem( const QList<Track>& tracks )
     :ActivityListItem(), m_info( 0 ), m_tracks( tracks )
@@ -40,10 +42,12 @@ void IPodScrobbleItem::finishUi()
 {
     // set the text for the row
     QString format = (m_tracks.count() == 1 ?
-        tr("iPod '%2' (%1 track)"):
-        tr("iPod '%2' (%1 tracks)"));
+        tr("iPod scrobble (%1 track)"):
+        tr("iPod scrobble (%1 tracks)"));
 
-    setText( format.arg( QString::number(m_tracks.count()), m_tracks[0].extra("deviceId") ) );
+    setText( format.arg( QString::number(m_tracks.count()) ) );
+
+    ui->player->setText( tr( "iPod" ) );
 
     updateTimestamp();
 
