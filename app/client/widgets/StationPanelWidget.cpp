@@ -78,7 +78,7 @@ StationPanelWidget::refresh()
         ui->friendsList->addStation( yourLibrary, "You" );
         ui->friendsList->setTasteometerCompareScore( User().name(), 1 );
 
-        connect( User().getRecentStations( 7 ), SIGNAL(finished()), SLOT(onGotRecentStations()) );
+        connect( User().getRecentStations( 20 ), SIGNAL(finished()), SLOT(onGotRecentStations()) );
         connect( User().getFriends( true, 50 ), SIGNAL(finished()), SLOT(onGotFriends()));
         connect( User().getNeighbours( 50 ), SIGNAL(finished()), SLOT(onGotNeighbours()));
         connect( User().getTopArtists( "3month", 50 ), SIGNAL(finished()), SLOT(onGotArtists()));
