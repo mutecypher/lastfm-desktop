@@ -6,8 +6,9 @@
 
 
 Drawer::Drawer( QWidget* parent )
-    : QDockWidget( parent, Qt::Drawer | Qt::FramelessWindowHint )
-    {
+       : QDockWidget( parent, Qt::Drawer | Qt::FramelessWindowHint )
+{
+    setMinimumWidth( 450 );
     hide();
 #ifdef FAKE_DRAWER
     connect( this, SIGNAL( dockLocationChanged(Qt::DockWidgetArea)),
@@ -20,9 +21,7 @@ Drawer::Drawer( QWidget* parent )
     parent->installEventFilter( this );
     eventFilter( parent, 0 );
 #endif
-    }
-
-
+}
 
 #ifdef FAKE_DRAWER
 void 
