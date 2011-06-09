@@ -30,46 +30,6 @@ ScrobbleInfoWidget {
     border-bottom: 1px solid #1c1c1c;
 }
 
-TitleBar {
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 200, 200, 200, 255 ), stop:1 rgba( 145, 145, 145, 255 ));
-    border: 1px solid rgba(146, 146, 146, 153);
-    border-bottom: none;
-
-    min-height: 22px;
-    max-height: 22px;
-}
-
-TitleBar QLabel {
-    font-weight: bold;
-    font-size: 11px;
-    color: black;
-    min-height: 20px;
-    max-height: 20px;
-    margin-top: -5px;
-}
-
-TitleBar QPushButton, 
-TitleBar QPushButton:pressed {
-    margin: 0px;
-    padding: 0px;
-    border: none;
-    color: transparent;
-    background-color: transparent;
-    background-clip: margin;
-    background-origin: content;
-    background-image: url(:/close.png);
-    background-position: center;
-    background-repeat: no-repeat;
-    margin-top: -2px;
-    min-width: 20px;
-    min-height:20px;
-    max-height: 20px;
-    max-width: 20px;
-}
-
 WelcomeWidget {
 	padding: 10px 10px 10px 10px;
 }
@@ -735,6 +695,22 @@ QRadioButton::indicator:checked:pressed {
     border-radius: 8px;
     padding: 3px 5px;
 }
+
+QToolBar {
+     background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 200, 200, 200, 255 ), stop:1 rgba( 145, 145, 145, 255 ));
+     spacing: 3px; /* spacing between items in the tool bar */
+ }
+
+QStatusBar {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 200, 200, 200, 255 ), stop:1 rgba( 145, 145, 145, 255 ));
+	border-top: 1px solid black;
+ }
+/*
+ QStatusBar::item {
+    border: 1px solid red;
+    border-radius: 3px;
+ }
+*/
 
 /*
  * The following css will affect rich text in QLabel / QTextBrowser etc

@@ -105,7 +105,9 @@ MetadataWindow::MetadataWindow()
 
     ui.statusBar = new StatusBar( this );
     ui.statusBar->setObjectName( "StatusBar" );
-
+#ifndef Q_OS_MAC
+    ui.statusBar->setSizeGripEnabled( false );
+#endif // Q_OS_MAC
 
     setWindowTitle( aApp->applicationName() );
     setUnifiedTitleAndToolBarOnMac( true );
