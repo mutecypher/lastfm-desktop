@@ -67,6 +67,8 @@ private slots:
     void onSessionChanged( unicorn::Session* );
 
     void onItemClicked( class ActivityListItem* clickedItem );
+    void setRadioDrawerVisible(bool);
+    void hideRadioDrawer();
     
 private:
     void newTrack( const Track& track );
@@ -78,6 +80,7 @@ private:
 private:
     Track m_currentTrack;
     class ActivityListItem* m_currentActivity;
+    class Drawer* m_drawer;
     QList<QAction*> m_buttons;
 };
 

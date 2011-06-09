@@ -6,7 +6,8 @@
 
 
 Drawer::Drawer( QWidget* parent )
-       : QDockWidget( parent, Qt::Drawer | Qt::FramelessWindowHint )
+       : QDockWidget( parent, Qt::Drawer | Qt::FramelessWindowHint ),
+         m_vis( false )
 {
     setMinimumWidth( 450 );
     hide();
@@ -21,6 +22,25 @@ Drawer::Drawer( QWidget* parent )
     parent->installEventFilter( this );
     eventFilter( parent, 0 );
 #endif
+}
+
+
+void 
+Drawer::moveEvent( QMoveEvent* event ) {
+    int diff = (event->pos().x() + width()) - 
+        (parentWidget()->frameGeometry().x() + parentWidget()->frameGeometry().width());
+
+    if( diff <= (frameGeometry().width() / 2.0f ) ) {
+        if( m_vis ) {
+            emit visibilityChanged( false );
+            m_vis = false;
+        }
+    } else {
+        if( !m_vis ) {
+            emit visibilityChanged( true );
+            m_vis = true;
+        }
+    }
 }
 
 #ifdef FAKE_DRAWER
