@@ -489,6 +489,12 @@ PlaybackControlsWidget {
 	max-width: 42px;
 }
 
+#playbackControls QLabel#title {
+    padding-top: 5px;
+    font-weight: bold;
+    color: white;
+}
+
 #playbackControls QPushButton#ban {
     background-image: url(:/ban-rest.png);
 }
