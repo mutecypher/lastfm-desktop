@@ -260,10 +260,6 @@ ActivityListWidget {
 	min-width: 40px;
 }
 
-ActivityListWidget QScrollBar {
-    min-height: 0px;
-}
-
 ActivityListItem {
 	min-width: 40px;
 	min-height: 40px;
@@ -501,6 +497,12 @@ PlaybackControlsWidget {
 	min-width: 42px;
 	max-height: 42px;
 	max-width: 42px;
+}
+
+#playbackControls QLabel#title {
+    padding-top: 5px;
+    font-weight: bold;
+    color: white;
 }
 
 #playbackControls QPushButton#ban {
