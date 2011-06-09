@@ -14,6 +14,10 @@
 
 class Drawer : public QDockWidget {
 Q_OBJECT
+
+    void moveEvent( QMoveEvent* event );
+    bool m_vis;
+    
 public:
     Drawer( QWidget* parent );
 

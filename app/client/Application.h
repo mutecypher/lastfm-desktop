@@ -71,8 +71,6 @@ namespace audioscrobbler
         // we delete these so QPointers
         QPointer<QSystemTrayIcon> m_tray;
         QPointer<MetadataWindow> m_mw;
-        QPointer<Drawer> m_drawer;
-        QPointer<RadioWidget> m_radioWidget;
 
         Track m_currentTrack;
         Track m_trackToScrobble;
@@ -139,9 +137,6 @@ namespace audioscrobbler
 
         void onTrackGotInfo(const XmlQuery& );
         void parseArguments( const QStringList& args );
-
-        void setRadioDrawerVisible( bool visible );
-        void hideRadioDrawer();
 
     protected:
         virtual void initiateLogin()throw( StubbornUserException );

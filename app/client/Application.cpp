@@ -28,8 +28,6 @@
 #include <QTcpSocket>
 
 #include "Widgets/PointyArrow.h"
-#include "Widgets/RadioWidget.h"
-#include "Widgets/Drawer.h"
 #include "Dialogs/SettingsDialog.h"
 #include "Widgets/TrackItem.h"
 
@@ -266,8 +264,6 @@ Application::init()
     m_mw->addWinThumbBarButton( m_play_action );
     m_mw->addWinThumbBarButton( m_skip_action );
 
-    m_drawer = new Drawer( m_mw );
-    m_drawer->setWidget( m_radioWidget = new RadioWidget );
 
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
 #ifndef Q_OS_LINUX
@@ -458,32 +454,6 @@ Application::onVisitProfileTriggered()
 {
     QDesktopServices::openUrl( User().www() );
 }
-
-
-void
-Application::setRadioDrawerVisible( bool show )
-{
-    if ( show ) {
-        int width = m_drawer->width();
-        int screenRight = desktop()->screenGeometry( m_mw ).right();
-        if( ( m_mw->geometry().right() + width ) > screenRight ) {
-            m_mw->addDockWidget( Qt::LeftDockWidgetArea, m_drawer );
-        } else {
-            m_mw->addDockWidget( Qt::RightDockWidgetArea, m_drawer );
-        }
-        m_drawer->show();
-    } else {
-        m_drawer->close();
-    }
-}
-
-
-void
-Application::hideRadioDrawer()
-{
-    m_drawer->hide();
-}
-
 
 void
 Application::onFaqTriggered()

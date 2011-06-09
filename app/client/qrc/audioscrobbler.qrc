@@ -103,5 +103,18 @@
 		<file alias="taskbar-info.png" >taskbar-info-16x16.png</file>
 		<file alias="taskbar-play.png" >taskbar-play-16x16.png</file>
 		<file alias="taskbar-skip.png" >taskbar-skip-16x16.png</file>
+
+        <file alias="tune_library.png" >tune_library_REST.png</file>
+		<file alias="tune_library_onhover.png" >tune_library_HOVER.png</file>
+		<file alias="tune_library_onpress.png" >tune_library_PRESS.png</file>
+
+        <file alias="tune_mix.png" >tune_mix_REST.png</file>
+		<file alias="tune_mix_onhover.png" >tune_mix_HOVER.png</file>
+		<file alias="tune_mix_onpress.png" >tune_mix_PRESS.png</file>
+
+        <file alias="tune_recs.png" >tune_recs_REST.png</file>
+		<file alias="tune_recs_onhover.png" >tune_recs_HOVER.png</file>
+		<file alias="tune_recs_onpress.png" >tune_recs_PRESS.png</file>
+
     </qresource>
 </RCC>

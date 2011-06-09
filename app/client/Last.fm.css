@@ -110,18 +110,77 @@ QScrollArea > QWidget,
 
 ScrobbleInfoWidget QPushButton,
 RadioWidget QPushButton {
-    color: transparent;
     background-color: transparent;
-    background-position: center;
+    color: transparent;
+    background-position: top;
     background-repeat: no-repeat;
     border: none;
-    margin: 5px 15px;
+    margin: 5px 5px;
     padding: 0px;
     height: 25px;
 	min-height: 5px;
     width: 40;
 }
 
+RadioWidget QPushButton#library {
+    color: black;
+    background-image: url(":/tune_library.png");
+    margin-top: 0px;
+    padding-top:50px;
+    height: 60px;
+}
+
+RadioWidget QPushButton#library:pressed {
+    background-image: url(":/tune_library_onpress.png");
+    margin-top: 0px;
+    height: 69px;
+}
+
+RadioWidget QPushButton#library:hover {
+    background-image: url(":/tune_library_onhover.png");
+    margin-top: 0px;
+    height: 69px;
+}
+
+RadioWidget QPushButton#mix {
+    color: black;
+    background-image: url(":/tune_mix.png");
+    margin-top: 0px;
+    padding-top:50px;
+    height: 60px;
+}
+
+RadioWidget QPushButton#mix:pressed {
+    background-image: url(":/tune_mix_onpress.png");
+    margin-top: 0px;
+    height: 69px;
+}
+
+RadioWidget QPushButton#mix:hover {
+    background-image: url(":/tune_mix_onhover.png");
+    margin-top: 0px;
+    height: 69px;
+}
+
+RadioWidget QPushButton#recommended {
+    color: black;
+    background-image: url(":/tune_recs.png");
+    margin-top: 0px;
+    padding-top:50px;
+    height: 60px;
+}
+
+RadioWidget QPushButton#recommended:pressed {
+    background-image: url(":/tune_recs_onpress.png");
+    margin-top: 0px;
+    height: 69px;
+}
+
+RadioWidget QPushButton#recommended:hover {
+    background-image: url(":/tune_recs_onhover.png");
+    margin-top: 0px;
+    height: 69px;
+}
 ScrobbleInfoWidget QListView,
 ProfileWidget QTreeView  {
     background-color: transparent;
@@ -400,7 +459,7 @@ Phonon--VolumeSlider QSlider::handle:horizontal {
 	background-position: center;
     background-repeat: no-repeat;
 	height: 16px;
-    width: 16px;
+    /*width: 16px;*/
 	margin: 0px 0px;
 	border: none;
 }
@@ -419,11 +478,12 @@ Phonon--VolumeSlider  QSlider::handle:horizontal:pressed {
     border: none;
     margin: 0px 0px;
 	min-width: 0px;
-	padding: 0px;
+	padding: 0px 5px;
 }
 
 PlaybackControlsWidget {
 	background-color: black;
+    border-bottom: 1px solid #555;
 }
 
 #playbackControls QPushButton {
@@ -594,7 +654,7 @@ background-image: url(:/vol-right.png);
 }
 
 QProgressBar {
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(91, 105, 128, 191), stop:1 rgba(75, 87, 107, 191));;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(91, 105, 128, 191), stop:1 rgba(75, 87, 107, 191));
 	border: none;
 	border-radius: 0px;
 	height: 1px;

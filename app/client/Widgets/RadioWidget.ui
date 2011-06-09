@@ -84,30 +84,30 @@
      <property name="spacing">
       <number>0</number>
      </property>
-     <property name="margin">
-      <number>0</number>
-     </property>
      <item>
       <widget class="QWidget" name="widget" native="true">
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
          <widget class="QPushButton" name="library">
           <property name="text">
-           <string>Your Library Radio</string>
+           <string>Your
+Library Radio</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="mix">
           <property name="text">
-           <string>Your Mix Radio</string>
+           <string>Your
+Mix Radio</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="recommended">
           <property name="text">
-           <string>Your Recommended Radio</string>
+           <string>Your
+Recommended Radio</string>
           </property>
          </widget>
         </item>
