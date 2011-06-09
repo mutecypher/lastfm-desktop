@@ -116,5 +116,36 @@
 		<file alias="tune_recs_onhover.png" >tune_recs_HOVER.png</file>
 		<file alias="tune_recs_onpress.png" >tune_recs_PRESS.png</file>
 
+		<file>activity_buy_HOVER.png</file>
+		<file>activity_buy_PRESS.png</file>
+		<file>activity_buy_REST.png</file>
+		<file>activity_love_OFF_HOVER.png</file>
+		<file>activity_love_OFF_PRESS.png</file>
+		<file>activity_love_OFF_REST.png</file>
+		<file>activity_love_ON_HOVER.png</file>
+		<file>activity_love_ON_PRESS.png</file>
+		<file>activity_love_ON_REST.png</file>
+		<file>activity_min_love_OFF_HOVER.png</file>
+		<file>activity_min_love_OFF_PRESS.png</file>
+		<file>activity_min_love_OFF_REST.png</file>
+		<file>activity_min_love_ON_HOVER.png</file>
+		<file>activity_min_love_ON_PRESS.png</file>
+		<file>activity_min_love_ON_REST.png</file>
+		<file>activity_min_remove_HOVER.png</file>
+		<file>activity_min_remove_PRESS.png</file>
+		<file>activity_min_remove_REST.png</file>
+		<file>activity_min_share_HOVER.png</file>
+		<file>activity_min_share_PRESS.png</file>
+		<file>activity_min_share_REST.png</file>
+		<file>activity_min_tag_HOVER.png</file>
+		<file>activity_min_tag_PRESS.png</file>
+		<file>activity_min_tag_REST.png</file>
+		<file>activity_share_HOVER.png</file>
+		<file>activity_share_PRESS.png</file>
+		<file>activity_share_REST.png</file>
+		<file>activity_tag_HOVER.png</file>
+		<file>activity_tag_PRESS.png</file>
+		<file>activity_tag_REST.png</file>
+		
     </qresource>
 </RCC>

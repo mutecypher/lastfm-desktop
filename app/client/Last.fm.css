@@ -235,6 +235,16 @@ DataBox #contents QLabel {
 #bio #header QLabel#icon { background-image: url(:/header_bio.png); }
 #similarArtists #header QLabel#icon { background-image: url(:/header_simartists.png); }
 
+QTabWidget::tab-bar {
+	left: 5px; /* move to the right by 5px */
+	qproperty-expanding: true;
+}
+
+QTabBar {
+	qproperty-expanding: true;
+}
+
+
 QTabWidget::pane {
 	border: none;
 }
@@ -763,8 +773,56 @@ QToolBar {
 
 QStatusBar {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 200, 200, 200, 255 ), stop:1 rgba( 145, 145, 145, 255 ));
-	border-top: 1px solid black;
  }
+ 
+QDockWidget {
+	background-color: red;
+	border: 1px solid black;
+}
+
+ScrobbleControls QPushButton{
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+}
+
+ScrobbleControls QPushButton#love {
+	width: 32px;
+	height: 30px;
+	background-image: url(:/activity_love_OFF_REST.png);
+}
+ScrobbleControls QPushButton#love:hover { background-image: url(:/activity_love_OFF_HOVER.png) ; }
+ScrobbleControls QPushButton#love:pressed { background-image: url(:/activity_love_OFF_PRESS.png) ; }
+ScrobbleControls QPushButton#love:checked { background-image: url(:/activity_love_ON_REST.png) ; }
+ScrobbleControls QPushButton#love:checked:hover { background-image: url(:/activity_love_ON_HOVER.png) ; }
+ScrobbleControls QPushButton#love:checked:pressed { background-image: url(:/activity_love_ON_PRESS.png) ; }
+
+ScrobbleControls QPushButton#share {
+	width: 56px;
+ 	height: 30px;
+	background-image: url(:/activity_share_REST.png);
+}
+ScrobbleControls QPushButton#share:hover { background-image: url(:/activity_share_HOVER.png) ; }
+ScrobbleControls QPushButton#share:pressed { background-image: url(:/activity_share_PRESS.png) ; }
+
+ScrobbleControls QPushButton#tag {
+	width: 31px;
+ 	height: 30px;
+	background-image: url(:/activity_tag_REST.png);
+}
+ScrobbleControls QPushButton#tag:hover { background-image: url(:/activity_tag_HOVER.png) ; }
+ScrobbleControls QPushButton#tag:press { background-image: url(:/activity_tag_PRESS.png) ; }
+
+ScrobbleControls QPushButton#buy {
+	width: 34px;
+ 	height: 30px;
+	background-image: url(:/activity_buy_REST.png);
+	}
+ScrobbleControls QPushButton#buy:hover { background-image: url(:/activity_buy_HOVER.png) ; }
+ScrobbleControls QPushButton#buy:press { background-image: url(:/activity_buy_PRESS.png) ; }
+
+ 
+ 
 /*
  QStatusBar::item {
     border: 1px solid red;
