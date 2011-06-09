@@ -46,9 +46,6 @@ public:
     QEasingCurve::Type easingCurve() const;
     void setEasingCurve( QEasingCurve::Type easingCurve );
 
-    void setScrollBar( class QScrollBar* );
-    class QScrollBar* scrollBar() const;
-
     int count() const;
     class ActivityListItem* itemAt( int index ) const;
 

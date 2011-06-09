@@ -250,10 +250,6 @@ ActivityListWidget {
 	min-width: 40px;
 }
 
-ActivityListWidget QScrollBar {
-    min-height: 0px;
-}
-
 ActivityListItem {
 	min-width: 40px;
 	min-height: 40px;

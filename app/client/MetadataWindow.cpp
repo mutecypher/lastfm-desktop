@@ -50,8 +50,6 @@
 #include <QTimer>
 #include <QMenuBar>
 #include <QSplitter>
-#include <QScrollArea>
-#include <QScrollBar>
 #include <QShortcut>
 #include <QToolBar>
 
@@ -67,6 +65,7 @@ MetadataWindow::MetadataWindow()
 #endif
 
     QToolBar* toolbar = addToolBar( "Options" );
+    addDragHandleWidget( toolbar );
     {
         QWidget* spacerWidget = new QWidget();
         spacerWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
@@ -85,13 +84,6 @@ MetadataWindow::MetadataWindow()
     layout->setSpacing( 0 );
     layout->setContentsMargins( 0, 0, 0, 0 );
 
-//#ifndef Q_OS_MAC
-//    ui.titleBar = new TitleBar( this );
-//    ui.titleBar->setObjectName( "titleBar" );
-//    connect( ui.titleBar, SIGNAL( closeClicked() ), SLOT( close() ) );
-//    addDragHandleWidget( ui.titleBar );
-//#endif
-
     ui.splitter = new QSplitter( Qt::Vertical, this );
 
     ui.playbackControls = new PlaybackControlsWidget( this );
@@ -103,10 +95,6 @@ MetadataWindow::MetadataWindow()
 
     ui.recentTracks = new ActivityListWidget( lastfm::ws::Username, this );
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
-
-    ui.scrollBar = ui.recentTracks->scrollBar();
-    ui.scrollBarContainer = new QWidget();
-    ui.scrollBarContainer->setObjectName( "scrollBarContainer" );
 
     ui.tracks = new QWidget;
     ui.tracks->setObjectName( "activityList" );
@@ -147,17 +135,10 @@ MetadataWindow::MetadataWindow()
     //for some reason some of the stylesheet is not being applied properly unless reloaded
     //here. StyleSheets see very flaky to me. :s
     aApp->refreshStyleSheet();
-
-//#ifndef Q_OS_MAC
-//    layout->addWidget( ui.titleBar, 1 );
-//#endif
     layout->addWidget( ui.splitter, 1 );
 
     delete ui.tracks->layout();
-    QHBoxLayout* hl = new QHBoxLayout( ui.tracks );
-    QVBoxLayout* vl = new QVBoxLayout;
-    hl->setContentsMargins( 0, 0, 0, 0 );
-    hl->setSpacing( 0 );
+    QVBoxLayout* vl = new QVBoxLayout( ui.tracks );
 
     vl->setContentsMargins( 0, 0, 0, 0 );
     vl->setSpacing( 0 );
@@ -165,13 +146,6 @@ MetadataWindow::MetadataWindow()
     vl->addWidget( ui.playbackControls );
     vl->addWidget( ui.nowPlaying );
     vl->addWidget( ui.recentTracks );
-
-    hl->addLayout( vl );
-
-    delete ui.scrollBarContainer->layout();
-    (new QVBoxLayout( ui.scrollBarContainer ))->addWidget( ui.scrollBar );
-    ui.scrollBarContainer->layout()->setContentsMargins( 0, 0, 0, 0 );
-    hl->addWidget( ui.scrollBarContainer );
 
     ui.splitter->addWidget( ui.tracks );
     ui.splitter->addWidget( ui.scrobbleInfo );
