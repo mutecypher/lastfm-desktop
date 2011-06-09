@@ -442,8 +442,8 @@ QSplitter::handle {
 Phonon--VolumeSlider QSlider {
 	margin: 0px;
 	border: none;
-	min-width: 98px;
-	max-width: 98px;
+	min-width: 130px;
+	max-width: 130px;
 }
 
 Phonon--VolumeSlider QSlider::groove:horizontal {
@@ -459,7 +459,7 @@ Phonon--VolumeSlider QSlider::handle:horizontal {
 	background-position: center;
     background-repeat: no-repeat;
 	height: 16px;
-    /*width: 16px;*/
+    width: 16px;
 	margin: 0px 0px;
 	border: none;
 }
