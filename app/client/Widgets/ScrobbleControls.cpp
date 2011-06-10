@@ -38,8 +38,6 @@ ScrobbleControls::ScrobbleControls( const Track& track )
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
-    layout->addStretch( 1 );
-
     layout->addWidget(ui.love = new QPushButton(tr("love")));
     ui.love->setObjectName("love");
     ui.love->setCheckable( true );

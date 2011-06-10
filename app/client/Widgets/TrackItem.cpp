@@ -83,6 +83,11 @@ TrackItem::doSetTrack( const Track& track )
     /// disconnect the old track
     disconnect( m_track.signalProxy(), 0, this, 0 );
 
+    disconnect( ui->love, 0, this, 0 );
+    connect( ui->love, SIGNAL(toggled(bool)), this, SLOT(onLoveChanged( bool )));
+
+    ui->love->setVisible( !track.isNull() );
+
     m_track = track;
 
     /// Create the fetcher and the info widget for this track
@@ -99,7 +104,7 @@ void
 TrackItem::setDetails()
 {
     /// Set some track specific data for the UI
-    ui->love->setVisible( m_track.isLoved() );
+    setLoveChecked( m_track.isLoved() );
     onCorrected( m_track.toString() );
     connectTrack();
 
@@ -116,7 +121,7 @@ void
 TrackItem::connectTrack()
 {
     connect( m_track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
-    connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onLoveToggled(bool)));
+    connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(setLoveChecked(bool)));
     connect( m_track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()) );
 
     // make sure we tell people when we change
@@ -169,11 +174,35 @@ TrackItem::onCorrected( QString correction )
 
 
 void
-TrackItem::onLoveToggled( bool loved )
+TrackItem::setLoveChecked( bool checked )
 {
-    ui->love->setVisible( loved );
+    /// This just changes the state of the love button
+
+    ui->love->setChecked( checked );
+
+    if ( checked )
+        ui->love->setToolTip( tr( "Unlove track" ) );
+    else
+        ui->love->setToolTip( tr( "Love track" ) );
 }
 
+void
+TrackItem::onLoveChanged( bool checked )
+{
+    /// This changes the state of the love button and
+    /// loves the track on Last.fm
+
+    // change the button state to the new state. Don't worry
+    // it'll get changed back if the web service request fails
+    setLoveChecked( checked );
+
+    MutableTrack track( m_track );
+
+    if ( checked )
+        track.love();
+    else
+        track.unlove();
+}
 
 void
 TrackItem::onScrobbleStatusChanged()

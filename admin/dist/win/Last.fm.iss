@@ -31,7 +31,7 @@ ShowLanguageDialog=yes
 WizardImageFile=wizard.bmp
 WizardSmallImageFile=wizard_small.bmp
 SetupIconFile=installer.ico
-UninstallDisplayIcon="{app}\Last.fm Scrobbler.exe"
+UninstallDisplayIcon="{app}\Last.fm.exe"
 AppModifyPath="{app}\UninsHs.exe" /m0=LastFM
 WizardImageBackColor=$ffffff
 WizardImageStretch=no
@@ -41,17 +41,6 @@ AppMutex=Lastfm-F396D8C8-9595-4f48-A319-48DCB827AD8F, Audioscrobbler-7BC5FBA0-A7
 ; It will then work to install however many updates and then run the uninstall script for
 ; the first version.
 AppId=LastFM
-
-[Types]
-Name: "full"; Description: "Full installation"
-Name: "compact"; Description: "Compact installation (just the scrobbler)"
-
-[Components]
-Name: Radio; Description: "Radio"; Flags: disablenouninstallwarning; Types: full
-Name: Audioscrobbler; Description: "Audioscrobbler"; Flags: fixed; Types: full compact
-Name: Unicorn; Description: "Application Library"; Flags: fixed; Types: full compact
-Name: LibLastfm; Description: "API Library"; Flags: fixed; Types: full compact
-Name: Qt; Description: "Qt Libraries"; Flags: fixed; Types: full compact
 
 [Languages]
 ; The first string is an internal code that we can set to whatever we feel like
@@ -70,48 +59,46 @@ Name: "en"; MessagesFile: "compiler:Default.isl"
 
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Components: Radio
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 ; The OnlyBelowVersion flag disables this on Vista as an admin-run installer can't install a quick launch
 ; icon to the standard user's folder location. Sucks.
-Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Components: Radio; Flags: unchecked; OnlyBelowVersion: 0, 6;
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0, 6;
 
 
 [Files]
 ; Main files
-Source: "..\..\..\_bin\Last.fm Radio.exe"; DestDir: "{app}"; Components: Radio ; Flags: ignoreversion; BeforeInstall: ExitApp('{app}\Last.fm R')
-Source: "..\..\..\_bin\Last.fm Scrobbler.exe"; DestDir: "{app}"; Components: Audioscrobbler ; Flags: ignoreversion; BeforeInstall: ExitApp('{app}\Last.fm Scrobbler.exe')
-Source: "..\..\..\_bin\iPodScrobbler.exe"; DestDir: "{app}"; Components: Audioscrobbler ; Flags: ignoreversion
+Source: "..\..\..\_bin\Last.fm.exe"; DestDir: "{app}"; Flags: ignoreversion; BeforeInstall: ExitApp('{app}\Last.fm R')
+Source: "..\..\..\_bin\iPodScrobbler.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 ;libraries
-Source: "..\..\..\_bin\lastfm.dll"; DestDir: "{app}"; Components: LibLastfm; Flags: ignoreversion
-Source: "..\..\..\_bin\unicorn.dll"; DestDir: "{app}"; Components: Unicorn; Flags: ignoreversion
-Source: "..\..\..\_bin\listener.dll"; DestDir: "{app}"; Components: Unicorn; Flags: ignoreversion
+Source: "..\..\..\_bin\lastfm.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\unicorn.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\listener.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ;Visual Studio redistributable packages
 Source: "%VSDIR%\VC\redist\x86\Microsoft.VC90.CRT\*"; DestDir: "{app}"; Flags: ignoreversion
 Source: "%VSDIR%\VC\redist\x86\Microsoft.VC90.ATL\*"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Qt binaries
-Source: "%QTDIR%\bin\QtCore4.dll"; DestDir: "{app}"; Components: Qt; Flags: ignoreversion
-Source: "%QTDIR%\bin\QtGui4.dll"; DestDir: "{app}"; Components: Qt; Flags: ignoreversion
-Source: "%QTDIR%\bin\QtNetwork4.dll"; DestDir: "{app}"; Components: Qt; Flags: ignoreversion
-Source: "%QTDIR%\bin\QtXml4.dll"; DestDir: "{app}"; Components: Qt; Flags: ignoreversion
-Source: "%QTDIR%\bin\QtSql4.dll"; DestDir: "{app}"; Components: Qt; Flags: ignoreversion
-Source: "%QTDIR%\bin\phonon4.dll"; DestDir: "{app}"; Components: Radio; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "%QTDIR%\bin\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "%QTDIR%\bin\phonon4.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ;image formats plugins
-Source: "%QTDIR%\plugins\imageformats\qjpeg4.dll"; DestDir: "{app}\imageformats"; Components: Qt; Flags: ignoreversion
-Source: "%QTDIR%\plugins\imageformats\qgif4.dll"; DestDir: "{app}\imageformats"; Components: Qt; Flags: ignoreversion
-Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\imageformats"; Components: Qt; Flags: ignoreversion
+Source: "%QTDIR%\plugins\imageformats\qjpeg4.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
+Source: "%QTDIR%\plugins\imageformats\qgif4.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
+Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
 
 ;phonon backend plugin
-Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\phonon_backend"; Components: Radio; Flags: ignoreversion
+Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\phonon_backend"; Flags: ignoreversion
 
 ;The stylesheets
-Source: "..\..\..\lib\unicorn\unicorn.css"; DestDir: "{app}"; Components: Unicorn; Flags: ignoreversion
-Source: "..\..\..\app\audioscrobbler\Last.fm Scrobbler.css"; DestDir: "{app}"; Components: Audioscrobbler; Flags: ignoreversion
-Source: "..\..\..\app\radio\Last.fm Radio.css"; DestDir: "{app}"; Components: Radio; Flags: ignoreversion
+Source: "..\..\..\lib\unicorn\unicorn.css"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\app\radio\Last.fm.css"; DestDir: "{app}"; Flags: ignoreversion
 
 ;The add/modify/remove file
 Source: "UninsHs.exe"; DestDir: "{app}"; Flags: onlyifdoesntexist
@@ -120,31 +107,30 @@ Source: "UninsHs.exe"; DestDir: "{app}"; Flags: onlyifdoesntexist
 
 [Registry]
 Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Version"; ValueData: "{cm:Version}"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\Last.fm Scrobbler.exe"; Components: Audioscrobbler; Flags: uninsdeletekey
+Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\Last.fm.exe"; Flags: uninsdeletekey
 
 ; Register last.fm protocol only if it isn't already
-Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: ""; ValueData: "URL:lastfm"; Components: Radio; Flags: uninsdeletekey
-Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Components: Radio; Flags: uninsdeletekey
-Root: HKCR; Subkey: "lastfm\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\Last.fm Radio"" ""%1"""; Components: Radio; Flags: uninsdeletekey
-Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Components: Radio; Flags: uninsdeletekey
+Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: ""; ValueData: "URL:lastfm"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Flags: uninsdeletekey
+Root: HKCR; Subkey: "lastfm\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\Last.fm"" ""%1"""; Flags: uninsdeletekey
+Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Flags: uninsdeletekey
 
 ; Register Last.fm in the control panel
-Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: ""; ValueData: "Audioscrobbler"; Components: Audioscrobbler; Flags: uninsdeletekey
-Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: ""; ValueData: "Audioscrobbler"; Components: Audioscrobbler; Flags: uninsdeletekey
-Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: "InfoTip"; ValueData: "Last.fm Audioscobbler"; Components: Audioscrobbler; Flags: uninsdeletekey
-Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: "System.ApplicationName"; ValueData: "fm.last.audioscrobbler"; Components: Audioscrobbler; Flags: uninsdeletekey
-Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: "System.ControlPanel.Category"; ValueData: "8"; Components: Audioscrobbler; Flags: uninsdeletekey
-Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Last.fm Scrobbler.exe, -2"; Components: Audioscrobbler; Flags: uninsdeletekey
-Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}\Shell\Open\Command"; ValueType: string; ValueName: ""; ValueData: "{app}\Last.fm Scrobbler.exe --settings"; Components: Audioscrobbler; Flags: uninsdeletekey
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: ""; ValueData: "Audioscrobbler"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: ""; ValueData: "Audioscrobbler"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: "InfoTip"; ValueData: "Last.fm"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: "System.ApplicationName"; ValueData: "fm.last.audioscrobbler"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: "System.ControlPanel.Category"; ValueData: "8"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Last.fm.exe, -2"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}\Shell\Open\Command"; ValueType: string; ValueName: ""; ValueData: "{app}\Last.fm.exe --settings"; Flags: uninsdeletekey
 
 ; This is just for deleting keys at uninstall
 Root: HKCU; Subkey: "Software\Last.fm"; Flags: dontcreatekey uninsdeletekey
 Root: HKLM; Subkey: "Software\Last.fm"; Flags: dontcreatekey uninsdeletekey
 
 [Icons]
-Name: "{group}\Last.fm Radio"; Components: Radio; Filename: "{app}\Last.fm Radio.exe"
-Name: "{group}\Last.fm Scrobbler"; Components: Audioscrobbler; Filename: "{app}\Last.fm Scrobbler.exe"
-Name: "{commondesktop}\Last.fm Radio"; Filename: "{app}\Last.fm Radio.exe"; Components: Radio; Tasks: desktopicon
+Name: "{group}\Last.fm"; Filename: "{app}\Last.fm.exe"
+Name: "{commondesktop}\Last.fm"; Filename: "{app}\Last.fm.exe"; Tasks: desktopicon
 
 ;Uninstall
 Name: "{group}\Uninstall Last.fm"; Filename: "{uninstallexe}"
@@ -152,17 +138,17 @@ Name: "{group}\Uninstall Last.fm"; Filename: "{app}\UninsHs.exe"; Parameters: "/
 
 ; The OnlyBelowVersion flag disables this on Vista as an admin-run installer can't install a quick launch
 ; icon to the standard user's folder location. Sucks.
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"; Filename: "{app}\Last.fm Radio.exe"; OnlyBelowVersion: 0,6; Tasks: quicklaunchicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"; Filename: "{app}\Last.fm.exe"; OnlyBelowVersion: 0,6; Tasks: quicklaunchicon
 
 
 [Run]
-Filename: "{app}\Last.fm Scrobbler.exe"; Description: "Last.fm Scrobbler"; Flags: nowait postinstall
+Filename: "{app}\Last.fm.exe"; Description: "Last.fm"; Flags: nowait postinstall
 Filename: "{app}\UninsHs.exe"; Parameters: "/r0=LastFM,{language},{srcexe},{app}\Installer.exe"; Flags: runminimized runhidden nowait
 
 [InstallDelete]
 ;All the files that are not in fixed components (so the Radio compontent is actually removed on modify)
-Type: Files; Name: "{commondesktop}\Last.fm Radio.lnk"
-Type: Files; Name: "{app}\Last.fm Radio.exe"
+Type: Files; Name: "{commondesktop}\Last.fm.lnk"
+Type: Files; Name: "{app}\Last.fm.exe"
 Type: Files; Name: "{app}\phonon4.dll"
 Type: Files; Name: "{app}\Last.fm Radio.css"
 Type: Files; Name: "{app}\phonon_backend\phonon_ds94.dll"
@@ -185,8 +171,7 @@ Type: dirifempty; Name: "{commonappdata}\Last.fm"
 
 ; This is the FIRST step of uninstallation
 [UninstallRun]
-Filename: "{app}\Last.fm Radio.exe"; Parameters: "--exit"
-Filename: "{app}\Last.fm Scrobbler.exe"; Parameters: "--exit"
+Filename: "{app}\Last.fm.exe"; Parameters: "--exit"
 
 [Code]
 // Global variables
@@ -240,8 +225,7 @@ procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssInstall then
     begin
-      ExitApp( '{app}\Last.fm Radio.exe' );
-      ExitApp( '{app}\Last.fm Scrobbler.exe' );
+      ExitApp( '{app}\Last.fm.exe' );
     end;
 end;
 

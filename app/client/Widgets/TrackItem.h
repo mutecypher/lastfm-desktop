@@ -68,11 +68,10 @@ protected:
     void doSetTrack( const Track& track );
 
 private slots:
-    void onLoveToggled( bool loved );
-
+    void setLoveChecked( bool checked );
+    void onLoveChanged( bool checked );
 
     void onScrobbleStatusChanged();
-
     void onCorrected( QString correction );
 
 protected:

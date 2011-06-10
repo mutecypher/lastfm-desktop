@@ -66,15 +66,12 @@ ActivityListItem::setupUi()
 {
     ui->setupUi( this );
 
-    ui->love->hide();
     ui->correction->hide();
 
     movie.scrobbler_as = new Movie( ":/scrobbler_as.mng" );
     movie.scrobbler_as->setSpeed( 200 );
     movie.scrobbler_as->setCacheMode( QMovie::CacheAll );
     ui->as->setMovie( movie.scrobbler_as );
-
-    ui->love->setToolTip( tr( "A loved track" ) );
 }
 
 

@@ -778,7 +778,6 @@ QStatusBar {
  }
  
 QDockWidget {
-	background-color: red;
 	border: 1px solid black;
 }
 
@@ -813,7 +812,7 @@ ScrobbleControls QPushButton#tag {
 	background-image: url(:/activity_tag_REST.png);
 }
 ScrobbleControls QPushButton#tag:hover { background-image: url(:/activity_tag_HOVER.png) ; }
-ScrobbleControls QPushButton#tag:press { background-image: url(:/activity_tag_PRESS.png) ; }
+ScrobbleControls QPushButton#tag:pressed { background-image: url(:/activity_tag_PRESS.png) ; }
 
 ScrobbleControls QPushButton#buy {
 	width: 34px;
@@ -821,9 +820,25 @@ ScrobbleControls QPushButton#buy {
 	background-image: url(:/activity_buy_REST.png);
 	}
 ScrobbleControls QPushButton#buy:hover { background-image: url(:/activity_buy_HOVER.png) ; }
-ScrobbleControls QPushButton#buy:press { background-image: url(:/activity_buy_PRESS.png) ; }
+ScrobbleControls QPushButton#buy:pressed { background-image: url(:/activity_buy_PRESS.png) ; }
 
  
+ActivityListItem QPushButton#love {
+    background-color: transparent;
+    color: transparent;
+    background-position: top;
+    background-repeat: no-repeat;
+	border: none;
+	width: 33px;
+	height: 30px;
+	background-image: url(:/activity_min_love_OFF_REST.png)
+}
+ActivityListItem QPushButton#love:hover { background-image: url(:/activity_min_love_OFF_HOVER.png) }
+ActivityListItem QPushButton#love:pressed { background-image: url(:/activity_min_love_OFF_PRESS.png) }
+ActivityListItem QPushButton#love:checked { background-image: url(:/activity_min_love_ON_REST.png) }
+ActivityListItem QPushButton#love:checked:hover { background-image: url(:/activity_min_love_ON_HOVER.png) }
+ActivityListItem QPushButton#love:checked:pressed { background-image: url(:/activity_min_love_ON_PRESS.png) }
+
  
 /*
  QStatusBar::item {

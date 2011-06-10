@@ -6,7 +6,7 @@
 
 
 Drawer::Drawer( QWidget* parent )
-       : QDockWidget( parent, Qt::Drawer ),
+    : QDockWidget( parent, Qt::Drawer | Qt::FramelessWindowHint ),
          m_vis( false )
 {    setMinimumWidth( 450 );
     hide();
