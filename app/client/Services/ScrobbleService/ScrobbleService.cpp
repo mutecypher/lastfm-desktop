@@ -64,6 +64,14 @@ ScrobbleService::ScrobbleService()
 
 }
 
+void ScrobbleService::submitCache()
+{
+    if ( m_as )
+    {
+        m_as->submit();
+    }
+}
+
 void 
 ScrobbleService::onSessionChanged( unicorn::Session* ) 
 {

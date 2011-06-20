@@ -76,6 +76,8 @@ signals:
     void frameChanged( int );
     void timeout();
 
+public slots:
+    void submitCache();
 
 protected slots:
     void setConnection( PlayerConnection* );

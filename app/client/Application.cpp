@@ -45,6 +45,7 @@
 #include "AudioscrobblerSettings.h"
 #include "Wizard/FirstRunWizard.h"
 
+#include <lastfm/InternetConnectionMonitor>
 #include <lastfm/XmlQuery>
 
 #include <QRegExp>
@@ -334,6 +335,9 @@ Application::init()
 
     // Do this last so that when the user logs in all the interested widgets find out
     initiateLogin();
+
+    // make sure cached scrobbles get submitted when the connection comes back online
+    connect( m_icm, SIGNAL(up(QString)), &ScrobbleService::instance(), SLOT(submitCache()) );
 
     emit messageReceived( arguments() );
 
