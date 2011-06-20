@@ -41,6 +41,7 @@ protected:
         QPushButton* love;
         QPushButton* tag;
         QPushButton* share;
+        QPushButton* buy;
     } ui;
 
 public slots:

@@ -118,12 +118,12 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="love">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
+       <widget class="QPushButton" name="love">
         <property name="text">
-         <string>love</string>
+         <string>Love</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

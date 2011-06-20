@@ -57,7 +57,7 @@ ActivityListWidget::ActivityListWidget( QString username, QWidget* parent )
     m_listLayout->setSpacing( 0 );
 
     m_scrollArea = new QScrollArea( this );
-    m_scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    m_scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
     m_scrollArea->setWidget( content );
     m_scrollArea->setWidgetResizable( true );
 
@@ -281,17 +281,5 @@ ActivityListWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
         if (track.extra("deviceId").isEmpty())
             addCachedTrack( track );
     }
-}
-
-void
-ActivityListWidget::setScrollBar( QScrollBar* scrollbar )
-{
-    m_scrollArea->setVerticalScrollBar( scrollbar );
-}
-
-QScrollBar*
-ActivityListWidget::scrollBar() const
-{
-    return m_scrollArea->verticalScrollBar();
 }
 

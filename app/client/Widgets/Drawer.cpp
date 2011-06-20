@@ -6,11 +6,11 @@
 
 
 Drawer::Drawer( QWidget* parent )
-       : QDockWidget( parent, Qt::Drawer | Qt::FramelessWindowHint ),
+    : QDockWidget( parent, Qt::Drawer | Qt::FramelessWindowHint ),
          m_vis( false )
-{
-    setMinimumWidth( 450 );
+{    setMinimumWidth( 450 );
     hide();
+
 #ifdef FAKE_DRAWER
     connect( this, SIGNAL( dockLocationChanged(Qt::DockWidgetArea)),
                    SLOT( onDockLocationChanged(Qt::DockWidgetArea)));

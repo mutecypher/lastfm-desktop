@@ -48,6 +48,7 @@ void IPodScrobbleItem::finishUi()
     setText( format.arg( QString::number(m_tracks.count()) ) );
 
     ui->player->setText( tr( "iPod" ) );
+    ui->love->hide();
 
     updateTimestamp();
 

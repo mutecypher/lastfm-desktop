@@ -36,8 +36,7 @@ ScrobbleControls::ScrobbleControls( const Track& track )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
-
-    layout->addStretch( 1 );
+    layout->setSpacing( 0 );
 
     layout->addWidget(ui.love = new QPushButton(tr("love")));
     ui.love->setObjectName("love");
@@ -54,11 +53,16 @@ ScrobbleControls::ScrobbleControls( const Track& track )
     ui.share->setObjectName("share");
     ui.share->setToolTip( tr( "Share" ) );
 
+    layout->addWidget(ui.buy = new QPushButton(tr("buy")));
+    ui.buy->setObjectName("buy");
+    ui.buy->setToolTip( tr( "Buy" ) );
+
     layout->addStretch( 1 );
 
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ), ui.share, SLOT( click() ) );
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ), ui.tag, SLOT( click() ) );
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_L ), ui.love, SLOT( toggle() ) );
+    new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_B ), ui.buy, SLOT( click() ) );
 
     connect( ui.tag, SIGNAL( clicked()), SLOT( onTag()));
     connect( ui.share, SIGNAL( clicked()), SLOT( onShare()));

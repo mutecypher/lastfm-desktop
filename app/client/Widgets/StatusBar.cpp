@@ -50,8 +50,6 @@ StatusBar::StatusBar( QWidget* parent )
         connect( deviceScrobbler, SIGNAL( noScrobblesFound()),SLOT( onNoScrobblesFound()));
     }
 
-    //layout->addWidget( ui.sizeGrip = new QSizeGrip( this ), 0 , Qt::AlignBottom | Qt::AlignRight );
-
     connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 }
 
