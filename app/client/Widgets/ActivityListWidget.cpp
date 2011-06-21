@@ -208,8 +208,6 @@ ActivityListWidget::addItem( ActivityListItem* item )
     connect( item, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
 
     connect( item, SIGNAL(changed()), SLOT(onItemChanged()));
-    connect( item, SIGNAL(cogMenuAboutToHide()), SLOT(enableHover()));
-    connect( item, SIGNAL(cogMenuAboutToShow()), SLOT(disableHover()));
 
     write();
 }

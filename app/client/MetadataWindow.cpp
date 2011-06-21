@@ -29,8 +29,7 @@
 #include "../Widgets/ActivityListWidget.h"
 #include "../Widgets/TrackItem.h"
 #include "../Widgets/StatusBar.h"
-#include "../Widgets/Drawer.h"
-#include "../Widgets/RadioWidget.h"
+#include "../Widgets/RadioListWidget.h"
 #include "../Widgets/TitleBar.h"
 #include "../Widgets/PlaybackControlsWidget.h"
 
@@ -52,14 +51,19 @@
 #include <QSplitter>
 #include <QShortcut>
 #include <QToolBar>
+#include <QDockWidget>
 
 MetadataWindow::MetadataWindow()
 {
     setAttribute( Qt::WA_TranslucentBackground );
 
-    m_drawer = new Drawer( this );
-    m_drawer->setWidget( new RadioWidget );
-    
+    m_radioSideBar = new QDockWidget;
+    m_radioSideBar->setWidget( new RadioListWidget);
+    m_radioSideBar->setFeatures( QDockWidget::NoDockWidgetFeatures );
+    addDockWidget( Qt::LeftDockWidgetArea, m_radioSideBar );
+    m_radioSideBar->setTitleBarWidget( new QWidget() );
+    m_radioSideBar->setAllowedAreas( Qt::LeftDockWidgetArea );
+
 #ifdef Q_OS_MAC
     setUnifiedTitleAndToolBarOnMac( true );
 #endif
@@ -73,8 +77,8 @@ MetadataWindow::MetadataWindow()
     }
     QAction* radioAction = toolbar->addAction( "Radio" );
     radioAction->setCheckable( true );
-    connect( radioAction, SIGNAL(triggered(bool)), SLOT(setRadioDrawerVisible(bool)));
-    connect( m_drawer, SIGNAL( visibilityChanged(bool)), radioAction, SLOT(setChecked(bool)));
+    connect( radioAction, SIGNAL(triggered(bool)), m_radioSideBar, SLOT(setVisible(bool)));
+    connect( m_radioSideBar, SIGNAL( visibilityChanged(bool)), radioAction, SLOT(setChecked(bool)));
     toolbar->setFloatable( false );
     toolbar->setMovable( false );
     
@@ -165,35 +169,6 @@ MetadataWindow::MetadataWindow()
     onItemClicked( ui.nowPlaying );
 
     finishUi();
-}
-
-void
-MetadataWindow::setRadioDrawerVisible( bool show )
-{
-    if ( show ) {
-        int width = m_drawer->width();
-        int screenRight = qApp->desktop()->screenGeometry( this ).right();
-        if( ( geometry().right() + width ) > screenRight ) {
-            addDockWidget( Qt::LeftDockWidgetArea, m_drawer );
-        } else {
-            addDockWidget( Qt::RightDockWidgetArea, m_drawer );
-        }
-        m_drawer->show();
-    } else {
-        m_drawer->close();
-    }
-}
-
-void
-MetadataWindow::hideRadioDrawer()
-{
-    m_drawer->hide();
-}
-
-void
-MetadataWindow::closeEvent( QCloseEvent* /*event*/ )
-{
-    hideRadioDrawer();
 }
 
 void

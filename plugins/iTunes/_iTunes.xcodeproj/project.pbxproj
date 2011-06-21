@@ -190,7 +190,14 @@
 			isa = PBXProject;
 			buildConfigurationList = AF2F40450BD811FE009D75EB /* Build configuration list for PBXProject "_iTunes" */;
 			compatibilityVersion = "Xcode 3.0";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 089C166AFE841209C02AAC07 /* iTunesPlugIn */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -245,7 +252,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				HEADER_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				USER_HEADER_SEARCH_PATHS = ../../;
 			};
 			name = Development;

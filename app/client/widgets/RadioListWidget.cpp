@@ -18,10 +18,39 @@
 */
 
 #include "RadioListWidget.h"
+#include "RadioStationListModel.h"
+#include <QAbstractListModel>
+#include "Services/RadioService.h"
+#include "../Application.h"
+#include <lastfm/RadioStation>
 
-RadioListWidget::RadioListWidget(QAbstractItemModel* model, QWidget* parent)
-: QListView(parent)
+
+RadioListWidget::RadioListWidget(QWidget* parent)
+: QTreeView(parent)
 {
-    setModel( model );
+    setModel( m_model = new RadioStationListModel());
+    setHeaderHidden( true );
+    setRootIsDecorated( false );
+    setAttribute( Qt::WA_MacShowFocusRect, false );
+    setAlternatingRowColors( true );
+
+    connect( this, SIGNAL( clicked( QModelIndex )), SLOT( onStationClicked( QModelIndex )));
+    connect( qApp, SIGNAL( sessionChanged(unicorn::Session* )), SLOT( onSessionChanged(unicorn::Session* )));
 }
 
+void 
+RadioListWidget::onSessionChanged( unicorn::Session* session ) {
+    QList<RadioStation> stationList;
+    stationList << RadioStation::library( lastfm::ws::Username )
+                << RadioStation::mix( lastfm::ws::Username)
+                << RadioStation::recommendations( lastfm::ws::Username)
+                << RadioStation::friends( lastfm::ws::Username)
+                << RadioStation::neighbourhood( lastfm::ws::Username);
+    
+    m_model->setList( stationList );
+}
+
+void 
+RadioListWidget::onStationClicked( const QModelIndex& index ) {
+    RadioService::instance().play( RadioStation( model()->data( index, RadioStationListModel::UrlRole ).toString()));
+}

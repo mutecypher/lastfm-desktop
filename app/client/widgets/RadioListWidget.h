@@ -20,15 +20,21 @@
 #ifndef RADIO_LIST_WIDGET_H
 #define RADIO_LIST_WIDGET_H
 
-#include <QListView>
-
-class RadioListWidget : public QListView
+#include <QTreeView>
+namespace unicorn { class Session; }
+class RadioListWidget : public QTreeView
 {
     Q_OBJECT
 
 public:
-    RadioListWidget(QAbstractItemModel*, QWidget* parent = 0);
+    RadioListWidget( QWidget* parent = 0 );
+   
+private slots:
+    void onStationClicked( const QModelIndex& );
+    void onSessionChanged( unicorn::Session* );
 
+private:
+    class RadioStationListModel* m_model;
 };
 
-#endif
+#endif // RADIO_LIST_WIDGET_H

@@ -67,20 +67,17 @@ private slots:
     void onSessionChanged( unicorn::Session* );
 
     void onItemClicked( class ActivityListItem* clickedItem );
-    void setRadioDrawerVisible(bool);
-    void hideRadioDrawer();
     
 private:
     void newTrack( const Track& track );
     void setCurrentWidget( QWidget* );
     void addWinThumbBarButtons( QList<QAction*>& );
     void addNowPlayingToActivityList();
-    void closeEvent( QCloseEvent* event );
 
 private:
     Track m_currentTrack;
     class ActivityListItem* m_currentActivity;
-    class Drawer* m_drawer;
+    class QDockWidget* m_radioSideBar;
     QList<QAction*> m_buttons;
 };
 

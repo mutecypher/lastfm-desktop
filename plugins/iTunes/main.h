@@ -43,8 +43,8 @@
 
 // You must update the version in many places young one, see the README
 #define kVisualPluginMajorVersion     3
-#define kVisualPluginMinorVersion     0
-#define kVisualPluginReleaseStage     1
+#define kVisualPluginMinorVersion     2
+#define kVisualPluginReleaseStage     0
 #define kVisualPluginNonFinalRelease  0
 
 

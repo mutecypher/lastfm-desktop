@@ -769,7 +769,6 @@ QRadioButton::indicator:checked:pressed {
 }
 
 QToolBar {
-     background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 200, 200, 200, 255 ), stop:1 rgba( 145, 145, 145, 255 ));
      spacing: 3px; /* spacing between items in the tool bar */
  }
 
@@ -777,12 +776,8 @@ QStatusBar {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba( 200, 200, 200, 255 ), stop:1 rgba( 145, 145, 145, 255 ));
  }
  
-QDockWidget {
-	border: 1px solid black;
-}
-
 ScrobbleControls QPushButton{
-	margin: 0px;
+	margin: 0px 6px 0px 6px;
 	padding: 0px;
 	border: 0px;
 }
