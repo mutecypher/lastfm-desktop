@@ -27,6 +27,7 @@
 #include <QScrollArea>
 
 #include <lastfm/misc.h>
+#include <lastfm/User>
 
 #include "lib/unicorn/layouts/AnimatedListLayout.h"
 #include "lib/unicorn/widgets/DataBox.h"
@@ -37,7 +38,7 @@
 #include "IPodScrobbleItem.h"
 
 
-const int kNumRecentTracks(20);
+const int kNumRecentTracks(30);
 
 ActivityListWidget::ActivityListWidget( QString username, QWidget* parent )
     :StylableWidget( parent ), m_rowNum( 0 ), m_currentItem( 0 )
@@ -74,6 +75,34 @@ ActivityListWidget::ActivityListWidget( QString username, QWidget* parent )
     connect( &ScrobbleService::instance(), SIGNAL(foundIPodScrobbles(QList<lastfm::Track>)), SLOT(onFoundIPodScrobbles(QList<lastfm::Track>)));
 }
 
+void
+ActivityListWidget::refreshRecentTracks( User user )
+{
+    connect( user.getRecentTracks( kNumRecentTracks ), SIGNAL(finished()), SLOT(onGotRecentTracks()) );
+}
+
+void
+ActivityListWidget::onGotRecentTracks()
+{
+    lastfm::XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
+
+    foreach ( const lastfm::XmlQuery& trackElement, lfm["recenttracks"].children("track") )
+    {
+        if ( trackElement.attribute("nowplaying") != "true" )
+        {
+            Track track;
+            MutableTrack( track ).setArtist( trackElement["artist"]["name"].text() );
+            MutableTrack( track ).setAlbum( trackElement["album"].text() );
+            MutableTrack( track ).setTitle( trackElement["name"].text() );
+
+            MutableTrack( track ).setTimeStamp( QDateTime::fromTime_t( trackElement["date"].attribute("uts").toUInt() ) );
+
+            insertCachedTrack( track );
+        }
+    }
+
+    QTimer::singleShot( 60000, this, SLOT(refreshRecentTracks()) );
+}
 
 int
 ActivityListWidget::count() const
@@ -123,12 +152,16 @@ ActivityListWidget::onItemChanged()
 
 void ActivityListWidget::setUsername( QString username )
 {
-    QString path = lastfm::dir::runtimeData().filePath( username + "_recent_tracks.xml" );
-
-    if ( m_path != path )
+    if ( !username.isEmpty() )
     {
-        m_path = path;
-        read();
+        QString path = lastfm::dir::runtimeData().filePath( username + "_recent_tracks.xml" );
+
+        if ( m_path != path )
+        {
+            m_path = path;
+            read();
+            refreshRecentTracks( User( username ) );
+        }
     }
 }
 
@@ -157,7 +190,7 @@ ActivityListWidget::read()
     for (QDomNode n = xml.documentElement().lastChild(); !n.isNull(); n = n.previousSibling())
     {
         ActivityListItem* item = ActivityListItem::fromElement( n.toElement() );
-        addItem( item );
+        insertItem( item );
     }
 
     m_listLayout->setAnimated( true );
@@ -197,26 +230,58 @@ ActivityListWidget::doWrite() const
 }
 
 void
-ActivityListWidget::addItem( ActivityListItem* item )
+ActivityListWidget::insertItem( ActivityListItem* item )
 {
     item->setObjectName("recentTrack");
     item->setOdd( m_rowNum++ % 2 );
     item->updateTimestamp();
-    m_listLayout->addWidget( item );
 
-    connect( item, SIGNAL(clicked(ActivityListItem*)), SIGNAL(itemClicked(ActivityListItem*)));
-    connect( item, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
+    int pos = 0;
 
-    connect( item, SIGNAL(changed()), SLOT(onItemChanged()));
+    // find where it should be depending on the timestamp
+    for ( int i = 0 ; i < m_listLayout->count() ; ++i )
+    {
+        QDateTime itemTimestamp = static_cast<ActivityListItem*>(m_listLayout->itemAt( i )->widget())->timestamp();
 
-    write();
+        qDebug() << item->timestamp() << itemTimestamp;
+
+        if ( item->timestamp() < itemTimestamp )
+        {
+            pos = i;
+        }
+        else if ( item->timestamp() == itemTimestamp )
+        {
+            pos = -1; // duplicate
+            item->deleteLater();
+            break;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    if ( pos >= 0 )
+    {
+        if ( pos == 0 )
+            m_listLayout->addWidget( item );
+        else
+            m_listLayout->insertWidget( pos, item );
+
+        connect( item, SIGNAL(clicked(ActivityListItem*)), SIGNAL(itemClicked(ActivityListItem*)));
+        connect( item, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
+
+        connect( item, SIGNAL(changed()), SLOT(onItemChanged()));
+
+        write();
+    }
 }
 
 void
-ActivityListWidget::addCachedTrack( const Track& track )
+ActivityListWidget::insertCachedTrack( const Track& track )
 {
     ActivityListItem* item = new TrackItem( track );
-    addItem( item );
+    insertItem( item );
 }
 
 void
@@ -277,7 +342,7 @@ ActivityListWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
         // Tracks with a deviceId are iPod scrobbles
         // we ignore these at the moment
         if (track.extra("deviceId").isEmpty())
-            addCachedTrack( track );
+            insertCachedTrack( track );
     }
 }
 

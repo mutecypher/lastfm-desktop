@@ -73,23 +73,33 @@ AnimatedListLayout::setAnimated( bool animated )
 
 void 
 AnimatedListLayout::addItem( QLayoutItem* item )
-{    
+{      
     if ( m_animated )
     {
         m_newItemList.prepend( item );
-
-        // make sure we don't draw the item in the list until
-        // it has been added properly
-        //QRect itemRect = contentsRect();
-        //itemRect.setHeight( 2 );
-        //itemRect.translate( -3, -3);
-        //item->setGeometry( itemRect );
     }
     else
     {
         m_itemList.prepend( item );
         update();
     }
+
+    QTimer::singleShot(1, this, SLOT(onItemLoaded()));
+}
+
+void
+AnimatedListLayout::insertWidget( int index, QWidget* widget )
+{
+    QWidgetItem* widgetItem = new QWidgetItem( widget );
+    widget->setParent( parentWidget() );
+    widget->show();
+    insertItem( index, widgetItem );
+}
+
+void
+AnimatedListLayout::insertItem( int index, QLayoutItem * item )
+{
+    m_itemList.insert( index, item );
 
     QTimer::singleShot(1, this, SLOT(onItemLoaded()));
 }

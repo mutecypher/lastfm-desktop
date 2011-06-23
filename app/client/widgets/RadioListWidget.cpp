@@ -18,9 +18,9 @@
 */
 
 #include "RadioListWidget.h"
-#include "RadioStationListModel.h"
+#include "../RadioStationListModel.h"
 #include <QAbstractListModel>
-#include "Services/RadioService.h"
+#include "../Services/RadioService.h"
 #include "../Application.h"
 #include <lastfm/RadioStation>
 

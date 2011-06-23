@@ -42,7 +42,9 @@ public:
     QSize minimumSize() const;
     void setGeometry(const QRect &rect);
     QSize sizeHint() const;
-    QLayoutItem *takeAt(int index);
+    QLayoutItem* takeAt(int index);
+
+    void insertWidget( int index, QWidget* widget );
 
 signals:
     void moveFinished();
@@ -54,7 +56,9 @@ private slots:
 private:
     void doLayout( const QRect &rect, int vOffset = 0 );
 
-    void addItem(QLayoutItem* item);
+    void addItem( QLayoutItem* item );
+
+    void insertItem( int index, QLayoutItem * item );
 
 private:
     QList<QLayoutItem *> m_itemList;

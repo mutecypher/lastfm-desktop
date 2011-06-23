@@ -98,7 +98,7 @@ Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\phonon
 
 ;The stylesheets
 Source: "..\..\..\lib\unicorn\unicorn.css"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\..\app\radio\Last.fm.css"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\app\client\Last.fm.css"; DestDir: "{app}"; Flags: ignoreversion
 
 ;The add/modify/remove file
 Source: "UninsHs.exe"; DestDir: "{app}"; Flags: onlyifdoesntexist
@@ -150,7 +150,7 @@ Filename: "{app}\UninsHs.exe"; Parameters: "/r0=LastFM,{language},{srcexe},{app}
 Type: Files; Name: "{commondesktop}\Last.fm.lnk"
 Type: Files; Name: "{app}\Last.fm.exe"
 Type: Files; Name: "{app}\phonon4.dll"
-Type: Files; Name: "{app}\Last.fm Radio.css"
+Type: Files; Name: "{app}\Last.fm.css"
 Type: Files; Name: "{app}\phonon_backend\phonon_ds94.dll"
 Type: dirifempty; Name: "{app}\phonon_backend\"
 

@@ -67,20 +67,6 @@ MetadataWindow::MetadataWindow()
 #ifdef Q_OS_MAC
     setUnifiedTitleAndToolBarOnMac( true );
 #endif
-
-    QToolBar* toolbar = addToolBar( "Options" );
-    addDragHandleWidget( toolbar );
-    {
-        QWidget* spacerWidget = new QWidget();
-        spacerWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
-        toolbar->addWidget( spacerWidget );
-    }
-    QAction* radioAction = toolbar->addAction( "Radio" );
-    radioAction->setCheckable( true );
-    connect( radioAction, SIGNAL(triggered(bool)), m_radioSideBar, SLOT(setVisible(bool)));
-    connect( m_radioSideBar, SIGNAL( visibilityChanged(bool)), radioAction, SLOT(setChecked(bool)));
-    toolbar->setFloatable( false );
-    toolbar->setMovable( false );
     
     setCentralWidget(new QWidget);
 
@@ -217,7 +203,7 @@ MetadataWindow::addNowPlayingToActivityList()
         && ui.nowPlaying->track().scrobbleStatus() != lastfm::Track::Null )
     {
         TrackItem* item = new TrackItem( *ui.nowPlaying );
-        ui.recentTracks->addItem( item );
+        ui.recentTracks->insertItem( item );
     }
 }
 

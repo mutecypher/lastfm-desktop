@@ -53,6 +53,8 @@ public:
     bool selected() const;
     void setSelected( bool selected );
 
+    QDateTime timestamp() const { return m_timestamp; }
+
 signals:
     void clicked( ActivityListItem* );
     void changed();

@@ -25,6 +25,8 @@
 #include <QList>
 #include <QEasingCurve>
 
+#include <lastfm/User>
+
 #include "lib/unicorn/StylableWidget.h"
 
 namespace lastfm { class Track; };
@@ -38,7 +40,7 @@ public:
 
     void setUsername( QString username );
 
-    void addItem( class ActivityListItem* TrackItem );
+    void insertItem( class ActivityListItem* TrackItem );
 
     void read();
     void write() const;
@@ -50,7 +52,7 @@ public:
     class ActivityListItem* itemAt( int index ) const;
 
 private:
-    void addCachedTrack( const Track& a_track );
+    void insertCachedTrack( const Track& a_track );
 
 signals:
     void itemClicked( class ActivityListItem* );
@@ -68,6 +70,9 @@ private slots:
 
     void onFoundIPodScrobbles( const QList<lastfm::Track>& tracks );
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
+
+    void refreshRecentTracks( User user = User() );
+    void onGotRecentTracks();
 
 private:
     Q_PROPERTY(QEasingCurve::Type easingCurve READ easingCurve WRITE setEasingCurve);
