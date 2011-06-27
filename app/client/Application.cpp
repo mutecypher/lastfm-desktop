@@ -400,6 +400,8 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
 void
 Application::onTrackSpooled( const Track& track, const Track& /*oldTrack*/ )
 {
+    m_tray->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
+
 #ifdef CLIENT_ROOM_RADIO
     QString strippedContextString = TrackItem::contextString( track );
 

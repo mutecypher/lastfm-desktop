@@ -172,6 +172,8 @@ MetadataWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )
         ui.playbackControls->hide();
 
     newTrack( t );
+
+    setWindowTitle( QApplication::applicationName() + " - " + t.toString() );
 }
 
 
@@ -179,6 +181,8 @@ void
 MetadataWindow::onStopped()
 {
     newTrack( Track() );
+
+    setWindowTitle( QApplication::applicationName() );
 }
 
 void
@@ -211,12 +215,14 @@ MetadataWindow::addNowPlayingToActivityList()
 void
 MetadataWindow::onResumed()
 {
+    setWindowTitle( QApplication::applicationName() + " - " + m_currentTrack.toString() );
 }
 
 
 void
 MetadataWindow::onPaused()
 {
+    setWindowTitle( QApplication::applicationName() + " - Paused" );
 }
 
 
