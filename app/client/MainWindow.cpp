@@ -17,7 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "MetadataWindow.h"
+#include "MainWindow.h"
 
 #include "Application.h"
 #include "Services/ScrobbleService.h"
@@ -53,7 +53,7 @@
 #include <QToolBar>
 #include <QDockWidget>
 
-MetadataWindow::MetadataWindow()
+MainWindow::MainWindow()
 {
     setAttribute( Qt::WA_TranslucentBackground );
 
@@ -158,14 +158,14 @@ MetadataWindow::MetadataWindow()
 }
 
 void
-MetadataWindow::onSessionChanged( unicorn::Session* session )
+MainWindow::onSessionChanged( unicorn::Session* session )
 {
     ui.recentTracks->setUsername( session->userInfo().name() );
 }
 
 
 void
-MetadataWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )
+MainWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )
 {
     // hide the playback controls if a radio track has started
     if ( t.source() != Track::LastFmRadio )
@@ -178,7 +178,7 @@ MetadataWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )
 
 
 void
-MetadataWindow::onStopped()
+MainWindow::onStopped()
 {
     newTrack( Track() );
 
@@ -186,7 +186,7 @@ MetadataWindow::onStopped()
 }
 
 void
-MetadataWindow::newTrack( const Track& track )
+MainWindow::newTrack( const Track& track )
 {
     addNowPlayingToActivityList();
 
@@ -201,7 +201,7 @@ MetadataWindow::newTrack( const Track& track )
 
 
 void
-MetadataWindow::addNowPlayingToActivityList()
+MainWindow::addNowPlayingToActivityList()
 {
     if ( ui.nowPlaying->track() != Track()
         && ui.nowPlaying->track().scrobbleStatus() != lastfm::Track::Null )
@@ -213,21 +213,21 @@ MetadataWindow::addNowPlayingToActivityList()
 
 
 void
-MetadataWindow::onResumed()
+MainWindow::onResumed()
 {
     setWindowTitle( QApplication::applicationName() + " - " + m_currentTrack.toString() );
 }
 
 
 void
-MetadataWindow::onPaused()
+MainWindow::onPaused()
 {
     setWindowTitle( QApplication::applicationName() + " - Paused" );
 }
 
 
 void
-MetadataWindow::onItemClicked( ActivityListItem* clickedItem )
+MainWindow::onItemClicked( ActivityListItem* clickedItem )
 {
     QVBoxLayout* infoLayout = static_cast<QVBoxLayout*>( ui.scrobbleInfo->layout() );
 
@@ -243,14 +243,14 @@ MetadataWindow::onItemClicked( ActivityListItem* clickedItem )
 
 
 void
-MetadataWindow::addWinThumbBarButton( QAction* thumbButtonAction )
+MainWindow::addWinThumbBarButton( QAction* thumbButtonAction )
 {
     m_buttons.append( thumbButtonAction );
 }
 
 
 void
-MetadataWindow::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
+MainWindow::addWinThumbBarButtons( QList<QAction*>& thumbButtonActions )
 {
     foreach ( QAction* button, m_buttons )
         thumbButtonActions.append( button );

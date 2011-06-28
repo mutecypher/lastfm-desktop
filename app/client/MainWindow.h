@@ -18,7 +18,7 @@ class SlideOverLayout;
 class UserToolButton;
 
 
-class MetadataWindow : public unicorn::MainWindow
+class MainWindow : public unicorn::MainWindow
 {
     Q_OBJECT
 
@@ -44,7 +44,7 @@ class MetadataWindow : public unicorn::MainWindow
     };
 
 public:
-    MetadataWindow();
+    MainWindow();
     const Track& currentTrack() const{ return m_currentTrack; }
 
     void addWinThumbBarButton( QAction* );

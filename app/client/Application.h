@@ -31,7 +31,7 @@
 #include "lib/unicorn/UnicornApplication.h"
 
 class AboutDialog;
-class MetadataWindow;
+class MainWindow;
 class RadioWidget;
 class QAction;
 class ScrobbleInfoFetcher;
@@ -70,7 +70,7 @@ namespace audioscrobbler
 
         // we delete these so QPointers
         QPointer<QSystemTrayIcon> m_tray;
-        QPointer<MetadataWindow> m_mw;
+        QPointer<MainWindow> m_mw;
 
         Track m_currentTrack;
         Track m_trackToScrobble;

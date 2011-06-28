@@ -31,7 +31,7 @@
 #include "Dialogs/SettingsDialog.h"
 #include "Widgets/TrackItem.h"
 
-#include "MetadataWindow.h"
+#include "MainWindow.h"
 #include "ScrobbleInfoFetcher.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "SkipListener.h"
@@ -256,8 +256,8 @@ Application::init()
     m_submit_scrobbles_toggle->setChecked(true);
     m_tray->setContextMenu(menu);
 
-/// MetadataWindow
-    m_mw = new MetadataWindow;
+/// MainWindow
+    m_mw = new MainWindow;
     m_mw->addWinThumbBarButton( m_tag_action );
     m_mw->addWinThumbBarButton( m_share_action );
     m_mw->addWinThumbBarButton( m_love_action );
