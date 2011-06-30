@@ -25,23 +25,13 @@ class MainWindow : public unicorn::MainWindow
     struct{
         class TitleBar* titleBar;
         class StatusBar* statusBar;
-        MessageBar* message_bar;
 
-        class QScrollBar* scrollBar;
-        QWidget* scrollBarContainer;
+        class SideBar* sideBar;
+        class QStackedWidget* stackedWidget;
 
-        class QSplitter* splitter;
-        QWidget* tracks;
-        class PlaybackControlsWidget* playbackControls;
-        class NowPlayingItem* nowPlaying;
         class ActivityListWidget* recentTracks;
         QWidget* scrobbleInfo;
     } ui;
-
-    enum {
-        TAB_PROFILE,
-        TAB_INFO
-    };
 
 public:
     MainWindow();

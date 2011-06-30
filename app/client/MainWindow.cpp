@@ -28,6 +28,7 @@
 #include "../Widgets/NowPlayingItem.h"
 #include "../Widgets/ActivityListWidget.h"
 #include "../Widgets/TrackItem.h"
+#include "../Widgets/SideBar.h"
 #include "../Widgets/StatusBar.h"
 #include "../Widgets/RadioListWidget.h"
 #include "../Widgets/TitleBar.h"
@@ -44,11 +45,11 @@
 
 #include <QLabel>
 #include <QPushButton>
+#include <QStackedWidget>
 #include <QStatusBar>
 #include <QSizeGrip>
 #include <QTimer>
 #include <QMenuBar>
-#include <QSplitter>
 #include <QShortcut>
 #include <QToolBar>
 #include <QDockWidget>
@@ -57,43 +58,38 @@ MainWindow::MainWindow()
 {
     setAttribute( Qt::WA_TranslucentBackground );
 
-    m_radioSideBar = new QDockWidget;
-    m_radioSideBar->setWidget( new RadioListWidget);
-    m_radioSideBar->setFeatures( QDockWidget::NoDockWidgetFeatures );
-    addDockWidget( Qt::LeftDockWidgetArea, m_radioSideBar );
-    m_radioSideBar->setTitleBarWidget( new QWidget() );
-    m_radioSideBar->setAllowedAreas( Qt::LeftDockWidgetArea );
-
 #ifdef Q_OS_MAC
     setUnifiedTitleAndToolBarOnMac( true );
 #endif
     
     setCentralWidget(new QWidget);
 
-    QVBoxLayout* layout = new QVBoxLayout( centralWidget() );
+    QHBoxLayout* layout = new QHBoxLayout( centralWidget() );
     layout->setSpacing( 0 );
     layout->setContentsMargins( 0, 0, 0, 0 );
 
-    ui.splitter = new QSplitter( Qt::Vertical, this );
+    layout->addWidget( ui.sideBar = new SideBar( this ) );
 
-    ui.playbackControls = new PlaybackControlsWidget( this );
-    ui.playbackControls->setObjectName("playbackControls");
-    ui.playbackControls->hide();
+    layout->addWidget( ui.stackedWidget = new QStackedWidget( this ) );
 
-    ui.nowPlaying = new NowPlayingItem( Track() );
-    ui.nowPlaying->setObjectName("nowPlaying");
+    connect( ui.sideBar, SIGNAL(currentChanged(int)), ui.stackedWidget, SLOT(setCurrentIndex(int)));
 
-    ui.recentTracks = new ActivityListWidget( lastfm::ws::Username, this );
-    ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
+    //ui.playbackControls = new PlaybackControlsWidget( this );
+    //ui.playbackControls->setObjectName("playbackControls");
+    //ui.playbackControls->hide();
 
-    ui.tracks = new QWidget;
-    ui.tracks->setObjectName( "activityList" );
+    //ui.nowPlaying = new NowPlayingItem( Track() );
+    //ui.nowPlaying->setObjectName("nowPlaying");
 
-    ui.scrobbleInfo = new QWidget(this);
+    ui.stackedWidget->addWidget( ui.scrobbleInfo = new QWidget(this) );
     ui.scrobbleInfo->setObjectName( "NowScrobbling" );
+
+    ui.stackedWidget->addWidget( ui.recentTracks = new ActivityListWidget( lastfm::ws::Username, this ) );
+    ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
     ui.statusBar = new StatusBar( this );
     ui.statusBar->setObjectName( "StatusBar" );
+
 #ifndef Q_OS_MAC
     ui.statusBar->setSizeGripEnabled( false );
 #endif // Q_OS_MAC
@@ -101,58 +97,34 @@ MainWindow::MainWindow()
     setWindowTitle( aApp->applicationName() );
     setUnifiedTitleAndToolBarOnMac( true );
 
-    ui.message_bar = new MessageBar( centralWidget());
-
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
     connect( &ScrobbleService::instance(), SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
     connect( &ScrobbleService::instance(), SIGNAL( paused() ), SLOT( onPaused() ) );
     connect( &ScrobbleService::instance(), SIGNAL( resumed() ), SLOT( onResumed() ) );
     connect( &ScrobbleService::instance(), SIGNAL( stopped() ), SLOT( onStopped() ) );
 
-    connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)));
-    connect( ui.nowPlaying->fetcher(), SIGNAL(albumGotInfo(XmlQuery)), SIGNAL(albumGotInfo(XmlQuery)));
-    connect( ui.nowPlaying->fetcher(), SIGNAL(artistGotInfo(XmlQuery)), SIGNAL(artistGotInfo(XmlQuery)));
-    connect( ui.nowPlaying->fetcher(), SIGNAL(artistGotEvents(XmlQuery)), SIGNAL(artistGotEvents(XmlQuery)));
-    connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotTopFans(XmlQuery)), SIGNAL(trackGotTopFans(XmlQuery)));
-    connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotTags(XmlQuery)), SIGNAL(trackGotTags(XmlQuery)));
-    connect( ui.nowPlaying->fetcher(), SIGNAL(finished()), SIGNAL(finished()));
+//    connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)));
+//    connect( ui.nowPlaying->fetcher(), SIGNAL(albumGotInfo(XmlQuery)), SIGNAL(albumGotInfo(XmlQuery)));
+//    connect( ui.nowPlaying->fetcher(), SIGNAL(artistGotInfo(XmlQuery)), SIGNAL(artistGotInfo(XmlQuery)));
+//    connect( ui.nowPlaying->fetcher(), SIGNAL(artistGotEvents(XmlQuery)), SIGNAL(artistGotEvents(XmlQuery)));
+//    connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotTopFans(XmlQuery)), SIGNAL(trackGotTopFans(XmlQuery)));
+//    connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotTags(XmlQuery)), SIGNAL(trackGotTags(XmlQuery)));
+//    connect( ui.nowPlaying->fetcher(), SIGNAL(finished()), SIGNAL(finished()));
 
-    connect( ui.nowPlaying, SIGNAL(clicked(ActivityListItem*)), ui.recentTracks, SLOT(clearItemClicked()));
+//    connect( ui.nowPlaying, SIGNAL(clicked(ActivityListItem*)), ui.recentTracks, SLOT(clearItemClicked()));
 
-    connect( ui.recentTracks, SIGNAL(itemClicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
-    connect( ui.nowPlaying, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
+//    connect( ui.recentTracks, SIGNAL(itemClicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
+//    connect( ui.nowPlaying, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
 
     menuBar()->hide();
 
     //for some reason some of the stylesheet is not being applied properly unless reloaded
     //here. StyleSheets see very flaky to me. :s
     aApp->refreshStyleSheet();
-    layout->addWidget( ui.splitter, 1 );
 
-    delete ui.tracks->layout();
-    QVBoxLayout* vl = new QVBoxLayout( ui.tracks );
-
-    vl->setContentsMargins( 0, 0, 0, 0 );
-    vl->setSpacing( 0 );
-
-    vl->addWidget( ui.playbackControls );
-    vl->addWidget( ui.nowPlaying );
-    vl->addWidget( ui.recentTracks );
-
-    ui.splitter->addWidget( ui.tracks );
-    ui.splitter->addWidget( ui.scrobbleInfo );
-    QVBoxLayout* nsLayout = new QVBoxLayout( ui.scrobbleInfo );
-    nsLayout->setSpacing( 0 );
-    nsLayout->setContentsMargins( 0, 0, 0, 0 );
-
-    ui.splitter->setCollapsible( 0, false );
-    ui.splitter->handle( 1 )->setAutoFillBackground( true );
     setMinimumWidth( 455 );
 
     setStatusBar( ui.statusBar );
-    resize(20, 500);
-
-    onItemClicked( ui.nowPlaying );
 
     finishUi();
 }
@@ -168,8 +140,8 @@ void
 MainWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )
 {
     // hide the playback controls if a radio track has started
-    if ( t.source() != Track::LastFmRadio )
-        ui.playbackControls->hide();
+//    if ( t.source() != Track::LastFmRadio )
+//        ui.playbackControls->hide();
 
     newTrack( t );
 
@@ -191,24 +163,24 @@ MainWindow::newTrack( const Track& track )
     addNowPlayingToActivityList();
 
     m_currentTrack = track;
-    ui.nowPlaying->setTrack( m_currentTrack );
+//    ui.nowPlaying->setTrack( m_currentTrack );
 
     // only switch the info widget if we are
     // currently on the now playing track
-    if ( m_currentActivity == ui.nowPlaying )
-        onItemClicked( ui.nowPlaying );
+//    if ( m_currentActivity == ui.nowPlaying )
+//        onItemClicked( ui.nowPlaying );
 }
 
 
 void
 MainWindow::addNowPlayingToActivityList()
 {
-    if ( ui.nowPlaying->track() != Track()
-        && ui.nowPlaying->track().scrobbleStatus() != lastfm::Track::Null )
-    {
-        TrackItem* item = new TrackItem( *ui.nowPlaying );
-        ui.recentTracks->insertItem( item );
-    }
+//    if ( ui.nowPlaying->track() != Track()
+//        && ui.nowPlaying->track().scrobbleStatus() != lastfm::Track::Null )
+//    {
+//        TrackItem* item = new TrackItem( *ui.nowPlaying );
+//        ui.recentTracks->insertItem( item );
+//    }
 }
 
 
