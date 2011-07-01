@@ -56,8 +56,6 @@
 
 MainWindow::MainWindow()
 {
-    setAttribute( Qt::WA_TranslucentBackground );
-
 #ifdef Q_OS_MAC
     setUnifiedTitleAndToolBarOnMac( true );
 #endif
