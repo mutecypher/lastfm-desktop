@@ -21,6 +21,8 @@
 #include <QRadioButton>
 #include <QVBoxLayout>
 
+#include <lastfm/User>
+
 #include "../Application.h"
 #include "SideBar.h"
 
@@ -53,7 +55,7 @@ SideBar::onButtonClicked()
 void
 SideBar::onSessionChanged( unicorn::Session* newSession )
 {
-    QUrl imageUrl = newSession->userInfo().imageUrl( lastfm::ImageSize::Medium, true );
+    QUrl imageUrl = newSession->userInfo().imageUrl( lastfm::Medium, true );
     connect( lastfm::nam()->get( QNetworkRequest( imageUrl ) ), SIGNAL(finished()), SLOT(onGotAvatar()));
 }
 

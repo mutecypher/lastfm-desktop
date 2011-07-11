@@ -75,6 +75,8 @@ MainWindow::MainWindow()
     //ui.playbackControls = new PlaybackControlsWidget( this );
     //ui.playbackControls->setObjectName("playbackControls");
     //ui.playbackControls->hide();
+    ui.recentTracks = new ActivityListWidget( this );
+    ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
     //ui.nowPlaying = new NowPlayingItem( Track() );
     //ui.nowPlaying->setObjectName("nowPlaying");
@@ -82,7 +84,7 @@ MainWindow::MainWindow()
     ui.stackedWidget->addWidget( ui.scrobbleInfo = new QWidget(this) );
     ui.scrobbleInfo->setObjectName( "NowScrobbling" );
 
-    ui.stackedWidget->addWidget( ui.recentTracks = new ActivityListWidget( lastfm::ws::Username, this ) );
+    ui.stackedWidget->addWidget( ui.recentTracks = new ActivityListWidget( this ) );
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
     ui.statusBar = new StatusBar( this );
@@ -126,13 +128,6 @@ MainWindow::MainWindow()
 
     finishUi();
 }
-
-void
-MainWindow::onSessionChanged( unicorn::Session* session )
-{
-    ui.recentTracks->setUsername( session->userInfo().name() );
-}
-
 
 void
 MainWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )

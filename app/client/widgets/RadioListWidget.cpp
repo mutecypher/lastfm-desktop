@@ -28,6 +28,8 @@
 RadioListWidget::RadioListWidget(QWidget* parent)
 : QTreeView(parent)
 {
+    setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
+
     setModel( m_model = new RadioStationListModel());
     setHeaderHidden( true );
     setRootIsDecorated( false );
@@ -39,7 +41,7 @@ RadioListWidget::RadioListWidget(QWidget* parent)
 }
 
 void 
-RadioListWidget::onSessionChanged( unicorn::Session* session ) {
+RadioListWidget::onSessionChanged( unicorn::Session* ) {
     QList<RadioStation> stationList;
     stationList << RadioStation::library( lastfm::ws::Username )
                 << RadioStation::mix( lastfm::ws::Username)

@@ -54,8 +54,6 @@ private slots:
     void onPaused();
     void onResumed();
 
-    void onSessionChanged( unicorn::Session* );
-
     void onItemClicked( class ActivityListItem* clickedItem );
     
 private:

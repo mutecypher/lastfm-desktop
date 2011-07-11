@@ -1,91 +1,101 @@
-/*
-   Copyright 2005-2009 Last.fm Ltd.
-      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
+#ifndef ACTIVITY_LIST_WIDGET_H
+#define ACTIVITY_LIST_WIDGET_H
 
-   This file is part of the Last.fm Desktop Application Suite.
-
-   lastfm-desktop is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   lastfm-desktop is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-#ifndef ACTIVITY_LIST_WIDGET_H_
-#define ACTIVITY_LIST_WIDGET_H_
-
-#include <QWidget>
-#include <QList>
-#include <QEasingCurve>
-
-#include <lastfm/User>
-
-#include "lib/unicorn/StylableWidget.h"
-
-namespace lastfm { class Track; };
-using lastfm::Track;
-
-class ActivityListWidget : public StylableWidget
-{
+#include <QTreeView>
+#include <QMouseEvent>
+class ActivityListWidget : public QTreeView {
     Q_OBJECT
 public:
-    ActivityListWidget( QString username, QWidget* parent = 0 );
+    ActivityListWidget( QWidget* parent );
 
-    void setUsername( QString username );
-
-    void insertItem( class ActivityListItem* TrackItem );
-
-    void read();
-    void write() const;
-
-    QEasingCurve::Type easingCurve() const;
-    void setEasingCurve( QEasingCurve::Type easingCurve );
-
-    int count() const;
-    class ActivityListItem* itemAt( int index ) const;
-
-private:
-    void insertCachedTrack( const Track& a_track );
-
-signals:
-    void itemClicked( class ActivityListItem* );
+protected:
+    int sizeHintForColumn( int column ) const {
+        if( 1 == column )
+            return 40;
+        
+        return QTreeView::sizeHintForColumn( column );
+    }
 
 private slots:
-    void onItemChanged();
-    void onMoveFinished();
-    void doWrite() const;
-
-    void disableHover();
-    void enableHover();
-
-    void clearItemClicked();
-    void onItemClicked( class ActivityListItem* item );
-
-    void onFoundIPodScrobbles( const QList<lastfm::Track>& tracks );
-    void onScrobblesCached( const QList<lastfm::Track>& tracks );
-
-    void refreshRecentTracks( User user = User() );
-    void onGotRecentTracks();
+/*    void refreshRecentTracks( User user = User() );
+    void onGotRecentTracks();   */
+    void onItemClicked( const QModelIndex& index );
 
 private:
-    Q_PROPERTY(QEasingCurve::Type easingCurve READ easingCurve WRITE setEasingCurve);
-    QEasingCurve::Type m_easingCurve;
-
-private:
-    QString m_path;
-    class QTimer* m_writeTimer;
-    class AnimatedListLayout* m_listLayout;
-    class QScrollArea* m_scrollArea;
-    int m_rowNum;
-
-    class ActivityListItem* m_currentItem;
+    class ActivityListModel* m_model;
 };
 
-#endif // ACTIVITY_LIST_WIDGET_H_
+#include <QPainter>
+#include <QStyledItemDelegate>
+#include "../ActivityListModel.h"
+class TrackDelegate : public QStyledItemDelegate {
+    Q_OBJECT
+public:
+    TrackDelegate( QObject* parent = 0 ) : QStyledItemDelegate( parent ){}
+    virtual void paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const {
+
+        const int timestampWidth=100;
+        const QImage& image = index.data( Qt::DecorationRole ).value<QImage>();
+        QLinearGradient g( option.rect.topLeft(), option.rect.bottomLeft());
+        g.setColorAt( 0, QColor( 0xeeeeee ) );
+        g.setColorAt( 1, QColor( 0xdddddd ) );
+        painter->fillRect( option.rect, g );
+        
+        painter->setPen(QColor(0xaaaaaa));
+        painter->drawLine( option.rect.bottomLeft(), option.rect.bottomRight());
+        
+        painter->drawImage( option.rect.topLeft() + QPoint( 20, 10 ), image );
+
+        QFont f("Lucida Grande");
+        f.setBold( true );
+        f.setPointSize( 14 );
+        painter->setPen(QColor(0x333333));
+        painter->setFont( f );
+
+        painter->setPen(Qt::white);
+        painter->drawText( option.rect.left() + 94, option.rect.top() + 26, index.data( ActivityListModel::TrackNameRole ).toString());
+        painter->setPen(QColor(0x333333));
+        painter->drawText( option.rect.left() + 94, option.rect.top() + 25, index.data( ActivityListModel::TrackNameRole ).toString());
+        f.setBold( false );
+        painter->setFont( f );
+        painter->setPen(Qt::white);
+        painter->drawText( option.rect.left() + 94, option.rect.top() + 46, index.data( ActivityListModel::ArtistNameRole ).toString());
+        painter->setPen(QColor(0x333333));
+        painter->drawText( option.rect.left() + 94, option.rect.top() + 45, index.data( ActivityListModel::ArtistNameRole ).toString());
+
+        painter->setPen(QColor(0x777777));
+        
+        f.setPointSize( 11 );
+        painter->setFont( f );
+        painter->drawText( option.rect.right() - timestampWidth, option.rect.top() + 25, prettyTime(index.data( ActivityListModel::TimeStampRole ).toDateTime()));
+    }
+
+private:
+    QString prettyTime( const QDateTime& timestamp ) const {
+        QString dateFormat( "d MMM h:mmap" );
+        QDateTime now = QDateTime::currentDateTime();
+        int secondsAgo = timestamp.secsTo( now );
+
+        if ( secondsAgo < (60 * 60) )
+        {
+            // Less than an hour ago
+            int minutesAgo = ( timestamp.secsTo( now ) / 60 );
+            return (minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) );
+        }
+        else if ( secondsAgo < (60 * 60 * 6) || now.date() == timestamp.date() )
+        {
+            // Less than 6 hours ago or on the same date
+            int hoursAgo = ( timestamp.secsTo( now ) / (60 * 60) );
+            return (hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) );
+        }
+        else
+        {
+            return timestamp.toString( dateFormat );
+            // We don't need to set the timer because this date will never change
+        }
+    }
+};
+
+
+#endif //ACTIVITY_LIST_WIDGET_H
+
