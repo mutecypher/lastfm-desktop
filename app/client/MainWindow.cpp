@@ -75,8 +75,6 @@ MainWindow::MainWindow()
     //ui.playbackControls = new PlaybackControlsWidget( this );
     //ui.playbackControls->setObjectName("playbackControls");
     //ui.playbackControls->hide();
-    ui.recentTracks = new ActivityListWidget( this );
-    ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
     //ui.nowPlaying = new NowPlayingItem( Track() );
     //ui.nowPlaying->setObjectName("nowPlaying");
