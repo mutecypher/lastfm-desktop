@@ -1,6 +1,7 @@
 #include "ActivityListModel.h"
 #include "../../../lib/unicorn/UnicornSession.h"
 #include <QApplication>
+#include <QDebug>
 
 void
 ActivityListModel::onFoundIPodScrobbles( const QList<lastfm::Track>& tracks )
@@ -65,6 +66,7 @@ ActivityListModel::read()
 void
 ActivityListModel::write() const
 {
+    qDebug() << "Writing recent_tracks";
     if ( rowCount() == 0 )
         QFile::remove( m_path );
     else
@@ -145,6 +147,7 @@ ActivityListModel::onTrackStarted( const Track& track )
     // Tracks with a deviceId are iPod scrobbles
     // we ignore these at the moment
     if (track.extra("deviceId").isEmpty()) {
+        if( m_tracks.count() > 0 && m_tracks[0] == track ) return;
         beginInsertRows( QModelIndex(), 0, 0 );
         m_tracks.prepend( track );
         track.getInfo();
@@ -166,6 +169,9 @@ ActivityListModel::onTrackLoveToggled()
 
 QVariant 
 ActivityListModel::data( const QModelIndex& index, int role ) const {
+    if( index.column() == index.model()->columnCount() - 1 && role == Qt::SizeHintRole )
+        return QSize( 10, 10 );
+
     if( role == TrackRole ) 
     {
         return m_tracks[index.row()];
@@ -183,7 +189,7 @@ ActivityListModel::data( const QModelIndex& index, int role ) const {
         else if( role == Qt::DecorationRole )
             return loveIcon;
         else if( role == Qt::SizeHintRole )
-            return loveIcon.actualSize( QSize( 40, 84 ));
+            return loveIcon.actualSize( QSize( 10, 10 ));
         else
             return QVariant();
     }
@@ -192,14 +198,33 @@ ActivityListModel::data( const QModelIndex& index, int role ) const {
         if( role == Qt::DecorationRole )
             return tagIcon;
         else if( role == Qt::SizeHintRole )
-            return tagIcon.actualSize( QSize( 40, 84 ));
+            return tagIcon.actualSize( QSize( 10, 10 ));
+        else if( role == Qt::DisplayRole )
+            return "Tag";
         else
             return QVariant();
     }
 
+    if( index.column() == 3 ) {
+        if( role == Qt::DecorationRole )
+            return shareIcon;
+        else if( role == Qt::SizeHintRole )
+            return shareIcon.actualSize( QSize( 10, 10 ));
+        else if( role == Qt::DisplayRole )
+            return "Share";
+        else
+            return QVariant();
+    }
+
+    if( index.column() != 0 ) return QVariant();
+
     switch( role ) {
         case Qt::DisplayRole: return m_tracks[index.row()].toString();
-        case Qt::DecorationRole: return m_tracks[index.row()].image();
+        case Qt::DecorationRole: {
+            const QImage& image = m_tracks[index.row()].image();
+            if( image.isNull() ) return noArt.scaled( 64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            return image;
+        }
         case Qt::SizeHintRole: return QSize( 600, 84 );
         case TrackNameRole: return m_tracks[index.row()].title();
         case ArtistNameRole: return m_tracks[index.row()].artist().toString();

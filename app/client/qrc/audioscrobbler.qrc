@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/" >
+	<file>noArt.png</file>
         <file>16x16.png</file>
         <file>22x22.png</file>
         <file>22x22_transparent.png</file>

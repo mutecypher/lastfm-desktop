@@ -9,12 +9,7 @@ public:
     ActivityListWidget( QWidget* parent );
 
 protected:
-    int sizeHintForColumn( int column ) const {
-        if( 1 == column )
-            return 40;
-        
-        return QTreeView::sizeHintForColumn( column );
-    }
+
 
 private slots:
 /*    void refreshRecentTracks( User user = User() );
@@ -67,7 +62,7 @@ public:
         
         f.setPointSize( 11 );
         painter->setFont( f );
-        painter->drawText( option.rect.right() - timestampWidth, option.rect.top() + 25, prettyTime(index.data( ActivityListModel::TimeStampRole ).toDateTime()));
+        painter->drawText( option.rect.left() + 94, option.rect.bottom() - 10, prettyTime(index.data( ActivityListModel::TimeStampRole ).toDateTime()));
     }
 
 private:
