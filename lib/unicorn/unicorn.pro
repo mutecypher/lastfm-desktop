@@ -49,7 +49,7 @@ SOURCES += \
 	qtsingleapplication/qtlockedfile.cpp \
 	qtsingleapplication/qtlocalpeer.cpp \
 	QMessageBoxBuilder.cpp \
-	LoginProcess.cpp \
+    LoginProcess.cpp \
 	layouts/SlideOverLayout.cpp \
 	layouts/SideBySideLayout.cpp \
 	layouts/flowlayout.cpp \
@@ -62,7 +62,7 @@ SOURCES += \
 	dialogs/LoginContinueDialog.cpp \
 	dialogs/AboutDialog.cpp \
 	AnimatedStatusBar.cpp
-	
+
 HEADERS += \
 	widgets/UserToolButton.h \
 	widgets/UserMenu.h \
@@ -130,9 +130,15 @@ HEADERS += \
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	
+
+mac:SOURCES += mac/AppleScript.cpp \
+               UnicornApplication_mac.mm
+
+mac:HEADERS += mac/AppleScript.h
+
 FORMS += \
 	dialogs/ShareDialog.ui \
 	dialogs/LoginDialog.ui
-	
+
 RESOURCES += \
 	qrc/unicorn.qrc
