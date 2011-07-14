@@ -107,7 +107,7 @@ SOURCES += \
 	AudioscrobblerSettings.cpp \
 	Application.cpp \
 	ActivityListModel.cpp
-    
+
 HEADERS += \
 	Wizard/WelcomePage.h \
 	Wizard/SystemTrayPage.h \
@@ -195,7 +195,9 @@ HEADERS += \
 	AudioscrobblerSettings.h \
 	Application.h \
 	ActivityListModel.h
-    
+
+mac:SOURCE += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
+
 FORMS += \
 	Widgets/TagFilterDialog.ui \
 	Widgets/PlaybackControlsWidget.ui \
@@ -203,6 +205,6 @@ FORMS += \
 	Widgets/ActivityListItem.ui \
 	Dialogs/ScrobbleSetupDialog.ui \
 	Dialogs/DiagnosticsDialog.ui
-    
+
 RESOURCES += \
 	qrc/audioscrobbler.qrc
