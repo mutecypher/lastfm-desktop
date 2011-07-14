@@ -196,7 +196,7 @@ HEADERS += \
 	Application.h \
 	ActivityListModel.h
 
-mac:SOURCE += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
+mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
 FORMS += \
 	Widgets/TagFilterDialog.ui \
