@@ -70,13 +70,34 @@ private:
     QRect iconRect( const QModelIndex& index, const QStyleOptionViewItem& option ) const {
         const QIcon& icon = index.data(Qt::DecorationRole).value<QIcon>();
         const QSize iconSize = icon.actualSize( QSize( 84, 84 ));
-        return QRect( option.rect.center() - QPoint( iconSize.width() / 2, iconSize.height() / 2 ),
+        return QRect( option.rect.topLeft() + QPoint( option.rect.width() /2.0f, 5) - QPoint( iconSize.width() / 2, 0 ),
                       iconSize);
     }
+
+    QString prettyTime( const QDateTime& timestamp ) const {
+        QString dateFormat( "d MMM h:mmap" );
+        QDateTime now = QDateTime::currentDateTime();
+        int secondsAgo = timestamp.secsTo( now );
+
+        if ( secondsAgo < (60 * 60) )
+        {
+            // Less than an hour ago
+            int minutesAgo = ( timestamp.secsTo( now ) / 60 );
+            return (minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) );
+        }
+        else if ( secondsAgo < (60 * 60 * 6) || now.date() == timestamp.date() )
+        {
+            // Less than 6 hours ago or on the same date
+            int hoursAgo = ( timestamp.secsTo( now ) / (60 * 60) );
+            return (hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) );
+        }
+        else
+        {
+            return timestamp.toString( dateFormat );
+            // We don't need to set the timer because this date will never change
+        }
+    }
 };
-
-
-
 
 ActivityListWidget::ActivityListWidget( QWidget* parent )
                    :QTreeView( parent )
@@ -84,17 +105,17 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     
     setModel( m_model = new ActivityListModel );
     QStyledItemDelegate* delegate = new CheckableDelegate(this);
-    setItemDelegateForColumn( 0, new TrackDelegate());
-    setItemDelegateForColumn( 1, delegate);
-    setItemDelegateForColumn( 2, delegate);
+    setItemDelegate( delegate);
+    setItemDelegateForColumn( 0, new TrackDelegate(this));
     header()->setStretchLastSection( false );
     setAttribute( Qt::WA_MacShowFocusRect, false );
     viewport()->setAttribute( Qt::WA_Hover, true );
     viewport()->setMouseTracking( true );
     setSelectionBehavior( SelectItems );
     header()->setResizeMode( 0, QHeaderView::Stretch );
-    header()->setResizeMode( 1, QHeaderView::ResizeToContents );
-    header()->setResizeMode( 2, QHeaderView::ResizeToContents );
+    for( int i = 1; i < m_model->columnCount(); i++ ) {
+        header()->setResizeMode( i, QHeaderView::ResizeToContents );
+    }
     header()->setMinimumSectionSize( 0 );
     setHeaderHidden( true );
     setRootIsDecorated( false );
@@ -103,6 +124,7 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     connect( this, SIGNAL(clicked(QModelIndex)),SLOT(onItemClicked(QModelIndex)));
 }
 
+#include "../../../lib/unicorn/dialogs/ShareDialog.h"
 #include "../../../lib/unicorn/dialogs/TagDialog.h"
 void 
 ActivityListWidget::onItemClicked( const QModelIndex& index ) 
@@ -113,6 +135,13 @@ ActivityListWidget::onItemClicked( const QModelIndex& index )
         td->show(); 
         td->activateWindow(); 
     }
+    if( index.column() == 3 && index.data( ActivityListModel::HoverStateRole ).toBool() ) {
+        ShareDialog* td = new ShareDialog( index.data(ActivityListModel::TrackRole).value<Track>(), window() ); 
+        td->raise(); 
+        td->show(); 
+        td->activateWindow(); 
+    }
+
 }
 
 
