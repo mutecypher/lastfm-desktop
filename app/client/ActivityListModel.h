@@ -13,7 +13,7 @@ class ImageTrack : public QObject, public lastfm::Track {
 Q_OBJECT
 public:
     ImageTrack(const lastfm::Track& t):QObject(), lastfm::Track(t) {}
-    ImageTrack(ImageTrack& t ):QObject(), lastfm::Track(t){}
+    ImageTrack(const ImageTrack& t ):QObject(), lastfm::Track(t){}
     void fetchImage() {
         QNetworkReply* r = lastfm::nam()->get(QNetworkRequest(imageUrl(lastfm::Small, false )));
         connect( r, SIGNAL(finished()), SLOT(onGotImage()));
