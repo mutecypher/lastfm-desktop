@@ -1,0 +1,138 @@
+TARGET = unicorn
+TEMPLATE = lib
+CONFIG += lastfm
+QT = core gui xml network
+include( $$ROOT_DIR/admin/include.qmake )
+SOURCES += $$ROOT_DIR/common/c++/Logger.cpp
+DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
+
+# UniqueApplication
+win32:LIBS += user32.lib shell32.lib ole32.lib
+
+macx:LIBS += -framework Cocoa
+
+SOURCES += \
+	widgets/UserToolButton.cpp \
+	widgets/UserManagerWidget.cpp \
+	widgets/UnicornTabWidget.cpp \
+	widgets/TrackWidget.cpp \
+	widgets/TagListWidget.cpp \
+	widgets/TagBuckets.cpp \
+	widgets/StatusLight.cpp \
+	widgets/SelectedItemWidget.cpp \
+	widgets/SearchBox.cpp \
+	widgets/MessageBar.cpp \
+	widgets/LfmListViewWidget.cpp \
+	widgets/Label.cpp \
+	widgets/ItemSelectorWidget.cpp \
+	widgets/ImageButton.cpp \
+	widgets/HttpImageWidget.cpp \
+	widgets/HelpTextLineEdit.cpp \
+	widgets/GhostWidget.cpp \
+	widgets/FriendsPicker.cpp \
+	widgets/DataListWidget.cpp \
+	widgets/BannerWidget.cpp \
+	widgets/ActionButton.cpp \
+	Updater/PluginList.cpp \
+	Updater/IPluginInfo.cpp \
+	UpdateInfoFetcher.cpp \
+	UnicornSettings.cpp \
+	UnicornSession.cpp \
+	UnicornMainWindow.cpp \
+	UnicornCoreApplication.cpp \
+	UnicornApplication.cpp \
+	TrackImageFetcher.cpp \
+	qtwin.cpp \
+	qtsingleapplication/qtsinglecoreapplication.cpp \
+	qtsingleapplication/qtsingleapplication.cpp \
+	qtsingleapplication/qtlockedfile_unix.cpp \
+	qtsingleapplication/qtlockedfile.cpp \
+	qtsingleapplication/qtlocalpeer.cpp \
+	QMessageBoxBuilder.cpp \
+	LoginProcess.cpp \
+	layouts/SlideOverLayout.cpp \
+	layouts/SideBySideLayout.cpp \
+	layouts/flowlayout.cpp \
+	layouts/AnimatedListLayout.cpp \
+	dialogs/UserManagerDialog.cpp \
+	dialogs/UpdateDialog.cpp \
+	dialogs/TagDialog.cpp \
+	dialogs/ShareDialog.cpp \
+	dialogs/LoginDialog.cpp \
+	dialogs/LoginContinueDialog.cpp \
+	dialogs/AboutDialog.cpp \
+	AnimatedStatusBar.cpp
+	
+HEADERS += \
+	widgets/UserToolButton.h \
+	widgets/UserMenu.h \
+	widgets/UserManagerWidget.h \
+	widgets/UserComboSelector.h \
+	widgets/UnicornTabWidget.h \
+	widgets/TrackWidget.h \
+	widgets/TagListWidget.h \
+	widgets/TagBuckets.h \
+	widgets/StatusLight.h \
+	widgets/SpinnerLabel.h \
+	widgets/SelectedItemWidget.h \
+	widgets/Seed.h \
+	widgets/SearchBox.h \
+	widgets/PlayableMimeData.h \
+	widgets/MessageBar.h \
+	widgets/LfmListViewWidget.h \
+	widgets/Label.h \
+	widgets/ItemSelectorWidget.h \
+	widgets/ImageButton.h \
+	widgets/HttpImageWidget.h \
+	widgets/HelpTextLineEdit.h \
+	widgets/GhostWidget.h \
+	widgets/FriendsPicker.h \
+	widgets/DataListWidget.h \
+	widgets/DataBox.h \
+	widgets/BannerWidget.h \
+	widgets/ActionButton.h \
+	Updater/PluginList.h \
+	Updater/KillProcess.h \
+	Updater/IPluginInfo.h \
+	Updater/gen_PluginList.h \
+	UpdateInfoFetcher.h \
+	UnicornSettings.h \
+	UnicornSession.h \
+	UnicornMainWindow.h \
+	UnicornCoreApplication.h \
+	UnicornApplication.h \
+	TrackImageFetcher.h \
+	StylableWidget.h \
+	SignalBlocker.h \
+	qtwin.h \
+	qtsingleapplication/qtsinglecoreapplication.h \
+	qtsingleapplication/qtsingleapplication.h \
+	qtsingleapplication/qtlockedfile.h \
+	qtsingleapplication/qtlocalpeer.h \
+	QMessageBoxBuilder.h \
+	PlayBus.h \
+	LoginProcess.h \
+	layouts/SlideOverLayout.h \
+	layouts/SideBySideLayout.h \
+	layouts/flowlayout.h \
+	layouts/AnimatedListLayout.h \
+	dialogs/WelcomeDialog.h \
+	dialogs/UserManagerDialog.h \
+	dialogs/UpdateDialog.h \
+	dialogs/UnicornDialog.h \
+	dialogs/TagDialog.h \
+	dialogs/ShareDialog.h \
+	dialogs/LoginDialog.h \
+	dialogs/LoginContinueDialog.h \
+	dialogs/AboutDialog.h \
+	AnimatedStatusBar.h \
+	AnimatedPushButton.h
+	
+win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
+	
+FORMS += \
+	dialogs/ShareDialog.ui \
+	dialogs/LoginDialog.ui
+	
+RESOURCES += \
+	qrc/unicorn.qrc
