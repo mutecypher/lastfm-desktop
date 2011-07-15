@@ -222,7 +222,7 @@ ActivityListModel::data( const QModelIndex& index, int role ) const {
         case Qt::DisplayRole: return m_tracks[index.row()].toString();
         case Qt::DecorationRole: {
             const QImage& image = m_tracks[index.row()].image();
-            if( image.isNull() ) return noArt.scaled( 64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            if( image.isNull() ) return noArt;
             return image;
         }
         case Qt::SizeHintRole: return QSize( 600, 84 );
