@@ -18,37 +18,62 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QRadioButton>
+#include <QToolButton>
 #include <QVBoxLayout>
+#include <QLabel>
 
 #include <lastfm/User>
 
 #include "../Application.h"
 #include "SideBar.h"
 
-SideBar::SideBar(QWidget *parent) :
-    QWidget(parent)
+QAbstractButton* newButton( const QString& text, QWidget* parent = 0 )
+{
+    QAbstractButton* pushButton = new QToolButton( parent );
+    pushButton->setText( text );
+    pushButton->setCheckable( true );
+    pushButton->setAutoExclusive( true );
+    pushButton->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+    return pushButton;
+}
+
+
+SideBar::SideBar(QWidget *parent)
+    :StylableWidget(parent)
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
-    layout->addWidget( ui.np = new QRadioButton( tr( "Now Playing" ), this ));
-    layout->addWidget( ui.s = new QRadioButton( tr( "Scrobbles" ), this ));
-    layout->addWidget( ui.r = new QRadioButton( tr( "Radio" ), this ));
+    layout->addWidget( ui.nowPlaying = newButton( tr( "Now Playing" ), this ), Qt::AlignHCenter );
+    ui.nowPlaying->setObjectName( "nowPlaying" );
+    layout->addWidget( ui.scrobbles = newButton( tr( "Scrobbles" ), this ), Qt::AlignHCenter);
+    ui.scrobbles->setObjectName( "scrobbles" ); 
+    layout->addWidget( ui.profile = newButton( tr( "Profile" ), this ), Qt::AlignHCenter);
+    ui.profile->setObjectName( "profile" );
+    layout->addWidget( ui.friends = newButton( tr( "Friends" ), this ), Qt::AlignHCenter);
+    ui.friends->setObjectName( "friends" );
+    layout->addWidget( ui.radio = newButton( tr( "Radio" ), this ), Qt::AlignHCenter);
+    ui.radio->setObjectName( "radio" );
     layout->addStretch( 1 );
+    layout->addWidget( ui.avatar = new QLabel( this ), Qt::AlignHCenter );
+    ui.avatar->setObjectName( "avatar" );
+    ui.avatar->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
 
-    connect( ui.np, SIGNAL(clicked()), SLOT(onButtonClicked()));
-    connect( ui.s, SIGNAL(clicked()), SLOT(onButtonClicked()));
-    connect( ui.r, SIGNAL(clicked()), SLOT(onButtonClicked()));
+    connect( ui.nowPlaying, SIGNAL(clicked()), SLOT(onButtonClicked()));
+    connect( ui.scrobbles, SIGNAL(clicked()), SLOT(onButtonClicked()));
+    connect( ui.profile, SIGNAL(clicked()), SLOT(onButtonClicked()));
+    connect( ui.friends, SIGNAL(clicked()), SLOT(onButtonClicked()));
+    connect( ui.radio, SIGNAL(clicked()), SLOT(onButtonClicked()));
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)));
 }
 
+
 void
 SideBar::onButtonClicked()
 {
-    emit currentChanged( layout()->indexOf( qobject_cast<QRadioButton*>( sender() ) ) );
+    emit currentChanged( layout()->indexOf( qobject_cast<QWidget*>( sender() ) ) );
 }
 
 
@@ -64,5 +89,5 @@ SideBar::onGotAvatar()
 {
     QPixmap avatar;
     avatar.loadFromData( qobject_cast<QNetworkReply*>(sender())->readAll() );
-    ui.np->setIcon( QIcon( avatar ) );
+    ui.avatar->setPixmap( avatar );
 }

@@ -23,17 +23,22 @@
 
 #include <QWidget>
 
+#include "lib/unicorn/StylableWidget.h"
+
 namespace unicorn { class Session; }
 
-class SideBar : public QWidget
+class SideBar : public StylableWidget
 {
     Q_OBJECT
 private:
     struct
     {
-        class QRadioButton* np;
-        class QRadioButton* s;
-        class QRadioButton* r;
+        class QAbstractButton* nowPlaying;
+        class QAbstractButton* scrobbles;
+        class QAbstractButton* profile;
+        class QAbstractButton* friends;
+        class QAbstractButton* radio;
+        class QLabel* avatar;
     } ui;
 
 public:

@@ -33,6 +33,7 @@
 #include "../Widgets/RadioListWidget.h"
 #include "../Widgets/TitleBar.h"
 #include "../Widgets/PlaybackControlsWidget.h"
+#include "../Widgets/RadioWidget.h"
 
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/MessageBar.h"
@@ -79,11 +80,21 @@ MainWindow::MainWindow()
     //ui.nowPlaying = new NowPlayingItem( Track() );
     //ui.nowPlaying->setObjectName("nowPlaying");
 
-    ui.stackedWidget->addWidget( ui.scrobbleInfo = new QWidget(this) );
-    ui.scrobbleInfo->setObjectName( "NowScrobbling" );
+    ui.stackedWidget->addWidget( ui.nowPlaying = new QWidget(this) );
+    ui.nowPlaying->setObjectName( "nowPlaying" );
 
     ui.stackedWidget->addWidget( ui.recentTracks = new ActivityListWidget( this ) );
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
+
+    ui.stackedWidget->addWidget( ui.profile = new QWidget(this) );
+    ui.profile->setObjectName( "profile" );
+
+    ui.stackedWidget->addWidget( ui.friends = new QWidget(this) );
+    ui.friends->setObjectName( "friends" );
+
+    ui.stackedWidget->addWidget( ui.radio = new RadioWidget(this) );
+    ui.radio->setObjectName( "radio" );
+
 
     ui.statusBar = new StatusBar( this );
     ui.statusBar->setObjectName( "StatusBar" );
@@ -192,7 +203,7 @@ MainWindow::onPaused()
 void
 MainWindow::onItemClicked( ActivityListItem* clickedItem )
 {
-    QVBoxLayout* infoLayout = static_cast<QVBoxLayout*>( ui.scrobbleInfo->layout() );
+    QVBoxLayout* infoLayout = static_cast<QVBoxLayout*>( ui.nowPlaying->layout() );
 
     while ( infoLayout->count() )
         infoLayout->takeAt( 0 )->widget()->hide();

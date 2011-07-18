@@ -106,7 +106,8 @@ SOURCES += \
 	Bootstrapper/AbstractBootstrapper.cpp \
 	AudioscrobblerSettings.cpp \
 	Application.cpp \
-	ActivityListModel.cpp
+	ActivityListModel.cpp \
+    Widgets/RadioWidget.cpp
 
 HEADERS += \
 	Wizard/WelcomePage.h \
@@ -194,7 +195,8 @@ HEADERS += \
 	Bootstrapper/AbstractBootstrapper.h \
 	AudioscrobblerSettings.h \
 	Application.h \
-	ActivityListModel.h
+	ActivityListModel.h \
+    Widgets/RadioWidget.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 

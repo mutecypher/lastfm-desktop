@@ -1,6 +1,15 @@
 <RCC>
     <qresource prefix="/" >
-	<file>noArt.png</file>
+		<file>noArt.png</file>
+		
+		<file>headphones.png</file>
+		<file alias="headphones-light.png">headphones_light.png</file>
+		<file>friend.png</file>
+		<file alias="user.png">user.png</file>
+		<file alias="user-light.png">user_light.png</file>
+		<file alias="now-playing.png">now_playing.png</file>
+		<file>scrobbles.png</file>
+		
         <file>16x16.png</file>
         <file>22x22.png</file>
         <file>22x22_transparent.png</file>

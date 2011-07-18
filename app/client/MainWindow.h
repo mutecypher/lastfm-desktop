@@ -29,8 +29,12 @@ class MainWindow : public unicorn::MainWindow
         class SideBar* sideBar;
         class QStackedWidget* stackedWidget;
 
+        QWidget* nowPlaying;
         class ActivityListWidget* recentTracks;
-        QWidget* scrobbleInfo;
+        QWidget* profile;
+        QWidget* friends;
+        class RadioWidget* radio;
+
     } ui;
 
 public:
