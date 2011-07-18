@@ -8,13 +8,21 @@ namespace unicorn { class Session; };
 class RadioWidget : public QWidget
 {
     Q_OBJECT
+private:
+    struct
+    {
+        class StylableWidget* topArtists;
+        class StylableWidget* recentStations;
+    } ui;
+
 public:
     explicit RadioWidget(QWidget *parent = 0);
 
-signals:
-
 private slots:
     void onSessionChanged( unicorn::Session* session );
+
+    void onGotTopArtists();
+    void onGotRecentStations();
 
 };
 
