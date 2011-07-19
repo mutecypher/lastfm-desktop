@@ -2,13 +2,25 @@
     <qresource prefix="/" >
 		<file>noArt.png</file>
 		
-		<file>headphones.png</file>
-		<file alias="headphones-light.png">headphones_light.png</file>
-		<file>friend.png</file>
-		<file alias="user.png">user.png</file>
-		<file alias="user-light.png">user_light.png</file>
-		<file alias="now-playing.png">now_playing.png</file>
-		<file>scrobbles.png</file>
+		<file>tab_now_playing_REST.png</file>
+		<file>tab_now_playing_HOVER.png</file>
+		<file>tab_now_playing_ACTIVE.png</file>
+		
+		<file>tab_scrobbles_REST.png</file>
+		<file>tab_scrobbles_HOVER.png</file>
+		<file>tab_scrobbles_ACTIVE.png</file>
+		
+		<file>tab_profile_REST.png</file>
+		<file>tab_profile_HOVER.png</file>
+		<file>tab_profile_ACTIVE.png</file>
+		
+		<file>tab_friends_REST.png</file>
+		<file>tab_friends_HOVER.png</file>
+		<file>tab_friends_ACTIVE.png</file>
+		
+		<file>tab_radio_REST.png</file>
+		<file>tab_radio_HOVER.png</file>
+		<file>tab_radio_ACTIVE.png</file>
 		
         <file>16x16.png</file>
         <file>22x22.png</file>

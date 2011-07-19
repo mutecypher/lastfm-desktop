@@ -47,11 +47,11 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
         layout->addWidget( new PlayableItemWidget( tr( "My Mix Radio" ), RadioStation::mix( session->userInfo() ) ) );
         layout->addWidget( new PlayableItemWidget( tr( "My Recommended Radio" ), RadioStation::recommendations( session->userInfo() ) ) );
 
-        layout->addWidget( ui.topArtists = new StylableWidget( this ) );
+        //layout->addWidget( ui.topArtists = new StylableWidget( this ) );
         layout->addWidget( ui.recentStations = new StylableWidget( this ) );
 
         // fetch top artists and recent stations
-        connect( session->userInfo().getTopArtists( "3month", 5 ), SIGNAL(finished()), SLOT(onGotTopArtists()));
+        //connect( session->userInfo().getTopArtists( "3month", 5 ), SIGNAL(finished()), SLOT(onGotTopArtists()));
         connect( session->userInfo().getRecentStations( 5 ), SIGNAL(finished()), SLOT(onGotRecentStations()));
 
         layout->addStretch( 1 );

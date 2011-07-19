@@ -32,7 +32,8 @@
 #include "NowPlayingWidget.h"
 #include "RadioProgressBar.h"
 
-NowPlayingWidget::NowPlayingWidget()
+NowPlayingWidget::NowPlayingWidget( QWidget* parent )
+    :QWidget( parent )
 {
     new QVBoxLayout( this );
 

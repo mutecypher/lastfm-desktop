@@ -35,7 +35,7 @@ class NowPlayingWidget : public QWidget
     Q_OBJECT;
 
 public:
-    NowPlayingWidget();
+    NowPlayingWidget( QWidget* parent = 0 );
 
 signals:
     void tick( qint64 );

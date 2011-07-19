@@ -18,7 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QToolButton>
+#include <QPushButton>
 #include <QVBoxLayout>
 #include <QLabel>
 
@@ -29,7 +29,7 @@
 
 QAbstractButton* newButton( const QString& text, QWidget* parent = 0 )
 {
-    QAbstractButton* pushButton = new QToolButton( parent );
+    QAbstractButton* pushButton = new QPushButton( parent );
     pushButton->setText( text );
     pushButton->setCheckable( true );
     pushButton->setAutoExclusive( true );

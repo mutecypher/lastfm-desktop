@@ -5,60 +5,39 @@ SideBar {
 	min-width: 80px;
 }
 
-SideBar QToolButton {
+SideBar QAbstractButton {
 	qproperty-toolButtonStyle: ToolButtonTextUnderIcon;
+	text-align: bottom;
 	background-color: transparent;
 	background-repeat: no-repeat;
 	color: white;
 	border: none;
-	icon-size: 48px;
+	height: 64px;
 	width: 48px;
     border-top: 1px solid rgba( 255, 255, 255, 25 );
     border-bottom: 1px solid rgba( 0, 0, 0, 102 );
 }
 
+SideBar QAbstractButton#nowPlaying { background-image: url(":/tab_now_playing_REST.png"); }
+SideBar QAbstractButton#nowPlaying:hover { background-image: url(":/tab_now_playing_HOVER.png"); }
+SideBar QAbstractButton#nowPlaying:checked { background-image: url(":/tab_now_playing_ACTIVE.png"); }
+
+SideBar QAbstractButton#scrobbles { background-image: url(":/tab_scrobbles_REST.png"); }
+SideBar QAbstractButton#scrobbles:hover { background-image: url(":/tab_scrobbles_HOVER.png"); }
+SideBar QAbstractButton#scrobbles:checked { background-image: url(":/tab_scrobbles_ACTIVE.png"); }
+
+SideBar QAbstractButton#profile { background-image: url(":/tab_profile_REST.png"); }
+SideBar QAbstractButton#profile:hover { background-image: url(":/tab_profile_HOVER.png"); }
+SideBar QAbstractButton#profile:checked { background-image: url(":/tab_profile_ACTIVE.png"); }
+
+SideBar QAbstractButton#friends { background-image: url(":/tab_friends_REST.png"); }
+SideBar QAbstractButton#friends:hover { background-image: url(":/tab_friends_HOVER.png"); }
+SideBar QAbstractButton#friends:checked { background-image: url(":/tab_friends_ACTIVE.png"); }
+
+SideBar QAbstractButton#radio { background-image: url(":/tab_radio_REST.png"); }
+SideBar QAbstractButton#radio:hover { background-image: url(":/tab_radio_HOVER.png"); }
+SideBar QAbstractButton#radio:checked { background-image: url(":/tab_radio_ACTIVE.png"); }
+
 SideBar QLabel {
 	qproperty-alignment: AlignHCenter;
 }
-
-SideBar QToolButton:checked {
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #000, stop:1 rgb(34,34,34));
-}
-
-/*(Url (disabled | active | normal | selected)? (on | off)? )*/
-
-#nowPlaying
-{
-	qproperty-icon: url(":/now-playing-light.png"),
-					url(":/now-playing.png") active,
-					url(":/now-playing.png") selected;
-}
-
-#scrobbles
-{
-	qproperty-icon: url(":/scrobbles-light.png"),
-					url(":/scrobbles.png") active,
-					url(":/scrobbles.png") selected;
-}
-
-#profile
-{
-	qproperty-icon: url(":/user-light.png"),
-					url(":/user.png") active,
-					url(":/user.png") selected;
-}
-
-#friends
-{
-	qproperty-icon: url(":/now-playing-light.png"),
-					url(":/now-playing.png") active,
-					url(":/now-playing.png") selected;
-}
-
-#radio
-{
-	qproperty-icon: url(":/headphones-light.png"),
-					url(":/headphones.png") active,
-					url(":/headphones.png") selected;
-}
-

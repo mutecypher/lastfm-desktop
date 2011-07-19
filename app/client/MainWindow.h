@@ -29,7 +29,7 @@ class MainWindow : public unicorn::MainWindow
         class SideBar* sideBar;
         class QStackedWidget* stackedWidget;
 
-        QWidget* nowPlaying;
+        class NowPlayingWidget* nowPlaying;
         class ActivityListWidget* recentTracks;
         QWidget* profile;
         QWidget* friends;

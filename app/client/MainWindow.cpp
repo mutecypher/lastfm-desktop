@@ -25,7 +25,7 @@
 #include "MediaDevices/DeviceScrobbler.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "../Widgets/ScrobbleInfoWidget.h"
-#include "../Widgets/NowPlayingItem.h"
+#include "../Widgets/NowPlayingWidget.h"
 #include "../Widgets/ActivityListWidget.h"
 #include "../Widgets/TrackItem.h"
 #include "../Widgets/SideBar.h"
@@ -80,7 +80,7 @@ MainWindow::MainWindow()
     //ui.nowPlaying = new NowPlayingItem( Track() );
     //ui.nowPlaying->setObjectName("nowPlaying");
 
-    ui.stackedWidget->addWidget( ui.nowPlaying = new QWidget(this) );
+    ui.stackedWidget->addWidget( ui.nowPlaying = new NowPlayingWidget(this) );
     ui.nowPlaying->setObjectName( "nowPlaying" );
 
     ui.stackedWidget->addWidget( ui.recentTracks = new ActivityListWidget( this ) );
