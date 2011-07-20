@@ -46,17 +46,16 @@ public:
 
 QuickStartWidget::QuickStartWidget()
 {
-    QVBoxLayout* layout = new QVBoxLayout( this );
-    QHBoxLayout* h1 = new QHBoxLayout();
+    QHBoxLayout* layout = new QHBoxLayout( this );
+    layout->setContentsMargins( 0, 0, 0, 0 );
+    layout->setSpacing( 0 );
+
     QPushButton* button = new AAQPushButton(tr("Play"));
     button->setToolTip( tr( "Play source" ) );
     m_edit = new HelpTextLineEdit( this );
-    m_edit->setHelpText( tr("Type an artist or tag") );
-    h1->addWidget( m_edit );
-    h1->addWidget(button);
-
-    layout->addWidget( new QLabel( tr("Quick start") ), 0, Qt::AlignCenter );
-    layout->addLayout( h1 );
+    m_edit->setHelpText( tr("Type an artist or tag and press play") );
+    layout->addWidget( m_edit );
+    layout->addWidget(button);
 
     m_edit->setAttribute( Qt::WA_MacShowFocusRect, false );
     

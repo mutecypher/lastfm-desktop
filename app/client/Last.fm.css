@@ -10,12 +10,19 @@ SideBar QAbstractButton {
 	text-align: bottom;
 	background-color: transparent;
 	background-repeat: no-repeat;
-	color: white;
+	color: #888888;
 	border: none;
 	height: 64px;
-	width: 48px;
-    border-top: 1px solid rgba( 255, 255, 255, 25 );
-    border-bottom: 1px solid rgba( 0, 0, 0, 102 );
+	width: 80px;
+	margin: 9px 0px;
+}
+
+SideBar QAbstractButton:hover {
+	color: #ffffff;
+}
+
+SideBar QAbstractButton:checked {
+	color: #ffffff;
 }
 
 SideBar QAbstractButton#nowPlaying { background-image: url(":/tab_now_playing_REST.png"); }
@@ -40,4 +47,30 @@ SideBar QAbstractButton#radio:checked { background-image: url(":/tab_radio_ACTIV
 
 SideBar QLabel {
 	qproperty-alignment: AlignHCenter;
+	text-style: bold; 
+	margin: 10px 10px;
+}
+
+QuickStartWidget  QLabel
+{
+	
+}
+
+RadioWidget #section
+{
+	border: none;
+	border-top: 1px solid black;
+	padding: 10px 0px; 
+	margin: 0px 20px;
+	
+}
+
+RadioWidget PlayableItemWidget
+{
+	
+}
+
+RadioWidget > QLabel
+{
+	margin: 10px 20px;
 }

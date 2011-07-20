@@ -1,5 +1,6 @@
 
 
+#include <QLabel>
 #include <QVBoxLayout>
 
 #include <lastfm/RadioStation>
@@ -38,17 +39,42 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
 
         // new layout!
         QVBoxLayout* layout = new QVBoxLayout( this );
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 0 );
 
         QuickStartWidget* quickStartWidget = new QuickStartWidget();
         layout->addWidget( quickStartWidget );
         connect( quickStartWidget, SIGNAL(startRadio(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)));
 
-        layout->addWidget( new PlayableItemWidget( tr( "My Library Radio" ), RadioStation::library( session->userInfo() ) ) );
-        layout->addWidget( new PlayableItemWidget( tr( "My Mix Radio" ), RadioStation::mix( session->userInfo() ) ) );
-        layout->addWidget( new PlayableItemWidget( tr( "My Recommended Radio" ), RadioStation::recommendations( session->userInfo() ) ) );
+        {
+            layout->addWidget( new QLabel( tr("Personal Stations"), this ) );
+            layout->addWidget( ui.personal = new StylableWidget( this ) );
+            ui.personal->setObjectName( "section" );
+            QVBoxLayout* personalLayout = new QVBoxLayout( ui.personal );
+            personalLayout->setContentsMargins( 0, 0, 0, 0 );
+            personalLayout->setSpacing( 0 );
+            personalLayout->addWidget( new PlayableItemWidget( tr( "My Library Radio" ), RadioStation::library( session->userInfo() ) ) );
+            personalLayout->addWidget( new PlayableItemWidget( tr( "My Mix Radio" ), RadioStation::mix( session->userInfo() ) ) );
+            personalLayout->addWidget( new PlayableItemWidget( tr( "My Recommended Radio" ), RadioStation::recommendations( session->userInfo() ) ) );
+        }
+
+        {
+            layout->addWidget( new QLabel( tr("Network Stations"), this ) );
+            layout->addWidget( ui.network = new StylableWidget( this ) );
+            ui.network->setObjectName( "section" );
+            QVBoxLayout* networkLayout = new QVBoxLayout( ui.network );
+            networkLayout->setContentsMargins( 0, 0, 0, 0 );
+            networkLayout->setSpacing( 0 );
+            networkLayout->addWidget( new PlayableItemWidget( tr( "My Friends' Radio" ), RadioStation::friends( session->userInfo() ) ) );
+            networkLayout->addWidget( new PlayableItemWidget( tr( "My Neighbours' Radio" ), RadioStation::neighbourhood( session->userInfo() ) ) );
+        }
+
+
+        layout->addWidget( new QLabel( tr("Recent Stations"), this ) );
+        layout->addWidget( ui.recentStations = new StylableWidget( this ) );
+        ui.recentStations->setObjectName( "section" );
 
         //layout->addWidget( ui.topArtists = new StylableWidget( this ) );
-        layout->addWidget( ui.recentStations = new StylableWidget( this ) );
 
         // fetch top artists and recent stations
         //connect( session->userInfo().getTopArtists( "3month", 5 ), SIGNAL(finished()), SLOT(onGotTopArtists()));
@@ -64,6 +90,8 @@ RadioWidget::onGotTopArtists()
     try
     {
         QVBoxLayout* layout = new QVBoxLayout( ui.topArtists );
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 0 );
 
         lastfm::XmlQuery lfm = lastfm::ws::parse( qobject_cast<QNetworkReply*>(sender()) );
 
@@ -87,6 +115,8 @@ RadioWidget::onGotRecentStations()
     try
     {
         QVBoxLayout* layout = new QVBoxLayout( ui.recentStations );
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->setSpacing( 0 );
 
         lastfm::XmlQuery lfm = lastfm::ws::parse( qobject_cast<QNetworkReply*>(sender()) );
 

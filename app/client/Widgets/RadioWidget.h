@@ -11,6 +11,8 @@ class RadioWidget : public QWidget
 private:
     struct
     {
+        class StylableWidget* personal;
+        class StylableWidget* network;
         class StylableWidget* topArtists;
         class StylableWidget* recentStations;
     } ui;
