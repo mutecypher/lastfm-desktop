@@ -30,8 +30,7 @@ class PlayableItemWidget : public QPushButton
     Q_OBJECT;
 
 public:
-    PlayableItemWidget( QString stationTitle, const RadioStation& rs );
-    PlayableItemWidget( const RadioStation& rs );
+    PlayableItemWidget( const RadioStation& rs, QString title, QString description = "" );
 
     const RadioStation& station() const { return m_rs; }
 
@@ -40,14 +39,16 @@ signals:
 
 public slots:
     void onRadioChanged();
+    void onClicked();
 
 private:
-//    virtual void mousePressEvent(QMouseEvent* event);
-    virtual void mouseReleaseEvent(QMouseEvent* event);
-
     void init();
 
+    void paintEvent( QPaintEvent* event );
+
+private:
     RadioStation m_rs;
+    QString m_description;
 };
 
 #endif

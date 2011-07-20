@@ -36,7 +36,6 @@ SOURCES += \
 	Wizard/BootstrapPage.cpp \
 	Wizard/BootstrapInProgressPage.cpp \
 	Wizard/AuthInProgressPage.cpp \
-	Widgets/YourStationsWidget.cpp \
 	Widgets/YouListWidget.cpp \
 	Widgets/WelcomeWidget.cpp \
 	Widgets/TrackItem.cpp \
@@ -64,7 +63,6 @@ SOURCES += \
 	Widgets/MultiStarterWidget.cpp \
 	Widgets/MultiStarterTabWidget.cpp \
 	Widgets/MoreStationsWidget.cpp \
-	Widgets/MainStarterWidget.cpp \
 	Widgets/KeyboardSettingsWidget.cpp \
 	Widgets/IpodSettingsWidget.cpp \
 	Widgets/IPodScrobbleItem.cpp \
@@ -119,7 +117,6 @@ HEADERS += \
 	Wizard/BootstrapPage.h \
 	Wizard/BootstrapInProgressPage.h \
 	Wizard/AuthInProgressPage.h \
-	Widgets/YourStationsWidget.h \
 	Widgets/YouListWidget.h \
 	Widgets/WelcomeWidget.h \
 	Widgets/TrackItem.h \
@@ -148,7 +145,6 @@ HEADERS += \
 	Widgets/MultiStarterWidget.h \
 	Widgets/MultiStarterTabWidget.h \
 	Widgets/MoreStationsWidget.h \
-	Widgets/MainStarterWidget.h \
 	Widgets/KeyboardSettingsWidget.h \
 	Widgets/IpodSettingsWidget.h \
 	Widgets/IPodScrobbleItem.h \

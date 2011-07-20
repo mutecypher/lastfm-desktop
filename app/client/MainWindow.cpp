@@ -17,9 +17,23 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <QLabel>
+#include <QPushButton>
+#include <QStackedWidget>
+#include <QStatusBar>
+#include <QSizeGrip>
+#include <QTimer>
+#include <QMenuBar>
+#include <QShortcut>
+#include <QToolBar>
+#include <QDockWidget>
+#include <QScrollArea>
+
 #include "MainWindow.h"
 
 #include "Application.h"
+#include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
 #include "ScrobbleInfoFetcher.h"
 #include "MediaDevices/DeviceScrobbler.h"
@@ -44,16 +58,6 @@
 #include "lib/unicorn/layouts/SlideOverLayout.h"
 #include "lib/listener/PlayerConnection.h"
 
-#include <QLabel>
-#include <QPushButton>
-#include <QStackedWidget>
-#include <QStatusBar>
-#include <QSizeGrip>
-#include <QTimer>
-#include <QMenuBar>
-#include <QShortcut>
-#include <QToolBar>
-#include <QDockWidget>
 
 MainWindow::MainWindow()
 {
@@ -92,9 +96,11 @@ MainWindow::MainWindow()
     ui.stackedWidget->addWidget( ui.friends = new QWidget(this) );
     ui.friends->setObjectName( "friends" );
 
-    ui.stackedWidget->addWidget( ui.radio = new RadioWidget(this) );
+    ui.stackedWidget->addWidget( ui.radioScrollArea = new QScrollArea( this ) );
+    ui.radioScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    ui.radioScrollArea->setWidget( ui.radio = new RadioWidget( this ) );
+    ui.radioScrollArea->setWidgetResizable( true );
     ui.radio->setObjectName( "radio" );
-
 
     ui.statusBar = new StatusBar( this );
     ui.statusBar->setObjectName( "StatusBar" );
@@ -111,6 +117,8 @@ MainWindow::MainWindow()
     connect( &ScrobbleService::instance(), SIGNAL( paused() ), SLOT( onPaused() ) );
     connect( &ScrobbleService::instance(), SIGNAL( resumed() ), SLOT( onResumed() ) );
     connect( &ScrobbleService::instance(), SIGNAL( stopped() ), SLOT( onStopped() ) );
+
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn()));
 
 //    connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)));
 //    connect( ui.nowPlaying->fetcher(), SIGNAL(albumGotInfo(XmlQuery)), SIGNAL(albumGotInfo(XmlQuery)));
@@ -136,6 +144,14 @@ MainWindow::MainWindow()
     setStatusBar( ui.statusBar );
 
     finishUi();
+}
+
+
+void
+MainWindow::onTuningIn()
+{
+    /* 0 is the now playing widget in the stack */
+    ui.sideBar->click( 0 );
 }
 
 void

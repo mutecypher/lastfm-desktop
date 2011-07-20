@@ -71,6 +71,13 @@ SideBar::SideBar(QWidget *parent)
 
 
 void
+SideBar::click( int index )
+{
+    qobject_cast<QAbstractButton*>( layout()->itemAt( index )->widget() )->click();
+}
+
+
+void
 SideBar::onButtonClicked()
 {
     emit currentChanged( layout()->indexOf( qobject_cast<QWidget*>( sender() ) ) );

@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include "../Services/RadioService/RadioService.h"
+
 namespace unicorn { class Session; };
 
 class RadioWidget : public QWidget
@@ -28,6 +30,8 @@ public:
 
 private slots:
     void onSessionChanged( unicorn::Session* session );
+
+    void onTuningIn( const RadioStation& station );
 
     void onGotTopArtists();
     void onGotRecentStations();

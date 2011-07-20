@@ -33,6 +33,7 @@ class MainWindow : public unicorn::MainWindow
         class ActivityListWidget* recentTracks;
         QWidget* profile;
         QWidget* friends;
+        class QScrollArea* radioScrollArea;
         class RadioWidget* radio;
 
     } ui;
@@ -57,6 +58,8 @@ private slots:
     void onStopped();
     void onPaused();
     void onResumed();
+
+    void onTuningIn();
 
     void onItemClicked( class ActivityListItem* clickedItem );
     

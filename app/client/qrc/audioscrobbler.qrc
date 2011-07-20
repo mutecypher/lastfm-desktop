@@ -22,9 +22,29 @@
 		<file>tab_radio_HOVER.png</file>
 		<file>tab_radio_ACTIVE.png</file>
 		
+		<file>radio_play_small_REST.png</file>
+		<file>radio_play_small_HOVER.png</file>
+		<file>radio_play_small_PRESS.png</file>
+		
 		<file>radio_play_large_REST.png</file>
 		<file>radio_play_large_HOVER.png</file>
 		<file>radio_play_large_PRESS.png</file>
+		
+		<file>radio_library_REST.png</file>
+		<file>radio_library_HOVER.png</file>
+		<file>radio_library_PRESS.png</file>
+		
+		<file>radio_mix_REST.png</file>
+		<file>radio_mix_HOVER.png</file>
+		<file>radio_mix_PRESS.png</file>
+		
+		<file>radio_rec_REST.png</file>
+		<file>radio_rec_HOVER.png</file>
+		<file>radio_rec_PRESS.png</file>
+		
+		<file>radio_friends_REST.png</file>
+		<file>radio_friends_HOVER.png</file>
+		<file>radio_friends_PRESS.png</file>
 		
         <file>16x16.png</file>
         <file>22x22.png</file>

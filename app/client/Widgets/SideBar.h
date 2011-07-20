@@ -44,6 +44,8 @@ private:
 public:
     explicit SideBar(QWidget *parent = 0);
 
+    void click( int index );
+
 signals:
     void currentChanged( int index );
 

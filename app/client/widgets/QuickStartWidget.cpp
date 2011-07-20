@@ -77,4 +77,6 @@ QuickStartWidget::search()
         connect(s, SIGNAL(searchResult(RadioStation)), SIGNAL(startRadio(RadioStation)));
         s->startSearch(m_edit->text());
     }
+
+    m_edit->clear();
 }

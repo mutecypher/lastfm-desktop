@@ -17,23 +17,21 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "PlayableItemWidget.h"
+#include <QPainter>
+#include <QPaintEvent>
 #include <QLayout>
 #include <QLabel>
+#include <QStyle>
+#include <QFont>
+
+#include "PlayableItemWidget.h"
 #include "../Services/RadioService.h"
 
 
-PlayableItemWidget::PlayableItemWidget(QString stationTitle, const RadioStation& rs)
-    : m_rs(rs)
+PlayableItemWidget::PlayableItemWidget(const RadioStation& rs, QString title, QString description )
+    : m_rs(rs), m_description( description )
 {
-    m_rs.setTitle( stationTitle );
-    init();
-}
-
-
-PlayableItemWidget::PlayableItemWidget(const RadioStation& rs)
-    : m_rs(rs)
-{
+    m_rs.setTitle( title );
     init();
 }
 
@@ -50,14 +48,15 @@ PlayableItemWidget::init()
 
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
     connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
+
+    connect( this, SIGNAL(clicked()), SLOT(onClicked()));
 }
 
 
-//virtual 
 void 
-PlayableItemWidget::mouseReleaseEvent(QMouseEvent* /*event*/)
+PlayableItemWidget::onClicked()
 {
-    emit startRadio(m_rs);
+    emit startRadio( m_rs );
 }
 
 
@@ -72,4 +71,25 @@ PlayableItemWidget::onRadioChanged()
     else
         setEnabled( true );
 
+}
+
+void
+PlayableItemWidget::paintEvent( QPaintEvent* event )
+{
+    QPushButton::paintEvent( event );
+    QPainter p( this );
+
+    p.setPen( QColor( 0x898989 ) );
+
+    QFont font = p.font();
+    font.setPixelSize( 12 );
+    p.setFont( font );
+
+    QTextOption to;
+    to.setAlignment( Qt::AlignBottom );
+
+    QRect rect = contentsRect();
+    rect.adjust( 54, 0, 0, -14 );
+
+    p.drawText( rect, m_description, to );
 }
