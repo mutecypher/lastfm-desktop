@@ -22,6 +22,10 @@
 		<file>tab_radio_HOVER.png</file>
 		<file>tab_radio_ACTIVE.png</file>
 		
+		<file>radio_play_large_REST.png</file>
+		<file>radio_play_large_HOVER.png</file>
+		<file>radio_play_large_PRESS.png</file>
+		
         <file>16x16.png</file>
         <file>22x22.png</file>
         <file>22x22_transparent.png</file>
@@ -39,16 +43,9 @@
         <file alias="share-onpress.png">share_29x29_pressed.png</file>
 		<file alias="share-disabled.png">share_29x29_disabled.png</file>
 		<file alias="delete.png">delete.png</file>
-		<file>header_bio.png</file>
-		<file>header_listeners.png</file>
-		<file>header_scrobbles.png</file>
-		<file>header_simartists.png</file>
-		<file>header_tags.png</file>
-        <file>close.png</file>
-		<file>default_album_large.png</file>
-		<file>default_user.png</file>
+
 		<file>asterisk_small.png</file>
-        <file>as_watermark.png</file>
+
         <file>pointyarrow.png</file>
         <file>systray_screenshot.png</file>
 		<file>as.png</file>
@@ -56,50 +53,10 @@
         <file>titlebar_highlight.png</file>
         <file>slider_nubbin.png</file>
 		
-		<file alias="love-rest.png" >controls-love-off-REST.png</file>
-        <file alias="love-onhover.png" >controls-love-off-HOVER.png</file>
-        <file alias="love-onpress.png" >controls-love-off-PRESS.png</file>
-		<file alias="love-isloved.png" >controls-love-on-REST.png</file>
-		<file alias="love-isloved-onhover.png" >controls-love-on-HOVER.png</file>
-        <file alias="love-isloved-onpress.png" >controls-love-on-PRESS.png</file>
-		<file alias="love-disabled.png" >controls-love-off-DISABLED.png</file>
-		
-		<file alias="ban-rest.png" >controls-ban-REST.png</file>
-        <file alias="ban-onhover.png" >controls-ban-HOVER.png</file>
-        <file alias="ban-onpress.png" >controls-ban-PRESS.png</file>
-		<file alias="ban-disabled.png" >controls-ban-DISABLED.png</file>
-		
-		<file alias="info-rest.png" >controls-info-REST.png</file>
-		<file alias="info-onhover.png" >controls-info-HOVER.png</file>
-		<file alias="info-onpressed.png" >controls-info-PRESS.png</file>
-		<file alias="info-disabled.png" >controls-info-DISABLED.png</file>
-		
-		<file alias="play-rest.png" >controls-play-REST.png</file>
-        <file alias="play-onhover.png" >controls-play-HOVER.png</file>
-        <file alias="play-onpress.png" >controls-play-PRESS.png</file>
-		<file alias="pause-rest.png" >controls-pause-REST.png</file>
-		<file alias="pause-onhover.png" >controls-pause-HOVER.png</file>
-        <file alias="pause-onpress.png" >controls-pause-PRESS.png</file>
-		
-		<file alias="skip-rest.png" >controls-skip-REST.png</file>
-		<file alias="skip-onhover.png" >controls-skip-HOVER.png</file>
-        <file alias="skip-onpress.png" >controls-skip-PRESS.png</file>
-		<file alias="skip-disabled.png" >controls-skip-DISABLED.png</file>
-		
-		<file alias="station-start-rest.png" >play_radio_rest.png</file>
-        <file alias="station-start-onhover.png" >play_radio_hover.png</file>
-        <file alias="station-start-onpress.png" >play_radio_press.png</file>
-		
-		<file alias="play-radio-large-rest.png" >play_radio_large_rest.png</file>
-        <file alias="play-radio-large-onhover.png" >play_radio_large_hover.png</file>
-        <file alias="play-radio-large-onpress.png" >play_radio_large_press.png</file>
-		
 		<file alias="vol-handle-rest.png" >volume_knob_rest.png</file>
 		<file alias="vol-handle-onpress.png" >volume_knob_active.png</file>
 		<file alias="vol-rail.png" >volume_slot_off.png</file>
 		
-		<file alias="watermark-fullsize.png" >watermark_fullsize.png</file>
-		<file alias="watermark-minimised.png" >watermark_minimised.png</file>
 		
 		<file alias="volume-icon.png" >volume-icon.png</file>
 		<file alias="volume-mute.png" >volume_mute.png</file>
@@ -112,59 +69,12 @@
 		<file alias="now-playing.png" >now-playing-REST.png</file>
 		<file alias="now-playing-onpress.png" >now-playing-PRESS.png</file>
 		
-		<file alias="back.png" >back-REST.png</file>
-		<file alias="back-onhover.png" >back-HOVER.png</file>
-		<file alias="back-onpress.png" >back-PRESS.png</file>
-		
 		<file alias="taskbar-love.png" >taskbar-love-OFF-16x16.png</file>
 		<file alias="taskbar-love-on.png" >taskbar-love-ON-16x16.png</file>
 		<file alias="taskbar-ban.png" >taskbar-ban-16x16.png</file>
 		<file alias="taskbar-info.png" >taskbar-info-16x16.png</file>
 		<file alias="taskbar-play.png" >taskbar-play-16x16.png</file>
 		<file alias="taskbar-skip.png" >taskbar-skip-16x16.png</file>
-
-        <file alias="tune_library.png" >tune_library_REST.png</file>
-		<file alias="tune_library_onhover.png" >tune_library_HOVER.png</file>
-		<file alias="tune_library_onpress.png" >tune_library_PRESS.png</file>
-
-        <file alias="tune_mix.png" >tune_mix_REST.png</file>
-		<file alias="tune_mix_onhover.png" >tune_mix_HOVER.png</file>
-		<file alias="tune_mix_onpress.png" >tune_mix_PRESS.png</file>
-
-        <file alias="tune_recs.png" >tune_recs_REST.png</file>
-		<file alias="tune_recs_onhover.png" >tune_recs_HOVER.png</file>
-		<file alias="tune_recs_onpress.png" >tune_recs_PRESS.png</file>
-
-		<file>activity_buy_HOVER.png</file>
-		<file>activity_buy_PRESS.png</file>
-		<file>activity_buy_REST.png</file>
-		<file>activity_love_OFF_HOVER.png</file>
-		<file>activity_love_OFF_PRESS.png</file>
-		<file>activity_love_OFF_REST.png</file>
-		<file>activity_love_ON_HOVER.png</file>
-		<file>activity_love_ON_PRESS.png</file>
-		<file>activity_love_ON_REST.png</file>
-		<file>activity_min_love_OFF_HOVER.png</file>
-		<file>activity_min_love_OFF_PRESS.png</file>
-		<file>activity_min_love_OFF_REST.png</file>
-		<file>activity_min_love_ON_HOVER.png</file>
-		<file>activity_min_love_ON_PRESS.png</file>
-		<file>activity_min_love_ON_REST.png</file>
-		<file>activity_min_remove_HOVER.png</file>
-		<file>activity_min_remove_PRESS.png</file>
-		<file>activity_min_remove_REST.png</file>
-		<file>activity_min_share_HOVER.png</file>
-		<file>activity_min_share_PRESS.png</file>
-		<file>activity_min_share_REST.png</file>
-		<file>activity_min_tag_HOVER.png</file>
-		<file>activity_min_tag_PRESS.png</file>
-		<file>activity_min_tag_REST.png</file>
-		<file>activity_share_HOVER.png</file>
-		<file>activity_share_PRESS.png</file>
-		<file>activity_share_REST.png</file>
-		<file>activity_tag_HOVER.png</file>
-		<file>activity_tag_PRESS.png</file>
-		<file>activity_tag_REST.png</file>
 		
     </qresource>
 </RCC>

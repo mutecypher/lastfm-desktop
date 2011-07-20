@@ -55,7 +55,7 @@ QuickStartWidget::QuickStartWidget()
     m_edit = new HelpTextLineEdit( this );
     m_edit->setHelpText( tr("Type an artist or tag and press play") );
     layout->addWidget( m_edit );
-    layout->addWidget(button);
+    layout->addWidget( button );
 
     m_edit->setAttribute( Qt::WA_MacShowFocusRect, false );
     
@@ -72,7 +72,7 @@ QuickStartWidget::search()
         return;
     }
 
-    if (m_edit->text().length()) {
+    if ( m_edit->text().length() ) {
         StationSearch* s = new StationSearch();
         connect(s, SIGNAL(searchResult(RadioStation)), SIGNAL(startRadio(RadioStation)));
         s->startSearch(m_edit->text());

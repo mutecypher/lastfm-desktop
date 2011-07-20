@@ -2,7 +2,7 @@
 SideBar {
 	border: none;
 	background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #2d2d2d, stop:0.925 #2d2d2d, stop:1 #232323);
-	min-width: 80px;
+	min-width: 84px;
 }
 
 SideBar QAbstractButton {
@@ -14,7 +14,7 @@ SideBar QAbstractButton {
 	border: none;
 	height: 64px;
 	width: 80px;
-	margin: 9px 0px;
+	margin: 9px 0px
 }
 
 SideBar QAbstractButton:hover {
@@ -47,19 +47,43 @@ SideBar QAbstractButton#radio:checked { background-image: url(":/tab_radio_ACTIV
 
 SideBar QLabel {
 	qproperty-alignment: AlignHCenter;
-	text-style: bold; 
 	margin: 10px 10px;
 }
 
-QuickStartWidget  QLabel
+QuickStartWidget
 {
-	
+	border: none;
+	padding: 20px 20px 10px;
 }
+
+QuickStartWidget  QLineEdit
+{
+    border: 1px solid #cdcdcd;
+    border-radius: 5px;
+    padding: 10px 10px;
+    selection-background-color: darkgray;
+	font-size: 17px;
+}
+
+QuickStartWidget  QPushButton
+{
+	background-image: url(":/radio_play_large_REST.png");
+	background-color: transparent;
+	color: transparent;
+	background-repeat: no-repeat;
+	border: none;
+	height: 58px;
+	width: 58px;
+	margin: 0px 0px 0px 10px;
+}
+
+QuickStartWidget  QPushButton:hover { background-image: url(":/radio_play_large_HOVER.png"); }
+QuickStartWidget  QPushButton:pressed { background-image: url(":/radio_play_large_PRESS.png"); }
 
 RadioWidget #section
 {
 	border: none;
-	border-top: 1px solid black;
+	border-top: 1px solid white;
 	padding: 10px 0px; 
 	margin: 0px 20px;
 	
@@ -72,5 +96,10 @@ RadioWidget PlayableItemWidget
 
 RadioWidget > QLabel
 {
-	margin: 10px 20px;
+	padding: 10px 0px;
+	margin: 0px 20px;
+	border: 1px solid #cdcdcd;
+	border-width: 0px 0px 1px 0px;
+	font-weight: bold; 
+	font-size: 15px;
 }

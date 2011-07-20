@@ -258,12 +258,12 @@ Application::init()
 
 /// MainWindow
     m_mw = new MainWindow;
-    m_mw->addWinThumbBarButton( m_tag_action );
-    m_mw->addWinThumbBarButton( m_share_action );
-    m_mw->addWinThumbBarButton( m_love_action );
-    m_mw->addWinThumbBarButton( m_ban_action );
-    m_mw->addWinThumbBarButton( m_play_action );
-    m_mw->addWinThumbBarButton( m_skip_action );
+//    m_mw->addWinThumbBarButton( m_tag_action );
+//    m_mw->addWinThumbBarButton( m_share_action );
+//    m_mw->addWinThumbBarButton( m_love_action );
+//    m_mw->addWinThumbBarButton( m_ban_action );
+//    m_mw->addWinThumbBarButton( m_play_action );
+//    m_mw->addWinThumbBarButton( m_skip_action );
 
 
     m_toggle_window_action = new QAction( this ), SLOT( trigger());

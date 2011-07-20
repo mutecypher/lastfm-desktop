@@ -15,6 +15,12 @@ private:
         class StylableWidget* network;
         class StylableWidget* topArtists;
         class StylableWidget* recentStations;
+
+        class PlayableItemWidget* library;
+        class PlayableItemWidget* mix;
+        class PlayableItemWidget* rec;
+        class PlayableItemWidget* friends;
+        class PlayableItemWidget* neighbours;
     } ui;
 
 public:

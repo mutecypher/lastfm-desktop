@@ -30,8 +30,8 @@ class PlayableItemWidget : public QPushButton
     Q_OBJECT;
 
 public:
-    PlayableItemWidget(QString stationTitle, const RadioStation& rs);
-    PlayableItemWidget(const RadioStation& rs);
+    PlayableItemWidget( QString stationTitle, const RadioStation& rs );
+    PlayableItemWidget( const RadioStation& rs );
 
     const RadioStation& station() const { return m_rs; }
 

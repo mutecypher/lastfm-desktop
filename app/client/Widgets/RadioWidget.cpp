@@ -53,9 +53,12 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
             QVBoxLayout* personalLayout = new QVBoxLayout( ui.personal );
             personalLayout->setContentsMargins( 0, 0, 0, 0 );
             personalLayout->setSpacing( 0 );
-            personalLayout->addWidget( new PlayableItemWidget( tr( "My Library Radio" ), RadioStation::library( session->userInfo() ) ) );
-            personalLayout->addWidget( new PlayableItemWidget( tr( "My Mix Radio" ), RadioStation::mix( session->userInfo() ) ) );
-            personalLayout->addWidget( new PlayableItemWidget( tr( "My Recommended Radio" ), RadioStation::recommendations( session->userInfo() ) ) );
+            personalLayout->addWidget( ui.library = new PlayableItemWidget( tr( "My Library Radio" ), RadioStation::library( session->userInfo() ) ) );
+            ui.library->setObjectName( "library" );
+            personalLayout->addWidget( ui.mix = new PlayableItemWidget( tr( "My Mix Radio" ), RadioStation::mix( session->userInfo() ) ) );
+            ui.mix->setObjectName( "mix" );
+            personalLayout->addWidget( ui.rec = new PlayableItemWidget( tr( "My Recommended Radio" ), RadioStation::recommendations( session->userInfo() ) ) );
+            ui.rec->setObjectName( "rec" );
         }
 
         {
@@ -65,8 +68,10 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
             QVBoxLayout* networkLayout = new QVBoxLayout( ui.network );
             networkLayout->setContentsMargins( 0, 0, 0, 0 );
             networkLayout->setSpacing( 0 );
-            networkLayout->addWidget( new PlayableItemWidget( tr( "My Friends' Radio" ), RadioStation::friends( session->userInfo() ) ) );
-            networkLayout->addWidget( new PlayableItemWidget( tr( "My Neighbours' Radio" ), RadioStation::neighbourhood( session->userInfo() ) ) );
+            networkLayout->addWidget( ui.friends = new PlayableItemWidget( tr( "My Friends' Radio" ), RadioStation::friends( session->userInfo() ) ) );
+            ui.friends->setObjectName( "friends" );
+            networkLayout->addWidget( ui.neighbours = new PlayableItemWidget( tr( "My Neighbours' Radio" ), RadioStation::neighbourhood( session->userInfo() ) ) );
+            ui.neighbours->setObjectName( "neighbours" );
         }
 
 
