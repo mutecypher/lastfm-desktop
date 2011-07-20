@@ -9,11 +9,12 @@ SideBar QAbstractButton {
 	text-align: bottom;
 	background-color: transparent;
 	background-repeat: no-repeat;
+	background-position: center;
 	color: #888888;
 	border: none;
-	height: 64px;
+	height: 60px;
 	width: 80px;
-	margin: 9px 0px
+	margin: 12px 0px
 }
 
 SideBar QAbstractButton:hover {
