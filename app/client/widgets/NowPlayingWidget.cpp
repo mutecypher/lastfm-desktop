@@ -19,31 +19,19 @@
 */
 
 #include <QVBoxLayout>
-#include <QPushButton>
-#include <QLabel>
-#include <QImage>
-#include <QPixmap>
-
-#include <lastfm/Track>
-#include <lastfm/RadioStation>
-
-#include "lib/unicorn/TrackImageFetcher.h"
-
-#include "../Services/RadioService/RadioService.h"
-#include "../Services/ScrobbleService/ScrobbleService.h"
 
 #include "NowPlayingWidget.h"
 #include "PlaybackControlsWidget.h"
 
-NowPlayingWidget::NowPlayingWidget( QWidget* parent )
-    :QWidget( parent )
+NowPlayingWidget::NowPlayingWidget(QWidget *parent)
+    :QWidget(parent)
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
-    layout->addWidget( ui.playbackControls = new PlaybackControlsWidget( this ) );
+    layout->addWidget( new PlaybackControlsWidget( this ) );
 
-    /* This stretch should be replaced by the track info widget */
-    layout->addStretch();
+    // replace the with the current track's info widget
+    layout->addStretch( 1 );
 }

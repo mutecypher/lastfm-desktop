@@ -19,6 +19,12 @@ public:
     explicit PlaybackControlsWidget(QWidget* parent = 0);
     ~PlaybackControlsWidget();
 
+public:
+    Q_PROPERTY( bool scrobbleTrack READ scrobbleTrack WRITE setScrobbleTrack );
+
+    bool scrobbleTrack() { return m_scrobbleTrack; }
+    void setScrobbleTrack( bool scrobbleTrack );
+
 private slots:
     void onActionsChanged();
     void onSpace();
@@ -42,6 +48,8 @@ private:
 
 private:
     Ui::PlaybackControlsWidget *ui;
+
+    bool m_scrobbleTrack;
 };
 
 #endif // PLAYBACKCONTROLS_H

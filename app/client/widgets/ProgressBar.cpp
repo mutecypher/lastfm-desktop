@@ -20,6 +20,9 @@
 
 #include "ProgressBar.h"
 
+#include "../Services/ScrobbleService.h"
+#include "../Services/ScrobbleService/StopWatch.h"
+
 #include <lastfm/Track>
 #include <QWidget>
 #include <QPaintEvent>
@@ -41,18 +44,51 @@ ProgressBar::paintEvent( QPaintEvent* e )
 
     QPainter p( this );
 
-    p.drawText( rect(), "Hello" );
+    QFont timeFont = font();
+    timeFont.setPixelSize( 10 );
+    setFont( timeFont );
 
-    int scrobbleMarker = rect().width() / 2;
-
-    p.setPen( QColor( 0xbdbdbd ) );
-    p.drawLine( QPoint( scrobbleMarker, rect().top() ),
-                QPoint( scrobbleMarker, rect().bottom() - 1 ) );
-
-    p.setPen( QColor( 0xe6e6e6 ) );
-    p.drawLine( QPoint( scrobbleMarker + 1, rect().top() ),
-                QPoint( scrobbleMarker + 1, rect().bottom() - 1 ) );
+    p.setPen( QColor( 0x333333 ) );
 
 
+
+    StopWatch* sw = ScrobbleService::instance().stopWatch();
+
+    if ( sw )
+    {
+        QString format( "m:ss" );
+
+        QTime duration( 0, 0 );
+        duration = duration.addMSecs( maximum() );
+        QTime progress( 0, 0 );
+        progress = progress.addMSecs( value() );
+
+        QTextOption to;
+        to.setAlignment( Qt::AlignVCenter | Qt::AlignLeft );
+        QRect timeRect = rect();
+        timeRect.adjust( 6, 0, 0, 0 );
+
+        if ( ScrobbleService::instance().currentTrack().source() == Track::LastFmRadio )
+            p.drawText( timeRect, QString( "%1 / %2" ).arg( progress.toString( format ) ,duration.toString( format ) ), to );
+        else
+            p.drawText( timeRect, QString( "%1" ).arg( progress.toString( format ) ), to );
+
+        uint scrobblePoint = sw->scrobblePoint() * 1000;
+
+        int scrobbleMarker = scrobblePoint * rect().width() / maximum() ;
+
+        p.setPen( QColor( 0xbdbdbd ) );
+        p.drawLine( QPoint( scrobbleMarker, rect().top() ),
+                    QPoint( scrobbleMarker, rect().bottom() - 1 ) );
+
+        p.setPen( QColor( 0xe6e6e6 ) );
+        p.drawLine( QPoint( scrobbleMarker + 1, rect().top() ),
+                    QPoint( scrobbleMarker + 1, rect().bottom() - 1 ) );
+
+        // draw the as!
+        QImage as( value() > scrobblePoint ? QImage(":/scrobble_marker_ON.png") : QImage(":/scrobble_marker_OFF.png") );
+        QPoint asPoint( scrobbleMarker - 25, (rect().height() / 2) - (as.height() / 2) );
+        p.drawImage( asPoint, as );
+    }
 }
         

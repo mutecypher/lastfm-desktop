@@ -106,7 +106,9 @@ SOURCES += \
 	Application.cpp \
 	ActivityListModel.cpp \
     Widgets/RadioWidget.cpp \
-    Services/RadioService/RadioConnection.cpp
+    Services/RadioService/RadioConnection.cpp \
+    Widgets/NothingPlayingWidget.cpp \
+    Widgets/NowPlayingStackedWidget.cpp
 
 HEADERS += \
 	Wizard/WelcomePage.h \
@@ -194,7 +196,9 @@ HEADERS += \
 	Application.h \
 	ActivityListModel.h \
     Widgets/RadioWidget.h \
-    Services/RadioService/RadioConnection.h
+    Services/RadioService/RadioConnection.h \
+    Widgets/NothingPlayingWidget.h \
+    Widgets/NowPlayingStackedWidget.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 

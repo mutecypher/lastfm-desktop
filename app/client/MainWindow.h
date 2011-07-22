@@ -29,7 +29,7 @@ class MainWindow : public unicorn::MainWindow
         class SideBar* sideBar;
         class QStackedWidget* stackedWidget;
 
-        class NowPlayingWidget* nowPlaying;
+        class NowPlayingStackedWidget* nowPlaying;
         class ActivityListWidget* recentTracks;
         QWidget* profile;
         QWidget* friends;
@@ -64,10 +64,8 @@ private slots:
     void onItemClicked( class ActivityListItem* clickedItem );
     
 private:
-    void newTrack( const Track& track );
     void setCurrentWidget( QWidget* );
     void addWinThumbBarButtons( QList<QAction*>& );
-    void addNowPlayingToActivityList();
 
 private:
     Track m_currentTrack;
