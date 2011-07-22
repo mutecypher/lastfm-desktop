@@ -18,10 +18,7 @@ SideBar QAbstractButton {
 	/* the height and bottom-padding should add up to 80px */
 }
 
-SideBar QAbstractButton:hover {
-	color: #ffffff;
-}
-
+SideBar QAbstractButton:hover,
 SideBar QAbstractButton:checked {
 	color: #ffffff;
 }
@@ -140,4 +137,96 @@ RadioWidget > QLabel {
 	border-width: 0px 0px 1px 0px;
 	font-weight: bold; 
 	font-size: 15px;
+}
+
+PlaybackControlsWidget {
+	border: none;
+}
+
+PlaybackControlsWidget QLabel#icon {
+	color: transparent;
+	width: 44px;
+	height: 44px;
+	margin: 0px 14px;
+}
+
+PlaybackControlsWidget QFrame#statusFrame {
+	padding: 13px 0px;
+}
+
+PlaybackControlsWidget QFrame#statusFrame QLabel#status {
+	color: white;
+	font-size: 12px;
+}
+
+PlaybackControlsWidget QFrame#statusFrame QLabel#device {
+	color: white;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+PlaybackControlsWidget QFrame#details {
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #3B3B3B, stop:0 #545454);
+	border: none;
+	border-bottom: 1px solid #272727;
+	min-height: 64px;
+}
+
+PlaybackControlsWidget QPushButton {
+	background-color: transparent;
+	background-repeat: no-repeat;
+	border: none;
+	color: transparent;
+	height: 28px;
+	margin: 0px 3px;
+}
+
+PlaybackControlsWidget QFrame#controls {
+	margin: 0px 10px 0px 0px;
+}
+
+PlaybackControlsWidget QPushButton#love {
+	background-image: url(":/controls_love_OFF_REST.png");
+	width: 29px;
+	
+}
+PlaybackControlsWidget QPushButton#love:hover { background-image: url(":/controls_love_OFF_HOVER.png"); }
+PlaybackControlsWidget QPushButton#love:pressed { background-image: url(":/controls_love_OFF_PRESS.png"); }
+PlaybackControlsWidget QPushButton#love:checked { background-image: url(":/controls_love_ON_REST.png"); }
+PlaybackControlsWidget QPushButton#love:checked:hover { background-image: url(":/controls_love_ON_HOVER.png"); }
+PlaybackControlsWidget QPushButton#love:checked:pressed { background-image: url(":/controls_love_ON_PRESS.png"); }
+		
+PlaybackControlsWidget QPushButton#ban {
+	background-image: url(":/controls_ban_REST.png");
+	width: 28px;
+}
+PlaybackControlsWidget QPushButton#ban:hover { background-image: url(":/controls_ban_HOVER.png"); }
+PlaybackControlsWidget QPushButton#ban:pressed { background-image: url(":/controls_ban_PRESS.png"); }
+		
+PlaybackControlsWidget QPushButton#play {
+	background-image: url(":/controls_play_REST.png");
+	width: 25px;
+}
+PlaybackControlsWidget QPushButton#play:hover { background-image: url(":/controls_play_HOVER.png"); }
+PlaybackControlsWidget QPushButton#play:pressed { background-image: url(":/controls_play_PRESS.png"); }
+PlaybackControlsWidget QPushButton#play:checked { background-image: url(":/controls_pause_REST.png"); }
+PlaybackControlsWidget QPushButton#play:checked:hover { background-image: url(":/controls_pause_HOVER.png"); }
+PlaybackControlsWidget QPushButton#play:checked:pressed { background-image: url(":/controls_pause_PRESS.png"); }
+		
+PlaybackControlsWidget QPushButton#skip {
+	background-image: url(":/controls_skip_REST.png");
+	width: 39px;
+}
+PlaybackControlsWidget QPushButton#skip:hover { background-image: url(":/controls_skip_HOVER.png"); }
+PlaybackControlsWidget QPushButton#skip:pressed { background-image: url(":/controls_skip_PRESS.png"); }
+
+PlaybackControlsWidget QProgressBar {
+	border-top: 1px solid #e5e5e5;
+	border-bottom: 1px solid #9b9b9b;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #cccccc, stop:0 #e5e5e5);
+	height: 21px;
+}
+
+QProgressBar::chunk {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #b6b6b6, stop:0 #cdcdcd);
 }

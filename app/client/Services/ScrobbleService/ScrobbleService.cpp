@@ -28,6 +28,7 @@
 #include "lib/listener/PlayerListener.h"
 #include "lib/listener/PlayerMediator.h"
 #include "../MediaDevices/DeviceScrobbler.h"
+#include "../RadioService/RadioConnection.h"
 #include "StopWatch.h"
 #ifdef Q_WS_MAC
 #include "lib/listener/mac/ITunesListener.h"
@@ -61,6 +62,8 @@ ScrobbleService::ScrobbleService()
         qWarning() << e.what();
         //TODO user visible warning
     }
+
+    m_mediator->follow( new RadioConnection( this ) );
 
 }
 

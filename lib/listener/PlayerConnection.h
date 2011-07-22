@@ -31,7 +31,7 @@
 class LISTENER_DLLEXPORT PlayerConnection : public QObject
 {
     Q_OBJECT
-
+protected:
     QTimer* m_stoppedTimer;
     QString const m_id;
     QString const m_name;   
@@ -39,12 +39,11 @@ class LISTENER_DLLEXPORT PlayerConnection : public QObject
 
     PlayerConnection();
     
-protected:
     State m_state;
     Track m_track;
     
 public:    
-    PlayerConnection( const QString& id, const QString& name );
+    PlayerConnection( const QString& id, const QString& name, QObject* parent = 0 );
     
     ~PlayerConnection()
     {
@@ -56,8 +55,8 @@ public:
 
     QString name() const { return m_name; }
     QString id() const { return m_id; }
-    Track track() const { return m_track; }
-    State state() const { return m_state; }
+    virtual Track track() const { return m_track; }
+    virtual State state() const { return m_state; }
 
     /** 0 until we are paused and made non-current by the mediator
      * then we store elapsed_scrobble_time */

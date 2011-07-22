@@ -160,8 +160,8 @@ Application::init()
     m_love_action = menu->addAction(tr("Love"));
     m_love_action->setCheckable( true );
     QIcon loveIcon;
-    loveIcon.addFile( ":/love-isloved.png", QSize( 16, 16), QIcon::Normal, QIcon::On );
-    loveIcon.addFile( ":/love-rest.png", QSize( 16, 16), QIcon::Normal, QIcon::Off );
+    loveIcon.addFile( ":/controls_love_ON_REST.png", QSize( 16, 16), QIcon::Normal, QIcon::On );
+    loveIcon.addFile( ":/controls_love_OFF_REST.png", QSize( 16, 16), QIcon::Normal, QIcon::Off );
     m_love_action->setIcon( loveIcon );
     m_love_action->setEnabled( false );
     connect( m_love_action, SIGNAL(triggered(bool)), SLOT(changeLovedState(bool)));
@@ -183,7 +183,7 @@ Application::init()
     {
         m_ban_action = new QAction( tr( "Ban" ), this );
         QIcon banIcon;
-        banIcon.addFile( ":/taskbar-ban.png" );
+        banIcon.addFile( ":/controls_ban_REST.png" );
         m_ban_action->setIcon( banIcon );
 
         //connect( m_ban_action, SIGNAL(triggered()), SLOT(onBanTriggered()));
@@ -192,8 +192,8 @@ Application::init()
         m_play_action = new QAction( tr( "Play" ), this );
         m_play_action->setCheckable( true );
         QIcon playIcon;
-        playIcon.addFile( ":/taskbar-pause.png", QSize(), QIcon::Normal, QIcon::On );
-        playIcon.addFile( ":/taskbar-play.png", QSize(), QIcon::Normal, QIcon::Off );
+        playIcon.addFile( ":/controls_pause_REST.png", QSize(), QIcon::Normal, QIcon::On );
+        playIcon.addFile( ":/controls_play_REST.png", QSize(), QIcon::Normal, QIcon::Off );
         m_play_action->setIcon( playIcon );
 
         //connect( m_play_action, SIGNAL(triggered(bool)), SLOT(onPlayTriggered(bool)));
@@ -201,7 +201,7 @@ Application::init()
     {
         m_skip_action = new QAction( tr( "Skip" ), this );
         QIcon skipIcon;
-        skipIcon.addFile( ":/taskbar-skip.png" );
+        skipIcon.addFile( ":/controls_skip_REST.png" );
         m_skip_action->setIcon( skipIcon );
 
         //connect( m_skip_action, SIGNAL(triggered()), SLOT(onSkipTriggered()));
@@ -258,12 +258,10 @@ Application::init()
 
 /// MainWindow
     m_mw = new MainWindow;
-//    m_mw->addWinThumbBarButton( m_tag_action );
-//    m_mw->addWinThumbBarButton( m_share_action );
-//    m_mw->addWinThumbBarButton( m_love_action );
-//    m_mw->addWinThumbBarButton( m_ban_action );
-//    m_mw->addWinThumbBarButton( m_play_action );
-//    m_mw->addWinThumbBarButton( m_skip_action );
+    m_mw->addWinThumbBarButton( m_love_action );
+    m_mw->addWinThumbBarButton( m_ban_action );
+    m_mw->addWinThumbBarButton( m_play_action );
+    m_mw->addWinThumbBarButton( m_skip_action );
 
 
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
@@ -299,15 +297,6 @@ Application::init()
     connect( m_mw, SIGNAL(finished()), SIGNAL(finished()));
 
     connect( m_mw, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
-
-    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackSpooled(Track,Track)));
-
-    // connect the radio up so it scrobbles
-#pragma message ( "This code bypasses the mediator - FIXME" )
-    connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), &ScrobbleService::instance(), SLOT(onTrackStarted(Track)));
-    connect( &RadioService::instance(), SIGNAL(paused()), &ScrobbleService::instance(), SLOT(onPaused()));
-    connect( &RadioService::instance(), SIGNAL(resumed()), &ScrobbleService::instance(), SLOT(onResumed()));
-    connect( &RadioService::instance(), SIGNAL(stopped()), &ScrobbleService::instance(), SLOT(onStopped()));
 
     connect( m_show_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
     connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( toggleWindow()), Qt::QueuedConnection );
@@ -371,7 +360,11 @@ Application::onCorrected(QString /*correction*/)
 
 void
 Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
-{ 
+{
+    m_currentTrack = track;
+
+    m_tray->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
+
     QFontMetrics fm( font() );
     QString durationString = " [" + track.durationString() + "]";
 
@@ -400,8 +393,6 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
 void
 Application::onTrackSpooled( const Track& track, const Track& /*oldTrack*/ )
 {
-    m_tray->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
-
 #ifdef CLIENT_ROOM_RADIO
     QString strippedContextString = TrackItem::contextString( track );
 
@@ -624,9 +615,9 @@ Application::parseArguments( const QStringList& args )
             break;
 
         case Pause:
-            if ( RadioService::instance().state() == RadioService::Playing )
+            if ( RadioService::instance().state() == Playing )
                 RadioService::instance().pause();
-            else if ( RadioService::instance().state() == RadioService::Paused )
+            else if ( RadioService::instance().state() == Paused )
                 RadioService::instance().resume();
             break;
 

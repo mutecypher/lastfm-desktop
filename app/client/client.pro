@@ -52,7 +52,7 @@ SOURCES += \
 	Widgets/ScrobbleInfoWidget.cpp \
 	Widgets/ScrobbleControls.cpp \
 	Widgets/RecentStationsWidget.cpp \
-	Widgets/RadioProgressBar.cpp \
+        Widgets/ProgressBar.cpp \
 	Widgets/RadioListWidget.cpp \
 	Widgets/QuickStartWidget.cpp \
 	Widgets/PointyArrow.cpp \
@@ -105,7 +105,8 @@ SOURCES += \
 	AudioscrobblerSettings.cpp \
 	Application.cpp \
 	ActivityListModel.cpp \
-    Widgets/RadioWidget.cpp
+    Widgets/RadioWidget.cpp \
+    Services/RadioService/RadioConnection.cpp
 
 HEADERS += \
 	Wizard/WelcomePage.h \
@@ -134,7 +135,7 @@ HEADERS += \
 	Widgets/ScrobbleInfoWidget.h \
 	Widgets/ScrobbleControls.h \
 	Widgets/RecentStationsWidget.h \
-	Widgets/RadioProgressBar.h \
+        Widgets/ProgressBar.h \
 	Widgets/RadioListWidget.h \
 	Widgets/QuickStartWidget.h \
 	Widgets/PointyArrow.h \
@@ -192,7 +193,8 @@ HEADERS += \
 	AudioscrobblerSettings.h \
 	Application.h \
 	ActivityListModel.h \
-    Widgets/RadioWidget.h
+    Widgets/RadioWidget.h \
+    Services/RadioService/RadioConnection.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 

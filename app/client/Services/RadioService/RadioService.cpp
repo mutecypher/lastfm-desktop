@@ -32,7 +32,7 @@
 RadioService::RadioService( )
      : m_audioOutput( 0 ),
        m_mediaObject( 0 ),
-       m_state( RadioService::Stopped ),
+       m_state( Stopped ),
        m_bErrorRecover( false )
 {
     initRadio();
@@ -293,7 +293,7 @@ RadioService::onPhononStateChanged( Phonon::State newstate, Phonon::State oldsta
                 qWarning() << "Phonon fatal error:" << m_mediaObject->errorString();
                 emit error( lastfm::ws::UnknownError, QVariant( m_mediaObject->errorString() ));
                 deInitRadio();
-                changeState( RadioService::Stopped );
+                changeState( Stopped );
             }
             else
             {
@@ -401,7 +401,7 @@ RadioService::onPhononCurrentSourceChanged( const Phonon::MediaSource& )
 
 
 void
-RadioService::changeState( RadioService::State const newstate )
+RadioService::changeState( State const newstate )
 {
     State const oldstate = m_state;
 

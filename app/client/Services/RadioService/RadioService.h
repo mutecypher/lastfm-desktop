@@ -31,6 +31,7 @@
 #include <QPointer>
 #include <QThread>
 #include <QVariant>
+#include "lib/listener/State.h"
 
 namespace Phonon
 {
@@ -50,15 +51,6 @@ class RadioService : public QObject
 public:
     RadioService();
     ~RadioService();
-	
-	enum State
-	{
-        Stopped,
-        TuningIn,
-        Buffering,
-        Playing,
-        Paused
-	};
 
     RadioStation station() const { return m_station; }
     Track currentTrack() const {return m_track;}
@@ -136,10 +128,6 @@ private:
 
 
 #include <QDebug>
-inline QDebug operator<<( QDebug d, RadioService::State s )
-{
-    return d << lastfm::qMetaEnumString<RadioService>( s, "State" );
-}
 inline QDebug operator<<( QDebug d, Phonon::State s )
 {
 	switch (s)
@@ -155,9 +143,6 @@ inline QDebug operator<<( QDebug d, Phonon::State s )
 	}
     return d;
 }
-
-
-Q_DECLARE_METATYPE( RadioService::State );
 
 
 #endif //RADIO_SERVICE_H_

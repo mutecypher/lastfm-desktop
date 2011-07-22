@@ -17,30 +17,42 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <lastfm/global.h>
+
+#include "ProgressBar.h"
+
+#include <lastfm/Track>
 #include <QWidget>
+#include <QPaintEvent>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPainter>
 
 
-class RadioProgressBar : public QWidget
+ProgressBar::ProgressBar( QWidget* parent )
+    :QProgressBar( parent )
+{ 
+}
+        
+
+void
+ProgressBar::paintEvent( QPaintEvent* e )
 {
-    Q_OBJECT
+    QProgressBar::paintEvent( e );
 
-public:
-    RadioProgressBar( QWidget* parent = 0 );
-    
-    virtual void paintEvent( QPaintEvent* e );
-    virtual QSize sizeHint() const;
-    
-public slots:
-    void onRadioTick( qint64 tick );
-    void onTrackSpooled( const Track& track, class StopWatch* );
+    QPainter p( this );
 
-private:
-    int m_scrobbleProgressTick;
-    int m_currentTrackDuration;
-    
-    struct {
-        class QLabel* time;
-        class QLabel* timeToGo;
-    } ui;
-};
+    p.drawText( rect(), "Hello" );
+
+    int scrobbleMarker = rect().width() / 2;
+
+    p.setPen( QColor( 0xbdbdbd ) );
+    p.drawLine( QPoint( scrobbleMarker, rect().top() ),
+                QPoint( scrobbleMarker, rect().bottom() - 1 ) );
+
+    p.setPen( QColor( 0xe6e6e6 ) );
+    p.drawLine( QPoint( scrobbleMarker + 1, rect().top() ),
+                QPoint( scrobbleMarker + 1, rect().bottom() - 1 ) );
+
+
+}
+        

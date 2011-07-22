@@ -3,6 +3,7 @@
 
 #include "../Application.h"
 #include "../Services/RadioService.h"
+#include "../Services/ScrobbleService.h"
 
 #include "PlaybackControlsWidget.h"
 #include "ui_PlaybackControlsWidget.h"
@@ -26,11 +27,14 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     connect( aApp->playAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
     connect( aApp->skipAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
 
-    connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) );
+    //connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) );
     //connect( &RadioService::instance(), SIGNAL(tick(qint64)), SLOT(onRadioTick(qint64)));
-    connect( &RadioService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
+    //connect( &RadioService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
     connect( &RadioService::instance(), SIGNAL(error(int,QVariant)), SLOT(onError(int, QVariant)));
+
+    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)) );
+    connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
 
     onActionsChanged();
 
@@ -40,8 +44,8 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     connect( ui->play, SIGNAL(clicked()), aApp->playAction(), SLOT(trigger()));
     connect( ui->skip, SIGNAL(clicked()), aApp->skipAction(), SLOT(trigger()));
 
-    ui->volumeSlider->setAudioOutput( RadioService::instance().audioOutput() );
-    ui->volumeSlider->setMuteVisible( false );
+//    ui->volumeSlider->setAudioOutput( RadioService::instance().audioOutput() );
+//    ui->volumeSlider->setMuteVisible( false );
 
     new QShortcut( QKeySequence( Qt::Key_Space ), this, SLOT(onSpace()));
 }
@@ -90,7 +94,7 @@ PlaybackControlsWidget::onPlayClicked( bool checked )
 {
     if ( checked )
     {
-        if ( RadioService::instance().state() == RadioService::Stopped )
+        if ( RadioService::instance().state() == Stopped )
             RadioService::instance().play( RadioStation( "" ) );
         else
         {
@@ -109,7 +113,7 @@ PlaybackControlsWidget::onPlayTriggered( bool checked )
 {
     if ( checked )
     {
-        if ( RadioService::instance().state() != RadioService::Stopped )
+        if ( RadioService::instance().state() != Stopped )
             setWindowTitle( QString( "Last.fm Radio - %1 - %2" ).arg( RadioService::instance().station().title(), RadioService::instance().currentTrack().toString() ) );
     }
     else
@@ -167,48 +171,125 @@ PlaybackControlsWidget::onBanFinished()
 }
 
 void
+PlaybackControlsWidget::setIconForRadio( const RadioStation& station )
+{
+    QString url = station.url();
+
+    if ( url.startsWith("lastfm://user") )
+    {
+        if ( url.contains( "/friends" )
+            || url.contains( "/neighbours" )
+            || url.startsWith( "lastfm://users") )
+            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_friends.png" ) );
+        if ( url.contains( "/library" )
+             || url.contains( "/personal") )
+            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_library.png" ) );
+        else if ( url.contains( "/mix" ) )
+            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_mix.png" ) );
+        else if ( url.contains( "/recommended" ) )
+            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_rec.png" ) );
+
+    }
+    else if ( url.startsWith("lastfm://artist") )
+        ui->icon->setPixmap( QPixmap( ":/control_bar_radio_artist.png" ) );
+    else if ( url.startsWith("lastfm://tag")
+                || url.startsWith( "lastfm://globaltags" ) )
+        ui->icon->setPixmap( QPixmap( ":/control_bar_radio_tag.png" ) );
+
+    //ui->icon->setPixmap( ":/control_bar_back.png" );
+}
+
+void
 PlaybackControlsWidget::onTuningIn( const RadioStation& station )
 {
-    show();
-
-    ui->title->setText( tr("Tuning %1").arg( station.title() ) );
+    ui->status->setText( tr("Tuning...") );
+    ui->device->setText( station.title() );
 
     ui->play->setChecked( true );
     aApp->playAction()->setChecked( true );
+
+    setIconForRadio( station );
+
+    ui->progressBar->setRange( 0, 1000 );
+    ui->progressBar->setValue( 0 );
 }
 
+void
+PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrack )
+{
+    if ( !track.isNull() )
+    {
+        ui->progressBar->setRange( 0, track.duration() * 1000 );
+        ui->progressBar->setValue( 0 );
+
+        disconnect( 0, 0, this, SLOT(onTick(qint64)));
+        disconnect( 0, 0, ui->progressBar, SLOT(setValue(int)) );
+
+        if(  track.source() == Track::LastFmRadio )
+        {
+            // A radio track!
+            aApp->playAction()->setEnabled( true );
+            aApp->loveAction()->setEnabled( true );
+            aApp->banAction()->setEnabled( true );
+            aApp->skipAction()->setEnabled( true );
+
+            aApp->playAction()->setChecked( true );
+            aApp->loveAction()->setChecked( track.isLoved() );
+
+            connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool)));
+
+            ui->play->setChecked( true );
+
+            ui->controls->show();
+
+            ui->status->setText( tr("Listening to...") );
+            ui->device->setText( RadioService::instance().station().title() );
+
+            connect( &RadioService::instance(), SIGNAL(tick(qint64)), SLOT(onTick(qint64)) );
+        }
+        else
+        {
+            aApp->playAction()->setEnabled( false );
+            aApp->loveAction()->setEnabled( true );
+            aApp->banAction()->setEnabled( false );
+            aApp->skipAction()->setEnabled( false );
+
+            ui->controls->hide();
+
+            // Not a radio track so hide the playback controls!
+            ui->status->setText( tr("Scrobbling from...") );
+            ui->device->setText( track.extra( "playerName" ) );
+
+            connect( &ScrobbleService::instance(), SIGNAL(frameChanged(int)), ui->progressBar, SLOT(setValue(int)) );
+        }
+
+        // Set the icon!
+        QString id = track.extra( "playerId" );
+
+        if ( id == "osx" || id == "itw" )
+            ui->icon->setPixmap( QPixmap( ":/control_bar_scrobble_itunes.png" ) );
+        else if (id == "foo")
+            ui->icon->setPixmap( QPixmap( ":/control_bar_scrobble_foobar.png" ) );
+        else if (id == "wa2")
+            ui->icon->setPixmap( QPixmap( ":/control_bar_scrobble_winamp.png" ) );
+        else if (id == "wmp")
+            ui->icon->setPixmap( QPixmap( ":/control_bar_scrobble_wmp.png" ) );
+        else if (id == "ass")
+            setIconForRadio( RadioService::instance().station() );
+    }
+}
 
 void
-PlaybackControlsWidget::onTrackSpooled( const Track& track )
+PlaybackControlsWidget::onTick( qint64 tick )
 {
-    if( !track.isNull() && track.source() == Track::LastFmRadio )
-    {
-        aApp->playAction()->setEnabled( true );
-        aApp->loveAction()->setEnabled( true );
-        aApp->banAction()->setEnabled( true );
-        aApp->skipAction()->setEnabled( true );
-
-        aApp->playAction()->setChecked( true );
-        aApp->loveAction()->setChecked( track.isLoved() );
-
-        connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool)));
-
-        ui->play->setChecked( true );
-
-        ui->title->setText( RadioService::instance().station().title() );
-    }
-    else
-    {
-        ui->play->setChecked( false );
-
-        ui->title->clear();
-    }
+    qDebug() << tick;
+    ui->progressBar->setValue( tick );
 }
 
 void
 PlaybackControlsWidget::onError( int error, const QVariant& errorText )
 {
-    ui->title->setText( errorText.toString() + ": " + QString::number(error) );
+    ui->status->setText( errorText.toString() + ": " + QString::number(error) );
 }
 
 void

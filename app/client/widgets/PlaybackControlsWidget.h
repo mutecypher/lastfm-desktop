@@ -31,9 +31,14 @@ private slots:
     void onBanFinished();
 
     void onTuningIn( const RadioStation& station );
-    void onTrackSpooled( const Track& track );
+    void onTrackStarted( const Track& track, const Track& oldTrack );
     void onError( int error , const QVariant& errorData );
     void onStopped();
+
+    void onTick( qint64 );
+
+private:
+    void setIconForRadio( const RadioStation& station );
 
 private:
     Ui::PlaybackControlsWidget *ui;

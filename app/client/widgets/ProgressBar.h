@@ -18,33 +18,20 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QLabel>
-#include <QImage>
-#include <QPixmap>
+#include <lastfm/global.h>
+#include <QProgressBar>
 
-#include <lastfm/Track>
-#include <lastfm/RadioStation>
 
-#include "lib/unicorn/TrackImageFetcher.h"
-
-#include "../Services/RadioService/RadioService.h"
-#include "../Services/ScrobbleService/ScrobbleService.h"
-
-#include "NowPlayingWidget.h"
-#include "RadioProgressBar.h"
-#include "PlaybackControlsWidget.h"
-
-NowPlayingWidget::NowPlayingWidget( QWidget* parent )
-    :QWidget( parent )
+class ProgressBar : public QProgressBar
 {
-    QVBoxLayout* layout = new QVBoxLayout( this );
-    layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
+    Q_OBJECT
 
-    layout->addWidget( ui.playbackControls = new PlaybackControlsWidget( this ) );
+public:
+    ProgressBar( QWidget* parent = 0 );
+    
+private:
+    virtual void paintEvent( QPaintEvent* e );
 
-    /* This stretch should be replaced by the track info widget */
-    layout->addStretch();
-}
+private:
+
+};

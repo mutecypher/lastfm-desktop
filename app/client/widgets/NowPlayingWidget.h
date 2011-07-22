@@ -37,24 +37,9 @@ class NowPlayingWidget : public QWidget
 public:
     NowPlayingWidget( QWidget* parent = 0 );
 
-signals:
-    void tick( qint64 );
-public slots:
-    // all from the radio:
-    void onTuningIn( const RadioStation& );
-    void onTrackSpooled( const Track& );
-    void onBuffering( int );
-    void onStopped();
-    
-private slots:
-    void onImageFinished( const QImage& );
-
 private:
     struct {
-        RadioProgressBar* bar;
-        QLabel* cover;
-        QLabel* track;
-        QLabel* album;
+        class PlaybackControlsWidget* playbackControls;
     } ui;
 };
 

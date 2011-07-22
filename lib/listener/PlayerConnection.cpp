@@ -53,8 +53,9 @@ PlayerConnection::PlayerConnection()
     connect( m_stoppedTimer, SIGNAL(timeout()), SLOT(onStopped()) );
 }
 
-PlayerConnection::PlayerConnection( const QString& id, const QString& name )
-    : m_id( id )
+PlayerConnection::PlayerConnection( const QString& id, const QString& name, QObject* parent )
+    :QObject( parent )
+    , m_id( id )
     , m_name( name )
     , m_elapsed( 0 )
     , m_state( Stopped )
