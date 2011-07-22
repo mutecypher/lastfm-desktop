@@ -118,7 +118,7 @@ private:
     Phonon::AudioOutput* m_audioOutput;
     Phonon::MediaObject* m_mediaObject;
     Phonon::Path m_path;
-    RadioService::State m_state;
+    State m_state;
     Track m_track;
     RadioStation m_station;
     bool m_bErrorRecover;

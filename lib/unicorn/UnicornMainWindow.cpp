@@ -293,31 +293,31 @@ unicorn::MainWindow::resizeEvent( QResizeEvent* )
 void
 unicorn::MainWindow::cleverlyPosition()
 {
-    AppSettings s;
-    s.beginGroup( metaObject()->className());
-        QRect geo = s.value( "geometry", QRect()).toRect();
-    s.endGroup();
+//    AppSettings s;
+//    s.beginGroup( metaObject()->className());
+//        QRect geo = s.value( "geometry", QRect()).toRect();
+//    s.endGroup();
 
-    if( !geo.isValid())
-        return;
+//    if( !geo.isValid())
+//        return;
 
-    move( geo.topLeft());
-    resize( geo.size());
+//    move( geo.topLeft());
+//    resize( geo.size());
     
-    int screenNum = qApp->desktop()->screenNumber( this );
-    QRect screenRect = qApp->desktop()->availableGeometry( screenNum );
-    if( !screenRect.contains( frameGeometry(), true)) {
-        QRect diff;
+//    int screenNum = qApp->desktop()->screenNumber( this );
+//    QRect screenRect = qApp->desktop()->availableGeometry( screenNum );
+//    if( !screenRect.contains( frameGeometry(), true)) {
+//        QRect diff;
 
-        diff = screenRect.intersected( frameGeometry() );
+//        diff = screenRect.intersected( frameGeometry() );
 
-        if (diff.left() == screenRect.left() )
-            move( diff.left(), pos().y());
-        if( diff.right() == screenRect.right())
-            move( diff.right() - width(), pos().y());
-        if( diff.top() == screenRect.top())
-            move( pos().x(), diff.top());
-        if( diff.bottom() == screenRect.bottom())
-            move( pos().x(), diff.bottom() - height());
-    }
+//        if (diff.left() == screenRect.left() )
+//            move( diff.left(), pos().y());
+//        if( diff.right() == screenRect.right())
+//            move( diff.right() - width(), pos().y());
+//        if( diff.top() == screenRect.top())
+//            move( pos().x(), diff.top());
+//        if( diff.bottom() == screenRect.bottom())
+//            move( pos().x(), diff.bottom() - height());
+//    }
 }

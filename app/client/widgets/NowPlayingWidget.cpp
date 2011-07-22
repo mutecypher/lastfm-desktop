@@ -33,7 +33,6 @@
 #include "../Services/ScrobbleService/ScrobbleService.h"
 
 #include "NowPlayingWidget.h"
-#include "RadioProgressBar.h"
 #include "PlaybackControlsWidget.h"
 
 NowPlayingWidget::NowPlayingWidget( QWidget* parent )
