@@ -47,7 +47,7 @@ SideBar::SideBar(QWidget *parent)
 
     layout->addWidget( ui.nowPlaying = newButton( tr( "Now Playing" ), this ), Qt::AlignHCenter );
     ui.nowPlaying->setObjectName( "nowPlaying" );
-    ui.nowPlaying->setChecked( true );
+    ui.nowPlaying->setChecked( true ); // the nowPlaying tab is always seleted at startUp
     layout->addWidget( ui.scrobbles = newButton( tr( "Scrobbles" ), this ), Qt::AlignHCenter);
     ui.scrobbles->setObjectName( "scrobbles" ); 
     layout->addWidget( ui.profile = newButton( tr( "Profile" ), this ), Qt::AlignHCenter);
