@@ -50,22 +50,28 @@ ProgressBar::paintEvent( QPaintEvent* e )
 
     p.setPen( QColor( 0x333333 ) );
 
-    QTime duration( 0, 0 );
-    duration = duration.addMSecs( maximum() );
-    QTime progress( 0, 0 );
-    progress = progress.addMSecs( value() );
 
-    QString format( "m:ss" );
 
     StopWatch* sw = ScrobbleService::instance().stopWatch();
 
     if ( sw )
     {
+        QString format( "m:ss" );
+
+        QTime duration( 0, 0 );
+        duration = duration.addMSecs( maximum() );
+        QTime progress( 0, 0 );
+        progress = progress.addMSecs( value() );
+
         QTextOption to;
         to.setAlignment( Qt::AlignVCenter | Qt::AlignLeft );
         QRect timeRect = rect();
         timeRect.adjust( 6, 0, 0, 0 );
-        p.drawText( timeRect, QString( "%1 / %2" ).arg( progress.toString( format ) ,duration.toString( format ) ), to );
+
+        if ( ScrobbleService::instance().currentTrack().source() == Track::LastFmRadio )
+            p.drawText( timeRect, QString( "%1 / %2" ).arg( progress.toString( format ) ,duration.toString( format ) ), to );
+        else
+            p.drawText( timeRect, QString( "%1" ).arg( progress.toString( format ) ), to );
 
         uint scrobblePoint = sw->scrobblePoint() * 1000;
 

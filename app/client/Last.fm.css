@@ -154,13 +154,12 @@ PlaybackControlsWidget QFrame#statusFrame {
 	padding: 13px 0px;
 }
 
-PlaybackControlsWidget QFrame#statusFrame QLabel#status {
+PlaybackControlsWidget QFrame#statusFrame QLabel {
 	color: white;
 	font-size: 12px;
 }
 
 PlaybackControlsWidget QFrame#statusFrame QLabel#device {
-	color: white;
 	font-weight: bold;
 	font-size: 14px;
 }
