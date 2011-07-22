@@ -39,7 +39,7 @@
 #include "MediaDevices/DeviceScrobbler.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "../Widgets/ScrobbleInfoWidget.h"
-#include "../Widgets/NowPlayingWidget.h"
+#include "../Widgets/NowPlayingStackedWidget.h"
 #include "../Widgets/ActivityListWidget.h"
 #include "../Widgets/TrackItem.h"
 #include "../Widgets/SideBar.h"
@@ -84,7 +84,7 @@ MainWindow::MainWindow()
     //ui.nowPlaying = new NowPlayingItem( Track() );
     //ui.nowPlaying->setObjectName("nowPlaying");
 
-    ui.stackedWidget->addWidget( ui.nowPlaying = new NowPlayingWidget(this) );
+    ui.stackedWidget->addWidget( ui.nowPlaying = new NowPlayingStackedWidget(this) );
     ui.nowPlaying->setObjectName( "nowPlaying" );
 
     ui.stackedWidget->addWidget( ui.recentTracks = new ActivityListWidget( this ) );
@@ -157,62 +157,41 @@ MainWindow::onTuningIn()
 void
 MainWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )
 {
-    // hide the playback controls if a radio track has started
-//    if ( t.source() != Track::LastFmRadio )
-//        ui.playbackControls->hide();
+    m_currentTrack = t;
 
-    newTrack( t );
-
-    setWindowTitle( QApplication::applicationName() + " - " + t.toString() );
+    if ( m_currentTrack.source() == Track::LastFmRadio )
+        setWindowTitle( tr( "%1 - %2 - %3" ).arg( QApplication::applicationName(), RadioService::instance().station().title(), t.toString() ) );
+    else
+        setWindowTitle( tr( "%1 - %2" ).arg( QApplication::applicationName(), t.toString() ) );
 }
 
 
 void
 MainWindow::onStopped()
 {
-    newTrack( Track() );
+    m_currentTrack = Track();
 
     setWindowTitle( QApplication::applicationName() );
-}
-
-void
-MainWindow::newTrack( const Track& track )
-{
-    addNowPlayingToActivityList();
-
-    m_currentTrack = track;
-//    ui.nowPlaying->setTrack( m_currentTrack );
-
-    // only switch the info widget if we are
-    // currently on the now playing track
-//    if ( m_currentActivity == ui.nowPlaying )
-//        onItemClicked( ui.nowPlaying );
-}
-
-
-void
-MainWindow::addNowPlayingToActivityList()
-{
-//    if ( ui.nowPlaying->track() != Track()
-//        && ui.nowPlaying->track().scrobbleStatus() != lastfm::Track::Null )
-//    {
-//        TrackItem* item = new TrackItem( *ui.nowPlaying );
-//        ui.recentTracks->insertItem( item );
-//    }
 }
 
 
 void
 MainWindow::onResumed()
 {
-    setWindowTitle( QApplication::applicationName() + " - " + m_currentTrack.toString() );
+    if ( m_currentTrack.source() == Track::LastFmRadio )
+        setWindowTitle( tr( "%1 - %2 - %3" ).arg( QApplication::applicationName(), RadioService::instance().station().title(), m_currentTrack.toString() ) );
+    else
+        setWindowTitle( tr( "%1 - %2" ).arg( QApplication::applicationName(), m_currentTrack.toString() ) );
 }
 
 
 void
 MainWindow::onPaused()
 {
-    setWindowTitle( QApplication::applicationName() + " - Paused" );
+    if ( m_currentTrack.source() == Track::LastFmRadio )
+        setWindowTitle( tr( "%1 - %2 - Paused - %3" ).arg( QApplication::applicationName(), RadioService::instance().station().title(), m_currentTrack.toString() ) );
+    else
+        setWindowTitle( tr( "%1 - Paused - %2" ).arg( QApplication::applicationName(), m_currentTrack.toString() ) );
 }
 
 

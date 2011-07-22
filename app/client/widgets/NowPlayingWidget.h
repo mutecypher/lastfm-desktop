@@ -22,25 +22,17 @@
 #define NOW_PLAYING_WIDGET_H
 
 #include <QWidget>
-#include <lastfm/Track>
-#include <lastfm/RadioStation>
-
-class TrackItem;
-class RadioProgressBar;
-class QLabel;
-class QImage;
 
 class NowPlayingWidget : public QWidget
 {
-    Q_OBJECT;
-
+    Q_OBJECT
 public:
-    NowPlayingWidget( QWidget* parent = 0 );
+    explicit NowPlayingWidget(QWidget *parent = 0);
 
-private:
-    struct {
-        class PlaybackControlsWidget* playbackControls;
-    } ui;
+signals:
+
+public slots:
+
 };
 
 #endif

@@ -65,6 +65,9 @@
 		<file>controls_love_ON_HOVER.png</file>
 		<file>controls_love_ON_PRESS.png</file>
 		
+		<file>scrobble_marker_OFF.png</file>
+		<file>scrobble_marker_ON.png</file>
+		
 		<file>controls_ban_REST.png</file>
 		<file>controls_ban_HOVER.png</file>
 		<file>controls_ban_PRESS.png</file>

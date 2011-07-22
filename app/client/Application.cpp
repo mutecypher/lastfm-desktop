@@ -420,9 +420,6 @@ Application::onTrackPaused( bool paused )
     if( paused ) {
         m_artist_action->setText( "" );
         m_title_action->setText( tr( "Ready" ));
-        m_love_action->setEnabled( false );
-        m_tag_action->setEnabled( false );
-        m_share_action->setEnabled( false );
     } else {
         onTrackStarted( ScrobbleService::instance().currentTrack(), ScrobbleService::instance().currentTrack());
     }
