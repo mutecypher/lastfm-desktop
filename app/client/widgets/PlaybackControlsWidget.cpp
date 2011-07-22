@@ -10,7 +10,8 @@
 
 PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     StylableWidget(parent),
-    ui(new Ui::PlaybackControlsWidget)
+    ui(new Ui::PlaybackControlsWidget),
+    m_scrobbleTrack( false )
 {
     ui->setupUi(this);
 
@@ -56,6 +57,16 @@ PlaybackControlsWidget::~PlaybackControlsWidget()
     delete ui;
 }
 
+
+void
+PlaybackControlsWidget::setScrobbleTrack( bool scrobbleTrack )
+{
+    m_scrobbleTrack = scrobbleTrack;
+    style()->polish( this );
+    style()->polish( ui->details );
+    style()->polish( ui->status );
+    style()->polish( ui->device );
+}
 
 void
 PlaybackControlsWidget::onActionsChanged()
@@ -202,6 +213,8 @@ PlaybackControlsWidget::setIconForRadio( const RadioStation& station )
 void
 PlaybackControlsWidget::onTuningIn( const RadioStation& station )
 {
+    setScrobbleTrack( false );
+
     ui->status->setText( tr("Tuning...") );
     ui->device->setText( station.title() );
 
@@ -227,6 +240,8 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
 
         if(  track.source() == Track::LastFmRadio )
         {
+            setScrobbleTrack( false );
+
             // A radio track!
             aApp->playAction()->setEnabled( true );
             aApp->loveAction()->setEnabled( true );
@@ -249,6 +264,8 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
         }
         else
         {
+            setScrobbleTrack( true );
+
             aApp->playAction()->setEnabled( false );
             aApp->loveAction()->setEnabled( true );
             aApp->banAction()->setEnabled( false );
@@ -282,7 +299,6 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
 void
 PlaybackControlsWidget::onTick( qint64 tick )
 {
-    qDebug() << tick;
     ui->progressBar->setValue( tick );
 }
 
