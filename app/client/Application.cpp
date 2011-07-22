@@ -307,6 +307,8 @@ Application::init()
     connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)));
     connect( &ScrobbleService::instance(), SIGNAL(paused(bool)), SLOT(onTrackPaused(bool)));
 
+    connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) );
+
     //We're not going to catch the first session change as it happened in the unicorn application before
     //we could connect to the signal!
 
@@ -361,9 +363,11 @@ Application::onCorrected(QString /*correction*/)
 void
 Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
 {
-    m_currentTrack = track;
-
-    m_tray->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
+    if ( track != m_currentTrack )
+    {
+        m_currentTrack = track;
+        m_tray->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
+    }
 
     QFontMetrics fm( font() );
     QString durationString = " [" + track.durationString() + "]";
@@ -391,7 +395,7 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
 }
 
 void
-Application::onTrackSpooled( const Track& track, const Track& /*oldTrack*/ )
+Application::onTrackSpooled( const Track& track )
 {
 #ifdef CLIENT_ROOM_RADIO
     QString strippedContextString = TrackItem::contextString( track );

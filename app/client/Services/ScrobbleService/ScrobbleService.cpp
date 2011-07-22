@@ -83,6 +83,7 @@ ScrobbleService::onSessionChanged( unicorn::Session* )
 
     m_as = new Audioscrobbler( "ass" );
     connect( m_as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
+    connect( m_as, SIGNAL(scrobblesSubmitted(QList<lastfm::Track>)), SIGNAL(scrobblesSubmitted(QList<lastfm::Track>)));
 
 /// DeviceScrobbler
     if( m_deviceScrobbler ) delete m_deviceScrobbler;

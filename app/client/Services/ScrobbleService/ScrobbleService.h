@@ -67,7 +67,7 @@ signals:
     void paused();
     void stopped();
     void scrobblesCached( const QList<lastfm::Track>& tracks );
-    void scrobblesSubmitted( const QList<lastfm::Track>& tracks, int numTracks );
+    void scrobblesSubmitted( const QList<lastfm::Track>& tracks );
 
     void foundIPodScrobbles( const QList<lastfm::Track>& tracks );
     void bootstrapReady( const QString& playerId );

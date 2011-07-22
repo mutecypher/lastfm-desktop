@@ -67,11 +67,13 @@ private:
 protected:
     void doSetTrack( const Track& track );
 
+public slots:
+    void onScrobbleStatusChanged();
+
 private slots:
     void setLoveChecked( bool checked );
     void onLoveChanged( bool checked );
 
-    void onScrobbleStatusChanged();
     void onCorrected( QString correction );
 
 protected:

@@ -163,7 +163,7 @@ namespace audioscrobbler
         void onTrackStarted( const Track&, const Track& );
         void onTrackPaused( bool );
 
-        void onTrackSpooled( const Track& , const Track& );
+        void onTrackSpooled( const Track& );
 
         void onMessageReceived(const QStringList& message);
 		

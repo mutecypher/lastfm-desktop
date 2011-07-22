@@ -282,7 +282,6 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
 void
 PlaybackControlsWidget::onTick( qint64 tick )
 {
-    qDebug() << tick;
     ui->progressBar->setValue( tick );
 }
 

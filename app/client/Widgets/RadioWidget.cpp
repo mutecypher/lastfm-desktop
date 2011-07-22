@@ -144,27 +144,30 @@ RadioWidget::onTuningIn( const RadioStation& station )
 {
     // insert at the front of the list
 
-    PlayableItemWidget* item = new PlayableItemWidget( station, station.title() );
-    item->setObjectName( "station" );
-    qobject_cast<QBoxLayout*>(ui.recentStations->layout())->insertWidget( 0, item );
-
-    // if it exists already remove it or remove the last one
-    bool removed = false;
-
-    for ( int i = 1 ; i < ui.recentStations->layout()->count() ; ++i )
+    if ( ui.recentStations->layout() )
     {
-        if ( station.url() == qobject_cast<PlayableItemWidget*>(ui.recentStations->layout()->itemAt( i )->widget())->station().url() )
+        PlayableItemWidget* item = new PlayableItemWidget( station, station.title() );
+        item->setObjectName( "station" );
+        qobject_cast<QBoxLayout*>(ui.recentStations->layout())->insertWidget( 0, item );
+
+        // if it exists already remove it or remove the last one
+        bool removed = false;
+
+        for ( int i = 1 ; i < ui.recentStations->layout()->count() ; ++i )
         {
-            QWidget* taken = ui.recentStations->layout()->takeAt( i )->widget();
-            taken->deleteLater();
-            removed = true;
-            break;
+            if ( station.url() == qobject_cast<PlayableItemWidget*>(ui.recentStations->layout()->itemAt( i )->widget())->station().url() )
+            {
+                QWidget* taken = ui.recentStations->layout()->takeAt( i )->widget();
+                taken->deleteLater();
+                removed = true;
+                break;
+            }
         }
-    }
 
-    if ( !removed )
-    {
-        QWidget* taken = ui.recentStations->layout()->takeAt( ui.recentStations->layout()->count() - 1 )->widget();
-        taken->deleteLater();
+        if ( !removed )
+        {
+            QWidget* taken = ui.recentStations->layout()->takeAt( ui.recentStations->layout()->count() - 1 )->widget();
+            taken->deleteLater();
+        }
     }
 }
