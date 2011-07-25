@@ -12,6 +12,7 @@ win32:release {
 }
 
 include( $$ROOT_DIR/admin/include.qmake )
+CONFIG -= silent
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 SOURCES -= LegacyTuner.cpp
 HEADERS -= LegacyTuner.h
@@ -38,7 +39,6 @@ SOURCES += \
 	Wizard/AuthInProgressPage.cpp \
 	Widgets/YouListWidget.cpp \
 	Widgets/WelcomeWidget.cpp \
-	Widgets/TrackItem.cpp \
 	Widgets/TitleBar.cpp \
 	Widgets/TagFilterDialog.cpp \
 	Widgets/StatusBar.cpp \
@@ -49,7 +49,7 @@ SOURCES += \
 	Widgets/SideBar.cpp \
 	Widgets/SettingsWidget.cpp \
 	Widgets/ScrobbleSettingsWidget.cpp \
-	Widgets/ScrobbleInfoWidget.cpp \
+	Widgets/MetadataWidget.cpp \
 	Widgets/ScrobbleControls.cpp \
 	Widgets/RecentStationsWidget.cpp \
         Widgets/ProgressBar.cpp \
@@ -59,20 +59,17 @@ SOURCES += \
 	Widgets/PlaybackControlsWidget.cpp \
 	Widgets/PlayableItemWidget.cpp \
 	Widgets/NowPlayingWidget.cpp \
-	Widgets/NowPlayingItem.cpp \
 	Widgets/MultiStarterWidget.cpp \
 	Widgets/MultiStarterTabWidget.cpp \
 	Widgets/MoreStationsWidget.cpp \
 	Widgets/KeyboardSettingsWidget.cpp \
 	Widgets/IpodSettingsWidget.cpp \
-	Widgets/IPodScrobbleItem.cpp \
 	Widgets/IPodScrobbleInfoWidget.cpp \
 	Widgets/EditStationDialog.cpp \
 	Widgets/ColumnListView.cpp \
 	Widgets/AdvancedOptionsWidget.cpp \
 	Widgets/AdvancedOptionsDialog.cpp \
 	Widgets/ActivityListWidget.cpp \
-	Widgets/ActivityListItem.cpp \
 	Widgets/AccountSettingsWidget.cpp \
 	StationSearch.cpp \
 	StationListModel.cpp \
@@ -83,7 +80,6 @@ SOURCES += \
 	Services/RadioService/RadioService.cpp \
 	ScrobSocket.cpp \
 	ScrobblesModel.cpp \
-	ScrobbleInfoFetcher.cpp \
 	RadioStationListModel.cpp \
 	PlaylistModel.cpp \
 	PlaylistMeta.cpp \
@@ -122,7 +118,6 @@ HEADERS += \
 	Wizard/AuthInProgressPage.h \
 	Widgets/YouListWidget.h \
 	Widgets/WelcomeWidget.h \
-	Widgets/TrackItem.h \
 	Widgets/TitleBar.h \
 	Widgets/TagFilterDialog.h \
 	Widgets/StatusBar.h \
@@ -134,7 +129,7 @@ HEADERS += \
 	Widgets/SettingsWidget.h \
 	Widgets/ScrobbleSettingsWidget.h \
 	Widgets/ScrobbleMeter.h \
-	Widgets/ScrobbleInfoWidget.h \
+	Widgets/MetadataWidget.h \
 	Widgets/ScrobbleControls.h \
 	Widgets/RecentStationsWidget.h \
         Widgets/ProgressBar.h \
@@ -144,20 +139,18 @@ HEADERS += \
 	Widgets/PlaybackControlsWidget.h \
 	Widgets/PlayableItemWidget.h \
 	Widgets/NowPlayingWidget.h \
-	Widgets/NowPlayingItem.h \
 	Widgets/MultiStarterWidget.h \
 	Widgets/MultiStarterTabWidget.h \
 	Widgets/MoreStationsWidget.h \
 	Widgets/KeyboardSettingsWidget.h \
 	Widgets/IpodSettingsWidget.h \
-	Widgets/IPodScrobbleItem.h \
 	Widgets/IPodScrobbleInfoWidget.h \
 	Widgets/EditStationDialog.h \
 	Widgets/ColumnListView.h \
 	Widgets/AdvancedOptionsWidget.h \
 	Widgets/AdvancedOptionsDialog.h \
 	Widgets/ActivityListWidget.h \
-	Widgets/ActivityListItem.h \
+    Widgets/RecentTracksWidget.h \
 	Widgets/AccountSettingsWidget.h \
 	StationSearch.h \
 	StationListModel.h \
@@ -172,7 +165,6 @@ HEADERS += \
 	Services/ITunesPluginInstaller/ITunesPluginInstaller.h \
 	ScrobSocket.h \
 	ScrobblesModel.h \
-	ScrobbleInfoFetcher.h \
 	RadioStationListModel.h \
 	PlaylistModel.h \
 	PlaylistMeta.h \
@@ -206,7 +198,6 @@ FORMS += \
 	Widgets/TagFilterDialog.ui \
 	Widgets/PlaybackControlsWidget.ui \
 	Widgets/EditStationDialog.ui \
-	Widgets/ActivityListItem.ui \
 	Dialogs/ScrobbleSetupDialog.ui \
 	Dialogs/DiagnosticsDialog.ui
 

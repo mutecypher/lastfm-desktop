@@ -3,10 +3,16 @@
 
 #include <QTreeView>
 #include <QMouseEvent>
+namespace lastfm{ class Track; }
+using lastfm::Track;
+
 class ActivityListWidget : public QTreeView {
     Q_OBJECT
 public:
-    ActivityListWidget( QWidget* parent );
+    ActivityListWidget( QWidget* parent = 0 );
+
+signals:
+    void trackClicked( const Track& );
 
 protected:
 

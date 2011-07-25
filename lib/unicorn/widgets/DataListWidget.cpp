@@ -97,7 +97,6 @@ DataListWidget::DataListWidget(QWidget* parent)
     :StylableWidget(parent)
 {
     new FlowLayout( this, 0, 0, 0 );
-    layout()->setContentsMargins( 0, 3, 0, 7 );
 }
 
 void 
@@ -105,7 +104,6 @@ DataListWidget::clear()
 {
     foreach( QObject* c, findChildren<QWidget*>())
         c->deleteLater();
-
 }
 
 void 
@@ -113,4 +111,3 @@ DataListWidget::addItem( const QString& text, const QUrl& url )
 {
     layout()->addWidget( new DataItem( text, url ));
 }
-

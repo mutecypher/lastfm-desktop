@@ -30,7 +30,7 @@ class MainWindow : public unicorn::MainWindow
         class QStackedWidget* stackedWidget;
 
         class NowPlayingStackedWidget* nowPlaying;
-        class ActivityListWidget* recentTracks;
+        class RecentTracksWidget* recentTracks;
         QWidget* profile;
         QWidget* friends;
         class QScrollArea* radioScrollArea;
@@ -58,11 +58,8 @@ private slots:
     void onStopped();
     void onPaused();
     void onResumed();
-
     void onTuningIn();
 
-    void onItemClicked( class ActivityListItem* clickedItem );
-    
 private:
     void setCurrentWidget( QWidget* );
     void addWinThumbBarButtons( QList<QAction*>& );

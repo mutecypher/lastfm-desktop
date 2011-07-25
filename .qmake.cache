@@ -26,4 +26,3 @@ macx* {
 	QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.4
 }
 
-CONFIG( debug, debug|release ):CONFIG -= release

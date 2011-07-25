@@ -35,20 +35,17 @@
 #include "Application.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
-#include "ScrobbleInfoFetcher.h"
 #include "MediaDevices/DeviceScrobbler.h"
 #include "../Widgets/ScrobbleControls.h"
-#include "../Widgets/ScrobbleInfoWidget.h"
 #include "../Widgets/NowPlayingStackedWidget.h"
-#include "../Widgets/ActivityListWidget.h"
-#include "../Widgets/TrackItem.h"
+#include "../Widgets/RecentTracksWidget.h"
 #include "../Widgets/SideBar.h"
 #include "../Widgets/StatusBar.h"
 #include "../Widgets/RadioListWidget.h"
 #include "../Widgets/TitleBar.h"
 #include "../Widgets/PlaybackControlsWidget.h"
 #include "../Widgets/RadioWidget.h"
-
+#include "../Widgets/NowPlayingWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/MessageBar.h"
 #include "lib/unicorn/widgets/GhostWidget.h"
@@ -87,7 +84,7 @@ MainWindow::MainWindow()
     ui.stackedWidget->addWidget( ui.nowPlaying = new NowPlayingStackedWidget(this) );
     ui.nowPlaying->setObjectName( "nowPlaying" );
 
-    ui.stackedWidget->addWidget( ui.recentTracks = new ActivityListWidget( this ) );
+    ui.stackedWidget->addWidget( ui.recentTracks = new RecentTracksWidget( this ) );
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
     ui.stackedWidget->addWidget( ui.profile = new QWidget(this) );
@@ -192,22 +189,6 @@ MainWindow::onPaused()
         setWindowTitle( tr( "%1 - %2 - Paused - %3" ).arg( QApplication::applicationName(), RadioService::instance().station().title(), m_currentTrack.toString() ) );
     else
         setWindowTitle( tr( "%1 - Paused - %2" ).arg( QApplication::applicationName(), m_currentTrack.toString() ) );
-}
-
-
-void
-MainWindow::onItemClicked( ActivityListItem* clickedItem )
-{
-    QVBoxLayout* infoLayout = static_cast<QVBoxLayout*>( ui.nowPlaying->layout() );
-
-    while ( infoLayout->count() )
-        infoLayout->takeAt( 0 )->widget()->hide();
-
-    QWidget* widget = clickedItem->infoWidget();
-    infoLayout->addWidget( widget );
-    widget->show();
-
-    m_currentActivity = clickedItem;
 }
 
 

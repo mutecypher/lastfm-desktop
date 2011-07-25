@@ -29,10 +29,8 @@
 
 #include "Widgets/PointyArrow.h"
 #include "Dialogs/SettingsDialog.h"
-#include "Widgets/TrackItem.h"
 
 #include "MainWindow.h"
-#include "ScrobbleInfoFetcher.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "SkipListener.h"
 

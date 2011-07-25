@@ -76,7 +76,7 @@ void HttpImageWidget::setHref( const QUrl& url )
         setCursor( Qt::PointingHandCursor );
         connect( this, SIGNAL(clicked()), SLOT(onClick()));
     } else {
-        setCursor( Qt::ArrowCursor );
+        unsetCursor();
         disconnect( this, SIGNAL( clicked()), this, SLOT(onClick()));
     }
 }
