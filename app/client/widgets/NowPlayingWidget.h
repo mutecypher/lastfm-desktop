@@ -22,6 +22,11 @@
 #define NOW_PLAYING_WIDGET_H
 
 #include <QWidget>
+#include <QPointer>
+
+#include <lastfm/Track>
+
+#include "MetadataWidget.h"
 
 class NowPlayingWidget : public QWidget
 {
@@ -31,8 +36,12 @@ public:
 
 signals:
 
-public slots:
+private slots:
+    void onTrackStarted( const Track& track, const Track& );
+    void onStopped();
 
+private:
+    QPointer<MetadataWidget> m_metadata;
 };
 
 #endif

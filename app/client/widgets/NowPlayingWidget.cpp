@@ -22,6 +22,9 @@
 
 #include "NowPlayingWidget.h"
 #include "PlaybackControlsWidget.h"
+#include "MetadataWidget.h"
+
+#include "../Services/ScrobbleService.h"
 
 NowPlayingWidget::NowPlayingWidget(QWidget *parent)
     :QWidget(parent)
@@ -32,6 +35,29 @@ NowPlayingWidget::NowPlayingWidget(QWidget *parent)
 
     layout->addWidget( new PlaybackControlsWidget( this ) );
 
-    // replace the with the current track's info widget
-    layout->addStretch( 1 );
+    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)) );
+    connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()) );
+}
+
+void
+NowPlayingWidget::onTrackStarted( const Track& track, const Track& )
+{
+    if ( m_metadata )
+    {
+        layout()->removeWidget( m_metadata );
+        m_metadata->deleteLater();
+    }
+
+    qobject_cast<QVBoxLayout*>(layout())->insertWidget( 1, m_metadata = new MetadataWidget( track, this ) );
+}
+
+
+void
+NowPlayingWidget::onStopped()
+{
+    if ( m_metadata )
+    {
+        layout()->removeWidget( m_metadata );
+        m_metadata->deleteLater();
+    }
 }
