@@ -71,7 +71,7 @@ PlayerConnection::PlayerConnection( const QString& id, const QString& name, QObj
 
 void PlayerConnection::forceTrackStarted( const Track& t )
 {
-    emit trackStarted( m_track, t );
+    emit trackStarted( track(), t );
 }
 
 void PlayerConnection::forcePaused()
