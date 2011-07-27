@@ -179,7 +179,7 @@ PlaybackControlsWidget[scrobbleTrack="true"] QFrame#details {
 }
 
 PlaybackControlsWidget[scrobbleTrack="true"] QFrame#statusFrame QLabel{
-	color: black;
+	color: #333;
 }
 
 PlaybackControlsWidget QPushButton {

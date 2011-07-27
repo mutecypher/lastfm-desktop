@@ -84,7 +84,7 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
 void
 MetadataWidget::fetchTrackInfo()
 {
-    connect( m_track.signalProxy(), SIGNAL( gotInfo(XmlQuery)), SLOT( onTrackGotInfo(XmlQuery)));
+    connect( m_track.signalProxy(), SIGNAL( gotInfo(QByteArray)), SLOT( onTrackGotInfo(QByteArray)));
     m_track.getInfo();
     connect( m_track.album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
     connect( m_track.artist().getInfo(), SIGNAL(finished()), SLOT(onArtistGotInfo()));
@@ -244,22 +244,31 @@ MetadataWidget::onAlbumGotInfo()
 }
 
 void
-MetadataWidget::onTrackGotInfo( const XmlQuery& lfm )
+MetadataWidget::onTrackGotInfo( const QByteArray& data )
 {
-    m_scrobbles = lfm["track"]["playcount"].text().toInt();
-    int listeners = lfm["track"]["listeners"].text().toInt();
-    m_userListens = lfm["track"]["userplaycount"].text().toInt();
-
-    ui.track.yourScrobbles->setText( QString("%L1").arg(m_userListens));
-    ui.track.totalScrobbles->setText( QString("%L1").arg(m_scrobbles));
-    ui.track.listeners->setText( QString("%L1").arg( listeners ));
-    ui.track.albumImage->loadUrl( lfm["track"]["album"]["image size=extralarge"].text() );
-    ui.track.albumImage->setHref( QUrl("http://www.google.com" ));
-    ui.track.scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
-
-    foreach(const XmlQuery& e, lfm["track"]["toptags"].children("tag").mid(0, 5 ))
+    try
     {
-        ui.track.popTags->addItem( e["name"].text(), e["url"].text());
+        XmlQuery lfm(data);
+
+        m_scrobbles = lfm["track"]["playcount"].text().toInt();
+        int listeners = lfm["track"]["listeners"].text().toInt();
+        m_userListens = lfm["track"]["userplaycount"].text().toInt();
+
+        ui.track.yourScrobbles->setText( QString("%L1").arg(m_userListens));
+        ui.track.totalScrobbles->setText( QString("%L1").arg(m_scrobbles));
+        ui.track.listeners->setText( QString("%L1").arg( listeners ));
+        ui.track.albumImage->loadUrl( lfm["track"]["album"]["image size=extralarge"].text() );
+        ui.track.albumImage->setHref( QUrl("http://www.google.com" ));
+        ui.track.scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
+
+        foreach(const XmlQuery& e, lfm["track"]["toptags"].children("tag").mid(0, 5 ))
+        {
+            ui.track.popTags->addItem( e["name"].text(), e["url"].text());
+        }
+    }
+    catch (...)
+    {
+        // TODO: we were probably fetching info for an unknown track or something
     }
 }
 

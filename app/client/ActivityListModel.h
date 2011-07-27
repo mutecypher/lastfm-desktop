@@ -25,7 +25,7 @@ public slots:
         if( imgUrl.isEmpty()) {
             qDebug() << "Getting info for track..";
             getInfo();
-            connect( signalProxy(), SIGNAL(gotInfo(XmlQuery)), SLOT(fetchImage()), Qt::DirectConnection);
+            connect( signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(fetchImage()), Qt::DirectConnection);
             return;
         }
         QNetworkReply* r = lastfm::nam()->get(QNetworkRequest(imgUrl));

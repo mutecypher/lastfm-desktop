@@ -28,6 +28,7 @@ NowPlayingStackedWidget::NowPlayingStackedWidget( QWidget* parent )
 
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(showNowPlaying()) );
     connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(showNowPlaying()));
+    connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(showNothingPlaying()));
 }
 
 void
@@ -35,4 +36,11 @@ NowPlayingStackedWidget::showNowPlaying()
 {
     qobject_cast<QStackedLayout*>(layout())->setCurrentWidget( ui.nowPlaying );
 }
+
+void
+NowPlayingStackedWidget::showNothingPlaying()
+{
+    qobject_cast<QStackedLayout*>(layout())->setCurrentWidget( ui.nothingPlaying );
+}
+
 

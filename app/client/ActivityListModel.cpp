@@ -154,7 +154,7 @@ ActivityListModel::onTrackStarted( const Track& track )
         m_tracks[0].fetchImage();
         connect( &m_tracks[0], SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
         connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
-        connect( track.signalProxy(), SIGNAL(gotInfo(XmlQuery)), SLOT(write()));
+        connect( track.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
         endInsertRows();
         write();
     }

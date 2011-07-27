@@ -99,6 +99,8 @@ class TB : public QTextBrowser {
                 e->type() == QEvent::Resize ) {
                 update( m_widgetTextObject->widgetRect(w).toRect());
             }
+
+            return false;
         }
 
     protected:
@@ -160,7 +162,7 @@ public:
 
 private slots:
 
-    void onTrackGotInfo(const XmlQuery& lfm);
+    void onTrackGotInfo(const QByteArray& data);
     void onAlbumGotInfo();
     void onArtistGotInfo();
     void onArtistGotEvents();

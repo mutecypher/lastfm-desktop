@@ -19,6 +19,7 @@ public:
 
 private slots:
     void showNowPlaying();
+    void showNothingPlaying();
 
 private:
     struct {
