@@ -99,7 +99,7 @@ class TB : public QTextBrowser {
                 e->type() == QEvent::Resize ) {
                 update( m_widgetTextObject->widgetRect(w).toRect());
             }
-
+            
             return false;
         }
 
@@ -119,6 +119,24 @@ class TB : public QTextBrowser {
         }
 
         void mouseMoveEvent( QMouseEvent* event ) {
+            //respect child widget cursor
+            {
+                QWidget* w = m_widgetTextObject->widgetAtPoint(event->pos() );
+                QWidget* c = w ? w->childAt(event->pos()) : w;
+                c = c ? c : w;
+
+                if( c ) {
+                    if( c != this ) {
+                        if( QApplication::overrideCursor()) {
+                            QApplication::changeOverrideCursor( c->cursor());
+                        } else {
+                            QApplication::setOverrideCursor( c->cursor());
+                        }
+                    } else {
+                        QApplication::restoreOverrideCursor();
+                    }
+                }
+            }
             if(!sendMouseEvent(event)) {
                 QTextBrowser::mouseMoveEvent( event );
             }
@@ -149,6 +167,8 @@ class TB : public QTextBrowser {
         QWidget* currentHoverWidget;
 };
 
+
+#include "lib/unicorn/widgets/HttpImageWidget.h"
 class MetadataWidget : public StylableWidget
 {
     Q_OBJECT
