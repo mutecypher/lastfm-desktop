@@ -514,7 +514,6 @@ MetadataWidget::setupUi()
         ui.artist.banner = new BannerWidget( tr("On Tour" ));
         ui.artist.banner->setBannerVisible( false );
         artistBio->layout()->addWidget( ui.artist.bio = new TB( artistBio ) );
-        ui.artist.bio->document()->setUseDesignMetrics( true );
         ui.artist.bio->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
         ui.artist.image = new HttpImageWidget;
         ui.artist.banner->setWidget( ui.artist.image );

@@ -73,7 +73,7 @@ protected:
     QMap<QWidget*, QRectF> m_widgetRects;
 };
 
-
+#include <QPlainTextDocumentLayout>
 class TB : public QTextBrowser {
     public:
         TB( QWidget* p ) : QTextBrowser( p ), currentHoverWidget(0){
@@ -95,11 +95,12 @@ class TB : public QTextBrowser {
 
         bool eventFilter( QObject* o, QEvent* e ) {
             QWidget* w = qobject_cast<QWidget*>( o );
-            if( e->type() == QEvent::Paint ||
-                e->type() == QEvent::Resize ) {
+            if( e->type() == QEvent::Resize ) {
+                //Force the QTextBrowser to recalculate layout including wrapping
+                QApplication::sendEvent( this, &QEvent(QEvent::FontChange));
+            } else if( e->type() == QEvent::Paint ) {
                 update( m_widgetTextObject->widgetRect(w).toRect());
             }
-            
             return false;
         }
 
