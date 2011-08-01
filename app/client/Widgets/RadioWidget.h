@@ -13,6 +13,8 @@ class RadioWidget : public QWidget
 private:
     struct
     {
+        class QWidget* main;
+
         class StylableWidget* personal;
         class StylableWidget* network;
         class StylableWidget* topArtists;

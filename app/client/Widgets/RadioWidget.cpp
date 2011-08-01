@@ -19,6 +19,12 @@
 RadioWidget::RadioWidget(QWidget *parent)
     :QWidget( parent )
 {
+    ui.main = 0;
+
+    QVBoxLayout* mainLayout = new QVBoxLayout( this );
+    mainLayout->setContentsMargins( 0, 0, 0, 0 );
+    mainLayout->setSpacing( 0 );
+
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*) ) );
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation) ) );
 }
@@ -29,16 +35,12 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
     if ( !session->userInfo().name().isEmpty() )
     {
         // remove any previous layout
-        if ( layout() )
-        {
-            for ( int i = layout()->count() - 1 ; i >= 0  ; --i )
-                layout()->takeAt( i )->widget()->deleteLater();
+        QLayoutItem* li = layout()->takeAt( 0 );
+        if ( li )
+            delete li->widget();
 
-            delete layout();
-        }
-
-        // new layout!
-        QVBoxLayout* layout = new QVBoxLayout( this );
+        layout()->addWidget( ui.main = new QWidget( this ) );
+        QVBoxLayout* layout = new QVBoxLayout( ui.main );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
@@ -47,7 +49,9 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
         connect( quickStartWidget, SIGNAL(startRadio(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)));
 
         {
-            layout->addWidget( new QLabel( tr("Personal Stations"), this ) );
+            QLabel* title = new QLabel( tr("Personal Stations"), this );
+            layout->addWidget( title );
+            title->setObjectName( "title" );
             layout->addWidget( ui.personal = new StylableWidget( this ) );
             ui.personal->setObjectName( "section" );
             QVBoxLayout* personalLayout = new QVBoxLayout( ui.personal );
@@ -62,7 +66,9 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
         }
 
         {
-            layout->addWidget( new QLabel( tr("Network Stations"), this ) );
+            QLabel* title = new QLabel( tr("Network Stations"), this ) ;
+            layout->addWidget( title );
+            title->setObjectName( "title" );
             layout->addWidget( ui.network = new StylableWidget( this ) );
             ui.network->setObjectName( "section" );
             QVBoxLayout* networkLayout = new QVBoxLayout( ui.network );
@@ -74,8 +80,9 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
             ui.neighbours->setObjectName( "neighbours" );
         }
 
-
-        layout->addWidget( new QLabel( tr("Recent Stations"), this ) );
+        QLabel* title = new QLabel( tr("Recent Stations"), this ) ;
+        layout->addWidget( title );
+        title->setObjectName( "title" );
         layout->addWidget( ui.recentStations = new StylableWidget( this ) );
         ui.recentStations->setObjectName( "section" );
 

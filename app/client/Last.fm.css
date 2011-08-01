@@ -79,7 +79,7 @@ QScrollArea {
 	border: none;
 }
 
-RadioWidget #section {
+RadioWidget QFrame#section {
 	border: none;
 	border-top: 1px solid white;
 	padding: 7px 0px; 
@@ -130,7 +130,7 @@ RadioWidget PlayableItemWidget#station {
 RadioWidget PlayableItemWidget#station:hover { background-image: url(":/radio_play_small_HOVER.png"); }
 RadioWidget PlayableItemWidget#station:pressed { background-image: url(":/radio_play_small_PRESS.png"); }
 
-RadioWidget > QLabel {
+RadioWidget QLabel#title {
 	padding: 10px 0px;
 	margin: 0px 20px;
 	border: 1px solid #cdcdcd;
