@@ -26,23 +26,6 @@
 #include "../StationSearch.h"
 
 #include <QStylePainter>
-class AAQPushButton : public QPushButton
-{
-public:
-    AAQPushButton( const QString& caption )
-        :QPushButton( caption )
-    {}
-
-    virtual void paintEvent( QPaintEvent* /*e*/ )
-    {
-        QStylePainter p( this );
-        QStyleOptionButton option;
-        initStyleOption( &option );
-
-        p.setRenderHint( QPainter::HighQualityAntialiasing );
-        p.drawControl( QStyle::CE_PushButton, option );
-    }
-};
 
 QuickStartWidget::QuickStartWidget()
 {
@@ -50,7 +33,7 @@ QuickStartWidget::QuickStartWidget()
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
-    QPushButton* button = new AAQPushButton(tr("Play"));
+    QPushButton* button = new QPushButton(tr("Play"), this);
     button->setToolTip( tr( "Play source" ) );
     m_edit = new HelpTextLineEdit( this );
     m_edit->setHelpText( tr("Type an artist or tag and press play") );
