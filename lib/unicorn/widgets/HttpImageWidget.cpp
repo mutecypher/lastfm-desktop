@@ -38,6 +38,14 @@ HttpImageWidget::setGradient( bool gradient )
     update();
 }
 
+void 
+HttpImageWidget::setPlaceholder( const QPixmap& placeholder )
+{
+    if( !pixmap() || pixmap()->isNull()) {
+        setPixmap( placeholder.scaled( maximumWidth(), maximumHeight(), Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
+    }
+}
+
 void
 HttpImageWidget::paintEvent( QPaintEvent* event )
 {

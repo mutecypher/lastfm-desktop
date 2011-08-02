@@ -38,6 +38,7 @@ public:
 
     bool gradient();
     void setGradient( bool gradient );
+    void setPlaceholder( const QPixmap& );
 
 public slots:
     void loadUrl( const QUrl& url, bool scale = true );
