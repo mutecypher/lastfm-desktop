@@ -105,7 +105,9 @@ SOURCES += \
     Services/RadioService/RadioConnection.cpp \
     Widgets/NothingPlayingWidget.cpp \
     Widgets/NowPlayingStackedWidget.cpp \
-    Widgets/ProfileWidget.cpp
+    Widgets/ProfileWidget.cpp \
+    Widgets/FriendListWidget.cpp \
+    Widgets/FriendWidget.cpp
 
 HEADERS += \
 	Wizard/WelcomePage.h \
@@ -192,7 +194,9 @@ HEADERS += \
     Services/RadioService/RadioConnection.h \
     Widgets/NothingPlayingWidget.h \
     Widgets/NowPlayingStackedWidget.h \
-    Widgets/ProfileWidget.h
+    Widgets/ProfileWidget.h \
+    Widgets/FriendListWidget.h \
+    Widgets/FriendWidget.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 

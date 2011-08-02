@@ -32,6 +32,7 @@ class MainWindow : public unicorn::MainWindow
         class NowPlayingStackedWidget* nowPlaying;
         class RecentTracksWidget* recentTracks;
         QWidget* profile;
+        class QScrollArea* friendsScrollArea;
         QWidget* friends;
         class QScrollArea* radioScrollArea;
         class RadioWidget* radio;
