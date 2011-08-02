@@ -77,25 +77,14 @@ int main( int argc, char** argv )
 
         qAddPostRoutine(cleanup);
 
-//        ScrobSocket* scrobsock = new ScrobSocket("ass");
-//        scrobsock->connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(start(Track)));
-//        scrobsock->connect( &RadioService::instance(), SIGNAL(paused()), SLOT(pause()));
-//        scrobsock->connect( &RadioService::instance(), SIGNAL(resumed()), SLOT(resume()));
-//        scrobsock->connect( &RadioService::instance(), SIGNAL(stopped()), SLOT(stop()));
-//        scrobsock->connect(&app, SIGNAL(aboutToQuit()), scrobsock, SLOT(stop()));
-
-      #ifdef Q_WS_MAC
+#ifdef Q_WS_MAC
         AEEventHandlerUPP h = NewAEEventHandlerUPP( appleEventHandler );
         AEInstallEventHandler( 'GURL', 'GURL', h, 0, false );
-      #endif
+#endif
 
         app.init();
-
         app.parseArguments( app.arguments() );
-
-        int result = app.exec();
-        //scrobsock->stop();
-        return result;
+        return app.exec();
     }
     catch (std::exception& e)
     {

@@ -45,7 +45,7 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent) :
     vl->addWidget( ui.lastTrack = new QLabel( tr( "Last track: %1" ).arg( recentTrack.toString() ), this) );
     ui.lastTrack->setObjectName( "lastTrack" );
 
-    vl->addWidget( ui.radio = new PlayableItemWidget( RadioStation::library( User( user["name"] ) ), tr( "Play Library Radio" ) ) );
+    vl->addWidget( ui.radio = new PlayableItemWidget( RadioStation::library( User( user["name"].text() ) ), tr( "Play Library Radio" ) ) );
     ui.lastTrack->setObjectName( "lastTrack" );
 
     connect( lastfm::UserDetails::getInfo( user["name"].text() ), SIGNAL(finished()), SLOT(onGotInfo()));

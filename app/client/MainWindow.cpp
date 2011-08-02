@@ -59,6 +59,8 @@
 
 MainWindow::MainWindow()
 {
+    hide();
+
 #ifdef Q_OS_MAC
     setUnifiedTitleAndToolBarOnMac( true );
 #endif
@@ -74,13 +76,6 @@ MainWindow::MainWindow()
     layout->addWidget( ui.stackedWidget = new QStackedWidget( this ) );
 
     connect( ui.sideBar, SIGNAL(currentChanged(int)), ui.stackedWidget, SLOT(setCurrentIndex(int)));
-
-    //ui.playbackControls = new PlaybackControlsWidget( this );
-    //ui.playbackControls->setObjectName("playbackControls");
-    //ui.playbackControls->hide();
-
-    //ui.nowPlaying = new NowPlayingItem( Track() );
-    //ui.nowPlaying->setObjectName("nowPlaying");
 
     ui.stackedWidget->addWidget( ui.nowPlaying = new NowPlayingStackedWidget(this) );
     ui.nowPlaying->setObjectName( "nowPlaying" );
@@ -121,19 +116,6 @@ MainWindow::MainWindow()
 
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn()));
 
-//    connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotInfo(XmlQuery)), SIGNAL(trackGotInfo(XmlQuery)));
-//    connect( ui.nowPlaying->fetcher(), SIGNAL(albumGotInfo(XmlQuery)), SIGNAL(albumGotInfo(XmlQuery)));
-//    connect( ui.nowPlaying->fetcher(), SIGNAL(artistGotInfo(XmlQuery)), SIGNAL(artistGotInfo(XmlQuery)));
-//    connect( ui.nowPlaying->fetcher(), SIGNAL(artistGotEvents(XmlQuery)), SIGNAL(artistGotEvents(XmlQuery)));
-//    connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotTopFans(XmlQuery)), SIGNAL(trackGotTopFans(XmlQuery)));
-//    connect( ui.nowPlaying->fetcher(), SIGNAL(trackGotTags(XmlQuery)), SIGNAL(trackGotTags(XmlQuery)));
-//    connect( ui.nowPlaying->fetcher(), SIGNAL(finished()), SIGNAL(finished()));
-
-//    connect( ui.nowPlaying, SIGNAL(clicked(ActivityListItem*)), ui.recentTracks, SLOT(clearItemClicked()));
-
-//    connect( ui.recentTracks, SIGNAL(itemClicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
-//    connect( ui.nowPlaying, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
-
     menuBar()->hide();
 
     //for some reason some of the stylesheet is not being applied properly unless reloaded
@@ -145,6 +127,10 @@ MainWindow::MainWindow()
     setStatusBar( ui.statusBar );
 
     finishUi();
+
+    resize( 545, 655 );
+
+    show();
 }
 
 

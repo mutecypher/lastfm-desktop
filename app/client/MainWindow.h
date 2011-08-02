@@ -6,6 +6,8 @@
 #include <lastfm/Track>
 #include <lastfm/XmlQuery>
 
+#include <QResizeEvent>
+
 using lastfm::XmlQuery;
 
 class QAbstractButton;

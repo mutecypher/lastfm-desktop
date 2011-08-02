@@ -37,15 +37,21 @@ FriendListWidget::onSessionChanged( unicorn::Session* session )
 void
 FriendListWidget::onTextChanged( const QString& text )
 {
+    setUpdatesEnabled( false );
+
     QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(m_main->layout());
 
-    for ( int i = 1 ; i < layout->count() ; ++i )
+    // Start from 1 because 0 is the HelpTextLineEdit
+    // end 1 from the end because the last one is a stretch
+    for ( int i = 1 ; i < layout->count() - 1 ; ++i )
     {
         FriendWidget* user = qobject_cast<FriendWidget*>(layout->itemAt( i )->widget());
 
         layout->itemAt( i )->widget()->setVisible( user->name().contains( text, Qt::CaseInsensitive )
-                                                   || (!user->realname().isEmpty() && user->realname().contains( text, Qt::CaseInsensitive ) ) );
+                                                   || user->realname().contains( text, Qt::CaseInsensitive ) );
     }
+
+    setUpdatesEnabled( true );
 }
 
 
@@ -57,7 +63,7 @@ FriendListWidget::onGotFriends()
     {
         layout()->addWidget( m_main = new QWidget( this ) );
         QVBoxLayout* layout = new QVBoxLayout( m_main );
-        layout->setContentsMargins( 0, 0, 0, 0);
+        layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
         HelpTextLineEdit* lineEdit = new HelpTextLineEdit( this );
@@ -70,18 +76,24 @@ FriendListWidget::onGotFriends()
     // add this set of users to the list
     lastfm::XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
 
+    QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(m_main->layout());
+
     foreach( const lastfm::XmlQuery& user, lfm["friends"].children( "user" ) )
     {
-        QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(m_main->layout());
-
         bool added = false;
 
-        // start from 1 because 0 is the HelpTextLineEdit
-        for ( int i = layout->count() - 1 ; i > 0 ; --i )
+        QString newUser = user["name"].text();
+
+        // Start from 1 because 0 is the HelpTextLineEdit
+        // end 1 from the end because the last one is a stretch
+        for ( int i = 1 ; i < layout->count() - 1 ; ++i )
         {
-            if ( user["name"].text().compare( qobject_cast<FriendWidget*>(layout->itemAt( i )->widget())->name(), Qt::CaseInsensitive ) > 0 )
+            QString listUser = qobject_cast<FriendWidget*>(layout->itemAt( i )->widget())->name();
+
+            if ( newUser.compare( listUser, Qt::CaseInsensitive ) < 0 )
             {
                 layout->insertWidget( i, new FriendWidget( user, this ) );
+                added = true;
                 break;
             }
         }
@@ -99,5 +111,6 @@ FriendListWidget::onGotFriends()
     // Check if we need to fetch another page of users
     if ( page != totalPages )
         connect( lastfm::User().getFriends( true, perPage, page + 1 ), SIGNAL(finished()), SLOT(onGotFriends()) );
-
+    else
+        layout->addStretch();
 }
