@@ -36,6 +36,7 @@
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
 #include "MediaDevices/DeviceScrobbler.h"
+#include "../Widgets/FriendListWidget.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "../Widgets/NowPlayingStackedWidget.h"
 #include "../Widgets/RecentTracksWidget.h"
@@ -90,7 +91,10 @@ MainWindow::MainWindow()
     ui.stackedWidget->addWidget( ui.profile = new QWidget(this) );
     ui.profile->setObjectName( "profile" );
 
-    ui.stackedWidget->addWidget( ui.friends = new QWidget(this) );
+    ui.stackedWidget->addWidget( ui.friendsScrollArea = new QScrollArea( this ) );
+    ui.friendsScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    ui.friendsScrollArea->setWidget( ui.friends = new FriendListWidget(this) );
+    ui.friendsScrollArea->setWidgetResizable( true );
     ui.friends->setObjectName( "friends" );
 
     ui.stackedWidget->addWidget( ui.radioScrollArea = new QScrollArea( this ) );
@@ -136,7 +140,7 @@ MainWindow::MainWindow()
     //here. StyleSheets see very flaky to me. :s
     aApp->refreshStyleSheet();
 
-    setMinimumWidth( 455 );
+    setMinimumWidth( 540 );
 
     setStatusBar( ui.statusBar );
 
