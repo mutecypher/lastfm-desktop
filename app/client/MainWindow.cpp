@@ -140,7 +140,7 @@ MainWindow::MainWindow()
     //here. StyleSheets see very flaky to me. :s
     aApp->refreshStyleSheet();
 
-    setMinimumWidth( 455 );
+    setMinimumWidth( 540 );
 
     setStatusBar( ui.statusBar );
 

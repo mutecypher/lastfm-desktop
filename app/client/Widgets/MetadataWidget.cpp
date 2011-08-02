@@ -1,4 +1,4 @@
-/*
+ /*
    Copyright 2005-2009 Last.fm Ltd.
       - Primarily authored by Jono Cole and Doug Mansell
 
@@ -202,12 +202,14 @@ MetadataWidget::onArtistGotInfo()
     ui.artist.image->setHref( QUrl(lfm["artist"]["url"].text()));
 
     ui.artist.bio->insertWidget( ui.artist.banner );
-    onBioChanged( ui.artist.bio->document()->documentLayout()->documentSize() );
+    ui.artist.banner->setHref( QUrl(lfm["artist"]["url"].text()+"/+events"));
 
     QTextFrame* root = ui.artist.bio->document()->rootFrame();
     QTextFrameFormat f = root->frameFormat();
     f.setMargin(0);
     root->setFrameFormat(f);
+
+    onBioChanged( ui.artist.bio->document()->documentLayout()->documentSize() );
 
     reply->close();
 }
@@ -220,13 +222,9 @@ MetadataWidget::onArtistGotEvents()
 
     if (lfm["events"].children("event").count() > 0)
     {
-        qCritical() << "Events Found";
         // Display an on tour notification
         ui.artist.banner->setBannerVisible();
-    } else {
-        qCritical() << "No Events Found";
     }
-
     reply->close();
 }
 
@@ -249,7 +247,6 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
     try
     {
         XmlQuery lfm(data);
-
         m_scrobbles = lfm["track"]["playcount"].text().toInt();
         int listeners = lfm["track"]["listeners"].text().toInt();
         m_userListens = lfm["track"]["userplaycount"].text().toInt();
@@ -258,7 +255,7 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
         ui.track.totalScrobbles->setText( QString("%L1").arg(m_scrobbles));
         ui.track.listeners->setText( QString("%L1").arg( listeners ));
         ui.track.albumImage->loadUrl( lfm["track"]["album"]["image size=extralarge"].text() );
-        ui.track.albumImage->setHref( QUrl("http://www.google.com" ));
+        ui.track.albumImage->setHref( lfm["track"]["url"].text());
         ui.track.scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
 
         foreach(const XmlQuery& e, lfm["track"]["toptags"].children("tag").mid(0, 5 ))
@@ -379,6 +376,7 @@ MetadataWidget::setupTrackDetails( QWidget* w )
 {
     new QHBoxLayout( w );   
     w->layout()->addWidget( ui.track.albumImage = new HttpImageWidget );
+    ui.track.albumImage->setMaximumSize( QSize( 126, 126 ));
     {
         QWidget* widget = new QWidget;
         widget->setStyleSheet( "color: #333;" );
@@ -505,6 +503,7 @@ MetadataWidget::setupUi()
     {
         artistBio->setStyleSheet( ".QWidget {background-color:#dedede;}");
         new QVBoxLayout( artistBio );
+        artistBio->setContentsMargins( 0, 0, 0, 0 );
         artistBio->layout()->addWidget( ui.artist.artist = new QLabel());
         ui.artist.artist->setStyleSheet( "font-size: 16pt; font-weight: bold;"
                                          "color: #333; padding-top: 7px;" );
@@ -512,9 +511,9 @@ MetadataWidget::setupUi()
         ui.artist.banner = new BannerWidget( tr("On Tour" ));
         ui.artist.banner->setBannerVisible( false );
         artistBio->layout()->addWidget( ui.artist.bio = new TB( artistBio ) );
+        ui.artist.bio->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
         ui.artist.image = new HttpImageWidget;
         ui.artist.banner->setWidget( ui.artist.image );
-        ui.artist.banner->setHref( QUrl( "http://www.twitter.com" ) );
         
         QString stylesheet = ((audioscrobbler::Application*)qApp)->loadedStyleSheet() + styleSheet();
         ui.artist.bio->document()->setDefaultStyleSheet( stylesheet );
@@ -524,6 +523,7 @@ MetadataWidget::setupUi()
     qobject_cast<QBoxLayout*>(artistBio->layout())->addStretch(1);
 
     contents->layout()->setContentsMargins( 0, 0, 0, 0 );
+    contents->layout()->setSpacing( 0 );
 
     contents->layout()->addWidget( trackDetails );
     contents->layout()->addWidget( trackStats );
@@ -534,14 +534,19 @@ MetadataWidget::setupUi()
     ui.scrollArea = new QScrollArea( this );
     ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
     ui.scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    
+
     ui.scrollArea->setWidget( contents );
     ui.scrollArea->setWidgetResizable( true );
 
     new QVBoxLayout( this );
     ui.backButton = new QPushButton( "Back" );
     connect( ui.backButton, SIGNAL( clicked()), SIGNAL( backClicked()));
-    this->layout()->addWidget( ui.backButton );
+    QWidget* pushButtonWidget = new QWidget;
+    new QVBoxLayout( pushButtonWidget );
+    pushButtonWidget->layout()->addWidget( ui.backButton );
+    this->layout()->addWidget( pushButtonWidget );
+    ui.backButton->setContentsMargins( 0, 0, 0, 0 );
     this->layout()->addWidget( ui.scrollArea );
     this->layout()->setContentsMargins( 0, 0, 0, 0 );
+    this->layout()->setSpacing( 0 );
 }
