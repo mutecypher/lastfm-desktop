@@ -39,24 +39,27 @@ class QTextBrowser;
 class WidgetTextObject : public QObject, QTextObjectInterface {
     Q_OBJECT
     Q_INTERFACES(QTextObjectInterface)
+    const QSize kMargin;
 public:
-    WidgetTextObject(){};
+    WidgetTextObject():kMargin(20,10){};
     virtual QSizeF intrinsicSize(QTextDocument*, int /*posInDocument*/,
                                  const QTextFormat& format) {
         QWidget* widget = qVariantValue<QWidget*>(format.property(1));
-        QSize margin( 20, 10 );
-        return QSizeF( widget->size() + margin );
+        return QSizeF( widget->size() + kMargin );
     }
     virtual void drawObject(QPainter *painter, const QRectF &rect,
            QTextDocument * /*doc*/, int /*posInDocument*/,
            const QTextFormat &format) {
         QWidget* widget = qVariantValue<QWidget*>(format.property( 1 ));
         widget->render( painter, QPoint( 0, 0 ));
-        m_widgetRects[widget] = rect;
+        
+        //Adjusted to allow for the margin
+        QRect contentsRect = rect.toRect().adjusted(0, 0, -kMargin.width(), -kMargin.height());
+        m_widgetRects[widget] = contentsRect;
     }
 
     QWidget* widgetAtPoint( const QPoint& p ) {
-        QMapIterator<QWidget*, QRectF> i(m_widgetRects);
+        QMapIterator<QWidget*, QRect> i(m_widgetRects);
         while (i.hasNext()) {
             i.next();
             if( i.value().contains(p))
@@ -70,14 +73,16 @@ public:
     }
 
 protected:
-    QMap<QWidget*, QRectF> m_widgetRects;
+    QMap<QWidget*, QRect> m_widgetRects;
 };
 
 #include <QPlainTextDocumentLayout>
 class TB : public QTextBrowser {
     public:
-        TB( QWidget* p ) : QTextBrowser( p ), currentHoverWidget(0){
+        TB( QWidget* p ) : QTextBrowser( p ), m_currentHoverWidget(0){
             m_widgetTextObject = new WidgetTextObject;
+            viewport()->installEventFilter( this );
+            setMouseTracking(true);
             document()->documentLayout()->registerHandler( WidgetImageFormat, m_widgetTextObject );
         }
         
@@ -95,9 +100,29 @@ class TB : public QTextBrowser {
 
         bool eventFilter( QObject* o, QEvent* e ) {
             QWidget* w = qobject_cast<QWidget*>( o );
+            if( viewport() == w ) {
+                if( QEvent::MouseMove != e->type() ) return false;
+                QMouseEvent* event = static_cast<QMouseEvent*>(e);
+                //respect child widget cursor
+                QWidget* w = m_widgetTextObject->widgetAtPoint(event->pos() );
+                if( w != m_currentHoverWidget ) {
+                    m_currentHoverWidget = w;
+                    if( 0 == w ) {
+                        viewport()->unsetCursor();
+                    } else {
+                        QWidget* c = w->childAt(event->pos());
+                        c = c ? c : w;
+                        viewport()->setCursor( c->cursor());
+                    }
+                }
+
+                return false;
+            }
+
             if( e->type() == QEvent::Resize ) {
                 //Force the QTextBrowser to recalculate layout including wrapping
-                QApplication::sendEvent( this, &QEvent(QEvent::FontChange));
+                QEvent fcEvent(QEvent::FontChange);
+                QApplication::sendEvent( this, &fcEvent);
             } else if( e->type() == QEvent::Paint ) {
                 update( m_widgetTextObject->widgetRect(w).toRect());
             }
@@ -120,24 +145,6 @@ class TB : public QTextBrowser {
         }
 
         void mouseMoveEvent( QMouseEvent* event ) {
-            //respect child widget cursor
-            {
-                QWidget* w = m_widgetTextObject->widgetAtPoint(event->pos() );
-                QWidget* c = w ? w->childAt(event->pos()) : w;
-                c = c ? c : w;
-
-                if( c ) {
-                    if( c != this ) {
-                        if( QApplication::overrideCursor()) {
-                            QApplication::changeOverrideCursor( c->cursor());
-                        } else {
-                            QApplication::setOverrideCursor( c->cursor());
-                        }
-                    } else {
-                        QApplication::restoreOverrideCursor();
-                    }
-                }
-            }
             if(!sendMouseEvent(event)) {
                 QTextBrowser::mouseMoveEvent( event );
             }
@@ -165,7 +172,7 @@ class TB : public QTextBrowser {
         }
         enum WidgetProperties { WidgetData = 1 };
         enum { WidgetImageFormat = QTextFormat::UserObject + 1 };
-        QWidget* currentHoverWidget;
+        QWidget* m_currentHoverWidget;
 };
 
 

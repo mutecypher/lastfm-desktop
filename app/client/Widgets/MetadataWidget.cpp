@@ -222,13 +222,9 @@ MetadataWidget::onArtistGotEvents()
 
     if (lfm["events"].children("event").count() > 0)
     {
-        qCritical() << "Events Found";
         // Display an on tour notification
         ui.artist.banner->setBannerVisible();
-    } else {
-        qCritical() << "No Events Found";
     }
-
     reply->close();
 }
 
@@ -259,7 +255,7 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
         ui.track.totalScrobbles->setText( QString("%L1").arg(m_scrobbles));
         ui.track.listeners->setText( QString("%L1").arg( listeners ));
         ui.track.albumImage->loadUrl( lfm["track"]["album"]["image size=extralarge"].text() );
-        ui.track.albumImage->setHref( QUrl("http://www.google.com" ));
+        ui.track.albumImage->setHref( lfm["track"]["url"].text());
         ui.track.scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
 
         foreach(const XmlQuery& e, lfm["track"]["toptags"].children("tag").mid(0, 5 ))
@@ -380,6 +376,7 @@ MetadataWidget::setupTrackDetails( QWidget* w )
 {
     new QHBoxLayout( w );   
     w->layout()->addWidget( ui.track.albumImage = new HttpImageWidget );
+    ui.track.albumImage->setMaximumSize( QSize( 126, 126 ));
     {
         QWidget* widget = new QWidget;
         widget->setStyleSheet( "color: #333;" );
