@@ -36,6 +36,7 @@
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
 #include "MediaDevices/DeviceScrobbler.h"
+#include "../Widgets/ProfileWidget.h"
 #include "../Widgets/FriendListWidget.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "../Widgets/NowPlayingStackedWidget.h"
@@ -83,7 +84,10 @@ MainWindow::MainWindow()
     ui.stackedWidget->addWidget( ui.recentTracks = new RecentTracksWidget( this ) );
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
-    ui.stackedWidget->addWidget( ui.profile = new QWidget(this) );
+    ui.stackedWidget->addWidget( ui.profileScrollArea = new QScrollArea( this ) );
+    ui.profileScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    ui.profileScrollArea->setWidget( ui.profile = new ProfileWidget(this) );
+    ui.profileScrollArea->setWidgetResizable( true );
     ui.profile->setObjectName( "profile" );
 
     ui.stackedWidget->addWidget( ui.friendsScrollArea = new QScrollArea( this ) );

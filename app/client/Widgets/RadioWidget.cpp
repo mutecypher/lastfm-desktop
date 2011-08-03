@@ -19,11 +19,9 @@
 RadioWidget::RadioWidget(QWidget *parent)
     :QWidget( parent )
 {
-    ui.main = 0;
-
-    QVBoxLayout* mainLayout = new QVBoxLayout( this );
-    mainLayout->setContentsMargins( 0, 0, 0, 0 );
-    mainLayout->setSpacing( 0 );
+    QVBoxLayout* layout = new QVBoxLayout( this );
+    layout->setContentsMargins( 0, 0, 0, 0 );
+    layout->setSpacing( 0 );
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*) ) );
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation) ) );
@@ -35,12 +33,11 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
     if ( !session->userInfo().name().isEmpty() )
     {
         // remove any previous layout
-        QLayoutItem* li = layout()->takeAt( 0 );
-        if ( li )
-            delete li->widget();
+        layout()->removeWidget( m_main );
+        delete m_main;
 
-        layout()->addWidget( ui.main = new QWidget( this ) );
-        QVBoxLayout* layout = new QVBoxLayout( ui.main );
+        layout()->addWidget( m_main = new QWidget( this ) );
+        QVBoxLayout* layout = new QVBoxLayout( m_main );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 

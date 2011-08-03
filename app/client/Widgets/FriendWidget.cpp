@@ -39,8 +39,8 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent) :
 
     lastfm::MutableTrack recentTrack;
     recentTrack.setTitle( user["recenttrack"]["name"].text() );
-    recentTrack.setAlbum( user["recenttrack"]["Album"]["name"].text() );
-    recentTrack.setArtist( user["recenttrack"]["Artist"]["name"].text() );
+    recentTrack.setAlbum( user["recenttrack"]["album"]["name"].text() );
+    recentTrack.setArtist( user["recenttrack"]["artist"]["name"].text() );
 
     vl->addWidget( ui.lastTrack = new QLabel( tr( "Last track: %1" ).arg( recentTrack.toString() ), this) );
     ui.lastTrack->setObjectName( "lastTrack" );

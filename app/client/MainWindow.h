@@ -33,6 +33,8 @@ class MainWindow : public unicorn::MainWindow
 
         class NowPlayingStackedWidget* nowPlaying;
         class RecentTracksWidget* recentTracks;
+
+        class QScrollArea* profileScrollArea;
         QWidget* profile;
         class QScrollArea* friendsScrollArea;
         QWidget* friends;

@@ -1,6 +1,7 @@
 #ifndef RADIOWIDGET_H
 #define RADIOWIDGET_H
 
+#include <QPointer>
 #include <QWidget>
 
 #include "../Services/RadioService/RadioService.h"
@@ -13,8 +14,6 @@ class RadioWidget : public QWidget
 private:
     struct
     {
-        class QWidget* main;
-
         class StylableWidget* personal;
         class StylableWidget* network;
         class StylableWidget* topArtists;
@@ -37,6 +36,9 @@ private slots:
 
     void onGotTopArtists();
     void onGotRecentStations();
+
+private:
+    QPointer<QWidget> m_main;
 
 };
 
