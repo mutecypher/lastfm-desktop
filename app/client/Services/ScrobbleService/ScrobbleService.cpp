@@ -31,6 +31,7 @@
 #include "../RadioService/RadioConnection.h"
 #include "StopWatch.h"
 #ifdef Q_WS_MAC
+#include "lib/listener/mac/SpotifyListener.h"
 #include "lib/listener/mac/ITunesListener.h"
 #endif
 
@@ -46,6 +47,9 @@ ScrobbleService::ScrobbleService()
         ITunesListener* itunes = new ITunesListener(m_mediator);
         connect(itunes, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
         itunes->start();
+
+        SpotifyListener* spotify = new SpotifyListener(m_mediator);
+        connect(spotify, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
 #endif
 
         QObject* o = new PlayerListener(m_mediator);

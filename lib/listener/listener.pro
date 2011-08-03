@@ -30,6 +30,8 @@ HEADERS += \
 	legacy/LegacyPlayerListener.h \
 	DBusListener.h
 
-mac:SOURCES += mac/ITunesListener.cpp
+mac:SOURCES += mac/ITunesListener.cpp \
+                mac/SpotifyListener.cpp
 
-mac:HEADERS += mac/ITunesListener.h
+mac:HEADERS += mac/ITunesListener.h \
+                mac/SpotifyListener.h
