@@ -5,7 +5,9 @@
 
 #include <lastfm/XmlQuery>
 
-class FriendWidget : public QWidget
+#include "lib/unicorn/StylableWidget.h"
+
+class FriendWidget : public StylableWidget
 {
     Q_OBJECT
 private:

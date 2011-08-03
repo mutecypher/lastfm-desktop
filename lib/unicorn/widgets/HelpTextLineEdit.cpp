@@ -39,9 +39,9 @@ HelpTextLineEdit::paintEvent( QPaintEvent* e )
     QLineEdit::paintEvent( e );
     
     if (text().isEmpty())
-    { 
-        QRect r = contentsRect();
-        r.adjust( 14, 0, 0, 0 );
+    {
+        QRect r = contentsRect();       
+        r.adjust( textMargins().left() + 14, 0, 0, 0 );
         QPainter p( this );
         p.setPen( Qt::gray );
         p.drawText( r, Qt::AlignVCenter, m_text );
