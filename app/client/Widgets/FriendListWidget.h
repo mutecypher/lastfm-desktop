@@ -10,6 +10,12 @@ namespace lastfm { class XmlQuery; };
 class FriendListWidget : public QWidget
 {
     Q_OBJECT
+private:
+    struct
+    {
+        class HelpTextLineEdit* filter;
+    } ui;
+
 public:
     explicit FriendListWidget(QWidget *parent = 0);
 

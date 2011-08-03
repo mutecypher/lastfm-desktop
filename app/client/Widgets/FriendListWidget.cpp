@@ -41,14 +41,16 @@ FriendListWidget::onTextChanged( const QString& text )
 
     QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(m_main->layout());
 
+    QRegExp re( QString( "^%1" ).arg( text ), Qt::CaseInsensitive );
+
     // Start from 1 because 0 is the HelpTextLineEdit
     // end 1 from the end because the last one is a stretch
     for ( int i = 1 ; i < layout->count() - 1 ; ++i )
     {
         FriendWidget* user = qobject_cast<FriendWidget*>(layout->itemAt( i )->widget());
 
-        layout->itemAt( i )->widget()->setVisible( user->name().contains( text, Qt::CaseInsensitive )
-                                                   || user->realname().contains( text, Qt::CaseInsensitive ) );
+        layout->itemAt( i )->widget()->setVisible( user->name().startsWith( text, Qt::CaseInsensitive )
+                                                   || user->realname().split( ' ' ).filter( re ).count() > 0 );
     }
 
     setUpdatesEnabled( true );
@@ -58,6 +60,8 @@ FriendListWidget::onTextChanged( const QString& text )
 void
 FriendListWidget::onGotFriends()
 {
+    setUpdatesEnabled( false );
+
     // create the layout for all the users if it's not already there
     if ( !m_main )
     {
@@ -66,11 +70,10 @@ FriendListWidget::onGotFriends()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        HelpTextLineEdit* lineEdit = new HelpTextLineEdit( this );
-        layout->addWidget( lineEdit );
-        lineEdit->setHelpText( tr( "Search for a friend by username or real name" ) );
+        layout->addWidget( ui.filter = new HelpTextLineEdit( this ) );
+        ui.filter->setHelpText( tr( "Search for a friend by username or real name" ) );
 
-        connect( lineEdit, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
+        connect( ui.filter, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
     }
 
     // add this set of users to the list
@@ -113,4 +116,8 @@ FriendListWidget::onGotFriends()
         connect( lastfm::User().getFriends( true, perPage, page + 1 ), SIGNAL(finished()), SLOT(onGotFriends()) );
     else
         layout->addStretch();
+
+    onTextChanged( ui.filter->text() );
+
+    setUpdatesEnabled( true );
 }

@@ -13,8 +13,8 @@
 
 
 
-FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent) :
-    QWidget(parent), m_user( user )
+FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent)
+    :StylableWidget( parent ), m_user( user )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );

@@ -53,7 +53,13 @@ QuickStartWidget {
 	padding: 20px 20px 10px;
 }
 
-QuickStartWidget  QLineEdit {
+FriendListWidget QLineEdit
+{
+	margin: 20px 40px 20px 20px;
+}
+
+QuickStartWidget  QLineEdit,
+FriendListWidget QLineEdit {
     border: 1px solid #cdcdcd;
     border-radius: 5px;
     padding: 10px 10px;
@@ -86,7 +92,40 @@ RadioWidget QFrame#section {
 	margin: 0px 20px;
 }
 
-RadioWidget PlayableItemWidget {
+FriendWidget {
+	margin: 0px 20px;
+	padding: 10px 0px;
+	border-top: 1px solid white;
+	border-bottom: 1px solid #cdcdcd;
+}
+
+FriendWidget QLabel#avatar {
+	padding: 2px;
+	background-color: white;
+	border: 1px solid #cdcdcd;
+	max-width: 64px;
+	max-height: 64px;
+	margin: 0px 20px 0px 0px;
+}
+
+FriendWidget QLabel#name {
+	font-weight: bold;
+	font-size: 14px;
+	color: #333;
+}
+
+FriendWidget QLabel#details {
+	font-size: 11px;
+	color: #898989;
+}
+
+FriendWidget QLabel#lastTrack {
+	font-size: 11px;
+	color: #333;
+}
+
+RadioWidget PlayableItemWidget,
+FriendWidget PlayableItemWidget  {
 	background-color: transparent;
 	background-repeat: no-repeat;
 	border: none;
@@ -118,7 +157,8 @@ RadioWidget PlayableItemWidget#neighbours:hover { background-image: url(":/radio
 RadioWidget PlayableItemWidget#friends:pressed,
 RadioWidget PlayableItemWidget#neighbours:pressed { background-image: url(":/radio_friends_PRESS.png"); }
 
-RadioWidget PlayableItemWidget#station {
+RadioWidget PlayableItemWidget#station,
+FriendWidget PlayableItemWidget  {
 	background-image: url(":/radio_play_small_REST.png");
 	text-align: center left;
 	font-size: 12px;
@@ -127,8 +167,10 @@ RadioWidget PlayableItemWidget#station {
 	margin: 2px 0px;
 }
 
-RadioWidget PlayableItemWidget#station:hover { background-image: url(":/radio_play_small_HOVER.png"); }
-RadioWidget PlayableItemWidget#station:pressed { background-image: url(":/radio_play_small_PRESS.png"); }
+RadioWidget PlayableItemWidget#station:hover,
+FriendWidget PlayableItemWidget :hover { background-image: url(":/radio_play_small_HOVER.png"); }
+RadioWidget PlayableItemWidget#station:pressed,
+FriendWidget PlayableItemWidget:pressed  { background-image: url(":/radio_play_small_PRESS.png"); }
 
 RadioWidget QLabel#title {
 	padding: 10px 0px;
