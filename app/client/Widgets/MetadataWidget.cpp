@@ -38,11 +38,13 @@
 #include <lastfm/ws.h>
 #include "../Application.h"
 #include "../Services/ScrobbleService.h"
+#include "../Services/RadioService.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/DataListWidget.h"
 #include "lib/unicorn/widgets/BannerWidget.h"
 #include "lib/unicorn/widgets/LfmListViewWidget.h"
+#include "lib/unicorn/widgets/Label.h"
 #include <QDebug>
 #include <lastfm/User>
 
@@ -55,8 +57,7 @@ MetadataWidget::MetadataWidget( const Track& track, bool showBack, QWidget* p )
      m_artistInfoReply( 0 ),
      m_artistEventsReply( 0 ),
      m_trackTopFansReply( 0 ),
-     m_trackTagsReply( 0 ),
-     m_showBack( showBack )
+     m_trackTagsReply( 0 )
 {
     setupUi();
     
@@ -412,6 +413,7 @@ void
 MetadataWidget::setupTrackStats( QWidget* w )
 {
     w->setStyleSheet( "color: #333;" );
+
     QGridLayout* wLayout = new QGridLayout( w );
 
     wLayout->addWidget( ui.track.listeners = new QLabel, 0, 0 );
@@ -496,8 +498,8 @@ MetadataWidget::setupUi()
     QWidget* trackDetails = new QWidget;
     setupTrackDetails( trackDetails );
     
-    QWidget* trackStats = new QWidget;
-    setupTrackStats( trackStats );
+    ui.track.trackStats = new QWidget;
+    setupTrackStats( ui.track.trackStats );
 
     QWidget* trackTags = new QWidget;
     setupTrackTags( trackTags );
@@ -529,7 +531,11 @@ MetadataWidget::setupUi()
     contents->layout()->setSpacing( 0 );
 
     contents->layout()->addWidget( trackDetails );
-    contents->layout()->addWidget( trackStats );
+    contents->layout()->addWidget( ui.track.trackStats );
+    contents->layout()->addWidget( ui.track.context = new QLabel( this ) );
+    ui.track.context->hide();
+    ui.track.context->setObjectName( "context" );
+    ui.track.context->setOpenExternalLinks( true );
     contents->layout()->addWidget( trackTags );
     contents->layout()->addWidget( artistBio );
 
@@ -543,24 +549,78 @@ MetadataWidget::setupUi()
 
     new QVBoxLayout( this );
 
-    if ( m_showBack )
-    {
-        ui.backButton = new QPushButton( "Back" );
-        connect( ui.backButton, SIGNAL( clicked()), SIGNAL( backClicked()));
-        QWidget* pushButtonWidget = new QWidget;
-        new QVBoxLayout( pushButtonWidget );
-        pushButtonWidget->layout()->addWidget( ui.backButton );
-        this->layout()->addWidget( pushButtonWidget );
-        ui.backButton->setContentsMargins( 0, 0, 0, 0 );
-    }
+    ui.backButton = new QPushButton( "Back" );
+    connect( ui.backButton, SIGNAL( clicked()), SIGNAL( backClicked()));
+    QWidget* pushButtonWidget = new QWidget;
+    new QVBoxLayout( pushButtonWidget );
+    pushButtonWidget->layout()->addWidget( ui.backButton );
+    this->layout()->addWidget( pushButtonWidget );
+    ui.backButton->setContentsMargins( 0, 0, 0, 0 );
 
     this->layout()->addWidget( ui.scrollArea );
     this->layout()->setContentsMargins( 0, 0, 0, 0 );
     this->layout()->setSpacing( 0 );
 }
 
+QString userLibrary( const QString& user, const QString& artist )
+{
+    return Label::anchor( QString("http://www.last.fm/user/%1/library/music/%2").arg( user, artist ), user );
+}
+
+QString
+MetadataWidget::contextString( const Track& track )
+{
+    QString contextString;
+
+    lastfm::TrackContext context = track.context();
+
+    if ( context.values().count() > 0 )
+    {
+        switch ( context.type() )
+        {
+        case lastfm::TrackContext::Artist:
+            {
+            switch ( context.values().count() )
+                {
+                default:
+                case 1: contextString = tr( "because you listen to %1" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ) ); break;
+                case 2: contextString = tr( "because you listen to %1 and %2" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ) ); break;
+                case 3: contextString = tr( "because you listen to %1, %2, and %3" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ) , Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ) ); break;
+                case 4: contextString = tr( "because you listen to %1, %2, %3, and %4" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ), Label::anchor( Artist( context.values().at(3) ).www().toString(), context.values().at(3) ) ); break;
+                case 5: contextString = tr( "because you listen to %1, %2, %3, %4, and %5" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ), Label::anchor( Artist( context.values().at(3) ).www().toString(), context.values().at(3) ), Label::anchor( Artist( context.values().at(4) ).www().toString(), context.values().at(4) ) ); break;
+                }
+            }
+            break;
+        case lastfm::TrackContext::User:
+            // Whitelist multi-user station
+            if ( !RadioService::instance().station().url().startsWith("lastfm://users/") )
+                break;
+        case lastfm::TrackContext::Friend:
+        case lastfm::TrackContext::Neighbour:
+            {
+            switch ( context.values().count() )
+                {
+                default:
+                case 1: contextString = tr( "from %2%1s library" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ) ); break;
+                case 2: contextString = tr( "from %2 and %3%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ) ); break;
+                case 3: contextString = tr( "from %2, %3, and %4%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ), userLibrary( context.values().at(2), track.artist().name() ) ); break;
+                case 4: contextString = tr( "from %2, %3, %4, and %5%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ),userLibrary(  context.values().at(1), track.artist().name() ), userLibrary( context.values().at(2), track.artist().name() ), userLibrary( context.values().at(3), track.artist().name() ) ); break;
+                case 5: contextString = tr( "from %2, %3, %4, %5, and %6%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ), userLibrary( context.values().at(2), track.artist().name() ), userLibrary( context.values().at(3), track.artist().name() ), userLibrary( context.values().at(4), track.artist().name() ) ); break;
+                }
+            }
+            break;
+        }
+    }
+
+    return contextString;
+}
+
 void 
 MetadataWidget::setBackButtonVisible( bool visible )
 {
+    ui.track.context->setText( contextString( m_track ) );
+
     ui.backButton->parentWidget()->setVisible( visible );
+    ui.track.trackStats->setVisible( visible );
+    ui.track.context->setVisible( !visible );
 }

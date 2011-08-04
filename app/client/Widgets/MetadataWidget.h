@@ -191,6 +191,8 @@ public:
     QWidget* basicInfoWidget();
     void setBackButtonVisible( bool );
 
+    static QString contextString( const Track& track );
+
 private slots:
 
     void onTrackGotInfo(const QByteArray& data);
@@ -238,9 +240,13 @@ protected:
              class QLabel* artist;
              
              class ScrobbleControls* scrobbleControls;
+
+             QWidget* trackStats;
              class QLabel* yourScrobbles;
              class QLabel* totalScrobbles;
              class QLabel* listeners;
+
+             class QLabel* context;
 
              class HttpImageWidget* albumImage;
              class DataListWidget* yourTags;
@@ -271,8 +277,6 @@ protected:
     QNetworkReply* m_artistEventsReply;
     QNetworkReply* m_trackTopFansReply;
     QNetworkReply* m_trackTagsReply;
-
-    bool m_showBack;
 };
 
 #endif //METADATA_WIDGET_H_

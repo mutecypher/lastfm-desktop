@@ -48,6 +48,16 @@ SideBar QLabel {
 	margin: 10px 10px;
 }
 
+NowPlayingWidget QLabel#context {
+	margin: 10px 20px;
+	padding: 15px 15px;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #e5e5e5);
+	border: 1px solid #cdcdcd;
+	border-radius: 5px;
+	font-weight: bold;
+	font-size: 12px;
+}
+
 QuickStartWidget {
 	border: none;
 	padding: 20px 20px 10px;
