@@ -24,23 +24,30 @@
 #include <lastfm/RadioStation>
 
 class QComboBox;
-class HelpTextLineEdit;
 
 class QuickStartWidget : public StylableWidget
 {
-    Q_OBJECT;
+    Q_OBJECT
+private:
+    struct
+    {
+        class QLineEdit* edit;
+        class QPushButton* button;
+    } ui;
 
 public:
     QuickStartWidget();
 
-signals:
-    void startRadio(RadioStation);
-
 private slots:
-    void search();
+    void play();
+    void playNext();
+
+    void onTextChanged( const QString& text );
+
+    void customContextMenuRequested( const class QPoint& point );
 
 private:
-    HelpTextLineEdit* m_edit;
+
 };
 
 #endif

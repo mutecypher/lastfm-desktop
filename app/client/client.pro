@@ -52,7 +52,7 @@ SOURCES += \
 	Widgets/MetadataWidget.cpp \
 	Widgets/ScrobbleControls.cpp \
 	Widgets/RecentStationsWidget.cpp \
-        Widgets/ProgressBar.cpp \
+    Widgets/ProgressBar.cpp \
 	Widgets/RadioListWidget.cpp \
 	Widgets/QuickStartWidget.cpp \
 	Widgets/PointyArrow.cpp \
@@ -135,7 +135,7 @@ HEADERS += \
 	Widgets/MetadataWidget.h \
 	Widgets/ScrobbleControls.h \
 	Widgets/RecentStationsWidget.h \
-        Widgets/ProgressBar.h \
+    Widgets/ProgressBar.h \
 	Widgets/RadioListWidget.h \
 	Widgets/QuickStartWidget.h \
 	Widgets/PointyArrow.h \

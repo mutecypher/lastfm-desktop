@@ -38,11 +38,11 @@ ProfileWidget::onSessionChanged( unicorn::Session* session )
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        QHBoxLayout* hl = new QHBoxLayout();
+        layout->addWidget( ui.user = new StylableWidget( this ) );
+        ui.user->setObjectName( "user" );
+        QHBoxLayout* hl = new QHBoxLayout( ui.user );
         hl->setContentsMargins( 0, 0, 0, 0 );
         hl->setSpacing( 0 );
-
-        layout->addLayout( hl );
 
         hl->addWidget( ui.avatar = new HttpImageWidget( this ) );
         ui.avatar->setObjectName( "avatar" );
@@ -83,7 +83,7 @@ ProfileWidget::onSessionChanged( unicorn::Session* session )
         layout->addStretch( 1 );
 
         connect( session->userInfo().getTopArtists( "overall", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopOverallArtists()));
-        connect( session->userInfo().getTopArtists( "weekly", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopWeeklyArtists()));
+        connect( session->userInfo().getTopArtists( "7day", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopWeeklyArtists()));
     }
 }
 

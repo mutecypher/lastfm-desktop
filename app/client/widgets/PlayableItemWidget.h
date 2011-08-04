@@ -34,17 +34,21 @@ public:
 
     const RadioStation& station() const { return m_rs; }
 
-signals:
-    void startRadio(RadioStation);
-
 public slots:
     void onRadioChanged();
-    void onClicked();
+
+    void play();
+    void playNext();
+    void playMulti();
+    void playMultiNext();
 
 private:
     void init();
 
+    RadioStation getMultiStation() const;
+
     void paintEvent( QPaintEvent* event );
+    void contextMenuEvent( class QContextMenuEvent* event );
 
 private:
     RadioStation m_rs;

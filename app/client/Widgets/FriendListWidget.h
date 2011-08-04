@@ -13,7 +13,7 @@ class FriendListWidget : public QWidget
 private:
     struct
     {
-        class HelpTextLineEdit* filter;
+        class QLineEdit* filter;
     } ui;
 
 public:

@@ -33,6 +33,8 @@
 #include "MainWindow.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "SkipListener.h"
+#include "Widgets/MetadataWidget.h"
+
 
 #include "lib/unicorn/dialogs/AboutDialog.h"
 #include "lib/unicorn/dialogs/ShareDialog.h"
@@ -396,7 +398,7 @@ void
 Application::onTrackSpooled( const Track& track )
 {
 #ifdef CLIENT_ROOM_RADIO
-    QString strippedContextString = TrackItem::contextString( track );
+    QString strippedContextString = MetadataWidget::contextString( track );
 
     QRegExp re( "<[^>]*>" );
 

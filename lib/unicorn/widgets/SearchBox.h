@@ -24,7 +24,6 @@
 #include <lastfm/global.h>
 #include "lib/DllExportMacro.h"
 #include <lastfm/User>
-#include "lib/unicorn/widgets/HelpTextLineEdit.h"
 
 class QNetworkReply;
 class QCompleter;
@@ -34,7 +33,7 @@ namespace lastfm {
 }
 
 
-class UNICORN_DLLEXPORT SearchBox : public HelpTextLineEdit
+class UNICORN_DLLEXPORT SearchBox : public QLineEdit
 {
     Q_OBJECT;
 

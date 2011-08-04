@@ -24,6 +24,7 @@
 #include <lastfm/Track>
 
 #include "lib/unicorn/StylableWidget.h"
+#include "lib/unicorn/widgets/HttpImageWidget.h"
 
 class DataListWidget;
 class HttpImageWidget;
@@ -36,6 +37,7 @@ class QTextBrowser;
 #include <QEventLoop>
 #include <QApplication>
 
+/** An embeddable widget text object wrapper */
 class WidgetTextObject : public QObject, QTextObjectInterface {
     Q_OBJECT
     Q_INTERFACES(QTextObjectInterface)
@@ -76,13 +78,13 @@ protected:
     QMap<QWidget*, QRect> m_widgetRects;
 };
 
+/** A specialized QTextBrowser which can insert widgets inline */
 #include <QPlainTextDocumentLayout>
 class TB : public QTextBrowser {
     public:
         TB( QWidget* p ) : QTextBrowser( p ), m_currentHoverWidget(0){
             m_widgetTextObject = new WidgetTextObject;
             viewport()->installEventFilter( this );
-            setMouseTracking(true);
             document()->documentLayout()->registerHandler( WidgetImageFormat, m_widgetTextObject );
         }
         
@@ -181,12 +183,15 @@ class MetadataWidget : public StylableWidget
 {
     Q_OBJECT
 public:
-    MetadataWidget( const Track& track, QWidget* p = 0 );
+    MetadataWidget( const Track& track, bool showBack, QWidget* p = 0 );
     ~MetadataWidget() { delete ui.artist.image; }
 
     class ScrobbleControls* scrobbleControls() const { return ui.track.scrobbleControls; }
 
     QWidget* basicInfoWidget();
+    void setBackButtonVisible( bool );
+
+    static QString contextString( const Track& track );
 
 private slots:
 
@@ -235,9 +240,13 @@ protected:
              class QLabel* artist;
              
              class ScrobbleControls* scrobbleControls;
+
+             QWidget* trackStats;
              class QLabel* yourScrobbles;
              class QLabel* totalScrobbles;
              class QLabel* listeners;
+
+             class QLabel* context;
 
              class HttpImageWidget* albumImage;
              class DataListWidget* yourTags;

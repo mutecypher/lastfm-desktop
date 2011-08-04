@@ -24,7 +24,7 @@ class RecentTracksWidget : public QWidget
     protected slots:
         void onTrackClicked( const Track& track ) {
             MetadataWidget* w;
-            layout->addWidget( w = new MetadataWidget( track ));
+            layout->addWidget( w = new MetadataWidget( track, true ));
             layout->moveForward();
             connect( w, SIGNAL(backClicked()), SLOT(onBackClicked()));
         }
