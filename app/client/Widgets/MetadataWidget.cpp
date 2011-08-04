@@ -552,3 +552,9 @@ MetadataWidget::setupUi()
     this->layout()->setContentsMargins( 0, 0, 0, 0 );
     this->layout()->setSpacing( 0 );
 }
+
+void 
+MetadataWidget::setBackButtonVisible( bool visible )
+{
+    ui.backButton->parentWidget()->setVisible( visible );
+}

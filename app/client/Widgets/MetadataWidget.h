@@ -36,6 +36,7 @@ class QTextBrowser;
 #include <QEventLoop>
 #include <QApplication>
 
+/** An embeddable widget text object wrapper */
 class WidgetTextObject : public QObject, QTextObjectInterface {
     Q_OBJECT
     Q_INTERFACES(QTextObjectInterface)
@@ -76,6 +77,7 @@ protected:
     QMap<QWidget*, QRect> m_widgetRects;
 };
 
+/** A specialized QTextBrowser which can insert widgets inline */
 #include <QPlainTextDocumentLayout>
 class TB : public QTextBrowser {
     public:
@@ -186,6 +188,7 @@ public:
     class ScrobbleControls* scrobbleControls() const { return ui.track.scrobbleControls; }
 
     QWidget* basicInfoWidget();
+    void setBackButtonVisible( bool );
 
 private slots:
 
