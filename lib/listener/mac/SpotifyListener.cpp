@@ -35,6 +35,7 @@ struct SpotifyConnection : PlayerConnection
         MutableTrack mt( t );
         mt.setSource( Track::Player );
         mt.setExtra( "playerId", id() );
+        mt.setExtra( "playerName", name() );
         mt.stamp();
         handleCommand( CommandStart, t );
     }
@@ -58,8 +59,6 @@ void
 SpotifyListener::loop()
 {
     QString playerState = AppleScript( "tell application \"Spotify\" to if running then return player state" ).exec();
-
-    qDebug() << playerState;
 
     if ( !playerState.isEmpty() )
     {
