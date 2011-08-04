@@ -193,7 +193,6 @@ MetadataWidget::onArtistGotInfo()
             bio += "<p>" + pTrimmed + "</p>";
         }
     }
-    qCritical() << bio;
     ui.artist.bio->setHtml( bio );
     ui.artist.bio->updateGeometry();
     ui.artist.image->setFixedSize( QSize( 150, 125 ) );
