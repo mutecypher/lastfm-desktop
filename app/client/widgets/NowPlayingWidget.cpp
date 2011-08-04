@@ -51,6 +51,7 @@ NowPlayingWidget::onTrackStarted( const Track& track, const Track& )
     }
 
     qobject_cast<QVBoxLayout*>(layout())->insertWidget( 1, m_metadata = new MetadataWidget( track, false, this ) );
+    m_metadata->setBackButtonVisible( false );
 }
 
 

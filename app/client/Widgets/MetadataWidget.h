@@ -37,6 +37,7 @@ class QTextBrowser;
 #include <QEventLoop>
 #include <QApplication>
 
+/** An embeddable widget text object wrapper */
 class WidgetTextObject : public QObject, QTextObjectInterface {
     Q_OBJECT
     Q_INTERFACES(QTextObjectInterface)
@@ -77,13 +78,13 @@ protected:
     QMap<QWidget*, QRect> m_widgetRects;
 };
 
+/** A specialized QTextBrowser which can insert widgets inline */
 #include <QPlainTextDocumentLayout>
 class TB : public QTextBrowser {
     public:
         TB( QWidget* p ) : QTextBrowser( p ), m_currentHoverWidget(0){
             m_widgetTextObject = new WidgetTextObject;
             viewport()->installEventFilter( this );
-            setMouseTracking(true);
             document()->documentLayout()->registerHandler( WidgetImageFormat, m_widgetTextObject );
         }
         
@@ -188,6 +189,7 @@ public:
     class ScrobbleControls* scrobbleControls() const { return ui.track.scrobbleControls; }
 
     QWidget* basicInfoWidget();
+    void setBackButtonVisible( bool );
 
 private slots:
 

@@ -87,7 +87,8 @@ MetadataWidget::fetchTrackInfo()
 {
     connect( m_track.signalProxy(), SIGNAL( gotInfo(QByteArray)), SLOT( onTrackGotInfo(QByteArray)));
     m_track.getInfo();
-    connect( m_track.album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
+    if( !m_track.album().isNull())
+        connect( m_track.album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
     connect( m_track.artist().getInfo(), SIGNAL(finished()), SLOT(onArtistGotInfo()));
     //connect( m_track.getTopTags(), SIGNAL(finished()), SLOT(onTrackGotPopTags()));
     connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
@@ -164,14 +165,14 @@ MetadataWidget::onArtistGotInfo()
 
     //model.similarArtists->clear();
 
+    #if 0
     foreach(const XmlQuery& e, lfm["artist"]["similar"].children("artist").mid(0,4))
     {
-        #if 0
         QListWidgetItem* lwi = new QListWidgetItem( e["name"].text());
         lwi->setData( Qt::DecorationRole, QUrl( e["image size=small"].text()));
-        #endif
       //  model.similarArtists->addArtist( Artist( e ));
     }
+    #endif
 
     /*
     foreach(const XmlQuery& e, lfm["artist"]["tags"].children("tag"))
@@ -180,25 +181,24 @@ MetadataWidget::onArtistGotInfo()
     }
     */
 
-    //ui.track.artistScrobbles->setText(QString("%L1").arg(scrobbles) + " plays (" + QString("%L1").arg(listeners) + " listeners)" + "\n" + QString("%L1").arg(userListens) + " plays in your library");
 
     
-    QUrl url = lfm["artist"]["image size=large"].text();
-    //ui.track.artistImage->loadUrl( url );
-    //ui.track.artistImage->setHref( lfm["artist"][ "url" ].text() );
 
     //TODO if empty suggest they edit it
     QString bio;
     {
         QStringList bioList = lfm["artist"]["bio"]["content"].text().trimmed().split( "\r" );
-        foreach( const QString& p, bioList )
-            bio += "<p>" + p + "</p>";
+        foreach( const QString& p, bioList ) {
+            QString pTrimmed = p.trimmed();
+            if( pTrimmed.isEmpty()) continue;
+            bio += "<p>" + pTrimmed + "</p>";
+        }
     }
-
     ui.artist.bio->setHtml( bio );
     ui.artist.bio->updateGeometry();
-    ui.artist.image->setMaximumSize( QSize( 150, 125 ) );
+    ui.artist.image->setFixedSize( QSize( 150, 125 ) );
     ui.artist.image->setAlignment( Qt::AlignTop );
+    QUrl url = lfm["artist"]["image size=large"].text();
     ui.artist.image->loadUrl( url );
     ui.artist.image->setHref( QUrl(lfm["artist"]["url"].text()));
 
@@ -213,6 +213,7 @@ MetadataWidget::onArtistGotInfo()
     onBioChanged( ui.artist.bio->document()->documentLayout()->documentSize() );
 
     reply->close();
+    
 }
 
 void
@@ -385,6 +386,7 @@ MetadataWidget::setupTrackDetails( QWidget* w )
         new QVBoxLayout( widget );
         widget->layout()->setSpacing( 0 );
         widget->layout()->addWidget( ui.track.title = new QLabel );
+        ui.track.title->setWordWrap( true );
         ui.track.title->setStyleSheet( "font-size: 16pt; font-weight: bold; padding-bottom: 5px;" );
         widget->layout()->addWidget( ui.track.artist = new QLabel );
 
@@ -555,4 +557,10 @@ MetadataWidget::setupUi()
     this->layout()->addWidget( ui.scrollArea );
     this->layout()->setContentsMargins( 0, 0, 0, 0 );
     this->layout()->setSpacing( 0 );
+}
+
+void 
+MetadataWidget::setBackButtonVisible( bool visible )
+{
+    ui.backButton->parentWidget()->setVisible( visible );
 }
