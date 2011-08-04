@@ -12,6 +12,7 @@ class ProfileWidget : public QWidget
 private:
     struct
     {
+        class StylableWidget* user;
         class HttpImageWidget* avatar;
         class QLabel* name;
         class QLabel* scrobbleCount;

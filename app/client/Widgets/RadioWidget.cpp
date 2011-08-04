@@ -43,7 +43,6 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
 
         QuickStartWidget* quickStartWidget = new QuickStartWidget();
         layout->addWidget( quickStartWidget );
-        connect( quickStartWidget, SIGNAL(startRadio(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)));
 
         {
             QLabel* title = new QLabel( tr("Personal Stations"), this );

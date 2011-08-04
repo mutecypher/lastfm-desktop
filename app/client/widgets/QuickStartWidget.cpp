@@ -18,12 +18,16 @@
 */
 
 #include <QComboBox>
-#include "lib/unicorn/widgets/HelpTextLineEdit.h"
+#include <QLineEdit>
 #include <QPushButton>
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QPoint>
+#include <QMenu>
+
 #include "QuickStartWidget.h"
 #include "../StationSearch.h"
+#include "../Services/RadioService/RadioService.h"
 
 #include <QStylePainter>
 
@@ -33,33 +37,71 @@ QuickStartWidget::QuickStartWidget()
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
-    QPushButton* button = new QPushButton(tr("Play"), this);
-    button->setToolTip( tr( "Play source" ) );
-    m_edit = new HelpTextLineEdit( this );
-    m_edit->setHelpText( tr("Type an artist or tag and press play") );
-    layout->addWidget( m_edit );
-    layout->addWidget( button );
+    layout->addWidget( ui.edit = new QLineEdit( this ) );
+    ui.edit->setPlaceholderText( tr("Type an artist or tag and press play") );
+    ui.edit->setAttribute( Qt::WA_MacShowFocusRect, false );
 
-    m_edit->setAttribute( Qt::WA_MacShowFocusRect, false );
-    
-    connect(m_edit, SIGNAL(returnPressed()), SLOT(search()));
-    connect(button, SIGNAL(clicked()), SLOT(search()));
+    connect( ui.edit, SIGNAL(returnPressed()), SLOT(play()));
+
+    layout->addWidget( ui.button = new QPushButton( tr("Play"), this ) );
+    ui.button->setToolTip( tr( "Play" ) );
+    ui.button->setContextMenuPolicy( Qt::CustomContextMenu );
+    ui.button->setEnabled( false );
+
+    connect( ui.button, SIGNAL(clicked()), SLOT(play()));
+    connect( ui.button, SIGNAL(customContextMenuRequested(QPoint)), SLOT(customContextMenuRequested(QPoint)));
+
+    connect( ui.edit, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
 }
 
 void
-QuickStartWidget::search()
+QuickStartWidget::onTextChanged( const QString& text )
 {
-    QString trimmedText = m_edit->text().trimmed();
-    if( trimmedText.startsWith("lastfm://")) {
-        emit startRadio( RadioStation( trimmedText ) );
-        return;
-    }
+    ui.button->setEnabled( !text.isEmpty() );
+}
 
-    if ( m_edit->text().length() ) {
+void
+QuickStartWidget::play()
+{
+    QString trimmedText = ui.edit->text().trimmed();
+
+    if( trimmedText.startsWith("lastfm://") )
+        RadioService::instance().play( RadioStation( trimmedText ) );
+    else if ( ui.edit->text().length() )
+    {
         StationSearch* s = new StationSearch();
-        connect(s, SIGNAL(searchResult(RadioStation)), SIGNAL(startRadio(RadioStation)));
-        s->startSearch(m_edit->text());
+        connect(s, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)));
+        s->startSearch( ui.edit->text() );
     }
 
-    m_edit->clear();
+    ui.edit->clear();
+}
+
+void
+QuickStartWidget::playNext()
+{
+    QString trimmedText = ui.edit->text().trimmed();
+
+    if( trimmedText.startsWith("lastfm://"))
+        RadioService::instance().playNext( RadioStation( trimmedText ) );
+    else if ( ui.edit->text().length() )
+    {
+        StationSearch* s = new StationSearch();
+        connect(s, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(playNext(RadioStation)));
+        s->startSearch(ui.edit->text());
+    }
+
+    ui.edit->clear();
+}
+
+void
+QuickStartWidget::customContextMenuRequested( const QPoint& point )
+{
+    QMenu* contextMenu = new QMenu( this );
+
+    if ( RadioService::instance().state() == Playing )
+        contextMenu->addAction( tr( "Play next" ), this, SLOT(playNext()));
+
+    if ( contextMenu->actions().count() )
+        contextMenu->exec( ui.button->mapToGlobal( point ) );
 }

@@ -24,6 +24,7 @@
 #include <lastfm/Track>
 
 #include "lib/unicorn/StylableWidget.h"
+#include "lib/unicorn/widgets/HttpImageWidget.h"
 
 class DataListWidget;
 class HttpImageWidget;
@@ -181,7 +182,7 @@ class MetadataWidget : public StylableWidget
 {
     Q_OBJECT
 public:
-    MetadataWidget( const Track& track, QWidget* p = 0 );
+    MetadataWidget( const Track& track, bool showBack, QWidget* p = 0 );
     ~MetadataWidget() { delete ui.artist.image; }
 
     class ScrobbleControls* scrobbleControls() const { return ui.track.scrobbleControls; }
@@ -268,6 +269,8 @@ protected:
     QNetworkReply* m_artistEventsReply;
     QNetworkReply* m_trackTopFansReply;
     QNetworkReply* m_trackTagsReply;
+
+    bool m_showBack;
 };
 
 #endif //METADATA_WIDGET_H_

@@ -23,6 +23,9 @@
 #include <QLabel>
 #include <QStyle>
 #include <QFont>
+#include <QMenu>
+
+#include <lastfm/RadioStation>
 
 #include "PlayableItemWidget.h"
 #include "../Services/RadioService.h"
@@ -44,19 +47,52 @@ PlayableItemWidget::init()
         setToolTip( m_rs.title());
     setText( title );
 
-    connect( this, SIGNAL(startRadio(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)) );
-
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
     connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
 
-    connect( this, SIGNAL(clicked()), SLOT(onClicked()));
+    connect( this, SIGNAL(clicked()), SLOT(play()));
 }
 
 
 void 
-PlayableItemWidget::onClicked()
+PlayableItemWidget::play()
 {
-    emit startRadio( m_rs );
+    RadioService::instance().play( m_rs );
+}
+
+void
+PlayableItemWidget::playNext()
+{
+    RadioService::instance().playNext( m_rs );
+}
+
+RadioStation
+PlayableItemWidget::getMultiStation() const
+{
+    QList<User> users;
+
+    int endPos = m_rs.url().indexOf( "/", 14 );
+    if ( endPos == -1 )
+        endPos = m_rs.url().length();
+
+    users << User( m_rs.url().mid( 14, endPos - 14 ) );
+    users << User();
+
+    return RadioStation::library( users );
+}
+
+void
+PlayableItemWidget::playMulti()
+{
+    if ( m_rs.url().startsWith("lastfm://user/") )
+        RadioService::instance().play( getMultiStation() );
+}
+
+void
+PlayableItemWidget::playMultiNext()
+{
+    if ( m_rs.url().startsWith("lastfm://user/") )
+        RadioService::instance().playNext( getMultiStation() );
 }
 
 
@@ -92,4 +128,29 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
     rect.adjust( 54, 0, 0, -14 );
 
     p.drawText( rect, m_description, to );
+}
+
+void
+PlayableItemWidget::contextMenuEvent( QContextMenuEvent* event )
+{
+    QMenu* contextMenu = new QMenu( this );
+
+    if ( RadioService::instance().state() == Playing )
+        contextMenu->addAction( tr( "Play next" ), this, SLOT(playNext()));
+
+
+
+    if ( m_rs.url().startsWith( "lastfm://user/" )
+         &&  ( m_rs.url().endsWith( "/library" ) || m_rs.url().endsWith( "/personal" ) )
+         && m_rs.url() != RadioStation::library( User() ).url() )
+    {
+        // if it's a user station that isn't yours we should
+        // let them start a multi-station with yours
+        contextMenu->addSeparator();
+        contextMenu->addAction( tr( "Play with your library" ), this, SLOT(playMulti()));
+        contextMenu->addAction( tr( "Play with your library next" ), this, SLOT(playMultiNext()));
+    }
+
+    if ( contextMenu->actions().count() )
+        contextMenu->exec( event->globalPos() );
 }

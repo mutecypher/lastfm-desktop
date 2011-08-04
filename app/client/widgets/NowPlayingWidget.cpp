@@ -35,6 +35,8 @@ NowPlayingWidget::NowPlayingWidget(QWidget *parent)
 
     layout->addWidget( new PlaybackControlsWidget( this ) );
 
+    layout->addStretch( 1 );
+
     connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)) );
     connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()) );
 }
@@ -45,10 +47,10 @@ NowPlayingWidget::onTrackStarted( const Track& track, const Track& )
     if ( m_metadata )
     {
         layout()->removeWidget( m_metadata );
-        m_metadata->deleteLater();
+        delete m_metadata;
     }
 
-    qobject_cast<QVBoxLayout*>(layout())->insertWidget( 1, m_metadata = new MetadataWidget( track, this ) );
+    qobject_cast<QVBoxLayout*>(layout())->insertWidget( 1, m_metadata = new MetadataWidget( track, false, this ) );
 }
 
 
@@ -58,6 +60,6 @@ NowPlayingWidget::onStopped()
     if ( m_metadata )
     {
         layout()->removeWidget( m_metadata );
-        m_metadata->deleteLater();
+        delete m_metadata;
     }
 }

@@ -27,7 +27,6 @@ SOURCES += \
 	widgets/ItemSelectorWidget.cpp \
 	widgets/ImageButton.cpp \
 	widgets/HttpImageWidget.cpp \
-	widgets/HelpTextLineEdit.cpp \
 	widgets/GhostWidget.cpp \
 	widgets/FriendsPicker.cpp \
 	widgets/DataListWidget.cpp \
@@ -84,7 +83,6 @@ HEADERS += \
 	widgets/ItemSelectorWidget.h \
 	widgets/ImageButton.h \
 	widgets/HttpImageWidget.h \
-	widgets/HelpTextLineEdit.h \
 	widgets/GhostWidget.h \
 	widgets/FriendsPicker.h \
 	widgets/DataListWidget.h \

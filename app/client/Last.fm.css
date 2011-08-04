@@ -85,11 +85,17 @@ QScrollArea {
 	border: none;
 }
 
-RadioWidget QFrame#section {
+RadioWidget QFrame#section,
+ProfileWidget QFrame#section {
 	border: none;
 	border-top: 1px solid white;
 	padding: 7px 0px; 
 	margin: 0px 20px;
+}
+
+ProfileWidget QFrame#user {
+	border: none;
+	margin: 20px 20px 10px;
 }
 
 FriendWidget {
@@ -99,7 +105,8 @@ FriendWidget {
 	border-bottom: 1px solid #cdcdcd;
 }
 
-FriendWidget QLabel#avatar {
+FriendWidget QLabel#avatar,
+ProfileWidget QLabel#avatar {
 	padding: 2px;
 	background-color: white;
 	border: 1px solid #cdcdcd;
@@ -108,24 +115,28 @@ FriendWidget QLabel#avatar {
 	margin: 0px 20px 0px 0px;
 }
 
-FriendWidget QLabel#name {
+FriendWidget QLabel#name,
+ProfileWidget QLabel#name {
 	font-weight: bold;
 	font-size: 14px;
 	color: #333;
 }
 
-FriendWidget QLabel#details {
+FriendWidget QLabel#details,
+ProfileWidget QLabel#scrobbleCount {
 	font-size: 11px;
 	color: #898989;
 }
 
-FriendWidget QLabel#lastTrack {
+FriendWidget QLabel#lastTrack,
+ProfileWidget QLabel#scrobbles {
 	font-size: 11px;
 	color: #333;
 }
 
 RadioWidget PlayableItemWidget,
-FriendWidget PlayableItemWidget  {
+FriendWidget PlayableItemWidget,
+ProfileWidget PlayableItemWidget   {
 	background-color: transparent;
 	background-repeat: no-repeat;
 	border: none;
@@ -158,7 +169,8 @@ RadioWidget PlayableItemWidget#friends:pressed,
 RadioWidget PlayableItemWidget#neighbours:pressed { background-image: url(":/radio_friends_PRESS.png"); }
 
 RadioWidget PlayableItemWidget#station,
-FriendWidget PlayableItemWidget  {
+FriendWidget PlayableItemWidget,
+ProfileWidget PlayableItemWidget  {
 	background-image: url(":/radio_play_small_REST.png");
 	text-align: center left;
 	font-size: 12px;
@@ -168,11 +180,14 @@ FriendWidget PlayableItemWidget  {
 }
 
 RadioWidget PlayableItemWidget#station:hover,
-FriendWidget PlayableItemWidget :hover { background-image: url(":/radio_play_small_HOVER.png"); }
+FriendWidget PlayableItemWidget:hover,
+ProfileWidget PlayableItemWidget:hover { background-image: url(":/radio_play_small_HOVER.png"); }
 RadioWidget PlayableItemWidget#station:pressed,
-FriendWidget PlayableItemWidget:pressed  { background-image: url(":/radio_play_small_PRESS.png"); }
+FriendWidget PlayableItemWidget:pressed,
+ProfileWidget PlayableItemWidget :pressed { background-image: url(":/radio_play_small_PRESS.png"); }
 
-RadioWidget QLabel#title {
+RadioWidget QLabel#title,
+ProfileWidget QLabel#title  {
 	padding: 10px 0px;
 	margin: 0px 20px;
 	border: 1px solid #cdcdcd;

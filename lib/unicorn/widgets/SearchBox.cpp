@@ -31,7 +31,7 @@
 #include <lastfm/UserList>
 
 SearchBox::SearchBox(QWidget* parent)
-: HelpTextLineEdit( parent )
+: QLineEdit( parent )
 , m_searching(false)
 {
     setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );

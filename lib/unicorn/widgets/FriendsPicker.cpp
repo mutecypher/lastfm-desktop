@@ -18,7 +18,8 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "FriendsPicker.h"
-#include "HelpTextLineEdit.h"
+#include <QLineEdit>
+
 #include <lastfm/User>
 #include <lastfm/UserList>
 #include <QDebug>
@@ -32,8 +33,8 @@ FriendsPicker::FriendsPicker( const User& user )
     qDebug() << user;
     
     QVBoxLayout* v = new QVBoxLayout( this );
-    HelpTextLineEdit* lineEdit = new HelpTextLineEdit;
-    lineEdit->setHelpText( tr("Search your friends") );
+    QLineEdit* lineEdit = new QLineEdit;
+    lineEdit->setPlaceholderText( tr("Search your friends") );
     v->addWidget( lineEdit );
     v->addWidget( ui.list = new QListWidget );
     v->addWidget( ui.buttons = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );

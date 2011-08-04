@@ -47,7 +47,7 @@
 #include <lastfm/User>
 
 
-MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
+MetadataWidget::MetadataWidget( const Track& track, bool showBack, QWidget* p )
     :StylableWidget( p ), 
      m_track( track ), 
      m_trackInfoReply( 0 ),
@@ -55,7 +55,8 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
      m_artistInfoReply( 0 ),
      m_artistEventsReply( 0 ),
      m_trackTopFansReply( 0 ),
-     m_trackTagsReply( 0 )
+     m_trackTagsReply( 0 ),
+     m_showBack( showBack )
 {
     setupUi();
     
@@ -539,13 +540,18 @@ MetadataWidget::setupUi()
     ui.scrollArea->setWidgetResizable( true );
 
     new QVBoxLayout( this );
-    ui.backButton = new QPushButton( "Back" );
-    connect( ui.backButton, SIGNAL( clicked()), SIGNAL( backClicked()));
-    QWidget* pushButtonWidget = new QWidget;
-    new QVBoxLayout( pushButtonWidget );
-    pushButtonWidget->layout()->addWidget( ui.backButton );
-    this->layout()->addWidget( pushButtonWidget );
-    ui.backButton->setContentsMargins( 0, 0, 0, 0 );
+
+    if ( m_showBack )
+    {
+        ui.backButton = new QPushButton( "Back" );
+        connect( ui.backButton, SIGNAL( clicked()), SIGNAL( backClicked()));
+        QWidget* pushButtonWidget = new QWidget;
+        new QVBoxLayout( pushButtonWidget );
+        pushButtonWidget->layout()->addWidget( ui.backButton );
+        this->layout()->addWidget( pushButtonWidget );
+        ui.backButton->setContentsMargins( 0, 0, 0, 0 );
+    }
+
     this->layout()->addWidget( ui.scrollArea );
     this->layout()->setContentsMargins( 0, 0, 0, 0 );
     this->layout()->setSpacing( 0 );

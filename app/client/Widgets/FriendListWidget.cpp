@@ -1,12 +1,12 @@
 
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QLineEdit>
 
 #include <lastfm/User>
 #include <lastfm/XmlQuery>
 
 #include "lib/unicorn/UnicornSession.h"
-#include "lib/unicorn/Widgets/HelpTextLineEdit.h"
 
 #include "../Application.h"
 #include "FriendWidget.h"
@@ -41,16 +41,25 @@ FriendListWidget::onTextChanged( const QString& text )
 
     QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(m_main->layout());
 
-    QRegExp re( QString( "^%1" ).arg( text ), Qt::CaseInsensitive );
-
-    // Start from 1 because 0 is the HelpTextLineEdit
-    // end 1 from the end because the last one is a stretch
-    for ( int i = 1 ; i < layout->count() - 1 ; ++i )
+    if ( text.isEmpty() )
     {
-        FriendWidget* user = qobject_cast<FriendWidget*>(layout->itemAt( i )->widget());
+        // special case an empty string so it's a bit zippier
+        for ( int i = 1 ; i < layout->count() - 1 ; ++i )
+            layout->itemAt( i )->widget()->show();
+    }
+    else
+    {
+        QRegExp re( QString( "^%1" ).arg( text ), Qt::CaseInsensitive );
 
-        layout->itemAt( i )->widget()->setVisible( user->name().startsWith( text, Qt::CaseInsensitive )
-                                                   || user->realname().split( ' ' ).filter( re ).count() > 0 );
+        // Start from 1 because 0 is the QLineEdit
+        // end 1 from the end because the last one is a stretch
+        for ( int i = 1 ; i < layout->count() - 1 ; ++i )
+        {
+            FriendWidget* user = qobject_cast<FriendWidget*>(layout->itemAt( i )->widget());
+
+            layout->itemAt( i )->widget()->setVisible( user->name().startsWith( text, Qt::CaseInsensitive )
+                                                       || user->realname().split( ' ' ).filter( re ).count() > 0 );
+        }
     }
 
     setUpdatesEnabled( true );
@@ -70,8 +79,8 @@ FriendListWidget::onGotFriends()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        layout->addWidget( ui.filter = new HelpTextLineEdit( this ) );
-        ui.filter->setHelpText( tr( "Search for a friend by username or real name" ) );
+        layout->addWidget( ui.filter = new QLineEdit( this ) );
+        ui.filter->setPlaceholderText( tr( "Search for a friend by username or real name" ) );
 
         connect( ui.filter, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
     }
@@ -87,7 +96,7 @@ FriendListWidget::onGotFriends()
 
         QString newUser = user["name"].text();
 
-        // Start from 1 because 0 is the HelpTextLineEdit
+        // Start from 1 because 0 is the QLineEdit
         // end 1 from the end because the last one is a stretch
         for ( int i = 1 ; i < layout->count() - 1 ; ++i )
         {

@@ -59,12 +59,11 @@ public:
 
     Phonon::AudioOutput* audioOutput() const { return m_audioOutput; }
 
-    void playNext( const RadioStation& station );
-
     static RadioService& instance(){ static RadioService r; return r; }
 
 public slots:
     void play( const RadioStation& station );
+    void playNext( const RadioStation& station );
     void skip();
     void stop();
     void mute();
