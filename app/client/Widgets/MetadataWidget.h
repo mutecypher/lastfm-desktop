@@ -82,7 +82,6 @@ class TB : public QTextBrowser {
         TB( QWidget* p ) : QTextBrowser( p ), m_currentHoverWidget(0){
             m_widgetTextObject = new WidgetTextObject;
             viewport()->installEventFilter( this );
-            setMouseTracking(true);
             document()->documentLayout()->registerHandler( WidgetImageFormat, m_widgetTextObject );
         }
         
