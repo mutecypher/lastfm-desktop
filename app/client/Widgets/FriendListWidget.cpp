@@ -37,6 +37,8 @@ FriendListWidget::onSessionChanged( unicorn::Session* session )
 void
 FriendListWidget::onTextChanged( const QString& text )
 {
+    QString trimmedText = text.trimmed();
+
     setUpdatesEnabled( false );
 
     QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(m_main->layout());
@@ -49,7 +51,7 @@ FriendListWidget::onTextChanged( const QString& text )
     }
     else
     {
-        QRegExp re( QString( "^%1" ).arg( text ), Qt::CaseInsensitive );
+        QRegExp re( QString( "^%1" ).arg( trimmedText ), Qt::CaseInsensitive );
 
         // Start from 1 because 0 is the QLineEdit
         // end 1 from the end because the last one is a stretch
@@ -57,7 +59,8 @@ FriendListWidget::onTextChanged( const QString& text )
         {
             FriendWidget* user = qobject_cast<FriendWidget*>(layout->itemAt( i )->widget());
 
-            layout->itemAt( i )->widget()->setVisible( user->name().startsWith( text, Qt::CaseInsensitive )
+            layout->itemAt( i )->widget()->setVisible( user->name().startsWith( trimmedText, Qt::CaseInsensitive )
+                                                       || user->realname().startsWith( trimmedText, Qt::CaseInsensitive )
                                                        || user->realname().split( ' ' ).filter( re ).count() > 0 );
         }
     }
@@ -81,6 +84,7 @@ FriendListWidget::onGotFriends()
 
         layout->addWidget( ui.filter = new QLineEdit( this ) );
         ui.filter->setPlaceholderText( tr( "Search for a friend by username or real name" ) );
+        ui.filter->setAttribute( Qt::WA_MacShowFocusRect, false );
 
         connect( ui.filter, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
     }
