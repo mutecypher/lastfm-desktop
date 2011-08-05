@@ -58,6 +58,7 @@ public:
         //Adjusted to allow for the margin
         QRect contentsRect = rect.toRect().adjusted(0, 0, -kMargin.width(), -kMargin.height());
         m_widgetRects[widget] = contentsRect;
+        qCritical() << "Draw Object..";
     }
 
     QWidget* widgetAtPoint( const QPoint& p ) {
@@ -123,8 +124,13 @@ class TB : public QTextBrowser {
 
             if( e->type() == QEvent::Resize ) {
                 //Force the QTextBrowser to recalculate layout including wrapping
-                QEvent fcEvent(QEvent::FontChange);
-                QApplication::sendEvent( this, &fcEvent);
+                
+                //Note: this is currently commented out due to causing an infinite 
+                //repaint of thebrowser widget. It is not strictly necessary for 
+                //our use case as we're using a fixed size widget.
+
+                //QEvent* fcEvent = new QEvent(QEvent::FontChange);
+                //QApplication::postEvent( this, fcEvent);
             } else if( e->type() == QEvent::Paint ) {
                 update( m_widgetTextObject->widgetRect(w).toRect());
             }
