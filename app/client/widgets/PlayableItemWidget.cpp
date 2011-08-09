@@ -100,13 +100,7 @@ void
 PlayableItemWidget::onRadioChanged()
 {
     if ( RadioService::instance().station() == m_rs )
-    {
-        setEnabled( false );
         setText( RadioService::instance().station().title() );
-    }
-    else
-        setEnabled( true );
-
 }
 
 void
@@ -135,10 +129,10 @@ PlayableItemWidget::contextMenuEvent( QContextMenuEvent* event )
 {
     QMenu* contextMenu = new QMenu( this );
 
+    contextMenu->addAction( tr( "Play" ), this, SLOT(play()));
+
     if ( RadioService::instance().state() == Playing )
         contextMenu->addAction( tr( "Play next" ), this, SLOT(playNext()));
-
-
 
     if ( m_rs.url().startsWith( "lastfm://user/" )
          &&  ( m_rs.url().endsWith( "/library" ) || m_rs.url().endsWith( "/personal" ) )
@@ -148,7 +142,8 @@ PlayableItemWidget::contextMenuEvent( QContextMenuEvent* event )
         // let them start a multi-station with yours
         contextMenu->addSeparator();
         contextMenu->addAction( tr( "Play with your library" ), this, SLOT(playMulti()));
-        contextMenu->addAction( tr( "Play with your library next" ), this, SLOT(playMultiNext()));
+        if ( RadioService::instance().state() == Playing )
+            contextMenu->addAction( tr( "Play with your library next" ), this, SLOT(playMultiNext()));
     }
 
     if ( contextMenu->actions().count() )

@@ -99,8 +99,13 @@ QuickStartWidget::customContextMenuRequested( const QPoint& point )
 {
     QMenu* contextMenu = new QMenu( this );
 
-    if ( RadioService::instance().state() == Playing )
-        contextMenu->addAction( tr( "Play next" ), this, SLOT(playNext()));
+    if ( !ui.edit->text().isEmpty() )
+    {
+        contextMenu->addAction( tr( "Play" ), this, SLOT(play()));
+
+        if ( RadioService::instance().state() == Playing )
+            contextMenu->addAction( tr( "Play next" ), this, SLOT(playNext()));
+    }
 
     if ( contextMenu->actions().count() )
         contextMenu->exec( ui.button->mapToGlobal( point ) );

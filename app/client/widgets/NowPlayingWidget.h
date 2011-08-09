@@ -25,6 +25,7 @@
 #include <QPointer>
 
 #include <lastfm/Track>
+#include <lastfm/RadioStation>
 
 #include "MetadataWidget.h"
 
@@ -37,6 +38,7 @@ public:
 signals:
 
 private slots:
+    void onTuningIn( const RadioStation& );
     void onTrackStarted( const Track& track, const Track& );
     void onStopped();
 

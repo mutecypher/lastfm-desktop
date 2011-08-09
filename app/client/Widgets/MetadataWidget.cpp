@@ -536,6 +536,7 @@ MetadataWidget::setupUi()
     ui.track.context->hide();
     ui.track.context->setObjectName( "context" );
     ui.track.context->setOpenExternalLinks( true );
+    ui.track.context->setWordWrap( true );
     contents->layout()->addWidget( trackTags );
     contents->layout()->addWidget( artistBio );
 

@@ -3,7 +3,8 @@ TEMPLATE = lib
 CONFIG += lastfm
 QT = core gui xml network
 include( $$ROOT_DIR/admin/include.qmake )
-SOURCES += $$ROOT_DIR/common/c++/Logger.cpp
+SOURCES += $$ROOT_DIR/common/c++/Logger.cpp \
+    dialogs/ShareDialog.cpp
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 # UniqueApplication
@@ -19,7 +20,6 @@ SOURCES += \
 	widgets/TagListWidget.cpp \
 	widgets/TagBuckets.cpp \
 	widgets/StatusLight.cpp \
-	widgets/SelectedItemWidget.cpp \
 	widgets/SearchBox.cpp \
 	widgets/MessageBar.cpp \
 	widgets/LfmListViewWidget.cpp \
@@ -56,7 +56,6 @@ SOURCES += \
 	dialogs/UserManagerDialog.cpp \
 	dialogs/UpdateDialog.cpp \
 	dialogs/TagDialog.cpp \
-	dialogs/ShareDialog.cpp \
 	dialogs/LoginDialog.cpp \
 	dialogs/LoginContinueDialog.cpp \
 	dialogs/AboutDialog.cpp \
@@ -73,7 +72,6 @@ HEADERS += \
 	widgets/TagBuckets.h \
 	widgets/StatusLight.h \
 	widgets/SpinnerLabel.h \
-	widgets/SelectedItemWidget.h \
 	widgets/Seed.h \
 	widgets/SearchBox.h \
 	widgets/PlayableMimeData.h \
@@ -119,12 +117,12 @@ HEADERS += \
 	dialogs/UpdateDialog.h \
 	dialogs/UnicornDialog.h \
 	dialogs/TagDialog.h \
-	dialogs/ShareDialog.h \
 	dialogs/LoginDialog.h \
 	dialogs/LoginContinueDialog.h \
 	dialogs/AboutDialog.h \
 	AnimatedStatusBar.h \
-	AnimatedPushButton.h
+	AnimatedPushButton.h \
+    dialogs/ShareDialog.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	

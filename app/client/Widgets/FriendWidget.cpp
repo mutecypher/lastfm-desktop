@@ -7,6 +7,7 @@
 #include <lastfm/XmlQuery>
 
 #include "lib/unicorn/widgets/HttpImageWidget.h"
+#include "lib/unicorn/widgets/Label.h"
 #include "PlayableItemWidget.h"
 
 #include "FriendWidget.h"
@@ -15,7 +16,7 @@
 
 FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent)
     :StylableWidget( parent ), m_user( user )
-{
+{   
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
@@ -31,10 +32,10 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent)
     vl->setSpacing( 0 );
     layout->addLayout( vl, 1 );
 
-    vl->addWidget( ui.name = new QLabel( user["name"].text(), this) );
+    vl->addWidget( ui.name = new Label( user["name"].text(), this) );
     ui.name->setObjectName( "name" );
 
-    vl->addWidget( ui.details = new QLabel( "", this) );
+    vl->addWidget( ui.details = new Label( "", this) );
     ui.details->setObjectName( "details" );
 
     lastfm::MutableTrack recentTrack;
@@ -42,7 +43,7 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent)
     recentTrack.setAlbum( user["recenttrack"]["album"]["name"].text() );
     recentTrack.setArtist( user["recenttrack"]["artist"]["name"].text() );
 
-    vl->addWidget( ui.lastTrack = new QLabel( tr( "Last track: %1" ).arg( recentTrack.toString() ), this) );
+    vl->addWidget( ui.lastTrack = new Label( tr( "Last track: %1" ).arg( recentTrack.toString() ), this) );
     ui.lastTrack->setObjectName( "lastTrack" );
 
     vl->addWidget( ui.radio = new PlayableItemWidget( RadioStation::library( User( user["name"].text() ) ), tr( "Play Library Radio" ) ) );
