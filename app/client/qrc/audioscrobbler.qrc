@@ -82,7 +82,27 @@
 		<file>controls_skip_REST.png</file>
 		<file>controls_skip_HOVER.png</file>
 		<file>controls_skip_PRESS.png</file>
-		
+
+        <file>meta_buy_HOVER.png</file>
+        <file>meta_buy_PRESS.png</file>
+        <file>meta_buy_REST.png</file>
+
+        <file>meta_love_OFF_HOVER.png</file>
+        <file>meta_love_OFF_PRESS.png</file>
+        <file>meta_love_OFF_REST.png</file>
+
+        <file>meta_love_ON_HOVER.png</file>
+        <file>meta_love_ON_PRESS.png</file>
+        <file>meta_love_ON_REST.png</file>
+
+        <file>meta_share_HOVER.png</file>
+        <file>meta_share_PRESS.png</file>
+        <file>meta_share_REST.png</file>
+
+        <file>meta_tag_HOVER.png</file>
+        <file>meta_tag_PRESS.png</file>
+        <file>meta_tag_REST.png</file>
+
         <file>16x16.png</file>
         <file>22x22.png</file>
         <file>22x22_transparent.png</file>
