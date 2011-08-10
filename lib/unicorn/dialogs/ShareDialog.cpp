@@ -34,111 +34,75 @@
 #include <QDesktopWidget>
 
 #include <lastfm/User>
+#include <lastfm/XmlQuery>
 
 #include "lib/unicorn/widgets/TrackWidget.h"
 
 #include "ShareDialog.h"
+
+#include "ui_ShareDialog.h"
+
 #include "../widgets/ItemSelectorWidget.h"
-#include "../widgets/SelectedItemWidget.h"
 
 const int kMaxMessage(1000);
 
 ShareDialog::ShareDialog( const Track& t, QWidget* parent )
-    : unicorn::Dialog( parent, Qt::Tool )
+    : unicorn::Dialog( parent, Qt::Tool ),
+      ui( new Ui::ShareDialog ),
+      m_track( t )
 {
-    m_track = t;
+    ui->setupUi( this );
 
-    setupUi();
-
-    setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
-    layout()->setSizeConstraint( QLayout::SetFixedSize );
+    ui->recipients->setType( ItemSelectorWidget::User );
+    ui->icon->loadUrl( m_track.imageUrl( lastfm::Small, true ), false );
 
     setWindowTitle( tr("Share") );    
     enableDisableOk();
 
-    connect( ui.buttons, SIGNAL(accepted()), this, SLOT(accept()) );
-    connect( ui.buttons, SIGNAL(rejected()), this, SLOT(close()) );
+    connect( ui->buttons, SIGNAL(accepted()), SLOT(accept()) );
+    connect( ui->buttons, SIGNAL(rejected()), SLOT(close()) );
+
+    connect( ui->message, SIGNAL(textChanged()), SLOT(updateCharacterLimit()));
+    connect( ui->message, SIGNAL(textChanged()), SLOT(enableDisableOk()));
+    connect( ui->recipients, SIGNAL(changed()), SLOT(enableDisableOk()));
 }
 
 
-void
-ShareDialog::setupUi()
+QPushButton*
+ShareDialog::ok()
 {
-
-    QHBoxLayout* h1 = new QHBoxLayout;
-    h1->addWidget( ui.track = new TrackWidget( m_track ), Qt::AlignLeft );
-
-    QVBoxLayout* v1 = new QVBoxLayout;
-    
-    v1->addWidget( new QLabel( tr("To") ) );
-    v1->addWidget( ui.recipients = new ItemSelectorWidget(ItemSelectorWidget::User, this) );
-    v1->addWidget( new QLabel( tr("Type friends or emails (up to 10), separated by commas.") ) );
-    v1->setSpacing( 0 );
-
-    connect( ui.recipients, SIGNAL(changed()), SLOT(enableDisableOk()));
-
-    QVBoxLayout* v2 = new QVBoxLayout;
-    v2->addWidget( new QLabel( tr("Message (optional)") ) );
-    v2->addWidget( ui.message = new QPlainTextEdit );
-    ui.message->setAttribute( Qt::WA_MacShowFocusRect, false );
-    connect( ui.message , SIGNAL(textChanged()), SLOT(onMessageChanged()));
-    connect( ui.message , SIGNAL(textChanged()), SLOT(enableDisableOk()));
-    v2->setSpacing( 4 );
-
-    QHBoxLayout* h2 = new QHBoxLayout;
-    h2->addWidget( ui.isPublic = new QCheckBox( tr("Include in my recent activity"), this ) );
-    ui.isPublic->setChecked( true );
-    ui.isPublic->setFocusPolicy( Qt::StrongFocus );
-    h2->addWidget( ui.characterLimit = new QLabel( this ), 0, Qt::AlignRight );
-    updateCharacterLimit();
-    
-    QVBoxLayout* v = new QVBoxLayout( this );
-    v->addWidget( new QLabel( tr("Choose something to share:") ) );
-    v->addLayout( h1 );
-    v->addLayout( v1 );
-    v->addLayout( v2 );
-    v->addLayout( h2 );
-    v->addWidget( ui.buttons = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ) );
-    
-    // make sure that pressing enter doesn't complete the dialog
-    ui.buttons->button( QDialogButtonBox::Ok )->setText( tr("Share") );
-    
-#ifdef Q_WS_MAC
-    foreach (QLabel* l, findChildren<QLabel*>())
-        l->setAttribute( Qt::WA_MacSmallSize );
-#endif
-    setTabOrders();
+    return ui->buttons->button( QDialogButtonBox::Ok );
 }
 
 void
 ShareDialog::enableDisableOk()
 {
-    ok()->setEnabled( ui.recipients->items().count() > 0
-                      && ui.message->toPlainText().length() <= kMaxMessage );
+    ok()->setEnabled( ui->recipients->items().count() > 0
+                      && ui->message->toPlainText().length() <= kMaxMessage );
 }
 
 void
 ShareDialog::updateCharacterLimit()
 {
-    ui.characterLimit->setText( QString::number( ui.message->toPlainText().length() ) + "/" + QString::number(kMaxMessage) );
+    ui->characterLimit->setText( QString::number( ui->message->toPlainText().length() ) + "/" + QString::number(kMaxMessage) );
 
-    if ( ui.message->toPlainText().length() > kMaxMessage ) {
-        ui.characterLimit->setProperty( "xerror", QVariant( true ) );
+    if ( ui->message->toPlainText().length() > kMaxMessage ) {
+        ui->characterLimit->setProperty( "xerror", true );
     }
     else
-        ui.characterLimit->setProperty( "xerror", QVariant( false ) );
+        ui->characterLimit->setProperty( "xerror", false );
 
-    ui.characterLimit->setStyle(QApplication::style());
+    style()->polish( ui->characterLimit );
 }
 
 void
 ShareDialog::setTabOrders()
 {
-    setTabOrder( ui.track, ui.recipients );
-    setTabOrder( ui.recipients, ui.message );
-    setTabOrder( ui.message, ui.isPublic );
-    setTabOrder( ui.isPublic, ui.buttons->button( QDialogButtonBox::Ok ) );
-    setTabOrder( ui.buttons->button( QDialogButtonBox::Ok ), ui.buttons->button( QDialogButtonBox::Cancel ) );
+//    setTabOrder( ui->track, ui->recipients );
+//    setTabOrder( ui->recipients, ui->message );
+//    setTabOrder( ui->message, ui->isPublic );
+//    setTabOrder( ui->isPublic, ui->buttons->button( QDialogButtonBox::Ok ) );
+//    setTabOrder( ui->buttons->button( QDialogButtonBox::Ok ), ui->buttons->button( QDialogButtonBox::Cancel ) );
 }
 
 void
@@ -151,19 +115,43 @@ ShareDialog::onMessageChanged()
 void
 ShareDialog::accept()
 {
-    QStringList recipients( ui.recipients->items() );
-    QString const message = ui.message->toPlainText();
-    bool isPublic = ui.isPublic->isChecked();
+    QStringList recipients( ui->recipients->items() );
+    QString const message = ui->message->toPlainText();
+    bool isPublic = ui->isPublic->isChecked();
 
-    if ( ui.track->type() == TrackWidget::Artist )
-        m_track.artist().share( recipients, message, isPublic );
-    else if ( ui.track->type() == TrackWidget::Album )
-        m_track.album().share( recipients, message, isPublic );
+    QNetworkReply* reply = 0;
+
+    if ( ui->track->isChecked() )
+        reply = m_track.share( recipients, message, isPublic ) ;
+    else if ( ui->album->isChecked() )
+        reply = m_track.album().share( recipients, message, isPublic );
     else
-        m_track.share( recipients, message, isPublic );
+        reply = m_track.artist().share( recipients, message, isPublic );
 
-    //TODO feedback on success etc, do via that bar thing you planned
-    //QDialog::accept();
-    close();
+    // disable the dialog until we get a response from Last.fm
+    setEnabled( false );
+    connect( reply, SIGNAL(finished()), SLOT(onShared()) );
+}
+
+void
+ShareDialog::onShared()
+{
+    try
+    {
+        XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
+
+        if ( lfm.attribute( "status" ) == "ok" )
+            close();
+        else
+        {
+            // TODO: display some kind of error message
+            setEnabled( true );
+        }
+    }
+    catch ( ... )
+    {
+        // TODO: display some kind of error message
+        setEnabled( true );
+    }
 }
 

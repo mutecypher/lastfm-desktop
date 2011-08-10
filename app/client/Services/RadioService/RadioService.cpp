@@ -391,12 +391,11 @@ void
 RadioService::onPhononCurrentSourceChanged( const Phonon::MediaSource& )
 {
     MutableTrack( m_track ).stamp();
-    if (m_mediaObject->state() == Phonon::PlayingState) {
-        emit trackSpooled( m_track );
-    } else {
+
+    if (m_mediaObject->state() != Phonon::PlayingState)
         changeState( Buffering );
-        emit trackSpooled( m_track );
-    }
+
+    emit trackSpooled( m_track );
 }
 
 

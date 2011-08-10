@@ -30,17 +30,20 @@
 #include "lib/unicorn/layouts/flowlayout.h"
 
 #include "ItemSelectorWidget.h"
-#include "SelectedItemWidget.h"
 
 #include <lastfm/User>
 
-ItemSelectorWidget::ItemSelectorWidget(Type type, QWidget* parent)
+ItemSelectorWidget::ItemSelectorWidget( QWidget* parent )
     :StylableWidget(parent), m_clearText( false )
 {
-    new FlowLayout( this, 0, 0, 0 );
+    QLayout* layout = new FlowLayout( this, 0, 0, 0 );
+    layout->setContentsMargins( 0, 0, 0, 0 );
+    layout->setSpacing( 0 );
+}
 
-    layout()->setContentsMargins( 1, 1, 1, 1 );
-
+void
+ItemSelectorWidget::setType( Type type )
+{
     if (type == User)
     {
         layout()->addItem( new QWidgetItem( ui.searchBox = new UserSearch( this ) ) );
@@ -49,6 +52,7 @@ ItemSelectorWidget::ItemSelectorWidget(Type type, QWidget* parent)
     {
         layout()->addItem( new QWidgetItem( ui.searchBox = new TagSearch( this ) ) );
     }
+
     ui.searchBox->setFrame( false );
     setFocusPolicy( Qt::StrongFocus );
     setFocusProxy( ui.searchBox );
@@ -60,6 +64,7 @@ ItemSelectorWidget::ItemSelectorWidget(Type type, QWidget* parent)
     connect( ui.searchBox, SIGNAL(commaPressed()), SLOT(onItemSelected()) );
     connect( ui.searchBox, SIGNAL(deletePressed()), SLOT(onDeletePressed()) );
 }
+
 
 void
 ItemSelectorWidget::onTextChanged( const QString& /*text*/ )
@@ -79,13 +84,15 @@ ItemSelectorWidget::onItemSelected()
 }
 
 void
-ItemSelectorWidget::onItemDeleted( SelectedItemWidget* item )
+ItemSelectorWidget::onItemDeleted( QLabel* item )
 {
     m_items.removeAt( m_items.indexOf( item ) );
     layout()->removeWidget( item );
     item->deleteLater();
 
     ui.searchBox->setFocus( Qt::OtherFocusReason );
+
+    emit changed();
 }
 
 void
@@ -93,7 +100,9 @@ ItemSelectorWidget::onDeletePressed()
 {
     if ( m_items.count() > 0 )
     {
-        onItemDeleted( m_items.takeLast() );
+        QLabel* lastLabel = m_items.takeLast();
+        ui.searchBox->setText( lastLabel->text() );
+        onItemDeleted( lastLabel );
     }
 }
 
@@ -107,15 +116,12 @@ void
 ItemSelectorWidget::addItem( const QString& text )
 {
     // create the widget
-    SelectedItemWidget* item = new SelectedItemWidget( text, this );
+    QLabel* item = new QLabel( text, this );
 
     if ( !ui.searchBox->text().isEmpty() // don't add empty recipients
         && !itemsContain( text ) // don't add duplicates
         && m_items.count() < 10 ) // limit to 10
     {
-        // make sure we get told when the widget is deleted
-        connect( item, SIGNAL(deleted(SelectedItemWidget*)), SLOT(onItemDeleted(SelectedItemWidget*)) );
-
         m_items.append( item );
         dynamic_cast<FlowLayout*>(layout())->insertWidget( layout()->count() - 1 , item );
 
@@ -134,7 +140,7 @@ ItemSelectorWidget::addItem( const QString& text )
 bool
 ItemSelectorWidget::itemsContain( const QString& text )
 {
-    foreach (const SelectedItemWidget* item, m_items)
+    foreach ( const QLabel* item, m_items )
     {
         if ( item->text() == text )
             return true;
@@ -148,7 +154,7 @@ ItemSelectorWidget::items() const
 {
     QStringList items;
 
-    foreach (const SelectedItemWidget* item, m_items)
+    foreach (const QLabel* item, m_items)
     {
         items << item->text();
     }

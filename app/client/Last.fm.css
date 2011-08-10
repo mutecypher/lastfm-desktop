@@ -48,6 +48,7 @@ SideBar QLabel {
 	margin: 10px 10px;
 }
 
+
 NowPlayingWidget QLabel#context {
 	margin: 10px 20px;
 	padding: 15px 15px;
@@ -60,12 +61,12 @@ NowPlayingWidget QLabel#context {
 
 QuickStartWidget {
 	border: none;
-	padding: 20px 20px 10px;
+	margin: 14px 20px 10px 20px;
 }
 
 FriendListWidget QLineEdit
 {
-	margin: 20px 40px 20px 20px;
+	margin: 20px 20px 20px 20px;
 }
 
 QuickStartWidget  QLineEdit,
@@ -116,10 +117,14 @@ FriendWidget {
 }
 
 FriendWidget QLabel#avatar,
-ProfileWidget QLabel#avatar {
+ProfileWidget QLabel#avatar,
+ShareDialog QLabel#icon {
 	padding: 2px;
 	background-color: white;
+	color: transparent;
 	border: 1px solid #cdcdcd;
+	min-width: 64px;
+	min-height: 64px;
 	max-width: 64px;
 	max-height: 64px;
 	margin: 0px 20px 0px 0px;
@@ -388,4 +393,27 @@ BannerWidgetPrivate {
     background-color: red;
     color: white;
     font-weight: bold;
+}
+
+ShareDialog ItemSelectorWidget {
+	background-color: white;
+}
+
+ShareDialog ItemSelectorWidget QLineEdit {
+	padding: 1px 2px 3px 0px;
+	margin: 2px;
+}
+
+ShareDialog ItemSelectorWidget QLabel {
+	padding: 2px;
+	margin: 2px 0px 2px 2px;
+	background-color: #DAE7F9;
+	font-weight: bold;
+	border: 1px solid #99BEEE;
+	border-radius: 9px;
+	min-width: 12px;
+}
+
+ShareDialog QLabel#characterLimit[xerror="true"] {
+	color: red;
 }

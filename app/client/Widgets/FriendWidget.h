@@ -14,9 +14,9 @@ private:
     struct
     {
         class HttpImageWidget* avatar;
-        class QLabel* name;
-        class QLabel* details;
-        class QLabel* lastTrack;
+        class Label* name;
+        class Label* details;
+        class Label* lastTrack;
         class PlayableItemWidget* radio;
     } ui;
 

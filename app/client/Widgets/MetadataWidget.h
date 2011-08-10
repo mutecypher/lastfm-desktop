@@ -132,7 +132,7 @@ class TB : public QTextBrowser {
                 //QEvent* fcEvent = new QEvent(QEvent::FontChange);
                 //QApplication::postEvent( this, fcEvent);
             } else if( e->type() == QEvent::Paint ) {
-                update( m_widgetTextObject->widgetRect(w).toRect());
+                //update( m_widgetTextObject->widgetRect(w).toRect());
             }
             return false;
         }

@@ -1,18 +1,36 @@
 #include <QEvent>
+#include <QResizeEvent>
+#include <QPainter>
 
 #include "Label.h"
 
-Label::Label( QWidget *parent )
+Label::Label( QWidget* parent )
     :QLabel( parent )
 {
-    setTextFormat( Qt::RichText );
 }
+
+
+Label::Label( const QString& text, QWidget* parent )
+    :QLabel( parent )
+{
+    setText( text );
+}
+
 
 void
 Label::setText( const QString& text )
 {
+    QLabel::setText( text );
+
+    if ( textFormat() == Qt::RichText )
+        QLabel::setText( QString( "<html><head><style type=text/css>"
+                                 "a:link {color:white; text-decoration:none;}"
+                                 "a:hover {color:white; text-decoration:none}"
+                                 "</style></head><body>%1</body></html>" ).arg( m_text ) );
+    else
+        QLabel::setText( "" );
+
     m_text = text;
-    resizeEvent(0);
 }
 
 QString
@@ -22,14 +40,18 @@ Label::anchor( const QString& url, const QString& text )
 }
 
 void
-Label::resizeEvent( QResizeEvent* event )
+Label::paintEvent( QPaintEvent* event )
 {
-    if ( textFormat() != Qt::RichText )
-        QLabel::setText( fontMetrics().elidedText( m_text, Qt::ElideRight, parentWidget()->contentsRect().width() ) );
+    QLabel::paintEvent( event );
+
+    if ( textFormat() == Qt::RichText )
+        QLabel::paintEvent( event );
     else
-        QLabel::setText( QString( "<html><head><style type=text/css>"
-                                 "a:link {color:white; text-decoration:none;}"
-                                 "a:hover {color:white; text-decoration:none}"
-                                 "</style></head><body>%1</body></html>" ).arg( m_text ) );
+    {
+        QFrame::paintEvent(event);
+        QPainter p(this);
+        p.drawText( rect(), fontMetrics().elidedText( m_text, Qt::ElideRight, contentsRect().width() ) );
+    }
 }
+
 
