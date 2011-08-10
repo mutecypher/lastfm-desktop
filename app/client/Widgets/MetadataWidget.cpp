@@ -382,19 +382,19 @@ MetadataWidget::setupTrackDetails( QWidget* w )
     ui.track.albumImage->setMaximumSize( QSize( 126, 126 ));
     {
         QWidget* widget = new QWidget;
-        widget->setStyleSheet( "color: #333;" );
         widget->setContentsMargins( 0, 0, 0, 0 );
         new QVBoxLayout( widget );
         widget->layout()->setSpacing( 0 );
+       
         widget->layout()->addWidget( ui.track.title = new QLabel );
         ui.track.title->setWordWrap( true );
-        ui.track.title->setStyleSheet( "font-size: 16pt; font-weight: bold; padding-bottom: 5px;" );
+        ui.track.title->setStyleSheet( "color: #333; font-size: 16pt; font-weight: bold; padding-bottom: 5px;" );
+        
         widget->layout()->addWidget( ui.track.artist = new QLabel );
-
+        ui.track.artist->setWordWrap( true );
         ui.track.artist->setStyleSheet( "border: 1px solid #cdcdcd;"
                                   "border-width: 0px 0px 1px 0px;"
-                                  "padding-bottom: 11px;" );
-
+                                  "padding-bottom: 11px; color: #333;" );
 
         widget->layout()->addWidget( ui.track.scrobbleControls = new ScrobbleControls(m_track) );
         ui.track.scrobbleControls->setStyleSheet( "ScrobbleControls{ border:none;" 
@@ -403,7 +403,9 @@ MetadataWidget::setupTrackDetails( QWidget* w )
                                             "padding: 2px 0px; }" );
 
         widget->layout()->addWidget( ui.track.album = new QLabel );
+        ui.track.album->setWordWrap( true );
         ui.track.album->setStyleSheet( "border-top: 1px solid #ffffff; padding-top: 11px; font-size: 11pt;" );
+
         w->layout()->addWidget( widget );
     }
     w->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );

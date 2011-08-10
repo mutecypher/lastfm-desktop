@@ -273,6 +273,7 @@ PlaybackControlsWidget QPushButton#love {
     min-width: 29px;
 	
 }
+
 PlaybackControlsWidget QPushButton#love:hover { background-image: url(":/controls_love_OFF_HOVER.png"); }
 PlaybackControlsWidget QPushButton#love:pressed { background-image: url(":/controls_love_OFF_PRESS.png"); }
 PlaybackControlsWidget QPushButton#love:checked { background-image: url(":/controls_love_ON_REST.png"); }
@@ -315,6 +316,77 @@ PlaybackControlsWidget QProgressBar {
 
 QProgressBar::chunk {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #b6b6b6, stop:0 #cdcdcd);
+}
+
+ScrobbleControls QPushButton{
+	background-color: transparent;
+    color: transparent;
+	background-repeat: no-repeat;
+    background-position: center;
+    margin: 0px;
+    padding: 3px 0px;
+    width: 20px;
+}
+
+ScrobbleControls QPushButton#love {
+    background-image: url(":/meta_love_OFF_REST.png");
+}
+
+ScrobbleControls QPushButton#love:hover {
+    background-image: url(":/meta_love_OFF_HOVER.png");
+}
+
+ScrobbleControls QPushButton#love:pressed {
+    background-image: url(":/meta_love_OFF_PRESS.png");
+}
+
+ScrobbleControls QPushButton#love:checked {
+    background-image: url(":/meta_love_ON_REST.png");
+}
+
+ScrobbleControls QPushButton#love:checked:hover {
+    background-image: url(":/meta_love_ON_HOVER.png");
+}
+
+ScrobbleControls QPushButton#love:checked:pressed {
+    background-image: url(":/meta_love_ON_PRESS.png");
+}
+
+
+ScrobbleControls QPushButton#tag {
+    background-image: url(":/meta_tag_REST.png");
+}
+ScrobbleControls QPushButton#tag:hover {
+    background-image: url(":/meta_tag_HOVER.png");
+}
+ScrobbleControls QPushButton#tag:pressed {
+    background-image: url(":/meta_tag_PRESS.png");
+}
+
+
+ScrobbleControls QPushButton#share {
+    background-image: url(":/meta_share_REST.png");
+}
+
+ScrobbleControls QPushButton#share:hover {
+    background-image: url(":/meta_share_HOVER.png");
+}
+
+ScrobbleControls QPushButton#share:pressed {
+    background-image: url(":/meta_share_PRESS.png");
+}
+
+
+ScrobbleControls QPushButton#buy {
+    background-image: url(":/meta_buy_REST.png");
+}
+
+ScrobbleControls QPushButton#buy:hover {
+    background-image: url(":/meta_buy_HOVER.png");
+}
+
+ScrobbleControls QPushButton#buy:pressed {
+    background-image: url(":/meta_buy_PRESS.png");
 }
 
 BannerWidgetPrivate {
