@@ -45,9 +45,9 @@ private slots:
     void onShared();
     void updateCharacterLimit();
 
-private:
-    class QPushButton* ok();
+    void onRadioButtonClicked();
 
+private:
     void setTabOrders();
 
 private:

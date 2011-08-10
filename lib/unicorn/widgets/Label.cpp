@@ -33,6 +33,8 @@ Label::setText( const QString& text )
         QLabel::setText( "" );
 
     m_text = text;
+
+    update();
 }
 
 QString
@@ -44,8 +46,6 @@ Label::anchor( const QString& url, const QString& text )
 void
 Label::paintEvent( QPaintEvent* event )
 {
-    QLabel::paintEvent( event );
-
     if ( textFormat() == Qt::RichText )
         QLabel::paintEvent( event );
     else

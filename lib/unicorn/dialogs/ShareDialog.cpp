@@ -56,6 +56,13 @@ ShareDialog::ShareDialog( const Track& t, QWidget* parent )
     ui->recipients->setType( ItemSelectorWidget::User );
     ui->icon->loadUrl( m_track.imageUrl( lastfm::Small, true ), false );
 
+    ui->album->setEnabled( !t.album().isNull() );
+
+    onRadioButtonClicked();
+    connect( ui->track, SIGNAL(clicked()), SLOT(onRadioButtonClicked()) );
+    connect( ui->artist, SIGNAL(clicked()), SLOT(onRadioButtonClicked()) );
+    connect( ui->album, SIGNAL(clicked()), SLOT(onRadioButtonClicked()) );
+
     setWindowTitle( tr("Share") );    
     enableDisableOk();
 
@@ -65,19 +72,34 @@ ShareDialog::ShareDialog( const Track& t, QWidget* parent )
     connect( ui->message, SIGNAL(textChanged()), SLOT(updateCharacterLimit()));
     connect( ui->message, SIGNAL(textChanged()), SLOT(enableDisableOk()));
     connect( ui->recipients, SIGNAL(changed()), SLOT(enableDisableOk()));
+
+
 }
 
-
-QPushButton*
-ShareDialog::ok()
+void
+ShareDialog::onRadioButtonClicked()
 {
-    return ui->buttons->button( QDialogButtonBox::Ok );
+    if ( ui->track->isChecked() )
+    {
+        ui->shareSubject->setText( m_track.title() );
+        ui->shareSubject2->setText( tr( "by %1" ).arg( m_track.artist() ) );
+    }
+    else if ( ui->artist->isChecked() )
+    {
+        ui->shareSubject->setText( m_track.artist() );
+        ui->shareSubject2->setText( "" );
+    }
+    else if ( ui->album->isChecked() )
+    {
+        ui->shareSubject->setText( m_track.album() );
+        ui->shareSubject2->setText( tr( "by %1" ).arg( m_track.artist() ) );
+    }
 }
 
 void
 ShareDialog::enableDisableOk()
 {
-    ok()->setEnabled( ui->recipients->items().count() > 0
+    ui->buttons->button( QDialogButtonBox::Ok )->setEnabled( ui->recipients->items().count() > 0
                       && ui->message->toPlainText().length() <= kMaxMessage );
 }
 

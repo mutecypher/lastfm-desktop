@@ -45,15 +45,13 @@ void
 ItemSelectorWidget::setType( Type type )
 {
     if (type == User)
-    {
         layout()->addItem( new QWidgetItem( ui.searchBox = new UserSearch( this ) ) );
-    }
     else
-    {
         layout()->addItem( new QWidgetItem( ui.searchBox = new TagSearch( this ) ) );
-    }
 
     ui.searchBox->setFrame( false );
+    ui.searchBox->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
+
     setFocusPolicy( Qt::StrongFocus );
     setFocusProxy( ui.searchBox );
 
@@ -101,7 +99,9 @@ ItemSelectorWidget::onDeletePressed()
     if ( m_items.count() > 0 )
     {
         QLabel* lastLabel = m_items.takeLast();
-        ui.searchBox->setText( lastLabel->text() );
+        int cursorPos = lastLabel->text().length();
+        ui.searchBox->setText( lastLabel->text() + ui.searchBox->text() );
+        ui.searchBox->setCursorPosition( cursorPos );
         onItemDeleted( lastLabel );
     }
 }
@@ -115,13 +115,11 @@ ItemSelectorWidget::onCompleterActivated( const QString& text )
 void
 ItemSelectorWidget::addItem( const QString& text )
 {
-    // create the widget
-    QLabel* item = new QLabel( text, this );
-
     if ( !ui.searchBox->text().isEmpty() // don't add empty recipients
         && !itemsContain( text ) // don't add duplicates
         && m_items.count() < 10 ) // limit to 10
     {
+        QLabel* item = new QLabel( text, this );
         m_items.append( item );
         dynamic_cast<FlowLayout*>(layout())->insertWidget( layout()->count() - 1 , item );
 
@@ -130,10 +128,6 @@ ItemSelectorWidget::addItem( const QString& text )
         QTimer::singleShot(1, ui.searchBox, SLOT(clear()));
 
         emit changed();
-    }
-    else
-    {
-        item->deleteLater();
     }
 }
 
