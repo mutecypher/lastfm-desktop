@@ -15,6 +15,11 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->play->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->ban->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->love->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->skip->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
     // If the actions are triggered we should do something
     // love is dealt with by the application
     //connect( aApp->loveAction(), SIGNAL(triggered(bool)), SLOT(onLoveClicked(bool)) );

@@ -7,6 +7,7 @@
 Label::Label( QWidget* parent )
     :QLabel( parent )
 {
+    setAttribute( Qt::WA_LayoutUsesWidgetRect );
 }
 
 
@@ -14,6 +15,7 @@ Label::Label( const QString& text, QWidget* parent )
     :QLabel( parent )
 {
     setText( text );
+    setAttribute( Qt::WA_LayoutUsesWidgetRect );
 }
 
 

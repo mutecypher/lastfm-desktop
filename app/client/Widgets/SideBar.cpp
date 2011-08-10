@@ -34,6 +34,7 @@ QAbstractButton* newButton( const QString& text, QWidget* parent = 0 )
     pushButton->setCheckable( true );
     pushButton->setAutoExclusive( true );
     pushButton->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+    pushButton->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     return pushButton;
 }
 

@@ -43,8 +43,6 @@ public slots:
     void playMultiNext();
 
 private:
-    void init();
-
     RadioStation getMultiStation() const;
 
     void paintEvent( QPaintEvent* event );
