@@ -132,7 +132,7 @@ MainWindow::MainWindow()
 
     finishUi();
 
-    resize( 545, 655 );
+    resize( 565, 710 );
 
     show();
 }

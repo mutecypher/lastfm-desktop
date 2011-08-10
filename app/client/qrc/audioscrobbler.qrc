@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/" >
+		<file>start_bg.png</file>
+	
 		<file>noArt.png</file>
 		
 		<file>tab_now_playing_REST.png</file>

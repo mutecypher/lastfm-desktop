@@ -69,6 +69,8 @@ private:
     void setCurrentWidget( QWidget* );
     void addWinThumbBarButtons( QList<QAction*>& );
 
+    //void resizeEvent( QResizeEvent* event ) { qDebug() << event->size(); }
+
 private:
     Track m_currentTrack;
     class ActivityListItem* m_currentActivity;

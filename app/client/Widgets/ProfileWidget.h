@@ -5,8 +5,9 @@
 #include <QWidget>
 
 #include "lib/unicorn/UnicornSession.h"
+#include "lib/unicorn/StylableWidget.h"
 
-class ProfileWidget : public QWidget
+class ProfileWidget : public StylableWidget
 {
     Q_OBJECT
 private:

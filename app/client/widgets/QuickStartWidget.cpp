@@ -31,7 +31,8 @@
 
 #include <QStylePainter>
 
-QuickStartWidget::QuickStartWidget()
+QuickStartWidget::QuickStartWidget( QWidget* parent )
+    :StylableWidget( parent )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );

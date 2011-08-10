@@ -10,6 +10,7 @@ SideBar QAbstractButton {
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: center;
+	font-size: 11px;
 	color: #888888;
 	border: none;
 	height: 67px;
@@ -46,8 +47,78 @@ SideBar QAbstractButton#radio:checked { background-image: url(":/tab_radio_ACTIV
 SideBar QLabel {
 	qproperty-alignment: AlignHCenter;
 	margin: 10px 10px;
+	min-height: 64px;
+	min-width:64px;
 }
 
+NothingPlayingWidget {
+	border: none;
+	background-image: url(":/start_bg.png");
+	background-repeat: no-repeat;
+	background-position: top left;
+	padding: 20px;
+}
+
+NothingPlayingWidget QLabel {
+	color: #333;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+NothingPlayingWidget QLabel#hello {
+	font-size: 16px;
+	margin-bottom: 25px;
+}
+
+NothingPlayingWidget QLabel#type {
+	margin-bottom: 44px;
+}
+
+NothingPlayingWidget QLabel#split {
+	font-size: 16px;
+	margin-top: 28px;
+	margin-bottom: 28px;
+}
+
+NothingPlayingWidget QLabel#scrobble {
+	font-size: 16px;
+	margin-bottom: 28px;
+}
+
+NothingPlayingWidget QLabel#scrobbleExplain {
+	margin-bottom: 20px;
+}
+
+NothingPlayingWidget StylableWidget#players {
+	padding-top: 40px;
+	border: none;
+}
+
+NothingPlayingWidget StylableWidget#players  QAbstractButton {
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: center;
+	border: none;
+	height: 44px;
+	width: 44px;
+	margin: 0px 10px;
+}
+
+NothingPlayingWidget StylableWidget#players  QAbstractButton#itunes {
+	background-image: url(":/control_bar_scrobble_itunes.png");
+}
+
+NothingPlayingWidget StylableWidget#players  QAbstractButton#wmp {
+	background-image: url(":/control_bar_scrobble_wmp.png");
+}
+
+NothingPlayingWidget StylableWidget#players  QAbstractButton#winamp {
+	background-image: url(":/control_bar_scrobble_winamp.png");
+}
+
+NothingPlayingWidget StylableWidget#players  QAbstractButton#foobar {
+	background-image: url(":/control_bar_scrobble_foobar.png");
+}
 
 NowPlayingWidget QLabel#context {
 	margin: 10px 20px;
@@ -61,7 +132,7 @@ NowPlayingWidget QLabel#context {
 
 QuickStartWidget {
 	border: none;
-	margin: 14px 20px 10px 20px;
+	margin: 14px 0px 10px 0px;
 }
 
 FriendListWidget QLineEdit
@@ -96,17 +167,21 @@ QScrollArea {
 	border: none;
 }
 
+ProfileWidget {
+	border: none;
+	margin: 0px 20px;
+}
+
 RadioWidget QFrame#section,
 ProfileWidget QFrame#section {
 	border: none;
 	border-top: 1px solid white;
 	padding: 7px 0px; 
-	margin: 0px 20px;
 }
 
 ProfileWidget QFrame#user {
 	border: none;
-	margin: 20px 20px 10px;
+	margin: 20px 0px 10px;
 }
 
 FriendWidget {
@@ -147,6 +222,11 @@ FriendWidget QLabel#lastTrack,
 ProfileWidget QLabel#scrobbles {
 	font-size: 11px;
 	color: #333;
+}
+
+RadioWidget {
+	border: none;
+	margin: 0px 20px;
 }
 
 RadioWidget PlayableItemWidget,
@@ -204,7 +284,6 @@ ProfileWidget PlayableItemWidget :pressed { background-image: url(":/radio_play_
 RadioWidget QLabel#title,
 ProfileWidget QLabel#title  {
 	padding: 10px 0px;
-	margin: 0px 20px;
 	border: 1px solid #cdcdcd;
 	border-width: 0px 0px 1px 0px;
 	font-weight: bold; 
@@ -395,17 +474,54 @@ BannerWidgetPrivate {
     font-weight: bold;
 }
 
+ShareDialog QFrame#what {
+	border: 1px solid #DBDBDB;
+	border-radius: 5px;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ABABAB, stop:0.04 #E6E6E6, stop:1 #E6E6E6);
+	padding: 18px;
+	margin: 18px 0px;
+}
+
+ShareDialog > QRadioButton {
+	margin-left: 10px;
+	font-weight: bold;
+}
+
+ShareDialog > QLabel,
+ShareDialog > QCheckBox,
+ShareDialog > QRadioButton {
+	font-size: 12px;
+	font-weight: bold;
+}
+
+ShareDialog QLabel#with {
+	margin-bottom: 10px;
+	font-size: 12px; 
+}
+
+ShareDialog QLabel#messageTitle {
+	margin-top: 16px;
+	margin-bottom: 10px;
+}
+
+ShareDialog QFrame#what QLabel#shareSubject,
+ShareDialog QFrame#what QLabel#shareSubject2 {
+	font-size: 12px; 
+	font-weight: bold;
+	margin: 4px 0px 4px 0px;
+}
+
 ShareDialog ItemSelectorWidget {
 	background-color: white;
 }
 
 ShareDialog ItemSelectorWidget QLineEdit {
-	padding: 1px 2px 3px 0px;
+	padding: 1px 2px 2px 3px;
 	margin: 2px;
 }
 
 ShareDialog ItemSelectorWidget QLabel {
-	padding: 2px;
+	padding: 2px 3px;
 	margin: 2px 0px 2px 2px;
 	background-color: #DAE7F9;
 	font-weight: bold;
@@ -414,6 +530,20 @@ ShareDialog ItemSelectorWidget QLabel {
 	min-width: 12px;
 }
 
+ShareDialog QTextEdit {
+	margin-bottom: 16px;
+}
+
+ShareDialog QLabel#characterLimit {
+	font-size: 11px;
+	font-weight: normal;
+}
+
 ShareDialog QLabel#characterLimit[xerror="true"] {
 	color: red;
+}
+
+ShareDialog QLabel#characterLimit,
+ShareDialog QCheckBox {
+	margin-bottom: 16px;
 }
