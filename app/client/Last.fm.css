@@ -340,16 +340,16 @@ ScrobbleControls QPushButton#love:pressed {
     background-image: url(":/meta_love_OFF_PRESS.png");
 }
 
-ScrobbleControls QPushButton#love {
-    background-image: url(":/meta_love_OFF_REST.png");
+ScrobbleControls QPushButton#love:checked {
+    background-image: url(":/meta_love_ON_REST.png");
 }
 
-ScrobbleControls QPushButton#love:hover {
-    background-image: url(":/meta_love_OFF_HOVER.png");
+ScrobbleControls QPushButton#love:checked:hover {
+    background-image: url(":/meta_love_ON_HOVER.png");
 }
 
-ScrobbleControls QPushButton#love:pressed {
-    background-image: url(":/meta_love_OFF_PRESS.png");
+ScrobbleControls QPushButton#love:checked:pressed {
+    background-image: url(":/meta_love_ON_PRESS.png");
 }
 
 
