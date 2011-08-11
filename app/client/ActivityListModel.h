@@ -44,14 +44,15 @@ private slots:
         qDebug() << "Finished fetching image for track: " << toString();
         sender()->deleteLater();
         QNetworkReply* reply = (QNetworkReply*) sender();
-        if (reply->error() == QNetworkReply::NoError) {
+        if (reply && reply->error() == QNetworkReply::NoError) {
             QPixmap p;
-            p.loadFromData(((QNetworkReply*)sender())->readAll());
+
+            p.loadFromData(reply->readAll());
             if (!p.isNull()) {
                 m_image = p.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation).toImage();
             }
+            emit imageUpdated();
         }
-        emit imageUpdated();
     }
 };
 
