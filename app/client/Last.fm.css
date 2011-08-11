@@ -202,7 +202,7 @@ ShareDialog QLabel#icon {
 	min-height: 64px;
 	max-width: 64px;
 	max-height: 64px;
-	margin: 0px 20px 0px 0px;
+	margin: 0px 20px 8px 0px;
 }
 
 FriendWidget QLabel#name,

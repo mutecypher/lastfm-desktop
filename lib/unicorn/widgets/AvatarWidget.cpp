@@ -21,12 +21,22 @@ AvatarWidget::paintEvent( QPaintEvent* paintEvent )
     {
         QPainter p( this );
 
-        p.setPen( QColor( 0xffffff ) );
+        QString text = tr( "Subscriber" );
 
         QFont font = p.font();
-        font.setPixelSize( 8 );
+        font.setPixelSize( 10 );
+        font.setWeight( QFont::Bold );
         p.setFont( font );
 
-        p.drawText( rect(), Qt::AlignHCenter | Qt::AlignBottom, tr( "Subscriber" ) );
+        QFontMetrics fm( font );
+        int width = fm.width( text ) + 4;
+        int height = fm.height() + 4;
+        QRect rect( (70 / 2) - (width / 2), 70 - (height / 2), width, height ) ;
+
+        p.setBrush( QColor( Qt::black ) );
+        p.drawRoundedRect( rect, 2, 2 );
+
+        p.setPen( QColor( Qt::white ) );
+        p.drawText( rect, Qt::AlignCenter, text );
     }
 }
