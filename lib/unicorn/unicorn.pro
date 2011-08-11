@@ -4,7 +4,8 @@ CONFIG += lastfm
 QT = core gui xml network
 include( $$ROOT_DIR/admin/include.qmake )
 SOURCES += $$ROOT_DIR/common/c++/Logger.cpp \
-    dialogs/ShareDialog.cpp
+    dialogs/ShareDialog.cpp \
+    widgets/AvatarWidget.cpp
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 # UniqueApplication
@@ -122,7 +123,8 @@ HEADERS += \
 	dialogs/AboutDialog.h \
 	AnimatedStatusBar.h \
 	AnimatedPushButton.h \
-    dialogs/ShareDialog.h
+    dialogs/ShareDialog.h \
+    widgets/AvatarWidget.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	

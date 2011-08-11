@@ -6,7 +6,7 @@
 #include <lastfm/Track>
 #include <lastfm/XmlQuery>
 
-#include "lib/unicorn/widgets/HttpImageWidget.h"
+#include "lib/unicorn/widgets/AvatarWidget.h"
 #include "lib/unicorn/widgets/Label.h"
 #include "PlayableItemWidget.h"
 
@@ -21,7 +21,7 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent)
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
-    layout->addWidget( ui.avatar = new HttpImageWidget( this ) );
+    layout->addWidget( ui.avatar = new AvatarWidget( this ) );
     ui.avatar->setObjectName( "avatar" );
 
     ui.avatar->loadUrl( user["image size=medium"].text(), false );
@@ -58,6 +58,7 @@ FriendWidget::onGotInfo()
 {
     lastfm::UserDetails user( qobject_cast<QNetworkReply*>(sender()) );
 
+    ui.avatar->setUserDetails( user );
     ui.details->setText( user.getInfoString() );
 }
 

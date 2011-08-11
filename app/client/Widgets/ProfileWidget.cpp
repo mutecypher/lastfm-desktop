@@ -2,7 +2,7 @@
 #include <QBoxLayout>
 #include <QLabel>
 
-#include "lib/unicorn/widgets/HttpImageWidget.h"
+#include "lib/unicorn/widgets/AvatarWidget.h"
 #include "lib/unicorn/StylableWidget.h"
 
 #include "PlayableItemWidget.h"
@@ -19,6 +19,7 @@ ProfileWidget::ProfileWidget(QWidget *parent)
     layout->setSpacing( 0 );
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)) );
+    connect( aApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)) );
 }
 
 void
@@ -44,7 +45,7 @@ ProfileWidget::onSessionChanged( unicorn::Session* session )
         hl->setContentsMargins( 0, 0, 0, 0 );
         hl->setSpacing( 0 );
 
-        hl->addWidget( ui.avatar = new HttpImageWidget( this ) );
+        hl->addWidget( ui.avatar = new AvatarWidget( this ) );
         ui.avatar->setObjectName( "avatar" );
         ui.avatar->loadUrl( session->userInfo().imageUrl( lastfm::Medium, true ), false );
         ui.avatar->setHref( session->userInfo().www() );
@@ -85,6 +86,13 @@ ProfileWidget::onSessionChanged( unicorn::Session* session )
         connect( session->userInfo().getTopArtists( "overall", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopOverallArtists()));
         connect( session->userInfo().getTopArtists( "7day", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopWeeklyArtists()));
     }
+}
+
+
+void
+ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userDetails )
+{
+    ui.avatar->setUserDetails( userDetails );
 }
 
 

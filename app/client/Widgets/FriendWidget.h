@@ -13,7 +13,7 @@ class FriendWidget : public StylableWidget
 private:
     struct
     {
-        class HttpImageWidget* avatar;
+        class AvatarWidget* avatar;
         class Label* name;
         class Label* details;
         class Label* lastTrack;

@@ -14,7 +14,7 @@ private:
     struct
     {
         class StylableWidget* user;
-        class HttpImageWidget* avatar;
+        class AvatarWidget* avatar;
         class QLabel* name;
         class QLabel* scrobbleCount;
         class QLabel* scrobbles;
@@ -28,6 +28,7 @@ public:
 
 private slots:
     void onSessionChanged( unicorn::Session* session );
+    void onGotUserInfo( const lastfm::UserDetails& userDetails );
 
     void onGotTopWeeklyArtists();
     void onGotTopOverallArtists();
