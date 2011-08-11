@@ -107,7 +107,8 @@ SOURCES += \
     Widgets/NowPlayingStackedWidget.cpp \
     Widgets/ProfileWidget.cpp \
     Widgets/FriendListWidget.cpp \
-    Widgets/FriendWidget.cpp
+    Widgets/FriendWidget.cpp \
+    Widgets/BioWidget.cpp
 
 HEADERS += \
 	Wizard/WelcomePage.h \
@@ -196,7 +197,8 @@ HEADERS += \
     Widgets/NowPlayingStackedWidget.h \
     Widgets/ProfileWidget.h \
     Widgets/FriendListWidget.h \
-    Widgets/FriendWidget.h
+    Widgets/FriendWidget.h \
+    Widgets/BioWidget.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
