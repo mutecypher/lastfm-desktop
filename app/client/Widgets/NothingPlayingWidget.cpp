@@ -50,12 +50,16 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
     hl->addStretch( 1 );
     hl->addWidget( ui.itunes = new QPushButton( this ) );
     ui.itunes->setObjectName( "itunes" );
+    ui.itunes->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     hl->addWidget( ui.wmp = new QPushButton( this ) );
     ui.wmp->setObjectName( "wmp" );
+    ui.wmp->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     hl->addWidget( ui.winamp = new QPushButton( this ) );
     ui.winamp->setObjectName( "winamp" );
+    ui.winamp->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     hl->addWidget( ui.foobar = new QPushButton( this ) );
     ui.foobar->setObjectName( "foobar" );
+    ui.foobar->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     hl->addStretch( 1 );
 
     layout->addStretch( 1 );
