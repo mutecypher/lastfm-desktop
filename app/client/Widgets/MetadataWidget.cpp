@@ -58,7 +58,10 @@ MetadataWidget::MetadataWidget( const Track& track, bool showBack, QWidget* p )
      m_artistInfoReply( 0 ),
      m_artistEventsReply( 0 ),
      m_trackTopFansReply( 0 ),
-     m_trackTagsReply( 0 )
+     m_trackTagsReply( 0 ),
+     m_globalTrackScrobbles( 0 ),
+     m_userTrackScrobbles( 0 ),
+     m_userArtistScrobbles( 0 )
 {
     setupUi();
     
@@ -238,12 +241,15 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
     try
     {
         XmlQuery lfm(data);
-        m_scrobbles = lfm["track"]["playcount"].text().toInt();
+        m_globalTrackScrobbles = lfm["track"]["playcount"].text().toInt();
         int listeners = lfm["track"]["listeners"].text().toInt();
-        m_userListens = lfm["track"]["userplaycount"].text().toInt();
+        m_userTrackScrobbles = lfm["track"]["userplaycount"].text().toInt();
 
-        ui.track.yourScrobbles->setText( QString("%L1").arg(m_userListens));
-        ui.track.totalScrobbles->setText( QString("%L1").arg(m_scrobbles));
+        // Update the context now that we have the user track listens
+        ui.track.context->setText( contextString( m_track ) );
+
+        ui.track.yourScrobbles->setText( QString("%L1").arg(m_userTrackScrobbles));
+        ui.track.totalScrobbles->setText( QString("%L1").arg(m_globalTrackScrobbles));
         ui.track.listeners->setText( QString("%L1").arg( listeners ));
         ui.track.albumImage->loadUrl( lfm["track"]["album"]["image size=extralarge"].text() );
         ui.track.albumImage->setHref( lfm["track"]["url"].text());
@@ -345,8 +351,10 @@ MetadataWidget::onScrobbleStatusChanged()
     if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
     {
         // update total scrobbles and your scrobbles!
-        ui.track.yourScrobbles->setText( QString("%L1").arg( ++m_userListens ));
-        ui.track.totalScrobbles->setText( QString("%L1").arg( ++m_scrobbles ));
+        ui.track.yourScrobbles->setText( QString("%L1").arg( ++m_userTrackScrobbles ));
+        ui.track.totalScrobbles->setText( QString("%L1").arg( ++m_globalTrackScrobbles ));
+
+        ui.track.context->setText( contextString( m_track ) );
     }
 }
 
@@ -584,6 +592,11 @@ MetadataWidget::contextString( const Track& track )
             }
             break;
         }
+    }
+    else
+    {
+        // There's no context so just gice them some scrobble counts
+        contextString = tr( "You've listened to %1 %L2 times and this track %L3 times." ).arg( track.artist().toString() ).arg( m_userArtistScrobbles ).arg( m_userTrackScrobbles );
     }
 
     return contextString;

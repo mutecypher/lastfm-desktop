@@ -12,6 +12,7 @@ AvatarWidget::setUserDetails( const lastfm::UserDetails& user )
     update();
 }
 
+
 void
 AvatarWidget::paintEvent( QPaintEvent* paintEvent )
 {
@@ -22,6 +23,18 @@ AvatarWidget::paintEvent( QPaintEvent* paintEvent )
         QPainter p( this );
 
         QString text = tr( "Subscriber" );
+        QColor brush( Qt::black );
+
+//        if ( m_user.isAlumi() )
+//        {
+//            text = m_user.gender().female() ? tr( "Alumna" ) : tr( "Alumnus" );
+//            brush = QColor( 0x5336BD );
+//        }
+//        else if ( m_user.isStaff() )
+//        {
+//            text = tr( "Staff" );
+//            brush = QColor( 0xD51007 );
+//        }
 
         QFont font = p.font();
         font.setPixelSize( 10 );
@@ -33,7 +46,7 @@ AvatarWidget::paintEvent( QPaintEvent* paintEvent )
         int height = fm.height() + 4;
         QRect rect( (70 / 2) - (width / 2), 70 - (height / 2), width, height ) ;
 
-        p.setBrush( QColor( Qt::black ) );
+        p.setBrush( brush );
         p.drawRoundedRect( rect, 2, 2 );
 
         p.setPen( QColor( Qt::white ) );

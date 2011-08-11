@@ -99,6 +99,7 @@ void
 PlayableItemWidget::paintEvent( QPaintEvent* event )
 {
     QPushButton::paintEvent( event );
+
     QPainter p( this );
 
     p.setPen( QColor( 0x898989 ) );
@@ -107,13 +108,25 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
     font.setPixelSize( 12 );
     p.setFont( font );
 
-    QTextOption to;
-    to.setAlignment( Qt::AlignBottom );
+    if ( QString("ProfileWidget").compare( parent()->parent()->parent()->metaObject()->className() ) == 0 )
+    {
+        QTextOption to;
+        to.setAlignment( Qt::AlignVCenter );
 
-    QRect rect = contentsRect();
-    rect.adjust( 54, 0, 0, -14 );
+        QFontMetrics fm( font );
+        p.drawText( rect().adjusted( fm.width( text() ) + 45, 0, 0, 0 ), m_description, to );
 
-    p.drawText( rect, m_description, to );
+    }
+    else
+    {
+        QTextOption to;
+        to.setAlignment( Qt::AlignBottom );
+
+        QRect rect = contentsRect();
+        rect.adjust( 54, 0, 0, -14 );
+        p.drawText( rect, m_description, to );
+    }
+
 }
 
 void

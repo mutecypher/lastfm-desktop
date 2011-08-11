@@ -44,7 +44,7 @@ public:
     QWidget* basicInfoWidget();
     void setBackButtonVisible( bool );
 
-    static QString contextString( const Track& track );
+    QString contextString( const Track& track );
 
 private slots:
 
@@ -111,8 +111,9 @@ protected:
     } ui;
 
     Track m_track;
-    int m_scrobbles;
-    int m_userListens;
+    int m_globalTrackScrobbles;
+    int m_userTrackScrobbles;
+    int m_userArtistScrobbles;
 
     struct {
         class LfmListModel* similarArtists;

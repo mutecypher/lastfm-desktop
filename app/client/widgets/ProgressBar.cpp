@@ -50,11 +50,9 @@ ProgressBar::paintEvent( QPaintEvent* e )
 
     p.setPen( QColor( 0x333333 ) );
 
-
-
     StopWatch* sw = ScrobbleService::instance().stopWatch();
 
-    if ( sw )
+    if ( sw && minimum() != -1 && maximum() != 0 )
     {
         QString format( "m:ss" );
 

@@ -25,6 +25,7 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
+namespace lastfm { class UserDetails; }
 namespace unicorn { class Session; }
 
 class SideBar : public StylableWidget
@@ -38,7 +39,7 @@ private:
         class QAbstractButton* profile;
         class QAbstractButton* friends;
         class QAbstractButton* radio;
-        class QLabel* avatar;
+        class AvatarWidget* avatar;
     } ui;
 
 public:
@@ -52,7 +53,7 @@ signals:
 public slots:
     void onButtonClicked();
     void onSessionChanged( unicorn::Session* newSession );
-    void onGotAvatar();
+    void onGotUserInfo( const lastfm::UserDetails& userDetails );
 };
 
 #endif // SIDEBAR_H

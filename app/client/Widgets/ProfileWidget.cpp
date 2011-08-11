@@ -110,7 +110,9 @@ ProfileWidget::onGotTopWeeklyArtists()
         foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
         {
             QString artistName = artist["name"].text();
-            PlayableItemWidget* item = new PlayableItemWidget( RadioStation::similar( lastfm::Artist( artistName ) ), tr( "%1 Similar Radio" ).arg( artistName ) );
+            int playCount = artist["playcount"].text().toInt();
+
+            PlayableItemWidget* item = new PlayableItemWidget( RadioStation::similar( lastfm::Artist( artistName ) ), tr( "%1 Similar Radio" ).arg( artistName ), tr( "(%L1 plays)" ).arg( playCount ) );
             item->setObjectName( "station" );
             layout->addWidget( item );
         }
@@ -136,7 +138,9 @@ ProfileWidget::onGotTopOverallArtists()
         foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
         {
             QString artistName = artist["name"].text();
-            PlayableItemWidget* item = new PlayableItemWidget( RadioStation::similar( lastfm::Artist( artistName ) ), tr( "%1 Similar Radio" ).arg( artistName ) );
+            int playCount = artist["playcount"].text().toInt();
+
+            PlayableItemWidget* item = new PlayableItemWidget( RadioStation::similar( lastfm::Artist( artistName ) ), tr( "%1 Similar Radio" ).arg( artistName ), tr( "(%L1 plays)" ).arg( playCount ) );
             item->setObjectName( "station" );
             layout->addWidget( item );
         }

@@ -440,7 +440,6 @@ void
 RadioService::setStationName( const QString& s )
 {
     m_station.setTitle( s );
-    emit tuningIn( m_station );
 }
 
 

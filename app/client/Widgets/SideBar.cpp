@@ -24,6 +24,8 @@
 
 #include <lastfm/User>
 
+#include "lib/unicorn/widgets/AvatarWidget.h"
+
 #include "../Application.h"
 #include "SideBar.h"
 
@@ -58,9 +60,8 @@ SideBar::SideBar(QWidget *parent)
     layout->addWidget( ui.radio = newButton( tr( "Radio" ), this ), Qt::AlignHCenter);
     ui.radio->setObjectName( "radio" );
     layout->addStretch( 1 );
-    layout->addWidget( ui.avatar = new QLabel( this ), Qt::AlignHCenter );
+    layout->addWidget( ui.avatar = new AvatarWidget( this ), Qt::AlignHCenter );
     ui.avatar->setObjectName( "avatar" );
-    ui.avatar->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
 
     connect( ui.nowPlaying, SIGNAL(clicked()), SLOT(onButtonClicked()));
     connect( ui.scrobbles, SIGNAL(clicked()), SLOT(onButtonClicked()));
@@ -69,6 +70,7 @@ SideBar::SideBar(QWidget *parent)
     connect( ui.radio, SIGNAL(clicked()), SLOT(onButtonClicked()));
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)));
+    connect( aApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
 }
 
 
@@ -87,16 +89,16 @@ SideBar::onButtonClicked()
 
 
 void
-SideBar::onSessionChanged( unicorn::Session* newSession )
+SideBar::onSessionChanged( unicorn::Session* session )
 {
-    QUrl imageUrl = newSession->userInfo().imageUrl( lastfm::Medium, true );
-    connect( lastfm::nam()->get( QNetworkRequest( imageUrl ) ), SIGNAL(finished()), SLOT(onGotAvatar()));
+    ui.avatar->clear();
+    ui.avatar->setPixmap( QPixmap() );
 }
 
 void
-SideBar::onGotAvatar()
+SideBar::onGotUserInfo( const lastfm::UserDetails& userDetails )
 {
-    QPixmap avatar;
-    avatar.loadFromData( qobject_cast<QNetworkReply*>(sender())->readAll() );
-    ui.avatar->setPixmap( avatar );
+    ui.avatar->loadUrl( userDetails.imageUrl( lastfm::Medium, true ), false );
+    ui.avatar->setHref( userDetails.www() );
+    ui.avatar->setUserDetails( userDetails );
 }

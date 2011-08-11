@@ -228,8 +228,8 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
 
     setIconForRadio( station );
 
-    ui->progressBar->setRange( 0, 1000 );
-    ui->progressBar->setValue( 0 );
+    ui->progressBar->setRange( -1, 0 );
+    ui->progressBar->setValue( -1 );
 }
 
 void
