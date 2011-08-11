@@ -39,6 +39,7 @@
 #include "../Application.h"
 #include "../Services/ScrobbleService.h"
 #include "../Services/RadioService.h"
+#include "BioWidget.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/DataListWidget.h"
@@ -72,8 +73,6 @@ MetadataWidget::MetadataWidget( const Track& track, bool showBack, QWidget* p )
     connect( ui.listeningNow, SIGNAL( clicked( QModelIndex )), SLOT( listItemClicked( QModelIndex )));
     */
 
-    connect(ui.artist.bio->document()->documentLayout(), SIGNAL( documentSizeChanged(QSizeF)), SLOT( onBioChanged(QSizeF)));
-    connect(ui.artist.bio, SIGNAL(anchorClicked(QUrl)), SLOT(onAnchorClicked(QUrl)));
 
     setTrackDetails( track );
 
@@ -195,23 +194,12 @@ MetadataWidget::onArtistGotInfo()
             bio += "<p>" + pTrimmed + "</p>";
         }
     }
-    ui.artist.bio->setHtml( bio );
+    ui.artist.bio->append( bio );
     ui.artist.bio->updateGeometry();
-    ui.artist.image->setFixedSize( QSize( 150, 125 ) );
-    ui.artist.image->setAlignment( Qt::AlignTop );
     QUrl url = lfm["artist"]["image size=large"].text();
-    ui.artist.image->loadUrl( url );
-    ui.artist.image->setHref( QUrl(lfm["artist"]["url"].text()));
-
-    ui.artist.bio->insertWidget( ui.artist.banner );
-    ui.artist.banner->setHref( QUrl(lfm["artist"]["url"].text()+"/+events"));
-
-    QTextFrame* root = ui.artist.bio->document()->rootFrame();
-    QTextFrameFormat f = root->frameFormat();
-    f.setMargin(0);
-    root->setFrameFormat(f);
-
-    onBioChanged( ui.artist.bio->document()->documentLayout()->documentSize() );
+    ui.artist.bio->loadImage( url );
+    ui.artist.bio->setImageHref( QUrl(lfm["artist"]["url"].text()));
+    ui.artist.bio->setOnTourVisible( false, QUrl(lfm["artist"]["url"].text()+"/+events"));
 
     reply->close();
     
@@ -226,7 +214,7 @@ MetadataWidget::onArtistGotEvents()
     if (lfm["events"].children("event").count() > 0)
     {
         // Display an on tour notification
-        ui.artist.banner->setBannerVisible();
+        ui.artist.bio->setOnTourVisible( true );
     }
     reply->close();
 }
@@ -335,18 +323,6 @@ MetadataWidget::onTrackGotPopTags()
     reply->close();
 }
 
-
-void
-MetadataWidget::onAnchorClicked( const QUrl& link )
-{
-    QDesktopServices::openUrl( link );
-}
-
-void
-MetadataWidget::onBioChanged( const QSizeF& size )
-{
-    ui.artist.bio->setFixedHeight( size.toSize().height() );
-}
 
 void
 MetadataWidget::listItemClicked( const QModelIndex& i )
@@ -515,12 +491,7 @@ MetadataWidget::setupUi()
         ui.artist.artist->setStyleSheet( "font-size: 16pt; font-weight: bold;"
                                          "color: #333; padding-top: 7px;" );
        
-        ui.artist.banner = new BannerWidget( tr("On Tour" ));
-        ui.artist.banner->setBannerVisible( false );
-        artistBio->layout()->addWidget( ui.artist.bio = new TB( artistBio ) );
-        ui.artist.bio->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-        ui.artist.image = new HttpImageWidget;
-        ui.artist.banner->setWidget( ui.artist.image );
+        artistBio->layout()->addWidget( ui.artist.bio = new BioWidget( artistBio ) );
         
         QString stylesheet = ((audioscrobbler::Application*)qApp)->loadedStyleSheet() + styleSheet();
         ui.artist.bio->document()->setDefaultStyleSheet( stylesheet );
