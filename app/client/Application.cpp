@@ -398,7 +398,7 @@ void
 Application::onTrackSpooled( const Track& track )
 {
 #ifdef CLIENT_ROOM_RADIO
-    QString strippedContextString = MetadataWidget::contextString( track );
+    QString strippedContextString = MetadataWidget::getContextString( track );
 
     QRegExp re( "<[^>]*>" );
 

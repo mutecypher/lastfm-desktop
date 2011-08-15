@@ -386,15 +386,12 @@ PlaybackControlsWidget QPushButton#skip {
 PlaybackControlsWidget QPushButton#skip:hover { background-image: url(":/controls_skip_HOVER.png"); }
 PlaybackControlsWidget QPushButton#skip:pressed { background-image: url(":/controls_skip_PRESS.png"); }
 
-PlaybackControlsWidget QProgressBar {
+PlaybackControlsWidget ProgressBar {
 	border-top: 1px solid #e5e5e5;
 	border-bottom: 1px solid #9b9b9b;
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #cccccc, stop:0 #e5e5e5);
-	height: 21px;
-}
-
-QProgressBar::chunk {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #b6b6b6, stop:0 #cdcdcd);
+	qproperty-chunk: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #b6b6b6, stop:0 #cdcdcd);
+	min-height: 21px;
 }
 
 ScrobbleControls QPushButton{

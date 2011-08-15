@@ -155,11 +155,11 @@
    </item>
    <item>
     <widget class="ProgressBar" name="progressBar">
-     <property name="value">
-      <number>0</number>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
      </property>
-     <property name="textVisible">
-      <bool>false</bool>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
      </property>
     </widget>
    </item>
@@ -167,14 +167,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ProgressBar</class>
-   <extends>QProgressBar</extends>
-   <header>../Widgets/ProgressBar.h</header>
-  </customwidget>
-  <customwidget>
    <class>Label</class>
    <extends>QLabel</extends>
    <header>lib/unicorn/widgets/Label.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ProgressBar</class>
+   <extends>QFrame</extends>
+   <header>../Widgets/ProgressBar.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -44,7 +44,7 @@ public:
     QWidget* basicInfoWidget();
     void setBackButtonVisible( bool );
 
-    QString contextString( const Track& track );
+    static QString getContextString( const Track& track );
 
 private slots:
 
@@ -71,6 +71,9 @@ signals:
 
 private:
     void setTrackDetails( const Track& track );
+
+    QString contextString( const Track& track );
+    QString scrobbleString( const Track& track );
 
 protected:
     void setupTrackStats( QWidget* w );

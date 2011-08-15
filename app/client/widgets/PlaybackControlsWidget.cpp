@@ -228,18 +228,16 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
 
     setIconForRadio( station );
 
-    ui->progressBar->setRange( -1, 0 );
-    ui->progressBar->setValue( -1 );
+    ui->progressBar->setTrack( Track() );
 }
 
 void
 PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrack )
 {
+    ui->progressBar->setTrack( track );
+
     if ( !track.isNull() )
     {
-        ui->progressBar->setRange( 0, track.duration() * 1000 );
-        ui->progressBar->setValue( 0 );
-
         disconnect( 0, 0, this, SLOT(onTick(qint64)));
         disconnect( 0, 0, ui->progressBar, SLOT(setValue(int)) );
 
@@ -282,7 +280,7 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
             ui->status->setText( tr("Scrobbling from...") );
             ui->device->setText( track.extra( "playerName" ) );
 
-            connect( &ScrobbleService::instance(), SIGNAL(frameChanged(int)), ui->progressBar, SLOT(setValue(int)) );
+            connect( &ScrobbleService::instance(), SIGNAL(frameChanged(int)), ui->progressBar, SLOT(onFrameChanged(int)) );
         }
 
         // Set the icon!
@@ -304,18 +302,20 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
 void
 PlaybackControlsWidget::onTick( qint64 tick )
 {
-    ui->progressBar->setValue( tick );
+    ui->progressBar->onFrameChanged( tick );
 }
 
 void
 PlaybackControlsWidget::onError( int error, const QVariant& errorText )
 {
+    ui->progressBar->setTrack( Track() );
     ui->status->setText( errorText.toString() + ": " + QString::number(error) );
 }
 
 void
 PlaybackControlsWidget::onStopped()
 {
+    ui->progressBar->setTrack( Track() );
     aApp->playAction()->setChecked( false );
 
     ui->love->setEnabled( false );

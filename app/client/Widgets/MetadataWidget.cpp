@@ -550,7 +550,7 @@ QString userLibrary( const QString& user, const QString& artist )
 }
 
 QString
-MetadataWidget::contextString( const Track& track )
+MetadataWidget::getContextString( const Track& track )
 {
     QString contextString;
 
@@ -595,11 +595,29 @@ MetadataWidget::contextString( const Track& track )
     }
     else
     {
-        // There's no context so just gice them some scrobble counts
-        contextString = tr( "You've listened to %1 %L2 times and this track %L3 times." ).arg( track.artist().toString() ).arg( m_userArtistScrobbles ).arg( m_userTrackScrobbles );
+        // There's no context so just give them some scrobble counts
     }
 
     return contextString;
+}
+
+
+QString
+MetadataWidget::contextString( const Track& track )
+{
+    QString context = getContextString( track );
+
+    if ( context.isEmpty() )
+        context = scrobbleString( track );
+
+    return context;
+}
+
+
+QString
+MetadataWidget::scrobbleString( const Track& track )
+{
+    return tr( "You've listened to %1 %L2 times and this track %L3 times." ).arg( track.artist().toString() ).arg( m_userArtistScrobbles ).arg( m_userTrackScrobbles );
 }
 
 void 
