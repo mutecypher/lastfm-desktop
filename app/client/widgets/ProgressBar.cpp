@@ -55,8 +55,6 @@ ProgressBar::onFrameChanged( int frame )
 {
     m_frame = frame;
     update();
-
-    qDebug() << (m_frame * width()) / (m_track.duration() * 1000);
 }
 
 
