@@ -12,4 +12,3 @@ Makefile*
 *.sln
 *.suo
 .DS_Store
-/lib/unicorn/Updater/gen_PluginList.h
