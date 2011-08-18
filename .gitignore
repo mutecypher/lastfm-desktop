@@ -1,6 +1,5 @@
 _build/
 _files.qmake
-_version.h
 _build_parameters.pl.h
 Makefile*
 /_bin/
@@ -12,4 +11,3 @@ Makefile*
 *.sln
 *.suo
 .DS_Store
-/lib/unicorn/Updater/gen_PluginList.h
