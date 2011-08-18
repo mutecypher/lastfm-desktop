@@ -90,10 +90,7 @@ MainWindow::MainWindow()
     ui.profileScrollArea->setWidgetResizable( true );
     ui.profile->setObjectName( "profile" );
 
-    ui.stackedWidget->addWidget( ui.friendsScrollArea = new QScrollArea( this ) );
-    ui.friendsScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    ui.friendsScrollArea->setWidget( ui.friends = new FriendListWidget(this) );
-    ui.friendsScrollArea->setWidgetResizable( true );
+    ui.stackedWidget->addWidget( ui.friends = new FriendListWidget(this) );
     ui.friends->setObjectName( "friends" );
 
     ui.stackedWidget->addWidget( ui.radioScrollArea = new QScrollArea( this ) );

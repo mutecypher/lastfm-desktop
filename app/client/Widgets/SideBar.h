@@ -52,8 +52,6 @@ signals:
 
 public slots:
     void onButtonClicked();
-    void onSessionChanged( unicorn::Session* newSession );
-    void onGotUserInfo( const lastfm::UserDetails& userDetails );
 };
 
 #endif // SIDEBAR_H

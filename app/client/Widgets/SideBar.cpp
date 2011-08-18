@@ -60,17 +60,12 @@ SideBar::SideBar(QWidget *parent)
     layout->addWidget( ui.radio = newButton( tr( "Radio" ), this ), Qt::AlignHCenter);
     ui.radio->setObjectName( "radio" );
     layout->addStretch( 1 );
-    layout->addWidget( ui.avatar = new AvatarWidget( this ), Qt::AlignHCenter );
-    ui.avatar->setObjectName( "avatar" );
 
     connect( ui.nowPlaying, SIGNAL(clicked()), SLOT(onButtonClicked()));
     connect( ui.scrobbles, SIGNAL(clicked()), SLOT(onButtonClicked()));
     connect( ui.profile, SIGNAL(clicked()), SLOT(onButtonClicked()));
     connect( ui.friends, SIGNAL(clicked()), SLOT(onButtonClicked()));
     connect( ui.radio, SIGNAL(clicked()), SLOT(onButtonClicked()));
-
-    connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)));
-    connect( aApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)));
 }
 
 
@@ -85,20 +80,4 @@ void
 SideBar::onButtonClicked()
 {
     emit currentChanged( layout()->indexOf( qobject_cast<QWidget*>( sender() ) ) );
-}
-
-
-void
-SideBar::onSessionChanged( unicorn::Session* session )
-{
-    ui.avatar->clear();
-    ui.avatar->setPixmap( QPixmap() );
-}
-
-void
-SideBar::onGotUserInfo( const lastfm::UserDetails& userDetails )
-{
-    ui.avatar->loadUrl( userDetails.imageUrl( lastfm::Medium, true ), false );
-    ui.avatar->setHref( userDetails.www() );
-    ui.avatar->setUserDetails( userDetails );
 }

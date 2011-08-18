@@ -72,7 +72,7 @@ NowPlayingWidget::onTrackStarted( const Track& track, const Track& )
         layout()->removeItem( layout()->itemAt( 1 ) );
     }
 
-    qobject_cast<QVBoxLayout*>(layout())->insertWidget( 1, m_metadata = new MetadataWidget( m_track, false, this ) );
+    qobject_cast<QVBoxLayout*>(layout())->insertWidget( 1, m_metadata = new MetadataWidget( track, false, this ) );
     m_metadata->setBackButtonVisible( false );
 
     setUpdatesEnabled( true );

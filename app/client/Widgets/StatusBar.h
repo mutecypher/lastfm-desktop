@@ -49,18 +49,18 @@ class StatusBar : public QStatusBar
         void onFoundScrobbles( QList<lastfm::Track> );
         void onNoScrobblesFound();
 
-        void onScrobblesCached( const QList<lastfm::Track>& tracks );
-        void onScrobbleStatusChanged();
-
     private:
         struct
         {
+            class QPushButton* cog;
+
+            class QLabel* volMin;
             Phonon::VolumeSlider* volumeSlider;
-            class QLabel* inetStatus;
+            class QLabel* volMax;
+
+            class QPushButton* scrobbleToggle;
             class QSizeGrip* sizeGrip;
         } ui;
 
-
-
-        int m_scrobbleCount;
+        bool m_online;
 };

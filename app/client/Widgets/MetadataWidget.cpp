@@ -90,7 +90,7 @@ MetadataWidget::fetchTrackInfo()
 {
     connect( m_track.signalProxy(), SIGNAL( gotInfo(QByteArray)), SLOT( onTrackGotInfo(QByteArray)));
     m_track.getInfo();
-    if( !m_track.album().isNull())
+    if( !m_track.album().isNull() )
         connect( m_track.album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
     connect( m_track.artist().getInfo(), SIGNAL(finished()), SLOT(onArtistGotInfo()));
     //connect( m_track.getTopTags(), SIGNAL(finished()), SLOT(onTrackGotPopTags()));
@@ -161,50 +161,63 @@ void
 MetadataWidget::onArtistGotInfo()
 {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    const XmlQuery& lfm = reply->readAll();
 
-    //int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
-    //int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
-    m_userArtistScrobbles = lfm["artist"]["stats"]["userplaycount"].text().toInt();
-
-    // Update the context now that we have the user track listens
-    ui.track.context->setText( contextString( m_track ) );
-
-    //model.similarArtists->clear();
-
-    #if 0
-    foreach(const XmlQuery& e, lfm["artist"]["similar"].children("artist").mid(0,4))
+    try
     {
-        QListWidgetItem* lwi = new QListWidgetItem( e["name"].text());
-        lwi->setData( Qt::DecorationRole, QUrl( e["image size=small"].text()));
-      //  model.similarArtists->addArtist( Artist( e ));
-    }
-    #endif
+        const XmlQuery& lfm = reply->readAll();
 
-    /*
-    foreach(const XmlQuery& e, lfm["artist"]["tags"].children("tag"))
-    {
-        ui.tags->addItem( e["name"].text(), QUrl(e["url"].text()));
-    }
-    */
-    
+        //int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
+        //int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
+        m_userArtistScrobbles = lfm["artist"]["stats"]["userplaycount"].text().toInt();
 
-    //TODO if empty suggest they edit it
-    QString bio;
-    {
-        QStringList bioList = lfm["artist"]["bio"]["content"].text().trimmed().split( "\r" );
-        foreach( const QString& p, bioList ) {
-            QString pTrimmed = p.trimmed();
-            if( pTrimmed.isEmpty()) continue;
-            bio += "<p>" + pTrimmed + "</p>";
+        // Update the context now that we have the user track listens
+        ui.track.context->setText( contextString( m_track ) );
+
+        //model.similarArtists->clear();
+
+        #if 0
+        foreach(const XmlQuery& e, lfm["artist"]["similar"].children("artist").mid(0,4))
+        {
+            QListWidgetItem* lwi = new QListWidgetItem( e["name"].text());
+            lwi->setData( Qt::DecorationRole, QUrl( e["image size=small"].text()));
+          //  model.similarArtists->addArtist( Artist( e ));
         }
+        #endif
+
+        /*
+        foreach(const XmlQuery& e, lfm["artist"]["tags"].children("tag"))
+        {
+            ui.tags->addItem( e["name"].text(), QUrl(e["url"].text()));
+        }
+        */
+
+
+        //TODO if empty suggest they edit it
+        QString bio;
+        {
+            QStringList bioList = lfm["artist"]["bio"]["content"].text().trimmed().split( "\r" );
+            foreach( const QString& p, bioList ) {
+                QString pTrimmed = p.trimmed();
+                if( pTrimmed.isEmpty()) continue;
+                bio += "<p>" + pTrimmed + "</p>";
+            }
+        }
+        ui.artist.bio->append( bio );
+        ui.artist.bio->updateGeometry();
+        QUrl url = lfm["artist"]["image size=large"].text();
+        ui.artist.bio->loadImage( url );
+        ui.artist.bio->setImageHref( QUrl(lfm["artist"]["url"].text()));
+        ui.artist.bio->setOnTourVisible( false, QUrl(lfm["artist"]["url"].text()+"/+events"));
     }
-    ui.artist.bio->append( bio );
-    ui.artist.bio->updateGeometry();
-    QUrl url = lfm["artist"]["image size=large"].text();
-    ui.artist.bio->loadImage( url );
-    ui.artist.bio->setImageHref( QUrl(lfm["artist"]["url"].text()));
-    ui.artist.bio->setOnTourVisible( false, QUrl(lfm["artist"]["url"].text()+"/+events"));
+    catch ( lastfm::ws::ParseError e )
+    {
+        // TODO: what happens when we fail?
+        qDebug() << e.message() << e.enumValue();
+    }
+    catch ( lastfm::ws::Error e )
+    {
+        qDebug() << e;
+    }
 
     reply->close();
     
@@ -214,13 +227,27 @@ void
 MetadataWidget::onArtistGotEvents()
 {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    const XmlQuery& lfm = reply->readAll();
 
-    if (lfm["events"].children("event").count() > 0)
+    try
     {
-        // Display an on tour notification
-        ui.artist.bio->setOnTourVisible( true );
+        const XmlQuery& lfm = reply->readAll();
+
+        if (lfm["events"].children("event").count() > 0)
+        {
+            // Display an on tour notification
+            ui.artist.bio->setOnTourVisible( true );
+        }
     }
+    catch ( lastfm::ws::ParseError e )
+    {
+        // TODO: what happens when we fail?
+        qDebug() << e.message() << e.enumValue();
+    }
+    catch ( lastfm::ws::Error e )
+    {
+        qDebug() << e;
+    }
+
     reply->close();
 }
 
@@ -228,12 +255,25 @@ void
 MetadataWidget::onAlbumGotInfo()
 {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    const XmlQuery& lfm = reply->readAll();
-    int scrobbles = lfm["album"]["playcount"].text().toInt();
-    int listeners = lfm["album"]["listeners"].text().toInt();
-    int userListens = lfm["album"]["userplaycount"].text().toInt();
+    try
+    {
+        const XmlQuery& lfm = reply->readAll();
+        int scrobbles = lfm["album"]["playcount"].text().toInt();
+        int listeners = lfm["album"]["listeners"].text().toInt();
+        int userListens = lfm["album"]["userplaycount"].text().toInt();
 
-//    ui.track.albumScrobbles->setText(QString("%L1").arg(scrobbles) + " plays (" + QString("%L1").arg(listeners) + " listeners)" + "\n" + QString("%L1").arg(userListens) + " plays in your library");;
+        //ui.track.albumScrobbles->setText(QString("%L1").arg(scrobbles) + " plays (" + QString("%L1").arg(listeners) + " listeners)" + "\n" + QString("%L1").arg(userListens) + " plays in your library");;
+    }
+    catch ( lastfm::ws::ParseError e )
+    {
+        // TODO: what happens when we fail?
+        qDebug() << e.message() << e.enumValue();
+    }
+    catch ( lastfm::ws::Error e )
+    {
+        qDebug() << e;
+    }
+
     reply->close();
 }
 
@@ -262,9 +302,14 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
             ui.track.popTags->addItem( e["name"].text(), e["url"].text());
         }
     }
-    catch (...)
+    catch ( lastfm::ws::ParseError e )
     {
-        // TODO: we were probably fetching info for an unknown track or something
+        // TODO: what happens when we fail?
+        qDebug() << e.message() << e.enumValue();
+    }
+    catch ( lastfm::ws::Error e )
+    {
+        qDebug() << e;
     }
 }
 
@@ -272,33 +317,47 @@ void
 MetadataWidget::onTrackGotTopFans()
 {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    const XmlQuery& lfm = reply->readAll();
 
-    model.listeningNow->clear();
-
-    QList<XmlQuery> users = lfm["topfans"].children("user");
-
-    // Add users that have avatars
-    foreach(const XmlQuery& e, users)
+    try
     {
-        if (model.listeningNow->rowCount() == 4)
-            break;
+        const XmlQuery& lfm = reply->readAll();
 
-        User u(e);
-        if ( !u.imageUrl( lastfm::Small ).toString().isEmpty() )
-            model.listeningNow->addUser(u);
+        model.listeningNow->clear();
+
+        QList<XmlQuery> users = lfm["topfans"].children("user");
+
+        // Add users that have avatars
+        foreach(const XmlQuery& e, users)
+        {
+            if (model.listeningNow->rowCount() == 4)
+                break;
+
+            User u(e);
+            if ( !u.imageUrl( lastfm::Small ).toString().isEmpty() )
+                model.listeningNow->addUser(u);
+        }
+
+        // If we still haven't got 4, add the ones that don't have avatars
+        foreach(const XmlQuery& e, users)
+        {
+            if (model.listeningNow->rowCount() == 4)
+                break;
+
+            User u(e);
+            if ( u.imageUrl( lastfm::Small ).toString().isEmpty() )
+                model.listeningNow->addUser(u);
+        }
+    }
+    catch ( lastfm::ws::ParseError e )
+    {
+        // TODO: what happens when we fail?
+        qDebug() << e.message() << e.enumValue();
+    }
+    catch ( lastfm::ws::Error e )
+    {
+        qDebug() << e;
     }
 
-    // If we still haven't got 4, add the ones that don't have avatars
-    foreach(const XmlQuery& e, users)
-    {
-        if (model.listeningNow->rowCount() == 4)
-            break;
-
-        User u(e);
-        if ( u.imageUrl( lastfm::Small ).toString().isEmpty() )
-            model.listeningNow->addUser(u);
-    }
     reply->close();
 }
 
@@ -306,11 +365,24 @@ void
 MetadataWidget::onTrackGotYourTags()
 {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    const XmlQuery& lfm = reply->readAll();
 
-    foreach(const XmlQuery& e, lfm["tags"].children("tag").mid(0, 5))
+    try
     {
-        ui.track.yourTags->addItem(e["name"].text(), e["url"].text());
+        const XmlQuery& lfm = reply->readAll();
+
+        foreach(const XmlQuery& e, lfm["tags"].children("tag").mid(0, 5))
+        {
+            ui.track.yourTags->addItem(e["name"].text(), e["url"].text());
+        }
+    }
+    catch ( lastfm::ws::ParseError e )
+    {
+        // TODO: what happens when we fail?
+        qDebug() << e.message() << e.enumValue();
+    }
+    catch ( lastfm::ws::Error e )
+    {
+        qDebug() << e;
     }
     
     reply->close();
@@ -321,11 +393,24 @@ void
 MetadataWidget::onTrackGotPopTags()
 {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    const XmlQuery& lfm = reply->readAll();
 
-    foreach(const XmlQuery& e, lfm["toptags"].children("tag").mid(0, 5))
+    try
     {
-        ui.track.popTags->addItem(e["name"].text(), e["url"].text());
+        const XmlQuery& lfm = reply->readAll();
+
+        foreach(const XmlQuery& e, lfm["toptags"].children("tag").mid(0, 5))
+        {
+            ui.track.popTags->addItem(e["name"].text(), e["url"].text());
+        }
+    }
+    catch ( lastfm::ws::ParseError e )
+    {
+        // TODO: what happens when we fail?
+        qDebug() << e.message() << e.enumValue();
+    }
+    catch ( lastfm::ws::Error e )
+    {
+        qDebug() << e;
     }
     
     reply->close();
@@ -355,6 +440,7 @@ MetadataWidget::onScrobbleStatusChanged()
         // update total scrobbles and your scrobbles!
         ui.track.yourScrobbles->setText( QString("%L1").arg( ++m_userTrackScrobbles ));
         ui.track.totalScrobbles->setText( QString("%L1").arg( ++m_globalTrackScrobbles ));
+        ++m_userArtistScrobbles;
 
         ui.track.context->setText( contextString( m_track ) );
     }
@@ -623,7 +709,7 @@ MetadataWidget::scrobbleString( const Track& track )
     QString userArtistScrobblesString = tr( m_userArtistScrobbles == 1 ? "%L1 time" : "%L1 times" ).arg( m_userArtistScrobbles );
     QString userTrackScrobblesString = tr( m_userTrackScrobbles == 1 ? "%L1 time" : "%L1 times" ).arg( m_userTrackScrobbles );
 
-    return tr( "You've listened to %1 %2 and this track %3 times." ).arg( artistString, userArtistScrobblesString, userTrackScrobblesString );
+    return tr( "You've listened to %1 %2 and this track %3." ).arg( artistString, userArtistScrobblesString, userTrackScrobblesString );
 }
 
 void 

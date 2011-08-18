@@ -132,16 +132,11 @@
         <file>titlebar_highlight.png</file>
         <file>slider_nubbin.png</file>
 		
-		<file alias="vol-handle-rest.png" >volume_knob_rest.png</file>
-		<file alias="vol-handle-onpress.png" >volume_knob_active.png</file>
-		<file alias="vol-rail.png" >volume_slot_off.png</file>
-		
-		
-		<file alias="volume-icon.png" >volume-icon.png</file>
-		<file alias="volume-mute.png" >volume_mute.png</file>
-		<file alias="volume-low.png" >volume_low.png</file>
-		<file alias="volume-med.png" >volume_med.png</file>
-		<file alias="volume-high.png" >volume_high.png</file>
+		<file>volume_knob_REST.png</file>
+		<file>volume_knob_PRESS.png</file>
+		<file>volume_slot_OFF.png</file>
+		<file>volume_max.png</file>
+		<file>volume_min.png</file>
 		
 		<file alias="on-tour.png" >on_tour.png</file>
 		

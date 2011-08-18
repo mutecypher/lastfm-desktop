@@ -20,6 +20,7 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
 
     layout->addWidget( ui.hello = new Label( tr( "Hello! Let's start a RadioStation..." ) ) );
     ui.hello->setObjectName( "hello" );
+    setUser( User() );
 
     layout->addWidget( ui.type = new QLabel( tr( "Type an artist or genre into the box and press play, or visit the Radio tab for more advanced options." ) ) );
     ui.type->setObjectName( "type" );
@@ -38,6 +39,7 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
     ui.scrobbleExplain->setObjectName( "scrobbleExplain" );
     ui.scrobbleExplain->setWordWrap( true );
 
+#if  defined( Q_OS_WIN32 ) || defined( Q_OS_MAC )
     layout->addWidget( ui.clickPlayers = new QLabel( tr( "Click on a player below to launch it." ) ) );
     ui.clickPlayers->setObjectName( "clickPlayers" );
 
@@ -48,9 +50,12 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
     hl->setSpacing( 0 );
 
     hl->addStretch( 1 );
+
     hl->addWidget( ui.itunes = new QPushButton( this ) );
     ui.itunes->setObjectName( "itunes" );
     ui.itunes->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
+#ifndef Q_OS_MAC
     hl->addWidget( ui.wmp = new QPushButton( this ) );
     ui.wmp->setObjectName( "wmp" );
     ui.wmp->setAttribute( Qt::WA_LayoutUsesWidgetRect );
@@ -60,7 +65,9 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
     hl->addWidget( ui.foobar = new QPushButton( this ) );
     ui.foobar->setObjectName( "foobar" );
     ui.foobar->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+#endif
     hl->addStretch( 1 );
+#endif
 
     layout->addStretch( 1 );
 
@@ -71,6 +78,22 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
 void
 NothingPlayingWidget::onSessionChanged( unicorn::Session* session )
 {
-    if ( !session->userInfo().name().isEmpty() )
-        ui.hello->setText( tr( "Hello, %1! Let's start a RadioStation..." ).arg( session->userInfo().name() ) );
+    setUser( session->userInfo() );
 }
+
+void
+NothingPlayingWidget::setUser( const lastfm::User& user )
+{
+    if ( !user.name().isEmpty() )
+        ui.hello->setText( tr( "Hello, %1! Let's start a RadioStation..." ).arg( user.name() ) );
+}
+
+void
+NothingPlayingWidget::oniTunesClicked()
+{
+#ifdef Q_OS_MAC
+    // launch iTunes!
+
+#endif
+}
+

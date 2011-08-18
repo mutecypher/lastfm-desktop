@@ -14,6 +14,8 @@ private:
     struct
     {
         class QLineEdit* filter;
+        class QWidget* friends;
+        class QScrollArea* scrollArea;
     } ui;
 
 public:

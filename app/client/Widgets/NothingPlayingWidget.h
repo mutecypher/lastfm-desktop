@@ -5,7 +5,9 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
+namespace lastfm { class User; }
 namespace unicorn { class Session; }
+
 
 class NothingPlayingWidget : public StylableWidget
 {
@@ -13,7 +15,7 @@ class NothingPlayingWidget : public StylableWidget
 private:
     struct
     {
-        class QLabel* hello;
+        class Label* hello;
         class QLabel* type;
         class QuickStartWidget* quickStart;
         class QLabel* split;
@@ -31,8 +33,13 @@ private:
 public:
     explicit NothingPlayingWidget( QWidget* parent = 0 );
 
+private:
+    void setUser( const lastfm::User& user );
+
 private slots:
     void onSessionChanged( unicorn::Session* session );
+
+    void oniTunesClicked();
 
 };
 

@@ -33,13 +33,30 @@
 #include "../Application.h"
 
 StatusBar::StatusBar( QWidget* parent )
-    :QStatusBar( parent ), m_scrobbleCount(-1)
+    :QStatusBar( parent )
 {
+    layout()->setContentsMargins( 0, 0, 0, 0 );
+    layout()->setSpacing( 0 );
+
     setStatus();
+
+    insertPermanentWidget( 0, ui.cog = new QPushButton( this ) );
+    ui.cog->setObjectName( "cog" );
+    ui.cog->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
+    addPermanentWidget( ui.volMin = new QLabel( this ) );
+    ui.volMin->setObjectName( "volMin" );
+    ui.volMin->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     addPermanentWidget( ui.volumeSlider = new Phonon::VolumeSlider( RadioService::instance().audioOutput(), this ) );
     ui.volumeSlider->setOrientation( Qt::Horizontal );
+    addPermanentWidget( ui.volMax = new QLabel( this ) );
+    ui.volMax->setObjectName( "volMax" );
+    ui.volMax->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-    addPermanentWidget( ui.inetStatus = new QLabel( tr(""), this ) );
+    addPermanentWidget( ui.scrobbleToggle = new QPushButton( this ) );
+    ui.scrobbleToggle->setObjectName( "scrobbleToggle" );
+    ui.scrobbleToggle->setCheckable( true );
+    ui.scrobbleToggle->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
     aApp->isInternetConnectionUp() ? onConnectionUp() : onConnectionDown();
 
@@ -49,14 +66,13 @@ StatusBar::StatusBar( QWidget* parent )
     connect( aApp, SIGNAL( gotUserInfo(lastfm::UserDetails)), SLOT( onGotUserInfo(lastfm::UserDetails) ) );
 
     DeviceScrobbler* deviceScrobbler = ScrobbleService::instance().deviceScrobbler();
-    if( deviceScrobbler ) {
+    if( deviceScrobbler )
+    {
         connect( deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected( QString )));
         connect( deviceScrobbler, SIGNAL( processingScrobbles()), SLOT( onProcessingScrobbles()));
         connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), SLOT( onFoundScrobbles( QList<lastfm::Track> )));
         connect( deviceScrobbler, SIGNAL( noScrobblesFound()),SLOT( onNoScrobblesFound()));
     }
-
-    connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 
     connect( this, SIGNAL(messageChanged(QString)), SLOT(onMessagedChanged(QString)));
 }
@@ -77,31 +93,27 @@ StatusBar::onMessagedChanged( const QString& message )
 void
 StatusBar::setStatus()
 {
-    if( m_scrobbleCount > 0 ) {
-        showMessage( tr("Logged in as %1 (%2 scrobbles)").arg( lastfm::ws::Username, QString("%L1").arg( m_scrobbleCount ) ) );
-    } else {
-        showMessage( tr("Logged in as %1").arg( lastfm::ws::Username ));
-    }
+    showMessage( tr("%1 (%2)").arg( lastfm::ws::Username, m_online ? tr( "Online" ) : tr( "Offline" ) ));
 }
 
 void
-StatusBar::onGotUserInfo(lastfm::UserDetails userDetails)
+StatusBar::onGotUserInfo( lastfm::UserDetails /*userDetails*/ )
 {
-    m_scrobbleCount = userDetails.scrobbleCount();
     setStatus();
 }
 
 void
 StatusBar::onConnectionUp()
 {
-    const char icon[] = {0xE3, 0x80, 0x88, 0xE2, 0x8B, 0xAF, 0xE3, 0x80, 0x89, 0x00 };
-    ui.inetStatus->setText( QString::fromUtf8( icon ) + tr( "Online"));
+    m_online = true;
+    setStatus();
 }
 
 void
 StatusBar::onConnectionDown()
 {
-    ui.inetStatus->setText( QString::fromUtf8( ":(" ) + tr( "Offline"));
+    m_online = false;
+    setStatus();
 }
 
 void
@@ -119,8 +131,6 @@ StatusBar::onProcessingScrobbles()
 void
 StatusBar::onFoundScrobbles( QList<lastfm::Track> tracks )
 {
-    m_scrobbleCount += tracks.count();
-
     tracks.count() == 1 ?
         showMessage( tr("%1 scrobble found").arg( tracks.count() ), 10 * 1000 ):
         showMessage( tr("%1 scrobbles found").arg( tracks.count() ), 10 * 1000 );
@@ -132,19 +142,4 @@ StatusBar::onNoScrobblesFound()
     showMessage( tr("No scrobbles found"), 10 * 1000 );
 }
 
-void
-StatusBar::onScrobblesCached( const QList<lastfm::Track>& tracks )
-{
-    foreach ( lastfm::Track track, tracks )
-        connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
-}
 
-void
-StatusBar::onScrobbleStatusChanged()
-{
-    if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
-    {
-        ++m_scrobbleCount;
-        setStatus();
-    }
-}

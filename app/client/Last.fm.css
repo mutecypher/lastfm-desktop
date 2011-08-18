@@ -2,7 +2,7 @@
 SideBar {
 	border: none;
 	background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #2d2d2d, stop:0.925 #2d2d2d, stop:1 #232323);
-	padding: 0px 10px;
+	padding: 0px;
 	margin: 0px;
 }
 
@@ -187,8 +187,7 @@ FriendWidget {
 
 FriendWidget AvatarWidget#avatar,
 ProfileWidget AvatarWidget#avatar,
-ShareDialog AvatarWidget#icon,
-SideBar AvatarWidget {
+ShareDialog AvatarWidget#icon {
 	padding: 2px;
 	background-color: white;
 	color: transparent;
@@ -198,11 +197,6 @@ SideBar AvatarWidget {
 	max-width: 64px;
 	max-height: 64px;
 	margin: 0px 20px 8px 0px;
-}
-
-SideBar AvatarWidget {
-	qproperty-alignment: AlignHCenter;
-	margin: 0px 0px 10px;
 }
 
 FriendWidget QLabel#name,
@@ -543,4 +537,43 @@ ShareDialog QLabel#characterLimit[xerror="true"] {
 ShareDialog QLabel#characterLimit,
 ShareDialog QCheckBox {
 	margin-bottom: 16px;
+}
+
+StatusBar QLabel#volMin,
+StatusBar QLabel#volMax {
+	border: none;
+	background-repeat: no-repeat;
+	background-position: center;
+	min-width: 16px;
+	min-height: 16px;
+	background-image: url(":/volume_min.png");
+}
+
+StatusBar QLabel#volMax {
+	background-image: url(":/volume_max.png");
+}
+
+StatusBar Phonon--VolumeSlider {
+	qproperty-muteVisible: false;
+	max-width: 96px;
+}
+
+StatusBar QSlider::groove:horizontal {
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 96px;
+	height: 16px;
+	background-image: url(":/volume_slot_OFF.png");
+}
+
+StatusBar QSlider::handle:horizontal {
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 16px;
+	height: 16px;
+	background-image: url(":/volume_knob_REST.png");
+}
+
+StatusBar QSlider::handle:horizontal:pressed {
+	background-image: url(":/volume_knob_PRESS.png");
 }

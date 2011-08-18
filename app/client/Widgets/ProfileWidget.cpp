@@ -7,6 +7,7 @@
 
 #include "PlayableItemWidget.h"
 
+#include "../Services/ScrobbleService/ScrobbleService.h"
 #include "../Application.h"
 
 #include "ProfileWidget.h"
@@ -20,11 +21,14 @@ ProfileWidget::ProfileWidget(QWidget *parent)
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)) );
     connect( aApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)) );
+
+    connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+
 }
 
 void
 ProfileWidget::onSessionChanged( unicorn::Session* session )
-{
+{  
     if ( !session->userInfo().name().isEmpty() )
     {
         // Make sure we don't recieve any updates about the last session
@@ -65,6 +69,9 @@ ProfileWidget::onSessionChanged( unicorn::Session* session )
         vl->addWidget( ui.scrobbles = new QLabel( tr("Scrobbles"), this) );
         ui.scrobbleCount->setObjectName( "scrobbles" );
 
+        m_scrobbleCount = session->userInfo().scrobbleCount();
+        setScrobbleCount();
+
         {
             QLabel* title = new QLabel( tr("Top Weekly Artists"), this ) ;
             layout->addWidget( title );
@@ -93,6 +100,8 @@ void
 ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userDetails )
 {
     ui.avatar->setUserDetails( userDetails );
+    m_scrobbleCount = userDetails.scrobbleCount();
+    setScrobbleCount();
 }
 
 
@@ -151,3 +160,25 @@ ProfileWidget::onGotTopOverallArtists()
     }
 }
 
+void
+ProfileWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
+{
+    foreach ( lastfm::Track track, tracks )
+        connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
+}
+
+void
+ProfileWidget::onScrobbleStatusChanged()
+{
+    if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
+    {
+        ++m_scrobbleCount;
+        setScrobbleCount();
+    }
+}
+
+void
+ProfileWidget::setScrobbleCount()
+{
+    ui.scrobbleCount->setText( QString( "%L1" ).arg( m_scrobbleCount ) );
+}

@@ -117,7 +117,6 @@ RadioWidget::onGotTopArtists()
     }
 }
 
-
 void
 RadioWidget::onGotRecentStations()
 {
@@ -139,6 +138,14 @@ RadioWidget::onGotRecentStations()
     catch ( lastfm::ws::ParseError error )
     {
         qDebug() << error.message();
+    }
+    catch ( lastfm::ws::Error error )
+    {
+        qDebug() << error;
+    }
+    catch ( ... )
+    {
+        qDebug() << "Something went terribly wrong";
     }
 }
 

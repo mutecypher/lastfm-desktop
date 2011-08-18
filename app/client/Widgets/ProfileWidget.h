@@ -33,8 +33,14 @@ private slots:
     void onGotTopWeeklyArtists();
     void onGotTopOverallArtists();
 
+    void onScrobblesCached( const QList<lastfm::Track>& tracks );
+    void onScrobbleStatusChanged();
+    void setScrobbleCount();
+
 private:
     QPointer<QWidget> m_main;
+
+    int m_scrobbleCount;
 };
 
 #endif // PROFILEWIDGET_H

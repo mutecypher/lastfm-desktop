@@ -35,18 +35,13 @@ class NowPlayingWidget : public QWidget
 public:
     explicit NowPlayingWidget(QWidget *parent = 0);
 
-signals:
-
 private slots:
     void onTuningIn( const RadioStation& );
     void onTrackStarted( const Track& track, const Track& );
-    void onTimeout();
     void onStopped();
 
 private:
     QPointer<MetadataWidget> m_metadata;
-
-    Track m_track;
 };
 
 #endif
