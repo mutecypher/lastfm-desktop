@@ -25,6 +25,8 @@
 
 class QLabel;
 
+namespace Phonon { class VolumeSlider; }
+
 class StatusBar : public QStatusBar
 {
     Q_OBJECT
@@ -34,6 +36,7 @@ class StatusBar : public QStatusBar
         void setSizeGripVisible( bool visible );
 
     private slots:
+        void onMessagedChanged( const QString& text );
         void setStatus();
 
         void onGotUserInfo(lastfm::UserDetails userDetails);
@@ -52,10 +55,12 @@ class StatusBar : public QStatusBar
     private:
         struct
         {
+            Phonon::VolumeSlider* volumeSlider;
+            class QLabel* inetStatus;
             class QSizeGrip* sizeGrip;
         } ui;
 
-        QLabel* m_inetStatus;
+
 
         int m_scrobbleCount;
 };

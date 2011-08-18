@@ -23,9 +23,12 @@
 #include <QLabel>
 #include <QSizeGrip>
 
+#include <Phonon/VolumeSlider>
+
 #include "StatusBar.h"
 
 #include "../Services/ScrobbleService.h"
+#include "../Services/RadioService.h"
 #include "../MediaDevices/DeviceScrobbler.h"
 #include "../Application.h"
 
@@ -33,7 +36,10 @@ StatusBar::StatusBar( QWidget* parent )
     :QStatusBar( parent ), m_scrobbleCount(-1)
 {
     setStatus();
-    addPermanentWidget( m_inetStatus = new QLabel( tr(""), this ) );
+    addPermanentWidget( ui.volumeSlider = new Phonon::VolumeSlider( RadioService::instance().audioOutput(), this ) );
+    ui.volumeSlider->setOrientation( Qt::Horizontal );
+
+    addPermanentWidget( ui.inetStatus = new QLabel( tr(""), this ) );
 
     aApp->isInternetConnectionUp() ? onConnectionUp() : onConnectionDown();
 
@@ -51,12 +57,21 @@ StatusBar::StatusBar( QWidget* parent )
     }
 
     connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+
+    connect( this, SIGNAL(messageChanged(QString)), SLOT(onMessagedChanged(QString)));
 }
 
 void
 StatusBar::setSizeGripVisible( bool visible )
 {
     ui.sizeGrip->setVisible( visible );
+}
+
+void
+StatusBar::onMessagedChanged( const QString& message )
+{
+    if ( message.isEmpty() )
+        setStatus();
 }
 
 void
@@ -80,48 +95,41 @@ void
 StatusBar::onConnectionUp()
 {
     const char icon[] = {0xE3, 0x80, 0x88, 0xE2, 0x8B, 0xAF, 0xE3, 0x80, 0x89, 0x00 };
-    m_inetStatus->setText( QString::fromUtf8( icon ) + tr( "Online"));
+    ui.inetStatus->setText( QString::fromUtf8( icon ) + tr( "Online"));
 }
 
 void
 StatusBar::onConnectionDown()
 {
-    m_inetStatus->setText( QString::fromUtf8( ":(" ) + tr( "Offline"));
+    ui.inetStatus->setText( QString::fromUtf8( ":(" ) + tr( "Offline"));
 }
 
 void
 StatusBar::onIPodDetected( QString iPod )
 {
-    showMessage( tr("iPod Detected... ") + iPod );
+    showMessage( tr("iPod Detected... ") + iPod, 3 * 1000 );
 }
 
 void
 StatusBar::onProcessingScrobbles()
 {
-    showMessage( tr("Processing iPod Scrobbles...") );
+    showMessage( tr("Processing iPod Scrobbles..."), 3 * 1000 );
 }
 
 void
 StatusBar::onFoundScrobbles( QList<lastfm::Track> tracks )
 {
     m_scrobbleCount += tracks.count();
-    setStatus();
 
     tracks.count() == 1 ?
-        showMessage( tr("%1 scrobble found").arg( tracks.count() ) ):
-        showMessage( tr("%1 scrobbles found").arg( tracks.count() ) );
-
-    // Schedule the status message to return to normal
-    QTimer::singleShot( 10 * 1000, this, SLOT(setStatus()) );
+        showMessage( tr("%1 scrobble found").arg( tracks.count() ), 10 * 1000 ):
+        showMessage( tr("%1 scrobbles found").arg( tracks.count() ), 10 * 1000 );
 }
 
 void
 StatusBar::onNoScrobblesFound()
 {
-    showMessage( tr("No scrobbles found") );
-
-    // Schedule the status message to return to normal
-    QTimer::singleShot( 10 * 1000, this, SLOT(setStatus()) );
+    showMessage( tr("No scrobbles found"), 10 * 1000 );
 }
 
 void
