@@ -41,6 +41,7 @@ private:
         class QCheckBox* allowFingerprint;
         class QCheckBox* launchItunes;
         class QLabel* percentText;
+        class QFrame* line;
     } ui;
 
 private:

@@ -25,6 +25,9 @@
 
 #include <Phonon/VolumeSlider>
 
+#include "lib/unicorn/widgets/Label.h"
+#include "lib/unicorn/StylableWidget.h"
+
 #include "StatusBar.h"
 
 #include "../Services/ScrobbleService.h"
@@ -35,28 +38,45 @@
 StatusBar::StatusBar( QWidget* parent )
     :QStatusBar( parent )
 {
-    layout()->setContentsMargins( 0, 0, 0, 0 );
-    layout()->setSpacing( 0 );
+    addWidget( ui.widget = new StylableWidget( this) );
+    QHBoxLayout* widgetLayout = new QHBoxLayout( ui.widget );
+    widgetLayout->setContentsMargins( 0, 0, 0, 0 );
+    widgetLayout->setSpacing( 0 );
 
-    setStatus();
-
-    insertPermanentWidget( 0, ui.cog = new QPushButton( this ) );
+    widgetLayout->addWidget( ui.cog = new QPushButton( this ), 0, Qt::AlignVCenter );
     ui.cog->setObjectName( "cog" );
     ui.cog->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-    addPermanentWidget( ui.volMin = new QLabel( this ) );
+    widgetLayout->addWidget( ui.message = new Label( this ), 1, Qt::AlignVCenter );
+    ui.message->setObjectName( "message" );
+    ui.message->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui.message->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
+
+    setStatus();
+
+    addPermanentWidget( ui.permanentWidget = new StylableWidget( this ) );
+    QHBoxLayout* permanentWidgetLayout = new QHBoxLayout( ui.permanentWidget );
+    permanentWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
+    permanentWidgetLayout->setSpacing( 0 );
+
+    permanentWidgetLayout->addWidget( ui.volMin = new QLabel( this ) );
     ui.volMin->setObjectName( "volMin" );
     ui.volMin->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    addPermanentWidget( ui.volumeSlider = new Phonon::VolumeSlider( RadioService::instance().audioOutput(), this ) );
+    permanentWidgetLayout->addWidget( ui.volumeSlider = new Phonon::VolumeSlider( RadioService::instance().audioOutput(), this ) );
     ui.volumeSlider->setOrientation( Qt::Horizontal );
-    addPermanentWidget( ui.volMax = new QLabel( this ) );
+    permanentWidgetLayout->addWidget( ui.volMax = new QLabel( this ) );
     ui.volMax->setObjectName( "volMax" );
     ui.volMax->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-    addPermanentWidget( ui.scrobbleToggle = new QPushButton( this ) );
+    bool scrobblingOn = unicorn::UserSettings().value( "scrobblingOn", true ).toBool();
+    permanentWidgetLayout->addWidget( ui.scrobbleToggle = new QPushButton( this ) );
     ui.scrobbleToggle->setObjectName( "scrobbleToggle" );
     ui.scrobbleToggle->setCheckable( true );
+    ui.scrobbleToggle->setChecked( scrobblingOn );
     ui.scrobbleToggle->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    connect( ui.scrobbleToggle, SIGNAL(toggled(bool)), SLOT(onScrobbleToggled(bool)) );
+
+    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
 
     aApp->isInternetConnectionUp() ? onConnectionUp() : onConnectionDown();
 
@@ -75,6 +95,25 @@ StatusBar::StatusBar( QWidget* parent )
     }
 
     connect( this, SIGNAL(messageChanged(QString)), SLOT(onMessagedChanged(QString)));
+
+    connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)));
+}
+
+
+void
+StatusBar::onSessionChanged( unicorn::Session* session )
+{
+    bool scrobblingOn = unicorn::UserSettings( session->userInfo() ).value( "scrobblingOn", true ).toBool();
+    ui.scrobbleToggle->setChecked( scrobblingOn );
+    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
+}
+
+
+void
+StatusBar::onScrobbleToggled( bool scrobblingOn )
+{
+    unicorn::UserSettings().setValue( "scrobblingOn", scrobblingOn );
+    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
 }
 
 void
@@ -93,7 +132,7 @@ StatusBar::onMessagedChanged( const QString& message )
 void
 StatusBar::setStatus()
 {
-    showMessage( tr("%1 (%2)").arg( lastfm::ws::Username, m_online ? tr( "Online" ) : tr( "Offline" ) ));
+    ui.message->setText( tr("%1 (%2)").arg( lastfm::ws::Username, m_online ? tr( "Online" ) : tr( "Offline" ) ));
 }
 
 void
@@ -119,27 +158,27 @@ StatusBar::onConnectionDown()
 void
 StatusBar::onIPodDetected( QString iPod )
 {
-    showMessage( tr("iPod Detected... ") + iPod, 3 * 1000 );
+    //showMessage( tr("iPod Detected... ") + iPod, 3 * 1000 );
 }
 
 void
 StatusBar::onProcessingScrobbles()
 {
-    showMessage( tr("Processing iPod Scrobbles..."), 3 * 1000 );
+    //showMessage( tr("Processing iPod Scrobbles..."), 3 * 1000 );
 }
 
 void
 StatusBar::onFoundScrobbles( QList<lastfm::Track> tracks )
 {
-    tracks.count() == 1 ?
-        showMessage( tr("%1 scrobble found").arg( tracks.count() ), 10 * 1000 ):
-        showMessage( tr("%1 scrobbles found").arg( tracks.count() ), 10 * 1000 );
+//    tracks.count() == 1 ?
+//        showMessage( tr("%1 scrobble found").arg( tracks.count() ), 10 * 1000 ):
+//        showMessage( tr("%1 scrobbles found").arg( tracks.count() ), 10 * 1000 );
 }
 
 void
 StatusBar::onNoScrobblesFound()
 {
-    showMessage( tr("No scrobbles found"), 10 * 1000 );
+    //showMessage( tr("No scrobbles found"), 10 * 1000 );
 }
 
 

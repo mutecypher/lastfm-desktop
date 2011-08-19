@@ -48,71 +48,41 @@ ScrobbleSettingsWidget::ScrobbleSettingsWidget( QWidget* parent )
 void
 ScrobbleSettingsWidget::setupUi()
 {
-    QLabel* title = new QLabel( tr( "Configure Scrobbler Settings" ), this );
-    QFrame* line = new QFrame( this );
-    line->setFrameShape( QFrame::HLine );
-
-    QLabel* scrobblePointText = new QLabel( tr( "Scrobble at" ), this );
-    QLabel* trackLengthText = new QLabel( tr( "percent of track length" ), this );
-    ui.scrobblePoint = new QSlider( Qt::Horizontal, this );
-    ui.allowFingerprint = new QCheckBox( this );
-
-#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
-    ui.launchItunes = new QCheckBox( this );
-#endif
-
-    QVBoxLayout* v = new QVBoxLayout;
-    QVBoxLayout* vg = new QVBoxLayout;
+    QVBoxLayout* v = new QVBoxLayout( this );
     QHBoxLayout* h = new QHBoxLayout;
 
+    h->addWidget( new QLabel( tr( "Scrobble at" ), this ) );
 
+    int scrobblePointValue = unicorn::UserSettings().value( "scrobblePoint", 50 ).toInt();
 
+    h->addWidget( ui.scrobblePoint = new QSlider( Qt::Horizontal, this ) );
+    ui.scrobblePoint->setValue( scrobblePointValue );
     ui.scrobblePoint->setTickInterval( 10 );
     ui.scrobblePoint->setRange( 50, 100 );
     ui.scrobblePoint->setTickPosition( QSlider::TicksBelow );
 
-    ui.allowFingerprint->setText( tr( "Allow Last.fm to fingerprint your tracks" ) );
-
-    int scrobblePointValue = unicorn::UserSettings().value( "scrobblePoint", 50 ).toInt();
-
-    ui.scrobblePoint->setValue( scrobblePointValue );
-    ui.percentText = new QLabel( QString::number( scrobblePointValue ), this );
-
+    h->addWidget( ui.percentText = new QLabel( QString::number( scrobblePointValue ), this ) );
     int maxWidth = ui.percentText->fontMetrics().width( "100" );
     ui.percentText->setFixedWidth( maxWidth );
 
+    h->addWidget( new QLabel( tr( "percent of track length" ), this ) );
+
+    QGroupBox* groupBox = new QGroupBox( tr( "Preferences" ), this );
+    QVBoxLayout* vg = new QVBoxLayout( groupBox );
+    vg->addLayout( h );
+    vg->addWidget( ui.allowFingerprint = new QCheckBox( tr( "Allow Last.fm to fingerprint your tracks" ), this ) );
     ui.allowFingerprint->setChecked( unicorn::UserSettings().value( "allowFingerprint", false ).toBool() );
 
 #if defined(Q_OS_MAC) || defined(Q_OS_WIN)
+    vg->addWidget( ui.launchItunes = new QCheckBox( tr( "Launch iTunes" ), this ) );
     ui.launchItunes->setChecked( unicorn::AppSettings().value( "launchItunes", true ).toBool() );
 #endif
 
-    QGroupBox* groupBox = new QGroupBox( this );
-    groupBox->setTitle( tr( "Preferences" ) );
-
-    h->addWidget( scrobblePointText );
-    h->addSpacing( 5 );
-    h->addWidget( ui.scrobblePoint );
-    h->addSpacing( 2 );
-    h->addWidget( ui.percentText );
-    h->addWidget( trackLengthText );
-
-    vg->addLayout( h );
-    vg->addWidget( ui.allowFingerprint );
-
-#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
-    vg->addWidget( ui.launchItunes );
-#endif
-
-    groupBox->setLayout( vg );
-
-    v->addWidget( title );
-    v->addWidget( line );
+    v->addWidget( new QLabel( tr( "Configure Scrobbler Settings" ), this ) );
+    v->addWidget( ui.line = new QFrame( this ) );
+    ui.line->setFrameShape( QFrame::HLine );
     v->addWidget( groupBox );
     v->addStretch( 1 );
-
-    setLayout( v );
-
 }
 
 void

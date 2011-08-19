@@ -35,6 +35,7 @@
 #endif
 
 ScrobbleService::ScrobbleService()
+    :m_scrobblingOn( true )
 {
 /// mediator
     m_mediator = new PlayerMediator(this);
@@ -67,7 +68,27 @@ ScrobbleService::ScrobbleService()
 
 }
 
-void ScrobbleService::submitCache()
+bool
+ScrobbleService::scrobblingOn() const
+{
+    return m_scrobblingOn;
+}
+
+void
+ScrobbleService::setScrobblingOn( bool scrobblingOn )
+{
+    m_scrobblingOn = scrobblingOn;
+
+    if( m_as
+            && m_watch
+            && m_watch->scrobbled()
+            && m_currentTrack.scrobbleStatus() == Track::Null
+            && m_scrobblingOn )
+        m_as->cache( m_trackToScrobble );
+}
+
+void
+ScrobbleService::submitCache()
 {
     if ( m_as )
     {
@@ -79,14 +100,16 @@ void
 ScrobbleService::onSessionChanged( unicorn::Session* ) 
 {
 /// audioscrobbler
-    if( m_as ) delete m_as;
+    if( m_as )
+        delete m_as;
 
     m_as = new Audioscrobbler( "ass" );
     connect( m_as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
     connect( m_as, SIGNAL(scrobblesSubmitted(QList<lastfm::Track>)), SIGNAL(scrobblesSubmitted(QList<lastfm::Track>)));
 
 /// DeviceScrobbler
-    if( m_deviceScrobbler ) delete m_deviceScrobbler;
+    if( m_deviceScrobbler )
+        delete m_deviceScrobbler;
 
     m_deviceScrobbler = new DeviceScrobbler;
     connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<lastfm::Track>)), this, SIGNAL( foundIPodScrobbles(QList<lastfm::Track>) ));
@@ -97,7 +120,8 @@ ScrobbleService::onSessionChanged( unicorn::Session* )
 void
 ScrobbleService::setConnection(PlayerConnection*c)
 {
-    if( m_connection ){
+    if( m_connection )
+    {
         // disconnect from all the objects that we connect to below
         disconnect( m_connection, 0, this, 0);
         if(m_watch)
@@ -118,13 +142,11 @@ ScrobbleService::setConnection(PlayerConnection*c)
 
     m_connection = c;
 
-    if(c->state() == Playing || c->state() == Paused){
+    if(c->state() == Playing || c->state() == Paused)
         c->forceTrackStarted(Track());
-    }
 
-    if( c->state() == Paused ) {
+    if( c->state() == Paused )
         c->forcePaused();
-    }
 }
 
 void
@@ -142,10 +164,11 @@ ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
 
     state = Playing;
 
-    //Q_ASSERT(m_connection);
+    Q_ASSERT(m_connection);
 
     //TODO move to playerconnection
-    if(t.isNull()){
+    if(t.isNull())
+    {
         qWarning() << "Can't start null track!";
         return;
     }
@@ -176,10 +199,15 @@ ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
     connect( m_watch, SIGNAL(timeout()), SIGNAL(timeout()));
 
     qDebug() << "********** AS = " << m_as;
-    if( m_as ) {
+    if( m_as )
+    {
         m_as->submit();
-        qDebug() << "************** Now Playing..";
-        m_as->nowPlaying( t );
+
+        if ( m_scrobblingOn )
+        {
+            qDebug() << "************** Now Playing..";
+            m_as->nowPlaying( t );
+        }
     }
 
 }
@@ -195,8 +223,8 @@ ScrobbleService::onPaused()
 
     m_currentTrack.removeNowPlaying();
 
-    //Q_ASSERT(m_connection);
-    //Q_ASSERT(m_watch);
+    Q_ASSERT(m_connection);
+    Q_ASSERT(m_watch);
     if(m_watch) m_watch->pause();
     
     emit paused();
@@ -211,13 +239,13 @@ ScrobbleService::onStopped()
 
     state = Stopped;
 
-    //Q_ASSERT(m_watch);
-    //Q_ASSERT(m_connection);
+    Q_ASSERT(m_watch);
+    Q_ASSERT(m_connection);
         
     delete m_watch;
-    if( m_as ) m_as->submit();
+    if( m_as )
+        m_as->submit();
 
-    //resetTrackInfo();
     emit stopped();
 }
 
@@ -230,22 +258,23 @@ ScrobbleService::onResumed()
 
     state = Playing;
 
-    //Q_ASSERT(m_watch);
-    //Q_ASSERT(m_connection);
+    Q_ASSERT(m_watch);
+    Q_ASSERT(m_connection);
 
     m_currentTrack.updateNowPlaying( m_currentTrack.duration() - (m_watch->elapsed()/1000) );
 
     if(m_watch) m_watch->resume();
 
-    //setTrackInfo();
     emit resumed();
 }
 
 void
 ScrobbleService::onScrobble()
 {
-    //Q_ASSERT(m_connection);
-    if( m_as ) m_as->cache( m_trackToScrobble );
+    Q_ASSERT(m_connection);
+
+    if( m_as && m_scrobblingOn )
+        m_as->cache( m_trackToScrobble );
 }
 
 void 

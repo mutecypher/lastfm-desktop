@@ -50,9 +50,6 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     connect( ui->play, SIGNAL(clicked()), aApp->playAction(), SLOT(trigger()));
     connect( ui->skip, SIGNAL(clicked()), aApp->skipAction(), SLOT(trigger()));
 
-//    ui->volumeSlider->setAudioOutput( RadioService::instance().audioOutput() );
-//    ui->volumeSlider->setMuteVisible( false );
-
     new QShortcut( QKeySequence( Qt::Key_Space ), this, SLOT(onSpace()));
 }
 

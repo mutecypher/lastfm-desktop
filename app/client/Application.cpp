@@ -125,9 +125,9 @@ Application::init()
     }
 #endif
 
-    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
-    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
-    lastfm::nam()->setCache( diskCache );
+//    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
+//    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
+//    lastfm::nam()->setCache( diskCache );
 
 /// tray
     m_tray = new QSystemTrayIcon(this);
@@ -267,7 +267,7 @@ Application::init()
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
 #ifndef Q_OS_LINUX
      AudioscrobblerSettings settings;
-     setRaiseHotKey( settings.raiseShortcutModifiers(), settings.raiseShortcutKey());
+     setRaiseHotKey( settings.raiseShortcutModifiers(), settings.raiseShortcutKey() );
 #endif
     //although the shortcuts are actually set on the ScrobbleControls widget,
     //setting it here adds the shortkey text to the trayicon menu
@@ -338,17 +338,17 @@ Application::init()
 }
 
 void
-Application::setRaiseHotKey( Qt::KeyboardModifiers mods, int key) {
-    if( m_raiseHotKeyId >= 0 ) {
+Application::setRaiseHotKey( Qt::KeyboardModifiers mods, int key )
+{
+    if( m_raiseHotKeyId >= 0 )
         unInstallHotKey( m_raiseHotKeyId );
-    }
+
     m_raiseHotKeyId = installHotKey( mods, key, m_toggle_window_action, SLOT(trigger()));
 }
 
 void
-Application::onTrackGotInfo(const XmlQuery& lfm)
+Application::onTrackGotInfo( const XmlQuery& lfm )
 {
-    //Q_ASSERT(m_connection);
     MutableTrack( ScrobbleService::instance().currentConnection()->track() ).setFromLfm( lfm );
 }
 
