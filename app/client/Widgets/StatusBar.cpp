@@ -73,10 +73,9 @@ StatusBar::StatusBar( QWidget* parent )
     ui.scrobbleToggle->setObjectName( "scrobbleToggle" );
     ui.scrobbleToggle->setCheckable( true );
     ui.scrobbleToggle->setChecked( scrobblingOn );
+    onScrobbleToggled( scrobblingOn );
     ui.scrobbleToggle->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     connect( ui.scrobbleToggle, SIGNAL(toggled(bool)), SLOT(onScrobbleToggled(bool)) );
-
-    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
 
     aApp->isInternetConnectionUp() ? onConnectionUp() : onConnectionDown();
 
@@ -104,8 +103,7 @@ void
 StatusBar::onSessionChanged( unicorn::Session* session )
 {
     bool scrobblingOn = unicorn::UserSettings( session->userInfo() ).value( "scrobblingOn", true ).toBool();
-    ui.scrobbleToggle->setChecked( scrobblingOn );
-    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
+    onScrobbleToggled( scrobblingOn );
 }
 
 
@@ -114,6 +112,8 @@ StatusBar::onScrobbleToggled( bool scrobblingOn )
 {
     unicorn::UserSettings().setValue( "scrobblingOn", scrobblingOn );
     ScrobbleService::instance().setScrobblingOn( scrobblingOn );
+    ui.scrobbleToggle->setChecked( scrobblingOn );
+    ui.scrobbleToggle->setToolTip( scrobblingOn ? tr( "Scrobbling on" ) : tr( "Scrobbling off" ) );
 }
 
 void

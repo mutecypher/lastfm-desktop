@@ -539,6 +539,12 @@ ShareDialog QCheckBox {
 	margin-bottom: 16px;
 }
 
+StatusBar StylableWidget {
+	border: none;
+	background-color: transparent;
+	margin: 1px 0px 2px;
+}
+
 StatusBar QPushButton#cog {
 	border: 1px solid #cdcdcd;
 	border-radius: 3px;
@@ -549,12 +555,6 @@ StatusBar QPushButton#cog {
 	width: 30px;
 	height: 22px;
 	margin: 0px 10px;
-}
-
-StatusBar StylableWidget {
-	border: none;
-	background-color: transparent;
-	margin: 1px 0px 2px;
 }
 
 StatusBar QPushButton#cog:hover { background-image: url(":/settings_HOVER.png"); }
