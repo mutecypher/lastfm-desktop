@@ -37,7 +37,7 @@ private:
     void populateLanguages();
 
 private:
-    class ShortCutEdit* sce;
+    class ShortCutEdit* m_sce;
 };
 
 #endif //KEYBOARD_SETTINGS_WIDGET_H_
