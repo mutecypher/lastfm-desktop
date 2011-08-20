@@ -36,39 +36,8 @@ RadioService::RadioService( )
        m_bErrorRecover( false )
 {
     initRadio();
-    connect( qApp, SIGNAL( aboutToQuit()), SLOT( fadeOut() ));
 }
 
-void 
-RadioService::fadeOut()
-{
-    // I'm not confident about the sleep code on Windows --mxcl
-#ifndef WIN32
-    //if this is the singleton object then likelyhood is that any signals
-    //connected to this object point to objects which have been destroyed
-    if ( !m_mediaObject || m_mediaObject->state() != Phonon::PlayingState )
-        return;
-
-    qreal starting_volume = m_audioOutput->volume();
-    //sigmoid curve
-    for (int x = 18; x >= -60; --x)
-    {
-        qreal y = x;
-        y /= 10;
-        y = qreal(1) / (qreal(1) + std::exp( -y ));
-        y *= starting_volume;
-        m_audioOutput->setVolume( y );
-
-		struct Thread : QThread { using QThread::msleep; };
-		Thread::msleep( 7 );
-    }
-#endif
-}
-
-
-RadioService::~RadioService()
-{    
-}
 
 // fixme:
 // todo:
@@ -493,11 +462,16 @@ RadioService::initRadio()
     if (unicorn::AppSettings().contains("Volume"))
     {
         bool ok;
-        double volume = unicorn::AppSettings().value("Volume", 0).toDouble(&ok);
+        double volume = unicorn::AppSettings().value("Volume", 1).toDouble(&ok);
         if (ok)
         {
             audioOutput->setVolume(volume);
             m_prevVolume = volume; //give it a initial value just in case
+        }
+        else
+        {
+            audioOutput->setVolume( 1 );
+            m_prevVolume = 1; //give it a initial value just in case
         }
     }
 
