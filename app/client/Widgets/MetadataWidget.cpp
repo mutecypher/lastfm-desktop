@@ -113,13 +113,10 @@ MetadataWidget::setTrackDetails( const Track& track )
     if ( ui.scrollArea->verticalScrollBar()->isVisible() )
         ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 
-    //track.www().toString()
-    ui.track.title->setText( track.title( Track::Corrected ));
-    //track.artist( Track::Corrected ).www()
-    ui.track.artist->setText( tr("by %1").arg(track.artist( Track::Corrected )));
-    ui.artist.artist->setText( track.artist( Track::Corrected ));
-    //track.album( Track::Corrected ).www().toString()
-    ui.track.album->setText( tr("from %1").arg(track.album( Track::Corrected )));
+    ui.track.title->setText( Label::anchor( track.www().toString(), track.title( Track::Corrected ) ) );
+    ui.track.artist->setText( tr("by %1").arg( Label::anchor( track.artist( Track::Corrected ).www().toString(), track.artist( Track::Corrected ))));
+    ui.artist.artist->setText( Label::anchor( track.artist( Track::Corrected ).www().toString(),track.artist( Track::Corrected )));
+    ui.track.album->setText( tr("from %1").arg( Label::anchor( track.album( Track::Corrected ).www().toString(), track.album( Track::Corrected ))));
    
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui.track.scrobbleControls, SLOT(setLoveChecked(bool)));
 
@@ -195,7 +192,7 @@ MetadataWidget::onArtistGotInfo()
         //TODO if empty suggest they edit it
         QString bio;
         {
-            QStringList bioList = lfm["artist"]["bio"]["content"].text().trimmed().split( "\r" );
+            QStringList bioList = lfm["artist"]["bio"]["summary"].text().trimmed().split( "\r" );
             foreach( const QString& p, bioList ) {
                 QString pTrimmed = p.trimmed();
                 if( pTrimmed.isEmpty()) continue;
@@ -461,12 +458,14 @@ MetadataWidget::setupTrackDetails( QWidget* w )
         widget->layout()->addWidget( ui.track.title = new QLabel );
         ui.track.title->setWordWrap( true );
         ui.track.title->setStyleSheet( "color: #333; font-size: 16pt; font-weight: bold; padding-bottom: 5px;" );
-        
+        ui.track.title->setOpenExternalLinks( true );
+
         widget->layout()->addWidget( ui.track.artist = new QLabel );
         ui.track.artist->setWordWrap( true );
         ui.track.artist->setStyleSheet( "border: 1px solid #cdcdcd;"
                                   "border-width: 0px 0px 1px 0px;"
                                   "padding-bottom: 11px; color: #333;" );
+        ui.track.artist->setOpenExternalLinks( true );
 
         widget->layout()->addWidget( ui.track.scrobbleControls = new ScrobbleControls(m_track) );
         ui.track.scrobbleControls->setStyleSheet( "ScrobbleControls{ border:none;" 
@@ -477,6 +476,7 @@ MetadataWidget::setupTrackDetails( QWidget* w )
         widget->layout()->addWidget( ui.track.album = new QLabel );
         ui.track.album->setWordWrap( true );
         ui.track.album->setStyleSheet( "border-top: 1px solid #ffffff; padding-top: 11px; font-size: 11pt;" );
+        ui.track.album->setOpenExternalLinks( true );
 
         w->layout()->addWidget( widget );
     }
@@ -586,6 +586,7 @@ MetadataWidget::setupUi()
         artistBio->layout()->addWidget( ui.artist.artist = new QLabel());
         ui.artist.artist->setStyleSheet( "font-size: 16pt; font-weight: bold;"
                                          "color: #333; padding-top: 7px;" );
+        ui.artist.artist->setOpenExternalLinks( true );
        
         artistBio->layout()->addWidget( ui.artist.bio = new BioWidget( artistBio ) );
         
@@ -632,9 +633,14 @@ MetadataWidget::setupUi()
     this->layout()->setSpacing( 0 );
 }
 
+QString userLibraryLink( const QString& user, const QString& artist )
+{
+    return QString("http://www.last.fm/user/%1/library/music/%2").arg( user, artist );
+}
+
 QString userLibrary( const QString& user, const QString& artist )
 {
-    return Label::anchor( QString("http://www.last.fm/user/%1/library/music/%2").arg( user, artist ), user );
+    return Label::anchor( userLibraryLink( user, artist ), user );
 }
 
 QString
@@ -705,7 +711,7 @@ MetadataWidget::contextString( const Track& track )
 QString
 MetadataWidget::scrobbleString( const Track& track )
 {
-    QString artistString = track.artist().toString();
+    QString artistString = Label::anchor( userLibraryLink( User().name(), track.artist().toString()  ), track.artist().toString()  );
     QString userArtistScrobblesString = tr( m_userArtistScrobbles == 1 ? "%L1 time" : "%L1 times" ).arg( m_userArtistScrobbles );
     QString userTrackScrobblesString = tr( m_userTrackScrobbles == 1 ? "%L1 time" : "%L1 times" ).arg( m_userTrackScrobbles );
 
