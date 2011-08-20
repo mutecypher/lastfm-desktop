@@ -69,6 +69,7 @@ signals:
     void resumed();
     void paused();
     void stopped();
+    void scrobblingOnChanged( bool scrobblingOn );
     void scrobblesCached( const QList<lastfm::Track>& tracks );
     void scrobblesSubmitted( const QList<lastfm::Track>& tracks );
 

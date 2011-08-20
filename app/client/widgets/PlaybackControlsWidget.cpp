@@ -41,6 +41,7 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
 
     connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)) );
     connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
+    connect( &ScrobbleService::instance(), SIGNAL(scrobblingOnChanged(bool)), SLOT(update()));
 
     onActionsChanged();
 

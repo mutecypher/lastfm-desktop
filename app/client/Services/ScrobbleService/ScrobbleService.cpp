@@ -85,6 +85,8 @@ ScrobbleService::setScrobblingOn( bool scrobblingOn )
             && m_currentTrack.scrobbleStatus() == Track::Null
             && m_scrobblingOn )
         m_as->cache( m_trackToScrobble );
+
+    emit scrobblingOnChanged( scrobblingOn );
 }
 
 void
