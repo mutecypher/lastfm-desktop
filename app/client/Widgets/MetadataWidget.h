@@ -21,6 +21,7 @@
 #ifndef METADATA_WIDGET_H_
 #define METADATA_WIDGET_H_
 
+#include <lastfm/Album>
 #include <lastfm/Track>
 
 #include "lib/unicorn/StylableWidget.h"
@@ -130,6 +131,8 @@ protected:
     QNetworkReply* m_artistEventsReply;
     QNetworkReply* m_trackTopFansReply;
     QNetworkReply* m_trackTagsReply;
+
+    Album m_albumGuess;
 };
 
 #endif //METADATA_WIDGET_H_

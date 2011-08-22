@@ -116,8 +116,17 @@ MetadataWidget::setTrackDetails( const Track& track )
     ui.track.title->setText( Label::anchor( track.www().toString(), track.title( Track::Corrected ) ) );
     ui.track.artist->setText( tr("by %1").arg( Label::anchor( track.artist( Track::Corrected ).www().toString(), track.artist( Track::Corrected ))));
     ui.artist.artist->setText( Label::anchor( track.artist( Track::Corrected ).www().toString(),track.artist( Track::Corrected )));
-    ui.track.album->setText( tr("from %1").arg( Label::anchor( track.album( Track::Corrected ).www().toString(), track.album( Track::Corrected ))));
-   
+
+    if ( !m_albumGuess.isNull() )
+        ui.track.album->setText( tr("from %1").arg( Label::anchor( m_albumGuess.www().toString(), m_albumGuess)));
+    else
+    {
+        if ( m_track.album().isNull() )
+            ui.track.album->setText( tr("from %1").arg( track.album( Track::Corrected )));
+        else
+            ui.track.album->setText( tr("from %1").arg( Label::anchor( track.album( Track::Corrected ).www().toString(), track.album( Track::Corrected ))));
+    }
+
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui.track.scrobbleControls, SLOT(setLoveChecked(bool)));
 
     // Add the green astrix to the title, if it has been corrected
@@ -298,6 +307,19 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
         {
             ui.track.popTags->addItem( e["name"].text(), e["url"].text());
         }
+
+        // If we don't know the album then get it from this response
+        if ( m_track.album().isNull() )
+        {
+            QString albumTitle = lfm["track"]["album"]["title"].text();
+
+            if ( !albumTitle.isEmpty() )
+            {
+                m_albumGuess = lastfm::Album( m_track.artist().name(), albumTitle );
+                connect( m_albumGuess.getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
+                setTrackDetails( m_track );
+            }
+        }
     }
     catch ( lastfm::ws::ParseError e )
     {
@@ -457,25 +479,20 @@ MetadataWidget::setupTrackDetails( QWidget* w )
        
         widget->layout()->addWidget( ui.track.title = new QLabel );
         ui.track.title->setWordWrap( true );
-        ui.track.title->setStyleSheet( "color: #333; font-size: 16pt; font-weight: bold; padding-bottom: 5px;" );
+        ui.track.title->setObjectName( "trackTitle" );
         ui.track.title->setOpenExternalLinks( true );
 
         widget->layout()->addWidget( ui.track.artist = new QLabel );
         ui.track.artist->setWordWrap( true );
-        ui.track.artist->setStyleSheet( "border: 1px solid #cdcdcd;"
-                                  "border-width: 0px 0px 1px 0px;"
-                                  "padding-bottom: 11px; color: #333;" );
+        ui.track.artist->setObjectName( "trackArtist" );
         ui.track.artist->setOpenExternalLinks( true );
 
         widget->layout()->addWidget( ui.track.scrobbleControls = new ScrobbleControls(m_track) );
-        ui.track.scrobbleControls->setStyleSheet( "ScrobbleControls{ border:none;" 
-                                            "border-top: 1px solid #ffffff;"
-                                            "border-bottom: 1px solid #cdcdcd;"
-                                            "padding: 2px 0px; }" );
+        ui.track.scrobbleControls->setObjectName( "scrobbleControls" );
 
         widget->layout()->addWidget( ui.track.album = new QLabel );
         ui.track.album->setWordWrap( true );
-        ui.track.album->setStyleSheet( "border-top: 1px solid #ffffff; padding-top: 11px; font-size: 11pt;" );
+        ui.track.album->setObjectName( "trackAlbum" );
         ui.track.album->setOpenExternalLinks( true );
 
         w->layout()->addWidget( widget );
@@ -486,13 +503,11 @@ MetadataWidget::setupTrackDetails( QWidget* w )
 void
 MetadataWidget::setupTrackStats( QWidget* w )
 {
-    w->setStyleSheet( "color: #333;" );
-
     QGridLayout* wLayout = new QGridLayout( w );
 
     wLayout->addWidget( ui.track.listeners = new QLabel, 0, 0 );
     wLayout->addWidget( new QLabel( tr("Listeners" )), 1, 0 );
-    ui.track.listeners->setStyleSheet( "font-size: 16pt; font-weight:bold;");
+    ui.track.listeners->setObjectName( "trackListeners" );
 
     struct Divider : QFrame {
         Divider() {
@@ -511,13 +526,13 @@ MetadataWidget::setupTrackStats( QWidget* w )
     wLayout->addWidget( new Divider, 0, 1, 2, 1 );
     wLayout->addWidget( ui.track.totalScrobbles = new QLabel, 0, 2 );
     wLayout->addWidget( new QLabel( tr("Plays" )), 1, 2 );
-    ui.track.totalScrobbles->setStyleSheet( "font-size: 16pt; font-weight:bold;");
+    ui.track.totalScrobbles->setObjectName( "trackTotalScrobbles" );
 
     wLayout->addWidget( new Divider, 0, 3, 2, 1 );
     
     wLayout->addWidget( ui.track.yourScrobbles = new QLabel, 0, 4 );
     wLayout->addWidget( new QLabel( tr("Plays in your library" )), 1, 4 );
-    ui.track.yourScrobbles->setStyleSheet( "font-size: 16pt; font-weight: bold;");
+    ui.track.yourScrobbles->setObjectName( "trackYourScrobbles" );
     
     w->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
 }
@@ -530,14 +545,13 @@ MetadataWidget::setupTrackTags( QWidget* w )
     w->layout()->setContentsMargins( 0, 0, 0, 0 );
     w->layout()->setSpacing( 0 );
     QLabel* wTitle = new QLabel( tr( "Track Tags"));
-    wTitle->setStyleSheet( "color:#333; font-size: 16pt; font-weight: bold;"
-                                   "border: 1px solid #cdcdcd; border-width: 0px 0px 1px 0px;"
-                                   "padding-bottom: 10px;");
+    wTitle->setObjectName( "trackTagsTitle" );
+
     w->layout()->addWidget( wTitle );
     {
         QWidget* your = new QFrame;
         QHBoxLayout* layout = new QHBoxLayout( your ); QLabel* yourTagsTitle;
-        your->setStyleSheet( ".QFrame{ border-top: 1px solid #ffffff; }" );
+        your->setObjectName( "your" );
         layout->addWidget( yourTagsTitle = new QLabel( tr("Your Tags:")), Qt::AlignTop);
 
         yourTagsTitle->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
@@ -545,7 +559,7 @@ MetadataWidget::setupTrackTags( QWidget* w )
         layout->addWidget( ui.track.yourTags = new DataListWidget);
         layout->setStretch( 1, 1 );
         w->layout()->addWidget( your );
-        ui.track.yourTags->setStyleSheet( "border: none; margin: 0px 10px;");
+        ui.track.yourTags->setObjectName( "trackYourTags" );
     }
     {
         QWidget* pop = new QFrame;
@@ -557,7 +571,7 @@ MetadataWidget::setupTrackTags( QWidget* w )
 
         layout->addWidget( ui.track.popTags = new DataListWidget);
         layout->setStretch( 1, 1 );
-        ui.track.popTags->setStyleSheet( "border: none; margin: 0px 10px;");
+        ui.track.popTags->setObjectName( "trackPopTags" );
         w->layout()->addWidget( pop );
     }
 }
@@ -566,10 +580,11 @@ void
 MetadataWidget::setupUi()
 {
     QWidget* contents = new QWidget();
-    contents->setStyleSheet( ".QWidget {background-color: #eeeeee;}" );
+    contents->setObjectName( "contents" );
     QVBoxLayout* mainLayout = new QVBoxLayout( contents );
 
     QWidget* trackDetails = new QWidget;
+    trackDetails->setObjectName( "trackDetails" );
     setupTrackDetails( trackDetails );
     
     ui.track.trackStats = new QWidget;
@@ -580,19 +595,18 @@ MetadataWidget::setupUi()
 
     QWidget* artistBio = new QWidget;
     {
-        artistBio->setStyleSheet( ".QWidget {background-color:#dedede;}");
+        artistBio->setObjectName( "artistBio");
         new QVBoxLayout( artistBio );
         artistBio->setContentsMargins( 0, 0, 0, 0 );
         artistBio->layout()->addWidget( ui.artist.artist = new QLabel());
-        ui.artist.artist->setStyleSheet( "font-size: 16pt; font-weight: bold;"
-                                         "color: #333; padding-top: 7px;" );
+        ui.artist.artist->setObjectName( "artistArtist" );
         ui.artist.artist->setOpenExternalLinks( true );
        
         artistBio->layout()->addWidget( ui.artist.bio = new BioWidget( artistBio ) );
         
         QString stylesheet = ((audioscrobbler::Application*)qApp)->loadedStyleSheet() + styleSheet();
         ui.artist.bio->document()->setDefaultStyleSheet( stylesheet );
-        ui.artist.bio->setStyleSheet( "background-color: #dedede; border: none; font-size: 12pt; color: #333;" );
+        ui.artist.bio->setObjectName( "bio" );
 
     }
     qobject_cast<QBoxLayout*>(artistBio->layout())->addStretch(1);

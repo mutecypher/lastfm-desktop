@@ -128,6 +128,83 @@ QuickStartWidget {
 	border: none;
 	margin: 14px 0px 10px 0px;
 }
+	
+MetadataWidget QLabel#trackTitle {
+	color: #333;
+	font-size: 16pt;
+	font-weight: bold;
+	padding-bottom: 5px;
+}
+
+MetadataWidget QLabel#trackArtist {
+	border: 1px solid #cdcdcd;
+    border-width: 0px 0px 1px 0px;
+    padding-bottom: 11px; color: #333;
+}
+
+MetadataWidget ScrobbleControls {
+	border:none;
+	border-top: 1px solid #ffffff;
+	border-bottom: 1px solid #cdcdcd;
+	padding: 2px 0px;
+}
+
+MetadataWidget QLabel#trackAlbum {
+	border-top: 1px solid #ffffff;
+	padding-top: 11px;
+	font-size: 11pt;
+}
+
+MetadataWidget QWidget#trackDetails {
+	color: #333;
+}
+MetadataWidget QLabel#trackTotalScrobbles,
+MetadataWidget QLabel#trackListeners,
+MetadtaWidget QLabel#trackYourScrobbles {
+	font-size: 16pt;
+	font-weight: bold;
+}
+
+MetadataWidget QLabel#trackTagsTitle {
+	color:#333;
+	font-size: 16pt;
+	font-weight: bold;
+	border: 1px solid #cdcdcd;
+	border-width: 0px 0px 1px 0px;
+	padding-bottom: 10px;
+}
+
+MetadataWidget QFrame#your {
+	border-top: 1px solid #ffffff;
+}
+
+MetadataWidget DataListWidget#trackYourTags,
+MetadataWidget DataListWidget#trackPopTags {
+	border: none;
+	margin: 0px 10px;
+}
+
+MetadataWidget QWidget#contents {
+	background-color: #eeeeee;
+}
+
+MetadataWidget QWidget#artistBio {
+    background-color:#dedede;
+}
+
+MetadataWidget QLabel#artistArtist {
+	font-size: 16pt;
+	font-weight: bold;
+	color: #333;
+	padding-top: 7px;
+}
+
+MetadataWidget BioWidget#bio {
+	background-color: #dedede;
+	border: none;
+	font-size: 12pt;
+	color: #333;
+}
 
 FriendListWidget QLineEdit
 {
