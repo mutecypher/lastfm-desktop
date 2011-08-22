@@ -115,18 +115,46 @@ NothingPlayingWidget StylableWidget#players  QAbstractButton#foobar {
 }
 
 NowPlayingWidget QLabel#context {
-	margin: 10px 20px;
+	margin: 20px 0px;
 	padding: 15px 15px;
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #e5e5e5);
 	border: 1px solid #cdcdcd;
 	border-radius: 5px;
-	font-weight: bold;
 	font-size: 12px;
 }
 
 QuickStartWidget {
 	border: none;
 	margin: 14px 0px 10px 0px;
+}
+
+MetadataWidget {
+	border: none;
+}
+
+MetadataWidget QWidget#scrollAreaWidgetContents {
+	border: none;
+}
+
+MetadataWidget QFrame#trackFrame,
+MetadataWidget QFrame#artistFrame {
+	padding: 20px;
+}
+
+MetadataWidget QFrame#artistFrame {
+	padding-bottom: 0px;
+}
+
+MetadataWidget HttpImageWidget#albumImage {
+	color: transparent;
+	background-color: white;
+	border: 1px solid #cdcdcd;
+	min-width: 128px;
+	min-height: 128px;
+	max-width: 128px;
+	max-height: 128px;
+	padding: 4px;
+	margin-right: 20px;
 }
 	
 MetadataWidget QLabel#trackTitle {
@@ -146,7 +174,7 @@ MetadataWidget ScrobbleControls {
 	border:none;
 	border-top: 1px solid #ffffff;
 	border-bottom: 1px solid #cdcdcd;
-	padding: 2px 0px;
+	padding: 7px 0px;
 }
 
 MetadataWidget QLabel#trackAlbum {
@@ -155,41 +183,58 @@ MetadataWidget QLabel#trackAlbum {
 	font-size: 11pt;
 }
 
-MetadataWidget QWidget#trackDetails {
-	color: #333;
+MetadataWidget QLabel#trackPopTags,
+MetadataWidget QLabel#artistPopTags,
+MetadataWidget QLabel#trackYourTags,
+MetadataWidget QLabel#artistYourTags {
+	font-size: 11px;
+	margin-left: 2px;
 }
-MetadataWidget QLabel#trackTotalScrobbles,
+
+MetadataWidget QLabel#trackTags,
+MetadataWidget QLabel#artistTags {
+	font-size: 16px;
+	font-weight: bold;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #cdcdcd;
+}
+
+
+MetadataWidget QLabel#trackPlays,
 MetadataWidget QLabel#trackListeners,
-MetadtaWidget QLabel#trackYourScrobbles {
+MetadataWidget QLabel#trackUserPlays,
+MetadataWidget QLabel#artistPlays,
+MetadataWidget QLabel#artistListeners,
+MetadataWidget QLabel#artistUserPlays {
+	color: #333;
 	font-size: 16pt;
 	font-weight: bold;
 }
 
-MetadataWidget QLabel#trackTagsTitle {
-	color:#333;
-	font-size: 16pt;
-	font-weight: bold;
-	border: 1px solid #cdcdcd;
-	border-width: 0px 0px 1px 0px;
-	padding-bottom: 10px;
+MetadataWidget QLabel#trackPlaysLabel,
+MetadataWidget QLabel#trackListenersLabel,
+MetadataWidget QLabel#trackUserPlaysLabel,
+MetadataWidget QLabel#artistPlaysLabel,
+MetadataWidget QLabel#artistListenersLabel,
+MetadataWidget QLabel#artistUserPlaysLabel {
+	color: #898989;
+	font-size: 10pt;
+	font-weight: normal;
 }
 
-MetadataWidget QFrame#your {
-	border-top: 1px solid #ffffff;
+MetadataWidget QLabel#trackPlays,
+MetadataWidget QLabel#trackListeners,
+MetadataWidget QLabel#trackPlaysLabel,
+MetadataWidget QLabel#trackListenersLabel,
+MetadataWidget QLabel#artistPlays,
+MetadataWidget QLabel#artistListeners,
+MetadataWidget QLabel#artistPlaysLabel,
+MetadataWidget QLabel#artistListenersLabel {
+	border-right: 1px solid #cdcdcd;
 }
 
-MetadataWidget DataListWidget#trackYourTags,
-MetadataWidget DataListWidget#trackPopTags {
-	border: none;
-	margin: 0px 10px;
-}
-
-MetadataWidget QWidget#contents {
-	background-color: #eeeeee;
-}
-
-MetadataWidget QWidget#artistBio {
-    background-color:#dedede;
+MetadataWidget QWidget#artistFrame {
+    background-color: #dedede;
 }
 
 MetadataWidget QLabel#artistArtist {
@@ -199,11 +244,26 @@ MetadataWidget QLabel#artistArtist {
 	padding-top: 7px;
 }
 
-MetadataWidget BioWidget#bio {
+MetadataWidget BioWidget#artistBio {
 	background-color: #dedede;
 	border: none;
 	font-size: 12pt;
 	color: #333;
+}
+
+MetadataWidget TagWidget {
+	height: 19px;
+	color: white;
+	font-size: 11px;
+	qproperty-left: url(":/meta_tag_LEFT_REST.png");
+	qproperty-middle: url(":/meta_tag_MIDDLE_REST.png");
+	qproperty-right: url(":/meta_tag_RIGHT_REST.png");
+}
+
+MetadataWidget TagWidget:hover {
+	qproperty-left: url(":/meta_tag_LEFT_HOVER.png");
+	qproperty-middle: url(":/meta_tag_MIDDLE_HOVER.png");
+	qproperty-right: url(":/meta_tag_RIGHT_HOVER.png");
 }
 
 FriendListWidget QLineEdit
@@ -211,7 +271,7 @@ FriendListWidget QLineEdit
 	margin: 20px 20px 20px 20px;
 }
 
-QuickStartWidget  QLineEdit,
+QuickStartWidget QLineEdit,
 FriendListWidget QLineEdit {
     border: 1px solid #cdcdcd;
     border-radius: 5px;
@@ -220,7 +280,7 @@ FriendListWidget QLineEdit {
 	font-size: 17px;
 }
 
-QuickStartWidget  QPushButton {
+QuickStartWidget QPushButton {
 	background-image: url(":/radio_play_large_REST.png");
 	background-color: transparent;
 	background-repeat: no-repeat;
@@ -231,8 +291,8 @@ QuickStartWidget  QPushButton {
 	margin: 0px 0px 0px 10px;
 }
 
-QuickStartWidget  QPushButton:hover { background-image: url(":/radio_play_large_HOVER.png"); }
-QuickStartWidget  QPushButton:pressed { background-image: url(":/radio_play_large_PRESS.png"); }
+QuickStartWidget QPushButton:hover { background-image: url(":/radio_play_large_HOVER.png"); }
+QuickStartWidget QPushButton:pressed { background-image: url(":/radio_play_large_PRESS.png"); }
 
 QScrollArea {
 	border: none;

@@ -18,13 +18,18 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef METADATA_WIDGET_H_
-#define METADATA_WIDGET_H_
+#ifndef METADATAWIDGET_H
+#define METADATAWIDGET_H
+
+#include <QWidget>
 
 #include <lastfm/Album>
 #include <lastfm/Track>
 
 #include "lib/unicorn/StylableWidget.h"
+#include "lib/unicorn/widgets/HttpImageWidget.h"
+
+namespace Ui { class MetadataWidget; }
 
 class DataListWidget;
 class HttpImageWidget;
@@ -32,15 +37,15 @@ class QLabel;
 class QGroupBox;
 class BioWidget;
 
-#include "lib/unicorn/widgets/HttpImageWidget.h"
+
 class MetadataWidget : public StylableWidget
 {
     Q_OBJECT
 public:
-    MetadataWidget( const Track& track, bool showBack, QWidget* p = 0 );
-    ~MetadataWidget() {}
+    MetadataWidget( const Track& track, QWidget* p = 0 );
+    ~MetadataWidget();
 
-    class ScrobbleControls* scrobbleControls() const { return ui.track.scrobbleControls; }
+    class ScrobbleControls* scrobbleControls() const;
 
     QWidget* basicInfoWidget();
     void setBackButtonVisible( bool );
@@ -48,17 +53,13 @@ public:
     static QString getContextString( const Track& track );
 
 private slots:
-
     void onTrackGotInfo(const QByteArray& data);
     void onAlbumGotInfo();
     void onArtistGotInfo();
     void onArtistGotEvents();
-    void onTrackGotTopFans();
-    
-    void onTrackGotYourTags();
-    void onTrackGotPopTags();
 
-    void onFinished();
+    void onTrackGotYourTags();
+    void onArtistGotYourTags();
 
     void onTrackCorrected( QString correction );
     void listItemClicked( const QModelIndex& );
@@ -71,68 +72,23 @@ signals:
     void backClicked();
 
 private:
+    void checkFinished();
+
     void setTrackDetails( const Track& track );
 
     QString contextString( const Track& track );
     QString scrobbleString( const Track& track );
 
-protected:
-    void setupTrackStats( QWidget* w );
-    void setupTrackDetails( QWidget* w );
-    void setupTrackTags( QWidget* w );
-    void setupUi();
-    void fetchTrackInfo();
-
-    struct {
-         class QScrollArea* scrollArea;
-         class QPushButton* backButton;
-
-         struct {
-             class QLabel* title;
-             class QLabel* album;
-             class QLabel* artist;
-             
-             class ScrobbleControls* scrobbleControls;
-
-             QWidget* trackStats;
-             class QLabel* yourScrobbles;
-             class QLabel* totalScrobbles;
-             class QLabel* listeners;
-
-             class QLabel* context;
-
-             class HttpImageWidget* albumImage;
-             class DataListWidget* yourTags;
-             class DataListWidget* popTags;
-         } track;
-
-         struct {
-            class QLabel* artist;
-            class BioWidget* bio;
-            class BannerWidget* banner;
-            class HttpImageWidget* image;
-         } artist;
-    } ui;
+private:
+    Ui::MetadataWidget *ui;
 
     Track m_track;
+
     int m_globalTrackScrobbles;
     int m_userTrackScrobbles;
     int m_userArtistScrobbles;
 
-    struct {
-        class LfmListModel* similarArtists;
-        class LfmListModel* listeningNow;
-    } model;
-
-    QNetworkReply* m_trackInfoReply;
-
-    QNetworkReply* m_albumInfoReply;
-    QNetworkReply* m_artistInfoReply;
-    QNetworkReply* m_artistEventsReply;
-    QNetworkReply* m_trackTopFansReply;
-    QNetworkReply* m_trackTagsReply;
-
     Album m_albumGuess;
 };
 
-#endif //METADATA_WIDGET_H_
+#endif // METADATAWIDGET_H

@@ -8,6 +8,7 @@ Label::Label( QWidget* parent )
     :QLabel( parent )
 {
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    setOpenExternalLinks( true );
 }
 
 
@@ -16,23 +17,27 @@ Label::Label( const QString& text, QWidget* parent )
 {
     setText( text );
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    setOpenExternalLinks( true );
 }
 
+QString
+Label::boldLinkStyle( const QString& text )
+{
+    return QString( "<html><head><style type=text/css>"
+                     "a:link {color:black; font-weight: bold; text-decoration:none;}"
+                     "a:hover {color:black; font-weight: bold; text-decoration:none;}"
+                     "</style></head><body>%1</body></html>" ).arg( text );
+}
 
 void
 Label::setText( const QString& text )
 {
-    QLabel::setText( text );
+    m_text = text;
 
     if ( textFormat() == Qt::RichText )
-        QLabel::setText( QString( "<html><head><style type=text/css>"
-                                 "a:link {color:white; text-decoration:none;}"
-                                 "a:hover {color:white; text-decoration:none}"
-                                 "</style></head><body>%1</body></html>" ).arg( m_text ) );
+        QLabel::setText( boldLinkStyle( m_text ) );
     else
-        QLabel::setText( "" );
-
-    m_text = text;
+        QLabel::setText( ""  );
 
     update();
 }
@@ -40,7 +45,7 @@ Label::setText( const QString& text )
 QString
 Label::anchor( const QString& url, const QString& text )
 {
-    return QString( "<a title='yeah' href=\"%1\">%2</a>" ).arg( url, text );
+    return QString( "<a href=\"%1\">%2</a>" ).arg( url, text );
 }
 
 void

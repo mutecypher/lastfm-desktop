@@ -31,8 +31,8 @@
 
 #include "../Application.h"
 
-ScrobbleControls::ScrobbleControls( const Track& track )
-    :m_track( track )
+ScrobbleControls::ScrobbleControls( QWidget* parent )
+    :StylableWidget( parent )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
@@ -70,7 +70,14 @@ ScrobbleControls::ScrobbleControls( const Track& track )
 
     connect( ui.tag, SIGNAL( clicked()), SLOT( onTag()));
     connect( ui.share, SIGNAL( clicked()), SLOT( onShare()));
+}
 
+
+void
+ScrobbleControls::setTrack( const Track& track )
+{
+    disconnect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), this, SLOT(setLoveChecked(bool)));
+    m_track = track;
     connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(setLoveChecked(bool)));
 }
 

@@ -15,6 +15,7 @@ public:
     void setText( const QString& text );
 
     static QString anchor( const QString& url, const QString& text );
+    static QString boldLinkStyle( const QString& text );
 
 private:
     void paintEvent( QPaintEvent* event );

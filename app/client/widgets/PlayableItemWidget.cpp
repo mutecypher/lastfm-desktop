@@ -39,6 +39,8 @@ PlayableItemWidget::PlayableItemWidget(const RadioStation& rs, QString title, QS
 
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
+    setCursor( Qt::PointingHandCursor );
+
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
     connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
 

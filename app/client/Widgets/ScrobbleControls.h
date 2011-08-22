@@ -30,19 +30,22 @@ namespace unicorn{ class Session; };
 namespace lastfm{ class UserDetails; };
 
 class QPushButton;
+
 class ScrobbleControls : public StylableWidget
 {
     Q_OBJECT
 public:
-    ScrobbleControls( const Track& track );
-
-protected:
     struct {
         QPushButton* love;
         QPushButton* tag;
         QPushButton* share;
         QPushButton* buy;
     } ui;
+
+public:
+    ScrobbleControls( QWidget* parent = 0 );
+
+    void setTrack( const Track& track );
 
 public slots:
     void setLoveChecked( bool checked );

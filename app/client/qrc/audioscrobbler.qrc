@@ -105,6 +105,13 @@
         <file>meta_tag_PRESS.png</file>
         <file>meta_tag_REST.png</file>
 
+		<file>meta_tag_LEFT_HOVER.png</file>
+		<file>meta_tag_LEFT_REST.png</file>
+		<file>meta_tag_MIDDLE_HOVER.png</file>
+		<file>meta_tag_MIDDLE_REST.png</file>
+		<file>meta_tag_RIGHT_HOVER.png</file>
+		<file>meta_tag_RIGHT_REST.png</file>
+
         <file>16x16.png</file>
         <file>22x22.png</file>
         <file>22x22_transparent.png</file>
