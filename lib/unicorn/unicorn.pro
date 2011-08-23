@@ -5,7 +5,8 @@ QT = core gui xml network
 include( $$ROOT_DIR/admin/include.qmake )
 SOURCES += $$ROOT_DIR/common/c++/Logger.cpp \
     dialogs/ShareDialog.cpp \
-    widgets/AvatarWidget.cpp
+    widgets/AvatarWidget.cpp \
+    layouts/FlowLayout.cpp
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 # UniqueApplication
@@ -52,7 +53,6 @@ SOURCES += \
     LoginProcess.cpp \
 	layouts/SlideOverLayout.cpp \
 	layouts/SideBySideLayout.cpp \
-	layouts/flowlayout.cpp \
 	layouts/AnimatedListLayout.cpp \
 	dialogs/UserManagerDialog.cpp \
 	dialogs/UpdateDialog.cpp \
@@ -111,7 +111,6 @@ HEADERS += \
 	LoginProcess.h \
 	layouts/SlideOverLayout.h \
 	layouts/SideBySideLayout.h \
-	layouts/flowlayout.h \
 	layouts/AnimatedListLayout.h \
 	dialogs/WelcomeDialog.h \
 	dialogs/UserManagerDialog.h \
@@ -124,7 +123,8 @@ HEADERS += \
 	AnimatedStatusBar.h \
 	AnimatedPushButton.h \
     dialogs/ShareDialog.h \
-    widgets/AvatarWidget.h
+    widgets/AvatarWidget.h \
+    layouts/FlowLayout.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	
