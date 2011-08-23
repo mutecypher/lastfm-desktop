@@ -61,6 +61,8 @@ private slots:
     void onTrackGotYourTags();
     void onArtistGotYourTags();
 
+    void onArtistGotSimilar();
+
     void onTrackCorrected( QString correction );
     void listItemClicked( const QModelIndex& );
 
@@ -72,6 +74,9 @@ signals:
     void backClicked();
 
 private:
+    void showIfRoom( const QLayout* layout );
+    void resizeEvent( QResizeEvent* event );
+
     void checkFinished();
 
     void setTrackDetails( const Track& track );

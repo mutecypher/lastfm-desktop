@@ -148,6 +148,7 @@ MetadataWidget QFrame#artistFrame {
 MetadataWidget HttpImageWidget#albumImage {
 	color: transparent;
 	background-color: white;
+	qproperty-scaledContents: true;
 	border: 1px solid #cdcdcd;
 	min-width: 128px;
 	min-height: 128px;
@@ -264,6 +265,12 @@ MetadataWidget TagWidget:hover {
 	qproperty-left: url(":/meta_tag_LEFT_HOVER.png");
 	qproperty-middle: url(":/meta_tag_MIDDLE_HOVER.png");
 	qproperty-right: url(":/meta_tag_RIGHT_HOVER.png");
+}
+
+MetadataWidget QFrame#similarArtistFrame QLabel {
+	padding: 2px;
+	border: 1px solid #cdcdcd;
+	background-color: white;
 }
 
 FriendListWidget QLineEdit

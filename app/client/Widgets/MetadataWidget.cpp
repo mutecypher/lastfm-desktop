@@ -89,11 +89,50 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
     connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
     connect( m_track.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
+    connect( m_track.artist().getSimilar( 4 ), SIGNAL(finished()), SLOT(onArtistGotSimilar()));
 }
 
 MetadataWidget::~MetadataWidget()
 {
     delete ui;
+}
+
+void
+MetadataWidget::showIfRoom( const QLayout* layout )
+{
+    int cumWidth = 0;
+
+    bool roomForMore = true;
+
+    for ( int i = 0 ; i < layout->count() ; ++i )
+    {
+        QWidget* widget = layout->itemAt( i )->widget();
+
+        if ( roomForMore )
+        {
+            int widgetWidth = widget->width();
+
+            roomForMore = cumWidth + widgetWidth < ui->scrollArea->viewport()->width() - 130;
+
+            widget->setVisible( roomForMore );
+
+            if ( roomForMore )
+                cumWidth += widgetWidth;
+        }
+        else
+            widget->hide();
+    }
+}
+
+void
+MetadataWidget::resizeEvent( QResizeEvent* event )
+{
+    setUpdatesEnabled( false );
+    showIfRoom( ui->trackYourTagsList );
+    showIfRoom( ui->trackPopTagsList );
+    showIfRoom( ui->artistYourTagsList );
+    showIfRoom( ui->artistPopTagsList );
+    setUpdatesEnabled( true );
 }
 
 ScrobbleControls*
@@ -168,9 +207,9 @@ MetadataWidget::onArtistGotInfo()
        #endif
 
        foreach(const XmlQuery& e, lfm["artist"]["tags"].children("tag"))
-       {
            ui->artistPopTagsList->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
-       }
+
+       showIfRoom( ui->artistPopTagsList );
 
        //TODO if empty suggest they edit it
        QString bio;
@@ -201,6 +240,46 @@ MetadataWidget::onArtistGotInfo()
    {
        qDebug() << e;
    }
+}
+
+void
+MetadataWidget::onArtistGotSimilar()
+{
+    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+
+    try
+    {
+        const XmlQuery& lfm = reply->readAll();
+
+        QList<XmlQuery> artists = lfm["similarartists"].children("artist");
+
+        QRegExp re( "/serve/(\\d*)s?/" );
+
+        ui->artist1->setText( artists[1]["name"].text() );
+        ui->artist1->loadUrl( artists[0]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
+        ui->artist1->setHref( artists[0]["url"].text() );
+
+        ui->artist2->setText( artists[1]["name"].text() );
+        ui->artist2->loadUrl( artists[1]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
+        ui->artist2->setHref( artists[1]["url"].text() );
+
+        ui->artist3->setText( artists[2]["name"].text() );
+        ui->artist3->loadUrl( artists[2]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
+        ui->artist3->setHref( artists[2]["url"].text() );
+
+        ui->artist4->setText( artists[3]["name"].text() );
+        ui->artist4->loadUrl( artists[3]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
+        ui->artist4->setHref( artists[3]["url"].text() );
+    }
+    catch ( lastfm::ws::ParseError e )
+    {
+        // TODO: what happens when we fail?
+        qDebug() << e.message() << e.enumValue();
+    }
+    catch ( lastfm::ws::Error e )
+    {
+        qDebug() << e;
+    }
 }
 
 void
@@ -301,10 +380,9 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
        ui->scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
 
        foreach(const XmlQuery& e, lfm["track"]["toptags"].children("tag").mid(0, 5 ))
-       {
            ui->trackPopTagsList->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
 
-       }
+       showIfRoom( ui->trackPopTagsList );
 
        // If we don't know the album then get it from this response
        if ( m_track.album().isNull() )

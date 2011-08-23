@@ -1,6 +1,7 @@
 #include <QEvent>
 #include <QResizeEvent>
 #include <QPainter>
+#include <QToolTip>
 
 #include "Label.h"
 
@@ -9,6 +10,8 @@ Label::Label( QWidget* parent )
 {
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
     setOpenExternalLinks( true );
+
+    connect( this, SIGNAL(linkHovered(QString)), SLOT(onHovered(QString)));
 }
 
 
@@ -18,6 +21,14 @@ Label::Label( const QString& text, QWidget* parent )
     setText( text );
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
     setOpenExternalLinks( true );
+
+    connect( this, SIGNAL(linkHovered(QString)), SLOT(onHovered(QString)));
+}
+
+void
+Label::onHovered( const QString& url )
+{
+    QToolTip::showText( cursor().pos(), url, this, QRect() );
 }
 
 QString

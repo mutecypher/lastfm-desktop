@@ -20,6 +20,9 @@ public:
 private:
     void paintEvent( QPaintEvent* event );
 
+private slots:
+    void onHovered( const QString& url );
+
 private:
     QString m_text;
 };

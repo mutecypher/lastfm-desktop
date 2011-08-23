@@ -64,6 +64,8 @@ protected slots:
     void onBioChanged( const QSizeF& size );
     void onAnchorClicked( const QUrl& link );
 
+    void onHighlighted( const QString& url );
+
 protected:
     void insertWidget( QWidget* w );
     WidgetTextObject* m_widgetTextObject;

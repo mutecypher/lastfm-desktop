@@ -4,6 +4,7 @@
 
 #include <QEventLoop>
 #include <QApplication>
+#include <QToolTip>
 
 BioWidget::BioWidget( QWidget* p ) 
           : QTextBrowser( p ), 
@@ -29,6 +30,13 @@ BioWidget::BioWidget( QWidget* p )
     insertWidget( ui.onTour );
     
     connect( ui.image, SIGNAL(loaded()), SLOT(update()));
+    connect( this, SIGNAL(highlighted(QString)), SLOT(onHighlighted(QString)) );
+}
+
+void
+BioWidget::onHighlighted( const QString& url )
+{
+    QToolTip::showText( cursor().pos(), url, this, QRect() );
 }
 
 void 
