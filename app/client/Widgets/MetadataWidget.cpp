@@ -69,6 +69,21 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     ui->back->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->trackTags->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->artistTags->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->trackTagsFrame->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
+    ui->trackPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
+    ui->trackPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
+    ui->trackUserPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
+    ui->trackUserPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
+    ui->trackListeners->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
+    ui->trackListenersLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
+
+    ui->artistPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
+    ui->artistPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
+    ui->artistUserPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
+    ui->artistUserPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
+    ui->artistListeners->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
+    ui->artistListenersLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
 
     setTrackDetails( track );
 
@@ -89,7 +104,6 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
     connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
     connect( m_track.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
-    connect( m_track.artist().getSimilar( 4 ), SIGNAL(finished()), SLOT(onArtistGotSimilar()));
 }
 
 MetadataWidget::~MetadataWidget()
@@ -168,6 +182,8 @@ MetadataWidget::setTrackDetails( const Track& track )
            ui->trackAlbum->setText( tr("from %1").arg( Label::anchor( track.album( Track::Corrected ).www().toString(), track.album( Track::Corrected ))));
    }
 
+   ui->radio->setStation( RadioStation::similar( Artist( track.artist().name() ) ), tr( "Play %1 Radio" ).arg( track.artist().name() ) );
+
    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->scrobbleControls, SLOT(setLoveChecked(bool)));
 
    // Add the green astrix to the title, if it has been corrected
@@ -182,54 +198,84 @@ MetadataWidget::setTrackDetails( const Track& track )
 void
 MetadataWidget::onArtistGotInfo()
 {
-   QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
 
-   try
-   {
-       const XmlQuery& lfm = reply->readAll();
+    try
+    {
+        const XmlQuery& lfm = reply->readAll();
 
-       //int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
-       //int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
-       m_userArtistScrobbles = lfm["artist"]["stats"]["userplaycount"].text().toInt();
+        int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
+        int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
+        m_userArtistScrobbles = lfm["artist"]["stats"]["userplaycount"].text().toInt();
 
-       // Update the context now that we have the user track listens
-       ui->context->setText( contextString( m_track ) );
+        ui->artistPlays->setText( tr( "%L1" ).arg( scrobbles ) );
+        ui->artistUserPlays->setText( tr( "%L1" ).arg( m_userArtistScrobbles ) );
+        ui->artistListeners->setText( tr( "%L1" ).arg( listeners ) );
 
-       //model.similarArtists->clear();
+        // Update the context now that we have the user track listens
+        ui->context->setText( contextString( m_track ) );
 
-       #if 0
-       foreach(const XmlQuery& e, lfm["artist"]["similar"].children("artist").mid(0,4))
-       {
-           QListWidgetItem* lwi = new QListWidgetItem( e["name"].text());
-           lwi->setData( Qt::DecorationRole, QUrl( e["image size=small"].text()));
-         //  model.similarArtists->addArtist( Artist( e ));
-       }
-       #endif
+        {
+            // Similar artists!
+            QList<XmlQuery> artists = lfm["artist"]["similar"].children("artist").mid( 0, 4 );
 
-       foreach(const XmlQuery& e, lfm["artist"]["tags"].children("tag"))
+            if ( artists.count() != 0 )
+            {
+                ui->similarArtistFrame->show();
+                ui->similarArtists->show();
+
+                QList<HttpImageWidget*> widgets;
+                widgets << ui->artist1 << ui->artist2 << ui->artist3 << ui->artist4;
+
+                QRegExp re( "/serve/(\\d*)s?/" );
+
+                for ( int i = 0 ; i < artists.count() ; ++i )
+                {
+                widgets[i]->setText( artists[i]["name"].text() );
+                widgets[i]->setToolTip( artists[i]["name"].text() );
+                widgets[i]->loadUrl( artists[i]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
+                widgets[i]->setHref( artists[i]["url"].text() );
+                }
+
+                // with yeah, blah and more.
+                if ( artists.count() == 1 )
+                    ui->radio->setDescription( tr( "With %1 and more." ).arg( artists[0]["name"].text() ) );
+                else if ( artists.count() == 2 )
+                    ui->radio->setDescription( tr( "With %1, %2 and more.").arg( artists[0]["name"].text(), artists[1]["name"].text() ) );
+                else if ( artists.count() == 3 )
+                    ui->radio->setDescription( tr( "With %1, %2, %3 and more.").arg( artists[0]["name"].text(), artists[1]["name"].text(), artists[2]["name"].text() )  );
+                else if ( artists.count() == 4 )
+                    ui->radio->setDescription( tr( "With %1, %2, %3, %4 and more.").arg( artists[0]["name"].text(), artists[1]["name"].text(), artists[2]["name"].text(), artists[3]["name"].text() )  );
+            }
+
+        }
+
+        QList<XmlQuery> tags =  lfm["artist"]["tags"].children("tag");
+
+        foreach( const XmlQuery& e, tags )
            ui->artistPopTagsList->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
 
-       showIfRoom( ui->artistPopTagsList );
+        showIfRoom( ui->artistPopTagsList );
 
-       //TODO if empty suggest they edit it
-       QString bio;
-       {
-           QStringList bioList = lfm["artist"]["bio"]["summary"].text().trimmed().split( "\r" );
-           foreach( const QString& p, bioList ) {
-               QString pTrimmed = p.trimmed();
-               if( pTrimmed.isEmpty()) continue;
-               bio += "<p>" + pTrimmed + "</p>";
-           }
-       }
+        //TODO if empty suggest they edit it
+        QString bio;
+        {
+            QStringList bioList = lfm["artist"]["bio"]["summary"].text().trimmed().split( "\r" );
+            foreach( const QString& p, bioList ) {
+                QString pTrimmed = p.trimmed();
+                if( pTrimmed.isEmpty()) continue;
+                bio += "<p>" + pTrimmed + "</p>";
+            }
+        }
 
-       bio = Label::boldLinkStyle( bio );
+        bio = Label::boldLinkStyle( bio );
 
-       ui->artistBio->append( bio );
-       ui->artistBio->updateGeometry();
-       QUrl url = lfm["artist"]["image size=large"].text();
-       ui->artistBio->loadImage( url );
-       ui->artistBio->setImageHref( QUrl(lfm["artist"]["url"].text()));
-       ui->artistBio->setOnTourVisible( false, QUrl(lfm["artist"]["url"].text()+"/+events"));
+        ui->artistBio->append( bio );
+        ui->artistBio->updateGeometry();
+        QUrl url = lfm["artist"]["image size=large"].text();
+        ui->artistBio->loadImage( url );
+        ui->artistBio->setImageHref( QUrl(lfm["artist"]["url"].text()));
+        ui->artistBio->setOnTourVisible( false, QUrl(lfm["artist"]["url"].text()+"/+events"));
    }
    catch ( lastfm::ws::ParseError e )
    {
@@ -240,46 +286,6 @@ MetadataWidget::onArtistGotInfo()
    {
        qDebug() << e;
    }
-}
-
-void
-MetadataWidget::onArtistGotSimilar()
-{
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-
-    try
-    {
-        const XmlQuery& lfm = reply->readAll();
-
-        QList<XmlQuery> artists = lfm["similarartists"].children("artist");
-
-        QRegExp re( "/serve/(\\d*)s?/" );
-
-        ui->artist1->setText( artists[1]["name"].text() );
-        ui->artist1->loadUrl( artists[0]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
-        ui->artist1->setHref( artists[0]["url"].text() );
-
-        ui->artist2->setText( artists[1]["name"].text() );
-        ui->artist2->loadUrl( artists[1]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
-        ui->artist2->setHref( artists[1]["url"].text() );
-
-        ui->artist3->setText( artists[2]["name"].text() );
-        ui->artist3->loadUrl( artists[2]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
-        ui->artist3->setHref( artists[2]["url"].text() );
-
-        ui->artist4->setText( artists[3]["name"].text() );
-        ui->artist4->loadUrl( artists[3]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
-        ui->artist4->setHref( artists[3]["url"].text() );
-    }
-    catch ( lastfm::ws::ParseError e )
-    {
-        // TODO: what happens when we fail?
-        qDebug() << e.message() << e.enumValue();
-    }
-    catch ( lastfm::ws::Error e )
-    {
-        qDebug() << e;
-    }
 }
 
 void

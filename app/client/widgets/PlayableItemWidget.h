@@ -30,7 +30,11 @@ class PlayableItemWidget : public QPushButton
     Q_OBJECT;
 
 public:
-    PlayableItemWidget( const RadioStation& rs, QString title, QString description = "" );
+    PlayableItemWidget( QWidget* parent = 0 );
+    PlayableItemWidget( const RadioStation& rs, const QString& title, const QString& description = "", QWidget* parent = 0 );
+
+    void setStation( const RadioStation& rs, const QString& title, const QString& description = "" );
+    void setDescription( const QString& description );
 
     const RadioStation& station() const { return m_rs; }
 

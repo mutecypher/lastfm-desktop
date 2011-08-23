@@ -145,6 +145,10 @@ MetadataWidget QFrame#artistFrame {
 	padding-bottom: 0px;
 }
 
+MetadataWidget QFrame#trackDetails {
+	padding-bottom: 10px;
+}
+
 MetadataWidget HttpImageWidget#albumImage {
 	color: transparent;
 	background-color: white;
@@ -193,13 +197,25 @@ MetadataWidget QLabel#artistYourTags {
 }
 
 MetadataWidget QLabel#trackTags,
-MetadataWidget QLabel#artistTags {
+MetadataWidget QLabel#artistTags,
+MetadataWidget QLabel#similarArtists {
 	font-size: 16px;
 	font-weight: bold;
-	padding-bottom: 8px;
+	padding: 10px 0px;
+	border: none;
 	border-bottom: 1px solid #cdcdcd;
 }
 
+MetadataWidget QFrame#trackStats,
+MetadataWidget QFrame#artistStats {
+	padding: 10px 0px;
+}
+
+MetadataWidget QFrame#trackTagsFrame,
+MetadataWidget QFrame#artistTagsFrame {
+	border-top: 1px solid white;
+	padding: 10px 0px;
+}
 
 MetadataWidget QLabel#trackPlays,
 MetadataWidget QLabel#trackListeners,
@@ -231,7 +247,20 @@ MetadataWidget QLabel#artistPlays,
 MetadataWidget QLabel#artistListeners,
 MetadataWidget QLabel#artistPlaysLabel,
 MetadataWidget QLabel#artistListenersLabel {
+	border: none;
 	border-right: 1px solid #cdcdcd;
+}
+
+MetadataWidget QLabel#trackPlays,
+MetadataWidget QLabel#trackUserPlays,
+MetadataWidget QLabel#trackPlaysLabel,
+MetadataWidget QLabel#trackUserPlaysLabel,
+MetadataWidget QLabel#artistPlays,
+MetadataWidget QLabel#artistUserPlays,
+MetadataWidget QLabel#artistPlaysLabel,
+MetadataWidget QLabel#artistUserPlaysLabel {
+	border: none;
+	border-left: 1px solid white;
 }
 
 MetadataWidget QWidget#artistFrame {
@@ -267,10 +296,27 @@ MetadataWidget TagWidget:hover {
 	qproperty-right: url(":/meta_tag_RIGHT_HOVER.png");
 }
 
+MetadataWidget QFrame#similarArtistFrame {
+	padding: 10px 0px;
+	border-top: 1px solid white;
+}
+
 MetadataWidget QFrame#similarArtistFrame QLabel {
 	padding: 2px;
 	border: 1px solid #cdcdcd;
 	background-color: white;
+	margin-bottom: 20px;
+	color: black;
+	qproperty-alignment: AlignBottom;
+	background-origin: margin;
+}
+
+MetadataWidget PlayableItemWidget {
+	color: white;
+	background-color: black;
+	border: 1px solid black;
+	border-radius: 4px;
+	height: 45px;
 }
 
 FriendListWidget QLineEdit

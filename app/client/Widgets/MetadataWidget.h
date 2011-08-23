@@ -61,8 +61,6 @@ private slots:
     void onTrackGotYourTags();
     void onArtistGotYourTags();
 
-    void onArtistGotSimilar();
-
     void onTrackCorrected( QString correction );
     void listItemClicked( const QModelIndex& );
 

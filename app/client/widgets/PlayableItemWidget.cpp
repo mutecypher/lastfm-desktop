@@ -30,23 +30,47 @@
 #include "PlayableItemWidget.h"
 #include "../Services/RadioService.h"
 
-
-PlayableItemWidget::PlayableItemWidget(const RadioStation& rs, QString title, QString description )
-    : m_rs(rs), m_description( description )
+PlayableItemWidget::PlayableItemWidget( QWidget* parent )
+    : QPushButton( parent )
 {
+    setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    setCursor( Qt::PointingHandCursor );
+}
+
+PlayableItemWidget::PlayableItemWidget( const RadioStation& rs, const QString& title, const QString& description, QWidget* parent )
+    : QPushButton( parent ), m_rs(rs), m_description( description )
+{
+    setStation( rs, title, description );
+
+    setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    setCursor( Qt::PointingHandCursor );
+}
+
+void
+PlayableItemWidget::setStation(const RadioStation &rs, const QString &title, const QString& description)
+{
+    // disconnect from recieving any previous signals
+    disconnect( this, 0 );
+
     m_rs.setTitle( title );
     setText( title );
 
-    setAttribute( Qt::WA_LayoutUsesWidgetRect );
-
-    setCursor( Qt::PointingHandCursor );
+    m_description = description;
 
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
     connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
 
     connect( this, SIGNAL(clicked()), SLOT(play()));
+
+    update();
 }
 
+void
+PlayableItemWidget::setDescription( const QString& description )
+{
+    m_description = description;
+    update();
+}
 
 void 
 PlayableItemWidget::play()
