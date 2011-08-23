@@ -10,24 +10,12 @@ class TagWidget : public QPushButton
 {
     Q_OBJECT
 public:
-    Q_PROPERTY( QPixmap left READ left WRITE setLeft );
-    Q_PROPERTY( QPixmap middle READ middle WRITE setMiddle );
-    Q_PROPERTY( QPixmap right READ right WRITE setRight );
-
     explicit TagWidget( const QString& tag, const QString& url, QWidget *parent = 0);
-
-    const QPixmap* left() const;
-    void setLeft( const QPixmap& left );
-
-    const QPixmap* middle() const;
-    void setMiddle( const QPixmap& middle );
-
-    const QPixmap* right() const;
-    void setRight( const QPixmap& right );
 
 private:
     void paintEvent( QPaintEvent* event );
     QSize sizeHint() const;
+    bool event( QEvent* e );
 
 private slots:
     void onClicked();
@@ -35,9 +23,15 @@ private slots:
 private:
     QUrl m_url;
 
-    QPixmap m_left;
-    QPixmap m_middle;
-    QPixmap m_right;
+    bool m_hovered;
+
+    QPixmap m_left_rest;
+    QPixmap m_middle_rest;
+    QPixmap m_right_rest;
+
+    QPixmap m_left_hover;
+    QPixmap m_middle_hover;
+    QPixmap m_right_hover;
 };
 
 #endif // TAGWIDGET_H

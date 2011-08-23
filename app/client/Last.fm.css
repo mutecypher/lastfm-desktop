@@ -282,18 +282,9 @@ MetadataWidget BioWidget#artistBio {
 }
 
 MetadataWidget TagWidget {
-	height: 19px;
-	color: white;
-	font-size: 11px;
-	qproperty-left: url(":/meta_tag_LEFT_REST.png");
-	qproperty-middle: url(":/meta_tag_MIDDLE_REST.png");
-	qproperty-right: url(":/meta_tag_RIGHT_REST.png");
-}
-
-MetadataWidget TagWidget:hover {
-	qproperty-left: url(":/meta_tag_LEFT_HOVER.png");
-	qproperty-middle: url(":/meta_tag_MIDDLE_HOVER.png");
-	qproperty-right: url(":/meta_tag_RIGHT_HOVER.png");
+        height: 19px;
+        color: white;
+        font-size: 11px;
 }
 
 MetadataWidget QFrame#similarArtistFrame {
@@ -313,10 +304,9 @@ MetadataWidget QFrame#similarArtistFrame QLabel {
 
 MetadataWidget PlayableItemWidget {
 	color: white;
-	background-color: black;
-	border: 1px solid black;
-	border-radius: 4px;
-	height: 45px;
+	background-color: transparent;
+	min-height: 49px;
+	max-height: 49px;
 }
 
 FriendListWidget QLineEdit

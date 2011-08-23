@@ -58,12 +58,16 @@ signals:
     void trackGotTags(XmlQuery);
     void finished();
 
+public slots:
+    void onPrefsTriggered();
+
 private slots:
     void onTrackStarted(const Track&, const Track&);
     void onStopped();
     void onPaused();
     void onResumed();
     void onTuningIn();
+
 
 private:
     void setCurrentWidget( QWidget* );

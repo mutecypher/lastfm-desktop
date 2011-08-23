@@ -82,7 +82,7 @@ namespace unicorn
         void openLog();
         void refreshStyleSheet();
 
-    protected:
+    public:
         struct UI {
             UI() : account( 0 ), profile( 0 )
             {}

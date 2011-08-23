@@ -30,20 +30,50 @@
 #include "PlayableItemWidget.h"
 #include "../Services/RadioService.h"
 
+QPixmap PlayableItemWidget::m_radio_left_hover = QPixmap( ":/meta_radio_LEFT_HOVER.png" );
+QPixmap PlayableItemWidget::m_radio_left_press = QPixmap( ":/meta_radio_LEFT_PRESS.png" );
+QPixmap PlayableItemWidget::m_radio_left_rest = QPixmap( ":/meta_radio_LEFT_REST.png" );
+QPixmap PlayableItemWidget::m_radio_middle_hover = QPixmap( ":/meta_radio_MIDDLE_HOVER.png" );
+QPixmap PlayableItemWidget::m_radio_middle_press = QPixmap( ":/meta_radio_MIDDLE_PRESS.png" );
+QPixmap PlayableItemWidget::m_radio_middle_rest = QPixmap( ":/meta_radio_MIDDLE_REST.png" );
+QPixmap PlayableItemWidget::m_radio_right_hover = QPixmap( ":/meta_radio_RIGHT_HOVER.png" );
+QPixmap PlayableItemWidget::m_radio_right_press = QPixmap( ":/meta_radio_RIGHT_PRESS.png" );
+QPixmap PlayableItemWidget::m_radio_right_rest = QPixmap( ":/meta_radio_RIGHT_REST.png" );
+
 PlayableItemWidget::PlayableItemWidget( QWidget* parent )
-    : QPushButton( parent )
+    : QPushButton( parent ), m_hovered( false )
 {
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
     setCursor( Qt::PointingHandCursor );
 }
 
 PlayableItemWidget::PlayableItemWidget( const RadioStation& rs, const QString& title, const QString& description, QWidget* parent )
-    : QPushButton( parent ), m_rs(rs), m_description( description )
+    : QPushButton( parent ), m_rs(rs), m_description( description ), m_hovered( false )
 {
     setStation( rs, title, description );
 
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
     setCursor( Qt::PointingHandCursor );
+}
+
+bool
+PlayableItemWidget::event( QEvent* e )
+{
+    switch ( e->type())
+    {
+    case QEvent::HoverEnter:
+        m_hovered = true;
+        update();
+        break;
+    case QEvent::HoverLeave:
+        m_hovered = false;
+        update();
+        break;
+    default:
+        break;
+    }
+
+    return QPushButton::event( e );
 }
 
 void
@@ -124,18 +154,18 @@ PlayableItemWidget::onRadioChanged()
 void
 PlayableItemWidget::paintEvent( QPaintEvent* event )
 {
-    QPushButton::paintEvent( event );
-
-    QPainter p( this );
-
-    p.setPen( QColor( 0x898989 ) );
-
-    QFont font = p.font();
-    font.setPixelSize( 12 );
-    p.setFont( font );
-
     if ( QString("ProfileWidget").compare( parent()->parent()->parent()->metaObject()->className() ) == 0 )
     {
+        QPushButton::paintEvent( event );
+
+        QPainter p( this );
+
+        p.setPen( QColor( 0x898989 ) );
+
+        QFont font = p.font();
+        font.setPixelSize( 12 );
+        p.setFont( font );
+
         QTextOption to;
         to.setAlignment( Qt::AlignVCenter );
 
@@ -143,8 +173,44 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
         p.drawText( rect().adjusted( fm.width( text() ) + 45, 0, 0, 0 ), m_description, to );
 
     }
+    else if ( QString("MetadataWidget").compare( parent()->parent()->parent()->parent()->parent()->metaObject()->className() ) == 0 )
+    {
+        QPainter p( this );
+
+        if ( m_hovered )
+        {
+            p.drawPixmap( rect().topLeft(), m_radio_left_hover );
+            p.drawPixmap( rect().topLeft() + QPoint( 20, 0 ), m_radio_middle_hover );
+            p.drawPixmap( rect().topLeft() + QPoint( 21, 0 ), m_radio_right_hover);
+        }
+        else
+        {
+            p.drawPixmap( rect().topLeft(), m_radio_left_rest );
+            p.drawPixmap( rect().topLeft() + QPoint( 20, 0 ), m_radio_middle_rest );
+            p.drawPixmap( rect().topLeft() + QPoint( 21, 0 ), m_radio_right_rest);
+        }
+
+        QPushButton::paintEvent( event );
+
+        p.setPen( QColor( 0x898989 ) );
+
+        QFont font = p.font();
+        font.setPixelSize( 12 );
+        p.setFont( font );
+
+    }
     else
     {
+        QPushButton::paintEvent( event );
+
+        QPainter p( this );
+
+        p.setPen( QColor( 0x898989 ) );
+
+        QFont font = p.font();
+        font.setPixelSize( 12 );
+        p.setFont( font );
+
         QTextOption to;
         to.setAlignment( Qt::AlignBottom );
 

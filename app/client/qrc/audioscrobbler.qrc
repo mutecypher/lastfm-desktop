@@ -111,6 +111,16 @@
 		<file>meta_tag_MIDDLE_REST.png</file>
 		<file>meta_tag_RIGHT_HOVER.png</file>
 		<file>meta_tag_RIGHT_REST.png</file>
+		
+		<file>meta_radio_LEFT_HOVER.png</file>
+		<file>meta_radio_LEFT_PRESS.png</file>
+		<file>meta_radio_LEFT_REST.png</file>
+		<file>meta_radio_MIDDLE_HOVER.png</file>
+		<file>meta_radio_MIDDLE_PRESS.png</file>
+		<file>meta_radio_MIDDLE_REST.png</file>
+		<file>meta_radio_RIGHT_HOVER.png</file>
+		<file>meta_radio_RIGHT_PRESS.png</file>
+		<file>meta_radio_RIGHT_REST.png</file>
 
         <file>16x16.png</file>
         <file>22x22.png</file>

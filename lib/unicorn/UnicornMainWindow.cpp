@@ -63,8 +63,11 @@ unicorn::MainWindow::finishUi()
     base_ui.account = menuBar()->addMenu( User().name() );
     base_ui.profile = base_ui.account->addAction( tr("Visit &Profile"), this, SLOT(visitProfile()) );
     base_ui.account->addSeparator();
+
     QAction* quit = base_ui.account->addAction( tr("&Quit"), qApp, SLOT(quit()) );
+
     quit->setMenuRole( QAction::QuitRole );
+
 #ifdef Q_OS_WIN
     quit->setShortcut( Qt::ALT + Qt::Key_F4 );
 #else
@@ -79,6 +82,11 @@ unicorn::MainWindow::finishUi()
 #ifdef Q_OS_MAC
     about->setMenuRole( QAction::AboutRole );
     c4u->setMenuRole( QAction::ApplicationSpecificRole );
+#endif
+
+#ifndef NDEBUG
+    QMenu* debug = menuBar()->addMenu( "Debug" );
+    debug->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()), Qt::CTRL + Qt::Key_R );
 #endif
 
     base_ui.update = new UpdateDialog( this );

@@ -28,7 +28,6 @@
 #include <QTcpSocket>
 
 #include "Widgets/PointyArrow.h"
-#include "Dialogs/SettingsDialog.h"
 
 #include "MainWindow.h"
 #include "../Widgets/ScrobbleControls.h"
@@ -124,6 +123,8 @@ Application::init()
         installer.install();
     }
 #endif
+
+
 
 //    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
 //    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
@@ -221,12 +222,7 @@ Application::init()
     menu->addSeparator();
 
     m_submit_scrobbles_toggle = menu->addAction(tr("Submit Scrobbles"));
-#ifdef Q_WS_MAC
-    m_prefs_action = menu->addAction(tr("Preferences")+ELLIPSIS);
-#else
-    m_prefs_action = menu->addAction(tr("Options")+ELLIPSIS);
-#endif
-    connect( m_prefs_action, SIGNAL( triggered() ), this, SLOT( onPrefsTriggered() ) );
+
     menu->addSeparator();
     QMenu* helpMenu = menu->addMenu( tr( "Help" ) );
 
@@ -238,13 +234,6 @@ Application::init()
     connect( m_forums_action, SIGNAL( triggered() ), SLOT( onForumsTriggered() ) );
     connect( m_about_action, SIGNAL( triggered() ), SLOT( onAboutTriggered() ) );
     menu->addSeparator();
-
-#ifndef NDEBUG
-    QAction* rss = menu->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()) );
-    rss->setShortcut( Qt::CTRL + Qt::Key_R );
-
-    menu->addSeparator();
-#endif
 
     QAction* quit = menu->addAction(tr("Quit %1").arg( applicationName()));
 
@@ -472,13 +461,6 @@ Application::onAboutTriggered()
     m_aboutDialog->show();
 }
 
-void
-Application::onPrefsTriggered()
-{
-    SettingsDialog* settingsDialog = new SettingsDialog();
-    settingsDialog->exec();
-}
-
 void 
 Application::changeLovedState(bool loved)
 {
@@ -572,7 +554,7 @@ Application::onMessageReceived( const QStringList& message )
     else if ( message.contains( "--settings" ) )
     {
         // raise the settings window
-        m_prefs_action->trigger();
+        m_mw->onPrefsTriggered();
     }
     else if ( message.contains( "--new-ipod-detected" ) ||
               message.contains( "--ipod-detected" ))

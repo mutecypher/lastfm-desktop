@@ -32,6 +32,8 @@
 
 #include "MainWindow.h"
 
+#include "Dialogs/SettingsDialog.h"
+
 #include "Application.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
@@ -129,9 +131,19 @@ MainWindow::MainWindow()
 
     finishUi();
 
+    QAction* prefs = base_ui.account->addAction( tr("preferences"), this, SLOT(onPrefsTriggered()) );
+    prefs->setMenuRole( QAction::PreferencesRole );
+
     resize( 565, 710 );
 
     show();
+}
+
+void
+MainWindow::onPrefsTriggered()
+{
+    SettingsDialog* settingsDialog = new SettingsDialog();
+    settingsDialog->exec();
 }
 
 
