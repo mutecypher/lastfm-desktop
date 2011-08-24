@@ -53,7 +53,6 @@ SOURCES += \
     Widgets/KeyboardSettingsWidget.cpp \
     Widgets/IpodSettingsWidget.cpp \
     Widgets/IPodScrobbleInfoWidget.cpp \
-    Widgets/ColumnListView.cpp \
     Widgets/ActivityListWidget.cpp \
     Widgets/AccountSettingsWidget.cpp \
     StationSearch.cpp \
@@ -119,7 +118,6 @@ HEADERS += \
     Widgets/KeyboardSettingsWidget.h \
     Widgets/IpodSettingsWidget.h \
     Widgets/IPodScrobbleInfoWidget.h \
-    Widgets/ColumnListView.h \
     Widgets/ActivityListWidget.h \
     Widgets/RecentTracksWidget.h \
     Widgets/AccountSettingsWidget.h \
