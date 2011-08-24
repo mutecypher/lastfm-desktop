@@ -258,10 +258,14 @@ MetadataWidget::onArtistGotInfo()
 
         QList<XmlQuery> tags =  lfm["artist"]["tags"].children("tag");
 
+        if ( tags.count() == 0 )
+        {
+            ui->artistTags->hide();
+            ui->artistTagsFrame->hide();
+        }
+
         foreach( const XmlQuery& e, tags )
            ui->artistPopTagsList->layout()->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
-
-        //showIfRoom( ui->artistPopTagsList );
 
         //TODO if empty suggest they edit it
         QString bio;
@@ -374,50 +378,57 @@ MetadataWidget::onAlbumGotInfo()
 void
 MetadataWidget::onTrackGotInfo( const QByteArray& data )
 {
-   try
-   {
-       XmlQuery lfm(data);
-       m_globalTrackScrobbles = lfm["track"]["playcount"].text().toInt();
-       int listeners = lfm["track"]["listeners"].text().toInt();
-       m_userTrackScrobbles = lfm["track"]["userplaycount"].text().toInt();
+    try
+    {
+        XmlQuery lfm(data);
+        m_globalTrackScrobbles = lfm["track"]["playcount"].text().toInt();
+        int listeners = lfm["track"]["listeners"].text().toInt();
+        m_userTrackScrobbles = lfm["track"]["userplaycount"].text().toInt();
 
-       // Update the context now that we have the user track listens
-       ui->context->setText( contextString( m_track ) );
+        // Update the context now that we have the user track listens
+        ui->context->setText( contextString( m_track ) );
 
-       ui->trackUserPlays->setText( QString("%L1").arg(m_userTrackScrobbles));
-       ui->trackPlays->setText( QString("%L1").arg(m_globalTrackScrobbles));
-       ui->trackListeners->setText( QString("%L1").arg( listeners ));
-       ui->albumImage->loadUrl( lfm["track"]["album"]["image size=medium"].text() );
-       ui->albumImage->setHref( lfm["track"]["url"].text());
-       ui->scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
+        ui->trackUserPlays->setText( QString("%L1").arg(m_userTrackScrobbles));
+        ui->trackPlays->setText( QString("%L1").arg(m_globalTrackScrobbles));
+        ui->trackListeners->setText( QString("%L1").arg( listeners ));
+        ui->albumImage->loadUrl( lfm["track"]["album"]["image size=medium"].text() );
+        ui->albumImage->setHref( lfm["track"]["url"].text());
+        ui->scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
 
-       foreach(const XmlQuery& e, lfm["track"]["toptags"].children("tag").mid(0, 5 ))
-           ui->trackPopTagsList->layout()->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
+        // get the popular tags
+        QList<XmlQuery> tags = lfm["track"]["toptags"].children("tag").mid( 0, 5 );
 
-       //showIfRoom( ui->trackPopTagsList );
+        if ( tags.count() == 0 )
+        {
+            ui->trackTags->hide();
+            ui->trackTagsFrame->hide();
+        }
 
-       // If we don't know the album then get it from this response
-       if ( m_track.album().isNull() )
-       {
-           QString albumTitle = lfm["track"]["album"]["title"].text();
+        foreach ( const XmlQuery& e, tags )
+            ui->trackPopTagsList->layout()->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
 
-           if ( !albumTitle.isEmpty() )
-           {
-               m_albumGuess = lastfm::Album( m_track.artist().name(), albumTitle );
-               connect( m_albumGuess.getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
-               setTrackDetails( m_track );
-           }
-       }
-   }
-   catch ( lastfm::ws::ParseError e )
-   {
-       // TODO: what happens when we fail?
-       qDebug() << e.message() << e.enumValue();
-   }
-   catch ( lastfm::ws::Error e )
-   {
-       qDebug() << e;
-   }
+        // If we don't know the album then get it from this response
+        if ( m_track.album().isNull() )
+        {
+            QString albumTitle = lfm["track"]["album"]["title"].text();
+
+            if ( !albumTitle.isEmpty() )
+            {
+                m_albumGuess = lastfm::Album( m_track.artist().name(), albumTitle );
+                connect( m_albumGuess.getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
+                setTrackDetails( m_track );
+            }
+        }
+    }
+    catch ( lastfm::ws::ParseError e )
+    {
+        // TODO: what happens when we fail?
+        qDebug() << e.message() << e.enumValue();
+    }
+    catch ( lastfm::ws::Error e )
+    {
+        qDebug() << e;
+    }
 }
 
 
@@ -571,5 +582,10 @@ MetadataWidget::setBackButtonVisible( bool visible )
    ui->back->setVisible( visible );
    ui->trackStats->setVisible( visible );
    ui->context->setVisible( !visible );
+
    ui->scrobbleControls->ui.love->setVisible( visible );
+
+   // keep the love button on for iTunes tracks
+   if ( !visible && m_track.source() != Track::LastFmRadio )
+       ui->scrobbleControls->ui.love->setVisible( visible );
 }

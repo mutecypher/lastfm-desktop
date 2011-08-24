@@ -45,7 +45,6 @@
 #include "../Widgets/RecentTracksWidget.h"
 #include "../Widgets/SideBar.h"
 #include "../Widgets/StatusBar.h"
-#include "../Widgets/RadioListWidget.h"
 #include "../Widgets/TitleBar.h"
 #include "../Widgets/PlaybackControlsWidget.h"
 #include "../Widgets/RadioWidget.h"

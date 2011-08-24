@@ -18,6 +18,7 @@ private:
         class Label* details;
         class Label* lastTrack;
         class PlayableItemWidget* radio;
+        class PlayableItemWidget* multiRadio;
     } ui;
 
 public:

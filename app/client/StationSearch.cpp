@@ -40,7 +40,7 @@ StationSearch::onFinished()
 {
     try {
         sender()->deleteLater();
-        lastfm::XmlQuery x(lastfm::ws::parse(qobject_cast<QNetworkReply*>(sender())));
+        lastfm::XmlQuery x( qobject_cast<QNetworkReply*>(sender())->readAll() );
         lastfm::XmlQuery station = x["stations"]["station"];
         RadioStation rs(QUrl::fromPercentEncoding( station["url"].text().toUtf8()));
         if (rs.url().length()) {

@@ -45,7 +45,6 @@ SOURCES += \
     Widgets/ScrobbleSettingsWidget.cpp \
     Widgets/ScrobbleControls.cpp \
     Widgets/ProgressBar.cpp \
-    Widgets/RadioListWidget.cpp \
     Widgets/QuickStartWidget.cpp \
     Widgets/PointyArrow.cpp \
     Widgets/PlaybackControlsWidget.cpp \
@@ -58,23 +57,17 @@ SOURCES += \
     Widgets/ActivityListWidget.cpp \
     Widgets/AccountSettingsWidget.cpp \
     StationSearch.cpp \
-    StationListModel.cpp \
-    SourceListModel.cpp \
     SkipListener.cpp \
     Services/ScrobbleService/StopWatch.cpp \
     Services/ScrobbleService/ScrobbleService.cpp \
     Services/RadioService/RadioService.cpp \
     ScrobSocket.cpp \
     ScrobblesModel.cpp \
-    RadioStationListModel.cpp \
-    PlaylistModel.cpp \
-    PlaylistMeta.cpp \
     MediaDevices/MediaDevice.cpp \
     MediaDevices/IpodDevice.cpp \
     MediaDevices/DeviceScrobbler.cpp \
     MainWindow.cpp \
     main.cpp \
-    FriendsSortFilterProxyModel.cpp \
     Dialogs/SettingsDialog.cpp \
     Dialogs/ScrobbleSetupDialog.cpp \
     Dialogs/ScrobbleConfirmationDialog.cpp \
@@ -96,7 +89,9 @@ SOURCES += \
     Widgets/FriendWidget.cpp \
     Widgets/BioWidget.cpp \
     Widgets/MetadataWidget.cpp \
-    Widgets/TagWidget.cpp
+    Widgets/TagWidget.cpp \
+    Widgets/CheckableDelegate.cpp \
+    Widgets/TrackDelegate.cpp
 
 HEADERS += \
     Wizard/WelcomePage.h \
@@ -116,7 +111,6 @@ HEADERS += \
     Widgets/ScrobbleSettingsWidget.h \
     Widgets/ScrobbleControls.h \
     Widgets/ProgressBar.h \
-    Widgets/RadioListWidget.h \
     Widgets/QuickStartWidget.h \
     Widgets/PointyArrow.h \
     Widgets/PlaybackControlsWidget.h \
@@ -130,8 +124,6 @@ HEADERS += \
     Widgets/RecentTracksWidget.h \
     Widgets/AccountSettingsWidget.h \
     StationSearch.h \
-    StationListModel.h \
-    SourceListModel.h \
     SkipListener.h \
     Services/ScrobbleService.h \
     Services/ScrobbleService/StopWatch.h \
@@ -142,14 +134,10 @@ HEADERS += \
     Services/ITunesPluginInstaller/ITunesPluginInstaller.h \
     ScrobSocket.h \
     ScrobblesModel.h \
-    RadioStationListModel.h \
-    PlaylistModel.h \
-    PlaylistMeta.h \
     MediaDevices/MediaDevice.h \
     MediaDevices/IpodDevice.h \
     MediaDevices/DeviceScrobbler.h \
     MainWindow.h \
-    FriendsSortFilterProxyModel.h \
     Dialogs/SettingsDialog.h \
     Dialogs/ScrobbleSetupDialog.h \
     Dialogs/ScrobbleConfirmationDialog.h \
@@ -173,7 +161,9 @@ HEADERS += \
     Widgets/FriendWidget.h \
     Widgets/BioWidget.h \
     Widgets/MetadataWidget.h \
-    Widgets/TagWidget.h
+    Widgets/TagWidget.h \
+    Widgets/CheckableDelegate.h \
+    Widgets/TrackDelegate.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 

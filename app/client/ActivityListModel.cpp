@@ -3,6 +3,23 @@
 #include <QApplication>
 #include <QDebug>
 
+ActivityListModel::ActivityListModel()
+    :noArt(":/noArt.png")
+{
+    loveIcon.addFile( ":/scrobbles_love_OFF_REST.png", QSize(), QIcon::Normal, QIcon::Off );
+    loveIcon.addFile( ":/meta_love_ON_REST.png", QSize(), QIcon::Normal, QIcon::On );
+    loveIcon.addFile( ":/scrobbles_love_OFF_HOVER.png", QSize(), QIcon::Selected, QIcon::Off );
+    loveIcon.addFile( ":/meta_love_ON_HOVER.png", QSize(), QIcon::Selected, QIcon::On );
+
+    tagIcon.addFile( ":/scrobbles_tag_REST.png", QSize(), QIcon::Normal, QIcon::Off );
+    tagIcon.addFile( ":/scrobbles_tag_HOVER.png", QSize(), QIcon::Selected, QIcon::Off );
+
+    shareIcon.addFile( ":/scrobbles_share_REST.png", QSize(), QIcon::Normal, QIcon::Off );
+    shareIcon.addFile( ":/scrobbles_share_HOVER.png", QSize(), QIcon::Selected, QIcon::Off );
+
+    noArt = noArt.scaled( 64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation );
+}
+
 void
 ActivityListModel::onFoundIPodScrobbles( const QList<lastfm::Track>& tracks )
 {
@@ -264,4 +281,18 @@ ActivityListModel::flags( const QModelIndex& index ) const {
         return (Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
     }
     return (Qt::ItemIsEnabled | Qt::ItemIsSelectable );
+}
+
+QVariant
+ActivityListModel::headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const
+{
+    if( orientation != Qt::Horizontal || role != Qt::DisplayRole )
+        return QVariant();
+
+    switch( section )
+    {
+        case 0: return tr( "Item" );
+    }
+
+    return QVariant();
 }

@@ -46,8 +46,20 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent)
     vl->addWidget( ui.lastTrack = new Label( tr( "Last track: %1" ).arg( recentTrack.toString() ), this) );
     ui.lastTrack->setObjectName( "lastTrack" );
 
-    vl->addWidget( ui.radio = new PlayableItemWidget( RadioStation::library( User( user["name"].text() ) ), tr( "Play Library Radio" ) ) );
-    ui.lastTrack->setObjectName( "lastTrack" );
+    QHBoxLayout* radios = new QHBoxLayout;
+    radios->setContentsMargins( 0, 0, 0, 0 );
+    radios->setSpacing( 0 );
+
+    vl->addLayout( radios );
+
+    radios->addWidget( ui.radio = new PlayableItemWidget( RadioStation::library( User( user["name"].text() ) ), tr( "Play Library Radio" ) ) );
+    ui.lastTrack->setObjectName( "radio" );
+
+    QList<User> users;
+    users << User() << User( user["name"].text() );
+
+    radios->addWidget( ui.multiRadio = new PlayableItemWidget( RadioStation::library( users ), tr( "Play Combo Radio" ) ) );
+    ui.lastTrack->setObjectName( "multiRadio" );
 
     connect( lastfm::UserDetails::getInfo( user["name"].text() ), SIGNAL(finished()), SLOT(onGotInfo()));
 }

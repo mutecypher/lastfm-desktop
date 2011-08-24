@@ -101,7 +101,7 @@ RadioWidget::onGotTopArtists()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        lastfm::XmlQuery lfm = lastfm::ws::parse( qobject_cast<QNetworkReply*>(sender()) );
+        lastfm::XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
 
         foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
         {
@@ -126,7 +126,7 @@ RadioWidget::onGotRecentStations()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        lastfm::XmlQuery lfm = lastfm::ws::parse( qobject_cast<QNetworkReply*>(sender()) );
+        lastfm::XmlQuery lfm( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         foreach ( const lastfm::XmlQuery& station, lfm["recentstations"].children("station") )
         {

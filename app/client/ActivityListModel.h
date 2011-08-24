@@ -62,22 +62,8 @@ private slots:
 class ActivityListModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    ActivityListModel() :noArt(":/noArt.png"){ 
-        loveIcon.addFile( ":/activity_min_love_OFF_REST.png", QSize(), QIcon::Normal, QIcon::Off );
-        loveIcon.addFile( ":/activity_min_love_ON_REST.png", QSize(), QIcon::Normal, QIcon::On );
-        loveIcon.addFile( ":/activity_min_love_OFF_HOVER.png", QSize(), QIcon::Selected, QIcon::Off );
-        loveIcon.addFile( ":/activity_min_love_ON_HOVER.png", QSize(), QIcon::Selected, QIcon::On );
-
-        tagIcon.addFile( ":/activity_min_tag_REST.png", QSize(), QIcon::Normal, QIcon::Off );
-        tagIcon.addFile( ":/activity_min_tag_HOVER.png", QSize(), QIcon::Selected, QIcon::Off );
-
-        shareIcon.addFile( ":/activity_min_share_REST.png", QSize(), QIcon::Normal, QIcon::Off );
-        shareIcon.addFile( ":/activity_min_share_HOVER.png", QSize(), QIcon::Selected, QIcon::Off );
-
-        noArt = noArt.scaled( 64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation );
-    }
-
-    enum {
+    enum
+    {
         TrackNameRole = Qt::UserRole,
         ArtistNameRole,
         LovedRole,
@@ -86,6 +72,8 @@ public:
         TrackRole
     };
 
+    ActivityListModel();
+
     virtual QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex()) const { return createIndex( row, column ); }
     virtual QModelIndex parent( const QModelIndex& index ) const { return QModelIndex(); }
     virtual int rowCount( const QModelIndex& parent = QModelIndex()) const { return parent.isValid() ? 0 : m_tracks.length(); }
@@ -93,17 +81,7 @@ public:
     virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
     virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
     virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const {
-        if( orientation != Qt::Horizontal ||
-            role != Qt::DisplayRole )
-            return QVariant();
-        
-        switch( section ) {
-            case 0: return tr( "Item" );
-        }
-
-        return QVariant();
-    }
+    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
 public slots:
     void onFoundIPodScrobbles( const QList<lastfm::Track>& tracks );
@@ -111,8 +89,13 @@ public slots:
     void onSessionChanged( unicorn::Session* session );
     void onTrackLoveToggled();
 
+private slots:
+    void write() const;
+
 private:
     void read();
+
+private:
     QList<ImageTrack> m_tracks;
     QString m_path;
     QIcon loveIcon;
@@ -120,11 +103,6 @@ private:
     QIcon shareIcon;
     QImage noArt;
     QModelIndex hoverIndex;
-
-
-private slots:
-    void write() const;
-
 };
 
 #endif //ACTIVITY_LIST_MODEL_H_
