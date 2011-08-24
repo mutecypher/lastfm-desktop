@@ -91,7 +91,8 @@ SOURCES += \
     Widgets/MetadataWidget.cpp \
     Widgets/TagWidget.cpp \
     Widgets/CheckableDelegate.cpp \
-    Widgets/TrackDelegate.cpp
+    Widgets/TrackDelegate.cpp \
+    ImageTrack.cpp
 
 HEADERS += \
     Wizard/WelcomePage.h \
@@ -162,7 +163,8 @@ HEADERS += \
     Widgets/MetadataWidget.h \
     Widgets/TagWidget.h \
     Widgets/CheckableDelegate.h \
-    Widgets/TrackDelegate.h
+    Widgets/TrackDelegate.h \
+    ImageTrack.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 

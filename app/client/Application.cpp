@@ -124,11 +124,9 @@ Application::init()
     }
 #endif
 
-
-
-//    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
-//    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
-//    lastfm::nam()->setCache( diskCache );
+    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
+    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
+    lastfm::nam()->setCache( diskCache );
 
 /// tray
     m_tray = new QSystemTrayIcon(this);

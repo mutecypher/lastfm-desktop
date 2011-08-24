@@ -1,64 +1,20 @@
 #ifndef ACTIVITY_LIST_MODEL_H_
 #define ACTIVITY_LIST_MODEL_H_
 
-#include <lastfm/ws.h>
-#include <lastfm/Track>
+#include <QAbstractItemModel>
 #include <QImage>
 #include <QPixmap>
 #include <QIcon>
 #include <QDebug>
 
+#include <lastfm/ws.h>
+#include <lastfm/Track>
+
+#include "ImageTrack.h"
+
 namespace unicorn { class Session; }
 
-class ImageTrack : public QObject, public lastfm::Track {
-Q_OBJECT
-public:
-    ImageTrack(const lastfm::Track& t):QObject(), lastfm::Track(t) {}
-    ImageTrack(const ImageTrack& t ):QObject(), lastfm::Track(t){}
 
-    ImageTrack& operator=(const ImageTrack& t){ *this = ImageTrack(t); return *this; }
-    const QImage& image() const { return m_image; }
-
-public slots:
-    void fetchImage() {
-        const QUrl imgUrl = imageUrl( lastfm::Small, false );
-        if( imgUrl.isEmpty()) {
-            qDebug() << "Getting info for track..";
-            getInfo();
-            connect( signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(fetchImage()), Qt::DirectConnection);
-            return;
-        }
-        QNetworkReply* r = lastfm::nam()->get(QNetworkRequest(imgUrl));
-        connect( r, SIGNAL(finished()), SLOT(onGotImage()));
-    }
-
-
-signals:
-    void imageUpdated();
-
-private:
-    QImage m_image;
-
-private slots:
-    void onGotImage() {
-        qDebug() << "Finished fetching image for track: " << toString();
-        sender()->deleteLater();
-        QNetworkReply* reply = (QNetworkReply*) sender();
-        if (reply && reply->error() == QNetworkReply::NoError) {
-            QPixmap p;
-
-            p.loadFromData(reply->readAll());
-            if (!p.isNull()) {
-                m_image = p.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation).toImage();
-            }
-            emit imageUpdated();
-        }
-    }
-};
-
-
-
-#include <QAbstractItemModel>
 class ActivityListModel : public QAbstractItemModel {
     Q_OBJECT
 public:
@@ -98,11 +54,11 @@ private:
 private:
     QList<ImageTrack> m_tracks;
     QString m_path;
-    QIcon loveIcon;
-    QIcon tagIcon;
-    QIcon shareIcon;
-    QImage noArt;
-    QModelIndex hoverIndex;
+    QIcon m_loveIcon;
+    QIcon m_tagIcon;
+    QIcon m_shareIcon;
+    QImage m_noArt;
+    QModelIndex m_hoverIndex;
 };
 
 #endif //ACTIVITY_LIST_MODEL_H_

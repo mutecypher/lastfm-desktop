@@ -13,11 +13,11 @@
 #include "MetadataWidget.h"
 
 ActivityListWidget::ActivityListWidget( QWidget* parent )
-                   :QTreeView( parent )
+    :QTreeView( parent )
 {
     setModel( m_model = new ActivityListModel );
     QStyledItemDelegate* delegate = new CheckableDelegate(this);
-    setItemDelegate( delegate);
+    setItemDelegate( delegate );
     setItemDelegateForColumn( 0, new TrackDelegate(this));
     header()->setStretchLastSection( false );
     setAttribute( Qt::WA_MacShowFocusRect, false );
@@ -26,10 +26,9 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     setSelectionBehavior( SelectItems );
     header()->setResizeMode( 0, QHeaderView::Stretch );
 
-    for( int i = 1; i < m_model->columnCount(); i++ )
-    {
+    for ( int i = 1; i < m_model->columnCount(); i++ )
         header()->setResizeMode( i, QHeaderView::ResizeToContents );
-    }
+
     header()->setMinimumSectionSize( 0 );
     setHeaderHidden( true );
     setRootIsDecorated( false );
@@ -50,9 +49,8 @@ ActivityListWidget::onItemClicked( const QModelIndex& index )
         td->raise(); 
         td->show(); 
         td->activateWindow();
-        return;
     }
-    if( index.column() == 3 && index.data( ActivityListModel::HoverStateRole ).toBool() )
+    else if( index.column() == 3 && index.data( ActivityListModel::HoverStateRole ).toBool() )
     {
         ShareDialog* td = new ShareDialog( index.data(ActivityListModel::TrackRole).value<Track>(), window() ); 
         td->raise(); 
@@ -60,7 +58,10 @@ ActivityListWidget::onItemClicked( const QModelIndex& index )
         td->activateWindow(); 
         return;
     }
-    emit trackClicked( index.data(ActivityListModel::TrackRole).value<Track>());
+    else
+    {
+        emit trackClicked( index.data(ActivityListModel::TrackRole).value<Track>());
+    }
 }
 
 

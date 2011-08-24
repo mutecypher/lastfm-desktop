@@ -4,20 +4,20 @@
 #include <QDebug>
 
 ActivityListModel::ActivityListModel()
-    :noArt(":/noArt.png")
+    :m_noArt( ":/noArt.png" )
 {
-    loveIcon.addFile( ":/scrobbles_love_OFF_REST.png", QSize(), QIcon::Normal, QIcon::Off );
-    loveIcon.addFile( ":/meta_love_ON_REST.png", QSize(), QIcon::Normal, QIcon::On );
-    loveIcon.addFile( ":/scrobbles_love_OFF_HOVER.png", QSize(), QIcon::Selected, QIcon::Off );
-    loveIcon.addFile( ":/meta_love_ON_HOVER.png", QSize(), QIcon::Selected, QIcon::On );
+    m_loveIcon.addFile( ":/scrobbles_love_OFF_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
+    m_loveIcon.addFile( ":/meta_love_ON_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::On );
+    m_loveIcon.addFile( ":/scrobbles_love_OFF_HOVER.png", QSize( 21, 18 ), QIcon::Selected, QIcon::Off );
+    m_loveIcon.addFile( ":/meta_love_ON_HOVER.png", QSize( 21, 18), QIcon::Selected, QIcon::On );
 
-    tagIcon.addFile( ":/scrobbles_tag_REST.png", QSize(), QIcon::Normal, QIcon::Off );
-    tagIcon.addFile( ":/scrobbles_tag_HOVER.png", QSize(), QIcon::Selected, QIcon::Off );
+    m_tagIcon.addFile( ":/scrobbles_tag_REST.png", QSize( 18, 18 ), QIcon::Normal, QIcon::Off );
+    m_tagIcon.addFile( ":/scrobbles_tag_HOVER.png", QSize( 18, 18 ), QIcon::Selected, QIcon::Off );
 
-    shareIcon.addFile( ":/scrobbles_share_REST.png", QSize(), QIcon::Normal, QIcon::Off );
-    shareIcon.addFile( ":/scrobbles_share_HOVER.png", QSize(), QIcon::Selected, QIcon::Off );
+    m_shareIcon.addFile( ":/scrobbles_share_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
+    m_shareIcon.addFile( ":/scrobbles_share_HOVER.png", QSize( 21, 18 ), QIcon::Selected, QIcon::Off );
 
-    noArt = noArt.scaled( 64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation );
+    m_noArt = m_noArt.scaled( 64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation );
 }
 
 void
@@ -163,7 +163,8 @@ ActivityListModel::onTrackStarted( const Track& track )
 {
     // Tracks with a deviceId are iPod scrobbles
     // we ignore these at the moment
-    if (track.extra("deviceId").isEmpty()) {
+    if ( track.extra("deviceId").isEmpty() )
+    {
         if( m_tracks.count() > 0 && m_tracks[0] == track ) return;
         beginInsertRows( QModelIndex(), 0, 0 );
         m_tracks.prepend( track );
@@ -185,37 +186,37 @@ ActivityListModel::onTrackLoveToggled()
 }
 
 QVariant 
-ActivityListModel::data( const QModelIndex& index, int role ) const {
-    if( index.column() == index.model()->columnCount() - 1 && role == Qt::SizeHintRole )
-        return QSize( 10, 10 );
-
-    if( role == TrackRole ) 
+ActivityListModel::data( const QModelIndex& index, int role ) const
+{
+    if ( role == TrackRole )
     {
         return m_tracks[index.row()];
     }
-    else if( role == HoverStateRole ) 
+    else if ( role == HoverStateRole )
     {
-        qDebug() << "HoverIndex: " << hoverIndex;
+        qDebug() << "HoverIndex: " << m_hoverIndex;
         qDebug() << "This Index: " << index;
-        return hoverIndex == index;
+
+        return m_hoverIndex == index;
     }
 
-    if( index.column() == 1 ) {
+    if ( index.column() == 1 )
+    {
         if( role == Qt::CheckStateRole ) 
             return m_tracks[index.row()].isLoved() ? Qt::Checked : Qt::Unchecked;
         else if( role == Qt::DecorationRole )
-            return loveIcon;
+            return m_loveIcon;
         else if( role == Qt::SizeHintRole )
-            return loveIcon.actualSize( QSize( 10, 10 ));
+            return m_loveIcon.actualSize( QSize( 21, 18 ));
         else
             return QVariant();
     }
 
     if( index.column() == 2 ) {
         if( role == Qt::DecorationRole )
-            return tagIcon;
+            return m_tagIcon;
         else if( role == Qt::SizeHintRole )
-            return tagIcon.actualSize( QSize( 10, 10 ));
+            return m_tagIcon.actualSize( QSize( 18, 18 ));
         else if( role == Qt::DisplayRole )
             return "Tag";
         else
@@ -224,9 +225,9 @@ ActivityListModel::data( const QModelIndex& index, int role ) const {
 
     if( index.column() == 3 ) {
         if( role == Qt::DecorationRole )
-            return shareIcon;
+            return m_shareIcon;
         else if( role == Qt::SizeHintRole )
-            return shareIcon.actualSize( QSize( 10, 10 ));
+            return m_shareIcon.actualSize( QSize( 21, 18 ));
         else if( role == Qt::DisplayRole )
             return "Share";
         else
@@ -239,7 +240,7 @@ ActivityListModel::data( const QModelIndex& index, int role ) const {
         case Qt::DisplayRole: return m_tracks[index.row()].toString();
         case Qt::DecorationRole: {
             const QImage& image = m_tracks[index.row()].image();
-            if( image.isNull() ) return noArt;
+            if( image.isNull() ) return m_noArt;
             return image;
         }
         case Qt::SizeHintRole: return QSize( 600, 84 );
@@ -253,33 +254,39 @@ ActivityListModel::data( const QModelIndex& index, int role ) const {
 bool 
 ActivityListModel::setData( const QModelIndex& index, const QVariant& value, int role ) 
 {
-    if( role == HoverStateRole && value.toBool() ) {
-        emit dataChanged( hoverIndex, hoverIndex );
-        hoverIndex = index;
+    if( role == HoverStateRole && value.toBool() )
+    {
+        emit dataChanged( m_hoverIndex, m_hoverIndex );
+        m_hoverIndex = index;
         emit dataChanged( index, index );
         return true;
     }
 
-    if( index.column() == 1 ) {
-        if( value == Qt::Checked ) {
+    if( index.column() == 1 )
+    {
+        if( value == Qt::Checked )
             MutableTrack(m_tracks[index.row()]).love();
-        } else if( value == Qt::Unchecked ) {
+        else if( value == Qt::Unchecked )
             MutableTrack(m_tracks[index.row()]).unlove();
-        }
+
         emit dataChanged( index, index );
+
         return true; 
     }
+
     //Needed to force repaint on hover for tag/share etc.
-    if( index.column() > 0 ) emit dataChanged( index, index );
+    if( index.column() > 0 )
+        emit dataChanged( index, index );
 
     return false;
 }
 
 Qt::ItemFlags 
-ActivityListModel::flags( const QModelIndex& index ) const {
-    if( index.column() == 1 ) {
+ActivityListModel::flags( const QModelIndex& index ) const
+{
+    if( index.column() == 1 )
         return (Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-    }
+
     return (Qt::ItemIsEnabled | Qt::ItemIsSelectable );
 }
 
@@ -291,7 +298,8 @@ ActivityListModel::headerData( int section, Qt::Orientation orientation, int rol
 
     switch( section )
     {
-        case 0: return tr( "Item" );
+        case 0:
+            return tr( "Item" );
     }
 
     return QVariant();

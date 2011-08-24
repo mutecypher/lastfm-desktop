@@ -32,14 +32,14 @@ CheckableDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option,
     if( index.data( Qt::CheckStateRole ) == Qt::Checked )
     {
         painter->drawPixmap( iconRect( index, option ),
-                             icon.pixmap(QSize( 84, 84 ),
+                             icon.pixmap(QSize( 21, 18 ),
                              hover ? QIcon::Selected : QIcon::Normal,
                              QIcon::On ));
     }
     else
     {
         painter->drawPixmap( iconRect( index, option ),
-                             icon.pixmap(QSize( 84, 84 ),
+                             icon.pixmap(QSize( 21, 18 ),
                              hover ? QIcon::Selected : QIcon::Normal,
                              QIcon::Off ));
     }
@@ -100,7 +100,7 @@ QRect
 CheckableDelegate::iconRect( const QModelIndex& index, const QStyleOptionViewItem& option ) const
 {
     const QIcon& icon = index.data(Qt::DecorationRole).value<QIcon>();
-    const QSize iconSize = icon.actualSize( QSize( 84, 84 ));
+    const QSize iconSize = icon.actualSize( QSize( 21, 18 ));
     return QRect( option.rect.topLeft() + QPoint( option.rect.width() /2.0f, 5) - QPoint( iconSize.width() / 2, 0 ),
                   iconSize);
 }

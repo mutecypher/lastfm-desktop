@@ -4,6 +4,20 @@
 	
 		<file>noArt.png</file>
 		
+		<file>scrobbles_buy_HOVER.png</file>
+		<file>scrobbles_buy_PRESS.png</file>
+		<file>scrobbles_buy_REST.png</file>
+		<file>scrobbles_love_OFF_HOVER.png</file>
+		<file>scrobbles_love_OFF_PRESS.png</file>
+		<file>scrobbles_love_OFF_REST.png</file>
+		<file>scrobbles_refresh.png</file>
+		<file>scrobbles_share_HOVER.png</file>
+		<file>scrobbles_share_PRESS.png</file>
+		<file>scrobbles_share_REST.png</file>
+		<file>scrobbles_tag_HOVER.png</file>
+		<file>scrobbles_tag_PRESS.png</file>
+		<file>scrobbles_tag_REST.png</file>
+		
 		<file>tab_now_playing_REST.png</file>
 		<file>tab_now_playing_HOVER.png</file>
 		<file>tab_now_playing_ACTIVE.png</file>
