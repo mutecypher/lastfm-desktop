@@ -54,6 +54,7 @@ SOURCES += \
     Widgets/IpodSettingsWidget.cpp \
     Widgets/IPodScrobbleInfoWidget.cpp \
     Widgets/ActivityListWidget.cpp \
+    Widgets/RecentTracksWidget.cpp \
     Widgets/AccountSettingsWidget.cpp \
     StationSearch.cpp \
     SkipListener.cpp \

@@ -284,7 +284,7 @@ ActivityListModel::flags( const QModelIndex& index ) const {
 }
 
 QVariant
-ActivityListModel::headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const
+ActivityListModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
     if( orientation != Qt::Horizontal || role != Qt::DisplayRole )
         return QVariant();
