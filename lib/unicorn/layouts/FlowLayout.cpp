@@ -44,13 +44,13 @@
 #include "flowlayout.h"
 //! [1]
 FlowLayout::FlowLayout(QWidget *parent, int margin, int hSpacing, int vSpacing)
-    : QLayout(parent), m_hSpace(hSpacing), m_vSpace(vSpacing)
+    : QLayout(parent), m_hSpace(hSpacing), m_vSpace(vSpacing), m_oneLine( false )
 {
     setContentsMargins(margin, margin, margin, margin);
 }
 
 FlowLayout::FlowLayout(int margin, int hSpacing, int vSpacing)
-    : m_hSpace(hSpacing), m_vSpace(vSpacing)
+    : m_hSpace(hSpacing), m_vSpace(vSpacing), m_oneLine( false )
 {
     setContentsMargins(margin, margin, margin, margin);
 }
@@ -198,7 +198,13 @@ int FlowLayout::doLayout(const QRect &rect, bool testOnly) const
 //! [10]
 //! [11]
         int nextX = x + item->sizeHint().width() + spaceX;
-        if (nextX - spaceX > effectiveRect.right() && lineHeight > 0) {
+        if (nextX - spaceX > effectiveRect.right() && lineHeight > 0)
+        {
+            if ( m_oneLine )
+            {
+                item->setGeometry( QRect( 0, 0, 0, 0 ) );
+                continue;
+            }
             x = effectiveRect.x();
             y = y + lineHeight + spaceY;
             nextX = x + item->sizeHint().width() + spaceX;

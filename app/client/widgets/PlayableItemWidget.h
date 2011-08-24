@@ -60,15 +60,15 @@ private:
 
     bool m_hovered;
 
-    static QPixmap m_radio_left_hover;
-    static QPixmap m_radio_left_press;
-    static QPixmap m_radio_left_rest;
-    static QPixmap m_radio_middle_hover;
-    static QPixmap m_radio_middle_press;
-    static QPixmap m_radio_middle_rest;
-    static QPixmap m_radio_right_hover;
-    static QPixmap m_radio_right_press;
-    static QPixmap m_radio_right_rest;
+    QPixmap m_radio_left_hover;
+    QPixmap m_radio_left_press;
+    QPixmap m_radio_left_rest;
+    QPixmap m_radio_middle_hover;
+    QPixmap m_radio_middle_press;
+    QPixmap m_radio_middle_rest;
+    QPixmap m_radio_right_hover;
+    QPixmap m_radio_right_press;
+    QPixmap m_radio_right_rest;
 };
 
 #endif

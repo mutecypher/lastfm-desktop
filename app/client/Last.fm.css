@@ -138,7 +138,7 @@ MetadataWidget QWidget#scrollAreaWidgetContents {
 
 MetadataWidget QFrame#trackFrame,
 MetadataWidget QFrame#artistFrame {
-	padding: 20px;
+	padding: 20px 20px 0px 20px;
 }
 
 MetadataWidget QFrame#artistFrame {
@@ -239,28 +239,22 @@ MetadataWidget QLabel#artistUserPlaysLabel {
 	font-weight: normal;
 }
 
-MetadataWidget QLabel#trackPlays,
-MetadataWidget QLabel#trackListeners,
-MetadataWidget QLabel#trackPlaysLabel,
-MetadataWidget QLabel#trackListenersLabel,
-MetadataWidget QLabel#artistPlays,
-MetadataWidget QLabel#artistListeners,
-MetadataWidget QLabel#artistPlaysLabel,
-MetadataWidget QLabel#artistListenersLabel {
+MetadataWidget QFrame#trackSeperator1,
+MetadataWidget QFrame#trackSeperator3,
+MetadataWidget QFrame#artistSeperator1,
+MetadataWidget QFrame#artistSeperator3 {
 	border: none;
 	border-right: 1px solid #cdcdcd;
+	margin: 0px;
 }
 
-MetadataWidget QLabel#trackPlays,
-MetadataWidget QLabel#trackUserPlays,
-MetadataWidget QLabel#trackPlaysLabel,
-MetadataWidget QLabel#trackUserPlaysLabel,
-MetadataWidget QLabel#artistPlays,
-MetadataWidget QLabel#artistUserPlays,
-MetadataWidget QLabel#artistPlaysLabel,
-MetadataWidget QLabel#artistUserPlaysLabel {
+MetadataWidget QFrame#trackSeperator2,
+MetadataWidget QFrame#trackSeperator4,
+MetadataWidget QFrame#artistSeperator2,
+MetadataWidget QFrame#artistSeperator4 {
 	border: none;
 	border-left: 1px solid white;
+	margin: 0px;
 }
 
 MetadataWidget QWidget#artistFrame {
@@ -271,7 +265,7 @@ MetadataWidget QLabel#artistArtist {
 	font-size: 16pt;
 	font-weight: bold;
 	color: #333;
-	padding-top: 7px;
+	padding-top: 10px 0px;
 }
 
 MetadataWidget BioWidget#artistBio {

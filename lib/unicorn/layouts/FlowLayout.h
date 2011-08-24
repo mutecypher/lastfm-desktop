@@ -54,6 +54,8 @@ public:
     FlowLayout(int margin = -1, int hSpacing = -1, int vSpacing = -1);
     ~FlowLayout();
 
+    void setOneLine( bool oneLine ) { m_oneLine = oneLine; }
+
     void addItem(QLayoutItem *item);
     void removeItem(QLayoutItem *item);
 
@@ -75,9 +77,11 @@ private:
     int doLayout(const QRect &rect, bool testOnly) const;
     int smartSpacing(QStyle::PixelMetric pm) const;
 
+private:
     QList<QLayoutItem *> itemList;
     int m_hSpace;
     int m_vSpace;
+    bool m_oneLine;
 };
 //! [0]
 

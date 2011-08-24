@@ -30,21 +30,22 @@
 #include "PlayableItemWidget.h"
 #include "../Services/RadioService.h"
 
-QPixmap PlayableItemWidget::m_radio_left_hover = QPixmap( ":/meta_radio_LEFT_HOVER.png" );
-QPixmap PlayableItemWidget::m_radio_left_press = QPixmap( ":/meta_radio_LEFT_PRESS.png" );
-QPixmap PlayableItemWidget::m_radio_left_rest = QPixmap( ":/meta_radio_LEFT_REST.png" );
-QPixmap PlayableItemWidget::m_radio_middle_hover = QPixmap( ":/meta_radio_MIDDLE_HOVER.png" );
-QPixmap PlayableItemWidget::m_radio_middle_press = QPixmap( ":/meta_radio_MIDDLE_PRESS.png" );
-QPixmap PlayableItemWidget::m_radio_middle_rest = QPixmap( ":/meta_radio_MIDDLE_REST.png" );
-QPixmap PlayableItemWidget::m_radio_right_hover = QPixmap( ":/meta_radio_RIGHT_HOVER.png" );
-QPixmap PlayableItemWidget::m_radio_right_press = QPixmap( ":/meta_radio_RIGHT_PRESS.png" );
-QPixmap PlayableItemWidget::m_radio_right_rest = QPixmap( ":/meta_radio_RIGHT_REST.png" );
-
 PlayableItemWidget::PlayableItemWidget( QWidget* parent )
-    : QPushButton( parent ), m_hovered( false )
+    : QPushButton( parent ),
+      m_hovered( false ),
+      m_radio_left_hover( ":/meta_radio_LEFT_HOVER.png" ),
+      m_radio_left_press( ":/meta_radio_LEFT_PRESS.png" ),
+      m_radio_left_rest( ":/meta_radio_LEFT_REST.png" ),
+      m_radio_middle_hover( ":/meta_radio_MIDDLE_HOVER.png" ),
+      m_radio_middle_press( ":/meta_radio_MIDDLE_PRESS.png" ),
+      m_radio_middle_rest( ":/meta_radio_MIDDLE_REST.png" ),
+      m_radio_right_hover( ":/meta_radio_RIGHT_HOVER.png" ),
+      m_radio_right_press( ":/meta_radio_RIGHT_PRESS.png" ),
+      m_radio_right_rest( ":/meta_radio_RIGHT_REST.png" )
 {
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
     setCursor( Qt::PointingHandCursor );
+    setAttribute( Qt::WA_Hover );
 }
 
 PlayableItemWidget::PlayableItemWidget( const RadioStation& rs, const QString& title, const QString& description, QWidget* parent )
@@ -59,7 +60,7 @@ PlayableItemWidget::PlayableItemWidget( const RadioStation& rs, const QString& t
 bool
 PlayableItemWidget::event( QEvent* e )
 {
-    switch ( e->type())
+    switch ( e->type() )
     {
     case QEvent::HoverEnter:
         m_hovered = true;
@@ -77,11 +78,12 @@ PlayableItemWidget::event( QEvent* e )
 }
 
 void
-PlayableItemWidget::setStation(const RadioStation &rs, const QString &title, const QString& description)
+PlayableItemWidget::setStation(const RadioStation& rs, const QString& title, const QString& description)
 {
     // disconnect from recieving any previous signals
     disconnect( this, 0 );
 
+    m_rs = rs;
     m_rs.setTitle( title );
     setText( title );
 
@@ -177,27 +179,36 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
     {
         QPainter p( this );
 
-        if ( m_hovered )
+        QRect middleRect = QRect( m_radio_left_rest.width(), 0, rect().width() - m_radio_left_rest.width() - m_radio_right_rest.width(), 49 );
+
+        if ( isDown() )
+        {
+            p.drawPixmap( rect().topLeft(), m_radio_left_press );
+            p.drawPixmap( middleRect, m_radio_middle_press );
+            p.drawPixmap( rect().topLeft() + QPoint( rect().width() - m_radio_right_press.width(), 0 ), m_radio_right_press );
+        }
+        else if ( m_hovered )
         {
             p.drawPixmap( rect().topLeft(), m_radio_left_hover );
-            p.drawPixmap( rect().topLeft() + QPoint( 20, 0 ), m_radio_middle_hover );
-            p.drawPixmap( rect().topLeft() + QPoint( 21, 0 ), m_radio_right_hover);
+            p.drawPixmap( middleRect, m_radio_middle_hover );
+            p.drawPixmap( rect().topLeft() + QPoint( rect().width() - m_radio_right_hover.width(), 0 ), m_radio_right_hover );
         }
         else
         {
             p.drawPixmap( rect().topLeft(), m_radio_left_rest );
-            p.drawPixmap( rect().topLeft() + QPoint( 20, 0 ), m_radio_middle_rest );
-            p.drawPixmap( rect().topLeft() + QPoint( 21, 0 ), m_radio_right_rest);
+            p.drawPixmap( middleRect, m_radio_middle_rest );
+            p.drawPixmap( rect().topLeft() + QPoint( rect().width() - m_radio_right_rest.width(), 0 ), m_radio_right_rest );
         }
 
-        QPushButton::paintEvent( event );
+        p.drawText( rect().adjusted( 40, 8, 0, 0 ), text() );
 
         p.setPen( QColor( 0x898989 ) );
 
         QFont font = p.font();
-        font.setPixelSize( 12 );
+        font.setPixelSize( 10 );
         p.setFont( font );
 
+        p.drawText( rect().adjusted( 40, 28, 0, 0 ), m_description );
     }
     else
     {

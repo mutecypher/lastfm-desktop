@@ -43,6 +43,7 @@
 #include "lib/unicorn/widgets/BannerWidget.h"
 #include "lib/unicorn/widgets/LfmListViewWidget.h"
 #include "lib/unicorn/widgets/Label.h"
+#include "lib/unicorn/layouts/FlowLayout.h"
 
 #include "../Application.h"
 #include "../Services/ScrobbleService.h"
@@ -71,19 +72,28 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     ui->artistTags->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->trackTagsFrame->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-    ui->trackPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
-    ui->trackPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
-    ui->trackUserPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
-    ui->trackUserPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
-    ui->trackListeners->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
-    ui->trackListenersLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
+    ui->trackPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->trackPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->trackUserPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->trackUserPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->trackListeners->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->trackListenersLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-    ui->artistPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
-    ui->artistPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
-    ui->artistUserPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
-    ui->artistUserPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
-    ui->artistListeners->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
-    ui->artistListenersLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );;
+    ui->artistPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->artistPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->artistUserPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->artistUserPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->artistListeners->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->artistListenersLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
+    FlowLayout* artistYourTagsListLayout = new FlowLayout( ui->artistYourTagsList );
+    artistYourTagsListLayout->setOneLine( true );
+    FlowLayout* artistYourPopListLayout = new FlowLayout( ui->artistPopTagsList );
+    artistYourPopListLayout->setOneLine( true );
+    FlowLayout* trackYourTagsListLayout = new FlowLayout( ui->trackYourTagsList );
+    trackYourTagsListLayout->setOneLine( true );
+    FlowLayout* trackPopTagsListLayout = new FlowLayout( ui->trackPopTagsList );
+    trackPopTagsListLayout->setOneLine( true );
 
     setTrackDetails( track );
 
@@ -114,38 +124,38 @@ MetadataWidget::~MetadataWidget()
 void
 MetadataWidget::showIfRoom( const QLayout* layout )
 {
-    int cumWidth = 0;
+//    int cumWidth = 0;
 
-    bool roomForMore = true;
+//    bool roomForMore = true;
 
-    for ( int i = 0 ; i < layout->count() ; ++i )
-    {
-        QWidget* widget = layout->itemAt( i )->widget();
+//    for ( int i = 0 ; i < layout->count() ; ++i )
+//    {
+//        QWidget* widget = layout->itemAt( i )->widget();
 
-        if ( roomForMore )
-        {
-            int widgetWidth = widget->width();
+//        if ( roomForMore )
+//        {
+//            int widgetWidth = widget->width();
 
-            roomForMore = cumWidth + widgetWidth < ui->scrollArea->viewport()->width() - 130;
+//            roomForMore = cumWidth + widgetWidth < ui->scrollArea->viewport()->width() - 130;
 
-            widget->setVisible( roomForMore );
+//            widget->setVisible( roomForMore );
 
-            if ( roomForMore )
-                cumWidth += widgetWidth;
-        }
-        else
-            widget->hide();
-    }
+//            if ( roomForMore )
+//                cumWidth += widgetWidth;
+//        }
+//        else
+//            widget->hide();
+//    }
 }
 
 void
 MetadataWidget::resizeEvent( QResizeEvent* event )
 {
     setUpdatesEnabled( false );
-    showIfRoom( ui->trackYourTagsList );
-    showIfRoom( ui->trackPopTagsList );
-    showIfRoom( ui->artistYourTagsList );
-    showIfRoom( ui->artistPopTagsList );
+//    showIfRoom( ui->trackYourTagsList );
+//    showIfRoom( ui->trackPopTagsList );
+//    showIfRoom( ui->artistYourTagsList );
+//    showIfRoom( ui->artistPopTagsList );
     setUpdatesEnabled( true );
 }
 
@@ -231,21 +241,17 @@ MetadataWidget::onArtistGotInfo()
 
                 for ( int i = 0 ; i < artists.count() ; ++i )
                 {
-                widgets[i]->setText( artists[i]["name"].text() );
-                widgets[i]->setToolTip( artists[i]["name"].text() );
-                widgets[i]->loadUrl( artists[i]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
-                widgets[i]->setHref( artists[i]["url"].text() );
+                    widgets[i]->setText( artists[i]["name"].text() );
+                    widgets[i]->setToolTip( artists[i]["name"].text() );
+                    widgets[i]->loadUrl( artists[i]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
+                    widgets[i]->setHref( artists[i]["url"].text() );
                 }
 
-                // with yeah, blah and more.
+                // "With yeah, blah and more."
                 if ( artists.count() == 1 )
                     ui->radio->setDescription( tr( "With %1 and more." ).arg( artists[0]["name"].text() ) );
-                else if ( artists.count() == 2 )
+                else if ( artists.count() >= 2 )
                     ui->radio->setDescription( tr( "With %1, %2 and more.").arg( artists[0]["name"].text(), artists[1]["name"].text() ) );
-                else if ( artists.count() == 3 )
-                    ui->radio->setDescription( tr( "With %1, %2, %3 and more.").arg( artists[0]["name"].text(), artists[1]["name"].text(), artists[2]["name"].text() )  );
-                else if ( artists.count() == 4 )
-                    ui->radio->setDescription( tr( "With %1, %2, %3, %4 and more.").arg( artists[0]["name"].text(), artists[1]["name"].text(), artists[2]["name"].text(), artists[3]["name"].text() )  );
             }
 
         }
@@ -253,9 +259,9 @@ MetadataWidget::onArtistGotInfo()
         QList<XmlQuery> tags =  lfm["artist"]["tags"].children("tag");
 
         foreach( const XmlQuery& e, tags )
-           ui->artistPopTagsList->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
+           ui->artistPopTagsList->layout()->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
 
-        showIfRoom( ui->artistPopTagsList );
+        //showIfRoom( ui->artistPopTagsList );
 
         //TODO if empty suggest they edit it
         QString bio;
@@ -302,7 +308,7 @@ MetadataWidget::onArtistGotYourTags()
        ui->artistYourTagsFrame->setVisible( tags.count() > 0 );
 
        foreach( const XmlQuery& e, tags )
-           ui->artistYourTagsList->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
+           ui->artistYourTagsList->layout()->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
    }
    catch ( lastfm::ws::ParseError e )
    {
@@ -386,9 +392,9 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
        ui->scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
 
        foreach(const XmlQuery& e, lfm["track"]["toptags"].children("tag").mid(0, 5 ))
-           ui->trackPopTagsList->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
+           ui->trackPopTagsList->layout()->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
 
-       showIfRoom( ui->trackPopTagsList );
+       //showIfRoom( ui->trackPopTagsList );
 
        // If we don't know the album then get it from this response
        if ( m_track.album().isNull() )
@@ -429,7 +435,7 @@ MetadataWidget::onTrackGotYourTags()
        ui->trackYourTagsFrame->setVisible( tags.count() > 0 );
 
        foreach( const XmlQuery& e, tags )
-           ui->trackYourTagsList->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
+           ui->trackYourTagsList->layout()->addWidget( new TagWidget( e["name"].text(), e["url"].text(), this ) );
    }
    catch ( lastfm::ws::ParseError e )
    {

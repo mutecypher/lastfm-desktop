@@ -210,31 +210,71 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
+             <item row="0" column="3">
               <widget class="QLabel" name="trackPlays">
                <property name="text">
                 <string>0</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="2">
+             <item row="0" column="6">
               <widget class="QLabel" name="trackUserPlays">
                <property name="text">
                 <string>0</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
+             <item row="1" column="3">
               <widget class="QLabel" name="trackPlaysLabel">
                <property name="text">
                 <string>Plays</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="2">
+             <item row="1" column="6">
               <widget class="QLabel" name="trackUserPlaysLabel">
                <property name="text">
                 <string>Plays in your library</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2" rowspan="2">
+              <widget class="QFrame" name="trackSeperator2">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1" rowspan="2">
+              <widget class="QFrame" name="trackSeperator1">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="4" rowspan="2">
+              <widget class="QFrame" name="trackSeperator3">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="5" rowspan="2">
+              <widget class="QFrame" name="trackSeperator4">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
                </property>
               </widget>
              </item>
@@ -278,7 +318,7 @@
              </property>
              <item>
               <widget class="QFrame" name="trackYourTagsFrame">
-               <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1">
                 <property name="spacing">
                  <number>0</number>
                 </property>
@@ -293,31 +333,14 @@
                  </widget>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="trackYourTagsList">
-                  <property name="spacing">
-                   <number>6</number>
-                  </property>
-                 </layout>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>0</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
+                 <widget class="QFrame" name="trackYourTagsList"/>
                 </item>
                </layout>
               </widget>
              </item>
              <item>
               <widget class="QFrame" name="trackPopTagsFrame">
-               <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1">
                 <property name="spacing">
                  <number>0</number>
                 </property>
@@ -332,24 +355,7 @@
                  </widget>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="trackPopTagsList">
-                  <property name="spacing">
-                   <number>6</number>
-                  </property>
-                 </layout>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_2">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>0</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
+                 <widget class="QFrame" name="trackPopTagsList"/>
                 </item>
                </layout>
               </widget>
@@ -424,31 +430,71 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
+             <item row="0" column="3">
               <widget class="QLabel" name="artistPlays">
                <property name="text">
                 <string>0</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="2">
+             <item row="0" column="6">
               <widget class="QLabel" name="artistUserPlays">
                <property name="text">
                 <string>0</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
+             <item row="1" column="3">
               <widget class="QLabel" name="artistPlaysLabel">
                <property name="text">
                 <string>Plays</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="2">
+             <item row="1" column="6">
               <widget class="QLabel" name="artistUserPlaysLabel">
                <property name="text">
                 <string>Plays in your library</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2" rowspan="2">
+              <widget class="QFrame" name="artistSeperator2">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1" rowspan="2">
+              <widget class="QFrame" name="artistSeperator1">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="4" rowspan="2">
+              <widget class="QFrame" name="artistSeperator3">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="5" rowspan="2">
+              <widget class="QFrame" name="artistSeperator4">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
                </property>
               </widget>
              </item>
@@ -584,7 +630,7 @@
                <property name="frameShadow">
                 <enum>QFrame::Raised</enum>
                </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1">
                 <property name="spacing">
                  <number>0</number>
                 </property>
@@ -599,24 +645,7 @@
                  </widget>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="artistYourTagsList">
-                  <property name="spacing">
-                   <number>6</number>
-                  </property>
-                 </layout>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_3">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>0</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
+                 <widget class="QFrame" name="artistYourTagsList"/>
                 </item>
                </layout>
               </widget>
@@ -629,7 +658,7 @@
                <property name="frameShadow">
                 <enum>QFrame::Raised</enum>
                </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,1">
                 <property name="spacing">
                  <number>0</number>
                 </property>
@@ -644,24 +673,7 @@
                  </widget>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="artistPopTagsList">
-                  <property name="spacing">
-                   <number>6</number>
-                  </property>
-                 </layout>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_4">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>0</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
+                 <widget class="QFrame" name="artistPopTagsList"/>
                 </item>
                </layout>
               </widget>
