@@ -22,7 +22,6 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
 
     // If the actions are triggered we should do something
     // love is dealt with by the application
-    //connect( aApp->loveAction(), SIGNAL(triggered(bool)), SLOT(onLoveClicked(bool)) );
     connect( aApp->banAction(), SIGNAL(triggered(bool)), SLOT(onBanClicked()) );
     connect( aApp->playAction(), SIGNAL(triggered(bool)), SLOT(onPlayClicked(bool)) );
     connect( aApp->skipAction(), SIGNAL(triggered(bool)), SLOT(onSkipClicked()) );
@@ -33,9 +32,6 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     connect( aApp->playAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
     connect( aApp->skipAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
 
-    //connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) );
-    //connect( &RadioService::instance(), SIGNAL(tick(qint64)), SLOT(onRadioTick(qint64)));
-    //connect( &RadioService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
     connect( &RadioService::instance(), SIGNAL(error(int,QVariant)), SLOT(onError(int, QVariant)));
 
@@ -236,8 +232,8 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
 
     if ( !track.isNull() )
     {
-        disconnect( 0, 0, this, SLOT(onTick(qint64)));
-        disconnect( 0, 0, ui->progressBar, SLOT(setValue(int)) );
+        disconnect( &RadioService::instance(), SIGNAL(tick(qint64)), this, SLOT(onTick(qint64)));
+        disconnect( &ScrobbleService::instance(), SIGNAL(frameChanged(int)), ui->progressBar, SLOT(onFrameChanged(int)) );
 
         if(  track.source() == Track::LastFmRadio )
         {

@@ -34,6 +34,7 @@ struct ITunesConnection : PlayerConnection
         MutableTrack mt( t );
         mt.setSource( Track::Player );
         mt.setExtra( "playerId", id() );
+        mt.setExtra( "playerName", name() );
         mt.stamp();
         handleCommand( CommandStart, t ); 
     }

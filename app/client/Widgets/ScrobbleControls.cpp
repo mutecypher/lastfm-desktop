@@ -44,7 +44,7 @@ ScrobbleControls::ScrobbleControls( QWidget* parent )
     ui.love->setToolTip( tr( "Love track" ) );
     ui.love->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-    connect( ui.love, SIGNAL( toggled( bool ) ), this, SLOT( onLoveChanged( bool ) ) );
+    connect( ui.love, SIGNAL( clicked(bool) ), SLOT( onLoveChanged( bool ) ) );
  
     layout->addWidget(ui.tag = new QPushButton(tr("tag")), 0, Qt::AlignCenter);
     ui.tag->setObjectName("tag");

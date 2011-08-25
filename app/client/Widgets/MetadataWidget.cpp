@@ -551,5 +551,5 @@ MetadataWidget::setBackButtonVisible( bool visible )
 
    // keep the love button on for iTunes tracks
    if ( !visible && m_track.source() != Track::LastFmRadio )
-       ui->scrobbleControls->ui.love->setVisible( visible );
+       ui->scrobbleControls->ui.love->setVisible( true );
 }
