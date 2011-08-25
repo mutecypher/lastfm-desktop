@@ -146,18 +146,21 @@ ActivityListModel::onGotRecentTracks()
 
         foreach ( const XmlQuery& trackXml, lfm["recenttracks"].children("track") )
         {
-            MutableTrack track;
-            track.setTitle( trackXml["name"].text() );
-            track.setArtist( trackXml["artist"].text() );
-            track.setAlbum( trackXml["album"].text() );
-            track.setTimeStamp( QDateTime::fromTime_t( trackXml["date"].attribute("uts").toUInt() ) );
+            if ( trackXml.attribute( "nowplaying" ) != "true" )
+            {
+                MutableTrack track;
+                track.setTitle( trackXml["name"].text() );
+                track.setArtist( trackXml["artist"].text() );
+                track.setAlbum( trackXml["album"].text() );
+                track.setTimeStamp( QDateTime::fromTime_t( trackXml["date"].attribute("uts").toUInt() ) );
 
-            track.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
-            track.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
-            track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
-            track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
+                track.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
+                track.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
+                track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
+                track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
 
-            tracks << track;
+                tracks << track;
+            }
         }
 
         addTracks( tracks );
@@ -170,50 +173,40 @@ ActivityListModel::onGotRecentTracks()
     emit refreshing( false );
 }
 
+bool lessThan( const ImageTrack& left, const ImageTrack& right )
+{
+    return left.timestamp().toTime_t() > right.timestamp().toTime_t();
+}
+
 void
 ActivityListModel::addTracks( const QList<lastfm::Track>& tracks )
 {
+    beginResetModel();
+
     foreach ( const lastfm::Track& track, tracks )
     {
         // Tracks with a deviceId are iPod scrobbles
         // we ignore these at the moment
         if ( track.extra("deviceId").isEmpty() )
         {
-            int pos = 0;
-            bool duplicate = false;
-
-            for ( int i = 0 ; i < m_tracks.count() ; ++i )
+            if ( qBinaryFind( m_tracks.begin(), m_tracks.end(), track, lessThan ) == m_tracks.end() )
             {
-                if ( track.timestamp() == m_tracks[i].timestamp() )
-                {
-                    // DON'T ADD DUPLICATES!
-                    duplicate = true;
-                    break;
-                }
-                if ( track.timestamp() < m_tracks[i].timestamp() )
-                    pos = i;
-                else
-                    break;
+                QList<ImageTrack>::iterator insert = qLowerBound( m_tracks.begin(), m_tracks.end(), track, lessThan );
+                QList<ImageTrack>::iterator inserted = m_tracks.insert( insert, track );
+
+                inserted->getInfo();
+                inserted->fetchImage();
+
+                connect( &(*inserted), SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
+                connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
+                connect( track.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
             }
-
-            if ( duplicate )
-                continue;
-
-            beginInsertRows( QModelIndex(), pos, pos );
-
-            m_tracks.insert( pos, track );
-            track.getInfo();
-            m_tracks[pos].fetchImage();
-
-            endInsertRows();
-
-            connect( &m_tracks[0], SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
-            connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
-            connect( track.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
-
-            write();
         }
     }
+
+    endResetModel();
+
+    write();
 
     limit( 30 );
 }
