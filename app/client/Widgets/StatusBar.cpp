@@ -18,6 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QAction>
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QLabel>
@@ -75,6 +76,11 @@ StatusBar::StatusBar( QWidget* parent )
     ui.scrobbleToggle->setChecked( scrobblingOn );
     onScrobbleToggled( scrobblingOn );
     ui.scrobbleToggle->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
+    aApp->scrobbleToggleAction()->setChecked( scrobblingOn );
+
+    connect( aApp->scrobbleToggleAction(), SIGNAL(toggled(bool)), SLOT(onScrobbleToggled(bool)) );
+
     connect( ui.scrobbleToggle, SIGNAL(toggled(bool)), SLOT(onScrobbleToggled(bool)) );
 
     aApp->isInternetConnectionUp() ? onConnectionUp() : onConnectionDown();
@@ -114,6 +120,7 @@ StatusBar::onScrobbleToggled( bool scrobblingOn )
     ScrobbleService::instance().setScrobblingOn( scrobblingOn );
     ui.scrobbleToggle->setChecked( scrobblingOn );
     ui.scrobbleToggle->setToolTip( scrobblingOn ? tr( "Scrobbling on" ) : tr( "Scrobbling off" ) );
+    aApp->scrobbleToggleAction()->setChecked( scrobblingOn );
 }
 
 void

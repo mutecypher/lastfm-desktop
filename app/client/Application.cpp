@@ -156,15 +156,16 @@ Application::init()
     m_artist_action = menu->addAction( "" );
     m_title_action = menu->addAction(tr("Ready"));
 
-    m_love_action = menu->addAction(tr("Love"));
-    m_love_action->setCheckable( true );
-    QIcon loveIcon;
-    loveIcon.addFile( ":/controls_love_ON_REST.png", QSize( 16, 16), QIcon::Normal, QIcon::On );
-    loveIcon.addFile( ":/controls_love_OFF_REST.png", QSize( 16, 16), QIcon::Normal, QIcon::Off );
-    m_love_action->setIcon( loveIcon );
-    m_love_action->setEnabled( false );
-    connect( m_love_action, SIGNAL(triggered(bool)), SLOT(changeLovedState(bool)));
-
+    {
+        m_love_action = menu->addAction(tr("Love"));
+        m_love_action->setCheckable( true );
+        QIcon loveIcon;
+        loveIcon.addFile( ":/controls_love_ON_REST.png", QSize( 16, 16), QIcon::Normal, QIcon::On );
+        loveIcon.addFile( ":/controls_love_OFF_REST.png", QSize( 16, 16), QIcon::Normal, QIcon::Off );
+        m_love_action->setIcon( loveIcon );
+        m_love_action->setEnabled( false );
+        connect( m_love_action, SIGNAL(triggered(bool)), SLOT(changeLovedState(bool)));
+    }
     {
         m_tag_action = menu->addAction(tr("Tag")+ELLIPSIS);
         m_tag_action->setIcon( QIcon( ":/tag-rest.png" ) );
@@ -184,8 +185,6 @@ Application::init()
         QIcon banIcon;
         banIcon.addFile( ":/controls_ban_REST.png" );
         m_ban_action->setIcon( banIcon );
-
-        //connect( m_ban_action, SIGNAL(triggered()), SLOT(onBanTriggered()));
     }
     {
         m_play_action = new QAction( tr( "Play" ), this );
@@ -194,16 +193,12 @@ Application::init()
         playIcon.addFile( ":/controls_pause_REST.png", QSize(), QIcon::Normal, QIcon::On );
         playIcon.addFile( ":/controls_play_REST.png", QSize(), QIcon::Normal, QIcon::Off );
         m_play_action->setIcon( playIcon );
-
-        //connect( m_play_action, SIGNAL(triggered(bool)), SLOT(onPlayTriggered(bool)));
     }
     {
         m_skip_action = new QAction( tr( "Skip" ), this );
         QIcon skipIcon;
         skipIcon.addFile( ":/controls_skip_REST.png" );
         m_skip_action->setIcon( skipIcon );
-
-        //connect( m_skip_action, SIGNAL(triggered()), SLOT(onSkipTriggered()));
     }
 
 #ifdef Q_WS_X11
@@ -219,7 +214,7 @@ Application::init()
 
     menu->addSeparator();
 
-    m_submit_scrobbles_toggle = menu->addAction(tr("Submit Scrobbles"));
+    m_submit_scrobbles_toggle = menu->addAction( tr("Submit Scrobbles") );
 
     menu->addSeparator();
     QMenu* helpMenu = menu->addMenu( tr( "Help" ) );
@@ -239,8 +234,8 @@ Application::init()
 
     m_artist_action->setEnabled( false );
     m_title_action->setEnabled( false );
-    m_submit_scrobbles_toggle->setCheckable(true);
-    m_submit_scrobbles_toggle->setChecked(true);
+    m_submit_scrobbles_toggle->setCheckable( true );
+    m_submit_scrobbles_toggle->setChecked( true );
     m_tray->setContextMenu(menu);
 
 /// MainWindow
@@ -249,7 +244,6 @@ Application::init()
     m_mw->addWinThumbBarButton( m_ban_action );
     m_mw->addWinThumbBarButton( m_play_action );
     m_mw->addWinThumbBarButton( m_skip_action );
-
 
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
 #ifndef Q_OS_LINUX
@@ -262,7 +256,6 @@ Application::init()
     m_tag_action->setShortcut( Qt::CTRL + Qt::Key_T );
     m_share_action->setShortcut( Qt::CTRL + Qt::Key_S );
     m_love_action->setShortcut( Qt::CTRL + Qt::Key_L );
-
 
     // make the love buttons sychronised
     connect(this, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
