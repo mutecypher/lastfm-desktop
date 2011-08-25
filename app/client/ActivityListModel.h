@@ -50,6 +50,7 @@ private slots:
 
 private:
     void read();
+    void limit( int limit );
 
 private:
     QList<ImageTrack> m_tracks;

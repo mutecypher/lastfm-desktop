@@ -7,6 +7,7 @@
 #include "Services/ScrobbleService/ScrobbleService.h"
 #include "ActivityListModel.h"
 
+
 ActivityListModel::ActivityListModel()
     :m_noArt( ":/noArt.png" )
 {
@@ -82,8 +83,9 @@ ActivityListModel::read()
         m_tracks.prepend( ImageTrack(Track( n.toElement() )));
         m_tracks[0].fetchImage();
         connect( &m_tracks[0], SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
-  
     }
+
+    limit( 30 );
 
     reset();
 }
@@ -185,6 +187,23 @@ ActivityListModel::onScrobblesCached( const QList<lastfm::Track>& tracks )
             endInsertRows();
             write();
         }
+    }
+
+    limit( 30 );
+}
+
+
+void
+ActivityListModel::limit( int limit )
+{
+    if ( m_tracks.count() > limit )
+    {
+        beginRemoveRows( QModelIndex(), limit, m_tracks.count() - 1 );
+
+        while ( m_tracks.count() > limit )
+            m_tracks.removeLast();
+
+        endInsertRows();
     }
 }
 
