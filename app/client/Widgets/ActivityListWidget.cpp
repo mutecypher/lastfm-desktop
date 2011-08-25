@@ -33,9 +33,7 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     setHeaderHidden( true );
     setRootIsDecorated( false );
 
-    connect( &ScrobbleService::instance(), SIGNAL( trackStarted(Track, Track) ), m_model, SLOT( onTrackStarted(Track) ) );
-    connect( qApp, SIGNAL( sessionChanged( unicorn::Session* )), m_model, SLOT(onSessionChanged( unicorn::Session* )));
-    connect( this, SIGNAL(clicked(QModelIndex)),SLOT(onItemClicked(QModelIndex)));
+    connect( this, SIGNAL( clicked(QModelIndex) ), SLOT(onItemClicked(QModelIndex)));
 }
 
 

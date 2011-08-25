@@ -41,7 +41,7 @@ public:
 
 public slots:
     void onFoundIPodScrobbles( const QList<lastfm::Track>& tracks );
-    void onTrackStarted( const Track& );
+    void onScrobblesCached( const QList<lastfm::Track>& tracks );
     void onSessionChanged( unicorn::Session* session );
     void onTrackLoveToggled();
 

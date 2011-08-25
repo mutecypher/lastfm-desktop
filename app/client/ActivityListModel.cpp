@@ -1,7 +1,11 @@
-#include "ActivityListModel.h"
-#include "../../../lib/unicorn/UnicornSession.h"
+
 #include <QApplication>
 #include <QDebug>
+
+#include "lib/unicorn/UnicornSession.h"
+
+#include "Services/ScrobbleService/ScrobbleService.h"
+#include "ActivityListModel.h"
 
 ActivityListModel::ActivityListModel()
     :m_noArt( ":/noArt.png" )
@@ -18,6 +22,10 @@ ActivityListModel::ActivityListModel()
     m_shareIcon.addFile( ":/scrobbles_share_HOVER.png", QSize( 21, 18 ), QIcon::Selected, QIcon::Off );
 
     m_noArt = m_noArt.scaled( 64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation );
+
+    connect( qApp, SIGNAL( sessionChanged( unicorn::Session* )), SLOT(onSessionChanged( unicorn::Session* )));
+
+    connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>) ) );
 }
 
 void
@@ -157,26 +165,29 @@ ActivityListWidget::insertItem( ActivityListItem* item )
     }
 }*/
 
-
 void
-ActivityListModel::onTrackStarted( const Track& track )
+ActivityListModel::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
-    // Tracks with a deviceId are iPod scrobbles
-    // we ignore these at the moment
-    if ( track.extra("deviceId").isEmpty() )
+    foreach ( const lastfm::Track& track, tracks )
     {
-        if( m_tracks.count() > 0 && m_tracks[0] == track ) return;
-        beginInsertRows( QModelIndex(), 0, 0 );
-        m_tracks.prepend( track );
-        track.getInfo();
-        m_tracks[0].fetchImage();
-        connect( &m_tracks[0], SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
-        connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
-        connect( track.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
-        endInsertRows();
-        write();
+        // Tracks with a deviceId are iPod scrobbles
+        // we ignore these at the moment
+        if ( track.extra("deviceId").isEmpty() )
+        {
+            if( m_tracks.count() > 0 && m_tracks[0] == track ) return;
+            beginInsertRows( QModelIndex(), 0, 0 );
+            m_tracks.prepend( track );
+            track.getInfo();
+            m_tracks[0].fetchImage();
+            connect( &m_tracks[0], SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
+            connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
+            connect( track.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
+            endInsertRows();
+            write();
+        }
     }
 }
+
 
 void 
 ActivityListModel::onTrackLoveToggled()
