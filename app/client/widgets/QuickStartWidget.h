@@ -42,6 +42,8 @@ private slots:
     void play();
     void playNext();
 
+    void setToCurrent();
+
     void onTextChanged( const QString& text );
 
     void customContextMenuRequested( const class QPoint& point );

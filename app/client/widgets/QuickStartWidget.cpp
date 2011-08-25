@@ -24,6 +24,7 @@
 #include <QHBoxLayout>
 #include <QPoint>
 #include <QMenu>
+#include <QShortcut>
 
 #include "QuickStartWidget.h"
 #include "../StationSearch.h"
@@ -53,6 +54,17 @@ QuickStartWidget::QuickStartWidget( QWidget* parent )
     connect( ui.button, SIGNAL(customContextMenuRequested(QPoint)), SLOT(customContextMenuRequested(QPoint)));
 
     connect( ui.edit, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
+
+    QShortcut* shortcut = new QShortcut( ui.edit );
+    shortcut->setKey( Qt::CTRL + Qt::Key_D );
+    shortcut->setContext( Qt::WidgetShortcut );
+    connect( shortcut, SIGNAL(activated()), SLOT(setToCurrent()) );
+}
+
+void
+QuickStartWidget::setToCurrent()
+{
+    ui.edit->setText( RadioService::instance().station().url() );
 }
 
 void
