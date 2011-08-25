@@ -34,6 +34,8 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     setRootIsDecorated( false );
 
     connect( this, SIGNAL( clicked(QModelIndex) ), SLOT(onItemClicked(QModelIndex)));
+
+    connect( m_model, SIGNAL(refreshing(bool)), SIGNAL(refreshing(bool)) );
 }
 
 
@@ -63,4 +65,9 @@ ActivityListWidget::onItemClicked( const QModelIndex& index )
 }
 
 
+void
+ActivityListWidget::refresh()
+{
+    m_model->refresh();
+}
 

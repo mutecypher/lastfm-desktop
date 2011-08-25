@@ -92,7 +92,10 @@ SOURCES += \
     Widgets/TagWidget.cpp \
     Widgets/CheckableDelegate.cpp \
     Widgets/TrackDelegate.cpp \
-    ImageTrack.cpp
+    ImageTrack.cpp \
+    Widgets/ScrobblesWidget.cpp \
+    Widgets/RefreshButton.cpp \
+    Widgets/BackButton.cpp
 
 HEADERS += \
     Wizard/WelcomePage.h \
@@ -164,7 +167,10 @@ HEADERS += \
     Widgets/TagWidget.h \
     Widgets/CheckableDelegate.h \
     Widgets/TrackDelegate.h \
-    ImageTrack.h
+    ImageTrack.h \
+    Widgets/ScrobblesWidget.h \
+    Widgets/RefreshButton.h \
+    Widgets/BackButton.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 

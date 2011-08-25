@@ -55,11 +55,11 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent)
     radios->addWidget( ui.radio = new PlayableItemWidget( RadioStation::library( User( user["name"].text() ) ), tr( "Play Library Radio" ) ) );
     ui.lastTrack->setObjectName( "radio" );
 
-    QList<User> users;
-    users << User() << User( user["name"].text() );
+//    QList<User> users;
+//    users << User() << User( user["name"].text() );
 
-    radios->addWidget( ui.multiRadio = new PlayableItemWidget( RadioStation::library( users ), tr( "Play Combo Radio" ) ) );
-    ui.lastTrack->setObjectName( "multiRadio" );
+//    radios->addWidget( ui.multiRadio = new PlayableItemWidget( RadioStation::library( users ), tr( "Play Combo Radio" ) ) );
+//    ui.lastTrack->setObjectName( "multiRadio" );
 
     connect( lastfm::UserDetails::getInfo( user["name"].text() ), SIGNAL(finished()), SLOT(onGotInfo()));
 }

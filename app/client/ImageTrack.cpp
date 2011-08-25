@@ -32,7 +32,7 @@ ImageTrack::image() const
 void
 ImageTrack::fetchImage()
 {
-    const QUrl imgUrl = imageUrl( lastfm::Small, false );
+    const QUrl imgUrl = imageUrl( lastfm::Medium, false );
     if( imgUrl.isEmpty())
     {
         qDebug() << "Getting info for track..";

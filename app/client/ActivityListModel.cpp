@@ -2,6 +2,8 @@
 #include <QApplication>
 #include <QDebug>
 
+#include <lastfm/XmlQuery>
+
 #include "lib/unicorn/UnicornSession.h"
 
 #include "Services/ScrobbleService/ScrobbleService.h"
@@ -26,7 +28,7 @@ ActivityListModel::ActivityListModel()
 
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* )), SLOT(onSessionChanged( unicorn::Session* )));
 
-    connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>) ) );
+    connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(addTracks(QList<lastfm::Track>) ) );
 }
 
 void
@@ -45,11 +47,11 @@ ActivityListModel::onFoundIPodScrobbles( const QList<lastfm::Track>& tracks )
     write();*/
 }
 
-
 void 
 ActivityListModel::onSessionChanged( unicorn::Session* session )
 {
     const QString& username = session->userInfo().name();
+
     if ( !username.isEmpty() )
     {
         QString path = lastfm::dir::runtimeData().filePath( username + "_recent_tracks.xml" );
@@ -59,6 +61,8 @@ ActivityListModel::onSessionChanged( unicorn::Session* session )
             m_path = path;
             read();
         }
+
+        refresh();
     }
 }
 
@@ -77,13 +81,17 @@ ActivityListModel::read()
     QDomDocument xml;
     xml.setContent( stream.readAll() );
 
+    QList<Track> tracks;
+
     for (QDomNode n = xml.documentElement().lastChild(); !n.isNull(); n = n.previousSibling())
     {
-        if( n.toElement().attributes().contains( "iPodScrobble" )) continue;
-        m_tracks.prepend( ImageTrack(Track( n.toElement() )));
-        m_tracks[0].fetchImage();
-        connect( &m_tracks[0], SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
+        if( n.toElement().attributes().contains( "iPodScrobble" ))
+            continue;
+
+        tracks << Track( n.toElement() );
     }
+
+    addTracks( tracks );
 
     limit( 30 );
 
@@ -118,57 +126,52 @@ ActivityListModel::write() const
     }
 }
 
-/*
 void
-ActivityListWidget::insertItem( ActivityListItem* item )
+ActivityListModel::refresh()
 {
-    item->setObjectName("recentTrack");
-    item->setOdd( m_rowNum++ % 2 );
-    item->updateTimestamp();
-
-    int pos = 0;
-
-    // find where it should be depending on the timestamp
-    for ( int i = 0 ; i < m_listLayout->count() ; ++i )
-    {
-        QDateTime itemTimestamp = static_cast<ActivityListItem*>(m_listLayout->itemAt( i )->widget())->timestamp();
-
-        qDebug() << item->timestamp() << itemTimestamp;
-
-        if ( item->timestamp() < itemTimestamp )
-        {
-            pos = i;
-        }
-        else if ( item->timestamp() == itemTimestamp )
-        {
-            pos = -1; // duplicate
-            item->deleteLater();
-            break;
-        }
-        else
-        {
-            break;
-        }
-    }
-
-    if ( pos >= 0 )
-    {
-        if ( pos == 0 )
-            m_listLayout->addWidget( item );
-        else
-            m_listLayout->insertWidget( pos, item );
-
-        connect( item, SIGNAL(clicked(ActivityListItem*)), SIGNAL(itemClicked(ActivityListItem*)));
-        connect( item, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
-
-        connect( item, SIGNAL(changed()), SLOT(onItemChanged()));
-
-        write();
-    }
-}*/
+    connect( User().getRecentTracks( 30, 1 ), SIGNAL(finished()), SLOT(onGotRecentTracks()) );
+    emit refreshing( true );
+}
 
 void
-ActivityListModel::onScrobblesCached( const QList<lastfm::Track>& tracks )
+ActivityListModel::onGotRecentTracks()
+{
+    try
+    {
+        XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
+
+        qDebug() << lfm;
+
+        QList<lastfm::Track> tracks;
+
+        foreach ( const XmlQuery& trackXml, lfm["recenttracks"].children("track") )
+        {
+            MutableTrack track;
+            track.setTitle( trackXml["name"].text() );
+            track.setArtist( trackXml["artist"].text() );
+            track.setAlbum( trackXml["album"].text() );
+            track.setTimeStamp( QDateTime::fromTime_t( trackXml["date"].attribute("uts").toUInt() ) );
+
+            track.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
+            track.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
+            track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
+            track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
+
+            tracks << track;
+        }
+
+        addTracks( tracks );
+    }
+    catch (...)
+    {
+
+    }
+
+    emit refreshing( false );
+}
+
+void
+ActivityListModel::addTracks( const QList<lastfm::Track>& tracks )
 {
     foreach ( const lastfm::Track& track, tracks )
     {
@@ -176,15 +179,38 @@ ActivityListModel::onScrobblesCached( const QList<lastfm::Track>& tracks )
         // we ignore these at the moment
         if ( track.extra("deviceId").isEmpty() )
         {
-            if( m_tracks.count() > 0 && m_tracks[0] == track ) return;
-            beginInsertRows( QModelIndex(), 0, 0 );
-            m_tracks.prepend( track );
+            int pos = 0;
+            bool duplicate = false;
+
+            for ( int i = 0 ; i < m_tracks.count() ; ++i )
+            {
+                if ( track.timestamp() == m_tracks[i].timestamp() )
+                {
+                    // DON'T ADD DUPLICATES!
+                    duplicate = true;
+                    break;
+                }
+                if ( track.timestamp() < m_tracks[i].timestamp() )
+                    pos = i;
+                else
+                    break;
+            }
+
+            if ( duplicate )
+                continue;
+
+            beginInsertRows( QModelIndex(), pos, pos );
+
+            m_tracks.insert( pos, track );
             track.getInfo();
-            m_tracks[0].fetchImage();
+            m_tracks[pos].fetchImage();
+
+            endInsertRows();
+
             connect( &m_tracks[0], SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
             connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
             connect( track.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
-            endInsertRows();
+
             write();
         }
     }
@@ -204,6 +230,8 @@ ActivityListModel::limit( int limit )
             m_tracks.removeLast();
 
         endInsertRows();
+
+        write();
     }
 }
 

@@ -18,8 +18,8 @@ class RecentTracksWidget : public QWidget
         void onMoveFinished( class QLayoutItem* i );
 
     protected:
-        class SideBySideLayout* layout;
-        class ActivityListWidget* activityList;
+        class SideBySideLayout* m_layout;
+        class ScrobblesWidget* m_scrobbles;
 };
 
 #endif //RECENT_TRACKS_WIDGET_H_

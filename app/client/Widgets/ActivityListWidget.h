@@ -13,13 +13,10 @@ public:
 
 signals:
     void trackClicked( const Track& );
-
-protected:
-
+    void refreshing( bool refreshing );
 
 private slots:
-/*    void refreshRecentTracks( User user = User() );
-    void onGotRecentTracks();   */
+    void refresh();
     void onItemClicked( const QModelIndex& index );
 
 private:

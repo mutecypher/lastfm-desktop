@@ -21,9 +21,9 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QPushButton" name="back">
+    <widget class="BackButton" name="back">
      <property name="text">
-      <string>Back</string>
+      <string>Track and Artist Info</string>
      </property>
     </widget>
    </item>
@@ -735,6 +735,11 @@
    <class>PlayableItemWidget</class>
    <extends>QPushButton</extends>
    <header>../Widgets/PlayableItemWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BackButton</class>
+   <extends>QPushButton</extends>
+   <header>../Widgets/BackButton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

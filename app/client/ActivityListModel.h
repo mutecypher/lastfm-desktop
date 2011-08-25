@@ -39,11 +39,16 @@ public:
     virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
+signals:
+    void refreshing( bool refreshing );
+
 public slots:
     void onFoundIPodScrobbles( const QList<lastfm::Track>& tracks );
-    void onScrobblesCached( const QList<lastfm::Track>& tracks );
+    void addTracks( const QList<lastfm::Track>& tracks );
     void onSessionChanged( unicorn::Session* session );
     void onTrackLoveToggled();
+    void onGotRecentTracks();
+    void refresh();
 
 private slots:
     void write() const;

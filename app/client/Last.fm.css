@@ -132,6 +132,22 @@ MetadataWidget {
 	border: none;
 }
 
+MetadataWidget QPushButton#back {
+	background-image: url(":/control_bar_back.png");
+	background-repeat: none;
+	background-position: center left;
+	color: #333;
+	font-size: 12px;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
+	border: none;
+	border-bottom: 1px solid #989898;
+	text-align: top left;
+	height: 51px;
+	padding-top: 13px;
+	padding-left: 50px;
+}
+
+
 MetadataWidget QWidget#scrollAreaWidgetContents {
 	border: none;
 }
@@ -301,6 +317,30 @@ MetadataWidget PlayableItemWidget {
 	background-color: transparent;
 	min-height: 49px;
 	max-height: 49px;
+}
+
+ActivityListWidget {
+	border: none;
+}
+
+ScrobblesWidget QPushButton#refresh {
+	background-position: center left;
+	background-repeat: none;
+	padding: 0px 10%;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
+	color: #777;
+	border: none;
+	border-bottom: 1px solid #a6a6a6;
+	height: 38px;
+}
+
+ScrobblesWidget QPushButton#refresh:hover {
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #f0f0f0, stop:1 #d6d6d6);
+}
+
+ScrobblesWidget QPushButton#refresh:pressed,
+ScrobblesWidget QPushButton#refresh:disabled {
+	background-color: #cccccc;
 }
 
 FriendListWidget QLineEdit
