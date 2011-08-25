@@ -160,22 +160,23 @@ Application::init()
         m_love_action = menu->addAction(tr("Love"));
         m_love_action->setCheckable( true );
         QIcon loveIcon;
-        loveIcon.addFile( ":/controls_love_ON_REST.png", QSize( 16, 16), QIcon::Normal, QIcon::On );
-        loveIcon.addFile( ":/controls_love_OFF_REST.png", QSize( 16, 16), QIcon::Normal, QIcon::Off );
+        loveIcon.addFile( ":/meta_love_OFF_REST.png", QSize( 16, 16 ), QIcon::Normal, QIcon::Off );
+        loveIcon.addFile( ":/meta_love_ON_REST.png", QSize( 16, 16 ), QIcon::Normal, QIcon::On );
+
         m_love_action->setIcon( loveIcon );
         m_love_action->setEnabled( false );
         connect( m_love_action, SIGNAL(triggered(bool)), SLOT(changeLovedState(bool)));
     }
     {
         m_tag_action = menu->addAction(tr("Tag")+ELLIPSIS);
-        m_tag_action->setIcon( QIcon( ":/tag-rest.png" ) );
+        m_tag_action->setIcon( QIcon( ":/meta_tag_REST.png" ) );
         m_tag_action->setEnabled( false );
         connect( m_tag_action, SIGNAL(triggered()), SLOT(onTagTriggered()));
     }
 
     {
         m_share_action = menu->addAction(tr("Share")+ELLIPSIS);
-        m_share_action->setIcon( QIcon( ":/share-rest.png" ) );
+        m_share_action->setIcon( QIcon( ":/meta_share_REST.png" ) );
         m_share_action->setEnabled( false );
         connect( m_share_action, SIGNAL(triggered()), SLOT(onShareTriggered()));
     }
