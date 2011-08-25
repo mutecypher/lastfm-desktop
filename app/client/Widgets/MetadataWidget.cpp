@@ -95,6 +95,8 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     FlowLayout* trackPopTagsListLayout = new FlowLayout( ui->trackPopTagsList );
     trackPopTagsListLayout->setOneLine( true );
 
+    ui->scrobbleControls->setTrack( track );
+
     setTrackDetails( track );
 
     //setUpdatesEnabled( false );
@@ -119,44 +121,6 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
 MetadataWidget::~MetadataWidget()
 {
     delete ui;
-}
-
-void
-MetadataWidget::showIfRoom( const QLayout* layout )
-{
-//    int cumWidth = 0;
-
-//    bool roomForMore = true;
-
-//    for ( int i = 0 ; i < layout->count() ; ++i )
-//    {
-//        QWidget* widget = layout->itemAt( i )->widget();
-
-//        if ( roomForMore )
-//        {
-//            int widgetWidth = widget->width();
-
-//            roomForMore = cumWidth + widgetWidth < ui->scrollArea->viewport()->width() - 130;
-
-//            widget->setVisible( roomForMore );
-
-//            if ( roomForMore )
-//                cumWidth += widgetWidth;
-//        }
-//        else
-//            widget->hide();
-//    }
-}
-
-void
-MetadataWidget::resizeEvent( QResizeEvent* event )
-{
-    setUpdatesEnabled( false );
-//    showIfRoom( ui->trackYourTagsList );
-//    showIfRoom( ui->trackPopTagsList );
-//    showIfRoom( ui->artistYourTagsList );
-//    showIfRoom( ui->artistPopTagsList );
-    setUpdatesEnabled( true );
 }
 
 ScrobbleControls*

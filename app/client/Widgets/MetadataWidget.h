@@ -72,9 +72,6 @@ signals:
     void backClicked();
 
 private:
-    void showIfRoom( const QLayout* layout );
-    void resizeEvent( QResizeEvent* event );
-
     void checkFinished();
 
     void setTrackDetails( const Track& track );
