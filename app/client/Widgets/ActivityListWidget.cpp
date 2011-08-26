@@ -32,6 +32,8 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     header()->setMinimumSectionSize( 0 );
     setHeaderHidden( true );
     setRootIsDecorated( false );
+    setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
+
 
     connect( this, SIGNAL( clicked(QModelIndex) ), SLOT(onItemClicked(QModelIndex)));
 
