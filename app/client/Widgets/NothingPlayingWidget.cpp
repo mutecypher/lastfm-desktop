@@ -85,7 +85,7 @@ void
 NothingPlayingWidget::setUser( const lastfm::User& user )
 {
     if ( !user.name().isEmpty() )
-        ui.hello->setText( tr( "Hello, %1! Let's start a RadioStation..." ).arg( user.name() ) );
+        ui.hello->setText( tr( "Hello, %1! Let's start a radio station..." ).arg( user.name() ) );
 }
 
 void
