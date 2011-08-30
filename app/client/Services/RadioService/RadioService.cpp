@@ -331,7 +331,8 @@ RadioService::phononEnqueue()
 
         // Invalid urls won't trigger the correct phonon
         // state changes, so we must filter them.
-        if (!t.url().isValid()) continue;
+        if (!t.url().isValid())
+            continue;
         
         m_track = t;
         Phonon::MediaSource ms( t.url() );
@@ -346,7 +347,15 @@ RadioService::phononEnqueue()
             m_mediaObject->enqueue( ms );
         } else {
             qDebug() << "starting " << t;
-            m_mediaObject->setCurrentSource( ms );
+            try
+            {
+                m_mediaObject->setCurrentSource( ms );
+            }
+            catch (...)
+            {
+                continue;
+            }
+
             m_mediaObject->play();
         }
         break;
