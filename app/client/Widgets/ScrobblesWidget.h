@@ -19,6 +19,8 @@ private:
 public:
     explicit ScrobblesWidget(QWidget *parent = 0);
 
+    void refresh();
+
 signals:
     void trackClicked( const Track& );
 

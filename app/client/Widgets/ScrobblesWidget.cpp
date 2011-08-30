@@ -30,6 +30,12 @@ ScrobblesWidget::ScrobblesWidget(QWidget *parent) :
 }
 
 void
+ScrobblesWidget::refresh()
+{
+    ui.activityList->refresh();
+}
+
+void
 ScrobblesWidget::onRefreshing( bool refreshing )
 {
     ui.refresh->setText( refreshing ? tr( "Refreshing..." ) : tr( "Refresh Scrobbles" ) );

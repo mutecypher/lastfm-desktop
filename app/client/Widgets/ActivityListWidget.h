@@ -15,8 +15,10 @@ signals:
     void trackClicked( const Track& );
     void refreshing( bool refreshing );
 
-private slots:
+public slots:
     void refresh();
+
+private slots: 
     void onItemClicked( const QModelIndex& index );
 
 private:
