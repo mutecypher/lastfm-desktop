@@ -39,7 +39,6 @@ private:
         class QAbstractButton* profile;
         class QAbstractButton* friends;
         class QAbstractButton* radio;
-        class AvatarWidget* avatar;
     } ui;
 
 public:
@@ -52,6 +51,9 @@ signals:
 
 public slots:
     void onButtonClicked();
+
+    void onUp();
+    void onDown();
 };
 
 #endif // SIDEBAR_H
