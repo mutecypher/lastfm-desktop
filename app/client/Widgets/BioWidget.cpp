@@ -1,10 +1,13 @@
-#include "BioWidget.h"
-#include "../../../lib/unicorn/widgets/BannerWidget.h"
-#include "../../../lib/unicorn/widgets/HttpImageWidget.h"
 
 #include <QEventLoop>
 #include <QApplication>
 #include <QToolTip>
+
+#include "lib/unicorn/widgets/BannerWidget.h"
+#include "lib/unicorn/widgets/HttpImageWidget.h"
+
+#include "WidgetTextObject.h"
+#include "BioWidget.h"
 
 BioWidget::BioWidget( QWidget* p ) 
           : QTextBrowser( p ), 

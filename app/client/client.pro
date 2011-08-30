@@ -95,7 +95,8 @@ SOURCES += \
     ImageTrack.cpp \
     Widgets/ScrobblesWidget.cpp \
     Widgets/RefreshButton.cpp \
-    Widgets/BackButton.cpp
+    Widgets/BackButton.cpp \
+    Widgets/WidgetTextObject.cpp
 
 HEADERS += \
     Wizard/WelcomePage.h \
@@ -170,7 +171,8 @@ HEADERS += \
     ImageTrack.h \
     Widgets/ScrobblesWidget.h \
     Widgets/RefreshButton.h \
-    Widgets/BackButton.h
+    Widgets/BackButton.h \
+    Widgets/WidgetTextObject.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
