@@ -32,6 +32,7 @@
 #include <QAbstractTextDocumentLayout>
 #include <QTextFrame>
 #include <QScrollBar>
+#include <QMenu>
 
 #include <lastfm/XmlQuery>
 #include <lastfm/ws.h>
@@ -116,6 +117,9 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
     connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
     connect( m_track.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
+
+    //connect( m_track.getBuyLinks( aApp->currentSession()->userInfo().country() ), SIGNAL(finished()), SLOT(onTrackGotBuyLinks()) );
+    connect( m_track.getBuyLinks( "united kingdom" ), SIGNAL(finished()), SLOT(onTrackGotBuyLinks()) );
 }
 
 MetadataWidget::~MetadataWidget()
@@ -339,6 +343,46 @@ MetadataWidget::onAlbumGotInfo()
    {
        qDebug() << e;
    }
+}
+
+void
+MetadataWidget::onTrackGotBuyLinks()
+{
+    try
+    {
+        QByteArray data = qobject_cast<QNetworkReply*>(sender())->readAll() ;
+        qDebug() << data;
+        XmlQuery lfm( data );
+
+
+
+        QMenu* menu = new QMenu( this );
+
+        foreach ( const XmlQuery& affiliation, lfm["affiliations"]["physicals"].children( "affiliation" ) )
+        {
+            QAction* buyAction = menu->addAction( affiliation["supplierName"].text() );
+            buyAction->setData( affiliation["buyLink"].text() );
+        }
+
+        ui->scrobbleControls->ui.buy->setMenu( menu );
+
+        connect( menu, SIGNAL(triggered(QAction*)), SLOT(onBuyActionTriggered(QAction*)) );
+    }
+    catch ( lastfm::ws::ParseError e )
+    {
+        // TODO: what happens when we fail?
+        qDebug() << e.message() << e.enumValue();
+    }
+    catch ( lastfm::ws::Error e )
+    {
+        qDebug() << e;
+    }
+}
+
+void
+MetadataWidget::onBuyActionTriggered( QAction* buyAction )
+{
+    QDesktopServices::openUrl( buyAction->data().toString() );
 }
 
 void

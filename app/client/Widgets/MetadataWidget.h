@@ -57,6 +57,8 @@ private slots:
     void onAlbumGotInfo();
     void onArtistGotInfo();
     void onArtistGotEvents();
+    void onTrackGotBuyLinks();
+    void onBuyActionTriggered( QAction* buyAction );
 
     void onTrackGotYourTags();
     void onArtistGotYourTags();
