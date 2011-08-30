@@ -53,12 +53,22 @@ public slots:
 private slots:
     void write() const;
 
+    void onTrackStarted( const Track&, const Track& );
+    void onResumed();
+    void onPaused();
+    void onStopped();
+
 private:
     void read();
     void limit( int limit );
 
+    QModelIndex adjustedIndex( const QModelIndex& a_index ) const;
+    const ImageTrack& indexedTrack( const QModelIndex& index, const QModelIndex& adjustedIndex ) const;
+
 private:
     ImageTrack m_nowPlayingTrack;
+    ImageTrack m_nowScrobblingTrack;
+    bool m_paused;
     QList<ImageTrack> m_tracks;
     QString m_path;
     QIcon m_loveIcon;

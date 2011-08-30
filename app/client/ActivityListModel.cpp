@@ -11,7 +11,10 @@
 
 
 ActivityListModel::ActivityListModel()
-    :m_noArt( ":/noArt.png" ), m_nowPlayingTrack( Track() )
+    :m_noArt( ":/noArt.png" ),
+     m_nowPlayingTrack( Track() ),
+     m_nowScrobblingTrack( Track() ),
+     m_paused( false )
 {
     m_loveIcon.addFile( ":/scrobbles_love_OFF_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
     m_loveIcon.addFile( ":/meta_love_ON_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::On );
@@ -29,6 +32,11 @@ ActivityListModel::ActivityListModel()
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* )), SLOT(onSessionChanged( unicorn::Session* )));
 
     connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(addTracks(QList<lastfm::Track>) ) );
+
+    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)));
+    connect( &ScrobbleService::instance(), SIGNAL(paused()), SLOT(onPaused()));
+    connect( &ScrobbleService::instance(), SIGNAL(resumed()), SLOT(onResumed()));
+    connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
 }
 
 void
@@ -124,6 +132,38 @@ ActivityListModel::write() const
         stream << "<?xml version='1.0' encoding='utf-8'?>\n";
         stream << xml.toString( 2 );
     }
+}
+
+void
+ActivityListModel::onTrackStarted( const Track& track, const Track& )
+{
+    m_nowScrobblingTrack = track;
+    m_nowScrobblingTrack.getInfo();
+    m_nowScrobblingTrack.fetchImage();
+    m_paused = true;
+
+    reset();
+}
+
+void
+ActivityListModel::onResumed()
+{
+    m_paused = false;
+    reset();
+}
+
+void
+ActivityListModel::onPaused()
+{
+    m_paused = true;
+    reset();
+}
+
+void
+ActivityListModel::onStopped()
+{
+    m_nowScrobblingTrack = Track();
+    reset();
 }
 
 void
@@ -254,16 +294,35 @@ ActivityListModel::onTrackLoveToggled()
     reset();
 }
 
+QModelIndex
+ActivityListModel::adjustedIndex( const QModelIndex& a_index ) const
+{
+    if ( !m_nowPlayingTrack.isNull() || (!m_nowScrobblingTrack.isNull() && !m_paused) )
+        return createIndex( a_index.row() - 1, a_index.column() );
+
+    return a_index;
+}
+
+
+const ImageTrack&
+ActivityListModel::indexedTrack( const QModelIndex& index, const QModelIndex& adjustedIndex ) const
+{
+    if ( !m_nowScrobblingTrack.isNull() && !m_paused && index.row() == 0 )
+        return m_nowScrobblingTrack;
+
+    return !m_nowPlayingTrack.isNull() && index.row() == 0 ? m_nowPlayingTrack : m_tracks[adjustedIndex.row()];
+}
+
+
 QVariant 
 ActivityListModel::data( const QModelIndex& a_index, int role ) const
 {
-    QModelIndex index = a_index;
-    if ( !m_nowPlayingTrack.isNull() ) index = createIndex( a_index.row() - 1, a_index.column() );
-    const ImageTrack& indexedTrack = !m_nowPlayingTrack.isNull() && a_index.row() == 0 ? m_nowPlayingTrack : m_tracks[index.row()];
+    QModelIndex index = adjustedIndex( a_index );
+    const ImageTrack& track = indexedTrack( a_index, index );
 
     if ( role == TrackRole )
     {
-        return indexedTrack;
+        return track;
     }
     else if ( role == HoverStateRole )
     {
@@ -276,7 +335,7 @@ ActivityListModel::data( const QModelIndex& a_index, int role ) const
     if ( index.column() == 1 )
     {
         if( role == Qt::CheckStateRole ) 
-            return indexedTrack.isLoved() ? Qt::Checked : Qt::Unchecked;
+            return track.isLoved() ? Qt::Checked : Qt::Unchecked;
         else if( role == Qt::DecorationRole )
             return m_loveIcon;
         else if( role == Qt::SizeHintRole )
@@ -310,16 +369,16 @@ ActivityListModel::data( const QModelIndex& a_index, int role ) const
     if( index.column() != 0 ) return QVariant();
 
     switch( role ) {
-        case Qt::DisplayRole: return indexedTrack.toString();
+        case Qt::DisplayRole: return track.toString();
         case Qt::DecorationRole: {
-            const QImage& image = indexedTrack.image();
+            const QImage& image = track.image();
             if( image.isNull() ) return m_noArt;
             return image;
         }
         case Qt::SizeHintRole: return QSize( 600, 84 );
-        case TrackNameRole: return indexedTrack.title();
-        case ArtistNameRole: return indexedTrack.artist().toString();
-        case TimeStampRole: return indexedTrack.timestamp();
+        case TrackNameRole: return track.title();
+        case ArtistNameRole: return track.artist().toString();
+        case TimeStampRole: return track.timestamp();
     }
     return QVariant();
 }
@@ -327,9 +386,8 @@ ActivityListModel::data( const QModelIndex& a_index, int role ) const
 bool 
 ActivityListModel::setData( const QModelIndex& a_index, const QVariant& value, int role )
 {
-    QModelIndex index = a_index;
-    if ( !m_nowPlayingTrack.isNull() ) index = createIndex( a_index.row() - 1, a_index.column() );
-    const ImageTrack& indexedTrack = !m_nowPlayingTrack.isNull() && a_index.row() == 0 ? m_nowPlayingTrack : m_tracks[index.row()];
+    QModelIndex index = adjustedIndex( a_index );
+    const ImageTrack& track = indexedTrack( a_index, index );
 
     if( role == HoverStateRole && value.toBool() )
     {
@@ -342,9 +400,9 @@ ActivityListModel::setData( const QModelIndex& a_index, const QVariant& value, i
     if( index.column() == 1 )
     {
         if( value == Qt::Checked )
-            MutableTrack(indexedTrack).love();
+            MutableTrack( track ).love();
         else if( value == Qt::Unchecked )
-            MutableTrack(indexedTrack).unlove();
+            MutableTrack( track ).unlove();
 
         emit dataChanged( index, index );
 
@@ -373,7 +431,7 @@ ActivityListModel::parent( const QModelIndex& index ) const
 int
 ActivityListModel::rowCount( const QModelIndex& parent ) const
 {
-    return parent.isValid() ? 0 : m_nowPlayingTrack.isNull() ? m_tracks.length() : m_tracks.length() + 1;
+    return parent.isValid() ? 0 : !m_nowPlayingTrack.isNull() || (!m_nowScrobblingTrack.isNull() && !m_paused) ? m_tracks.length() + 1 : m_tracks.length();
 }
 
 int
