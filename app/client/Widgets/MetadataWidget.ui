@@ -295,13 +295,6 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="trackTags">
-            <property name="text">
-             <string>Track Tags</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QFrame" name="trackTagsFrame">
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
@@ -317,47 +310,29 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QFrame" name="trackYourTagsFrame">
-               <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-                <property name="margin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QLabel" name="trackYourTags">
-                  <property name="text">
-                   <string>Your tags:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QFrame" name="trackYourTagsList"/>
-                </item>
-               </layout>
+              <widget class="Label" name="trackPopTags">
+               <property name="text">
+                <string>Popular tags:</string>
+               </property>
+               <property name="textFormat">
+                <enum>Qt::RichText</enum>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
              <item>
-              <widget class="QFrame" name="trackPopTagsFrame">
-               <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-                <property name="margin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QLabel" name="trackPopTags">
-                  <property name="text">
-                   <string>Popular tags:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QFrame" name="trackPopTagsList"/>
-                </item>
-               </layout>
+              <widget class="Label" name="trackYourTags">
+               <property name="text">
+                <string>Your tags:</string>
+               </property>
+               <property name="textFormat">
+                <enum>Qt::RichText</enum>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
             </layout>
@@ -502,6 +477,50 @@
            </widget>
           </item>
           <item>
+           <widget class="QFrame" name="artistTagsFrame">
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="Label" name="artistPopTags">
+               <property name="text">
+                <string>Popular tags:</string>
+               </property>
+               <property name="textFormat">
+                <enum>Qt::RichText</enum>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="Label" name="artistYourTags">
+               <property name="text">
+                <string>Your tags:</string>
+               </property>
+               <property name="textFormat">
+                <enum>Qt::RichText</enum>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
            <widget class="QLabel" name="similarArtists">
             <property name="text">
              <string>Similar Artists</string>
@@ -598,87 +617,6 @@
             <property name="text">
              <string>Play Artist Radio</string>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="artistTags">
-            <property name="text">
-             <string>Artist Tags</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QFrame" name="artistTagsFrame">
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_6">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="margin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QFrame" name="artistYourTagsFrame">
-               <property name="frameShape">
-                <enum>QFrame::NoFrame</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-                <property name="margin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QLabel" name="artistUserTags">
-                  <property name="text">
-                   <string>Your tags:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QFrame" name="artistYourTagsList"/>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
-              <widget class="QFrame" name="artistPopTagsFrame">
-               <property name="frameShape">
-                <enum>QFrame::NoFrame</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,1">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-                <property name="margin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QLabel" name="artistPopTags">
-                  <property name="text">
-                   <string>Popular tags:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QFrame" name="artistPopTagsList"/>
-                </item>
-               </layout>
-              </widget>
-             </item>
-            </layout>
            </widget>
           </item>
           <item>
