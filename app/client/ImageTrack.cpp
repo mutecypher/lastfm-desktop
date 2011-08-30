@@ -17,9 +17,10 @@ ImageTrack::ImageTrack( const ImageTrack& t )
 }
 
 ImageTrack&
-ImageTrack::operator=(const ImageTrack& t)
+ImageTrack::operator=( const ImageTrack& t )
 {
-    *this = ImageTrack(t);
+    d = t.d;
+    m_image = t.image();
     return *this;
 }
 

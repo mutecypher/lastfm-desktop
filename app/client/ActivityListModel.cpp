@@ -11,7 +11,7 @@
 
 
 ActivityListModel::ActivityListModel()
-    :m_noArt( ":/noArt.png" )
+    :m_noArt( ":/noArt.png" ), m_nowPlayingTrack( Track() )
 {
     m_loveIcon.addFile( ":/scrobbles_love_OFF_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
     m_loveIcon.addFile( ":/meta_love_ON_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::On );
@@ -102,7 +102,7 @@ void
 ActivityListModel::write() const
 {
     qDebug() << "Writing recent_tracks";
-    if ( rowCount() == 0 )
+    if ( m_tracks.count() == 0 )
         QFile::remove( m_path );
     else
     {
@@ -111,7 +111,7 @@ ActivityListModel::write() const
         e.setAttribute( "product", QCoreApplication::applicationName() );
         e.setAttribute( "version", "2" );
 
-        for ( int i(0) ; i < rowCount() ; ++i )
+        for ( int i(0) ; i < m_tracks.count() ; ++i )
             e.appendChild( m_tracks[i].toDomElement( xml ) );
 
         xml.appendChild( e );
@@ -142,11 +142,29 @@ ActivityListModel::onGotRecentTracks()
 
         qDebug() << lfm;
 
+        m_nowPlayingTrack = Track();
+
         QList<lastfm::Track> tracks;
 
         foreach ( const XmlQuery& trackXml, lfm["recenttracks"].children("track") )
         {
-            if ( trackXml.attribute( "nowplaying" ) != "true" )
+            if ( trackXml.attribute( "nowplaying" ) == "true" )
+            {
+                MutableTrack track;
+                track.setTitle( trackXml["name"].text() );
+                track.setArtist( trackXml["artist"].text() );
+                track.setAlbum( trackXml["album"].text() );
+                track.setTimeStamp( QDateTime::fromTime_t( trackXml["date"].attribute("uts").toUInt() ) );
+
+                track.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
+                track.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
+                track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
+                track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
+
+                m_nowPlayingTrack = track;
+                m_nowPlayingTrack.fetchImage();
+            }
+            else
             {
                 MutableTrack track;
                 track.setTitle( trackXml["name"].text() );
@@ -237,11 +255,15 @@ ActivityListModel::onTrackLoveToggled()
 }
 
 QVariant 
-ActivityListModel::data( const QModelIndex& index, int role ) const
+ActivityListModel::data( const QModelIndex& a_index, int role ) const
 {
+    QModelIndex index = a_index;
+    if ( !m_nowPlayingTrack.isNull() ) index = createIndex( a_index.row() - 1, a_index.column() );
+    const ImageTrack& indexedTrack = !m_nowPlayingTrack.isNull() && a_index.row() == 0 ? m_nowPlayingTrack : m_tracks[index.row()];
+
     if ( role == TrackRole )
     {
-        return m_tracks[index.row()];
+        return indexedTrack;
     }
     else if ( role == HoverStateRole )
     {
@@ -254,7 +276,7 @@ ActivityListModel::data( const QModelIndex& index, int role ) const
     if ( index.column() == 1 )
     {
         if( role == Qt::CheckStateRole ) 
-            return m_tracks[index.row()].isLoved() ? Qt::Checked : Qt::Unchecked;
+            return indexedTrack.isLoved() ? Qt::Checked : Qt::Unchecked;
         else if( role == Qt::DecorationRole )
             return m_loveIcon;
         else if( role == Qt::SizeHintRole )
@@ -288,23 +310,27 @@ ActivityListModel::data( const QModelIndex& index, int role ) const
     if( index.column() != 0 ) return QVariant();
 
     switch( role ) {
-        case Qt::DisplayRole: return m_tracks[index.row()].toString();
+        case Qt::DisplayRole: return indexedTrack.toString();
         case Qt::DecorationRole: {
-            const QImage& image = m_tracks[index.row()].image();
+            const QImage& image = indexedTrack.image();
             if( image.isNull() ) return m_noArt;
             return image;
         }
         case Qt::SizeHintRole: return QSize( 600, 84 );
-        case TrackNameRole: return m_tracks[index.row()].title();
-        case ArtistNameRole: return m_tracks[index.row()].artist().toString();
-        case TimeStampRole: return m_tracks[index.row()].timestamp();
+        case TrackNameRole: return indexedTrack.title();
+        case ArtistNameRole: return indexedTrack.artist().toString();
+        case TimeStampRole: return indexedTrack.timestamp();
     }
     return QVariant();
 }
 
 bool 
-ActivityListModel::setData( const QModelIndex& index, const QVariant& value, int role ) 
+ActivityListModel::setData( const QModelIndex& a_index, const QVariant& value, int role )
 {
+    QModelIndex index = a_index;
+    if ( !m_nowPlayingTrack.isNull() ) index = createIndex( a_index.row() - 1, a_index.column() );
+    const ImageTrack& indexedTrack = !m_nowPlayingTrack.isNull() && a_index.row() == 0 ? m_nowPlayingTrack : m_tracks[index.row()];
+
     if( role == HoverStateRole && value.toBool() )
     {
         emit dataChanged( m_hoverIndex, m_hoverIndex );
@@ -316,9 +342,9 @@ ActivityListModel::setData( const QModelIndex& index, const QVariant& value, int
     if( index.column() == 1 )
     {
         if( value == Qt::Checked )
-            MutableTrack(m_tracks[index.row()]).love();
+            MutableTrack(indexedTrack).love();
         else if( value == Qt::Unchecked )
-            MutableTrack(m_tracks[index.row()]).unlove();
+            MutableTrack(indexedTrack).unlove();
 
         emit dataChanged( index, index );
 
@@ -330,6 +356,30 @@ ActivityListModel::setData( const QModelIndex& index, const QVariant& value, int
         emit dataChanged( index, index );
 
     return false;
+}
+
+QModelIndex
+ActivityListModel::index( int row, int column, const QModelIndex& parent ) const
+{
+    return createIndex( row, column );
+}
+
+QModelIndex
+ActivityListModel::parent( const QModelIndex& index ) const
+{
+    return QModelIndex();
+}
+
+int
+ActivityListModel::rowCount( const QModelIndex& parent ) const
+{
+    return parent.isValid() ? 0 : m_nowPlayingTrack.isNull() ? m_tracks.length() : m_tracks.length() + 1;
+}
+
+int
+ActivityListModel::columnCount( const QModelIndex& parent ) const
+{
+    return parent.isValid() ? 0 : 5;
 }
 
 Qt::ItemFlags 

@@ -11,6 +11,14 @@
 
 #include "NothingPlayingWidget.h"
 
+#ifdef Q_OS_MAC
+#define ITUNES_BUNDLEID "com.apple.iTunes"
+#include <ApplicationServices/ApplicationServices.h>
+
+//This macro clashes with Qt headers
+#undef check
+#endif
+
 NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
     :StylableWidget( parent )
 {
@@ -55,6 +63,8 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
     ui.itunes->setObjectName( "itunes" );
     ui.itunes->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
+    connect( ui.itunes, SIGNAL(clicked()), SLOT(oniTunesClicked()));
+
 #ifndef Q_OS_MAC
     hl->addWidget( ui.wmp = new QPushButton( this ) );
     ui.wmp->setObjectName( "wmp" );
@@ -93,7 +103,31 @@ NothingPlayingWidget::oniTunesClicked()
 {
 #ifdef Q_OS_MAC
     // launch iTunes!
+    FSRef appRef;
+    LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( ITUNES_BUNDLEID ), NULL, &appRef, NULL );
 
+    LSApplicationParameters params;
+    params.version = 0;
+    params.flags = kLSLaunchAndHide;
+    params.application = &appRef;
+    params.asyncLaunchRefCon = NULL;
+    params.environment = NULL;
+
+
+    AEAddressDesc target;
+    AECreateDesc( typeApplicationBundleID, CFSTR( ITUNES_BUNDLEID ), 16, &target);
+
+    AppleEvent event;
+    AECreateAppleEvent ( kCoreEventClass,
+            kAEReopenApplication ,
+            &target,
+            kAutoGenerateReturnID,
+            kAnyTransactionID,
+            &event );
+
+    params.initialEvent = &event;
+
+    LSOpenApplication( &params, NULL );
 #endif
 }
 

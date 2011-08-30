@@ -30,10 +30,10 @@ public:
 
     ActivityListModel();
 
-    virtual QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex()) const { return createIndex( row, column ); }
-    virtual QModelIndex parent( const QModelIndex& index ) const { return QModelIndex(); }
-    virtual int rowCount( const QModelIndex& parent = QModelIndex()) const { return parent.isValid() ? 0 : m_tracks.length(); }
-    virtual int columnCount( const QModelIndex& parent = QModelIndex()) const { return parent.isValid() ? 0 : 5; }
+    virtual QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    virtual QModelIndex parent( const QModelIndex& index ) const;
+    virtual int rowCount( const QModelIndex& parent = QModelIndex()) const;
+    virtual int columnCount( const QModelIndex& parent = QModelIndex()) const;
     virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
     virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
     virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
@@ -58,6 +58,7 @@ private:
     void limit( int limit );
 
 private:
+    ImageTrack m_nowPlayingTrack;
     QList<ImageTrack> m_tracks;
     QString m_path;
     QIcon m_loveIcon;

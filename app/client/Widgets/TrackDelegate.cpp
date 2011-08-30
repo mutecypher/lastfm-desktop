@@ -41,9 +41,11 @@ TrackDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option, con
 
     painter->setPen(QColor(0x777777));
 
+    QDateTime timestamp = index.data( ActivityListModel::TimeStampRole ).toDateTime();
+
     f.setPointSize( 11 );
     painter->setFont( f );
-    painter->drawText( option.rect.left() + 94, option.rect.bottom() - 10, prettyTime(index.data( ActivityListModel::TimeStampRole ).toDateTime()));
+    painter->drawText( option.rect.left() + 94, option.rect.bottom() - 10, timestamp.toTime_t() == 0 ? tr( "Now playing" ) : prettyTime(timestamp));
 }
 
 QString
