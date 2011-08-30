@@ -39,7 +39,8 @@ BioWidget::BioWidget( QWidget* p )
 void
 BioWidget::onHighlighted( const QString& url )
 {
-    QToolTip::showText( cursor().pos(), url, this, QRect() );
+    QUrl displayUrl( url );
+    QToolTip::showText( cursor().pos(), displayUrl.toString(), this, QRect() );
 }
 
 void 
