@@ -13,11 +13,12 @@ class FriendWidget : public StylableWidget
 private:
     struct
     {
-        class HttpImageWidget* avatar;
-        class QLabel* name;
-        class QLabel* details;
-        class QLabel* lastTrack;
+        class AvatarWidget* avatar;
+        class Label* name;
+        class Label* details;
+        class Label* lastTrack;
         class PlayableItemWidget* radio;
+        class PlayableItemWidget* multiRadio;
     } ui;
 
 public:

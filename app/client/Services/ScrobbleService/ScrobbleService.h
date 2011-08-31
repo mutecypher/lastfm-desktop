@@ -39,7 +39,10 @@ public:
     ScrobbleService();
     ~ScrobbleService();
 
-    Track currentTrack() const {return m_currentTrack;}
+    bool scrobblingOn() const;
+    void setScrobblingOn( bool scrobblingOn );
+
+    Track currentTrack() const { return m_currentTrack; }
     QPointer<DeviceScrobbler> deviceScrobbler() { return m_deviceScrobbler; }
     QPointer<PlayerConnection> currentConnection() { return m_connection; }
     QPointer<StopWatch> stopWatch() { return m_watch; }
@@ -66,6 +69,7 @@ signals:
     void resumed();
     void paused();
     void stopped();
+    void scrobblingOnChanged( bool scrobblingOn );
     void scrobblesCached( const QList<lastfm::Track>& tracks );
     void scrobblesSubmitted( const QList<lastfm::Track>& tracks );
 
@@ -97,6 +101,7 @@ protected:
     QPointer <DeviceScrobbler> m_deviceScrobbler;
     Track m_currentTrack;
     Track m_trackToScrobble;
+    bool m_scrobblingOn;
 };
 
 

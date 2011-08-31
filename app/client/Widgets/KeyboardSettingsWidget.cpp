@@ -146,11 +146,13 @@ KeyboardSettingsWidget::setupUi()
     QHBoxLayout* h = new QHBoxLayout();
 
     h->addWidget( new QCheckBox( "Raise Scrobbler"));
-    h->addWidget( sce = new ShortCutEdit );
+    h->addWidget( m_sce = new ShortCutEdit );
 
     AudioscrobblerSettings settings;
-    sce->setTextValue( settings.raiseShortcutDescription() );
-    connect( sce, SIGNAL(editTextChanged(QString)), this, SLOT(onSettingsChanged()));
+    m_sce->setTextValue( settings.raiseShortcutDescription() );
+    m_sce->m_modifiers = settings.raiseShortcutModifiers();
+    m_sce->m_key = settings.raiseShortcutKey();
+    connect( m_sce, SIGNAL(editTextChanged(QString)), this, SLOT(onSettingsChanged()));
 
     v->addLayout(h);
 
@@ -164,9 +166,9 @@ KeyboardSettingsWidget::saveSettings()
     qDebug() << "has unsaved changes?" << hasUnsavedChanges();
 
     AudioscrobblerSettings settings;
-    settings.setRaiseShortcutKey( sce->m_key );
-    settings.setRaiseShortcutModifiers( sce->m_modifiers );
-    settings.setRaiseShortcutDescription( sce->textValue() );
+    settings.setRaiseShortcutKey( m_sce->m_key );
+    settings.setRaiseShortcutModifiers( m_sce->m_modifiers );
+    settings.setRaiseShortcutDescription( m_sce->textValue() );
 
-    aApp->setRaiseHotKey( sce->m_modifiers, sce->m_key );
+    aApp->setRaiseHotKey( m_sce->m_modifiers, m_sce->m_key );
 }

@@ -19,11 +19,13 @@
 */
 
 #include <QVBoxLayout>
+#include <QTimer>
 
 #include "NowPlayingWidget.h"
 #include "PlaybackControlsWidget.h"
 #include "MetadataWidget.h"
 
+#include "../Services/RadioService.h"
 #include "../Services/ScrobbleService.h"
 
 NowPlayingWidget::NowPlayingWidget(QWidget *parent)
@@ -37,30 +39,56 @@ NowPlayingWidget::NowPlayingWidget(QWidget *parent)
 
     layout->addStretch( 1 );
 
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)) );
+
     connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)) );
     connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()) );
 }
 
 void
-NowPlayingWidget::onTrackStarted( const Track& track, const Track& )
+NowPlayingWidget::onTuningIn( const RadioStation& )
 {
     if ( m_metadata )
     {
         layout()->removeWidget( m_metadata );
         delete m_metadata;
+        qobject_cast<QVBoxLayout*>(layout())->addStretch( 1 );
     }
-
-    qobject_cast<QVBoxLayout*>(layout())->insertWidget( 1, m_metadata = new MetadataWidget( track, false, this ) );
-    m_metadata->setBackButtonVisible( false );
 }
 
+void
+NowPlayingWidget::onTrackStarted( const Track& track, const Track& )
+{
+    setUpdatesEnabled( false );
+
+    if ( m_metadata )
+    {
+        layout()->removeWidget( m_metadata );
+        delete m_metadata;
+    }
+    else
+    {
+        // remove the stretch
+        layout()->removeItem( layout()->itemAt( 1 ) );
+    }
+
+    qobject_cast<QVBoxLayout*>(layout())->insertWidget( 1, m_metadata = new MetadataWidget( track, this ), 1 );
+    m_metadata->setBackButtonVisible( false );
+
+    setUpdatesEnabled( true );
+}
 
 void
 NowPlayingWidget::onStopped()
 {
+    setUpdatesEnabled( false );
+
     if ( m_metadata )
     {
         layout()->removeWidget( m_metadata );
         delete m_metadata;
+        qobject_cast<QVBoxLayout*>(layout())->addStretch( 1 );
     }
+
+    setUpdatesEnabled( true );
 }

@@ -54,6 +54,7 @@ public:
 
     ScrobblePoint scrobblePoint() const { return m_point; }
     uint duration() const { return m_duration; }
+    bool scrobbled() const { return m_scrobbled; }
     
 signals:
     void paused( bool );

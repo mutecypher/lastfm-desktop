@@ -28,7 +28,7 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,1,0">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -58,14 +58,14 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QLabel" name="status">
+          <widget class="Label" name="status">
            <property name="text">
             <string>Status</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="device">
+          <widget class="Label" name="device">
            <property name="text">
             <string>Device</string>
            </property>
@@ -73,19 +73,6 @@
          </item>
         </layout>
        </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-       </spacer>
       </item>
       <item>
        <widget class="QFrame" name="controls">
@@ -168,11 +155,11 @@
    </item>
    <item>
     <widget class="ProgressBar" name="progressBar">
-     <property name="value">
-      <number>0</number>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
      </property>
-     <property name="textVisible">
-      <bool>false</bool>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
      </property>
     </widget>
    </item>
@@ -180,9 +167,15 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>Label</class>
+   <extends>QLabel</extends>
+   <header>lib/unicorn/widgets/Label.h</header>
+  </customwidget>
+  <customwidget>
    <class>ProgressBar</class>
-   <extends>QProgressBar</extends>
+   <extends>QFrame</extends>
    <header>../Widgets/ProgressBar.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -18,20 +18,39 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <lastfm/global.h>
-#include <QProgressBar>
+#include <lastfm/Track>
+
+#include "lib/unicorn/StylableWidget.h"
 
 
-class ProgressBar : public QProgressBar
+class ProgressBar : public StylableWidget
 {
     Q_OBJECT
 
+    Q_PROPERTY( QBrush chunk READ chunk WRITE setChunk )
+
 public:
     ProgressBar( QWidget* parent = 0 );
+
+    void setTrack( const Track& track );
+
+    QBrush chunk() const { return m_chunk; }
+    void setChunk( const QBrush& chunk ) { m_chunk = chunk; }
+
+public slots:
+    void onFrameChanged( int frame );
     
 private:
-    virtual void paintEvent( QPaintEvent* e );
+    void resizeEvent( QResizeEvent* e );
+    void paintEvent( QPaintEvent* e );
 
 private:
+    QImage m_scrobbleMarkerOn;
+    QImage m_scrobbleMarkerOff;
 
+    int m_frame;
+
+    Track m_track;
+
+    QBrush m_chunk;
 };

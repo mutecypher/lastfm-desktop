@@ -2,7 +2,8 @@
 SideBar {
 	border: none;
 	background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #2d2d2d, stop:0.925 #2d2d2d, stop:1 #232323);
-	min-width: 84px;
+	padding: 0px;
+	margin: 0px;
 }
 
 SideBar QAbstractButton {
@@ -10,6 +11,7 @@ SideBar QAbstractButton {
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: center;
+	font-size: 11px;
 	color: #888888;
 	border: none;
 	height: 67px;
@@ -43,32 +45,300 @@ SideBar QAbstractButton#radio { background-image: url(":/tab_radio_REST.png"); }
 SideBar QAbstractButton#radio:hover { background-image: url(":/tab_radio_HOVER.png"); }
 SideBar QAbstractButton#radio:checked { background-image: url(":/tab_radio_ACTIVE.png"); }
 
-SideBar QLabel {
-	qproperty-alignment: AlignHCenter;
-	margin: 10px 10px;
+NothingPlayingWidget {
+	border: none;
+	background-image: url(":/start_bg.png");
+	background-repeat: no-repeat;
+	background-position: top left;
+	padding: 20px;
+}
+
+NothingPlayingWidget QLabel {
+	color: #333;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+NothingPlayingWidget QLabel#hello {
+	font-size: 16px;
+	margin-bottom: 25px;
+}
+
+NothingPlayingWidget QLabel#type {
+	margin-bottom: 44px;
+}
+
+NothingPlayingWidget QLabel#split {
+	font-size: 16px;
+	margin-top: 28px;
+	margin-bottom: 28px;
+}
+
+NothingPlayingWidget QLabel#scrobble {
+	font-size: 16px;
+	margin-bottom: 28px;
+}
+
+NothingPlayingWidget QLabel#scrobbleExplain {
+	margin-bottom: 20px;
+}
+
+NothingPlayingWidget StylableWidget#players {
+	padding-top: 40px;
+	border: none;
+}
+
+NothingPlayingWidget StylableWidget#players  QAbstractButton {
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: center;
+	border: none;
+	height: 44px;
+	width: 44px;
+	margin: 0px 10px;
+}
+
+NothingPlayingWidget StylableWidget#players  QAbstractButton#itunes {
+	background-image: url(":/control_bar_scrobble_itunes.png");
+}
+
+NothingPlayingWidget StylableWidget#players  QAbstractButton#wmp {
+	background-image: url(":/control_bar_scrobble_wmp.png");
+}
+
+NothingPlayingWidget StylableWidget#players  QAbstractButton#winamp {
+	background-image: url(":/control_bar_scrobble_winamp.png");
+}
+
+NothingPlayingWidget StylableWidget#players  QAbstractButton#foobar {
+	background-image: url(":/control_bar_scrobble_foobar.png");
 }
 
 NowPlayingWidget QLabel#context {
-	margin: 10px 20px;
+	margin: 20px 0px;
 	padding: 15px 15px;
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #e5e5e5);
 	border: 1px solid #cdcdcd;
 	border-radius: 5px;
-	font-weight: bold;
 	font-size: 12px;
 }
 
 QuickStartWidget {
 	border: none;
-	padding: 20px 20px 10px;
+	margin: 14px 0px 10px 0px;
+}
+
+MetadataWidget {
+	border: none;
+}
+
+MetadataWidget QPushButton#back {
+	background-image: url(":/control_bar_back.png");
+	background-repeat: none;
+	background-position: center left;
+	color: #333;
+	font-size: 12px;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
+	border: none;
+	border-bottom: 1px solid #989898;
+	text-align: top left;
+	height: 51px;
+	padding-top: 13px;
+	padding-left: 50px;
+}
+
+
+MetadataWidget QWidget#scrollAreaWidgetContents {
+	border: none;
+}
+
+MetadataWidget QFrame#trackFrame,
+MetadataWidget QFrame#artistFrame {
+	padding: 20px 20px 20px 20px;
+}
+
+MetadataWidget QFrame#artistFrame {
+	padding-bottom: 0px;
+}
+
+MetadataWidget QFrame#trackDetails {
+	padding-bottom: 10px;
+}
+
+MetadataWidget HttpImageWidget#albumImage {
+	color: transparent;
+	background-color: white;
+	qproperty-scaledContents: true;
+	border: 1px solid #cdcdcd;
+	min-width: 128px;
+	min-height: 128px;
+	max-width: 128px;
+	max-height: 128px;
+	padding: 4px;
+	margin-right: 20px;
+}
+	
+MetadataWidget QLabel#trackTitle {
+	color: #333;
+	font-size: 16pt;
+	font-weight: bold;
+	padding-bottom: 5px;
+}
+
+MetadataWidget QLabel#trackArtist {
+	border: 1px solid #cdcdcd;
+    border-width: 0px 0px 1px 0px;
+    padding-bottom: 11px; color: #333;
+}
+
+MetadataWidget ScrobbleControls {
+	border:none;
+	border-top: 1px solid #ffffff;
+	border-bottom: 1px solid #cdcdcd;
+	padding: 7px 0px;
+}
+
+MetadataWidget QLabel#trackAlbum {
+	border-top: 1px solid #ffffff;
+	padding-top: 11px;
+	font-size: 11pt;
+}
+
+MetadataWidget QLabel#trackPopTags,
+MetadataWidget QLabel#artistPopTags,
+MetadataWidget QLabel#trackYourTags,
+MetadataWidget QLabel#artistYourTags {
+	font-size: 11px;
+}
+
+MetadataWidget QLabel#similarArtists {
+	font-size: 16px;
+	font-weight: bold;
+	padding: 10px 0px;
+	border: none;
+	border-bottom: 1px solid #cdcdcd;
+}
+
+MetadataWidget QFrame#trackStats {
+	padding: 10px 0px 20px;
+}
+
+MetadataWidget QLabel#trackPlays,
+MetadataWidget QLabel#trackListeners,
+MetadataWidget QLabel#trackUserPlays,
+MetadataWidget QLabel#artistPlays,
+MetadataWidget QLabel#artistListeners,
+MetadataWidget QLabel#artistUserPlays {
+	color: #333;
+	font-size: 16pt;
+	font-weight: bold;
+}
+
+MetadataWidget QLabel#trackPlaysLabel,
+MetadataWidget QLabel#trackListenersLabel,
+MetadataWidget QLabel#trackUserPlaysLabel,
+MetadataWidget QLabel#artistPlaysLabel,
+MetadataWidget QLabel#artistListenersLabel,
+MetadataWidget QLabel#artistUserPlaysLabel {
+	color: #898989;
+	font-size: 10pt;
+	font-weight: normal;
+}
+
+MetadataWidget QFrame#trackSeperator1,
+MetadataWidget QFrame#trackSeperator3,
+MetadataWidget QFrame#artistSeperator1,
+MetadataWidget QFrame#artistSeperator3 {
+	border: none;
+	border-right: 1px solid #cdcdcd;
+	margin: 0px;
+}
+
+MetadataWidget QFrame#trackSeperator2,
+MetadataWidget QFrame#trackSeperator4,
+MetadataWidget QFrame#artistSeperator2,
+MetadataWidget QFrame#artistSeperator4 {
+	border: none;
+	border-left: 1px solid white;
+	margin: 0px;
+}
+
+MetadataWidget QWidget#artistFrame {
+    background-color: #dedede;
+}
+
+MetadataWidget QLabel#artistArtist {
+	font-size: 16pt;
+	font-weight: bold;
+	color: #333;
+	padding-top: 10px 0px;
+}
+
+MetadataWidget BioWidget#artistBio {
+	background-color: #dedede;
+	border: none;
+	font-size: 12pt;
+	color: #333;
+}
+
+MetadataWidget TagWidget {
+        height: 19px;
+        color: white;
+        font-size: 11px;
+}
+
+MetadataWidget QFrame#similarArtistFrame {
+	padding: 10px 0px;
+	border-top: 1px solid white;
+}
+
+MetadataWidget QFrame#similarArtistFrame QLabel {
+	padding: 2px;
+	border: 1px solid #cdcdcd;
+	background-color: white;
+	margin-bottom: 20px;
+	color: black;
+	qproperty-alignment: AlignBottom;
+	background-origin: margin;
+}
+
+MetadataWidget PlayableItemWidget {
+	color: white;
+	background-color: transparent;
+	min-height: 49px;
+	max-height: 49px;
+}
+
+ActivityListWidget {
+	border: none;
+}
+
+ScrobblesWidget QPushButton#refresh {
+	background-position: center left;
+	background-repeat: none;
+	padding: 0px 10%;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
+	color: #777;
+	border: none;
+	border-bottom: 1px solid #a6a6a6;
+	height: 38px;
+}
+
+ScrobblesWidget QPushButton#refresh:hover {
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #f0f0f0, stop:1 #d6d6d6);
+}
+
+ScrobblesWidget QPushButton#refresh:pressed,
+ScrobblesWidget QPushButton#refresh:disabled {
+	background-color: #cccccc;
 }
 
 FriendListWidget QLineEdit
 {
-	margin: 20px 40px 20px 20px;
+	margin: 20px 20px 20px 20px;
 }
 
-QuickStartWidget  QLineEdit,
+QuickStartWidget QLineEdit,
 FriendListWidget QLineEdit {
     border: 1px solid #cdcdcd;
     border-radius: 5px;
@@ -77,7 +347,7 @@ FriendListWidget QLineEdit {
 	font-size: 17px;
 }
 
-QuickStartWidget  QPushButton {
+QuickStartWidget QPushButton {
 	background-image: url(":/radio_play_large_REST.png");
 	background-color: transparent;
 	background-repeat: no-repeat;
@@ -88,11 +358,16 @@ QuickStartWidget  QPushButton {
 	margin: 0px 0px 0px 10px;
 }
 
-QuickStartWidget  QPushButton:hover { background-image: url(":/radio_play_large_HOVER.png"); }
-QuickStartWidget  QPushButton:pressed { background-image: url(":/radio_play_large_PRESS.png"); }
+QuickStartWidget QPushButton:hover { background-image: url(":/radio_play_large_HOVER.png"); }
+QuickStartWidget QPushButton:pressed { background-image: url(":/radio_play_large_PRESS.png"); }
 
 QScrollArea {
 	border: none;
+}
+
+ProfileWidget {
+	border: none;
+	margin: 0px 20px;
 }
 
 RadioWidget QFrame#section,
@@ -100,12 +375,11 @@ ProfileWidget QFrame#section {
 	border: none;
 	border-top: 1px solid white;
 	padding: 7px 0px; 
-	margin: 0px 20px;
 }
 
 ProfileWidget QFrame#user {
 	border: none;
-	margin: 20px 20px 10px;
+	margin: 20px 0px 10px;
 }
 
 FriendWidget {
@@ -115,14 +389,18 @@ FriendWidget {
 	border-bottom: 1px solid #cdcdcd;
 }
 
-FriendWidget QLabel#avatar,
-ProfileWidget QLabel#avatar {
+FriendWidget AvatarWidget#avatar,
+ProfileWidget AvatarWidget#avatar,
+ShareDialog AvatarWidget#icon {
 	padding: 2px;
 	background-color: white;
+	color: transparent;
 	border: 1px solid #cdcdcd;
+	min-width: 64px;
+	min-height: 64px;
 	max-width: 64px;
 	max-height: 64px;
-	margin: 0px 20px 0px 0px;
+	margin: 0px 20px 8px 0px;
 }
 
 FriendWidget QLabel#name,
@@ -142,6 +420,11 @@ FriendWidget QLabel#lastTrack,
 ProfileWidget QLabel#scrobbles {
 	font-size: 11px;
 	color: #333;
+}
+
+RadioWidget {
+	border: none;
+	margin: 0px 20px;
 }
 
 RadioWidget PlayableItemWidget,
@@ -199,7 +482,6 @@ ProfileWidget PlayableItemWidget :pressed { background-image: url(":/radio_play_
 RadioWidget QLabel#title,
 ProfileWidget QLabel#title  {
 	padding: 10px 0px;
-	margin: 0px 20px;
 	border: 1px solid #cdcdcd;
 	border-width: 0px 0px 1px 0px;
 	font-weight: bold; 
@@ -268,6 +550,7 @@ PlaybackControlsWidget QPushButton#love {
     min-width: 29px;
 	
 }
+
 PlaybackControlsWidget QPushButton#love:hover { background-image: url(":/controls_love_OFF_HOVER.png"); }
 PlaybackControlsWidget QPushButton#love:pressed { background-image: url(":/controls_love_OFF_PRESS.png"); }
 PlaybackControlsWidget QPushButton#love:checked { background-image: url(":/controls_love_ON_REST.png"); }
@@ -301,19 +584,203 @@ PlaybackControlsWidget QPushButton#skip {
 PlaybackControlsWidget QPushButton#skip:hover { background-image: url(":/controls_skip_HOVER.png"); }
 PlaybackControlsWidget QPushButton#skip:pressed { background-image: url(":/controls_skip_PRESS.png"); }
 
-PlaybackControlsWidget QProgressBar {
+PlaybackControlsWidget ProgressBar {
 	border-top: 1px solid #e5e5e5;
 	border-bottom: 1px solid #9b9b9b;
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #cccccc, stop:0 #e5e5e5);
-	height: 21px;
+	qproperty-chunk: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #b6b6b6, stop:0 #cdcdcd);
+	min-height: 21px;
 }
 
-QProgressBar::chunk {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #b6b6b6, stop:0 #cdcdcd);
+ScrobbleControls QPushButton{
+	background-color: transparent;
+    color: transparent;
+	background-repeat: no-repeat;
+    background-position: center;
+    margin: 0px;
+    padding: 3px 0px;
+    width: 20px;
 }
+
+ScrobbleControls QPushButton#love { background-image: url(":/meta_love_OFF_REST.png"); }
+ScrobbleControls QPushButton#love:hover { background-image: url(":/meta_love_OFF_HOVER.png"); }
+ScrobbleControls QPushButton#love:pressed { background-image: url(":/meta_love_OFF_PRESS.png"); }
+ScrobbleControls QPushButton#love:checked { background-image: url(":/meta_love_ON_REST.png"); }
+ScrobbleControls QPushButton#love:checked:hover { background-image: url(":/meta_love_ON_HOVER.png"); }
+ScrobbleControls QPushButton#love:checked:pressed { background-image: url(":/meta_love_ON_PRESS.png"); }
+
+ScrobbleControls QPushButton#tag { background-image: url(":/meta_tag_REST.png"); }
+ScrobbleControls QPushButton#tag:hover { background-image: url(":/meta_tag_HOVER.png"); }
+ScrobbleControls QPushButton#tag:pressed { background-image: url(":/meta_tag_PRESS.png"); }
+
+ScrobbleControls QPushButton#share { background-image: url(":/meta_share_REST.png"); }
+ScrobbleControls QPushButton#share:hover { background-image: url(":/meta_share_HOVER.png"); }
+ScrobbleControls QPushButton#share:pressed { background-image: url(":/meta_share_PRESS.png"); }
+
+ScrobbleControls QPushButton#buy { background-image: url(":/meta_buy_REST.png"); }
+ScrobbleControls QPushButton#buy:menu-indicator { background: transparent; }
+ScrobbleControls QPushButton#buy:hover { background-image: url(":/meta_buy_HOVER.png"); }
+ScrobbleControls QPushButton#buy:pressed { background-image: url(":/meta_buy_PRESS.png"); }
 
 BannerWidgetPrivate {
     background-color: red;
     color: white;
     font-weight: bold;
 }
+
+ShareDialog QFrame#what {
+	border: 1px solid #DBDBDB;
+	border-radius: 5px;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ABABAB, stop:0.04 #E6E6E6, stop:1 #E6E6E6);
+	padding: 18px;
+	margin: 18px 0px;
+}
+
+ShareDialog > QRadioButton {
+	margin-left: 10px;
+	font-weight: bold;
+}
+
+ShareDialog > QLabel,
+ShareDialog > QCheckBox,
+ShareDialog > QRadioButton {
+	font-size: 12px;
+	font-weight: bold;
+}
+
+ShareDialog QLabel#with {
+	margin-bottom: 10px;
+	font-size: 12px; 
+}
+
+ShareDialog QLabel#messageTitle {
+	margin-top: 16px;
+	margin-bottom: 10px;
+}
+
+ShareDialog QFrame#what QLabel#shareSubject,
+ShareDialog QFrame#what QLabel#shareSubject2 {
+	font-size: 12px; 
+	font-weight: bold;
+	margin: 4px 0px 4px 0px;
+}
+
+ShareDialog ItemSelectorWidget {
+	background-color: white;
+}
+
+ShareDialog ItemSelectorWidget QLineEdit {
+	padding: 1px 2px 2px 3px;
+	margin: 2px;
+}
+
+ShareDialog ItemSelectorWidget QLabel {
+	padding: 2px 3px;
+	margin: 2px 0px 2px 2px;
+	background-color: #DAE7F9;
+	font-weight: bold;
+	border: 1px solid #99BEEE;
+	border-radius: 9px;
+	min-width: 12px;
+}
+
+ShareDialog QTextEdit {
+	margin-bottom: 16px;
+}
+
+ShareDialog QLabel#characterLimit {
+	font-size: 11px;
+	font-weight: normal;
+}
+
+ShareDialog QLabel#characterLimit[xerror="true"] {
+	color: red;
+}
+
+ShareDialog QLabel#characterLimit,
+ShareDialog QCheckBox {
+	margin-bottom: 16px;
+}
+
+StatusBar StylableWidget {
+	border: none;
+	background-color: transparent;
+	margin: 1px 0px 2px;
+}
+
+StatusBar QPushButton#cog {
+	border: 1px solid #cdcdcd;
+	border-radius: 3px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #e5e5e5);
+	background-image: url(":/settings_REST.png");
+	width: 30px;
+	height: 22px;
+	margin: 0px 10px;
+}
+
+StatusBar QPushButton#cog:hover { background-image: url(":/settings_HOVER.png"); }
+StatusBar QPushButton#cog:pressed { background-image: url(":/settings_PRESS.png"); }
+
+StatusBar QLabel#volMin,
+StatusBar QLabel#volMax {
+	border: none;
+	background-repeat: no-repeat;
+	background-position: center;
+	min-width: 16px;
+	height: 16px;
+	background-image: url(":/volume_min.png");
+}
+
+StatusBar QLabel#volMin {
+	min-width: 8px;
+	max-width: 8px;
+}
+
+StatusBar QLabel#volMax {
+	background-image: url(":/volume_max.png");
+}
+
+StatusBar Phonon--VolumeSlider {
+	qproperty-muteVisible: false;
+	min-width: 104px;
+}
+
+StatusBar QSlider::groove:horizontal {
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 104px;
+	height: 16px;
+	background-image: url(":/volume_slot_OFF.png");
+}
+
+StatusBar QSlider::handle:horizontal {
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 16px;
+	height: 16px;
+	background-image: url(":/volume_knob_REST.png");
+}
+
+StatusBar QSlider::handle:horizontal:pressed {
+	background-image: url(":/volume_knob_PRESS.png");
+}
+
+StatusBar QPushButton#scrobbleToggle {
+	border: 1px solid #cdcdcd;
+	border-radius: 3px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #e5e5e5);
+	background-image: url(":/scrobble_OFF_REST.png");
+	width: 36px;
+	height: 22px;
+	margin-left: 10px;
+}
+
+StatusBar QPushButton#scrobbleToggle:hover { background-image: url(":/scrobble_OFF_HOVER.png"); }
+StatusBar QPushButton#scrobbleToggle:pressed { background-image: url(":/scrobble_OFF_PRESS.png"); }
+StatusBar QPushButton#scrobbleToggle:checked { background-image: url(":/scrobble_ON_REST.png"); }
+StatusBar QPushButton#scrobbleToggle:checked:hover { background-image: url(":/scrobble_ON_HOVER.png"); }
+StatusBar QPushButton#scrobbleToggle:checked:pressed { background-image: url(":/scrobble_ON_PRESS.png"); }

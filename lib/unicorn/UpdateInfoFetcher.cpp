@@ -80,7 +80,7 @@ Plugin::canBootstrap() const
 UpdateInfoFetcher::UpdateInfoFetcher( QNetworkReply* reply, QObject* parent )
                   :QObject( parent )
 {
-    XmlQuery xq = lastfm::ws::parse( reply );
+    XmlQuery xq = reply->readAll();
     QList<XmlQuery> plugins = xq.children( "Plugin" );
     foreach( const XmlQuery& plugin, plugins ) {
         m_plugins << Plugin( plugin );

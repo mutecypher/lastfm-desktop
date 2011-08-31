@@ -32,6 +32,7 @@ public:
     bool setData( const QModelIndex& index, const QVariant& value, int role );
 
     QList<lastfm::Track> tracksToScrobble() const;
+
 private:
     class Scrobble
     {

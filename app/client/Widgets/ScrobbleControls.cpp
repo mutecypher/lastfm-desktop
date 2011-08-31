@@ -31,31 +31,35 @@
 
 #include "../Application.h"
 
-ScrobbleControls::ScrobbleControls( const Track& track )
-    :m_track( track )
+ScrobbleControls::ScrobbleControls( QWidget* parent )
+    :StylableWidget( parent )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
+    layout->setSpacing( 5 );
 
-    layout->addWidget(ui.love = new QPushButton(tr("love")));
+    layout->addWidget(ui.love = new QPushButton(tr("love")), 0, Qt::AlignCenter);
     ui.love->setObjectName("love");
     ui.love->setCheckable( true );
     ui.love->setToolTip( tr( "Love track" ) );
+    ui.love->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-    connect( ui.love, SIGNAL( toggled( bool ) ), this, SLOT( onLoveChanged( bool ) ) );
-    
-    layout->addWidget(ui.tag = new QPushButton(tr("tag")));
+    connect( ui.love, SIGNAL( clicked(bool) ), SLOT( onLoveChanged( bool ) ) );
+ 
+    layout->addWidget(ui.tag = new QPushButton(tr("tag")), 0, Qt::AlignCenter);
     ui.tag->setObjectName("tag");
     ui.tag->setToolTip( tr( "Add tags" ) );
+    ui.tag->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-    layout->addWidget(ui.share = new QPushButton(tr("share")));
+    layout->addWidget(ui.share = new QPushButton(tr("share")), 0, Qt::AlignCenter);
     ui.share->setObjectName("share");
     ui.share->setToolTip( tr( "Share" ) );
+    ui.share->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-    layout->addWidget(ui.buy = new QPushButton(tr("buy")));
+    layout->addWidget(ui.buy = new QPushButton(tr("buy")), 0, Qt::AlignCenter);
     ui.buy->setObjectName("buy");
     ui.buy->setToolTip( tr( "Buy" ) );
+    ui.buy->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
     layout->addStretch( 1 );
 
@@ -66,7 +70,14 @@ ScrobbleControls::ScrobbleControls( const Track& track )
 
     connect( ui.tag, SIGNAL( clicked()), SLOT( onTag()));
     connect( ui.share, SIGNAL( clicked()), SLOT( onShare()));
+}
 
+
+void
+ScrobbleControls::setTrack( const Track& track )
+{
+    disconnect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), this, SLOT(setLoveChecked(bool)));
+    m_track = track;
     connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(setLoveChecked(bool)));
 }
 

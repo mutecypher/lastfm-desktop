@@ -26,19 +26,11 @@
 
 #include "lib/DllExportMacro.h"
 
+namespace Ui { class ShareDialog; }
+
 class UNICORN_DLLEXPORT ShareDialog : public unicorn::Dialog
 {
     Q_OBJECT
-
-    struct {
-        class TrackWidget* track;
-        class ItemSelectorWidget* recipients;
-        class QPlainTextEdit* message;
-        class QCheckBox* isPublic;
-        class QLabel* characterLimit;
-        QDialogButtonBox* buttons;
-    } ui;
-    
 public:
     ShareDialog( const Track&, QWidget* parent );
 
@@ -50,13 +42,17 @@ private slots:
     void enableDisableOk();
     void accept();
     void onMessageChanged();
+    void onShared();
+    void updateCharacterLimit();
+
+    void onRadioButtonClicked();
 
 private:
-    class QPushButton* ok() { return ui.buttons->button( QDialogButtonBox::Ok ); }
-    void updateCharacterLimit();
     void setTabOrders();
 
+private:
     Track m_track;
+    Ui::ShareDialog* ui;
 };
 
 #endif

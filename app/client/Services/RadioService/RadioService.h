@@ -50,7 +50,6 @@ class RadioService : public QObject
 
 public:
     RadioService();
-    ~RadioService();
 
     RadioStation station() const { return m_station; }
     Track currentTrack() const {return m_track;}
@@ -58,6 +57,7 @@ public:
     State state() const { return m_state; }
 
     Phonon::AudioOutput* audioOutput() const { return m_audioOutput; }
+    Phonon::MediaObject* mediaObject() const { return m_mediaObject; }
 
     static RadioService& instance(){ static RadioService r; return r; }
 
@@ -70,7 +70,6 @@ public slots:
     void pause();
     void resume();
     void setSupportsDisco( bool supportsDisco );
-    void fadeOut();
 
 signals:
     /** emitted up to twice, as first time may not have a title for the station

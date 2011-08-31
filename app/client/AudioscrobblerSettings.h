@@ -27,20 +27,14 @@ class AudioscrobblerSettings : public unicorn::AppSettings
 {
 public:
     AudioscrobblerSettings();
-    Qt::KeyboardModifiers raiseShortcutModifiers() const { return (Qt::KeyboardModifiers)value( "raiseShortcutModifiers", (int)(Qt::ControlModifier | Qt::MetaModifier) ).toInt(); }
-    int raiseShortcutKey() const {
-#ifdef Q_WS_MAC
-        const int sKeyCode = 1;
-#elif defined Q_WS_WIN
-        const int sKeyCode = 83;
-#endif
-        return value( "raiseShortcutKey", sKeyCode ).toInt();
-    }
-    QString raiseShortcutDescription() const { return value( "raiseShortcutDescription", QString::fromUtf8( "⌃⌘ S" ) ).toString(); }
 
-    void setRaiseShortcutKey( int key ) { setValue( "raiseShortcutKey", key ); }
-    void setRaiseShortcutModifiers( Qt::KeyboardModifiers m ) { setValue( "raiseShortcutModifiers", (int)m ); }
-    void setRaiseShortcutDescription( QString d ) { setValue( "raiseShortcutDescription", d ); }
+    Qt::KeyboardModifiers raiseShortcutModifiers() const;
+    int raiseShortcutKey() const;
+    QString raiseShortcutDescription() const;
+
+    void setRaiseShortcutKey( int key );
+    void setRaiseShortcutModifiers( Qt::KeyboardModifiers m );
+    void setRaiseShortcutDescription( QString d );
 };
 
 #endif // AUDIOSCROBBLER_SETTINGS_H

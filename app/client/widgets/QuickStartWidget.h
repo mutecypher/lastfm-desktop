@@ -36,11 +36,13 @@ private:
     } ui;
 
 public:
-    QuickStartWidget();
+    QuickStartWidget( QWidget* parent = 0 );
 
 private slots:
     void play();
     void playNext();
+
+    void setToCurrent();
 
     void onTextChanged( const QString& text );
 

@@ -30,7 +30,7 @@ function fixFrameworks {
 
     # echo Fixing Frameworks for $bin
 
-    libs=`otool -L "$bin"|sed -n '/\/opt.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'`
+    libs=`otool -L "$bin"|sed -n '/\/Users.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'`
     
     mkdir -p "$bundlePath/Contents/Frameworks"
 
@@ -78,7 +78,7 @@ function fixLocalLibs {
     echo Fixing Local Lib for $bin
 
     local libs=`otool -L "$bin" | sed -n '/^[^\/]*$/ s/^[[:space:]]*\(.*\) (com.*/\1/p'`
-    local extralibs=`otool -L "$bin" | sed -n '/\/opt.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'|grep -v framework`
+    local extralibs=`otool -L "$bin" | sed -n '/\/usr\/local.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'|grep -v framework`
     local libs="$libs $extralibs"
     local lib
     local cpPath

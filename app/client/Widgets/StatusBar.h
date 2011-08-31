@@ -25,6 +25,9 @@
 
 class QLabel;
 
+namespace Phonon { class VolumeSlider; }
+namespace unicorn { class Session; }
+
 class StatusBar : public QStatusBar
 {
     Q_OBJECT
@@ -34,6 +37,7 @@ class StatusBar : public QStatusBar
         void setSizeGripVisible( bool visible );
 
     private slots:
+        void onMessagedChanged( const QString& text );
         void setStatus();
 
         void onGotUserInfo(lastfm::UserDetails userDetails);
@@ -46,16 +50,24 @@ class StatusBar : public QStatusBar
         void onFoundScrobbles( QList<lastfm::Track> );
         void onNoScrobblesFound();
 
-        void onScrobblesCached( const QList<lastfm::Track>& tracks );
-        void onScrobbleStatusChanged();
+        void onScrobbleToggled( bool );
+
+        void onSessionChanged( unicorn::Session* session );
 
     private:
         struct
         {
+            class StylableWidget* widget;
+            class QPushButton* cog;
+            class Label* message;
+
+            class StylableWidget* permanentWidget;
+            class QLabel* volMin;
+            Phonon::VolumeSlider* volumeSlider;
+            class QLabel* volMax;
+            class QPushButton* scrobbleToggle;
             class QSizeGrip* sizeGrip;
         } ui;
 
-        QLabel* m_inetStatus;
-
-        int m_scrobbleCount;
+        bool m_online;
 };

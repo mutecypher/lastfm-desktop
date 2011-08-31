@@ -17,7 +17,7 @@
 #include "RadioWidget.h"
 
 RadioWidget::RadioWidget(QWidget *parent)
-    :QWidget( parent )
+    :StylableWidget( parent )
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
@@ -101,7 +101,7 @@ RadioWidget::onGotTopArtists()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        lastfm::XmlQuery lfm = lastfm::ws::parse( qobject_cast<QNetworkReply*>(sender()) );
+        lastfm::XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
 
         foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
         {
@@ -117,7 +117,6 @@ RadioWidget::onGotTopArtists()
     }
 }
 
-
 void
 RadioWidget::onGotRecentStations()
 {
@@ -127,7 +126,7 @@ RadioWidget::onGotRecentStations()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        lastfm::XmlQuery lfm = lastfm::ws::parse( qobject_cast<QNetworkReply*>(sender()) );
+        lastfm::XmlQuery lfm( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         foreach ( const lastfm::XmlQuery& station, lfm["recentstations"].children("station") )
         {
@@ -139,6 +138,14 @@ RadioWidget::onGotRecentStations()
     catch ( lastfm::ws::ParseError error )
     {
         qDebug() << error.message();
+    }
+    catch ( lastfm::ws::Error error )
+    {
+        qDebug() << error;
+    }
+    catch ( ... )
+    {
+        qDebug() << "Something went terribly wrong";
     }
 }
 

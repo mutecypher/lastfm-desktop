@@ -1,25 +1,23 @@
- /*
-   Copyright 2005-2009 Last.fm Ltd.
-      - Primarily authored by Jono Cole and Doug Mansell
+/*
+  Copyright 2005-2009 Last.fm Ltd.
+     - Primarily authored by Jono Cole and Doug Mansell
 
-   This file is part of the Last.fm Desktop Application Suite.
+  This file is part of the Last.fm Desktop Application Suite.
 
-   lastfm-desktop is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+  lastfm-desktop is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-   lastfm-desktop is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  lastfm-desktop is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#include "MetadataWidget.h"
-#include "ScrobbleControls.h"
+#include <QDebug>
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QLabel>
@@ -34,214 +32,396 @@
 #include <QAbstractTextDocumentLayout>
 #include <QTextFrame>
 #include <QScrollBar>
+#include <QMenu>
+#include <QDebug>
+
 #include <lastfm/XmlQuery>
 #include <lastfm/ws.h>
-#include "../Application.h"
-#include "../Services/ScrobbleService.h"
-#include "../Services/RadioService.h"
+#include <lastfm/User>
+#include <lastfm/Track>
+#include <lastfm/Artist>
+
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/DataListWidget.h"
 #include "lib/unicorn/widgets/BannerWidget.h"
 #include "lib/unicorn/widgets/LfmListViewWidget.h"
 #include "lib/unicorn/widgets/Label.h"
-#include <QDebug>
-#include <lastfm/User>
+#include "lib/unicorn/layouts/FlowLayout.h"
+
+#include "../Application.h"
+#include "../Services/ScrobbleService.h"
+#include "../Services/RadioService.h"
+#include "ScrobbleControls.h"
+#include "BioWidget.h"
+#include "TagWidget.h"
+
+#include "MetadataWidget.h"
+#include "ui_MetadataWidget.h"
 
 
-MetadataWidget::MetadataWidget( const Track& track, bool showBack, QWidget* p )
-    :StylableWidget( p ), 
-     m_track( track ), 
-     m_trackInfoReply( 0 ),
-     m_albumInfoReply( 0 ),
-     m_artistInfoReply( 0 ),
-     m_artistEventsReply( 0 ),
-     m_trackTopFansReply( 0 ),
-     m_trackTagsReply( 0 )
+MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
+   :StylableWidget( p ),
+    ui( new Ui::MetadataWidget ),
+    m_track( track ),
+    m_globalTrackScrobbles( 0 ),
+    m_userTrackScrobbles( 0 ),
+    m_userArtistScrobbles( 0 )
 {
-    setupUi();
-    
-    /*
-    ui.similarArtists->setModel( model.similarArtists = new LfmListModel());
-    ui.listeningNow->setModel( model.listeningNow = new LfmListModel());
-    
-    ui.similarArtists->setItemDelegate( new LfmDelegate( ui.similarArtists ));
-    ui.listeningNow->setItemDelegate( new LfmDelegate( ui.listeningNow ));
+    ui->setupUi( this );
 
-    connect( ui.similarArtists, SIGNAL( clicked( QModelIndex )), SLOT( listItemClicked( QModelIndex )));
-    connect( ui.listeningNow, SIGNAL( clicked( QModelIndex )), SLOT( listItemClicked( QModelIndex )));
-    */
+    ui->scrollArea->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->back->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->trackTagsFrame->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-    connect(ui.artist.bio->document()->documentLayout(), SIGNAL( documentSizeChanged(QSizeF)), SLOT( onBioChanged(QSizeF)));
-    connect(ui.artist.bio, SIGNAL(anchorClicked(QUrl)), SLOT(onAnchorClicked(QUrl)));
+    ui->trackPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->trackPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->trackUserPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->trackUserPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->trackListeners->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->trackListenersLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
+    ui->artistPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->artistPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->artistUserPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->artistUserPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->artistListeners->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->artistListenersLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
+    ui->trackYourTags->setLinkColor( QRgb( 0x008AC7 ) );
+    ui->trackPopTags->setLinkColor( QRgb( 0x008AC7 ) );
+    ui->artistYourTags->setLinkColor( QRgb( 0x008AC7 ) );
+    ui->artistPopTags->setLinkColor( QRgb( 0x008AC7 ) );
+
+    ui->scrobbleControls->setTrack( track );
 
     setTrackDetails( track );
 
     connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
     connect( track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onTrackCorrected(QString)));
 
-    fetchTrackInfo();
-}
+    connect( ui->back, SIGNAL(clicked()), SIGNAL(backClicked()));
 
-void
-MetadataWidget::fetchTrackInfo()
-{
+    // fetch Track info
     connect( m_track.signalProxy(), SIGNAL( gotInfo(QByteArray)), SLOT( onTrackGotInfo(QByteArray)));
     m_track.getInfo();
-    if( !m_track.album().isNull())
+    if( !m_track.album().isNull() )
         connect( m_track.album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
     connect( m_track.artist().getInfo(), SIGNAL(finished()), SLOT(onArtistGotInfo()));
-    //connect( m_track.getTopTags(), SIGNAL(finished()), SLOT(onTrackGotPopTags()));
-    connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
-    connect( m_track.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
-    m_trackTopFansReply = m_track.getTopFans();
 
+    connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
+    connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
+    connect( m_track.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
+
+    connect( m_track.getBuyLinks( aApp->currentSession()->userInfo().country() ), SIGNAL(finished()), SLOT(onTrackGotBuyLinks()) );
+}
+
+MetadataWidget::~MetadataWidget()
+{
+    delete ui;
+}
+
+ScrobbleControls*
+MetadataWidget::scrobbleControls() const
+{
+    return ui->scrobbleControls;
 }
 
 
 void
 MetadataWidget::onTrackCorrected( QString )
 {
-    setTrackDetails( m_track );
+   setTrackDetails( m_track );
 }
 
 void
 MetadataWidget::setTrackDetails( const Track& track )
 {
-    if ( ui.scrollArea->verticalScrollBar()->isVisible() )
-        ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+   if ( ui->scrollArea->verticalScrollBar()->isVisible() )
+       ui->scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 
-    //track.www().toString()
-    ui.track.title->setText( track.title( Track::Corrected ));
-    //track.artist( Track::Corrected ).www()
-    ui.track.artist->setText( tr("by %1").arg(track.artist( Track::Corrected )));
-    ui.artist.artist->setText( track.artist( Track::Corrected ));
-    //track.album( Track::Corrected ).www().toString()
-    ui.track.album->setText( tr("from %1").arg(track.album( Track::Corrected )));
-   
-    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui.track.scrobbleControls, SLOT(setLoveChecked(bool)));
+   ui->trackTitle->setText( Label::anchor( track.www().toString(), track.title( Track::Corrected ) ) );
+   ui->trackArtist->setText( tr("by %1").arg( Label::anchor( track.artist( Track::Corrected ).www().toString(), track.artist( Track::Corrected ))));
+   ui->artistArtist->setText( Label::anchor( track.artist( Track::Corrected ).www().toString(),track.artist( Track::Corrected )));
 
-    // Add the green astrix to the title, if it has been corrected
-    if ( track.corrected() )
-    {
-        // TODO: The hover text doesn't work at the moment.
-        QString toolTip = tr("Auto-corrected from: %1").arg( track.toString( Track::Original ) );
-        ui.track.title->setText( ui.track.title->text() + "<img src=\":/asterisk_small.png\" alt=\"" + toolTip + "\" title=\"" + toolTip + "\" />" );
-    }
-}
+   if ( !m_albumGuess.isNull() )
+       ui->trackAlbum->setText( tr("from %1").arg( Label::anchor( m_albumGuess.www().toString(), m_albumGuess)));
+   else
+   {
+       if ( m_track.album().isNull() )
+           ui->trackAlbum->setText( tr("from %1").arg( track.album( Track::Corrected )));
+       else
+           ui->trackAlbum->setText( tr("from %1").arg( Label::anchor( track.album( Track::Corrected ).www().toString(), track.album( Track::Corrected ))));
+   }
 
+   ui->radio->setStation( RadioStation::similar( Artist( track.artist().name() ) ), tr( "Play %1 Radio" ).arg( track.artist().name() ) );
 
-void
-MetadataWidget::onFinished()
-{
-    if( (void*)sender() == (void*)m_albumInfoReply )
-        qDebug() << "AlbumInfoReply";
-    if( sender() == m_artistInfoReply )
-        qDebug() << "ArtistInfoReply";
-    if( sender() == m_trackTopFansReply ) 
-        qDebug() << "TrackTopFansReply";
-    if( sender() == m_artistEventsReply )
-        qDebug() << "ArtistEventsReply";
-    if( sender() == m_trackTagsReply )
-        qDebug() << "TrackTagsReply";
+   ui->back->setDescription( tr( "%1 by %2" ).arg( track.title(), track.artist().name() ) );
 
-    if( 
-        ( m_albumInfoReply && m_albumInfoReply->isOpen()) ||
-        ( m_artistInfoReply && m_artistInfoReply->isOpen()) ||
-        ( m_artistEventsReply && m_artistEventsReply->isOpen()) ||
-        ( m_trackTopFansReply && m_trackTopFansReply->isOpen()) ||
-        ( m_trackTagsReply && m_trackTagsReply->isOpen() )) 
-    { qDebug() << "Remaining unserviced requests.."; return; }
-    
+   connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->scrobbleControls, SLOT(setLoveChecked(bool)));
+
+   // Add the green astrix to the title, if it has been corrected
+   if ( track.corrected() )
+   {
+       // TODO: The hover text doesn't work at the moment.
+       QString toolTip = tr("Auto-corrected from: %1").arg( track.toString( Track::Original ) );
+       ui->trackTitle->setText( ui->trackTitle->text() + "<img src=\":/asterisk_small.png\" alt=\"" + toolTip + "\" title=\"" + toolTip + "\" />" );
+   }
 }
 
 void
 MetadataWidget::onArtistGotInfo()
 {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    const XmlQuery& lfm = reply->readAll();
-    //int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
-    //int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
-    //int userListens = lfm["artist"]["stats"]["userplaycount"].text().toInt();
 
-    //model.similarArtists->clear();
-
-    #if 0
-    foreach(const XmlQuery& e, lfm["artist"]["similar"].children("artist").mid(0,4))
+    try
     {
-        QListWidgetItem* lwi = new QListWidgetItem( e["name"].text());
-        lwi->setData( Qt::DecorationRole, QUrl( e["image size=small"].text()));
-      //  model.similarArtists->addArtist( Artist( e ));
-    }
-    #endif
+        const XmlQuery& lfm = reply->readAll();
 
-    /*
-    foreach(const XmlQuery& e, lfm["artist"]["tags"].children("tag"))
+        int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
+        int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
+        m_userArtistScrobbles = lfm["artist"]["stats"]["userplaycount"].text().toInt();
+
+        ui->artistPlays->setText( tr( "%L1" ).arg( scrobbles ) );
+        ui->artistUserPlays->setText( tr( "%L1" ).arg( m_userArtistScrobbles ) );
+        ui->artistListeners->setText( tr( "%L1" ).arg( listeners ) );
+
+        // Update the context now that we have the user track listens
+        ui->context->setText( contextString( m_track ) );
+
+        {
+            // Similar artists!
+            QList<XmlQuery> artists = lfm["artist"]["similar"].children("artist").mid( 0, 4 );
+
+            if ( artists.count() != 0 )
+            {
+                ui->similarArtistFrame->show();
+                ui->similarArtists->show();
+
+                QList<HttpImageWidget*> widgets;
+                widgets << ui->artist1 << ui->artist2 << ui->artist3 << ui->artist4;
+
+                QRegExp re( "/serve/(\\d*)s?/" );
+
+                for ( int i = 0 ; i < artists.count() ; ++i )
+                {
+                    widgets[i]->setText( artists[i]["name"].text() );
+                    widgets[i]->setToolTip( artists[i]["name"].text() );
+                    widgets[i]->loadUrl( artists[i]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
+                    widgets[i]->setHref( artists[i]["url"].text() );
+                }
+
+                // "With yeah, blah and more."
+                if ( artists.count() == 1 )
+                    ui->radio->setDescription( tr( "With %1 and more." ).arg( artists[0]["name"].text() ) );
+                else if ( artists.count() >= 2 )
+                    ui->radio->setDescription( tr( "With %1, %2 and more.").arg( artists[0]["name"].text(), artists[1]["name"].text() ) );
+            }
+
+        }
+
+        QList<XmlQuery> tags =  lfm["artist"]["tags"].children("tag");
+
+        if ( tags.count() == 0 )
+            ui->artistTagsFrame->hide();
+        else
+        {
+            QString tagString = tr( "Popular tags:" );
+
+            for ( int i = 0 ; i < tags.count() ; ++i )
+            {
+                if ( i ==0 )
+                    tagString.append( tr( " %1" ).arg( Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
+                else
+                    tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "・" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
+            }
+
+            ui->artistPopTags->setText( tagString );
+        }
+
+        //TODO if empty suggest they edit it
+        QString bio;
+        {
+            QStringList bioList = lfm["artist"]["bio"]["summary"].text().trimmed().split( "\r" );
+            foreach( const QString& p, bioList ) {
+                QString pTrimmed = p.trimmed();
+                if( pTrimmed.isEmpty()) continue;
+                bio += "<p>" + pTrimmed + "</p>";
+            }
+        }
+
+        bio = Label::boldLinkStyle( bio, Qt::black );
+
+        ui->artistBio->append( bio );
+        ui->artistBio->updateGeometry();
+        QUrl url = lfm["artist"]["image size=large"].text();
+        ui->artistBio->loadImage( url );
+        ui->artistBio->setImageHref( QUrl(lfm["artist"]["url"].text()));
+        ui->artistBio->setOnTourVisible( false, QUrl(lfm["artist"]["url"].text()+"/+events"));
+   }
+   catch ( lastfm::ws::ParseError e )
+   {
+       // TODO: what happens when we fail?
+       qDebug() << e.message() << e.enumValue();
+   }
+   catch ( lastfm::ws::Error e )
+   {
+       qDebug() << e;
+   }
+}
+
+void
+MetadataWidget::onArtistGotYourTags()
+{
+    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+
+    try
     {
-        ui.tags->addItem( e["name"].text(), QUrl(e["url"].text()));
-    }
-    */
+        const XmlQuery& lfm = reply->readAll();
 
+        QList<XmlQuery> tags = lfm["tags"].children("tag").mid(0, 5);
 
-    
+        if ( tags.count() == 0 )
+            ui->artistYourTags->hide();
+        else
+        {
+            QString tagString = tr( "Your tags:" );
 
-    //TODO if empty suggest they edit it
-    QString bio;
-    {
-        QStringList bioList = lfm["artist"]["bio"]["content"].text().trimmed().split( "\r" );
-        foreach( const QString& p, bioList ) {
-            QString pTrimmed = p.trimmed();
-            if( pTrimmed.isEmpty()) continue;
-            bio += "<p>" + pTrimmed + "</p>";
+            for ( int i = 0 ; i < tags.count() ; ++i )
+            {
+                if ( i ==0 )
+                    tagString.append( tr( " %1" ).arg( Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
+                else
+                    tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "・" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
+            }
+
+            ui->artistYourTags->setText( tagString );
         }
     }
-    ui.artist.bio->setHtml( bio );
-    ui.artist.bio->updateGeometry();
-    ui.artist.image->setFixedSize( QSize( 150, 125 ) );
-    ui.artist.image->setAlignment( Qt::AlignTop );
-    QUrl url = lfm["artist"]["image size=large"].text();
-    ui.artist.image->loadUrl( url );
-    ui.artist.image->setHref( QUrl(lfm["artist"]["url"].text()));
-
-    ui.artist.bio->insertWidget( ui.artist.banner );
-    ui.artist.banner->setHref( QUrl(lfm["artist"]["url"].text()+"/+events"));
-
-    QTextFrame* root = ui.artist.bio->document()->rootFrame();
-    QTextFrameFormat f = root->frameFormat();
-    f.setMargin(0);
-    root->setFrameFormat(f);
-
-    onBioChanged( ui.artist.bio->document()->documentLayout()->documentSize() );
-
-    reply->close();
-    
+    catch ( lastfm::ws::ParseError e )
+    {
+       // TODO: what happens when we fail?
+       qDebug() << e.message() << e.enumValue();
+    }
+    catch ( lastfm::ws::Error e )
+    {
+       qDebug() << e;
+    }
 }
 
 void
 MetadataWidget::onArtistGotEvents()
 {
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    const XmlQuery& lfm = reply->readAll();
+   QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
 
-    if (lfm["events"].children("event").count() > 0)
-    {
-        // Display an on tour notification
-        ui.artist.banner->setBannerVisible();
-    }
-    reply->close();
+   try
+   {
+       const XmlQuery& lfm = reply->readAll();
+
+       if (lfm["events"].children("event").count() > 0)
+       {
+           // Display an on tour notification
+           ui->artistBio->setOnTourVisible( true );
+       }
+   }
+   catch ( lastfm::ws::ParseError e )
+   {
+       // TODO: what happens when we fail?
+       qDebug() << e.message() << e.enumValue();
+   }
+   catch ( lastfm::ws::Error e )
+   {
+       qDebug() << e;
+   }
 }
 
 void
 MetadataWidget::onAlbumGotInfo()
 {
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    const XmlQuery& lfm = reply->readAll();
-    int scrobbles = lfm["album"]["playcount"].text().toInt();
-    int listeners = lfm["album"]["listeners"].text().toInt();
-    int userListens = lfm["album"]["userplaycount"].text().toInt();
+   QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+   try
+   {
+       const XmlQuery& lfm = reply->readAll();
+       int scrobbles = lfm["album"]["playcount"].text().toInt();
+       int listeners = lfm["album"]["listeners"].text().toInt();
+       int userListens = lfm["album"]["userplaycount"].text().toInt();
 
-//    ui.track.albumScrobbles->setText(QString("%L1").arg(scrobbles) + " plays (" + QString("%L1").arg(listeners) + " listeners)" + "\n" + QString("%L1").arg(userListens) + " plays in your library");;
-    reply->close();
+       //ui->track.albumScrobbles->setText(QString("%L1").arg(scrobbles) + " plays (" + QString("%L1").arg(listeners) + " listeners)" + "\n" + QString("%L1").arg(userListens) + " plays in your library");;
+   }
+   catch ( lastfm::ws::ParseError e )
+   {
+       // TODO: what happens when we fail?
+       qDebug() << e.message() << e.enumValue();
+   }
+   catch ( lastfm::ws::Error e )
+   {
+       qDebug() << e;
+   }
+}
+
+void
+MetadataWidget::onTrackGotBuyLinks()
+{
+    try
+    {
+        QByteArray data = qobject_cast<QNetworkReply*>(sender())->readAll() ;
+        qDebug() << data;
+        XmlQuery lfm( data );
+
+        QMenu* menu = new QMenu( this );
+
+        menu->addAction( tr("Physical") )->setEnabled( false );
+
+        foreach ( const XmlQuery& affiliation, lfm["affiliations"]["physicals"].children( "affiliation" ) )
+        {
+            bool isSearch = affiliation["isSearch"].text() == "1";
+
+            QAction* buyAction = 0;
+
+            if ( isSearch )
+                buyAction = menu->addAction( tr("Search on %1").arg( affiliation["supplierName"].text() ) );
+            else
+                buyAction = menu->addAction( tr("Buy on %1 %2 %3").arg( affiliation["supplierName"].text(), affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) );
+
+            buyAction->setData( affiliation["buyLink"].text() );
+        }
+
+        menu->addSeparator();
+        menu->addAction( tr("Downloads") )->setEnabled( false );
+
+        foreach ( const XmlQuery& affiliation, lfm["affiliations"]["downloads"].children( "affiliation" ) )
+        {
+            bool isSearch = affiliation["isSearch"].text() == "1";
+
+            QAction* buyAction = 0;
+
+            if ( isSearch )
+                buyAction = menu->addAction( tr("Search on %1").arg( affiliation["supplierName"].text() ) );
+            else
+                buyAction = menu->addAction( tr("Buy on %1 %2 %3").arg( affiliation["supplierName"].text(), affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) );
+
+            buyAction->setData( affiliation["buyLink"].text() );
+        }
+
+        ui->scrobbleControls->ui.buy->setMenu( menu );
+
+        connect( menu, SIGNAL(triggered(QAction*)), SLOT(onBuyActionTriggered(QAction*)) );
+    }
+    catch ( lastfm::ws::ParseError e )
+    {
+        // TODO: what happens when we fail?
+        qDebug() << e.message() << e.enumValue();
+    }
+    catch ( lastfm::ws::Error e )
+    {
+        qDebug() << e;
+    }
+}
+
+void
+MetadataWidget::onBuyActionTriggered( QAction* buyAction )
+{
+    QDesktopServices::openUrl( buyAction->data().toString() );
 }
 
 void
@@ -250,377 +430,259 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
     try
     {
         XmlQuery lfm(data);
-        m_scrobbles = lfm["track"]["playcount"].text().toInt();
+        m_globalTrackScrobbles = lfm["track"]["playcount"].text().toInt();
         int listeners = lfm["track"]["listeners"].text().toInt();
-        m_userListens = lfm["track"]["userplaycount"].text().toInt();
+        m_userTrackScrobbles = lfm["track"]["userplaycount"].text().toInt();
 
-        ui.track.yourScrobbles->setText( QString("%L1").arg(m_userListens));
-        ui.track.totalScrobbles->setText( QString("%L1").arg(m_scrobbles));
-        ui.track.listeners->setText( QString("%L1").arg( listeners ));
-        ui.track.albumImage->loadUrl( lfm["track"]["album"]["image size=extralarge"].text() );
-        ui.track.albumImage->setHref( lfm["track"]["url"].text());
-        ui.track.scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
+        // Update the context now that we have the user track listens
+        ui->context->setText( contextString( m_track ) );
 
-        foreach(const XmlQuery& e, lfm["track"]["toptags"].children("tag").mid(0, 5 ))
+        ui->trackUserPlays->setText( QString("%L1").arg(m_userTrackScrobbles));
+        ui->trackPlays->setText( QString("%L1").arg(m_globalTrackScrobbles));
+        ui->trackListeners->setText( QString("%L1").arg( listeners ));
+        ui->albumImage->loadUrl( lfm["track"]["album"]["image size=medium"].text() );
+        ui->albumImage->setHref( lfm["track"]["url"].text());
+        ui->scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
+
+        // get the popular tags
+        QList<XmlQuery> tags = lfm["track"]["toptags"].children("tag").mid( 0, 5 );
+
+        if ( tags.count() == 0 )
+            ui->trackTagsFrame->hide();
+        else
         {
-            ui.track.popTags->addItem( e["name"].text(), e["url"].text());
+            QString tagString = tr( "Popular tags:" );
+
+            for ( int i = 0 ; i < tags.count() ; ++i )
+            {
+                if ( i ==0 )
+                    tagString.append( tr( " %1" ).arg( Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
+                else
+                    tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "・" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
+            }
+
+            ui->trackPopTags->setText( tagString );
+
+            // If we don't know the album then get it from this response
+            if ( m_track.album().isNull() )
+            {
+                QString albumTitle = lfm["track"]["album"]["title"].text();
+
+                if ( !albumTitle.isEmpty() )
+                {
+                    m_albumGuess = lastfm::Album( m_track.artist().name(), albumTitle );
+                    connect( m_albumGuess.getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
+                    setTrackDetails( m_track );
+                }
+            }
         }
     }
-    catch (...)
+    catch ( lastfm::ws::ParseError e )
     {
-        // TODO: we were probably fetching info for an unknown track or something
+        // TODO: what happens when we fail?
+        qDebug() << e.message() << e.enumValue();
+    }
+    catch ( lastfm::ws::Error e )
+    {
+        qDebug() << e;
     }
 }
+
 
 void
-MetadataWidget::onTrackGotTopFans()
-{
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    const XmlQuery& lfm = reply->readAll();
-
-    model.listeningNow->clear();
-
-    QList<XmlQuery> users = lfm["topfans"].children("user");
-
-    // Add users that have avatars
-    foreach(const XmlQuery& e, users)
-    {
-        if (model.listeningNow->rowCount() == 4)
-            break;
-
-        User u(e);
-        if ( !u.imageUrl( lastfm::Small ).toString().isEmpty() )
-            model.listeningNow->addUser(u);
-    }
-
-    // If we still haven't got 4, add the ones that don't have avatars
-    foreach(const XmlQuery& e, users)
-    {
-        if (model.listeningNow->rowCount() == 4)
-            break;
-
-        User u(e);
-        if ( u.imageUrl( lastfm::Small ).toString().isEmpty() )
-            model.listeningNow->addUser(u);
-    }
-    reply->close();
-}
-
-void 
 MetadataWidget::onTrackGotYourTags()
 {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    const XmlQuery& lfm = reply->readAll();
 
-    foreach(const XmlQuery& e, lfm["tags"].children("tag").mid(0, 5))
+    try
     {
-        ui.track.yourTags->addItem(e["name"].text(), e["url"].text());
+        const XmlQuery& lfm = reply->readAll();
+
+        QList<XmlQuery> tags = lfm["tags"].children("tag").mid(0, 5);
+
+        if ( tags.count() == 0 )
+            ui->trackYourTags->hide();
+        else
+        {
+            QString tagString = tr( "Popular tags:" );
+
+            for ( int i = 0 ; i < tags.count() ; ++i )
+            {
+                if ( i ==0 )
+                    tagString.append( tr( " %1" ).arg( Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
+                else
+                    tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "・" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
+            }
+
+            ui->trackYourTags->setText( tagString );
+        }
     }
-    
-    reply->close();
-}
-
-
-void 
-MetadataWidget::onTrackGotPopTags()
-{
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    const XmlQuery& lfm = reply->readAll();
-
-    foreach(const XmlQuery& e, lfm["toptags"].children("tag").mid(0, 5))
+    catch ( lastfm::ws::ParseError e )
     {
-        ui.track.popTags->addItem(e["name"].text(), e["url"].text());
+        // TODO: what happens when we fail?
+        qDebug() << e.message() << e.enumValue();
     }
-    
-    reply->close();
+    catch ( lastfm::ws::Error e )
+    {
+        qDebug() << e;
+    }
 }
 
-
-void
-MetadataWidget::onAnchorClicked( const QUrl& link )
-{
-    QDesktopServices::openUrl( link );
-}
-
-void
-MetadataWidget::onBioChanged( const QSizeF& size )
-{
-    ui.artist.bio->setFixedHeight( size.toSize().height() );
-}
 
 void
 MetadataWidget::listItemClicked( const QModelIndex& i )
 {
-    const QUrl& url = i.data( LfmListModel::WwwRole ).toUrl();
-    QDesktopServices::openUrl( url );
+   const QUrl& url = i.data( LfmListModel::WwwRole ).toUrl();
+   QDesktopServices::openUrl( url );
 }
 
 void
 MetadataWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
-    foreach ( lastfm::Track track, tracks )
-        connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
+   foreach ( lastfm::Track track, tracks )
+       connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
 }
 
 void
 MetadataWidget::onScrobbleStatusChanged()
 {
 
-    if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
-    {
-        // update total scrobbles and your scrobbles!
-        ui.track.yourScrobbles->setText( QString("%L1").arg( ++m_userListens ));
-        ui.track.totalScrobbles->setText( QString("%L1").arg( ++m_scrobbles ));
-    }
+   if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
+   {
+       // update total scrobbles and your scrobbles!
+       ui->trackUserPlays->setText( QString("%L1").arg( ++m_userTrackScrobbles ));
+       ui->trackPlays->setText( QString("%L1").arg( ++m_globalTrackScrobbles ));
+       ++m_userArtistScrobbles;
+
+       ui->context->setText( contextString( m_track ) );
+   }
 }
 
-void 
-MetadataWidget::setupTrackDetails( QWidget* w )
+QString userLibraryLink( const QString& user, const lastfm::Artist& artist )
 {
-    new QHBoxLayout( w );   
-    w->layout()->addWidget( ui.track.albumImage = new HttpImageWidget );
-    ui.track.albumImage->setMaximumSize( QSize( 126, 126 ));
-    {
-        QWidget* widget = new QWidget;
-        widget->setStyleSheet( "color: #333;" );
-        widget->setContentsMargins( 0, 0, 0, 0 );
-        new QVBoxLayout( widget );
-        widget->layout()->setSpacing( 0 );
-        widget->layout()->addWidget( ui.track.title = new QLabel );
-        ui.track.title->setWordWrap( true );
-        ui.track.title->setStyleSheet( "font-size: 16pt; font-weight: bold; padding-bottom: 5px;" );
-        widget->layout()->addWidget( ui.track.artist = new QLabel );
-
-        ui.track.artist->setStyleSheet( "border: 1px solid #cdcdcd;"
-                                  "border-width: 0px 0px 1px 0px;"
-                                  "padding-bottom: 11px;" );
-
-
-        widget->layout()->addWidget( ui.track.scrobbleControls = new ScrobbleControls(m_track) );
-        ui.track.scrobbleControls->setStyleSheet( "ScrobbleControls{ border:none;" 
-                                            "border-top: 1px solid #ffffff;"
-                                            "border-bottom: 1px solid #cdcdcd;"
-                                            "padding: 2px 0px; }" );
-
-        widget->layout()->addWidget( ui.track.album = new QLabel );
-        ui.track.album->setStyleSheet( "border-top: 1px solid #ffffff; padding-top: 11px; font-size: 11pt;" );
-        w->layout()->addWidget( widget );
-    }
-    w->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+    return QString("http://www.last.fm/user/%1/library/music/%2").arg( user, artist.name() );
 }
 
-void
-MetadataWidget::setupTrackStats( QWidget* w )
+QString userLibraryLink( const QString& user, const lastfm::Track& track )
 {
-    w->setStyleSheet( "color: #333;" );
-
-    QGridLayout* wLayout = new QGridLayout( w );
-
-    wLayout->addWidget( ui.track.listeners = new QLabel, 0, 0 );
-    wLayout->addWidget( new QLabel( tr("Listeners" )), 1, 0 );
-    ui.track.listeners->setStyleSheet( "font-size: 16pt; font-weight:bold;");
-
-    struct Divider : QFrame {
-        Divider() {
-            setFrameShape( QFrame::VLine );
-            setFrameShadow( QFrame::Raised );
-            setLineWidth( 1 );
-            setMidLineWidth( 1 );
-            QPalette p;
-            p.setColor( QPalette::Light, Qt::transparent );
-            p.setColor( QPalette::Mid, 0xcdcdcd );
-            p.setColor( QPalette::Dark, Qt::white );
-            setPalette( p );
-        }
-    };
-    
-    wLayout->addWidget( new Divider, 0, 1, 2, 1 );
-    wLayout->addWidget( ui.track.totalScrobbles = new QLabel, 0, 2 );
-    wLayout->addWidget( new QLabel( tr("Plays" )), 1, 2 );
-    ui.track.totalScrobbles->setStyleSheet( "font-size: 16pt; font-weight:bold;");
-
-    wLayout->addWidget( new Divider, 0, 3, 2, 1 );
-    
-    wLayout->addWidget( ui.track.yourScrobbles = new QLabel, 0, 4 );
-    wLayout->addWidget( new QLabel( tr("Plays in your library" )), 1, 4 );
-    ui.track.yourScrobbles->setStyleSheet( "font-size: 16pt; font-weight: bold;");
-    
-    w->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+    return QString("http://www.last.fm/user/%1/library/music/%2/_/%3").arg( user, track.artist( Track::Corrected ).name(), track.title( Track::Corrected ) );
 }
 
-
-void
-MetadataWidget::setupTrackTags( QWidget* w )
+QString userLibrary( const QString& user, const lastfm::Artist& artist )
 {
-    new QVBoxLayout( w );
-    w->layout()->setContentsMargins( 0, 0, 0, 0 );
-    w->layout()->setSpacing( 0 );
-    QLabel* wTitle = new QLabel( tr( "Track Tags"));
-    wTitle->setStyleSheet( "color:#333; font-size: 16pt; font-weight: bold;"
-                                   "border: 1px solid #cdcdcd; border-width: 0px 0px 1px 0px;"
-                                   "padding-bottom: 10px;");
-    w->layout()->addWidget( wTitle );
-    {
-        QWidget* your = new QFrame;
-        QHBoxLayout* layout = new QHBoxLayout( your ); QLabel* yourTagsTitle;
-        your->setStyleSheet( ".QFrame{ border-top: 1px solid #ffffff; }" );
-        layout->addWidget( yourTagsTitle = new QLabel( tr("Your Tags:")), Qt::AlignTop);
-
-        yourTagsTitle->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
-
-        layout->addWidget( ui.track.yourTags = new DataListWidget);
-        layout->setStretch( 1, 1 );
-        w->layout()->addWidget( your );
-        ui.track.yourTags->setStyleSheet( "border: none; margin: 0px 10px;");
-    }
-    {
-        QWidget* pop = new QFrame;
-        QHBoxLayout* layout = new QHBoxLayout( pop );
-        QLabel* popTagsTitle;
-        layout->addWidget( popTagsTitle = new QLabel( tr("Popular Tags:")), Qt::AlignTop);
-        popTagsTitle->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
-        layout->addWidget( popTagsTitle, Qt::AlignLeft );
-
-        layout->addWidget( ui.track.popTags = new DataListWidget);
-        layout->setStretch( 1, 1 );
-        ui.track.popTags->setStyleSheet( "border: none; margin: 0px 10px;");
-        w->layout()->addWidget( pop );
-    }
+   return Label::anchor( userLibraryLink( user, artist ), user );
 }
 
-void 
-MetadataWidget::setupUi()
+QString
+MetadataWidget::getContextString( const Track& track )
 {
-    QWidget* contents = new QWidget();
-    contents->setStyleSheet( ".QWidget {background-color: #eeeeee;}" );
-    QVBoxLayout* mainLayout = new QVBoxLayout( contents );
+   QString contextString;
 
-    QWidget* trackDetails = new QWidget;
-    setupTrackDetails( trackDetails );
-    
-    ui.track.trackStats = new QWidget;
-    setupTrackStats( ui.track.trackStats );
+   lastfm::TrackContext context = track.context();
 
-    QWidget* trackTags = new QWidget;
-    setupTrackTags( trackTags );
+   if ( context.values().count() > 0 )
+   {
+       switch ( context.type() )
+       {
+       case lastfm::TrackContext::Artist:
+           {
+           switch ( context.values().count() )
+               {
+               default:
+               case 1: contextString = tr( "Recommended because you listen to %1." ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ) ); break;
+               case 2: contextString = tr( "Recommended because you listen to %1 and %2." ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ) ); break;
+               case 3: contextString = tr( "Recommended because you listen to %1, %2, and %3." ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ) , Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ) ); break;
+               case 4: contextString = tr( "Recommended because you listen to %1, %2, %3, and %4." ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ), Label::anchor( Artist( context.values().at(3) ).www().toString(), context.values().at(3) ) ); break;
+               case 5: contextString = tr( "Recommended because you listen to %1, %2, %3, %4, and %5." ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ), Label::anchor( Artist( context.values().at(3) ).www().toString(), context.values().at(3) ), Label::anchor( Artist( context.values().at(4) ).www().toString(), context.values().at(4) ) ); break;
+               }
+           }
+           break;
+       case lastfm::TrackContext::User:
+           // Whitelist multi-user station
+           if ( !RadioService::instance().station().url().startsWith("lastfm://users/") )
+               break;
+       case lastfm::TrackContext::Friend:
+       case lastfm::TrackContext::Neighbour:
+           {
+           switch ( context.values().count() )
+               {
+               default:
+               case 1: contextString = tr( "From %2%1s library." ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ) ); break;
+               case 2: contextString = tr( "From %2 and %3%1s libraries." ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ) ); break;
+               case 3: contextString = tr( "From %2, %3, and %4%1s libraries." ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ), userLibrary( context.values().at(2), track.artist().name() ) ); break;
+               case 4: contextString = tr( "From %2, %3, %4, and %5%1s libraries." ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ),userLibrary(  context.values().at(1), track.artist().name() ), userLibrary( context.values().at(2), track.artist().name() ), userLibrary( context.values().at(3), track.artist().name() ) ); break;
+               case 5: contextString = tr( "From %2, %3, %4, %5, and %6%1s libraries." ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ), userLibrary( context.values().at(2), track.artist().name() ), userLibrary( context.values().at(3), track.artist().name() ), userLibrary( context.values().at(4), track.artist().name() ) ); break;
+               }
+           }
+           break;
+       }
+   }
+   else
+   {
+       // There's no context so just give them some scrobble counts
+   }
 
-    QWidget* artistBio = new QWidget;
-    {
-        artistBio->setStyleSheet( ".QWidget {background-color:#dedede;}");
-        new QVBoxLayout( artistBio );
-        artistBio->setContentsMargins( 0, 0, 0, 0 );
-        artistBio->layout()->addWidget( ui.artist.artist = new QLabel());
-        ui.artist.artist->setStyleSheet( "font-size: 16pt; font-weight: bold;"
-                                         "color: #333; padding-top: 7px;" );
-       
-        ui.artist.banner = new BannerWidget( tr("On Tour" ));
-        ui.artist.banner->setBannerVisible( false );
-        artistBio->layout()->addWidget( ui.artist.bio = new TB( artistBio ) );
-        ui.artist.bio->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-        ui.artist.image = new HttpImageWidget;
-        ui.artist.banner->setWidget( ui.artist.image );
-        
-        QString stylesheet = ((audioscrobbler::Application*)qApp)->loadedStyleSheet() + styleSheet();
-        ui.artist.bio->document()->setDefaultStyleSheet( stylesheet );
-        ui.artist.bio->setStyleSheet( "background-color: #dedede; border: none; font-size: 12pt; color: #333;" );
-
-    }
-    qobject_cast<QBoxLayout*>(artistBio->layout())->addStretch(1);
-
-    contents->layout()->setContentsMargins( 0, 0, 0, 0 );
-    contents->layout()->setSpacing( 0 );
-
-    contents->layout()->addWidget( trackDetails );
-    contents->layout()->addWidget( ui.track.trackStats );
-    contents->layout()->addWidget( ui.track.context = new QLabel( this ) );
-    ui.track.context->hide();
-    ui.track.context->setObjectName( "context" );
-    ui.track.context->setOpenExternalLinks( true );
-    contents->layout()->addWidget( trackTags );
-    contents->layout()->addWidget( artistBio );
-
-    
-    ui.scrollArea = new QScrollArea( this );
-    ui.scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
-    ui.scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-
-    ui.scrollArea->setWidget( contents );
-    ui.scrollArea->setWidgetResizable( true );
-
-    new QVBoxLayout( this );
-
-    ui.backButton = new QPushButton( "Back" );
-    connect( ui.backButton, SIGNAL( clicked()), SIGNAL( backClicked()));
-    QWidget* pushButtonWidget = new QWidget;
-    new QVBoxLayout( pushButtonWidget );
-    pushButtonWidget->layout()->addWidget( ui.backButton );
-    this->layout()->addWidget( pushButtonWidget );
-    ui.backButton->setContentsMargins( 0, 0, 0, 0 );
-
-    this->layout()->addWidget( ui.scrollArea );
-    this->layout()->setContentsMargins( 0, 0, 0, 0 );
-    this->layout()->setSpacing( 0 );
+   return contextString;
 }
 
-QString userLibrary( const QString& user, const QString& artist )
-{
-    return Label::anchor( QString("http://www.last.fm/user/%1/library/music/%2").arg( user, artist ), user );
-}
 
 QString
 MetadataWidget::contextString( const Track& track )
 {
-    QString contextString;
+   QString context = getContextString( track );
 
-    lastfm::TrackContext context = track.context();
+   if ( context.isEmpty() )
+       context = scrobbleString( track );
 
-    if ( context.values().count() > 0 )
-    {
-        switch ( context.type() )
-        {
-        case lastfm::TrackContext::Artist:
-            {
-            switch ( context.values().count() )
-                {
-                default:
-                case 1: contextString = tr( "because you listen to %1" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ) ); break;
-                case 2: contextString = tr( "because you listen to %1 and %2" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ) ); break;
-                case 3: contextString = tr( "because you listen to %1, %2, and %3" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ) , Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ) ); break;
-                case 4: contextString = tr( "because you listen to %1, %2, %3, and %4" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ), Label::anchor( Artist( context.values().at(3) ).www().toString(), context.values().at(3) ) ); break;
-                case 5: contextString = tr( "because you listen to %1, %2, %3, %4, and %5" ).arg( Label::anchor( Artist( context.values().at(0) ).www().toString(), context.values().at(0) ), Label::anchor( Artist( context.values().at(1) ).www().toString(), context.values().at(1) ), Label::anchor( Artist( context.values().at(2) ).www().toString(), context.values().at(2) ), Label::anchor( Artist( context.values().at(3) ).www().toString(), context.values().at(3) ), Label::anchor( Artist( context.values().at(4) ).www().toString(), context.values().at(4) ) ); break;
-                }
-            }
-            break;
-        case lastfm::TrackContext::User:
-            // Whitelist multi-user station
-            if ( !RadioService::instance().station().url().startsWith("lastfm://users/") )
-                break;
-        case lastfm::TrackContext::Friend:
-        case lastfm::TrackContext::Neighbour:
-            {
-            switch ( context.values().count() )
-                {
-                default:
-                case 1: contextString = tr( "from %2%1s library" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ) ); break;
-                case 2: contextString = tr( "from %2 and %3%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ) ); break;
-                case 3: contextString = tr( "from %2, %3, and %4%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ), userLibrary( context.values().at(2), track.artist().name() ) ); break;
-                case 4: contextString = tr( "from %2, %3, %4, and %5%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ),userLibrary(  context.values().at(1), track.artist().name() ), userLibrary( context.values().at(2), track.artist().name() ), userLibrary( context.values().at(3), track.artist().name() ) ); break;
-                case 5: contextString = tr( "from %2, %3, %4, %5, and %6%1s libraries" ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ), userLibrary( context.values().at(2), track.artist().name() ), userLibrary( context.values().at(3), track.artist().name() ), userLibrary( context.values().at(4), track.artist().name() ) ); break;
-                }
-            }
-            break;
-        }
-    }
-
-    return contextString;
+   return context;
 }
 
-void 
+QString numberOfTimes( int num )
+{
+    QString string;
+
+    switch ( num )
+    {
+    case 1:
+        string = QObject::tr( "once" );
+        break;
+    case 2:
+        string = QObject::tr( "twice" );
+        break;
+    default:
+        string = QObject::tr( num == 1 ? "%L1 time" : "%L1 times" ).arg( num );
+        break;
+    }
+
+    return string;
+}
+
+QString
+MetadataWidget::scrobbleString( const Track& track )
+{
+    QString artistString = Label::anchor( userLibraryLink( User().name(), track.artist( Track::Corrected ).toString()  ), track.artist( Track::Corrected )  );
+    QString trackString = Label::anchor( userLibraryLink( User().name(), track  ), track.title( Track::Corrected )  );
+
+    QString userArtistScrobblesString = numberOfTimes( m_userArtistScrobbles );
+    QString userTrackScrobblesString = numberOfTimes( m_userTrackScrobbles );
+
+    return m_userTrackScrobbles != 0 ?
+        tr( "You've listened to %1 %2 and %3 %4." ).arg( artistString, userArtistScrobblesString, trackString, userTrackScrobblesString ):
+        tr( "You've listened to %1 %2, but not this track." ).arg( artistString, userArtistScrobblesString );
+}
+
+void
 MetadataWidget::setBackButtonVisible( bool visible )
 {
-    ui.track.context->setText( contextString( m_track ) );
+   ui->context->setText( contextString( m_track ) );
 
-    ui.backButton->parentWidget()->setVisible( visible );
-    ui.track.trackStats->setVisible( visible );
-    ui.track.context->setVisible( !visible );
+   ui->back->setVisible( visible );
+   ui->trackStats->setVisible( visible );
+   ui->context->setVisible( !visible );
+
+   ui->scrobbleControls->ui.love->setVisible( visible );
+
+   // keep the love button on for iTunes tracks
+   if ( !visible && m_track.source() != Track::LastFmRadio )
+       ui->scrobbleControls->ui.love->setVisible( true );
 }

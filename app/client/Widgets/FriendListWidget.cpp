@@ -2,6 +2,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QLineEdit>
+#include <QScrollArea>
 
 #include <lastfm/User>
 #include <lastfm/XmlQuery>
@@ -37,9 +38,11 @@ FriendListWidget::onSessionChanged( unicorn::Session* session )
 void
 FriendListWidget::onTextChanged( const QString& text )
 {
+    QString trimmedText = text.trimmed();
+
     setUpdatesEnabled( false );
 
-    QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(m_main->layout());
+    QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui.friends->layout());
 
     if ( text.isEmpty() )
     {
@@ -49,15 +52,16 @@ FriendListWidget::onTextChanged( const QString& text )
     }
     else
     {
-        QRegExp re( QString( "^%1" ).arg( text ), Qt::CaseInsensitive );
+        QRegExp re( QString( "^%1" ).arg( trimmedText ), Qt::CaseInsensitive );
 
         // Start from 1 because 0 is the QLineEdit
         // end 1 from the end because the last one is a stretch
-        for ( int i = 1 ; i < layout->count() - 1 ; ++i )
+        for ( int i = 0 ; i < layout->count() - 1 ; ++i )
         {
             FriendWidget* user = qobject_cast<FriendWidget*>(layout->itemAt( i )->widget());
 
-            layout->itemAt( i )->widget()->setVisible( user->name().startsWith( text, Qt::CaseInsensitive )
+            layout->itemAt( i )->widget()->setVisible( user->name().startsWith( trimmedText, Qt::CaseInsensitive )
+                                                       || user->realname().startsWith( trimmedText, Qt::CaseInsensitive )
                                                        || user->realname().split( ' ' ).filter( re ).count() > 0 );
         }
     }
@@ -81,6 +85,18 @@ FriendListWidget::onGotFriends()
 
         layout->addWidget( ui.filter = new QLineEdit( this ) );
         ui.filter->setPlaceholderText( tr( "Search for a friend by username or real name" ) );
+        ui.filter->setAttribute( Qt::WA_MacShowFocusRect, false );
+
+        layout->addWidget( ui.scrollArea = new QScrollArea( this ) );
+        ui.scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+        ui.scrollArea->setWidget( ui.friends = new QWidget( this ) );
+        ui.scrollArea->setWidgetResizable( true );
+
+        QVBoxLayout* friendsLayout = new QVBoxLayout( ui.friends );
+        friendsLayout->setContentsMargins( 0, 0, 0, 0 );
+        friendsLayout->setSpacing( 0 );
+
+        ui.friends->setObjectName( "friends" );
 
         connect( ui.filter, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
     }
@@ -88,7 +104,7 @@ FriendListWidget::onGotFriends()
     // add this set of users to the list
     lastfm::XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
 
-    QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(m_main->layout());
+    QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui.friends->layout());
 
     foreach( const lastfm::XmlQuery& user, lfm["friends"].children( "user" ) )
     {
@@ -96,9 +112,7 @@ FriendListWidget::onGotFriends()
 
         QString newUser = user["name"].text();
 
-        // Start from 1 because 0 is the QLineEdit
-        // end 1 from the end because the last one is a stretch
-        for ( int i = 1 ; i < layout->count() - 1 ; ++i )
+        for ( int i = 0 ; i < layout->count() ; ++i )
         {
             QString listUser = qobject_cast<FriendWidget*>(layout->itemAt( i )->widget())->name();
 
@@ -124,9 +138,10 @@ FriendListWidget::onGotFriends()
     if ( page != totalPages )
         connect( lastfm::User().getFriends( true, perPage, page + 1 ), SIGNAL(finished()), SLOT(onGotFriends()) );
     else
+    {
         layout->addStretch();
-
-    onTextChanged( ui.filter->text() );
+        onTextChanged( ui.filter->text() );
+    }
 
     setUpdatesEnabled( true );
 }

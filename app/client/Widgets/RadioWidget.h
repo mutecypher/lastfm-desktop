@@ -4,11 +4,13 @@
 #include <QPointer>
 #include <QWidget>
 
+#include "lib/unicorn/StylableWidget.h"
+
 #include "../Services/RadioService/RadioService.h"
 
 namespace unicorn { class Session; };
 
-class RadioWidget : public QWidget
+class RadioWidget : public StylableWidget
 {
     Q_OBJECT
 private:

@@ -106,7 +106,7 @@ bool
 TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node )
 {
     try {
-        XmlQuery lfm = lastfm::ws::parse( reply );
+        XmlQuery lfm = reply->readAll();
         foreach (QString size, QStringList() << "mega" << "extralarge" << "large")
         {
             QUrl const url = lfm[root_node]["image size="+size].text();

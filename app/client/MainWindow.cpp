@@ -32,6 +32,8 @@
 
 #include "MainWindow.h"
 
+#include "Dialogs/SettingsDialog.h"
+
 #include "Application.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
@@ -43,7 +45,6 @@
 #include "../Widgets/RecentTracksWidget.h"
 #include "../Widgets/SideBar.h"
 #include "../Widgets/StatusBar.h"
-#include "../Widgets/RadioListWidget.h"
 #include "../Widgets/TitleBar.h"
 #include "../Widgets/PlaybackControlsWidget.h"
 #include "../Widgets/RadioWidget.h"
@@ -84,16 +85,15 @@ MainWindow::MainWindow()
     ui.stackedWidget->addWidget( ui.recentTracks = new RecentTracksWidget( this ) );
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
+    connect( ui.stackedWidget, SIGNAL(currentChanged(int)), ui.recentTracks, SLOT(onCurrentChanged(int)) );
+
     ui.stackedWidget->addWidget( ui.profileScrollArea = new QScrollArea( this ) );
     ui.profileScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     ui.profileScrollArea->setWidget( ui.profile = new ProfileWidget(this) );
     ui.profileScrollArea->setWidgetResizable( true );
     ui.profile->setObjectName( "profile" );
 
-    ui.stackedWidget->addWidget( ui.friendsScrollArea = new QScrollArea( this ) );
-    ui.friendsScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    ui.friendsScrollArea->setWidget( ui.friends = new FriendListWidget(this) );
-    ui.friendsScrollArea->setWidgetResizable( true );
+    ui.stackedWidget->addWidget( ui.friends = new FriendListWidget(this) );
     ui.friends->setObjectName( "friends" );
 
     ui.stackedWidget->addWidget( ui.radioScrollArea = new QScrollArea( this ) );
@@ -132,9 +132,19 @@ MainWindow::MainWindow()
 
     finishUi();
 
-    resize( 545, 655 );
+    QAction* prefs = base_ui.account->addAction( tr("preferences"), this, SLOT(onPrefsTriggered()) );
+    prefs->setMenuRole( QAction::PreferencesRole );
+
+    resize( 565, 710 );
 
     show();
+}
+
+void
+MainWindow::onPrefsTriggered()
+{
+    SettingsDialog* settingsDialog = new SettingsDialog();
+    settingsDialog->exec();
 }
 
 

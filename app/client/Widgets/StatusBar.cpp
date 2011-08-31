@@ -18,22 +18,70 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QAction>
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QLabel>
 #include <QSizeGrip>
 
+#include <Phonon/VolumeSlider>
+
+#include "lib/unicorn/widgets/Label.h"
+#include "lib/unicorn/StylableWidget.h"
+
 #include "StatusBar.h"
 
 #include "../Services/ScrobbleService.h"
+#include "../Services/RadioService.h"
 #include "../MediaDevices/DeviceScrobbler.h"
 #include "../Application.h"
 
 StatusBar::StatusBar( QWidget* parent )
-    :QStatusBar( parent ), m_scrobbleCount(-1)
+    :QStatusBar( parent )
 {
+    addWidget( ui.widget = new StylableWidget( this) );
+    QHBoxLayout* widgetLayout = new QHBoxLayout( ui.widget );
+    widgetLayout->setContentsMargins( 0, 0, 0, 0 );
+    widgetLayout->setSpacing( 0 );
+
+    widgetLayout->addWidget( ui.cog = new QPushButton( this ), 0, Qt::AlignVCenter );
+    ui.cog->setObjectName( "cog" );
+    ui.cog->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
+    widgetLayout->addWidget( ui.message = new Label( this ), 1, Qt::AlignVCenter );
+    ui.message->setObjectName( "message" );
+    ui.message->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui.message->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
+
     setStatus();
-    addPermanentWidget( m_inetStatus = new QLabel( tr(""), this ) );
+
+    addPermanentWidget( ui.permanentWidget = new StylableWidget( this ) );
+    QHBoxLayout* permanentWidgetLayout = new QHBoxLayout( ui.permanentWidget );
+    permanentWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
+    permanentWidgetLayout->setSpacing( 0 );
+
+    permanentWidgetLayout->addWidget( ui.volMin = new QLabel( this ) );
+    ui.volMin->setObjectName( "volMin" );
+    ui.volMin->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    permanentWidgetLayout->addWidget( ui.volumeSlider = new Phonon::VolumeSlider( RadioService::instance().audioOutput(), this ) );
+    ui.volumeSlider->setOrientation( Qt::Horizontal );
+    permanentWidgetLayout->addWidget( ui.volMax = new QLabel( this ) );
+    ui.volMax->setObjectName( "volMax" );
+    ui.volMax->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
+    bool scrobblingOn = unicorn::UserSettings().value( "scrobblingOn", true ).toBool();
+    permanentWidgetLayout->addWidget( ui.scrobbleToggle = new QPushButton( this ) );
+    ui.scrobbleToggle->setObjectName( "scrobbleToggle" );
+    ui.scrobbleToggle->setCheckable( true );
+    ui.scrobbleToggle->setChecked( scrobblingOn );
+    onScrobbleToggled( scrobblingOn );
+    ui.scrobbleToggle->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
+    aApp->scrobbleToggleAction()->setChecked( scrobblingOn );
+
+    connect( aApp->scrobbleToggleAction(), SIGNAL(toggled(bool)), SLOT(onScrobbleToggled(bool)) );
+
+    connect( ui.scrobbleToggle, SIGNAL(toggled(bool)), SLOT(onScrobbleToggled(bool)) );
 
     aApp->isInternetConnectionUp() ? onConnectionUp() : onConnectionDown();
 
@@ -43,14 +91,36 @@ StatusBar::StatusBar( QWidget* parent )
     connect( aApp, SIGNAL( gotUserInfo(lastfm::UserDetails)), SLOT( onGotUserInfo(lastfm::UserDetails) ) );
 
     DeviceScrobbler* deviceScrobbler = ScrobbleService::instance().deviceScrobbler();
-    if( deviceScrobbler ) {
+    if( deviceScrobbler )
+    {
         connect( deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected( QString )));
         connect( deviceScrobbler, SIGNAL( processingScrobbles()), SLOT( onProcessingScrobbles()));
         connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), SLOT( onFoundScrobbles( QList<lastfm::Track> )));
         connect( deviceScrobbler, SIGNAL( noScrobblesFound()),SLOT( onNoScrobblesFound()));
     }
 
-    connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+    connect( this, SIGNAL(messageChanged(QString)), SLOT(onMessagedChanged(QString)));
+
+    connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)));
+}
+
+
+void
+StatusBar::onSessionChanged( unicorn::Session* session )
+{
+    bool scrobblingOn = unicorn::UserSettings( session->userInfo() ).value( "scrobblingOn", true ).toBool();
+    onScrobbleToggled( scrobblingOn );
+}
+
+
+void
+StatusBar::onScrobbleToggled( bool scrobblingOn )
+{
+    unicorn::UserSettings().setValue( "scrobblingOn", scrobblingOn );
+    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
+    ui.scrobbleToggle->setChecked( scrobblingOn );
+    ui.scrobbleToggle->setToolTip( scrobblingOn ? tr( "Scrobbling on" ) : tr( "Scrobbling off" ) );
+    aApp->scrobbleToggleAction()->setChecked( scrobblingOn );
 }
 
 void
@@ -60,83 +130,62 @@ StatusBar::setSizeGripVisible( bool visible )
 }
 
 void
-StatusBar::setStatus()
+StatusBar::onMessagedChanged( const QString& message )
 {
-    if( m_scrobbleCount > 0 ) {
-        showMessage( tr("Logged in as %1 (%2 scrobbles)").arg( lastfm::ws::Username, QString("%L1").arg( m_scrobbleCount ) ) );
-    } else {
-        showMessage( tr("Logged in as %1").arg( lastfm::ws::Username ));
-    }
+    if ( message.isEmpty() )
+        setStatus();
 }
 
 void
-StatusBar::onGotUserInfo(lastfm::UserDetails userDetails)
+StatusBar::setStatus()
 {
-    m_scrobbleCount = userDetails.scrobbleCount();
+    ui.message->setText( tr("%1 (%2)").arg( lastfm::ws::Username, m_online ? tr( "Online" ) : tr( "Offline" ) ));
+}
+
+void
+StatusBar::onGotUserInfo( lastfm::UserDetails /*userDetails*/ )
+{
     setStatus();
 }
 
 void
 StatusBar::onConnectionUp()
 {
-    const char icon[] = {0xE3, 0x80, 0x88, 0xE2, 0x8B, 0xAF, 0xE3, 0x80, 0x89, 0x00 };
-    m_inetStatus->setText( QString::fromUtf8( icon ) + tr( "Online"));
+    m_online = true;
+    setStatus();
 }
 
 void
 StatusBar::onConnectionDown()
 {
-    m_inetStatus->setText( QString::fromUtf8( ":(" ) + tr( "Offline"));
+    m_online = false;
+    setStatus();
 }
 
 void
 StatusBar::onIPodDetected( QString iPod )
 {
-    showMessage( tr("iPod Detected... ") + iPod );
+    //showMessage( tr("iPod Detected... ") + iPod, 3 * 1000 );
 }
 
 void
 StatusBar::onProcessingScrobbles()
 {
-    showMessage( tr("Processing iPod Scrobbles...") );
+    //showMessage( tr("Processing iPod Scrobbles..."), 3 * 1000 );
 }
 
 void
 StatusBar::onFoundScrobbles( QList<lastfm::Track> tracks )
 {
-    m_scrobbleCount += tracks.count();
-    setStatus();
-
-    tracks.count() == 1 ?
-        showMessage( tr("%1 scrobble found").arg( tracks.count() ) ):
-        showMessage( tr("%1 scrobbles found").arg( tracks.count() ) );
-
-    // Schedule the status message to return to normal
-    QTimer::singleShot( 10 * 1000, this, SLOT(setStatus()) );
+//    tracks.count() == 1 ?
+//        showMessage( tr("%1 scrobble found").arg( tracks.count() ), 10 * 1000 ):
+//        showMessage( tr("%1 scrobbles found").arg( tracks.count() ), 10 * 1000 );
 }
 
 void
 StatusBar::onNoScrobblesFound()
 {
-    showMessage( tr("No scrobbles found") );
-
-    // Schedule the status message to return to normal
-    QTimer::singleShot( 10 * 1000, this, SLOT(setStatus()) );
+    //showMessage( tr("No scrobbles found"), 10 * 1000 );
 }
 
-void
-StatusBar::onScrobblesCached( const QList<lastfm::Track>& tracks )
-{
-    foreach ( lastfm::Track track, tracks )
-        connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
-}
 
-void
-StatusBar::onScrobbleStatusChanged()
-{
-    if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
-    {
-        ++m_scrobbleCount;
-        setStatus();
-    }
-}

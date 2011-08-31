@@ -62,7 +62,7 @@ SearchBox::keyPressEvent( QKeyEvent* event )
 {
     if ( event->key() == Qt::Key_Backspace )
     {
-        if ( text().isEmpty() )
+        if ( cursorPosition() == 0 )
         {
             emit deletePressed();
             return;

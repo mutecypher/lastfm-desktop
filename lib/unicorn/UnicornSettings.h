@@ -22,10 +22,11 @@
 
 #include <QSettings>
 #include <QString>
+
+#include <lastfm/User>
+
 #include "lib/DllExportMacro.h"
 
-
-namespace lastfm{ class User; }
 namespace unicorn
 {
     inline const char* organizationName() { return "Last.fm"; }
@@ -53,7 +54,7 @@ namespace unicorn
     class UNICORN_DLLEXPORT UserSettings : public QSettings
     {
     public:
-        UserSettings( QString userName = "" );
+        UserSettings( QString userName = User() );
         static const char* subscriptionKey() { return "subscriber"; }
     };
 }

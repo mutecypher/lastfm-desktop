@@ -28,7 +28,6 @@
 #include <QTcpSocket>
 
 #include "Widgets/PointyArrow.h"
-#include "Dialogs/SettingsDialog.h"
 
 #include "MainWindow.h"
 #include "../Widgets/ScrobbleControls.h"
@@ -157,25 +156,27 @@ Application::init()
     m_artist_action = menu->addAction( "" );
     m_title_action = menu->addAction(tr("Ready"));
 
-    m_love_action = menu->addAction(tr("Love"));
-    m_love_action->setCheckable( true );
-    QIcon loveIcon;
-    loveIcon.addFile( ":/controls_love_ON_REST.png", QSize( 16, 16), QIcon::Normal, QIcon::On );
-    loveIcon.addFile( ":/controls_love_OFF_REST.png", QSize( 16, 16), QIcon::Normal, QIcon::Off );
-    m_love_action->setIcon( loveIcon );
-    m_love_action->setEnabled( false );
-    connect( m_love_action, SIGNAL(triggered(bool)), SLOT(changeLovedState(bool)));
+    {
+        m_love_action = menu->addAction(tr("Love"));
+        m_love_action->setCheckable( true );
+        QIcon loveIcon;
+        loveIcon.addFile( ":/meta_love_OFF_REST.png", QSize( 16, 16 ), QIcon::Normal, QIcon::Off );
+        loveIcon.addFile( ":/meta_love_ON_REST.png", QSize( 16, 16 ), QIcon::Normal, QIcon::On );
 
+        m_love_action->setIcon( loveIcon );
+        m_love_action->setEnabled( false );
+        connect( m_love_action, SIGNAL(triggered(bool)), SLOT(changeLovedState(bool)));
+    }
     {
         m_tag_action = menu->addAction(tr("Tag")+ELLIPSIS);
-        m_tag_action->setIcon( QIcon( ":/tag-rest.png" ) );
+        m_tag_action->setIcon( QIcon( ":/meta_tag_REST.png" ) );
         m_tag_action->setEnabled( false );
         connect( m_tag_action, SIGNAL(triggered()), SLOT(onTagTriggered()));
     }
 
     {
         m_share_action = menu->addAction(tr("Share")+ELLIPSIS);
-        m_share_action->setIcon( QIcon( ":/share-rest.png" ) );
+        m_share_action->setIcon( QIcon( ":/meta_share_REST.png" ) );
         m_share_action->setEnabled( false );
         connect( m_share_action, SIGNAL(triggered()), SLOT(onShareTriggered()));
     }
@@ -185,8 +186,6 @@ Application::init()
         QIcon banIcon;
         banIcon.addFile( ":/controls_ban_REST.png" );
         m_ban_action->setIcon( banIcon );
-
-        //connect( m_ban_action, SIGNAL(triggered()), SLOT(onBanTriggered()));
     }
     {
         m_play_action = new QAction( tr( "Play" ), this );
@@ -195,16 +194,12 @@ Application::init()
         playIcon.addFile( ":/controls_pause_REST.png", QSize(), QIcon::Normal, QIcon::On );
         playIcon.addFile( ":/controls_play_REST.png", QSize(), QIcon::Normal, QIcon::Off );
         m_play_action->setIcon( playIcon );
-
-        //connect( m_play_action, SIGNAL(triggered(bool)), SLOT(onPlayTriggered(bool)));
     }
     {
         m_skip_action = new QAction( tr( "Skip" ), this );
         QIcon skipIcon;
         skipIcon.addFile( ":/controls_skip_REST.png" );
         m_skip_action->setIcon( skipIcon );
-
-        //connect( m_skip_action, SIGNAL(triggered()), SLOT(onSkipTriggered()));
     }
 
 #ifdef Q_WS_X11
@@ -220,13 +215,8 @@ Application::init()
 
     menu->addSeparator();
 
-    m_submit_scrobbles_toggle = menu->addAction(tr("Submit Scrobbles"));
-#ifdef Q_WS_MAC
-    m_prefs_action = menu->addAction(tr("Preferences")+ELLIPSIS);
-#else
-    m_prefs_action = menu->addAction(tr("Options")+ELLIPSIS);
-#endif
-    connect( m_prefs_action, SIGNAL( triggered() ), this, SLOT( onPrefsTriggered() ) );
+    m_submit_scrobbles_toggle = menu->addAction( tr("Submit Scrobbles") );
+
     menu->addSeparator();
     QMenu* helpMenu = menu->addMenu( tr( "Help" ) );
 
@@ -239,21 +229,14 @@ Application::init()
     connect( m_about_action, SIGNAL( triggered() ), SLOT( onAboutTriggered() ) );
     menu->addSeparator();
 
-#ifndef NDEBUG
-    QAction* rss = menu->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()) );
-    rss->setShortcut( Qt::CTRL + Qt::Key_R );
-
-    menu->addSeparator();
-#endif
-
     QAction* quit = menu->addAction(tr("Quit %1").arg( applicationName()));
 
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
 
     m_artist_action->setEnabled( false );
     m_title_action->setEnabled( false );
-    m_submit_scrobbles_toggle->setCheckable(true);
-    m_submit_scrobbles_toggle->setChecked(true);
+    m_submit_scrobbles_toggle->setCheckable( true );
+    m_submit_scrobbles_toggle->setChecked( true );
     m_tray->setContextMenu(menu);
 
 /// MainWindow
@@ -263,11 +246,10 @@ Application::init()
     m_mw->addWinThumbBarButton( m_play_action );
     m_mw->addWinThumbBarButton( m_skip_action );
 
-
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
 #ifndef Q_OS_LINUX
      AudioscrobblerSettings settings;
-     setRaiseHotKey( settings.raiseShortcutModifiers(), settings.raiseShortcutKey());
+     setRaiseHotKey( settings.raiseShortcutModifiers(), settings.raiseShortcutKey() );
 #endif
     //although the shortcuts are actually set on the ScrobbleControls widget,
     //setting it here adds the shortkey text to the trayicon menu
@@ -275,7 +257,6 @@ Application::init()
     m_tag_action->setShortcut( Qt::CTRL + Qt::Key_T );
     m_share_action->setShortcut( Qt::CTRL + Qt::Key_S );
     m_love_action->setShortcut( Qt::CTRL + Qt::Key_L );
-
 
     // make the love buttons sychronised
     connect(this, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
@@ -338,17 +319,17 @@ Application::init()
 }
 
 void
-Application::setRaiseHotKey( Qt::KeyboardModifiers mods, int key) {
-    if( m_raiseHotKeyId >= 0 ) {
+Application::setRaiseHotKey( Qt::KeyboardModifiers mods, int key )
+{
+    if( m_raiseHotKeyId >= 0 )
         unInstallHotKey( m_raiseHotKeyId );
-    }
+
     m_raiseHotKeyId = installHotKey( mods, key, m_toggle_window_action, SLOT(trigger()));
 }
 
 void
-Application::onTrackGotInfo(const XmlQuery& lfm)
+Application::onTrackGotInfo( const XmlQuery& lfm )
 {
-    //Q_ASSERT(m_connection);
     MutableTrack( ScrobbleService::instance().currentConnection()->track() ).setFromLfm( lfm );
 }
 
@@ -398,7 +379,7 @@ void
 Application::onTrackSpooled( const Track& track )
 {
 #ifdef CLIENT_ROOM_RADIO
-    QString strippedContextString = MetadataWidget::contextString( track );
+    QString strippedContextString = MetadataWidget::getContextString( track );
 
     QRegExp re( "<[^>]*>" );
 
@@ -470,13 +451,6 @@ Application::onAboutTriggered()
 {
     if ( m_aboutDialog ) m_aboutDialog = new AboutDialog( m_mw );
     m_aboutDialog->show();
-}
-
-void
-Application::onPrefsTriggered()
-{
-    SettingsDialog* settingsDialog = new SettingsDialog();
-    settingsDialog->exec();
 }
 
 void 
@@ -572,7 +546,7 @@ Application::onMessageReceived( const QStringList& message )
     else if ( message.contains( "--settings" ) )
     {
         // raise the settings window
-        m_prefs_action->trigger();
+        m_mw->onPrefsTriggered();
     }
     else if ( message.contains( "--new-ipod-detected" ) ||
               message.contains( "--ipod-detected" ))

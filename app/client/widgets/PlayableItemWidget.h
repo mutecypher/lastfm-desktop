@@ -30,7 +30,11 @@ class PlayableItemWidget : public QPushButton
     Q_OBJECT;
 
 public:
-    PlayableItemWidget( const RadioStation& rs, QString title, QString description = "" );
+    PlayableItemWidget( QWidget* parent = 0 );
+    PlayableItemWidget( const RadioStation& rs, const QString& title, const QString& description = "", QWidget* parent = 0 );
+
+    void setStation( const RadioStation& rs, const QString& title, const QString& description = "" );
+    void setDescription( const QString& description );
 
     const RadioStation& station() const { return m_rs; }
 
@@ -43,16 +47,28 @@ public slots:
     void playMultiNext();
 
 private:
-    void init();
-
     RadioStation getMultiStation() const;
 
     void paintEvent( QPaintEvent* event );
     void contextMenuEvent( class QContextMenuEvent* event );
 
+    bool event( QEvent* e );
+
 private:
     RadioStation m_rs;
     QString m_description;
+
+    bool m_hovered;
+
+    QPixmap m_radio_left_hover;
+    QPixmap m_radio_left_press;
+    QPixmap m_radio_left_rest;
+    QPixmap m_radio_middle_hover;
+    QPixmap m_radio_middle_press;
+    QPixmap m_radio_middle_rest;
+    QPixmap m_radio_right_hover;
+    QPixmap m_radio_right_press;
+    QPixmap m_radio_right_rest;
 };
 
 #endif

@@ -20,6 +20,7 @@
 
 #include "ProgressBar.h"
 
+#include "../Services/RadioService.h"
 #include "../Services/ScrobbleService.h"
 #include "../Services/ScrobbleService/StopWatch.h"
 
@@ -30,65 +31,111 @@
 #include <QLabel>
 #include <QPainter>
 
+#include <phonon/MediaObject>
+
 
 ProgressBar::ProgressBar( QWidget* parent )
-    :QProgressBar( parent )
-{ 
+    :StylableWidget( parent )
+{
+    m_scrobbleMarkerOn = QImage(":/scrobble_marker_ON.png");
+    m_scrobbleMarkerOff = QImage(":/scrobble_marker_OFF.png");
 }
-        
+
+
+void
+ProgressBar::setTrack( const Track& track )
+{
+    m_track = track;
+    m_frame = 0;
+}
+
+
+void
+ProgressBar::onFrameChanged( int frame )
+{
+    m_frame = frame;
+    update();
+}
+
+
+void
+ProgressBar::resizeEvent( QResizeEvent* e )
+{
+    // we set theick interval so we are only told
+    // when the progress goes to the next pixel
+    if ( !m_track.isNull() && RadioService::instance().mediaObject() )
+        RadioService::instance().mediaObject()->setTickInterval( ( m_track.duration() * 1000 ) / e->size().width()  );
+}
 
 void
 ProgressBar::paintEvent( QPaintEvent* e )
 {
-    QProgressBar::paintEvent( e );
+    StylableWidget::paintEvent( e );
 
     QPainter p( this );
 
-    QFont timeFont = font();
-    timeFont.setPixelSize( 10 );
-    setFont( timeFont );
-
-    p.setPen( QColor( 0x333333 ) );
-
-
-
     StopWatch* sw = ScrobbleService::instance().stopWatch();
 
-    if ( sw )
+    if ( !m_track.isNull() )
     {
+        // draw the chunk
+        p.setPen( Qt::transparent );
+        p.setBrush( m_chunk );
+        p.drawRect( rect().adjusted( 0, 0, ((m_frame * width()) / (m_track.duration() * 1000)) - width(), -1) );
+
         QString format( "m:ss" );
 
         QTime duration( 0, 0 );
-        duration = duration.addMSecs( maximum() );
+        duration = duration.addMSecs( m_track.duration() * 1000 );
         QTime progress( 0, 0 );
-        progress = progress.addMSecs( value() );
+        progress = progress.addMSecs( m_frame );
 
-        QTextOption to;
-        to.setAlignment( Qt::AlignVCenter | Qt::AlignLeft );
-        QRect timeRect = rect();
-        timeRect.adjust( 6, 0, 0, 0 );
+        QTextOption timeTextOption;
+        timeTextOption.setAlignment( Qt::AlignVCenter | Qt::AlignLeft );
 
-        if ( ScrobbleService::instance().currentTrack().source() == Track::LastFmRadio )
-            p.drawText( timeRect, QString( "%1 / %2" ).arg( progress.toString( format ) ,duration.toString( format ) ), to );
+        QFont timeFont = font();
+        timeFont.setPixelSize( 10 );
+        setFont( timeFont );
+
+        p.setPen( QColor( 0x333333 ) );
+
+        if ( m_track.source() == Track::LastFmRadio )
+            p.drawText( rect().adjusted( 6, 0, 0, 0 ), QString( "%1 / %2" ).arg( progress.toString( format ) ,duration.toString( format ) ), timeTextOption );
         else
-            p.drawText( timeRect, QString( "%1" ).arg( progress.toString( format ) ), to );
+            p.drawText( rect().adjusted( 6, 0, 0, 0 ), QString( "%1" ).arg( progress.toString( format ) ), timeTextOption );
 
-        uint scrobblePoint = sw->scrobblePoint() * 1000;
+        if ( ScrobbleService::instance().scrobblingOn() || m_track.scrobbleStatus() != Track::Null )
+        {
+            if ( !ScrobbleService::instance().scrobblingOn() && m_track.scrobbleStatus() != Track::Null )
+            {
+                QTextOption textOption;
+                textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
+                p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr( "Scrobbling off" ), textOption );
+            }
 
-        int scrobbleMarker = scrobblePoint * rect().width() / maximum() ;
+            uint scrobblePoint = sw->scrobblePoint() * 1000;
 
-        p.setPen( QColor( 0xbdbdbd ) );
-        p.drawLine( QPoint( scrobbleMarker, rect().top() ),
-                    QPoint( scrobbleMarker, rect().bottom() - 1 ) );
+            int scrobbleMarker = (scrobblePoint * width()) / ( m_track.duration() * 1000 ) ;
 
-        p.setPen( QColor( 0xe6e6e6 ) );
-        p.drawLine( QPoint( scrobbleMarker + 1, rect().top() ),
-                    QPoint( scrobbleMarker + 1, rect().bottom() - 1 ) );
+            p.setPen( QColor( 0xbdbdbd ) );
+            p.drawLine( QPoint( scrobbleMarker, rect().top() ),
+                        QPoint( scrobbleMarker, rect().bottom() - 1 ) );
 
-        // draw the as!
-        QImage as( value() > scrobblePoint ? QImage(":/scrobble_marker_ON.png") : QImage(":/scrobble_marker_OFF.png") );
-        QPoint asPoint( scrobbleMarker - 25, (rect().height() / 2) - (as.height() / 2) );
-        p.drawImage( asPoint, as );
+            p.setPen( QColor( 0xe6e6e6 ) );
+            p.drawLine( QPoint( scrobbleMarker + 1, rect().top() ),
+                        QPoint( scrobbleMarker + 1, rect().bottom() - 1 ) );
+
+            // draw the as!
+            QImage as( m_track.scrobbleStatus() != Track::Null ? m_scrobbleMarkerOn : m_scrobbleMarkerOff );
+            QPoint asPoint( scrobbleMarker - 25, (rect().height() / 2) - (as.height() / 2) );
+            p.drawImage( asPoint, as );
+        }
+        else
+        {
+            QTextOption textOption;
+            textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
+            p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr( "Not scrobbling" ), textOption );
+        }
     }
 }
         

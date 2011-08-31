@@ -24,6 +24,7 @@
 #include <QHBoxLayout>
 #include <QPoint>
 #include <QMenu>
+#include <QShortcut>
 
 #include "QuickStartWidget.h"
 #include "../StationSearch.h"
@@ -31,7 +32,8 @@
 
 #include <QStylePainter>
 
-QuickStartWidget::QuickStartWidget()
+QuickStartWidget::QuickStartWidget( QWidget* parent )
+    :StylableWidget( parent )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
@@ -52,6 +54,17 @@ QuickStartWidget::QuickStartWidget()
     connect( ui.button, SIGNAL(customContextMenuRequested(QPoint)), SLOT(customContextMenuRequested(QPoint)));
 
     connect( ui.edit, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
+
+    QShortcut* shortcut = new QShortcut( ui.edit );
+    shortcut->setKey( Qt::CTRL + Qt::Key_D );
+    shortcut->setContext( Qt::WidgetShortcut );
+    connect( shortcut, SIGNAL(activated()), SLOT(setToCurrent()) );
+}
+
+void
+QuickStartWidget::setToCurrent()
+{
+    ui.edit->setText( RadioService::instance().station().url() );
 }
 
 void
@@ -99,8 +112,13 @@ QuickStartWidget::customContextMenuRequested( const QPoint& point )
 {
     QMenu* contextMenu = new QMenu( this );
 
-    if ( RadioService::instance().state() == Playing )
-        contextMenu->addAction( tr( "Play next" ), this, SLOT(playNext()));
+    if ( !ui.edit->text().isEmpty() )
+    {
+        contextMenu->addAction( tr( "Play" ), this, SLOT(play()));
+
+        if ( RadioService::instance().state() == Playing )
+            contextMenu->addAction( tr( "Play next" ), this, SLOT(playNext()));
+    }
 
     if ( contextMenu->actions().count() )
         contextMenu->exec( ui.button->mapToGlobal( point ) );

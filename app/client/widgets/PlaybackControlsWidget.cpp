@@ -15,9 +15,13 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->play->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->ban->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->love->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->skip->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
     // If the actions are triggered we should do something
     // love is dealt with by the application
-    //connect( aApp->loveAction(), SIGNAL(triggered(bool)), SLOT(onLoveClicked(bool)) );
     connect( aApp->banAction(), SIGNAL(triggered(bool)), SLOT(onBanClicked()) );
     connect( aApp->playAction(), SIGNAL(triggered(bool)), SLOT(onPlayClicked(bool)) );
     connect( aApp->skipAction(), SIGNAL(triggered(bool)), SLOT(onSkipClicked()) );
@@ -28,14 +32,12 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     connect( aApp->playAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
     connect( aApp->skipAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
 
-    //connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) );
-    //connect( &RadioService::instance(), SIGNAL(tick(qint64)), SLOT(onRadioTick(qint64)));
-    //connect( &RadioService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
     connect( &RadioService::instance(), SIGNAL(error(int,QVariant)), SLOT(onError(int, QVariant)));
 
     connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)) );
     connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
+    connect( &ScrobbleService::instance(), SIGNAL(scrobblingOnChanged(bool)), SLOT(update()));
 
     onActionsChanged();
 
@@ -44,9 +46,6 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     connect( ui->ban, SIGNAL(clicked()), aApp->banAction(), SLOT(trigger()));
     connect( ui->play, SIGNAL(clicked()), aApp->playAction(), SLOT(trigger()));
     connect( ui->skip, SIGNAL(clicked()), aApp->skipAction(), SLOT(trigger()));
-
-//    ui->volumeSlider->setAudioOutput( RadioService::instance().audioOutput() );
-//    ui->volumeSlider->setMuteVisible( false );
 
     new QShortcut( QKeySequence( Qt::Key_Space ), this, SLOT(onSpace()));
 }
@@ -172,7 +171,7 @@ PlaybackControlsWidget::onBanClicked()
 void
 PlaybackControlsWidget::onBanFinished()
 {
-    lastfm::XmlQuery lfm(lastfm::ws::parse(static_cast<QNetworkReply*>(sender())));
+    lastfm::XmlQuery lfm( static_cast<QNetworkReply*>(sender())->readAll() );
 
     if ( lfm.attribute( "status" ) != "ok" )
     {
@@ -223,20 +222,18 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
 
     setIconForRadio( station );
 
-    ui->progressBar->setRange( 0, 1000 );
-    ui->progressBar->setValue( 0 );
+    ui->progressBar->setTrack( Track() );
 }
 
 void
 PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrack )
 {
+    ui->progressBar->setTrack( track );
+
     if ( !track.isNull() )
     {
-        ui->progressBar->setRange( 0, track.duration() * 1000 );
-        ui->progressBar->setValue( 0 );
-
-        disconnect( 0, 0, this, SLOT(onTick(qint64)));
-        disconnect( 0, 0, ui->progressBar, SLOT(setValue(int)) );
+        disconnect( &RadioService::instance(), SIGNAL(tick(qint64)), this, SLOT(onTick(qint64)));
+        disconnect( &ScrobbleService::instance(), SIGNAL(frameChanged(int)), ui->progressBar, SLOT(onFrameChanged(int)) );
 
         if(  track.source() == Track::LastFmRadio )
         {
@@ -277,7 +274,7 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
             ui->status->setText( tr("Scrobbling from...") );
             ui->device->setText( track.extra( "playerName" ) );
 
-            connect( &ScrobbleService::instance(), SIGNAL(frameChanged(int)), ui->progressBar, SLOT(setValue(int)) );
+            connect( &ScrobbleService::instance(), SIGNAL(frameChanged(int)), ui->progressBar, SLOT(onFrameChanged(int)) );
         }
 
         // Set the icon!
@@ -299,18 +296,20 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
 void
 PlaybackControlsWidget::onTick( qint64 tick )
 {
-    ui->progressBar->setValue( tick );
+    ui->progressBar->onFrameChanged( tick );
 }
 
 void
 PlaybackControlsWidget::onError( int error, const QVariant& errorText )
 {
+    ui->progressBar->setTrack( Track() );
     ui->status->setText( errorText.toString() + ": " + QString::number(error) );
 }
 
 void
 PlaybackControlsWidget::onStopped()
 {
+    ui->progressBar->setTrack( Track() );
     aApp->playAction()->setChecked( false );
 
     ui->love->setEnabled( false );

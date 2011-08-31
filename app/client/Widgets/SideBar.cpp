@@ -21,8 +21,11 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QShortcut>
 
 #include <lastfm/User>
+
+#include "lib/unicorn/widgets/AvatarWidget.h"
 
 #include "../Application.h"
 #include "SideBar.h"
@@ -34,6 +37,7 @@ QAbstractButton* newButton( const QString& text, QWidget* parent = 0 )
     pushButton->setCheckable( true );
     pushButton->setAutoExclusive( true );
     pushButton->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+    pushButton->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     return pushButton;
 }
 
@@ -57,9 +61,6 @@ SideBar::SideBar(QWidget *parent)
     layout->addWidget( ui.radio = newButton( tr( "Radio" ), this ), Qt::AlignHCenter);
     ui.radio->setObjectName( "radio" );
     layout->addStretch( 1 );
-    layout->addWidget( ui.avatar = new QLabel( this ), Qt::AlignHCenter );
-    ui.avatar->setObjectName( "avatar" );
-    ui.avatar->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
 
     connect( ui.nowPlaying, SIGNAL(clicked()), SLOT(onButtonClicked()));
     connect( ui.scrobbles, SIGNAL(clicked()), SLOT(onButtonClicked()));
@@ -67,9 +68,31 @@ SideBar::SideBar(QWidget *parent)
     connect( ui.friends, SIGNAL(clicked()), SLOT(onButtonClicked()));
     connect( ui.radio, SIGNAL(clicked()), SLOT(onButtonClicked()));
 
-    connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)));
+    //const QKeySequence & key, QWidget * parent, const char * member = 0, const char * ambiguousMember = 0, Qt::ShortcutContext context = Qt::WindowShortcut
+    new QShortcut( Qt::CTRL + Qt::Key_BracketLeft, this, SLOT(onUp()));
+    new QShortcut( Qt::CTRL + Qt::Key_BracketRight, this, SLOT(onDown()));
 }
 
+
+void
+SideBar::onUp()
+{
+    if ( ui.nowPlaying->isChecked() ) ui.radio->click();
+    else if ( ui.scrobbles->isChecked() ) ui.nowPlaying->click();
+    else if ( ui.profile->isChecked() ) ui.scrobbles->click();
+    else if ( ui.friends->isChecked() ) ui.profile->click();
+    else if ( ui.radio->isChecked() ) ui.friends->click();
+}
+
+void
+SideBar::onDown()
+{
+    if ( ui.nowPlaying->isChecked() ) ui.scrobbles->click();
+    else if ( ui.scrobbles->isChecked() ) ui.profile->click();
+    else if ( ui.profile->isChecked() ) ui.friends->click();
+    else if ( ui.friends->isChecked() ) ui.radio->click();
+    else if ( ui.radio->isChecked() ) ui.nowPlaying->click();
+}
 
 void
 SideBar::click( int index )
@@ -82,20 +105,4 @@ void
 SideBar::onButtonClicked()
 {
     emit currentChanged( layout()->indexOf( qobject_cast<QWidget*>( sender() ) ) );
-}
-
-
-void
-SideBar::onSessionChanged( unicorn::Session* newSession )
-{
-    QUrl imageUrl = newSession->userInfo().imageUrl( lastfm::Medium, true );
-    connect( lastfm::nam()->get( QNetworkRequest( imageUrl ) ), SIGNAL(finished()), SLOT(onGotAvatar()));
-}
-
-void
-SideBar::onGotAvatar()
-{
-    QPixmap avatar;
-    avatar.loadFromData( qobject_cast<QNetworkReply*>(sender())->readAll() );
-    ui.avatar->setPixmap( avatar );
 }

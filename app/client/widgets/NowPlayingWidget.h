@@ -25,6 +25,7 @@
 #include <QPointer>
 
 #include <lastfm/Track>
+#include <lastfm/RadioStation>
 
 #include "MetadataWidget.h"
 
@@ -34,9 +35,8 @@ class NowPlayingWidget : public QWidget
 public:
     explicit NowPlayingWidget(QWidget *parent = 0);
 
-signals:
-
 private slots:
+    void onTuningIn( const RadioStation& );
     void onTrackStarted( const Track& track, const Track& );
     void onStopped();
 

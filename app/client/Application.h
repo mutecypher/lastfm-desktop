@@ -95,19 +95,19 @@ namespace audioscrobbler
         QAction* m_faq_action;
         QAction* m_forums_action;
         QAction* m_about_action;
-        QAction* m_prefs_action;
         
     public:
         Application(int& argc, char** argv);
 
         void init();
         
-        QAction* loveAction() const{ return m_love_action; }
-        QAction* tagAction() const{ return m_tag_action; }
-        QAction* shareAction() const{ return m_share_action; }
-        QAction* banAction() const{ return m_ban_action; }
-        QAction* playAction() const{ return m_play_action; }
-        QAction* skipAction() const{ return m_skip_action; }
+        QAction* loveAction() const { return m_love_action; }
+        QAction* tagAction() const { return m_tag_action; }
+        QAction* shareAction() const { return m_share_action; }
+        QAction* banAction() const { return m_ban_action; }
+        QAction* playAction() const { return m_play_action; }
+        QAction* skipAction() const { return m_skip_action; }
+        QAction* scrobbleToggleAction() const { return m_submit_scrobbles_toggle; }
 
         QSystemTrayIcon* tray() const { return m_tray.data(); }
         void setRaiseHotKey( Qt::KeyboardModifiers mods, int key );
@@ -155,7 +155,6 @@ namespace audioscrobbler
         void onFaqTriggered();
         void onForumsTriggered();
         void onAboutTriggered();
-        void onPrefsTriggered();
 
         void showWindow();
         void toggleWindow();

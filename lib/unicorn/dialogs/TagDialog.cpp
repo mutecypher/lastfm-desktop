@@ -141,7 +141,8 @@ TagDialog::setupUi()
     v->addWidget( ui.track = new TrackWidget( m_track ) );
     v->addWidget( new QLabel( tr("Tags") ) );
 
-    v->addWidget( ui.tagsWidget = new ItemSelectorWidget( ItemSelectorWidget::Tag, this ) );
+    v->addWidget( ui.tagsWidget = new ItemSelectorWidget( this ) );
+    ui.tagsWidget->setType( ItemSelectorWidget::Tag );
 
     /*{
         v->addWidget( ui.popularTagsBox = new QGroupBox( tr("Popular tags"), this ) );

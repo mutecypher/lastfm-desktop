@@ -18,6 +18,9 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef ITEM_SELECTOR_WIDGET_H
+#define ITEM_SELECTOR_WIDGET_H
+
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/DllExportMacro.h"
 
@@ -37,7 +40,9 @@ public:
         User
     };
 
-    explicit ItemSelectorWidget(Type type, QWidget* parent = 0);
+    explicit ItemSelectorWidget( QWidget* parent = 0 );
+
+    void setType( Type type );
 
     QStringList items() const;
 
@@ -47,7 +52,7 @@ signals:
 private slots:
     void onItemSelected();
     void onDeletePressed();
-    void onItemDeleted( class SelectedItemWidget* recipient );
+    void onItemDeleted( class QLabel* recipient );
 
     void onCompleterActivated( const QString& text );
     void onTextChanged( const QString& text );
@@ -57,6 +62,8 @@ private:
     bool itemsContain( const QString& text );
 
 private:
-    QList<class SelectedItemWidget*> m_items;
+    QList<class QLabel*> m_items;
     bool m_clearText;
 };
+
+#endif // ITEM_SELECTOR_WIDGET_H

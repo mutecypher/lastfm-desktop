@@ -5,15 +5,16 @@
 #include <QWidget>
 
 #include "lib/unicorn/UnicornSession.h"
+#include "lib/unicorn/StylableWidget.h"
 
-class ProfileWidget : public QWidget
+class ProfileWidget : public StylableWidget
 {
     Q_OBJECT
 private:
     struct
     {
         class StylableWidget* user;
-        class HttpImageWidget* avatar;
+        class AvatarWidget* avatar;
         class QLabel* name;
         class QLabel* scrobbleCount;
         class QLabel* scrobbles;
@@ -27,12 +28,19 @@ public:
 
 private slots:
     void onSessionChanged( unicorn::Session* session );
+    void onGotUserInfo( const lastfm::UserDetails& userDetails );
 
     void onGotTopWeeklyArtists();
     void onGotTopOverallArtists();
 
+    void onScrobblesCached( const QList<lastfm::Track>& tracks );
+    void onScrobbleStatusChanged();
+    void setScrobbleCount();
+
 private:
     QPointer<QWidget> m_main;
+
+    int m_scrobbleCount;
 };
 
 #endif // PROFILEWIDGET_H

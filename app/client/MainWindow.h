@@ -58,6 +58,9 @@ signals:
     void trackGotTags(XmlQuery);
     void finished();
 
+public slots:
+    void onPrefsTriggered();
+
 private slots:
     void onTrackStarted(const Track&, const Track&);
     void onStopped();
@@ -65,9 +68,12 @@ private slots:
     void onResumed();
     void onTuningIn();
 
+
 private:
     void setCurrentWidget( QWidget* );
     void addWinThumbBarButtons( QList<QAction*>& );
+
+    //void resizeEvent( QResizeEvent* event ) { qDebug() << event->size(); }
 
 private:
     Track m_currentTrack;

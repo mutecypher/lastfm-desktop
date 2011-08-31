@@ -23,3 +23,44 @@
 AudioscrobblerSettings::AudioscrobblerSettings()
 {
 }
+
+Qt::KeyboardModifiers
+AudioscrobblerSettings::raiseShortcutModifiers() const
+{
+    return (Qt::KeyboardModifiers)value( "raiseShortcutModifiers", (int)(Qt::ControlModifier | Qt::MetaModifier) ).toInt();
+}
+
+int
+AudioscrobblerSettings::raiseShortcutKey() const
+{
+#ifdef Q_WS_MAC
+    const int sKeyCode = 1;
+#elif defined Q_WS_WIN
+    const int sKeyCode = 83;
+#endif
+    return value( "raiseShortcutKey", sKeyCode ).toInt();
+}
+
+QString
+AudioscrobblerSettings::raiseShortcutDescription() const
+{
+    return value( "raiseShortcutDescription", QString::fromUtf8( "⌃⌘ S" ) ).toString();
+}
+
+void
+AudioscrobblerSettings::setRaiseShortcutKey( int key )
+{
+    setValue( "raiseShortcutKey", key );
+}
+
+void
+AudioscrobblerSettings::setRaiseShortcutModifiers( Qt::KeyboardModifiers m )
+{
+    setValue( "raiseShortcutModifiers", (int)m );
+}
+
+void
+AudioscrobblerSettings::setRaiseShortcutDescription( QString d )
+{
+    setValue( "raiseShortcutDescription", d );
+}

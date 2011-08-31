@@ -2,28 +2,33 @@
 #include <QBoxLayout>
 #include <QLabel>
 
-#include "lib/unicorn/widgets/HttpImageWidget.h"
+#include "lib/unicorn/widgets/AvatarWidget.h"
 #include "lib/unicorn/StylableWidget.h"
 
 #include "PlayableItemWidget.h"
 
+#include "../Services/ScrobbleService/ScrobbleService.h"
 #include "../Application.h"
 
 #include "ProfileWidget.h"
 
 ProfileWidget::ProfileWidget(QWidget *parent)
-    :QWidget(parent)
+    :StylableWidget(parent)
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)) );
+    connect( aApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)) );
+
+    connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
+
 }
 
 void
 ProfileWidget::onSessionChanged( unicorn::Session* session )
-{
+{  
     if ( !session->userInfo().name().isEmpty() )
     {
         // Make sure we don't recieve any updates about the last session
@@ -44,7 +49,7 @@ ProfileWidget::onSessionChanged( unicorn::Session* session )
         hl->setContentsMargins( 0, 0, 0, 0 );
         hl->setSpacing( 0 );
 
-        hl->addWidget( ui.avatar = new HttpImageWidget( this ) );
+        hl->addWidget( ui.avatar = new AvatarWidget( this ) );
         ui.avatar->setObjectName( "avatar" );
         ui.avatar->loadUrl( session->userInfo().imageUrl( lastfm::Medium, true ), false );
         ui.avatar->setHref( session->userInfo().www() );
@@ -63,6 +68,9 @@ ProfileWidget::onSessionChanged( unicorn::Session* session )
 
         vl->addWidget( ui.scrobbles = new QLabel( tr("Scrobbles"), this) );
         ui.scrobbleCount->setObjectName( "scrobbles" );
+
+        m_scrobbleCount = session->userInfo().scrobbleCount();
+        setScrobbleCount();
 
         {
             QLabel* title = new QLabel( tr("Top Weekly Artists"), this ) ;
@@ -89,6 +97,15 @@ ProfileWidget::onSessionChanged( unicorn::Session* session )
 
 
 void
+ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userDetails )
+{
+    ui.avatar->setUserDetails( userDetails );
+    m_scrobbleCount = userDetails.scrobbleCount();
+    setScrobbleCount();
+}
+
+
+void
 ProfileWidget::onGotTopWeeklyArtists()
 {
     try
@@ -97,12 +114,14 @@ ProfileWidget::onGotTopWeeklyArtists()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        lastfm::XmlQuery lfm = lastfm::ws::parse( qobject_cast<QNetworkReply*>(sender()) );
+        lastfm::XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
 
         foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
         {
             QString artistName = artist["name"].text();
-            PlayableItemWidget* item = new PlayableItemWidget( RadioStation::similar( lastfm::Artist( artistName ) ), tr( "%1 Similar Radio" ).arg( artistName ) );
+            int playCount = artist["playcount"].text().toInt();
+
+            PlayableItemWidget* item = new PlayableItemWidget( RadioStation::similar( lastfm::Artist( artistName ) ), tr( "%1 Similar Radio" ).arg( artistName ), tr( "(%L1 plays)" ).arg( playCount ) );
             item->setObjectName( "station" );
             layout->addWidget( item );
         }
@@ -123,12 +142,14 @@ ProfileWidget::onGotTopOverallArtists()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        lastfm::XmlQuery lfm = lastfm::ws::parse( qobject_cast<QNetworkReply*>(sender()) );
+        lastfm::XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
 
         foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
         {
             QString artistName = artist["name"].text();
-            PlayableItemWidget* item = new PlayableItemWidget( RadioStation::similar( lastfm::Artist( artistName ) ), tr( "%1 Similar Radio" ).arg( artistName ) );
+            int playCount = artist["playcount"].text().toInt();
+
+            PlayableItemWidget* item = new PlayableItemWidget( RadioStation::similar( lastfm::Artist( artistName ) ), tr( "%1 Similar Radio" ).arg( artistName ), tr( "(%L1 plays)" ).arg( playCount ) );
             item->setObjectName( "station" );
             layout->addWidget( item );
         }
@@ -139,3 +160,25 @@ ProfileWidget::onGotTopOverallArtists()
     }
 }
 
+void
+ProfileWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
+{
+    foreach ( lastfm::Track track, tracks )
+        connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
+}
+
+void
+ProfileWidget::onScrobbleStatusChanged()
+{
+    if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
+    {
+        ++m_scrobbleCount;
+        setScrobbleCount();
+    }
+}
+
+void
+ProfileWidget::setScrobbleCount()
+{
+    ui.scrobbleCount->setText( QString( "%L1" ).arg( m_scrobbleCount ) );
+}

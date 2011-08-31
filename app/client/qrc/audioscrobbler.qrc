@@ -1,6 +1,22 @@
 <RCC>
     <qresource prefix="/" >
+		<file>start_bg.png</file>
+	
 		<file>noArt.png</file>
+		
+		<file>scrobbles_buy_HOVER.png</file>
+		<file>scrobbles_buy_PRESS.png</file>
+		<file>scrobbles_buy_REST.png</file>
+		<file>scrobbles_love_OFF_HOVER.png</file>
+		<file>scrobbles_love_OFF_PRESS.png</file>
+		<file>scrobbles_love_OFF_REST.png</file>
+		<file>scrobbles_refresh.png</file>
+		<file>scrobbles_share_HOVER.png</file>
+		<file>scrobbles_share_PRESS.png</file>
+		<file>scrobbles_share_REST.png</file>
+		<file>scrobbles_tag_HOVER.png</file>
+		<file>scrobbles_tag_PRESS.png</file>
+		<file>scrobbles_tag_REST.png</file>
 		
 		<file>tab_now_playing_REST.png</file>
 		<file>tab_now_playing_HOVER.png</file>
@@ -82,14 +98,49 @@
 		<file>controls_skip_REST.png</file>
 		<file>controls_skip_HOVER.png</file>
 		<file>controls_skip_PRESS.png</file>
+
+        <file>meta_buy_HOVER.png</file>
+        <file>meta_buy_PRESS.png</file>
+        <file>meta_buy_REST.png</file>
+
+        <file>meta_love_OFF_HOVER.png</file>
+        <file>meta_love_OFF_PRESS.png</file>
+        <file>meta_love_OFF_REST.png</file>
+
+        <file>meta_love_ON_HOVER.png</file>
+        <file>meta_love_ON_PRESS.png</file>
+        <file>meta_love_ON_REST.png</file>
+
+        <file>meta_share_HOVER.png</file>
+        <file>meta_share_PRESS.png</file>
+        <file>meta_share_REST.png</file>
+
+        <file>meta_tag_HOVER.png</file>
+        <file>meta_tag_PRESS.png</file>
+        <file>meta_tag_REST.png</file>
+
+		<file>meta_tag_LEFT_HOVER.png</file>
+		<file>meta_tag_LEFT_REST.png</file>
+		<file>meta_tag_MIDDLE_HOVER.png</file>
+		<file>meta_tag_MIDDLE_REST.png</file>
+		<file>meta_tag_RIGHT_HOVER.png</file>
+		<file>meta_tag_RIGHT_REST.png</file>
 		
+		<file>meta_radio_LEFT_HOVER.png</file>
+		<file>meta_radio_LEFT_PRESS.png</file>
+		<file>meta_radio_LEFT_REST.png</file>
+		<file>meta_radio_MIDDLE_HOVER.png</file>
+		<file>meta_radio_MIDDLE_PRESS.png</file>
+		<file>meta_radio_MIDDLE_REST.png</file>
+		<file>meta_radio_RIGHT_HOVER.png</file>
+		<file>meta_radio_RIGHT_PRESS.png</file>
+		<file>meta_radio_RIGHT_REST.png</file>
+
         <file>16x16.png</file>
         <file>22x22.png</file>
         <file>22x22_transparent.png</file>
         <file>systray_icon_rest_mac.png</file>
         <file>systray_icon_pressed_mac.png</file>
-        <file>scrobbler_as.mng</file>
-        <file>scrobbler_as_paused.png</file>
 
         <file alias="tag-rest.png">tag_29x29_rest.png</file>
         <file alias="tag-onhover.png">tag_29x29_hover.png</file>
@@ -109,17 +160,23 @@
         <file>highlight.png</file>
         <file>titlebar_highlight.png</file>
         <file>slider_nubbin.png</file>
+
+		<file>settings_HOVER.png</file>
+		<file>settings_PRESS.png</file>
+		<file>settings_REST.png</file>
 		
-		<file alias="vol-handle-rest.png" >volume_knob_rest.png</file>
-		<file alias="vol-handle-onpress.png" >volume_knob_active.png</file>
-		<file alias="vol-rail.png" >volume_slot_off.png</file>
+		<file>scrobble_OFF_HOVER.png</file>
+		<file>scrobble_OFF_PRESS.png</file>
+		<file>scrobble_OFF_REST.png</file>
+		<file>scrobble_ON_HOVER.png</file>
+		<file>scrobble_ON_PRESS.png</file>
+		<file>scrobble_ON_REST.png</file>
 		
-		
-		<file alias="volume-icon.png" >volume-icon.png</file>
-		<file alias="volume-mute.png" >volume_mute.png</file>
-		<file alias="volume-low.png" >volume_low.png</file>
-		<file alias="volume-med.png" >volume_med.png</file>
-		<file alias="volume-high.png" >volume_high.png</file>
+		<file>volume_knob_REST.png</file>
+		<file>volume_knob_PRESS.png</file>
+		<file>volume_slot_OFF.png</file>
+		<file>volume_max.png</file>
+		<file>volume_min.png</file>
 		
 		<file alias="on-tour.png" >on_tour.png</file>
 		
