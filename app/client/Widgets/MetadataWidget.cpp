@@ -113,9 +113,7 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
     connect( m_track.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
 
-    QString country = aApp->currentSession()->userInfo().country();
-    qDebug() << "Country: " << country;
-    connect( m_track.getBuyLinks( country ), SIGNAL(finished()), SLOT(onTrackGotBuyLinks()) );
+    connect( m_track.getBuyLinks( aApp->currentSession()->userInfo().country() ), SIGNAL(finished()), SLOT(onTrackGotBuyLinks()) );
 }
 
 MetadataWidget::~MetadataWidget()
@@ -372,9 +370,36 @@ MetadataWidget::onTrackGotBuyLinks()
 
         QMenu* menu = new QMenu( this );
 
+        menu->addAction( tr("Physical") )->setEnabled( false );
+
         foreach ( const XmlQuery& affiliation, lfm["affiliations"]["physicals"].children( "affiliation" ) )
         {
-            QAction* buyAction = menu->addAction( affiliation["supplierName"].text() );
+            bool isSearch = affiliation["isSearch"].text() == "1";
+
+            QAction* buyAction = 0;
+
+            if ( isSearch )
+                buyAction = menu->addAction( tr("Search on %1").arg( affiliation["supplierName"].text() ) );
+            else
+                buyAction = menu->addAction( tr("Buy on %1 %2 %3").arg( affiliation["supplierName"].text(), affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) );
+
+            buyAction->setData( affiliation["buyLink"].text() );
+        }
+
+        menu->addSeparator();
+        menu->addAction( tr("Downloads") )->setEnabled( false );
+
+        foreach ( const XmlQuery& affiliation, lfm["affiliations"]["downloads"].children( "affiliation" ) )
+        {
+            bool isSearch = affiliation["isSearch"].text() == "1";
+
+            QAction* buyAction = 0;
+
+            if ( isSearch )
+                buyAction = menu->addAction( tr("Search on %1").arg( affiliation["supplierName"].text() ) );
+            else
+                buyAction = menu->addAction( tr("Buy on %1 %2 %3").arg( affiliation["supplierName"].text(), affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) );
+
             buyAction->setData( affiliation["buyLink"].text() );
         }
 
