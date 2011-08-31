@@ -40,6 +40,7 @@ private:
         class QSlider* scrobblePoint;
         class QCheckBox* allowFingerprint;
         class QCheckBox* launchItunes;
+        class QCheckBox* scrobbleSpotify;
         class QLabel* percentText;
         class QFrame* line;
     } ui;

@@ -212,7 +212,16 @@ ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
         if ( m_scrobblingOn )
         {
             qDebug() << "************** Now Playing..";
-            m_as->nowPlaying( t );
+
+            if ( t.extra( "playerId" ) == "spt" )
+            {
+                if ( unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool() )
+                    m_as->nowPlaying( t );
+            }
+            else
+                m_as->nowPlaying( t );
+
+
         }
     }
 
@@ -280,16 +289,26 @@ ScrobbleService::onScrobble()
     Q_ASSERT(m_connection);
 
     if( m_as && m_scrobblingOn )
-        m_as->cache( m_trackToScrobble );
+    {
+        if ( m_trackToScrobble.extra( "playerId" ) == "spt" )
+        {
+            if ( unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool() )
+                m_as->cache( m_trackToScrobble );
+        }
+        else
+            m_as->cache( m_trackToScrobble );
+    }
 }
 
 void 
-ScrobbleService::handleIPodDetectedMessage( const QStringList& message ) {
+ScrobbleService::handleIPodDetectedMessage( const QStringList& message )
+{
     m_deviceScrobbler->iPodDetected( message );
 }
 
 void 
-ScrobbleService::handleTwiddlyMessage( const QStringList& message ) {
+ScrobbleService::handleTwiddlyMessage( const QStringList& message )
+{
     m_deviceScrobbler->handleMessage( message );
 }
 

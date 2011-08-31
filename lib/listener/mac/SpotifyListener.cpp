@@ -58,42 +58,55 @@ SpotifyListener::SpotifyListener( QObject* parent )
 void
 SpotifyListener::loop()
 {
-    QString playerState = AppleScript( "tell application \"Spotify\" to if running then return player state" ).exec();
+    static AppleScript playerStateScript( "tell application \"Spotify\" to if running then return player state" );
+    QString playerState = playerStateScript.exec();
 
     if ( !playerState.isEmpty() )
     {
         if ( !m_connection )
             emit newConnection( m_connection = new SpotifyConnection );
 
+        static AppleScript titleScript( "tell application \"Spotify\" to return name of current track" );
+        static AppleScript albumScript( "tell application \"Spotify\" to return album of current track" );
+        static AppleScript artistScript( "tell application \"Spotify\" to return artist of current track" );
+        static AppleScript durationScript( "tell application \"Spotify\" to return duration of current track" );
+
         if ( playerState == "playing" )
         {
             lastfm::MutableTrack t;
-            t.setTitle( AppleScript( "tell application \"Spotify\" to return name of current track" ).exec() );
-            t.setAlbum( AppleScript( "tell application \"Spotify\" to return album of current track" ).exec() );
-            t.setArtist( AppleScript( "tell application \"Spotify\" to return artist of current track" ).exec() );
-            t.setDuration( AppleScript( "tell application \"Spotify\" to return duration of current track" ).exec().toInt() );
+            t.setTitle( titleScript.exec() );
+            t.setAlbum( albumScript.exec() );
+            t.setArtist( artistScript.exec() );
+            t.setDuration( durationScript.exec().toInt() );
 
             if ( t != m_lastTrack )
                 m_connection->start( t );
+
+            m_lastTrack = t;
         }
         else if ( m_lastPlayerState != playerState )
         {
             if ( playerState == "stopped" )
+            {
                 m_connection->stop();
+                m_lastTrack = Track();
+            }
             else if ( playerState == "paused" )
                 m_connection->pause();
             else if ( playerState == "playing" )
             {
                 lastfm::MutableTrack t;
-                t.setTitle( AppleScript( "tell application \"Spotify\" to return name of current track" ).exec() );
-                t.setAlbum( AppleScript( "tell application \"Spotify\" to return album of current track" ).exec() );
-                t.setArtist( AppleScript( "tell application \"Spotify\" to return artist of current track" ).exec() );
-                t.setDuration( AppleScript( "tell application \"Spotify\" to return duration of current track" ).exec().toInt() );
+                t.setTitle( titleScript.exec() );
+                t.setAlbum( albumScript.exec() );
+                t.setArtist( artistScript.exec() );
+                t.setDuration( durationScript.exec().toInt() );
 
                 if ( m_lastPlayerState == "paused" && t == m_lastTrack )
                     m_connection->resume();
                 else
                     m_connection->start( t );
+
+                m_lastTrack = t;
             }
         }
     }
