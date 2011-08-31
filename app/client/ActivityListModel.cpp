@@ -140,7 +140,7 @@ ActivityListModel::onTrackStarted( const Track& track, const Track& )
     m_nowScrobblingTrack = track;
     m_nowScrobblingTrack.getInfo();
     m_nowScrobblingTrack.fetchImage();
-    m_paused = true;
+    m_paused = false;
 
     reset();
 }
