@@ -23,7 +23,7 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     setAttribute( Qt::WA_MacShowFocusRect, false );
     viewport()->setAttribute( Qt::WA_Hover, true );
     viewport()->setMouseTracking( true );
-    setSelectionBehavior( SelectItems );
+    setSelectionMode( NoSelection );
     header()->setResizeMode( 0, QHeaderView::Stretch );
 
     for ( int i = 1; i < m_model->columnCount(); i++ )
@@ -33,7 +33,6 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     setHeaderHidden( true );
     setRootIsDecorated( false );
     setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
-
 
     connect( this, SIGNAL( clicked(QModelIndex) ), SLOT(onItemClicked(QModelIndex)));
 
