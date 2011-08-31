@@ -140,6 +140,11 @@ ActivityListModel::onTrackStarted( const Track& track, const Track& )
     m_nowScrobblingTrack = track;
     m_nowScrobblingTrack.getInfo();
     m_nowScrobblingTrack.fetchImage();
+
+    connect( &m_nowScrobblingTrack, SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
+    connect( m_nowScrobblingTrack.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
+    connect( m_nowScrobblingTrack.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
+
     m_paused = false;
 
     reset();
@@ -203,6 +208,10 @@ ActivityListModel::onGotRecentTracks()
 
                 m_nowPlayingTrack = track;
                 m_nowPlayingTrack.fetchImage();
+                connect( &m_nowPlayingTrack, SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
+                connect( m_nowPlayingTrack.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
+                connect( m_nowPlayingTrack.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
+
             }
             else
             {

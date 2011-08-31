@@ -46,7 +46,7 @@ PlayerMediator::follow( PlayerConnection* connection )
 void
 PlayerMediator::onActivity()
 {
-    PlayerConnection* connection = (PlayerConnection*)sender();
+    PlayerConnection* connection = qobject_cast<PlayerConnection*>(sender());
 
     if (m_active == connection)
     {
@@ -70,9 +70,10 @@ PlayerMediator::assess( PlayerConnection* connection )
     if (!m_active)
         goto set_active;
     
-    if (m_active->state() == Stopped || m_active->state() == Paused)
+    if ( m_active->state() == Stopped || m_active->state() == Paused
+         || connection->id() == "ass" ) // the radio connection steals from all other sources
     {
-        switch (connection->state())
+        switch ( connection->state() )
         {
             case Playing:
                 goto set_active;
@@ -91,9 +92,12 @@ PlayerMediator::assess( PlayerConnection* connection )
     return false;
     
 set_active:
-    if (!connection) return false;
+    if (!connection)
+        return false;
+
     m_active = connection;
     emit activeConnectionChanged( connection );
+
     return true;
 }
 
