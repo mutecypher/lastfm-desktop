@@ -614,6 +614,7 @@ ScrobbleControls QPushButton#tag:hover { background-image: url(":/meta_tag_HOVER
 ScrobbleControls QPushButton#tag:pressed { background-image: url(":/meta_tag_PRESS.png"); }
 
 ScrobbleControls QPushButton#share { background-image: url(":/meta_share_REST.png"); }
+ScrobbleControls QPushButton#share:menu-indicator { background: transparent; }
 ScrobbleControls QPushButton#share:hover { background-image: url(":/meta_share_HOVER.png"); }
 ScrobbleControls QPushButton#share:pressed { background-image: url(":/meta_share_PRESS.png"); }
 
