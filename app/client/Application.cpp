@@ -422,7 +422,7 @@ Application::onTagTriggered()
 void 
 Application::onShareTriggered()
 {
-    ShareDialog* sd = new ShareDialog( m_currentTrack, m_mw );
+    ShareDialog* sd = new ShareDialog( m_currentTrack, ShareDialog::ShareLastFm, m_mw );
     sd->raise();
     sd->show();
     sd->activateWindow();

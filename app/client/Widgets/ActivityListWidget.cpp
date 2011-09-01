@@ -23,7 +23,7 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     setAttribute( Qt::WA_MacShowFocusRect, false );
     viewport()->setAttribute( Qt::WA_Hover, true );
     viewport()->setMouseTracking( true );
-    setSelectionBehavior( SelectItems );
+    setSelectionMode( NoSelection );
     header()->setResizeMode( 0, QHeaderView::Stretch );
 
     for ( int i = 1; i < m_model->columnCount(); i++ )
@@ -33,7 +33,6 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     setHeaderHidden( true );
     setRootIsDecorated( false );
     setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
-
 
     connect( this, SIGNAL( clicked(QModelIndex) ), SLOT(onItemClicked(QModelIndex)));
 
@@ -47,14 +46,14 @@ ActivityListWidget::onItemClicked( const QModelIndex& index )
 {
     if( index.column() == 2 && index.data( ActivityListModel::HoverStateRole ).toBool() )
     {
-        TagDialog* td = new TagDialog( index.data(ActivityListModel::TrackRole).value<Track>(), window() ); 
+        TagDialog* td = new TagDialog( index.data(ActivityListModel::TrackRole).value<Track>(), window() );
         td->raise(); 
         td->show(); 
         td->activateWindow();
     }
     else if( index.column() == 3 && index.data( ActivityListModel::HoverStateRole ).toBool() )
     {
-        ShareDialog* td = new ShareDialog( index.data(ActivityListModel::TrackRole).value<Track>(), window() ); 
+        ShareDialog* td = new ShareDialog( index.data(ActivityListModel::TrackRole).value<Track>(), ShareDialog::ShareLastFm, window() );
         td->raise(); 
         td->show(); 
         td->activateWindow(); 

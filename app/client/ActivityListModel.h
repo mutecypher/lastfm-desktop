@@ -30,10 +30,10 @@ public:
 
     ActivityListModel();
 
-    virtual QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex()) const { return createIndex( row, column ); }
-    virtual QModelIndex parent( const QModelIndex& index ) const { return QModelIndex(); }
-    virtual int rowCount( const QModelIndex& parent = QModelIndex()) const { return parent.isValid() ? 0 : m_tracks.length(); }
-    virtual int columnCount( const QModelIndex& parent = QModelIndex()) const { return parent.isValid() ? 0 : 5; }
+    virtual QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    virtual QModelIndex parent( const QModelIndex& index ) const;
+    virtual int rowCount( const QModelIndex& parent = QModelIndex()) const;
+    virtual int columnCount( const QModelIndex& parent = QModelIndex()) const;
     virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
     virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
     virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
@@ -53,11 +53,22 @@ public slots:
 private slots:
     void write() const;
 
+    void onTrackStarted( const Track&, const Track& );
+    void onResumed();
+    void onPaused();
+    void onStopped();
+
 private:
     void read();
     void limit( int limit );
 
+    QModelIndex adjustedIndex( const QModelIndex& a_index ) const;
+    const ImageTrack& indexedTrack( const QModelIndex& index, const QModelIndex& adjustedIndex ) const;
+
 private:
+    ImageTrack m_nowPlayingTrack;
+    ImageTrack m_nowScrobblingTrack;
+    bool m_paused;
     QList<ImageTrack> m_tracks;
     QString m_path;
     QIcon m_loveIcon;

@@ -1,10 +1,13 @@
-#include "BioWidget.h"
-#include "../../../lib/unicorn/widgets/BannerWidget.h"
-#include "../../../lib/unicorn/widgets/HttpImageWidget.h"
 
 #include <QEventLoop>
 #include <QApplication>
 #include <QToolTip>
+
+#include "lib/unicorn/widgets/BannerWidget.h"
+#include "lib/unicorn/widgets/HttpImageWidget.h"
+
+#include "WidgetTextObject.h"
+#include "BioWidget.h"
 
 BioWidget::BioWidget( QWidget* p ) 
           : QTextBrowser( p ), 
@@ -36,7 +39,8 @@ BioWidget::BioWidget( QWidget* p )
 void
 BioWidget::onHighlighted( const QString& url )
 {
-    QToolTip::showText( cursor().pos(), url, this, QRect() );
+    QUrl displayUrl( url );
+    QToolTip::showText( cursor().pos(), displayUrl.toString(), this, QRect() );
 }
 
 void 

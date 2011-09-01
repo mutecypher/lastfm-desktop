@@ -1,6 +1,6 @@
 /*
-   Copyright 2010 Last.fm Ltd.
-      - Primarily authored by Jono Cole, Michael Coffey, and William Viana
+   Copyright 2005-2009 Last.fm Ltd.
+      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -17,39 +17,30 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef SPOTIFY_LISTENER_H
+#define SPOTIFY_LISTENER_H
 
-#ifndef SCROBBLE_SETTINGS_WIDGET_H
-#define SCROBBLE_SETTINGS_WIDGET_H
+#include <QObject>
+#include <QPointer>
 
-#include "SettingsWidget.h"
+#include <lastfm/Track>
 
-
-class ScrobbleSettingsWidget: public SettingsWidget
+class SpotifyListener : public QObject
 {
     Q_OBJECT
-
 public:
-    ScrobbleSettingsWidget( QWidget* parent = 0 );
+    SpotifyListener( QObject* parent );
 
-public slots:
-    virtual void saveSettings();
-
-private:
-    struct Ui
-    {
-        class QSlider* scrobblePoint;
-        class QCheckBox* allowFingerprint;
-        class QCheckBox* launchItunes;
-        class QCheckBox* scrobbleSpotify;
-        class QLabel* percentText;
-        class QFrame* line;
-    } ui;
-
-private:
-    void setupUi();
+signals:
+    void newConnection( class PlayerConnection* );
 
 private slots:
-    void onSliderMoved( int value );
+    void loop();
+
+private:
+    QString m_lastPlayerState;
+    lastfm::Track m_lastTrack;
+    QPointer<class SpotifyConnection> m_connection;
 };
 
 #endif

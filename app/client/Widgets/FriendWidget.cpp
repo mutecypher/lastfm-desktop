@@ -24,7 +24,9 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent)
     layout->addWidget( ui.avatar = new AvatarWidget( this ) );
     ui.avatar->setObjectName( "avatar" );
 
-    ui.avatar->loadUrl( user["image size=medium"].text(), false );
+    QRegExp re( "/serve/(\\d*)s?/" );
+
+    ui.avatar->loadUrl( user["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
     ui.avatar->setHref( user["url"].text() );
 
     QVBoxLayout* vl = new QVBoxLayout();

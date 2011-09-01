@@ -1,6 +1,8 @@
 
 #include <QShortcut>
 
+#include "lib/unicorn/UnicornSettings.h"
+
 #include "../Application.h"
 #include "../Services/RadioService.h"
 #include "../Services/ScrobbleService.h"
@@ -271,7 +273,12 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
             ui->controls->hide();
 
             // Not a radio track so hide the playback controls!
-            ui->status->setText( tr("Scrobbling from...") );
+
+            if ( track.extra( "playerId" ) == "spt" && !unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool() )
+                ui->status->setText( tr("Listening to...") );
+            else
+                ui->status->setText( tr("Scrobbling from...") );
+
             ui->device->setText( track.extra( "playerName" ) );
 
             connect( &ScrobbleService::instance(), SIGNAL(frameChanged(int)), ui->progressBar, SLOT(onFrameChanged(int)) );
@@ -288,6 +295,8 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
             ui->icon->setPixmap( QPixmap( ":/control_bar_scrobble_winamp.png" ) );
         else if (id == "wmp")
             ui->icon->setPixmap( QPixmap( ":/control_bar_scrobble_wmp.png" ) );
+        else if (id == "spt")
+            ui->icon->setPixmap( QPixmap( ":/control_bar_scrobble_spotify.png" ) );
         else if (id == "ass")
             setIconForRadio( RadioService::instance().station() );
     }

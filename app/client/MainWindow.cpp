@@ -85,6 +85,8 @@ MainWindow::MainWindow()
     ui.stackedWidget->addWidget( ui.recentTracks = new RecentTracksWidget( this ) );
     ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
+    connect( ui.stackedWidget, SIGNAL(currentChanged(int)), ui.recentTracks, SLOT(onCurrentChanged(int)) );
+
     ui.stackedWidget->addWidget( ui.profileScrollArea = new QScrollArea( this ) );
     ui.profileScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     ui.profileScrollArea->setWidget( ui.profile = new ProfileWidget(this) );

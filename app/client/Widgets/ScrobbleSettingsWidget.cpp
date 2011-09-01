@@ -41,6 +41,7 @@ ScrobbleSettingsWidget::ScrobbleSettingsWidget( QWidget* parent )
 
 #if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     connect( ui.launchItunes, SIGNAL( stateChanged( int ) ), this, SLOT( onSettingsChanged() ) );
+    connect( ui.scrobbleSpotify, SIGNAL( stateChanged( int ) ), this, SLOT( onSettingsChanged() ) );
 #endif
 
 }
@@ -76,6 +77,10 @@ ScrobbleSettingsWidget::setupUi()
 #if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     vg->addWidget( ui.launchItunes = new QCheckBox( tr( "Launch iTunes" ), this ) );
     ui.launchItunes->setChecked( unicorn::AppSettings().value( "launchItunes", true ).toBool() );
+
+    vg->addWidget( ui.scrobbleSpotify = new QCheckBox( tr( "Scrobble Spotify" ), this ) );
+    ui.scrobbleSpotify->setToolTip( tr( "Only scrobble Spotify from one place!" ) );
+    ui.scrobbleSpotify->setChecked( unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool() );
 #endif
 
     v->addWidget( new QLabel( tr( "Configure Scrobbler Settings" ), this ) );
@@ -102,6 +107,7 @@ ScrobbleSettingsWidget::saveSettings()
         unicorn::UserSettings().setValue( "allowFingerprint", ui.allowFingerprint->isChecked() );
 #if defined(Q_OS_MAC) || defined(Q_OS_WIN)
         unicorn::AppSettings().setValue( "launchItunes", ui.launchItunes->isChecked() );
+        unicorn::AppSettings().setValue( "scrobbleSpotify", ui.scrobbleSpotify->isChecked() );
 #endif
         onSettingsSaved();
     }

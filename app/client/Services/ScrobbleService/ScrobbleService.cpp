@@ -31,6 +31,7 @@
 #include "../RadioService/RadioConnection.h"
 #include "StopWatch.h"
 #ifdef Q_WS_MAC
+#include "lib/listener/mac/SpotifyListener.h"
 #include "lib/listener/mac/ITunesListener.h"
 #endif
 
@@ -47,6 +48,9 @@ ScrobbleService::ScrobbleService()
         ITunesListener* itunes = new ITunesListener(m_mediator);
         connect(itunes, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
         itunes->start();
+
+        SpotifyListener* spotify = new SpotifyListener(m_mediator);
+        connect(spotify, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
 #endif
 
         QObject* o = new PlayerListener(m_mediator);
@@ -208,7 +212,16 @@ ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
         if ( m_scrobblingOn )
         {
             qDebug() << "************** Now Playing..";
-            m_as->nowPlaying( t );
+
+            if ( t.extra( "playerId" ) == "spt" )
+            {
+                if ( unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool() )
+                    m_as->nowPlaying( t );
+            }
+            else
+                m_as->nowPlaying( t );
+
+
         }
     }
 
@@ -276,16 +289,26 @@ ScrobbleService::onScrobble()
     Q_ASSERT(m_connection);
 
     if( m_as && m_scrobblingOn )
-        m_as->cache( m_trackToScrobble );
+    {
+        if ( m_trackToScrobble.extra( "playerId" ) == "spt" )
+        {
+            if ( unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool() )
+                m_as->cache( m_trackToScrobble );
+        }
+        else
+            m_as->cache( m_trackToScrobble );
+    }
 }
 
 void 
-ScrobbleService::handleIPodDetectedMessage( const QStringList& message ) {
+ScrobbleService::handleIPodDetectedMessage( const QStringList& message )
+{
     m_deviceScrobbler->iPodDetected( message );
 }
 
 void 
-ScrobbleService::handleTwiddlyMessage( const QStringList& message ) {
+ScrobbleService::handleTwiddlyMessage( const QStringList& message )
+{
     m_deviceScrobbler->handleMessage( message );
 }
 

@@ -2,8 +2,8 @@ TEMPLATE = subdirs
 CONFIG += ordered
 SUBDIRS = lib/unicorn \
           lib/listener \
-          app/client \
-          app/twiddly
+          app/client
+          #app/twiddly
           #app/boffin
 
 #mac:SUBDIRS += app/mac-bundle

@@ -21,6 +21,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QShortcut>
 
 #include <types/User.h>
 
@@ -66,8 +67,32 @@ SideBar::SideBar(QWidget *parent)
     connect( ui.profile, SIGNAL(clicked()), SLOT(onButtonClicked()));
     connect( ui.friends, SIGNAL(clicked()), SLOT(onButtonClicked()));
     connect( ui.radio, SIGNAL(clicked()), SLOT(onButtonClicked()));
+
+    //const QKeySequence & key, QWidget * parent, const char * member = 0, const char * ambiguousMember = 0, Qt::ShortcutContext context = Qt::WindowShortcut
+    new QShortcut( Qt::CTRL + Qt::Key_BracketLeft, this, SLOT(onUp()));
+    new QShortcut( Qt::CTRL + Qt::Key_BracketRight, this, SLOT(onDown()));
 }
 
+
+void
+SideBar::onUp()
+{
+    if ( ui.nowPlaying->isChecked() ) ui.radio->click();
+    else if ( ui.scrobbles->isChecked() ) ui.nowPlaying->click();
+    else if ( ui.profile->isChecked() ) ui.scrobbles->click();
+    else if ( ui.friends->isChecked() ) ui.profile->click();
+    else if ( ui.radio->isChecked() ) ui.friends->click();
+}
+
+void
+SideBar::onDown()
+{
+    if ( ui.nowPlaying->isChecked() ) ui.scrobbles->click();
+    else if ( ui.scrobbles->isChecked() ) ui.profile->click();
+    else if ( ui.profile->isChecked() ) ui.friends->click();
+    else if ( ui.friends->isChecked() ) ui.radio->click();
+    else if ( ui.radio->isChecked() ) ui.nowPlaying->click();
+}
 
 void
 SideBar::click( int index )

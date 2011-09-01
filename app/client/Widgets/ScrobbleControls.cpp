@@ -23,6 +23,7 @@
 #include <QToolButton>
 #include <QAction>
 #include <QShortcut>
+#include <QMenu>
 
 #include "lib/unicorn/dialogs/ShareDialog.h"
 #include "lib/unicorn/dialogs/TagDialog.h"
@@ -56,6 +57,13 @@ ScrobbleControls::ScrobbleControls( QWidget* parent )
     ui.share->setToolTip( tr( "Share" ) );
     ui.share->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
+    QMenu* shareMenu = new QMenu( this );
+    shareMenu->addAction( tr( "Share on Last.fm" ), this, SLOT(onShareLastFm()) );
+    shareMenu->addAction( tr( "Share on Twitter" ), this, SLOT(onShareTwitter()) );
+    shareMenu->addAction( tr( "Share on Facebook" ), this, SLOT(onShareFacebook()) );
+
+    ui.share->setMenu( shareMenu );
+
     layout->addWidget(ui.buy = new QPushButton(tr("buy")), 0, Qt::AlignCenter);
     ui.buy->setObjectName("buy");
     ui.buy->setToolTip( tr( "Buy" ) );
@@ -69,7 +77,7 @@ ScrobbleControls::ScrobbleControls( QWidget* parent )
     new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_B ), ui.buy, SLOT( click() ) );
 
     connect( ui.tag, SIGNAL( clicked()), SLOT( onTag()));
-    connect( ui.share, SIGNAL( clicked()), SLOT( onShare()));
+    //connect( ui.share, SIGNAL( clicked()), SLOT( onShare()));
 }
 
 
@@ -115,9 +123,27 @@ ScrobbleControls::onLoveChanged( bool checked )
 }
 
 void 
-ScrobbleControls::onShare()
+ScrobbleControls::onShareLastFm()
 {
-    ShareDialog* sd = new ShareDialog( m_track, window() );
+    ShareDialog* sd = new ShareDialog( m_track, ShareDialog::ShareLastFm, window() );
+    sd->raise();
+    sd->show();
+    sd->activateWindow();
+}
+
+void
+ScrobbleControls::onShareTwitter()
+{
+    ShareDialog* sd = new ShareDialog( m_track, ShareDialog::ShareTwitter, window() );
+    sd->raise();
+    sd->show();
+    sd->activateWindow();
+}
+
+void
+ScrobbleControls::onShareFacebook()
+{
+    ShareDialog* sd = new ShareDialog( m_track, ShareDialog::ShareFacebook, window() );
     sd->raise();
     sd->show();
     sd->activateWindow();

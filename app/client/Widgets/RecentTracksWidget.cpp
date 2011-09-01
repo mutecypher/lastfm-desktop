@@ -20,6 +20,15 @@ RecentTracksWidget::RecentTracksWidget( QWidget* parent )
     connect( m_layout, SIGNAL( moveFinished(QLayoutItem*)), SLOT(onMoveFinished(QLayoutItem*)));
 }
 
+void
+RecentTracksWidget::onCurrentChanged( int index )
+{
+    if ( index == 1 )
+    {
+        // this tab was clicked on
+        m_scrobbles->refresh();
+    }
+}
 
 void
 RecentTracksWidget::onTrackClicked( const Track& track )

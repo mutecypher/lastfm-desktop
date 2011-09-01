@@ -20,6 +20,8 @@
 
 #include "ProgressBar.h"
 
+#include "lib/unicorn/UnicornSettings.h"
+
 #include "../Services/RadioService.h"
 #include "../Services/ScrobbleService.h"
 #include "../Services/ScrobbleService/StopWatch.h"
@@ -104,7 +106,10 @@ ProgressBar::paintEvent( QPaintEvent* e )
         else
             p.drawText( rect().adjusted( 6, 0, 0, 0 ), QString( "%1" ).arg( progress.toString( format ) ), timeTextOption );
 
-        if ( ScrobbleService::instance().scrobblingOn() || m_track.scrobbleStatus() != Track::Null )
+        bool spotifyTrackNotScrobbling = m_track.extra( "playerId" ) == "spt" && !unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool();
+
+        if ( m_track.extra( "playerId" ) != "spt" || !spotifyTrackNotScrobbling
+             && ScrobbleService::instance().scrobblingOn() || m_track.scrobbleStatus() != Track::Null )
         {
             if ( !ScrobbleService::instance().scrobblingOn() && m_track.scrobbleStatus() != Track::Null )
             {
@@ -134,7 +139,7 @@ ProgressBar::paintEvent( QPaintEvent* e )
         {
             QTextOption textOption;
             textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
-            p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr( "Not scrobbling" ), textOption );
+            p.drawText( rect().adjusted( 0, 0, -6, 0 ), spotifyTrackNotScrobbling ? tr("Make sure scrobbling is turned on in either Last.fm or Spotify's preferences!") : tr( "Not scrobbling" ), textOption );
         }
     }
 }
