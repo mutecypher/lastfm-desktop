@@ -21,9 +21,9 @@
 #define SEARCH_BOX_H
 
 #include <QLineEdit>
-#include <lastfm/global.h>
+#include <global.h>
 #include "lib/DllExportMacro.h"
-#include <lastfm/User>
+#include <types/User.h>
 
 class QNetworkReply;
 class QCompleter;

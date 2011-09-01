@@ -33,8 +33,8 @@
 #include <QCheckBox>
 #include <QDesktopWidget>
 
-#include <lastfm/User>
-#include <lastfm/XmlQuery>
+#include <types/User.h>
+#include <core/XmlQuery.h>
 
 #include "lib/unicorn/widgets/TrackWidget.h"
 

@@ -3,7 +3,7 @@
 #include "ScrobblesWidget.h"
 #include "MetadataWidget.h"
 #include "lib/unicorn/layouts/SideBySideLayout.h"
-#include <lastfm/Track>
+#include <types/Track.h>
 #include <QDebug>
 
 #include "RecentTracksWidget.h"

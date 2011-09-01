@@ -18,7 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "UpdateDialog.h"
-#include <lastfm/misc.h>
+#include <core/misc.h>
 #include <QCoreApplication>
 #include <QDesktopServices>
 #include <QTemporaryFile>

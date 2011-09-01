@@ -21,7 +21,7 @@
 #include <QThread>
 #include <QTimer>
 #include <cmath>
-#include <lastfm/RadioTuner>
+#include <radio/RadioTuner.h>
 #include <phonon/mediaobject.h>
 #include <phonon/backendcapabilities.h>
 

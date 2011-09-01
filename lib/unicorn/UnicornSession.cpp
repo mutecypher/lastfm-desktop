@@ -1,7 +1,7 @@
 #include "UnicornSession.h"
 #include "UnicornSettings.h"
 
-#include <lastfm/User>
+#include <types/User.h>
 
 #include <QApplication>
 #include <QDebug>

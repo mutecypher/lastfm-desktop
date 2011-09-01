@@ -25,7 +25,7 @@
 #define ITUNES_DEVICE_H
 
 #include "MediaDeviceInterface.h"
-#include <lastfm/Track>
+#include <types/Track.h>
 
 /** 
   * @brief The ITunesDevice class parses the iTunes Music Library.xml file

@@ -7,8 +7,8 @@
 #include <QIcon>
 #include <QDebug>
 
-#include <lastfm/ws.h>
-#include <lastfm/Track>
+#include <ws/ws.h>
+#include <types/Track.h>
 
 #include "ImageTrack.h"
 

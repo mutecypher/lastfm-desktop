@@ -2,7 +2,7 @@
 #define USER_MENU_H_
 
 #include <QMenu>
-#include <lastfm/User>
+#include <types/User.h>
 #include "lib/DllExportMacro.h"
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/UnicornSettings.h"

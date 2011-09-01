@@ -33,9 +33,9 @@
 #include <QTextFrame>
 #include <QScrollBar>
 
-#include <lastfm/XmlQuery>
-#include <lastfm/ws.h>
-#include <lastfm/User>
+#include <core/XmlQuery.h>
+#include <ws/ws.h>
+#include <types/User.h>
 
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"

@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QImage>
 
-#include <lastfm/Track>
+#include <types/Track.h>
 
 class ImageTrack : public QObject, public lastfm::Track
 {

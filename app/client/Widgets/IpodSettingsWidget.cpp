@@ -26,7 +26,7 @@
 
 #include "lib/unicorn/UnicornSettings.h"
 
-#include <lastfm/User>
+#include <types/User.h>
 
 #include <QCheckBox>
 #include <QDebug>

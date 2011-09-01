@@ -1,6 +1,6 @@
 #include "UpdateInfoFetcher.h"
-#include <lastfm/ws.h>
-#include <lastfm/XmlQuery>
+#include <ws/ws.h>
+#include <core/XmlQuery.h>
 #include <QDebug>
 #include <QSettings>
 #include <QString>

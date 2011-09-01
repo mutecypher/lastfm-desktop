@@ -26,7 +26,7 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/widgets/UserManagerWidget.h"
 
-#include <lastfm/User>
+#include <types/User.h>
 
 #include <QApplication>
 #include <QComboBox>
@@ -129,7 +129,7 @@ AccountSettingsWidget::populateLanguages()
     ui.languages->addItem( "Polski", QLocale( QLocale::Polish ).name().left( 2 ) );
     ui.languages->addItem( "Svenska", QLocale( QLocale::Swedish ).name().left( 2 ) );
     ui.languages->addItem( QString::fromUtf8( "Tükçe" ), QLocale( QLocale::Turkish ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "Русский" ), QLocale( QLocale::Russian ).name().left( 2 ) );
+    ui.languages->addItem( QString::fromUtf8( "� усский" ), QLocale( QLocale::Russian ).name().left( 2 ) );
     ui.languages->addItem( QString::fromUtf8( "中文" ), QLocale( QLocale::Chinese ).name().left( 2 ) );
     ui.languages->addItem( QString::fromUtf8( "日本語" ), QLocale( QLocale::Japanese ).name().left( 2 ) );
 

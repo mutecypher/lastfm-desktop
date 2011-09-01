@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include <lastfm/XmlQuery>
+#include <core/XmlQuery.h>
 
 #include "lib/unicorn/StylableWidget.h"
 

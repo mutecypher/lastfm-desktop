@@ -20,8 +20,7 @@
 #include "FriendsPicker.h"
 #include <QLineEdit>
 
-#include <lastfm/User>
-#include <lastfm/UserList>
+#include <types/User.h>
 #include <QDebug>
 #include <QDialogButtonBox>
 #include <QListWidget>

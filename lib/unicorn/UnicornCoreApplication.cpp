@@ -18,8 +18,8 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "UnicornCoreApplication.h"
-#include <lastfm/ws.h>
-#include <lastfm/misc.h>
+#include <ws/ws.h>
+#include <core/misc.h>
 //#include "UnicornSettings.h"
 #include "common/c++/Logger.h"
 #include <QDebug>

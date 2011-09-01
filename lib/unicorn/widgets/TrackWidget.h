@@ -20,8 +20,8 @@
 #ifndef TRACK_WIDGET_H
 #define TRACK_WIDGET_H
 
-#include <lastfm/global.h>
-#include <lastfm/Track>
+#include <global.h>
+#include <types/Track.h>
 #include <QWidget>
 #include <QPixmap>
 #include "lib/DllExportMacro.h"

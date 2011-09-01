@@ -2,9 +2,9 @@
 #include "QMessageBoxBuilder.h"
 #include "UnicornApplication.h"
 
-#include <lastfm/ws.h>
-#include <lastfm/misc.h>
-#include <lastfm/XmlQuery>
+#include <ws/ws.h>
+#include <core/misc.h>
+#include <core/XmlQuery.h>
 
 #include <QApplication>
 #include <QDesktopServices>

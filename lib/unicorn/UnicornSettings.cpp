@@ -1,6 +1,6 @@
 #include "UnicornSettings.h"
 #include "UnicornApplication.h"
-#include <lastfm/User>
+#include <types/User.h>
 
 QList<lastfm::User>
 unicorn::Settings::userRoster() const

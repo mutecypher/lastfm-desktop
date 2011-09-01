@@ -18,7 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <QWidget>
-#include <lastfm/Track>
+#include <types/Track.h>
 #include <QGLWidget>
 #include <QHash>
 /** @author Max Howell <max@last.fm> */

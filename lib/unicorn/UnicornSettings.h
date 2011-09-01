@@ -23,7 +23,7 @@
 #include <QSettings>
 #include <QString>
 
-#include <lastfm/User>
+#include <types/User.h>
 
 #include "lib/DllExportMacro.h"
 

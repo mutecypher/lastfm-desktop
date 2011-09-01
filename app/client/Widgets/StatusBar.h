@@ -20,8 +20,8 @@
 
 #include <QStatusBar>
 
-#include <lastfm/Track>
-#include <lastfm/UserDetails>
+#include <types/Track.h>
+#include <types/User.h>
 
 class QLabel;
 

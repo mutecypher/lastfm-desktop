@@ -21,7 +21,7 @@
 #ifndef SCROBBLECONFIRMATIONDIALOG_H
 #define SCROBBLECONFIRMATIONDIALOG_H
 
-#include <lastfm/Track>
+#include <types/Track.h>
 #include <QDialog>
 
 #define MIN_WIDTH  500

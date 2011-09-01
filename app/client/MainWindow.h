@@ -3,8 +3,8 @@
 
 #include "lib/unicorn/UnicornMainWindow.h"
 #include "lib/unicorn/StylableWidget.h"
-#include <lastfm/Track>
-#include <lastfm/XmlQuery>
+#include <types/Track.h>
+#include <core/XmlQuery.h>
 
 #include <QResizeEvent>
 

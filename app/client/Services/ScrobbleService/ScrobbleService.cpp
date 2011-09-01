@@ -19,8 +19,8 @@
 */
 
 #include "ScrobbleService.h"
-#include <lastfm/Audioscrobbler>
-#include <lastfm/ws.h>
+#include <scrobble/Audioscrobbler.h>
+#include <ws/ws.h>
 
 #include "lib/listener/DBusListener.h"
 #include "lib/listener/legacy/LegacyPlayerListener.h"

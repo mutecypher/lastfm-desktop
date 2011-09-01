@@ -41,11 +41,11 @@
 #include "UnicornCoreApplication.h"
 #include "UnicornSettings.h"
 
-#include <lastfm/misc.h>
-#include <lastfm/User>
-#include <lastfm/InternetConnectionMonitor>
-#include <lastfm/ws.h>
-#include <lastfm/XmlQuery>
+#include <core/misc.h>
+#include <types/User.h>
+#include <ws/InternetConnectionMonitor.h>
+#include <ws/ws.h>
+#include <core/XmlQuery.h>
 
 
 #include <QDebug>

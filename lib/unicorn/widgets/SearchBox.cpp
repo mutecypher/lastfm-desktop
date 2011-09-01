@@ -25,10 +25,10 @@
 #include <QListView>
 #include <QCompleter>
 #include <QStringListModel>
-#include <lastfm/XmlQuery>
-#include <lastfm/Artist>
-#include <lastfm/Tag>
-#include <lastfm/UserList>
+#include <core/XmlQuery.h>
+#include <types/Artist.h>
+#include <types/Tag.h>
+#include <types/User.h>
 
 SearchBox::SearchBox(QWidget* parent)
 : QLineEdit( parent )

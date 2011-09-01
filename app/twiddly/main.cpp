@@ -24,7 +24,7 @@
 #include "Settings.h"
 #include "lib/unicorn/UnicornCoreApplication.h"
 #include "plugins/iTunes/ITunesExceptions.h"
-#include <lastfm/misc.h>
+#include <core/misc.h>
 #include <QtCore>
 #include <QtXml>
 #include <iostream>

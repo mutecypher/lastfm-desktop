@@ -23,7 +23,7 @@
 #include <QProcess>
 
 #include "lib/unicorn/UnicornSettings.h"
-#include <lastfm/misc.h>
+#include <core/misc.h>
 #ifdef Q_OS_MAC
     #define AUDIOSCROBBLER_BUNDLEID "fm.last.Last.fm"
     #include <ApplicationServices/ApplicationServices.h>

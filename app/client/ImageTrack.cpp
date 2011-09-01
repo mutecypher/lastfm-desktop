@@ -1,7 +1,7 @@
 
 #include <QPixmap>
 
-#include <lastfm/ws.h>
+#include <ws/ws.h>
 
 #include "ImageTrack.h"
 

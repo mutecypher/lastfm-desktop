@@ -20,8 +20,8 @@
 #ifndef SCROB_SOCKET_H
 #define SCROB_SOCKET_H
 
-#include <lastfm/global.h>
-#include <lastfm/Track>
+#include <global.h>
+#include <types/Track.h>
 #include <QLocalSocket>
 #include <QQueue>
 

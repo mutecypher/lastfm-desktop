@@ -18,8 +18,8 @@
 */
 
 #include "StationSearch.h"
-#include <lastfm/ws.h>
-#include <lastfm/XmlQuery>
+#include <ws/ws.h>
+#include <core/XmlQuery.h>
 
 using namespace lastfm;
 

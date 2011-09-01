@@ -1,10 +1,10 @@
 
 #include <QHBoxLayout>
 
-#include <lastfm/RadioStation>
-#include <lastfm/User>
-#include <lastfm/Track>
-#include <lastfm/XmlQuery>
+#include <radio/RadioStation.h>
+#include <types/User.h>
+#include <types/Track.h>
+#include <core/XmlQuery.h>
 
 #include "lib/unicorn/widgets/AvatarWidget.h"
 #include "lib/unicorn/widgets/Label.h"

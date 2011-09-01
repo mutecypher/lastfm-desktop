@@ -21,7 +21,7 @@
 #define UPDATE_DIALOG_H
 
 #include "lib/DllExportMacro.h"
-#include <lastfm/ws.h>
+#include <ws/ws.h>
 #include <QDialog>
 
 

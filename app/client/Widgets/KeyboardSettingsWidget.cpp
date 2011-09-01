@@ -27,7 +27,7 @@
 #include "lib/unicorn/UnicornSession.h"
 #include "lib/unicorn/widgets/UserManagerWidget.h"
 
-#include <lastfm/User>
+#include <types/User.h>
 
 
 #include <QApplication>

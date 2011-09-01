@@ -4,8 +4,8 @@
 #include <QVBoxLayout>
 #include <QScrollArea>
 
-#include <lastfm/RadioStation>
-#include <lastfm/XmlQuery>
+#include <radio/RadioStation.h>
+#include <core/XmlQuery.h>
 
 #include "lib/unicorn/StylableWidget.h"
 

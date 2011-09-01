@@ -22,7 +22,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
-#include <lastfm/User>
+#include <types/User.h>
 
 #include "lib/unicorn/widgets/AvatarWidget.h"
 

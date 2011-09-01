@@ -1,9 +1,9 @@
 #ifndef UNICORN_SESSION_H_
 #define UNICORN_SESSION_H_
-#include <lastfm/XmlQuery>
-#include <lastfm/misc.h>
-#include <lastfm/User>
-#include <lastfm/ws.h>
+#include <core/XmlQuery.h>
+#include <core/misc.h>
+#include <types/User.h>
+#include <ws/ws.h>
 
 #include <QObject>
 #include <QSharedData>

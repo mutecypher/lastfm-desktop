@@ -18,9 +18,9 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "TrackImageFetcher.h"
-#include <lastfm/Track>
-#include <lastfm/ws.h>
-#include <lastfm/XmlQuery>
+#include <types/Track.h>
+#include <ws/ws.h>
+#include <core/XmlQuery.h>
 #include <QImage>
 #include <QStringList>
 

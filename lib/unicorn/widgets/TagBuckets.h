@@ -17,7 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <lastfm/Track>
+#include <types/Track.h>
 #include <QTextEdit>
 #include <QLayout>
 #include <QWidget>

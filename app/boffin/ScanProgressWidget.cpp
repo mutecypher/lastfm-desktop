@@ -19,7 +19,7 @@
 */
 #include "ScanProgressWidget.h"
 #include <lastfm/ws.h>
-#include <lastfm/Track>
+#include <types/Track.h>
 #include <QtGui>
 #include <QtNetwork>
 

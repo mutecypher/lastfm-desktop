@@ -20,7 +20,7 @@
 #include "MediaDevice.h"
 #include "lib/unicorn/UnicornSettings.h"
 
-#include <lastfm/misc.h>
+#include <core/misc.h>
 
 #include <QSqlQuery>
 #include <QSqlError>

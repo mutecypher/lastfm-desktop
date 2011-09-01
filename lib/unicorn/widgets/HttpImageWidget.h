@@ -28,7 +28,7 @@
 #include <QMouseEvent>
 #include "lib/DllExportMacro.h"
 
-#include <lastfm/ws.h>
+#include <ws/ws.h>
 
 class UNICORN_DLLEXPORT HttpImageWidget : public QLabel
 {

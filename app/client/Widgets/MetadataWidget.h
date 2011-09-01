@@ -23,8 +23,8 @@
 
 #include <QWidget>
 
-#include <lastfm/Album>
-#include <lastfm/Track>
+#include <types/Album.h>
+#include <types/Track.h>
 
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"

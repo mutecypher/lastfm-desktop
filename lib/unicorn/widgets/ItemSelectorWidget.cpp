@@ -31,7 +31,7 @@
 
 #include "ItemSelectorWidget.h"
 
-#include <lastfm/User>
+#include <types/User.h>
 
 ItemSelectorWidget::ItemSelectorWidget( QWidget* parent )
     :StylableWidget(parent), m_clearText( false )

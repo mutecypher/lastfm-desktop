@@ -25,7 +25,7 @@
 #include <QFont>
 #include <QMenu>
 
-#include <lastfm/RadioStation>
+#include <radio/RadioStation.h>
 
 #include "PlayableItemWidget.h"
 #include "../Services/RadioService.h"
