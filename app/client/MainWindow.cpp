@@ -118,7 +118,7 @@ MainWindow::MainWindow()
 
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn()));
 
-    menuBar()->hide();
+    //menuBar()->hide();
 
     //for some reason some of the stylesheet is not being applied properly unless reloaded
     //here. StyleSheets see very flaky to me. :s
