@@ -97,7 +97,6 @@ Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\imageformats";
 Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\phonon_backend"; Flags: ignoreversion
 
 ;The stylesheets
-Source: "..\..\..\lib\unicorn\unicorn.css"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\app\client\Last.fm.css"; DestDir: "{app}"; Flags: ignoreversion
 
 ;The add/modify/remove file
