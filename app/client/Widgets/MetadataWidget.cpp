@@ -338,25 +338,25 @@ MetadataWidget::onArtistGotEvents()
 void
 MetadataWidget::onAlbumGotInfo()
 {
-   QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-   try
-   {
-       const XmlQuery& lfm = reply->readAll();
-       int scrobbles = lfm["album"]["playcount"].text().toInt();
-       int listeners = lfm["album"]["listeners"].text().toInt();
-       int userListens = lfm["album"]["userplaycount"].text().toInt();
+    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+    try
+    {
+        const XmlQuery& lfm = reply->readAll();
+//        int scrobbles = lfm["album"]["playcount"].text().toInt();
+//        int listeners = lfm["album"]["listeners"].text().toInt();
+//        int userListens = lfm["album"]["userplaycount"].text().toInt();
 
-       //ui->track.albumScrobbles->setText(QString("%L1").arg(scrobbles) + " plays (" + QString("%L1").arg(listeners) + " listeners)" + "\n" + QString("%L1").arg(userListens) + " plays in your library");;
-   }
-   catch ( lastfm::ws::ParseError e )
-   {
+        ui->albumImage->loadUrl( lfm["album"]["image size=large"].text() );
+    }
+    catch ( lastfm::ws::ParseError e )
+    {
        // TODO: what happens when we fail?
        qDebug() << e.message() << e.enumValue();
-   }
-   catch ( lastfm::ws::Error e )
-   {
+    }
+    catch ( lastfm::ws::Error e )
+    {
        qDebug() << e;
-   }
+    }
 }
 
 void
@@ -440,8 +440,10 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
         ui->trackUserPlays->setText( QString("%L1").arg(m_userTrackScrobbles));
         ui->trackPlays->setText( QString("%L1").arg(m_globalTrackScrobbles));
         ui->trackListeners->setText( QString("%L1").arg( listeners ));
-        ui->albumImage->loadUrl( lfm["track"]["album"]["image size=medium"].text() );
+
+        //ui->albumImage->loadUrl( lfm["track"]["album"]["image size=medium"].text() );
         ui->albumImage->setHref( lfm["track"]["url"].text());
+
         ui->scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
 
         // get the popular tags

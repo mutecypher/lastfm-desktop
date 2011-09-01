@@ -2,6 +2,7 @@
 #include <QPixmap>
 
 #include <lastfm/ws.h>
+#include <lastfm/XmlQuery>
 
 #include "ImageTrack.h"
 
@@ -34,16 +35,49 @@ void
 ImageTrack::fetchImage()
 {
     const QUrl imgUrl = imageUrl( lastfm::Medium, false );
-    if( imgUrl.isEmpty())
+    if( imgUrl.isEmpty() )
     {
         qDebug() << "Getting info for track..";
-        getInfo();
-        connect( signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(fetchImage()), Qt::DirectConnection);
+
+        if ( !album().isNull() )
+            connect( album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
+        else
+        {
+            getInfo();
+            connect( signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(fetchImage()) );
+        }
+
+
         return;
     }
 
     QNetworkReply* r = lastfm::nam()->get(QNetworkRequest(imgUrl));
     connect( r, SIGNAL(finished()), SLOT(onGotImage()));
+}
+
+
+void
+ImageTrack::onAlbumGotInfo()
+{
+    try
+    {
+        XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
+
+        lastfm::MutableTrack t( *this );
+        t.setImageUrl( lastfm::Small, lfm["album"]["image size=small"].text() );
+        t.setImageUrl( lastfm::Medium, lfm["album"]["image size=medium"].text() );
+        t.setImageUrl( lastfm::Large, lfm["album"]["image size=large"].text() );
+        t.setImageUrl( lastfm::ExtraLarge, lfm["album"]["image size=extralarge"].text() );
+        t.setImageUrl( lastfm::Mega, lfm["album"]["image size=mega"].text() );
+
+        fetchImage();
+    }
+    catch (...)
+    {
+        // we failed to fetch album info so try the track
+        getInfo();
+        connect( signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(fetchImage()) );
+    }
 }
 
 
