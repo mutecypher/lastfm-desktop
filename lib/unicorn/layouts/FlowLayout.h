@@ -46,8 +46,11 @@
 #include <QRect>
 #include <QWidgetItem>
 #include <QStyle>
+
+#include <lib/DllExportMacro.h>
+
 //! [0]
-class FlowLayout : public QLayout
+class UNICORN_DLLEXPORT FlowLayout : public QLayout
 {
 public:
     FlowLayout(QWidget *parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
@@ -79,6 +82,7 @@ private:
 
 private:
     QList<QLayoutItem *> itemList;
+
     int m_hSpace;
     int m_vSpace;
     bool m_oneLine;
