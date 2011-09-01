@@ -52,7 +52,11 @@ public slots:
 
 private slots:
     void onLoveChanged( bool checked );
-    void onShare();
+
+    void onShareLastFm();
+    void onShareTwitter();
+    void onShareFacebook();
+
     void onTag();
 
 private:
