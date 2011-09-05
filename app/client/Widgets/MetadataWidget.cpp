@@ -176,7 +176,8 @@ MetadataWidget::onArtistGotInfo()
 
     try
     {
-        const XmlQuery& lfm = reply->readAll();
+        XmlQuery lfm;
+        lfm.parse( reply->readAll() );
 
         int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
         int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
@@ -277,7 +278,8 @@ MetadataWidget::onArtistGotYourTags()
 
     try
     {
-        const XmlQuery& lfm = reply->readAll();
+        XmlQuery lfm;
+        lfm.parse( reply->readAll() );
 
         QList<XmlQuery> tags = lfm["tags"].children("tag").mid(0, 5);
 
@@ -316,7 +318,8 @@ MetadataWidget::onArtistGotEvents()
 
    try
    {
-       const XmlQuery& lfm = reply->readAll();
+       XmlQuery lfm;
+       lfm.parse( reply->readAll() );
 
        if (lfm["events"].children("event").count() > 0)
        {
@@ -338,10 +341,10 @@ MetadataWidget::onArtistGotEvents()
 void
 MetadataWidget::onAlbumGotInfo()
 {
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
     try
     {
-        const XmlQuery& lfm = reply->readAll();
+        XmlQuery lfm;
+        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 //        int scrobbles = lfm["album"]["playcount"].text().toInt();
 //        int listeners = lfm["album"]["listeners"].text().toInt();
 //        int userListens = lfm["album"]["userplaycount"].text().toInt();
@@ -366,7 +369,8 @@ MetadataWidget::onTrackGotBuyLinks()
     {
         QByteArray data = qobject_cast<QNetworkReply*>(sender())->readAll() ;
         qDebug() << data;
-        XmlQuery lfm( data );
+        XmlQuery lfm;
+        lfm.parse( data );
 
         QMenu* menu = new QMenu( this );
 
@@ -429,7 +433,9 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
 {
     try
     {
-        XmlQuery lfm(data);
+        XmlQuery lfm;
+        lfm.parse( data );
+
         m_globalTrackScrobbles = lfm["track"]["playcount"].text().toInt();
         int listeners = lfm["track"]["listeners"].text().toInt();
         m_userTrackScrobbles = lfm["track"]["userplaycount"].text().toInt();
@@ -494,11 +500,10 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
 void
 MetadataWidget::onTrackGotYourTags()
 {
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-
     try
     {
-        const XmlQuery& lfm = reply->readAll();
+        XmlQuery lfm;
+        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         QList<XmlQuery> tags = lfm["tags"].children("tag").mid(0, 5);
 

@@ -1,5 +1,6 @@
 TARGET = unicorn
 TEMPLATE = lib
+CONFIG += dll
 CONFIG += lastfm
 QT = core gui xml network
 include( $$ROOT_DIR/admin/include.qmake )

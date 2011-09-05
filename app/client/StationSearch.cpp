@@ -40,7 +40,8 @@ StationSearch::onFinished()
 {
     try {
         sender()->deleteLater();
-        lastfm::XmlQuery x( qobject_cast<QNetworkReply*>(sender())->readAll() );
+        lastfm::XmlQuery x;
+        x.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
         lastfm::XmlQuery station = x["stations"]["station"];
         RadioStation rs(QUrl::fromPercentEncoding( station["url"].text().toUtf8()));
         if (rs.url().length()) {
@@ -62,8 +63,9 @@ void
 StationSearch::onUserGotFriends()
 {
     sender()->deleteLater();
-    QNetworkReply* r = (QNetworkReply*)sender();
-    lastfm::XmlQuery lfm(r->readAll());
+
+    lastfm::XmlQuery lfm;
+    lfm.parse( qobject_cast<QNetworkReply*>( sender() )->readAll() );
 
     foreach (lastfm::XmlQuery e, lfm["friends"].children("user")) {
         if (m_name == e["name"].text().toLower()) {
