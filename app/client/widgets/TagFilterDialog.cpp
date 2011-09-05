@@ -23,7 +23,8 @@ TagFilterDialog::~TagFilterDialog()
 void
 TagFilterDialog::onGotTagSuggestions()
 {
-    lastfm::XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
+    lastfm::XmlQuery lfm;
+    lfm.parse( static_cast<QNetworkReply*>(sender())->readAll() );
 
     foreach ( const lastfm::XmlQuery suggestion, lfm.children("suggestion"))
         ui->tagComboBox->addItem( suggestion["tag"]["name"].text() );

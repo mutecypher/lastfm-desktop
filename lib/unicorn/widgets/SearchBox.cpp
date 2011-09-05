@@ -83,8 +83,9 @@ SearchBox::onSearchFinished()
     sender()->deleteLater();
     QString searchTerm;
     try {
-        QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-        XmlQuery lfm(reply->readAll());
+        XmlQuery lfm;
+        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
+
         searchTerm = ((QDomElement)lfm["results"]).attribute("for");
         m_completer->setModel(
             new QStringListModel(

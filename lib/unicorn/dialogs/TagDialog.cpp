@@ -57,7 +57,8 @@ TagDialog::TagDialog( const Track& track, QWidget *parent )
 void
 TagDialog::onUserGotTopTags()
 {
-    XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
+    XmlQuery lfm;
+    lfm.parse( static_cast<QNetworkReply*>(sender())->readAll() );
 
     foreach(const XmlQuery& e, lfm["toptags"].children("tag").mid(0, 5))
     {
@@ -75,7 +76,8 @@ TagDialog::onUserGotTopTags()
 void
 TagDialog::onTrackGotTopTags()
 {
-    XmlQuery lfm = static_cast<QNetworkReply*>(sender())->readAll();
+    XmlQuery lfm;
+    lfm.parse( static_cast<QNetworkReply*>(sender())->readAll() );
 
     foreach(const XmlQuery& e, lfm["toptags"].children("tag").mid(0, 5))
     {
