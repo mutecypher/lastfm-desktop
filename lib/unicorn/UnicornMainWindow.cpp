@@ -23,7 +23,7 @@
 #include "dialogs/AboutDialog.h"
 #include "dialogs/UpdateDialog.h"
 #include "UnicornSettings.h"
-#include <lastfm/User>
+#include <lastfm/User.h>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QMenuBar>

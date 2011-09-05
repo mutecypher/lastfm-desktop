@@ -26,7 +26,7 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/widgets/UserManagerWidget.h"
 
-#include <lastfm/User>
+#include <lastfm/User.h>
 
 #include <QApplication>
 #include <QComboBox>

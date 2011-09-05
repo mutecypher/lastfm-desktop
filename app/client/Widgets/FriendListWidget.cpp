@@ -4,8 +4,8 @@
 #include <QLineEdit>
 #include <QScrollArea>
 
-#include <lastfm/User>
-#include <lastfm/XmlQuery>
+#include <lastfm/User.h>
+#include <lastfm/XmlQuery.h>
 
 #include "lib/unicorn/UnicornSession.h"
 

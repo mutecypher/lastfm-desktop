@@ -21,7 +21,7 @@
 #define TRACK_WIDGET_H
 
 #include <lastfm/global.h>
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 #include <QWidget>
 #include <QPixmap>
 #include "lib/DllExportMacro.h"

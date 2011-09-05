@@ -1,7 +1,7 @@
 
 #include <QPainter>
 
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 
 #include "../Services/ScrobbleService/ScrobbleService.h"
 #include "../ActivityListModel.h"
@@ -16,10 +16,14 @@ TrackDelegate::TrackDelegate( QObject* parent )
 void
 TrackDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
+    Track track = index.data( ActivityListModel::TrackRole ).value<Track>();
+    QDateTime timestamp = index.data( ActivityListModel::TimeStampRole ).toDateTime();
+    bool isNowPlaying = timestamp.toTime_t() == 0 || track.sameObject( ScrobbleService::instance().currentTrack() );
+
     const QImage& image = index.data( Qt::DecorationRole ).value<QImage>();
     QLinearGradient g( option.rect.topLeft(), option.rect.bottomLeft());
-    g.setColorAt( 0, QColor( 0xeeeeee ) );
-    g.setColorAt( 1, QColor( 0xdddddd ) );
+    g.setColorAt( 0, isNowPlaying ? QColor( 0xFFFCCA ) : QColor( 0xeeeeee ) );
+    g.setColorAt( 1, isNowPlaying ? QColor( 0xeeebb9 ) : QColor( 0xdddddd ) );
     painter->fillRect( option.rect, g );
 
     painter->setPen(QColor(0xaaaaaa));
@@ -46,9 +50,7 @@ TrackDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option, con
 
     painter->setPen( QColor(0x777777) );
 
-    QDateTime timestamp = index.data( ActivityListModel::TimeStampRole ).toDateTime();
-    Track track = index.data( ActivityListModel::TrackRole ).value<Track>();
-    QString timestampString = timestamp.toTime_t() == 0 || track.sameObject( ScrobbleService::instance().currentTrack() ) ? tr( "Now playing" ) : prettyTime( timestamp );
+    QString timestampString = isNowPlaying ? tr( "Now playing" ) : prettyTime( timestamp );
 
     f.setPointSize( 11 );
     painter->setFont( f );

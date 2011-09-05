@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QImage>
 
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 
 class ImageTrack : public QObject, public lastfm::Track
 {
@@ -21,6 +21,7 @@ public slots:
 
 private slots:
     void onGotImage();
+    void onAlbumGotInfo();
 
 signals:
     void imageUpdated();

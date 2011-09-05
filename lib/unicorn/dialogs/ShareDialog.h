@@ -20,7 +20,7 @@
 #ifndef SHARE_DIALOG_H
 #define SHARE_DIALOG_H
 
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 #include <QDialogButtonBox>
 #include "UnicornDialog.h"
 
@@ -32,7 +32,15 @@ class UNICORN_DLLEXPORT ShareDialog : public unicorn::Dialog
 {
     Q_OBJECT
 public:
-    ShareDialog( const Track&, QWidget* parent );
+
+    enum Type
+    {
+        ShareLastFm,
+        ShareTwitter,
+        ShareFacebook
+    };
+
+    ShareDialog( const Track&, Type type = ShareLastFm, QWidget* parent = 0 );
 
     Track track() const { return m_track; }
 
@@ -50,9 +58,14 @@ private slots:
 private:
     void setTabOrders();
 
+    QString shareText();
+    QUrl shareUrl();
+    void setShareText();
+
 private:
     Track m_track;
     Ui::ShareDialog* ui;
+    Type m_type;
 };
 
 #endif

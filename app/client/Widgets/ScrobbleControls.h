@@ -23,8 +23,8 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
-#include <lastfm/Track>
-#include <lastfm/XmlQuery>
+#include <lastfm/Track.h>
+#include <lastfm/XmlQuery.h>
 
 namespace unicorn{ class Session; };
 namespace lastfm{ class UserDetails; };
@@ -52,7 +52,11 @@ public slots:
 
 private slots:
     void onLoveChanged( bool checked );
-    void onShare();
+
+    void onShareLastFm();
+    void onShareTwitter();
+    void onShareFacebook();
+
     void onTag();
 
 private:

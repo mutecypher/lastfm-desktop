@@ -21,7 +21,7 @@
 #define STATION_SEARCH_H
 
 #include <QObject>
-#include <lastfm/RadioStation>
+#include <lastfm/RadioStation.h>
 
 // Use radio.search to find the most likely station (tag or similar artist).
 // Fallback to searching friends list for library radio if radio.search 

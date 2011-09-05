@@ -21,9 +21,9 @@
 #define PLAYABLE_MIME_DATA
 
 #include <QMimeData>
-#include <lastfm/Artist>
-#include <lastfm/Tag>
-#include <lastfm/User>
+#include <lastfm/Artist.h>
+#include <lastfm/Tag.h>
+#include <lastfm/User.h>
 #include "Seed.h"
 
 

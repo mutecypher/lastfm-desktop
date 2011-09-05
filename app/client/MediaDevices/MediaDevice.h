@@ -22,7 +22,7 @@
 
 #include <QObject>
 #include <QSqlDatabase>
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 
 #define DB_NAME "MediaDevicesScrobbles"
 

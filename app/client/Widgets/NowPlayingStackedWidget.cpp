@@ -4,8 +4,8 @@
 #include <QPixmap>
 #include <QStackedLayout>
 
-#include <lastfm/Track>
-#include <lastfm/RadioStation>
+#include <lastfm/Track.h>
+#include <lastfm/RadioStation.h>
 
 #include "lib/unicorn/TrackImageFetcher.h"
 
