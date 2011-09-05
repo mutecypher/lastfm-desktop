@@ -20,9 +20,9 @@
 #ifndef RADIO_SERVICE_H
 #define RADIO_SERVICE_H
 
-#include <lastfm/Track>
-#include <lastfm/RadioStation>
-#include <lastfm/RadioTuner>
+#include <lastfm/Track.h>
+#include <lastfm/RadioStation.h>
+#include <lastfm/RadioTuner.h>
 #include <lastfm/ws.h>
 #include <phonon/phononnamespace.h>
 #include <phonon/audiooutput.h>

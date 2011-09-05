@@ -22,7 +22,7 @@
 #define LFM_LIST_VIEW_WIDGET_H
 
 
-#include <lastfm/AbstractType>
+#include <lastfm/AbstractType.h>
 #include <QStyledItemDelegate>
 #include <QPainter>
 #include <QUrl>

@@ -21,7 +21,7 @@
 #define SCROB_SOCKET_H
 
 #include <lastfm/global.h>
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 #include <QLocalSocket>
 #include <QQueue>
 

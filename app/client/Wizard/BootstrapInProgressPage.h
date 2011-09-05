@@ -3,7 +3,7 @@
 
 #include <QWizardPage>
 #include "lib/unicorn/Updater/PluginList.h"
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 
 class BootstrapInProgressPage : public QWizardPage {
     Q_OBJECT

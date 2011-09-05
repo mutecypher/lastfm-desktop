@@ -1,7 +1,7 @@
 #ifndef SCROBBLES_MODEL_H
 #define SCROBBLES_MODEL_H
 
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 
 #include <QAbstractTableModel>
 #include <QStringList>

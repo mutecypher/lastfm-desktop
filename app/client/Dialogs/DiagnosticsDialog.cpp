@@ -21,9 +21,9 @@
 //TODO #include "DiagnosticsDialog/SendLogsDialog.h"
 #include "app/twiddly.h"
 #include "lib/unicorn/UnicornCoreApplication.h"
-#include <lastfm/Audioscrobbler>
+#include <lastfm/Audioscrobbler.h>
 #include <lastfm/misc.h>
-#include <lastfm/ScrobbleCache>
+#include <lastfm/ScrobbleCache.h>
 #include <lastfm/ws.h>
 #include <QByteArray>
 #include <QHeaderView>

@@ -2,7 +2,7 @@
 #include <QApplication>
 #include <QDebug>
 
-#include <lastfm/XmlQuery>
+#include <lastfm/XmlQuery.h>
 
 #include "lib/unicorn/UnicornSession.h"
 

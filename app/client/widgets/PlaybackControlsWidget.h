@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include <lastfm/RadioStation>
+#include <lastfm/RadioStation.h>
 
 #include "lib/unicorn/StylableWidget.h"
 

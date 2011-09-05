@@ -19,7 +19,7 @@
 */
 #include "TagListWidget.h"
 #include "PlayableMimeData.h"
-#include <lastfm/Tag>
+#include <lastfm/Tag.h>
 #include <lastfm/ws.h>
 #include <QDesktopServices>
 #include <QHeaderView>

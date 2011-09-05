@@ -21,7 +21,7 @@
 #define QUICK_START_WIDGET_H
 
 #include "lib/unicorn/StylableWidget.h"
-#include <lastfm/RadioStation>
+#include <lastfm/RadioStation.h>
 
 class QComboBox;
 

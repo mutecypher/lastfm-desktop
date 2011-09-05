@@ -2,8 +2,8 @@
 #define NOWPLAYINGSTACKEDWIDGET_H
 
 #include <QWidget>
-#include <lastfm/Track>
-#include <lastfm/RadioStation>
+#include <lastfm/Track.h>
+#include <lastfm/RadioStation.h>
 
 class TrackItem;
 class RadioProgressBar;

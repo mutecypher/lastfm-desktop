@@ -26,8 +26,8 @@
 #include "lib/unicorn/widgets/ItemSelectorWidget.h"
 #include "lib/unicorn/widgets/DataListWidget.h"
 
-#include <lastfm/XmlQuery>
-#include <lastfm/User>
+#include <lastfm/XmlQuery.h>
+#include <lastfm/User.h>
 
 #include <QtCore>
 #include <QtGui>

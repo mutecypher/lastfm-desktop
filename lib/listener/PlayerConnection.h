@@ -23,7 +23,7 @@
 #include "lib/DllExportMacro.h"
 #include "PlayerCommand.h"
 #include "State.h"
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 #include <QTimer>
 
 
