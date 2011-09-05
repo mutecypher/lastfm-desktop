@@ -1,5 +1,5 @@
 
-#include <lastfm/XmlQuery>
+#include <lastfm/XmlQuery.h>
 
 #include "TagFilterDialog.h"
 #include "ui_TagFilterDialog.h"

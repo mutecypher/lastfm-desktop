@@ -19,7 +19,7 @@
 */
 
 #include "ScrobbleService.h"
-#include <lastfm/Audioscrobbler>
+#include <lastfm/Audioscrobbler.h>
 #include <lastfm/ws.h>
 
 #include "lib/listener/DBusListener.h"

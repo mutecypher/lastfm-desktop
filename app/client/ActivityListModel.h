@@ -8,7 +8,7 @@
 #include <QDebug>
 
 #include <lastfm/ws.h>
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 
 #include "ImageTrack.h"
 

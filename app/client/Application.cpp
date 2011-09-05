@@ -44,8 +44,8 @@
 #include "AudioscrobblerSettings.h"
 #include "Wizard/FirstRunWizard.h"
 
-#include <lastfm/InternetConnectionMonitor>
-#include <lastfm/XmlQuery>
+#include <lastfm/InternetConnectionMonitor.h>
+#include <lastfm/XmlQuery.h>
 
 #include <QRegExp>
 #include <QShortcut>

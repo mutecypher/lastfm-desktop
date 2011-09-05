@@ -2,7 +2,7 @@
 #include <QPixmap>
 
 #include <lastfm/ws.h>
-#include <lastfm/XmlQuery>
+#include <lastfm/XmlQuery.h>
 
 #include "ImageTrack.h"
 

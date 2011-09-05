@@ -25,7 +25,7 @@
 #include <QSystemTrayIcon>
 
 #include <lastfm/global.h>
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 #include <lastfm/ws.h>
 
 #include "lib/unicorn/UnicornApplication.h"

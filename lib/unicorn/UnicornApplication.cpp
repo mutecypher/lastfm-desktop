@@ -42,10 +42,10 @@
 #include "UnicornSettings.h"
 
 #include <lastfm/misc.h>
-#include <lastfm/User>
-#include <lastfm/InternetConnectionMonitor>
+#include <lastfm/User.h>
+#include <lastfm/InternetConnectionMonitor.h>
 #include <lastfm/ws.h>
-#include <lastfm/XmlQuery>
+#include <lastfm/XmlQuery.h>
 
 
 #include <QDebug>

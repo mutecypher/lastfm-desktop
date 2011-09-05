@@ -24,8 +24,8 @@
 #include <QWidget>
 #include <QPointer>
 
-#include <lastfm/Track>
-#include <lastfm/RadioStation>
+#include <lastfm/Track.h>
+#include <lastfm/RadioStation.h>
 
 #include "MetadataWidget.h"
 

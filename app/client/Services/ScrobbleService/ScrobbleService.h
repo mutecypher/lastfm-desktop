@@ -22,7 +22,7 @@
 
 #include <QObject>
 #include <QPointer>
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 
 namespace unicorn { class Session; }
 class PlayerMediator;

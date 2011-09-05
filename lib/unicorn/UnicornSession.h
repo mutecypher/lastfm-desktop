@@ -1,8 +1,8 @@
 #ifndef UNICORN_SESSION_H_
 #define UNICORN_SESSION_H_
-#include <lastfm/XmlQuery>
+#include <lastfm/XmlQuery.h>
 #include <lastfm/misc.h>
-#include <lastfm/User>
+#include <lastfm/User.h>
 #include <lastfm/ws.h>
 
 #include <QObject>

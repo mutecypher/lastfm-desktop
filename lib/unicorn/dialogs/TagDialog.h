@@ -20,7 +20,7 @@
 #ifndef TAG_DIALOG_H
 #define TAG_DIALOG_H
 
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 #include <QModelIndex>
 #include "UnicornDialog.h"
 

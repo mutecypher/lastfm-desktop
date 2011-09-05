@@ -35,11 +35,11 @@
 #include <QMenu>
 #include <QDebug>
 
-#include <lastfm/XmlQuery>
+#include <lastfm/XmlQuery.h>
 #include <lastfm/ws.h>
-#include <lastfm/User>
-#include <lastfm/Track>
-#include <lastfm/Artist>
+#include <lastfm/User.h>
+#include <lastfm/Track.h>
+#include <lastfm/Artist.h>
 
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"

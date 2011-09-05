@@ -23,7 +23,7 @@
 #include <QLineEdit>
 #include <lastfm/global.h>
 #include "lib/DllExportMacro.h"
-#include <lastfm/User>
+#include <lastfm/User.h>
 
 class QNetworkReply;
 class QCompleter;
