@@ -183,7 +183,8 @@ ActivityListModel::onGotRecentTracks()
 {
     try
     {
-        XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
+        XmlQuery lfm;
+        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         qDebug() << lfm;
 

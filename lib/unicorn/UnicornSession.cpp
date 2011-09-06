@@ -41,7 +41,8 @@ Session::lastSessionData()
 
 Session::Session( QNetworkReply* reply ) throw( lastfm::ws::ParseError )
 {
-    lastfm::XmlQuery lfm = reply->readAll();
+    lastfm::XmlQuery lfm;
+    lfm.parse( reply->readAll() );
     qDebug() << lfm;
     lastfm::XmlQuery session = lfm["session"];
     

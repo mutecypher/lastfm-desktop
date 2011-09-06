@@ -61,7 +61,8 @@ ImageTrack::onAlbumGotInfo()
 {
     try
     {
-        XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
+        XmlQuery lfm;
+        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         lastfm::MutableTrack t( *this );
         t.setImageUrl( lastfm::Small, lfm["album"]["image size=small"].text() );

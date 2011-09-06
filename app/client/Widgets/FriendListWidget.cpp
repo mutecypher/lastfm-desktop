@@ -102,7 +102,8 @@ FriendListWidget::onGotFriends()
     }
 
     // add this set of users to the list
-    lastfm::XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
+    lastfm::XmlQuery lfm;
+    lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
     QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui.friends->layout());
 
