@@ -18,7 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 #include "SpotifyListener.h"
 #include "../PlayerConnection.h"
 #include <lastfm/misc.h>
