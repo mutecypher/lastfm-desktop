@@ -20,7 +20,7 @@
 #ifndef MOOSE_SETTINGS_H
 #define MOOSE_SETTINGS_H
 
-#include <lastfm/ScrobblePoint>
+#include <lastfm/ScrobblePoint.h>
 #include "lib/unicorn/UnicornSettings.h"
 #include "app/moose.h"
 
