@@ -18,11 +18,17 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "main.h"
-#include "common/c++/logger.h"
-#include "ITunesPlaysDatabase.h"
 
-/** @author <max@last.fm> */
+#import "main.h"
+#import "common/c++/logger.h"
+#import "ITunesPlaysDatabase.h"
+
+#import <AppKit/AppKit.h>
+#import <OpenGL/gl.h>
+#import <OpenGL/glu.h>
+#import <string.h>
+
+/** @author <michaelc@last.fm> */
 
 
 enum PlayerState
@@ -99,3 +105,35 @@ VisualPluginHandler( OSType m, VisualPluginMessageInfo*, void* )
             return unimpErr;
     }
 }
+
+//-------------------------------------------------------------------------------------------------
+//	exported function prototypes
+//-------------------------------------------------------------------------------------------------
+
+extern "C" OSStatus iTunesPluginMainMachO( OSType inMessage, PluginMessageInfo *inMessageInfoPtr, void *refCon ) __attribute__((visibility("default")));
+
+//-------------------------------------------------------------------------------------------------
+//	GetVisualName
+//-------------------------------------------------------------------------------------------------
+//
+void GetVisualName( ITUniStr255 name )
+{
+	CFIndex length = CFStringGetLength( kTVisualPluginName );
+    
+	name[0] = (UniChar)length;
+	CFStringGetCharacters( kTVisualPluginName, CFRangeMake( 0, length ), &name[1] );
+}
+
+//-------------------------------------------------------------------------------------------------
+//	GetVisualOptions
+//-------------------------------------------------------------------------------------------------
+//
+OptionBits GetVisualOptions( void )
+{
+	OptionBits		options = (kVisualSupportsMuxedGraphics | kVisualWantsIdleMessages);
+    
+	return options;
+}
+
+
+

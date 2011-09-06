@@ -83,7 +83,8 @@ IPod::newFromUsbDevice( io_object_t device, deviceType type /* = unknown */ )
     {
         if( ipod->waitForIpodBackup() )
         {
-            ipod->m_mobileScrobblerInstalled = ipod->queryMobileScrobblerInstalled();
+            ipod->m_mobileScrobblerInstalled = false;
+             //ipod->queryMobileScrobblerInstalled();
             ipod->m_manualMode = ipod->queryIPhoneManual();
         }
         else

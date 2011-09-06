@@ -17,6 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #include "main.h"
 #include "IPodDetector.h"
 #include "Moose.h"
@@ -42,62 +43,71 @@ static void setupIPodSystem();
 static void cleanup();
 static void uninstall();
 static void deleteTwiddlyDatabases();
-static OSStatus RegisterVisualPlugin( PluginMessageInfo* );
+extern void ScrobSubCallback(int reqID, bool error, std::string message, void* userData);
+extern void ClearMemory( LogicalAddress dest, SInt32 length );
 
-
-extern "C"
+//-------------------------------------------------------------------------------------------------
+//	iTunesPluginMain
+//-------------------------------------------------------------------------------------------------
+//
+#if TARGET_OS_MAC
+extern "C" OSStatus iTunesPluginMainMachO( OSType message, PluginMessageInfo * messageInfo, void * refCon )
+#else
+extern "C" __declspec(dllexport) OSStatus iTunesPluginMain( OSType message, PluginMessageInfo * messageInfo, void * refCon )
+#endif
 {
-    IMPEXP OSStatus
-    MAIN( OSType message, PluginMessageInfo* messageInfo, void* /*refCon*/ )
+	OSStatus		status;
+	
+	(void) refCon;
+	
+    switch ( message )
     {
-        switch ( message )
-        {
-            case kPluginInitMessage:
-                initLogger();
-
-              #if TARGET_OS_MAC
-                if ( !isClientInstalled() )
-                {
-                    uninstall();
-                    return noErr;
-                }
-              #endif
-                
-                launchClient(); //launches client, on mac
-                setupIPodSystem(); //sets up iPod scrobbling
-
-              #if TARGET_OS_WIN32
-                LOG( 3, "Initialising ScrobSubmitter" );
-                gSubmitter.Init( "itw", ScrobSubCallback, 0 );
-              #endif
-                
-                return RegisterVisualPlugin( messageInfo );
-
-        
-            case kPluginPrepareToQuitMessage:
-                LOG( 3, "EVENT: kPluginPrepareToQuitMessage" );
-
-                cleanup();
+        case kPluginInitMessage:
+            initLogger();
+            
+#if TARGET_OS_MAC
+            if ( !isClientInstalled() )
+            {
+                uninstall();
                 return noErr;
-
-        
-            case kPluginCleanupMessage:
-                LOG( 3, "EVENT: kPluginCleanupMessage" );
-
-              #if TARGET_OS_WIN32
-                LOG( 3, "Terminating ScrobSubmitter" );
-                gSubmitter.Term();
-              #endif
-
-                return noErr;
-
-        
-            default:
-                return unimpErr;
-        }
+            }
+#endif
+            
+            launchClient(); //launches client, on mac
+            setupIPodSystem(); //sets up iPod scrobbling
+            
+#if TARGET_OS_WIN32
+            LOG( 3, "Initialising ScrobSubmitter" );
+            gSubmitter.Init( "itw", ScrobSubCallback, 0 );
+#endif
+            
+            return RegisterVisualPlugin( messageInfo );
+            
+            
+        case kPluginPrepareToQuitMessage:
+            LOG( 3, "EVENT: kPluginPrepareToQuitMessage" );
+            
+            cleanup();
+            return noErr;
+            
+            
+        case kPluginCleanupMessage:
+            LOG( 3, "EVENT: kPluginCleanupMessage" );
+            
+#if TARGET_OS_WIN32
+            LOG( 3, "Terminating ScrobSubmitter" );
+            gSubmitter.Term();
+#endif
+            
+            return noErr;
+            
+            
+        default:
+            return unimpErr;
     }
-} // extern "C"
-
+    
+	return status;
+}
 
 static void initLogger()
 {
@@ -106,7 +116,7 @@ static void initLogger()
     path += L"\\iTunesPlugin.log";
 #else
     std::string path = ::getenv( "HOME" );
-    path += "/Library/Logs/Last.fm/iTunes.log";
+    path += "/Library/Logs/Last.fm/iTunes Plugin.log";
 #endif
 
     new Logger( path.c_str(), Logger::Debug );
@@ -119,9 +129,7 @@ static void launchClient()
 #if TARGET_OS_MAC
     if ( Moose::launchWithMediaPlayer() )
     {
-        std::vector< std::string > tray;
-        tray.push_back( "--tray" );
-        Moose::launchAudioscrobbler( tray );
+        Moose::exec( Moose::applicationFolder() + "Last.fm", "--tray" );
     }
 #endif
 }
@@ -176,9 +184,9 @@ static void cleanup()
 #if TARGET_OS_MAC
 static bool isClientInstalled()
 {
-	FSRef appRef;
-	OSStatus status = LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.scrobbler" ), NULL, &appRef, NULL );
-	return status != kLSApplicationNotFoundErr;
+    struct stat st;
+    std::string path = Moose::applicationFolder() + "Last.fm";
+    return stat( path.c_str(), &st ) == 0;
 }
 
 
@@ -209,73 +217,61 @@ static void deleteTwiddlyDatabases()
     #endif
 }
 
-
-static OSStatus
-RegisterVisualPlugin( PluginMessageInfo *messageInfo )
+//-------------------------------------------------------------------------------------------------
+//	RegisterVisualPlugin
+//-------------------------------------------------------------------------------------------------
+//
+#include <iostream>
+OSStatus RegisterVisualPlugin( PluginMessageInfo * messageInfo )
 {
-    OSStatus status;
-    PlayerMessageInfo playerMessageInfo;
-
+    std::cout << "Registering Visual Plugin!!!!" << std::endl;
+	PlayerMessageInfo	playerMessageInfo;
+	OSStatus			status;
+    
 #if TARGET_OS_WIN32
     ClearMemory( &playerMessageInfo.u.registerVisualPluginMessage, 
-                 sizeof( playerMessageInfo.u.registerVisualPluginMessage ) );
+                sizeof( playerMessageInfo.u.registerVisualPluginMessage ) );
 #else
     memset( &playerMessageInfo.u.registerVisualPluginMessage, 
-            0,
-            sizeof( playerMessageInfo.u.registerVisualPluginMessage ) );
+           0,
+           sizeof( playerMessageInfo.u.registerVisualPluginMessage ) );
 #endif
-
+    
 #if TARGET_OS_MAC
-    const char* pluginName = kVisualPluginName;
-    int const n = strlen( pluginName );
-    playerMessageInfo.u.registerVisualPluginMessage.name[0] = n;
-    memcpy( &playerMessageInfo.u.registerVisualPluginMessage.name[1], &pluginName[0], n );
+	GetVisualName( playerMessageInfo.u.registerVisualPluginMessage.name );
 #else
     // copy in name length byte first
-    playerMessageInfo.u.registerVisualPluginMessage.name[0] = lstrlenA( kVisualPluginName );
-
+    playerMessageInfo.u.registerVisualPluginMessage.name[0] = lstrlenA( kTVisualPluginName );
+    
     // now copy in actual name
     memcpy( &playerMessageInfo.u.registerVisualPluginMessage.name[1],
-            kVisualPluginName,
-            lstrlenA(kVisualPluginName));
+           kTVisualPluginName,
+           lstrlenA(kTVisualPluginName));
 #endif
 
-    SetNumVersion( &playerMessageInfo.u.registerVisualPluginMessage.pluginVersion,
-        kVisualPluginMajorVersion,
-        kVisualPluginMinorVersion,
-        kVisualPluginReleaseStage,
-        kVisualPluginNonFinalRelease );
 
-    LOG( 3, "Giving iTunes version number: " + GetVersionString() );
-
-#if TARGET_OS_WIN32
-    //FIXME actually, I doubt we want these
-    playerMessageInfo.u.registerVisualPluginMessage.options                 = kVisualWantsIdleMessages;
-#endif
-    playerMessageInfo.u.registerVisualPluginMessage.handler                 = VisualPluginHandler;
-    playerMessageInfo.u.registerVisualPluginMessage.registerRefCon          = 0;
-    playerMessageInfo.u.registerVisualPluginMessage.creator                 = kVisualPluginCreator;
-
-    // following sets render to be called every 100ms
-    playerMessageInfo.u.registerVisualPluginMessage.timeBetweenDataInMS     = 100; // 16 milliseconds = 1 Tick, 0xFFFFFFFF = Often as possible.
-    playerMessageInfo.u.registerVisualPluginMessage.numWaveformChannels     = 2;
-    playerMessageInfo.u.registerVisualPluginMessage.numSpectrumChannels     = 2;
-
-    playerMessageInfo.u.registerVisualPluginMessage.minWidth                = 64;
-    playerMessageInfo.u.registerVisualPluginMessage.minHeight               = 64;
-    playerMessageInfo.u.registerVisualPluginMessage.maxWidth                = 32767;
-    playerMessageInfo.u.registerVisualPluginMessage.maxHeight               = 32767;
-    playerMessageInfo.u.registerVisualPluginMessage.minFullScreenBitDepth   = 0;
-    playerMessageInfo.u.registerVisualPluginMessage.maxFullScreenBitDepth   = 0;
-    playerMessageInfo.u.registerVisualPluginMessage.windowAlignmentInBytes  = 0;
-
-    messageInfo->u.initMessage.options = 0;
-    messageInfo->u.initMessage.refCon = 0;
     
-    status = PlayerRegisterVisualPlugin( messageInfo->u.initMessage.appCookie,
-                                         messageInfo->u.initMessage.appProc,
-                                         &playerMessageInfo );
-    return status;
+	SetNumVersion( &playerMessageInfo.u.registerVisualPluginMessage.pluginVersion, kTVisualPluginMajorVersion, kTVisualPluginMinorVersion, kTVisualPluginReleaseStage, kTVisualPluginNonFinalRelease );
+    
+    LOG( 3, "Giving iTunes version number: " + GetVersionString() );
+    
+	playerMessageInfo.u.registerVisualPluginMessage.options					= GetVisualOptions();
+	playerMessageInfo.u.registerVisualPluginMessage.handler					= (VisualPluginProcPtr)VisualPluginHandler;
+	playerMessageInfo.u.registerVisualPluginMessage.registerRefCon			= 0;
+	playerMessageInfo.u.registerVisualPluginMessage.creator					= kTVisualPluginCreator;
+	
+	playerMessageInfo.u.registerVisualPluginMessage.pulseRateInHz			= kStoppedPulseRateInHz;	// update my state N times a second
+	playerMessageInfo.u.registerVisualPluginMessage.numWaveformChannels		= 2;
+	playerMessageInfo.u.registerVisualPluginMessage.numSpectrumChannels		= 2;
+	
+	playerMessageInfo.u.registerVisualPluginMessage.minWidth				= 64;
+	playerMessageInfo.u.registerVisualPluginMessage.minHeight				= 64;
+	playerMessageInfo.u.registerVisualPluginMessage.maxWidth				= 0;	// no max width limit
+	playerMessageInfo.u.registerVisualPluginMessage.maxHeight				= 0;	// no max height limit
+	
+	status = PlayerRegisterVisualPlugin( messageInfo->u.initMessage.appCookie, messageInfo->u.initMessage.appProc, &playerMessageInfo );
+    
+	return status;
 }
 
 
@@ -283,9 +279,9 @@ std::string
 GetVersionString()
 {
     std::ostringstream os;
-    os << kVisualPluginMajorVersion << "."
-       << kVisualPluginMinorVersion << "."
-       << kVisualPluginReleaseStage << "."
-       << kVisualPluginNonFinalRelease;
+    os << kTVisualPluginMajorVersion << "."
+       << kTVisualPluginMinorVersion << "."
+       << kTVisualPluginReleaseStage << "."
+       << kTVisualPluginNonFinalRelease;
     return os.str();
 }

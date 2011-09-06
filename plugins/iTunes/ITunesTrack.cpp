@@ -100,10 +100,10 @@ ITunesTrack::~ITunesTrack()
 
 
 #ifndef WIN32
-static void splitTheseFourCommaSeparatedParts( const std::string& in, std::string out[] )
+static void splitTheseFiveCommaSeparatedParts( const std::string& in, std::string out[] )
 {
     unsigned int first = 0;
-    for (int x = 0; x < 3; ++x)
+    for (int x = 0; x < 4; ++x)
     {   
         unsigned int const second = in.find( ',', first );
 
@@ -115,7 +115,7 @@ static void splitTheseFourCommaSeparatedParts( const std::string& in, std::strin
         first = second + 2;
     }
     
-    out[3] = in.substr( first );
+    out[4] = in.substr( first );
 }
 
 
@@ -129,22 +129,28 @@ ExtendedITunesTrack::currentTrack()
         //TODO may as well precompile 3 scripts and then run them with carbon
         // that should be most efficient computationally and easiest to read method
         
-        // returns eg. "412EAE1061ABF7D2, 6152, 3, /music/file.mp3"
+        // returns eg. "412EAE1061ABF7D2, 6152, 3, /music/file.mp3", "Audio CD Track"
         std::string const s = scriptResult( "currentTrack.scpt" );
 
-        std::string parts[4];
-        splitTheseFourCommaSeparatedParts( s, parts );
+        if( s.length() == 0 ) throw PlayCountException();
+        std::string parts[5];
+        splitTheseFiveCommaSeparatedParts( s, parts );
         
         t.m_id = parts[0];
         t.m_dbid = parts[1];
         t.m_path = parts[3];
+        t.m_kind = parts[4];
         // may throw PlayCountException, if so initialPlayCount stays at -1
         // this always happens when iTunes is stopped
         t.m_initialPlayCount = stdStringToLong( parts[2] );
     }
     catch (PlayCountException&)
     {
-        LOG( 3, "Couldn't get current track data" );
+        LOGL( 3, "Couldn't get current track data" );
+    }
+    catch (ITunesException& e)
+    {
+        LOGL( 3, (std::string("Couldn't determine current track: ") + e.what()).c_str());
     }
     
     return t;
@@ -298,7 +304,7 @@ ITunesTrack::isNull() const
   #ifdef WIN32
     return m_comTrack == 0 || m_path.empty();
   #else
-    return m_id == "";
+    return m_id == "" || m_kind == "Audio CD Track";
   #endif
 }
 

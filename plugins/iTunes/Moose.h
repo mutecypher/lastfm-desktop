@@ -124,7 +124,7 @@ namespace Moose
     inline std::wstring
     Moose::twiddlyPath()
     {
-        return applicationFolder() + L"twiddly.exe";
+        return applicationFolder() + L"iPodScrobbler.exe";
     }
 #endif
 
