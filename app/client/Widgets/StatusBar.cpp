@@ -88,7 +88,6 @@ StatusBar::StatusBar( QWidget* parent )
     connect( aApp, SIGNAL( internetConnectionDown() ), SLOT( onConnectionDown() ) );
     connect( aApp, SIGNAL( internetConnectionUp() ), SLOT( onConnectionUp() ) );
 
-    connect( aApp, SIGNAL( gotUserInfo(lastfm::UserDetails)), SLOT( onGotUserInfo(lastfm::UserDetails) ) );
 
     DeviceScrobbler* deviceScrobbler = ScrobbleService::instance().deviceScrobbler();
     if( deviceScrobbler )
@@ -102,6 +101,7 @@ StatusBar::StatusBar( QWidget* parent )
     connect( this, SIGNAL(messageChanged(QString)), SLOT(onMessagedChanged(QString)));
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)));
+    connect( aApp, SIGNAL( gotUserInfo(lastfm::UserDetails)), SLOT( onGotUserInfo(lastfm::UserDetails) ) );
 }
 
 
@@ -110,8 +110,14 @@ StatusBar::onSessionChanged( unicorn::Session* session )
 {
     bool scrobblingOn = unicorn::UserSettings( session->userInfo() ).value( "scrobblingOn", true ).toBool();
     onScrobbleToggled( scrobblingOn );
+    setStatus();
 }
 
+void
+StatusBar::onGotUserInfo( lastfm::UserDetails /*userDetails*/ )
+{
+    setStatus();
+}
 
 void
 StatusBar::onScrobbleToggled( bool scrobblingOn )
@@ -140,12 +146,6 @@ void
 StatusBar::setStatus()
 {
     ui.message->setText( tr("%1 (%2)").arg( lastfm::ws::Username, m_online ? tr( "Online" ) : tr( "Offline" ) ));
-}
-
-void
-StatusBar::onGotUserInfo( lastfm::UserDetails /*userDetails*/ )
-{
-    setStatus();
 }
 
 void

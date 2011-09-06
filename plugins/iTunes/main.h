@@ -21,88 +21,104 @@
 // Don't allow windows.h to include old winsock.h because it conflicts with
 // winsock2.h included by the ScrobSubmitter
 #ifndef _WINSOCKAPI_
-    #define _WINSOCKAPI_
+#define _WINSOCKAPI_
 #endif
 
 #include "iTunesVisualAPI/iTunesVisualAPI.h"
+#include <time.h>
 #include <string>
 
+#if TARGET_OS_WIN32
+#include <Gdiplus.h>
+#endif // TARGET_OS_WIN32
 
 #if TARGET_OS_WIN32
-    #define	MAIN iTunesPluginMain
-    #define IMPEXP	__declspec(dllexport)
+#define kTVisualPluginName     "Last.fm AudioScrobbler"
 #else
-    #define	MAIN iTunesPluginMainMachO
-    #define IMPEXP
+#define kTVisualPluginName     CFSTR("Last.fm AudioScrobbler")
+#endif
+
+#define	kTVisualPluginCreator			'hook'
+
+#define	kTVisualPluginMajorVersion		5
+#define	kTVisualPluginMinorVersion		0
+#define	kTVisualPluginReleaseStage		0
+#define	kTVisualPluginNonFinalRelease	0
+
+struct VisualPluginData;
+
+#if TARGET_OS_MAC
+#import <Cocoa/Cocoa.h>
+
+// "namespace" our ObjC classname to avoid load conflicts between multiple visualizer plugins
+#define VisualView		ComAppleExample_VisualView
+#define GLVisualView	ComAppleExample_GLVisualView
+
+@class VisualView;
+@class GLVisualView;
+
+OSStatus	ConfigureVisual( VisualPluginData * visualPluginData );
+
+void notificationCallback( CFNotificationCenterRef,
+                          void*,
+                          CFStringRef,
+                          const void*,
+                          CFDictionaryRef info );
+
 #endif
 
 
-#define kVisualPluginName     "Last.fm AudioScrobbler"
-#define kVisualPluginCreator  '\?\?\?\?'
 
+#define kInfoTimeOutInSeconds		10							// draw info/artwork for N seconds when it changes or playback starts
+#define kPlayingPulseRateInHz		10							// when iTunes is playing, draw N times a second
+#define kStoppedPulseRateInHz		5							// when iTunes is not playing, draw N times a second
 
-// You must update the version in many places young one, see the README
-#define kVisualPluginMajorVersion     3
-#define kVisualPluginMinorVersion     2
-#define kVisualPluginReleaseStage     0
-#define kVisualPluginNonFinalRelease  0
-
-
-struct VisualPluginData 
+struct VisualPluginData
 {
-    void*               appCookie;
-    ITAppProcPtr        appProc;
+	void *				appCookie;
+	ITAppProcPtr		appProc;
     
 #if TARGET_OS_MAC
-    ITFileSpec          pluginFileSpec;
+	NSView*				destView;
+	NSRect				destRect;
+	NSImage *			currentArtwork;
+#else
+	HWND				destView;
+	RECT				destRect;
+	Gdiplus::Bitmap* 	currentArtwork;
+	long int			lastDrawTime;
 #endif
+	OptionBits			destOptions;
     
-    GRAPHICS_DEVICE     destPort;
-    Rect                destRect;
-    OptionBits          destOptions;
-    UInt32              destBitDepth;
+	RenderVisualData	renderData;
+	UInt32				renderTimeStampID;
+	
+	ITTrackInfo			trackInfo;
+	ITStreamInfo		streamInfo;
     
-    RenderVisualData    renderData;
-    UInt32              renderTimeStampID;
+	// Plugin-specific data
     
-    SInt8               waveformData[kVisualMaxDataChannels][kVisualNumWaveformEntries];
+	Boolean				playing;								// is iTunes currently playing audio?
+	Boolean				padding[3];
     
-    UInt8               level[kVisualMaxDataChannels];      /* 0-128 */
+	time_t				drawInfoTimeOut;						// when should we stop showing info/artwork?
     
-    ITTrackInfoV1       trackInfo;
-    ITStreamInfoV1      streamInfo;
-    
-    Boolean             playing;
-    Boolean             padding[3];
-    
-    /** Plugin-specific data */
-#if TARGET_OS_MAC
-    GWorldPtr           offscreen;
-#endif
+	UInt8				minLevel[kVisualMaxDataChannels];		// 0-128
+	UInt8				maxLevel[kVisualMaxDataChannels];		// 0-128
 };
-
 typedef struct VisualPluginData VisualPluginData;
 
+void		GetVisualName( ITUniStr255 name );
+OptionBits	GetVisualOptions( void );
+OSStatus	RegisterVisualPlugin( PluginMessageInfo * messageInfo );
 
-#if TARGET_OS_WIN32	
-    void ScrobSubCallback( int, 
-                           bool, 
-                           std::string, 
-                           void* );
+void		ProcessRenderData( VisualPluginData * visualPluginData, UInt32 timeStampID, const RenderVisualData * renderData );
+void		ResetRenderData( VisualPluginData * visualPluginData );
+void		UpdateTrackInfo( VisualPluginData * visualPluginData, ITTrackInfo * trackInfo, ITStreamInfo * streamInfo );
+void		UpdatePulseRate( VisualPluginData * visualPluginData, UInt32 * ioPulseRate );
 
-    void ClearMemory( LogicalAddress, SInt32 );
+void		PulseVisual( VisualPluginData * visualPluginData, UInt32 timeStampID, const RenderVisualData * renderData, UInt32 * ioPulseRate );
+void		InvalidateVisual( VisualPluginData * visualPluginData );
 
-#else
-    void notificationCallback( CFNotificationCenterRef,
-                               void*,
-                               CFStringRef,
-                               const void*,
-                               CFDictionaryRef );
-#endif
-
-
-std::string GetVersionString();
-
-OSStatus VisualPluginHandler( OSType,
-                              VisualPluginMessageInfo*,
-                              void* );
+std::string	GetVersionString();
+OSStatus	VisualPluginHandler( OSType m, VisualPluginMessageInfo*, void* );

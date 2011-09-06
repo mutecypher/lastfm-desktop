@@ -23,7 +23,7 @@
 
 #ifdef WIN32
 
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 #include "plugins/iTunes/ITunesTrack.h"
 #include <QSharedData>
 #include <QSharedDataPointer>
@@ -114,7 +114,7 @@ struct IPodLibraryTrackData : public ITunesLibraryTrackData
 
 
 #else //MAC
-    #include <lastfm/Track>
+    #include <lastfm/Track.h>
     #include "PlayCountsDatabase.h"
     
     template <typename T> class QList;

@@ -17,6 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #include "main.h"
 
 #include "common/c++/logger.h"
@@ -466,22 +467,18 @@ ProcessRenderData( VisualPluginData *visualPluginData, const RenderVisualData *r
 }
 
 
-/** RenderVisualPort - this is the main drawing code */
-static void
-RenderVisualPort (VisualPluginData *visualPluginData, GRAPHICS_DEVICE destPort, const Rect *destRect, Boolean onlyUpdate)
+/** DrawVisual - this is the main drawing code */
+void DrawVisual( VisualPluginData * visualPluginData )
 {
-    if (destPort == nil)
+	if ( !(visualPluginData && visualPluginData->destView != NULL) )
         return;
 
-    HDC hdc = GetDC(destPort);
+    HDC hdc = GetDC(visualPluginData->destView);
 
     HBRUSH brush = CreateSolidBrush(RGB(220, 220, 220));
 
     RECT client;
-    client.bottom = destRect->bottom;
-    client.top = destRect->top;
-    client.left = destRect->left;
-    client.right = destRect->right;
+    ::GetClientRect( visualPluginData->destView, &client );
 
     // Paint background
     FillRect(hdc, &client, brush);
@@ -491,12 +488,12 @@ RenderVisualPort (VisualPluginData *visualPluginData, GRAPHICS_DEVICE destPort, 
     SelectObject(hdc, GetStockObject(DEFAULT_GUI_FONT)) ;
     RECT textRect = {10, 10, 400, 30};
     std::ostringstream os;
-    os << kVisualPluginName << " " << GetVersionString();
+    os << kTVisualPluginName << " " << GetVersionString();
     DrawText(hdc, os.str().c_str(), -1, &textRect, DT_LEFT | DT_TOP);
 
     // Draw options box
-    RECT boxRect = { destRect->right - 144, destRect->top + 10,
-                     destRect->right - 10, destRect->top + 50 };
+    RECT boxRect = { visualPluginData->destRect.right - 144, visualPluginData->destRect.top + 10,
+                     visualPluginData->destRect.right - 10, visualPluginData->destRect.top + 50 };
     DeleteObject(brush);
     brush = CreateSolidBrush(RGB(250, 250, 250));
     SelectObject(hdc, brush);
@@ -507,7 +504,7 @@ RenderVisualPort (VisualPluginData *visualPluginData, GRAPHICS_DEVICE destPort, 
              -1, &boxRect, DT_LEFT | DT_TOP);
 
     DeleteObject(brush);
-    ReleaseDC(destPort, hdc);
+    ReleaseDC(visualPluginData->destView, hdc);
 }
 
 
@@ -518,6 +515,15 @@ static OSStatus
 AllocateVisualData (VisualPluginData *visualPluginData, const Rect *destRect)
 {
     return noErr;
+}
+
+//-------------------------------------------------------------------------------------------------
+//	GetVisualOptions
+//-------------------------------------------------------------------------------------------------
+//
+OptionBits GetVisualOptions( void )
+{
+	return kVisualWantsIdleMessages;
 }
 
 
@@ -544,62 +550,27 @@ RectanglesEqual(const Rect *r1, const Rect *r2)
 }
 
 
-static OSStatus
-ChangeVisualPort( VisualPluginData *visualPluginData, GRAPHICS_DEVICE destPort, const Rect *destRect )
+OSStatus MoveVisual( VisualPluginData * visualPluginData, OptionBits newOptions )
 {
-    OSStatus        status;
-    Boolean         doAllocate;
-    Boolean         doDeallocate;
+	GetClientRect( visualPluginData->destView, &visualPluginData->destRect );
+	visualPluginData->destOptions = newOptions;
 
-    status = noErr;
+	return noErr;
+}
 
-    doAllocate      = false;
-    doDeallocate    = false;
 
-    if (destPort != nil)
-    {
-        if (visualPluginData->destPort != nil)
-        {
-            if (RectanglesEqual(destRect, &visualPluginData->destRect) == false)
-            {
-                doDeallocate    = true;
-                doAllocate      = true;
-            }
-        }
-        else
-        {
-            doAllocate = true;
-        }
-    }
-    else
-    {
-        doDeallocate = true;
-    }
-
-    if (doDeallocate)
-        DeallocateVisualData(visualPluginData);
-
-    if (doAllocate)
-        status = AllocateVisualData(visualPluginData, destRect);
-
-    if (status != noErr)
-        destPort = nil;
-
-    visualPluginData->destPort = destPort;
-    if (destRect != nil)
-        visualPluginData->destRect = *destRect;
-
-    return status;
+OSStatus DeactivateVisual( VisualPluginData * visualPluginData )
+{
+	visualPluginData->destView = NULL;
+	return noErr;
 }
 
 
 static void
 ResetRenderData (VisualPluginData *visualPluginData)
 {
-    ClearMemory(&visualPluginData->renderData, sizeof(visualPluginData->renderData));
-    ClearMemory(&visualPluginData->waveformData[0][0], sizeof(visualPluginData->waveformData));
-    visualPluginData->level[0] = 0;
-    visualPluginData->level[1] = 0;
+    memset( &visualPluginData->renderData, 0, sizeof(visualPluginData->renderData) );
+	memset( visualPluginData->minLevel, 0, sizeof(visualPluginData->minLevel) );
 }
 
 
@@ -666,10 +637,7 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
             // The render msg will take care of refreshing the screen if we're playing
             if ( !visualPluginData->playing )
             {
-                RenderVisualPort( visualPluginData, 
-                                  visualPluginData->destPort,
-                                  &visualPluginData->destRect,
-                                  false );
+                DrawVisual( visualPluginData );
             }
         }
         break;
@@ -683,58 +651,32 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
         /** Sent when iTunes is going to show the visual plugin in a port.  At
           * this point, the plugin should allocate any large buffers it needs.
           * Gets called once when window is first displayed. */
-        case kVisualPluginSetWindowMessage:
+		case kVisualPluginActivateMessage:
         /** Sent when iTunes needs to change the port or rectangle of the
           * currently displayed visual. Resize. */
-        case kVisualPluginShowWindowMessage:
+        case kVisualPluginWindowChangedMessage:
         {
-            LOGL( 3, "EVENT: kVisualPlugin*WindowMessage" );
-
-            visualPluginData->destOptions = messageInfo->u.showWindowMessage.options;
-
-            #if TARGET_OS_WIN32
-                #define PORT messageInfo->u.setWindowMessage.window
-            #else
-                #define PORT messageInfo->u.setWindowMessage.port
-            #endif
-
-            status = ChangeVisualPort( visualPluginData,
-                                       PORT,
-                                       &messageInfo->u.showWindowMessage.drawRect );
-            if (status == noErr)
-            {
-                RenderVisualPort( visualPluginData, visualPluginData->destPort, &visualPluginData->destRect, true);
-            }
+ 			status = MoveVisual( visualPluginData, messageInfo->u.windowChangedMessage.options );
+			break;
         }
         break;
 
         /** Sent when iTunes is no longer displayed. */
-        case _(kVisualPluginHideWindowMessage)
+        case _(kVisualPluginDeactivateMessage)
         {
-            ChangeVisualPort( visualPluginData, nil, nil );
-
-            ClearMemory( &visualPluginData->trackInfo, sizeof(visualPluginData->trackInfo) );
-            ClearMemory( &visualPluginData->streamInfo, sizeof(visualPluginData->streamInfo) );
+            status = DeactivateVisual( visualPluginData );
         }
         break;
 
         /** Sent for the visual plugin to render a frame. Only get these when 
           * playing. */
-        case kVisualPluginRenderMessage:
-            visualPluginData->renderTimeStampID = messageInfo->u.renderMessage.timeStampID;
-            RenderVisualPort(visualPluginData, visualPluginData->destPort, &visualPluginData->destRect, false);
-            break;
-
-        /** Sent in response to an update event.  The visual plugin should update
-          * into its remembered port.  This will only be sent if the plugin has been
-          * previously given a ShowWindow message. */  
-        case kVisualPluginUpdateMessage:
-            RenderVisualPort( visualPluginData, visualPluginData->destPort, &visualPluginData->destRect, true );
+        case kVisualPluginDrawMessage:
+            DrawVisual( visualPluginData );
             break;
 
         /** Sent when the playback starts */
         case _(kVisualPluginPlayMessage)
-            HandleTrack( messageInfo->u.playMessage.trackInfoUnicode );
+			HandleTrack( messageInfo->u.playMessage.trackInfo );
             visualPluginData->playing = true;
             break;
 
@@ -743,7 +685,7 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
          * onto the next track. The visual plugin should update any displayed
          * information about the currently playing song. */
         case _(kVisualPluginChangeTrackMessage)
-            HandleTrack( messageInfo->u.changeTrackMessage.trackInfoUnicode );
+            HandleTrack( messageInfo->u.changeTrackMessage.trackInfo );
             break;
 
         /** Sent when the player stops. */
@@ -758,7 +700,7 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
             visualPluginData->playing = false;
 
             ResetRenderData(visualPluginData);
-            RenderVisualPort(visualPluginData, visualPluginData->destPort, &visualPluginData->destRect, true);
+            DrawVisual(visualPluginData);
         }
         break;
 
@@ -766,45 +708,6 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
         case _(kVisualPluginSetPositionMessage)
             break;
 
-        /** Sent when the player pauses.  iTunes does not currently use pause or 
-          * unpause. A pause in iTunes is handled by stopping and remembering 
-          * the position. */
-        case _(kVisualPluginPauseMessage)
-        {
-            LOGL( 3, "***************************** PAUSE MESSAGE *****************************************" );
-            if ( gASState == AS_PLAYING )
-            {
-                ASPause();
-            }
-
-            visualPluginData->playing = false;
-
-            ResetRenderData( visualPluginData );
-            RenderVisualPort( visualPluginData, visualPluginData->destPort, &visualPluginData->destRect, true );
-        }
-        break;
-
-        /** Sent when the player unpauses.  iTunes does not currently use pause 
-          * or unpause. A pause in iTunes is handled by stopping and remembering 
-          * the position. */
-        case _(kVisualPluginUnpauseMessage)
-        {
-            if (gASState == AS_PAUSED)
-            {
-                ASResume();
-            }
-
-            visualPluginData->playing = true;
-
-            ResetRenderData( visualPluginData );
-            RenderVisualPort( visualPluginData, visualPluginData->destPort, &visualPluginData->destRect, true );
-        }
-        break;
-
-        /** Sent to the plugin in response to a MacOS event.  The plugin should 
-          * return noErr for any event it handles completely, or an error
-          * (unimpErr) if iTunes should handle it. */
-        case kVisualPluginEventMessage:
         default:
             status = unimpErr;
             break;
@@ -813,21 +716,4 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
     #undef _ //logging helper macro
 
     return status;
-}
-
-
-BOOL APIENTRY
-DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved )
-{
-    if (ul_reason_for_call == DLL_PROCESS_ATTACH)
-    {
-        // intial startup - null everything just for safety
-        gHModule = hModule;
-    }
-    else if (ul_reason_for_call == DLL_PROCESS_DETACH)
-    {
-        // er?
-    }
-
-    return TRUE;
 }

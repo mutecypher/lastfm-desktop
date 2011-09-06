@@ -82,6 +82,7 @@ public:
     /** These two fields are always populated when an iTunes track is created */
     std::string persistentId() const { return m_id; }
     std::string path() const { return m_path; }
+    std::string kind() const { return m_kind; }
   
   #endif
 
@@ -106,7 +107,8 @@ protected:
     std::string m_id; // utf8
     std::string m_path; // utf8
     std::string m_dbid; //database ID
-
+    std::string m_kind; // "Audio CD Track" etc
+    
     /** executes an applescript in the bundle and returns the output */
     static std::string scriptResult( const char* filename, const std::string& argv1 = "" ) throw();
 

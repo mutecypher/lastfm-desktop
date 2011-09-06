@@ -198,7 +198,17 @@ ITunesPlaysDatabase::needsBootstrap()
 {
     std::string out;
     bool b = query( "SELECT value FROM metadata WHERE key='bootstrap_complete'", &out );
-    return !(b && out == "true");
+    if (!b || out != "true")
+        return true;
+
+   
+#ifndef WIN32
+    b = query( "SELECT value FROM metadata WHERE key='schema'", &out );
+    if (!b || out != "2")
+        return true;
+#endif
+
+    return false;
 }
 
 

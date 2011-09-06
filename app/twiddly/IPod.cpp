@@ -26,7 +26,7 @@
 #include "common/qt/msleep.cpp"
 #include "plugins/iTunes/ITunesExceptions.h"
 #include <lastfm/misc.h>
-#include <lastfm/Track>
+#include <lastfm/Track.h>
 #include <QtCore>
 #include <QtXml>
 #include <iostream>
