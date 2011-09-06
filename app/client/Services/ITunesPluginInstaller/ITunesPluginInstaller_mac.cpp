@@ -31,7 +31,7 @@ static const char* kPListFile = "Contents/Info.plist";
 
 
 ITunesPluginInstaller::ITunesPluginInstaller()
-        : k_shippedPluginDir( qApp->applicationDirPath() + "/PlugIns/" + kBundleName + "/" ),
+        : k_shippedPluginDir( qApp->applicationDirPath() + "/" + kBundleName + "/" ),
           k_iTunesPluginDir( QDir::homePath() + "/Library/iTunes/iTunes Plug-ins/" + kBundleName + "/" ),
           m_needsTwiddlyBootstrap( false )
 {
