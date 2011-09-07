@@ -21,6 +21,7 @@ public slots:
 
 private slots:
     void onGotImage();
+    void onTrackGotInfo();
     void onAlbumGotInfo();
 
 signals:
