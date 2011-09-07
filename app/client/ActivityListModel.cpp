@@ -92,12 +92,7 @@ ActivityListModel::read()
     QList<Track> tracks;
 
     for (QDomNode n = xml.documentElement().lastChild(); !n.isNull(); n = n.previousSibling())
-    {
-        if( n.toElement().attributes().contains( "iPodScrobble" ))
-            continue;
-
         tracks << Track( n.toElement() );
-    }
 
     addTracks( tracks );
 
@@ -253,22 +248,17 @@ ActivityListModel::addTracks( const QList<lastfm::Track>& tracks )
 
     foreach ( const lastfm::Track& track, tracks )
     {
-        // Tracks with a deviceId are iPod scrobbles
-        // we ignore these at the moment
-        if ( track.extra("deviceId").isEmpty() )
+        if ( qBinaryFind( m_tracks.begin(), m_tracks.end(), track, lessThan ) == m_tracks.end() )
         {
-            if ( qBinaryFind( m_tracks.begin(), m_tracks.end(), track, lessThan ) == m_tracks.end() )
-            {
-                QList<ImageTrack>::iterator insert = qLowerBound( m_tracks.begin(), m_tracks.end(), track, lessThan );
-                QList<ImageTrack>::iterator inserted = m_tracks.insert( insert, track );
+            QList<ImageTrack>::iterator insert = qLowerBound( m_tracks.begin(), m_tracks.end(), track, lessThan );
+            QList<ImageTrack>::iterator inserted = m_tracks.insert( insert, track );
 
-                inserted->getInfo();
-                inserted->fetchImage();
+            inserted->getInfo();
+            inserted->fetchImage();
 
-                connect( &(*inserted), SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
-                connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
-                connect( track.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
-            }
+            connect( &(*inserted), SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
+            connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
+            connect( track.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
         }
     }
 
