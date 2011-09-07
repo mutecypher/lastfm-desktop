@@ -84,11 +84,12 @@ Application::Application(int& argc, char** argv)
 void
 Application::initiateLogin() throw( StubbornUserException )
 {
-    if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
+    //if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool() )
     {
         setWizardRunning( true );
         FirstRunWizard w;
-        if( w.exec() != QDialog::Accepted ) {
+        if( w.exec() != QDialog::Accepted )
+        {
             setWizardRunning( false );
             throw StubbornUserException();
         }
@@ -117,6 +118,8 @@ Application::init()
     // Initialise the unicorn base class first!
     unicorn::Application::init();
 
+    initiateLogin();
+
 #ifdef Q_WS_MAC
     {
         ITunesPluginInstaller installer;
@@ -129,22 +132,7 @@ Application::init()
     lastfm::nam()->setCache( diskCache );
 
 /// tray
-    m_tray = new QSystemTrayIcon(this);
-    QIcon trayIcon( AS_TRAY_ICON );
-#ifdef Q_WS_MAC
-    trayIcon.addFile( ":systray_icon_pressed_mac.png", QSize(), QIcon::Selected );
-#endif
-
-#ifdef Q_WS_WIN
-    connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
-#endif
-
-#ifdef Q_WS_X11
-    connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
-#endif
-    m_tray->setIcon(trayIcon);
-    m_tray->show();
-    connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
+    tray(); // this will initialise m_tray if it doesn't already exist
 
     /// tray menu
     QMenu* menu = new QMenu;
@@ -305,17 +293,42 @@ Application::init()
     // clicking on a system tray message should show the scrobbler
     connect( m_tray, SIGNAL(messageClicked()), m_show_window_action, SLOT(trigger()));
 
-    // Do this last so that when the user logs in all the interested widgets find out
-    initiateLogin();
-
     // make sure cached scrobbles get submitted when the connection comes back online
     connect( m_icm, SIGNAL(up(QString)), &ScrobbleService::instance(), SLOT(submitCache()) );
+
+    emit sessionChanged( currentSession() );
 
     emit messageReceived( arguments() );
 
 #ifdef CLIENT_ROOM_RADIO
     new SkipListener( this );
 #endif
+}
+
+QSystemTrayIcon*
+Application::tray()
+{
+    if ( !m_tray )
+    {
+        m_tray = new QSystemTrayIcon(this);
+        QIcon trayIcon( AS_TRAY_ICON );
+#ifdef Q_WS_MAC
+        trayIcon.addFile( ":systray_icon_pressed_mac.png", QSize(), QIcon::Selected );
+#endif
+
+#ifdef Q_WS_WIN
+        connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+#endif
+
+#ifdef Q_WS_X11
+        connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+#endif
+        m_tray->setIcon(trayIcon);
+        m_tray->show();
+        connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
+    }
+
+    return m_tray;
 }
 
 void

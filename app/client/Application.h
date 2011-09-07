@@ -108,8 +108,7 @@ namespace audioscrobbler
         QAction* playAction() const { return m_play_action; }
         QAction* skipAction() const { return m_skip_action; }
         QAction* scrobbleToggleAction() const { return m_submit_scrobbles_toggle; }
-
-        QSystemTrayIcon* tray() const { return m_tray.data(); }
+        QSystemTrayIcon* tray() ;
         void setRaiseHotKey( Qt::KeyboardModifiers mods, int key );
         
     signals:
