@@ -350,13 +350,12 @@ RadioService::phononEnqueue()
             try
             {
                 m_mediaObject->setCurrentSource( ms );
+                m_mediaObject->play();
             }
             catch (...)
             {
                 continue;
             }
-
-            m_mediaObject->play();
         }
         break;
     }
