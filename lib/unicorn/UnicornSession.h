@@ -20,8 +20,6 @@ public:
     Session();
     Session( const QString& username, QString sessionKey = "" );
 
-    static Session* fromNetworkReply( QNetworkReply* reply ) throw( lastfm::ws::ParseError );
-
     QString sessionKey() const;
 
     lastfm::UserDetails userInfo() const;

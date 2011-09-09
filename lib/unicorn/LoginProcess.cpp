@@ -138,8 +138,7 @@ LoginProcess::authUrl() const
 void
 LoginProcess::getSession( QString token )
 {
-    connect( unicorn::Session::getSession( token ), SIGNAL( finished() ),
-             this, SLOT( onGotSession() ) );
+    connect( unicorn::Session::getSession( token ), SIGNAL( finished() ), SLOT( onGotSession() ) );
 }
 
 
@@ -148,7 +147,13 @@ LoginProcess::onGotSession()
 {
     try
     {
-        Session* session = qobject_cast<unicorn::Application*>( qApp )->changeSession( static_cast<QNetworkReply*>( sender() ) );
+        lastfm::XmlQuery lfm;
+        lfm.parse( qobject_cast<QNetworkReply*>( sender() )->readAll() );
+
+        QString username = lfm["session"]["name"].text();
+        QString sessionKey = lfm["session"]["key"].text();
+
+        Session* session = qobject_cast<unicorn::Application*>( qApp )->changeSession( username, sessionKey );
         emit gotSession( session );
         delete m_webServer;
     }
@@ -157,6 +162,17 @@ LoginProcess::onGotSession()
         m_lastError = e;
         qWarning() << e.what();
         if ( m_lastError.enumValue() == lastfm::ws::UnknownError )
+        {
+           m_lastNetworkError = ( QNetworkReply::NetworkError )static_cast<QNetworkReply*>( sender() )->error();
+        }
+    }
+    catch ( lastfm::ws::Error& e )
+    {
+        m_lastError = lastfm::ws::ParseError( e, "" );
+
+        qWarning() << e;
+
+        if ( e == lastfm::ws::UnknownError )
         {
            m_lastNetworkError = ( QNetworkReply::NetworkError )static_cast<QNetworkReply*>( sender() )->error();
         }

@@ -165,7 +165,6 @@ namespace unicorn
     public slots:
         void manageUsers();
         unicorn::Session* changeSession( const QString& username, const QString& sessionKey, bool announce = true );
-        unicorn::Session* changeSession( QNetworkReply* reply, bool announce = true );
         void sendBusLovedStateChanged(bool loved);
         void refreshStyleSheet();
         void restart();

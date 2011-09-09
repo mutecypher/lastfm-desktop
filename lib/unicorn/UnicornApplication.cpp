@@ -280,12 +280,6 @@ unicorn::Application::onBusSessionChanged( const QMap<QString, QString>& session
 }
 
 unicorn::Session*
-unicorn::Application::changeSession( QNetworkReply* reply, bool announce )
-{
-    return changeSession( Session::fromNetworkReply( reply ), announce );
-}
-
-unicorn::Session*
 unicorn::Application::changeSession( const QString& username, const QString& sessionKey, bool announce )
 {
     return changeSession( new Session( username, sessionKey ), announce );
