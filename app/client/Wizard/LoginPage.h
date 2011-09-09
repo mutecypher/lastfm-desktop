@@ -42,7 +42,6 @@ public:
  
 private slots:
     void onSignUpClicked();
-    void yah();
 
 private:
 

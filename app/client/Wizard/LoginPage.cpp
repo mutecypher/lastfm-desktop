@@ -32,63 +32,6 @@
 #include <QVBoxLayout>
 #include <QDesktopServices>
 
-void
-findAndHideWizardRuler( QObject* object )
-{
-    qDebug() << object->metaObject()->className();
-
-    QLayout* l = qobject_cast<QLayout*>(object);
-
-    if ( l )
-    {
-        for ( int i = 0 ; i < l->count() ; ++i )
-        {
-            QWidget* widget = l->itemAt( i )->widget();
-
-            if ( widget )
-            {
-                if ( QString( "QWizardRuler" ).compare( widget->metaObject()->className() ) == 0 )
-                    widget->hide();
-
-                findAndHideWizardRuler( widget );
-            }
-
-
-        }
-    }
-
-    if ( object->isWidgetType() )
-    {
-        QLayout* layout = qobject_cast<QWidget*>( object )->layout();
-
-        if ( layout )
-        {
-            for ( int i = 0 ; i < layout->count() ; ++i )
-            {
-                QWidget* widget = layout->itemAt( i )->widget();
-
-                if ( widget )
-                {
-                    if ( QString( "QWizardRuler" ).compare( widget->metaObject()->className() ) == 0 )
-                        widget->hide();
-
-                    findAndHideWizardRuler( widget );
-                }
-            }
-        }
-    }
-
-    foreach ( QObject* child, object->children() )
-    {
-        qDebug() << child->metaObject()->className();
-
-        if ( QString( child->metaObject()->className() ) == QString( "QWizardRuler" ) )
-            qobject_cast<QWidget*>(child)->hide();
-
-        findAndHideWizardRuler( child );
-    }
-}
-
 LoginPage::LoginPage( QWidget* parent )
           :QWizardPage( parent )
           , m_loginProcess( 0 )
@@ -116,14 +59,6 @@ LoginPage::initializePage()
     connect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked()), SLOT( onSignUpClicked()));
     setButtonText( QWizard::NextButton, tr( "Connect Your Account" ) );
     setButtonText( QWizard::CustomButton1, tr( "Sign up" ));
-
-    QTimer::singleShot( 200, this, SLOT(yah()));
-}
-
-void
-LoginPage::yah()
-{
-    findAndHideWizardRuler( wizard() );
 }
 
 void 
