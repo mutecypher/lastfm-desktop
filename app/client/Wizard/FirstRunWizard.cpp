@@ -19,6 +19,8 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QPalette>
+
 #include "lib/unicorn/UnicornSettings.h"
 
 #include "IntroPage.h"
@@ -39,6 +41,14 @@ FirstRunWizard::FirstRunWizard( QWidget* parent )
 
     // We don't want the bowtie and the space on the left
     setWizardStyle( ClassicStyle );
+
+    // get rid of the QWizardRuler
+    m_palette = aApp->palette();
+    QPalette palette = m_palette;
+    palette.setColor( QPalette::Mid, QColor( 0, 0, 0, 0 ) );
+    palette.setColor( QPalette::Base, QColor( 0, 0, 0, 0 ) );
+
+    aApp->setPalette( palette );
 
     resize( 725, 460 );
 
@@ -99,14 +109,16 @@ void
 FirstRunWizard::onWizardCompleted()
 {
     unicorn::Settings().setValue( "FirstRunWizardCompleted", true );
+
+    aApp->setPalette( m_palette );
 }
 
 
 void
 FirstRunWizard::onRejected()
 {
-    //if the user doesn't finish the wizard then we make sure
-    //the settings are removed.
+    // if the user doesn't finish the wizard then we make sure
+    // the settings are removed.
     QMap<QString, QString> lastSession = unicorn::Session::lastSessionData();
     if ( lastSession.contains( "username" ) )
     {

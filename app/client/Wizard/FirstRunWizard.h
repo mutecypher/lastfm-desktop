@@ -48,6 +48,9 @@ public:
 private slots:
     void onWizardCompleted();
     void onRejected();
+
+private:
+    QPalette m_palette;
 };
 
 #endif //FIRST_RUN_WIZARD_H_
