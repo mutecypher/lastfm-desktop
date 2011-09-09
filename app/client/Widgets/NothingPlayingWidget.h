@@ -15,13 +15,10 @@ class NothingPlayingWidget : public StylableWidget
 private:
     struct
     {
-        class Label* hello;
-        class QLabel* type;
+        class QLabel* top;
         class QuickStartWidget* quickStart;
         class QLabel* split;
-        class QLabel* scrobble;
-        class QLabel* scrobbleExplain;
-        class QLabel* clickPlayers;
+        class QLabel* bottom;
 
         StylableWidget* players;
         class QPushButton* itunes;
