@@ -1,5 +1,39 @@
 <RCC>
     <qresource prefix="/" >
+		<file alias="bg_clouds.png">wizard/bg_clouds.png</file>
+		<file alias="button_grey_LEFT_HOVER.png">wizard/button_grey_LEFT_HOVER.png</file>
+		<file alias="button_grey_LEFT_REST.png">wizard/button_grey_LEFT_REST.png</file>
+		<file alias="button_grey_MIDDLE_HOVER.png">wizard/button_grey_MIDDLE_HOVER.png</file>
+		<file alias="button_grey_MIDDLE_REST.png">wizard/button_grey_MIDDLE_REST.png</file>
+		<file alias="button_grey_RIGHT_HOVER.png">wizard/button_grey_RIGHT_HOVER.png</file>
+		<file alias="button_grey_RIGHT_REST.png">wizard/button_grey_RIGHT_REST.png</file>
+		<file alias="button_red_LEFT_HOVER.png">wizard/button_red_LEFT_HOVER.png</file>
+		<file alias="button_red_LEFT_REST.png">wizard/button_red_LEFT_REST.png</file>
+		<file alias="button_red_MIDDLE_HOVER.png">wizard/button_red_MIDDLE_HOVER.png</file>
+		<file alias="button_red_MIDDLE_REST.png">wizard/button_red_MIDDLE_REST.png</file>
+		<file alias="button_red_RIGHT_HOVER.png">wizard/button_red_RIGHT_HOVER.png</file>
+		<file alias="button_red_RIGHT_REST.png">wizard/button_red_RIGHT_REST.png</file>
+		<file alias="graphic_access.png">wizard/graphic_access.png</file>
+		<file alias="graphic_connect.png">wizard/graphic_connect.png</file>
+		<file alias="graphic_finish.png">wizard/graphic_finish.png</file>
+		<file alias="graphic_import_foobar.png">wizard/graphic_import_foobar.png</file>
+		<file alias="graphic_import_itunes.png">wizard/graphic_import_itunes.png</file>
+		<file alias="graphic_import_winamp.png">wizard/graphic_import_winamp.png</file>
+		<file alias="graphic_import_wmp.png">wizard/graphic_import_wmp.png</file>
+		<file alias="graphic_importing.png">wizard/graphic_importing.gif</file>
+		<file alias="graphic_location_MAC.png">wizard/graphic_location_MAC.png</file>
+		<file alias="graphic_location_WIN.png">wizard/graphic_location_WIN.png</file>
+		<file alias="graphic_metadata.png">wizard/graphic_metadata.png</file>
+		<file alias="graphic_plugins.png">wizard/graphic_plugins.png</file>
+		<file alias="graphic_radio.png">wizard/graphic_radio.png</file>
+		<file alias="graphic_scrobbles.png">wizard/graphic_scrobbles.png</file>
+		<file alias="player_foobar_64.png">wizard/player_foobar_64.png</file>
+		<file alias="player_itunes_64.png">wizard/player_itunes_64.png</file>
+		<file alias="player_winamp_64.png">wizard/player_winamp_64.png</file>
+		<file alias="player_wmp_64.png">wizard/player_wmp_64.png</file>
+		<file alias="scrobbler_32.png">wizard/scrobbler_32.png</file>
+		<file alias="scrobbler_64.png">wizard/scrobbler_64.png</file>
+
 		<file>start_bg.png</file>
 	
 		<file>noArt.png</file>

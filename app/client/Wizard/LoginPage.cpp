@@ -23,10 +23,6 @@
 #include "lib/unicorn/LoginProcess.h"
 #include "lib/unicorn/UnicornSession.h"
 
-#ifdef WIN32
-#include <windows.h>
-#endif // WIN32
-
 #include <QDebug>
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -36,23 +32,80 @@
 #include <QVBoxLayout>
 #include <QDesktopServices>
 
+void
+findAndHideWizardRuler( QObject* object )
+{
+    qDebug() << object->metaObject()->className();
+
+    QLayout* l = qobject_cast<QLayout*>(object);
+
+    if ( l )
+    {
+        for ( int i = 0 ; i < l->count() ; ++i )
+        {
+            QWidget* widget = l->itemAt( i )->widget();
+
+            if ( widget )
+            {
+                if ( QString( "QWizardRuler" ).compare( widget->metaObject()->className() ) == 0 )
+                    widget->hide();
+
+                findAndHideWizardRuler( widget );
+            }
+
+
+        }
+    }
+
+    if ( object->isWidgetType() )
+    {
+        QLayout* layout = qobject_cast<QWidget*>( object )->layout();
+
+        if ( layout )
+        {
+            for ( int i = 0 ; i < layout->count() ; ++i )
+            {
+                QWidget* widget = layout->itemAt( i )->widget();
+
+                if ( widget )
+                {
+                    if ( QString( "QWizardRuler" ).compare( widget->metaObject()->className() ) == 0 )
+                        widget->hide();
+
+                    findAndHideWizardRuler( widget );
+                }
+            }
+        }
+    }
+
+    foreach ( QObject* child, object->children() )
+    {
+        qDebug() << child->metaObject()->className();
+
+        if ( QString( child->metaObject()->className() ) == QString( "QWizardRuler" ) )
+            qobject_cast<QWidget*>(child)->hide();
+
+        findAndHideWizardRuler( child );
+    }
+}
+
 LoginPage::LoginPage( QWidget* parent )
           :QWizardPage( parent )
           , m_loginProcess( 0 )
           , m_isComplete( false )
 {
-//    setCommitPage( true );
+    setTitle( tr( "Hello! Let's get started by connecting your Last.fm account" ) );
 
-    setTitle( tr( "Connect with Last.fm" ) );
-    QVBoxLayout* pageLayout = new QVBoxLayout( this );
+    QHBoxLayout* layout = new QHBoxLayout( this );
     
-    ui.description = new QLabel( tr( "If you already have a Last.fm account, connect with Last.fm.\n\n" ) +
-                                 tr( "If you don't have a Last.fm account, you can sign up now for free." ) );
+    layout->addWidget( ui.image = new QLabel( this ), 0 );
+    ui.image->setObjectName( "image" );
+
+    layout->addWidget( ui.description = new QLabel( tr( "<p>Already a Last.fm user? You can connect the Last.fm Desktop App to your profile and keep a record of the music you listen to.</p>"
+                                                        "<p>If you don't have an account you can sign up now for free.</p>" ) ), 0, Qt::AlignTop );
     
     ui.description->setObjectName( "description" );
     ui.description->setWordWrap( true );
-    
-    pageLayout->addWidget( ui.description );
 }
 
 
@@ -61,17 +114,22 @@ LoginPage::initializePage()
 {
     wizard()->setOption( QWizard::HaveCustomButton1, true );
     connect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked()), SLOT( onSignUpClicked()));
-    setButtonText( QWizard::NextButton, tr( "Connect with your Last.fm account" ) );
+    setButtonText( QWizard::NextButton, tr( "Connect Your Account" ) );
     setButtonText( QWizard::CustomButton1, tr( "Sign up" ));
-    m_isComplete = false;
+
+    QTimer::singleShot( 200, this, SLOT(yah()));
 }
 
+void
+LoginPage::yah()
+{
+    findAndHideWizardRuler( wizard() );
+}
 
 void 
 LoginPage::cleanupPage()
 {
     disconnect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked()), this, 0 );
-    m_isComplete = false;
 }
 
 bool 

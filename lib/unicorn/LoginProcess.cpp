@@ -21,7 +21,6 @@ namespace unicorn
 
 TinyWebServer::TinyWebServer( QObject* parent )
     : QObject( parent )
-    , m_tcpServer( 0 )
 {
     m_tcpServer = new QTcpServer( this );
     m_tcpServer->listen( QHostAddress( QHostAddress::LocalHost ), 0 );
@@ -93,7 +92,6 @@ TinyWebServer::sendRedirect()
 /** LoginProcess **/
 LoginProcess::LoginProcess( QObject* parent )
     : QObject( parent )
-    , m_webServer( 0 )
     , m_lastError( lastfm::ws::ParseError( lastfm::ws::NoError, "" ) )
     , m_lastNetworkError( QNetworkReply::NoError )
 {
@@ -109,10 +107,7 @@ void
 LoginProcess::authenticate()
 {
     if ( m_webServer )
-    {
         delete m_webServer;
-        m_webServer = 0;
-    }
 
     m_webServer = new TinyWebServer( this );
 
@@ -153,10 +148,9 @@ LoginProcess::onGotSession()
 {
     try
     {
-        Session* session = qobject_cast<unicorn::Application* >( qApp )->changeSession( static_cast<QNetworkReply*>( sender() ) );
+        Session* session = qobject_cast<unicorn::Application*>( qApp )->changeSession( static_cast<QNetworkReply*>( sender() ) );
         emit gotSession( session );
         delete m_webServer;
-        m_webServer = 0;
     }
     catch ( lastfm::ws::ParseError& e )
     {

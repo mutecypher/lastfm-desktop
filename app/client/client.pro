@@ -96,7 +96,8 @@ SOURCES += \
     Widgets/ScrobblesWidget.cpp \
     Widgets/RefreshButton.cpp \
     Widgets/BackButton.cpp \
-    Widgets/WidgetTextObject.cpp
+    Widgets/WidgetTextObject.cpp \
+    Wizard/FirstRunWizard.cpp
 
 HEADERS += \
     Wizard/WelcomePage.h \
@@ -185,3 +186,4 @@ FORMS += \
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
+

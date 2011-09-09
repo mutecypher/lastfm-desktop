@@ -1,4 +1,94 @@
 
+QWizard {
+	background-repeat: none;
+	background-color: white;
+	background-image: url(":/bg_clouds.png");
+}
+
+QWizard QLabel {
+	color: #d51007;
+}
+
+QWizardRuler {
+	max-height: 0px;
+	min-height: 0px;
+}
+
+QWizardPage {
+	background: transparent;
+}
+
+QWizardPage QLabel {
+	color: #333;
+	font-size: 14px;
+}
+QWizardPage QLabel#image {
+	background-repeat: none;
+	background-origin: center;
+	min-width: 257px;
+	min-height: 228px;
+}
+
+/* QWizard::NextButton */
+/* QWizard::FinishButton */
+/* QWizard::CommitButton */
+QWizard QAbstractButton#__qt__passive_wizardbutton1,
+QWizard QAbstractButton#__qt__passive_wizardbutton2,
+QWizard QAbstractButton#__qt__passive_wizardbutton3 {
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #cc4d25, stop:1 #a02b1e);
+	font-size: 14px;
+	color: white;
+	padding: 10px;
+	border: 1px solid #711a11;
+	border-radius: 3px;
+}
+
+QWizard QAbstractButton#__qt__passive_wizardbutton1:hover,
+QWizard QAbstractButton#__qt__passive_wizardbutton2:hover,
+QWizard QAbstractButton#__qt__passive_wizardbutton3:hover {
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #e34729, stop:1 #b23d21);
+}
+
+QWizard QAbstractButton#__qt__passive_wizardbutton1:pressed,
+QWizard QAbstractButton#__qt__passive_wizardbutton2:pressed,
+QWizard QAbstractButton#__qt__passive_wizardbutton3:pressed {
+	background-color: #9f2a1d;
+}
+
+/* QWizard::BackButton */
+/* QWizard::CancelButton */
+/* QWizard::HelpButton */
+/* QWizard::CustomButton1 */
+QWizard QAbstractButton#__qt__passive_wizardbutton0,
+QWizard QAbstractButton#__qt__passive_wizardbutton4,
+QWizard QAbstractButton#__qt__passive_wizardbutton5,
+QWizard QAbstractButton#__qt__passive_wizardbutton6 {
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #b8b8b8, stop:1 #a3a3a3);
+	font-size: 14px;
+	color: white;
+	padding: 10px;
+	border: 1px solid #888;
+	border-radius: 3px;
+}
+
+QWizard QAbstractButton#__qt__passive_wizardbutton0:hover,
+QWizard QAbstractButton#__qt__passive_wizardbutton4:hover,
+QWizard QAbstractButton#__qt__passive_wizardbutton5:hover,
+QWizard QAbstractButton#__qt__passive_wizardbutton6:hover {
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #cdcdcd, stop:1 #b6b6b6);
+}
+	
+QWizard QAbstractButton#__qt__passive_wizardbutton0:pressed,
+QWizard QAbstractButton#__qt__passive_wizardbutton4:pressed,
+QWizard QAbstractButton#__qt__passive_wizardbutton5:pressed,
+QWizard QAbstractButton#__qt__passive_wizardbutton6:pressed {
+	background-color: #a2a2a2;
+}
+
+LoginPage QLabel#image { background-image: url(":/graphic_connect.png"); }
+
+
+
 SideBar {
 	border: none;
 	background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #2d2d2d, stop:0.925 #2d2d2d, stop:1 #232323);
@@ -22,205 +112,236 @@ SideBar QAbstractButton {
 
 SideBar QAbstractButton:hover,
 SideBar QAbstractButton:checked {
-	color: #ffffff;
+color: #ffffff;
 }
 
-SideBar QAbstractButton#nowPlaying { background-image: url(":/tab_now_playing_REST.png"); }
-SideBar QAbstractButton#nowPlaying:hover { background-image: url(":/tab_now_playing_HOVER.png"); }
-SideBar QAbstractButton#nowPlaying:checked { background-image: url(":/tab_now_playing_ACTIVE.png"); }
+SideBar QAbstractButton#nowPlaying {
+background-image: url(":/tab_now_playing_REST.png");
+}
+SideBar QAbstractButton#nowPlaying:hover {
+background-image: url(":/tab_now_playing_HOVER.png");
+}
+SideBar QAbstractButton#nowPlaying:checked {
+background-image: url(":/tab_now_playing_ACTIVE.png");
+}
 
-SideBar QAbstractButton#scrobbles { background-image: url(":/tab_scrobbles_REST.png"); }
-SideBar QAbstractButton#scrobbles:hover { background-image: url(":/tab_scrobbles_HOVER.png"); }
-SideBar QAbstractButton#scrobbles:checked { background-image: url(":/tab_scrobbles_ACTIVE.png"); }
+SideBar QAbstractButton#scrobbles {
+background-image: url(":/tab_scrobbles_REST.png");
+}
+SideBar QAbstractButton#scrobbles:hover {
+background-image: url(":/tab_scrobbles_HOVER.png");
+}
+SideBar QAbstractButton#scrobbles:checked {
+background-image: url(":/tab_scrobbles_ACTIVE.png");
+}
 
-SideBar QAbstractButton#profile { background-image: url(":/tab_profile_REST.png"); }
-SideBar QAbstractButton#profile:hover { background-image: url(":/tab_profile_HOVER.png"); }
-SideBar QAbstractButton#profile:checked { background-image: url(":/tab_profile_ACTIVE.png"); }
+SideBar QAbstractButton#profile {
+background-image: url(":/tab_profile_REST.png");
+}
+SideBar QAbstractButton#profile:hover {
+background-image: url(":/tab_profile_HOVER.png");
+}
+SideBar QAbstractButton#profile:checked {
+background-image: url(":/tab_profile_ACTIVE.png");
+}
 
-SideBar QAbstractButton#friends { background-image: url(":/tab_friends_REST.png"); }
-SideBar QAbstractButton#friends:hover { background-image: url(":/tab_friends_HOVER.png"); }
-SideBar QAbstractButton#friends:checked { background-image: url(":/tab_friends_ACTIVE.png"); }
+SideBar QAbstractButton#friends {
+background-image: url(":/tab_friends_REST.png");
+}
+SideBar QAbstractButton#friends:hover {
+background-image: url(":/tab_friends_HOVER.png");
+}
+SideBar QAbstractButton#friends:checked {
+background-image: url(":/tab_friends_ACTIVE.png");
+}
 
-SideBar QAbstractButton#radio { background-image: url(":/tab_radio_REST.png"); }
-SideBar QAbstractButton#radio:hover { background-image: url(":/tab_radio_HOVER.png"); }
-SideBar QAbstractButton#radio:checked { background-image: url(":/tab_radio_ACTIVE.png"); }
+SideBar QAbstractButton#radio {
+background-image: url(":/tab_radio_REST.png");
+}
+SideBar QAbstractButton#radio:hover {
+background-image: url(":/tab_radio_HOVER.png");
+}
+SideBar QAbstractButton#radio:checked {
+background-image: url(":/tab_radio_ACTIVE.png");
+}
 
 NothingPlayingWidget {
-	border: none;
-	background-image: url(":/start_bg.png");
-	background-repeat: no-repeat;
-	background-position: top left;
-	padding: 20px;
+border: none;
+background-image: url(":/start_bg.png");
+background-repeat: no-repeat;
+background-position: top left;
+padding: 20px;
 }
 
 NothingPlayingWidget QLabel {
-	color: #333;
-	font-weight: bold;
-	font-size: 12px;
+color: #333;
+font-weight: bold;
+font-size: 12px;
 }
 
 NothingPlayingWidget QLabel#hello {
-	font-size: 16px;
-	margin-bottom: 25px;
+font-size: 16px;
+margin-bottom: 25px;
 }
 
 NothingPlayingWidget QLabel#type {
-	margin-bottom: 44px;
+margin-bottom: 44px;
 }
 
 NothingPlayingWidget QLabel#split {
-	font-size: 16px;
-	margin-top: 28px;
-	margin-bottom: 28px;
+font-size: 16px;
+margin-top: 28px;
+margin-bottom: 28px;
 }
 
 NothingPlayingWidget QLabel#scrobble {
-	font-size: 16px;
-	margin-bottom: 28px;
+font-size: 16px;
+margin-bottom: 28px;
 }
 
 NothingPlayingWidget QLabel#scrobbleExplain {
-	margin-bottom: 20px;
+margin-bottom: 20px;
 }
 
 NothingPlayingWidget StylableWidget#players {
-	padding-top: 40px;
-	border: none;
+padding-top: 40px;
+border: none;
 }
 
 NothingPlayingWidget StylableWidget#players  QAbstractButton {
-	background-color: transparent;
-	background-repeat: no-repeat;
-	background-position: center;
-	border: none;
-	height: 44px;
-	width: 44px;
-	margin: 0px 10px;
+background-color: transparent;
+background-repeat: no-repeat;
+background-position: center;
+border: none;
+height: 44px;
+width: 44px;
+margin: 0px 10px;
 }
 
 NothingPlayingWidget StylableWidget#players  QAbstractButton#itunes {
-	background-image: url(":/control_bar_scrobble_itunes.png");
+background-image: url(":/control_bar_scrobble_itunes.png");
 }
 
 NothingPlayingWidget StylableWidget#players  QAbstractButton#wmp {
-	background-image: url(":/control_bar_scrobble_wmp.png");
+background-image: url(":/control_bar_scrobble_wmp.png");
 }
 
 NothingPlayingWidget StylableWidget#players  QAbstractButton#winamp {
-	background-image: url(":/control_bar_scrobble_winamp.png");
+background-image: url(":/control_bar_scrobble_winamp.png");
 }
 
 NothingPlayingWidget StylableWidget#players  QAbstractButton#foobar {
-	background-image: url(":/control_bar_scrobble_foobar.png");
+background-image: url(":/control_bar_scrobble_foobar.png");
 }
 
 NowPlayingWidget QLabel#context {
-	margin: 20px 0px;
-	padding: 15px 15px;
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #e5e5e5);
-	border: 1px solid #cdcdcd;
-	border-radius: 5px;
-	font-size: 12px;
+margin: 20px 0px;
+padding: 15px 15px;
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #e5e5e5);
+border: 1px solid #cdcdcd;
+border-radius: 5px;
+font-size: 12px;
 }
 
 QuickStartWidget {
-	border: none;
-	margin: 14px 0px 10px 0px;
+border: none;
+margin: 14px 0px 10px 0px;
 }
 
 MetadataWidget {
-	border: none;
+border: none;
 }
 
 MetadataWidget QPushButton#back {
-	background-image: url(":/control_bar_back.png");
-	background-repeat: none;
-	background-position: center left;
-	color: #333;
-	font-size: 12px;
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
-	border: none;
-	border-bottom: 1px solid #989898;
-	text-align: top left;
-	height: 51px;
-	padding-top: 13px;
-	padding-left: 50px;
+background-image: url(":/control_bar_back.png");
+background-repeat: none;
+background-position: center left;
+color: #333;
+font-size: 12px;
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
+border: none;
+border-bottom: 1px solid #989898;
+text-align: top left;
+height: 51px;
+padding-top: 13px;
+padding-left: 50px;
 }
 
 
 MetadataWidget QWidget#scrollAreaWidgetContents {
-	border: none;
+border: none;
 }
 
 MetadataWidget QFrame#trackFrame,
 MetadataWidget QFrame#artistFrame {
-	padding: 20px 20px 20px 20px;
+padding: 20px 20px 20px 20px;
 }
 
 MetadataWidget QFrame#artistFrame {
-	padding-bottom: 0px;
+padding-bottom: 0px;
 }
 
 MetadataWidget QFrame#trackDetails {
-	padding-bottom: 10px;
+padding-bottom: 10px;
 }
 
 MetadataWidget HttpImageWidget#albumImage {
-	color: transparent;
-	background-color: white;
-	qproperty-scaledContents: true;
-	border: 1px solid #cdcdcd;
-	min-width: 128px;
-	min-height: 128px;
-	max-width: 128px;
-	max-height: 128px;
-	padding: 4px;
-	margin-right: 20px;
+color: transparent;
+background-color: white;
+qproperty-scaledContents: true;
+border: 1px solid #cdcdcd;
+min-width: 128px;
+min-height: 128px;
+max-width: 128px;
+max-height: 128px;
+padding: 4px;
+margin-right: 20px;
 }
 	
 MetadataWidget QLabel#trackTitle {
-	color: #333;
-	font-size: 16pt;
-	font-weight: bold;
-	padding-bottom: 5px;
+color: #333;
+font-size: 16pt;
+font-weight: bold;
+padding-bottom: 5px;
 }
 
 MetadataWidget QLabel#trackArtist {
-	border: 1px solid #cdcdcd;
-    border-width: 0px 0px 1px 0px;
-    padding-bottom: 11px; color: #333;
+border: 1px solid #cdcdcd;
+border-width: 0px 0px 1px 0px;
+padding-bottom: 11px;
+color: #333;
 }
 
 MetadataWidget ScrobbleControls {
-	border:none;
-	border-top: 1px solid #ffffff;
-	border-bottom: 1px solid #cdcdcd;
-	padding: 7px 0px;
+border: none;
+border-top: 1px solid #ffffff;
+border-bottom: 1px solid #cdcdcd;
+padding: 7px 0px;
 }
 
 MetadataWidget QLabel#trackAlbum {
-	border-top: 1px solid #ffffff;
-	padding-top: 11px;
-	font-size: 11pt;
+border-top: 1px solid #ffffff;
+padding-top: 11px;
+font-size: 11pt;
 }
 
 MetadataWidget QLabel#trackPopTags,
 MetadataWidget QLabel#artistPopTags,
 MetadataWidget QLabel#trackYourTags,
 MetadataWidget QLabel#artistYourTags {
-	font-size: 11px;
+font-size: 11px;
 }
 
 MetadataWidget QLabel#similarArtists {
-	font-size: 16px;
-	font-weight: bold;
-	padding: 10px 0px;
-	border: none;
-	border-bottom: 1px solid #cdcdcd;
+font-size: 16px;
+font-weight: bold;
+padding: 10px 0px;
+border: none;
+border-bottom: 1px solid #cdcdcd;
 }
 
 MetadataWidget QFrame#trackStats {
-	padding: 10px 0px 20px;
+padding: 10px 0px 20px;
 }
 
 MetadataWidget QLabel#trackPlays,
@@ -229,9 +350,9 @@ MetadataWidget QLabel#trackUserPlays,
 MetadataWidget QLabel#artistPlays,
 MetadataWidget QLabel#artistListeners,
 MetadataWidget QLabel#artistUserPlays {
-	color: #333;
-	font-size: 16pt;
-	font-weight: bold;
+color: #333;
+font-size: 16pt;
+font-weight: bold;
 }
 
 MetadataWidget QLabel#trackPlaysLabel,
@@ -240,548 +361,654 @@ MetadataWidget QLabel#trackUserPlaysLabel,
 MetadataWidget QLabel#artistPlaysLabel,
 MetadataWidget QLabel#artistListenersLabel,
 MetadataWidget QLabel#artistUserPlaysLabel {
-	color: #898989;
-	font-size: 10pt;
-	font-weight: normal;
+color: #898989;
+font-size: 10pt;
+font-weight: normal;
 }
 
 MetadataWidget QFrame#trackSeperator1,
 MetadataWidget QFrame#trackSeperator3,
 MetadataWidget QFrame#artistSeperator1,
 MetadataWidget QFrame#artistSeperator3 {
-	border: none;
-	border-right: 1px solid #cdcdcd;
-	margin: 0px;
+border: none;
+border-right: 1px solid #cdcdcd;
+margin: 0px;
 }
 
 MetadataWidget QFrame#trackSeperator2,
 MetadataWidget QFrame#trackSeperator4,
 MetadataWidget QFrame#artistSeperator2,
 MetadataWidget QFrame#artistSeperator4 {
-	border: none;
-	border-left: 1px solid white;
-	margin: 0px;
+border: none;
+border-left: 1px solid white;
+margin: 0px;
 }
 
 MetadataWidget QWidget#artistFrame {
-    background-color: #dedede;
+background-color: #dedede;
 }
 
 MetadataWidget QLabel#artistArtist {
-	font-size: 16pt;
-	font-weight: bold;
-	color: #333;
-	padding-top: 10px 0px;
+font-size: 16pt;
+font-weight: bold;
+color: #333;
+padding-top: 10px 0px;
 }
 
 MetadataWidget BioWidget#artistBio {
-	background-color: #dedede;
-	border: none;
-	font-size: 12pt;
-	color: #333;
+background-color: #dedede;
+border: none;
+font-size: 12pt;
+color: #333;
 }
 
 MetadataWidget TagWidget {
-        height: 19px;
-        color: white;
-        font-size: 11px;
+height: 19px;
+color: white;
+font-size: 11px;
 }
 
 MetadataWidget QFrame#similarArtistFrame {
-	padding: 10px 0px;
-	border-top: 1px solid white;
+padding: 10px 0px;
+border-top: 1px solid white;
 }
 
 MetadataWidget QFrame#similarArtistFrame QLabel {
-	padding: 2px;
-	border: 1px solid #cdcdcd;
-	background-color: white;
-	margin-bottom: 20px;
-	color: black;
-	qproperty-alignment: AlignBottom;
-	background-origin: margin;
+padding: 2px;
+border: 1px solid #cdcdcd;
+background-color: white;
+margin-bottom: 20px;
+color: black;
+qproperty-alignment: AlignBottom;
+background-origin: margin;
 }
 
 MetadataWidget PlayableItemWidget {
-	color: white;
-	background-color: transparent;
-	min-height: 49px;
-	max-height: 49px;
+color: white;
+background-color: transparent;
+min-height: 49px;
+max-height: 49px;
 }
 
 ActivityListWidget {
-	border: none;
+border: none;
 }
 
 ScrobblesWidget QPushButton#refresh {
-	background-position: center left;
-	background-repeat: none;
-	padding: 0px 10%;
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
-	color: #777;
-	border: none;
-	border-bottom: 1px solid #a6a6a6;
-	height: 38px;
+background-position: center left;
+background-repeat: none;
+padding: 0px 10%;
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
+color: #777;
+border: none;
+border-bottom: 1px solid #a6a6a6;
+height: 38px;
 }
 
 ScrobblesWidget QPushButton#refresh:hover {
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #f0f0f0, stop:1 #d6d6d6);
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #f0f0f0, stop:1 #d6d6d6);
 }
 
 ScrobblesWidget QPushButton#refresh:pressed,
 ScrobblesWidget QPushButton#refresh:disabled {
-	background-color: #cccccc;
+background-color: #cccccc;
 }
 
-FriendListWidget QLineEdit
-{
-	margin: 20px 20px 20px 20px;
+FriendListWidget QLineEdit {
+margin: 20px 20px 20px 20px;
 }
 
 QuickStartWidget QLineEdit,
 FriendListWidget QLineEdit {
-    border: 1px solid #cdcdcd;
-    border-radius: 5px;
-    padding: 10px 10px;
-    selection-background-color: darkgray;
-	font-size: 17px;
+border: 1px solid #cdcdcd;
+border-radius: 5px;
+padding: 10px 10px;
+selection-background-color: darkgray;
+font-size: 17px;
 }
 
 QuickStartWidget QPushButton {
-	background-image: url(":/radio_play_large_REST.png");
-	background-color: transparent;
-	background-repeat: no-repeat;
-	color: transparent;
-	border: none;
-	height: 58px;
-	width: 58px;
-	margin: 0px 0px 0px 10px;
+background-image: url(":/radio_play_large_REST.png");
+background-color: transparent;
+background-repeat: no-repeat;
+color: transparent;
+border: none;
+height: 58px;
+width: 58px;
+margin: 0px 0px 0px 10px;
 }
 
-QuickStartWidget QPushButton:hover { background-image: url(":/radio_play_large_HOVER.png"); }
-QuickStartWidget QPushButton:pressed { background-image: url(":/radio_play_large_PRESS.png"); }
+QuickStartWidget QPushButton:hover {
+background-image: url(":/radio_play_large_HOVER.png");
+}
+QuickStartWidget QPushButton:pressed {
+background-image: url(":/radio_play_large_PRESS.png");
+}
 
 QScrollArea {
-	border: none;
+border: none;
 }
 
 ProfileWidget {
-	border: none;
-	margin: 0px 20px;
+border: none;
+margin: 0px 20px;
 }
 
 RadioWidget QFrame#section,
 ProfileWidget QFrame#section {
-	border: none;
-	border-top: 1px solid white;
-	padding: 7px 0px; 
+border: none;
+border-top: 1px solid white;
+padding: 7px 0px;
 }
 
 ProfileWidget QFrame#user {
-	border: none;
-	margin: 20px 0px 10px;
+border: none;
+margin: 20px 0px 10px;
 }
 
 FriendWidget {
-	margin: 0px 20px;
-	padding: 10px 0px;
-	border-top: 1px solid white;
-	border-bottom: 1px solid #cdcdcd;
+margin: 0px 20px;
+padding: 10px 0px;
+border-top: 1px solid white;
+border-bottom: 1px solid #cdcdcd;
 }
 
 FriendWidget AvatarWidget#avatar,
 ProfileWidget AvatarWidget#avatar,
 ShareDialog AvatarWidget#icon {
-	padding: 2px;
-	background-color: white;
-	color: transparent;
-	border: 1px solid #cdcdcd;
-	min-width: 64px;
-	min-height: 64px;
-	max-width: 64px;
-	max-height: 64px;
-	margin: 0px 20px 8px 0px;
+padding: 2px;
+background-color: white;
+color: transparent;
+border: 1px solid #cdcdcd;
+min-width: 64px;
+min-height: 64px;
+max-width: 64px;
+max-height: 64px;
+margin: 0px 20px 8px 0px;
 }
 
 FriendWidget QLabel#name,
 ProfileWidget QLabel#name {
-	font-weight: bold;
-	font-size: 14px;
-	color: #333;
+font-weight: bold;
+font-size: 14px;
+color: #333;
 }
 
 FriendWidget QLabel#details,
 ProfileWidget QLabel#scrobbleCount {
-	font-size: 11px;
-	color: #898989;
+font-size: 11px;
+color: #898989;
 }
 
 FriendWidget QLabel#lastTrack,
 ProfileWidget QLabel#scrobbles {
-	font-size: 11px;
-	color: #333;
+font-size: 11px;
+color: #333;
 }
 
 RadioWidget {
-	border: none;
-	margin: 0px 20px;
+border: none;
+margin: 0px 20px;
 }
 
 RadioWidget PlayableItemWidget,
 FriendWidget PlayableItemWidget,
-ProfileWidget PlayableItemWidget   {
-	background-color: transparent;
-	background-repeat: no-repeat;
-	border: none;
-	text-align: top left;
-	font-weight: bold;
-	font-size: 14px;
-	color: #333;
-	height: 40px;
-	padding: 3px 0px 3px 54px;
-	margin: 5px 0px;
+ProfileWidget PlayableItemWidget {
+background-color: transparent;
+background-repeat: no-repeat;
+border: none;
+text-align: top left;
+font-weight: bold;
+font-size: 14px;
+color: #333;
+height: 40px;
+padding: 3px 0px 3px 54px;
+margin: 5px 0px;
 }
 
-RadioWidget PlayableItemWidget#library { background-image: url(":/radio_library_REST.png"); }
-RadioWidget PlayableItemWidget#library:hover { background-image: url(":/radio_library_HOVER.png"); }
-RadioWidget PlayableItemWidget#library:pressed { background-image: url(":/radio_library_PRESS.png"); }
+RadioWidget PlayableItemWidget#library {
+background-image: url(":/radio_library_REST.png");
+}
+RadioWidget PlayableItemWidget#library:hover {
+background-image: url(":/radio_library_HOVER.png");
+}
+RadioWidget PlayableItemWidget#library:pressed {
+background-image: url(":/radio_library_PRESS.png");
+}
 		
-RadioWidget PlayableItemWidget#mix { background-image: url(":/radio_mix_REST.png"); }
-RadioWidget PlayableItemWidget#mix:hover { background-image: url(":/radio_mix_HOVER.png"); }
-RadioWidget PlayableItemWidget#mix:pressed { background-image: url(":/radio_mix_PRESS.png"); }
+RadioWidget PlayableItemWidget#mix {
+background-image: url(":/radio_mix_REST.png");
+}
+RadioWidget PlayableItemWidget#mix:hover {
+background-image: url(":/radio_mix_HOVER.png");
+}
+RadioWidget PlayableItemWidget#mix:pressed {
+background-image: url(":/radio_mix_PRESS.png");
+}
 		
-RadioWidget PlayableItemWidget#rec { background-image: url(":/radio_rec_REST.png"); }
-RadioWidget PlayableItemWidget#rec:hover { background-image: url(":/radio_rec_HOVER.png"); }
-RadioWidget PlayableItemWidget#rec:pressed { background-image: url(":/radio_rec_PRESS.png"); }
+RadioWidget PlayableItemWidget#rec {
+background-image: url(":/radio_rec_REST.png");
+}
+RadioWidget PlayableItemWidget#rec:hover {
+background-image: url(":/radio_rec_HOVER.png");
+}
+RadioWidget PlayableItemWidget#rec:pressed {
+background-image: url(":/radio_rec_PRESS.png");
+}
 		
 RadioWidget PlayableItemWidget#friends,
-RadioWidget PlayableItemWidget#neighbours { background-image: url(":/radio_friends_REST.png"); }
+RadioWidget PlayableItemWidget#neighbours {
+background-image: url(":/radio_friends_REST.png");
+}
 RadioWidget PlayableItemWidget#friends:hover,
-RadioWidget PlayableItemWidget#neighbours:hover { background-image: url(":/radio_friends_HOVER.png"); }
+RadioWidget PlayableItemWidget#neighbours:hover {
+background-image: url(":/radio_friends_HOVER.png");
+}
 RadioWidget PlayableItemWidget#friends:pressed,
-RadioWidget PlayableItemWidget#neighbours:pressed { background-image: url(":/radio_friends_PRESS.png"); }
+RadioWidget PlayableItemWidget#neighbours:pressed {
+background-image: url(":/radio_friends_PRESS.png");
+}
 
 RadioWidget PlayableItemWidget#station,
 FriendWidget PlayableItemWidget,
-ProfileWidget PlayableItemWidget  {
-	background-image: url(":/radio_play_small_REST.png");
-	text-align: center left;
-	font-size: 12px;
-	height: 27px;
-	padding: 0px 0px 0px 36px;
-	margin: 2px 0px;
+ProfileWidget PlayableItemWidget {
+background-image: url(":/radio_play_small_REST.png");
+text-align: center left;
+font-size: 12px;
+height: 27px;
+padding: 0px 0px 0px 36px;
+margin: 2px 0px;
 }
 
 RadioWidget PlayableItemWidget#station:hover,
 FriendWidget PlayableItemWidget:hover,
-ProfileWidget PlayableItemWidget:hover { background-image: url(":/radio_play_small_HOVER.png"); }
+ProfileWidget PlayableItemWidget:hover {
+background-image: url(":/radio_play_small_HOVER.png");
+}
 RadioWidget PlayableItemWidget#station:pressed,
 FriendWidget PlayableItemWidget:pressed,
-ProfileWidget PlayableItemWidget :pressed { background-image: url(":/radio_play_small_PRESS.png"); }
+ProfileWidget PlayableItemWidget :pressed {
+background-image: url(":/radio_play_small_PRESS.png");
+}
 
 RadioWidget QLabel#title,
-ProfileWidget QLabel#title  {
-	padding: 10px 0px;
-	border: 1px solid #cdcdcd;
-	border-width: 0px 0px 1px 0px;
-	font-weight: bold; 
-	font-size: 15px;
+ProfileWidget QLabel#title {
+padding: 10px 0px;
+border: 1px solid #cdcdcd;
+border-width: 0px 0px 1px 0px;
+font-weight: bold;
+font-size: 15px;
 }
 
 PlaybackControlsWidget {
-	border: none;
+border: none;
 }
 
 PlaybackControlsWidget QLabel#icon {
-	color: transparent;
-	width: 44px;
-	height: 44px;
-	margin: 0px 14px;
+color: transparent;
+width: 44px;
+height: 44px;
+margin: 0px 14px;
 }
 
 PlaybackControlsWidget QFrame#statusFrame {
-	padding: 13px 0px;
+padding: 13px 0px;
 }
 
 PlaybackControlsWidget QFrame#statusFrame QLabel {
-	color: white;
-	font-size: 12px;
+color: white;
+font-size: 12px;
 }
 
 PlaybackControlsWidget QFrame#statusFrame QLabel#device {
-	font-weight: bold;
-	font-size: 14px;
+font-weight: bold;
+font-size: 14px;
 }
 
 PlaybackControlsWidget[scrobbleTrack="false"] QFrame#details {
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #3B3B3B, stop:0 #545454);
-	border: none;
-	border-bottom: 1px solid #272727;
-	min-height: 64px;
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #3B3B3B, stop:0 #545454);
+border: none;
+border-bottom: 1px solid #272727;
+min-height: 64px;
 }
 
 PlaybackControlsWidget[scrobbleTrack="true"] QFrame#details {
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #c1c1c1, stop:0 #dbdbdb);
-	border: none;
-	border-bottom: 1px solid #9f9f9f;
-	min-height: 64px;
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #c1c1c1, stop:0 #dbdbdb);
+border: none;
+border-bottom: 1px solid #9f9f9f;
+min-height: 64px;
 }
 
-PlaybackControlsWidget[scrobbleTrack="true"] QFrame#statusFrame QLabel{
-	color: #333;
+PlaybackControlsWidget[scrobbleTrack="true"] QFrame#statusFrame QLabel {
+color: #333;
 }
 
 PlaybackControlsWidget QPushButton {
-	background-color: transparent;
-	background-repeat: no-repeat;
-	border: none;
-	color: transparent;
-	height: 28px;
-	margin: 0px 3px;
+background-color: transparent;
+background-repeat: no-repeat;
+border: none;
+color: transparent;
+height: 28px;
+margin: 0px 3px;
 }
 
 PlaybackControlsWidget QFrame#controls {
-	margin: 0px 10px 0px 0px;
+margin: 0px 10px 0px 0px;
 }
 
 PlaybackControlsWidget QPushButton#love {
-	background-image: url(":/controls_love_OFF_REST.png");
-    max-width: 29px;
-    min-width: 29px;
-	
+background-image: url(":/controls_love_OFF_REST.png");
+max-width: 29px;
+min-width: 29px;
 }
 
-PlaybackControlsWidget QPushButton#love:hover { background-image: url(":/controls_love_OFF_HOVER.png"); }
-PlaybackControlsWidget QPushButton#love:pressed { background-image: url(":/controls_love_OFF_PRESS.png"); }
-PlaybackControlsWidget QPushButton#love:checked { background-image: url(":/controls_love_ON_REST.png"); }
-PlaybackControlsWidget QPushButton#love:checked:hover { background-image: url(":/controls_love_ON_HOVER.png"); }
-PlaybackControlsWidget QPushButton#love:checked:pressed { background-image: url(":/controls_love_ON_PRESS.png"); }
+PlaybackControlsWidget QPushButton#love:hover {
+background-image: url(":/controls_love_OFF_HOVER.png");
+}
+PlaybackControlsWidget QPushButton#love:pressed {
+background-image: url(":/controls_love_OFF_PRESS.png");
+}
+PlaybackControlsWidget QPushButton#love:checked {
+background-image: url(":/controls_love_ON_REST.png");
+}
+PlaybackControlsWidget QPushButton#love:checked:hover {
+background-image: url(":/controls_love_ON_HOVER.png");
+}
+PlaybackControlsWidget QPushButton#love:checked:pressed {
+background-image: url(":/controls_love_ON_PRESS.png");
+}
 		
 PlaybackControlsWidget QPushButton#ban {
-	background-image: url(":/controls_ban_REST.png");
-    max-width: 28px;
-    min-width: 28px;
+background-image: url(":/controls_ban_REST.png");
+max-width: 28px;
+min-width: 28px;
 }
-PlaybackControlsWidget QPushButton#ban:hover { background-image: url(":/controls_ban_HOVER.png"); }
-PlaybackControlsWidget QPushButton#ban:pressed { background-image: url(":/controls_ban_PRESS.png"); }
+PlaybackControlsWidget QPushButton#ban:hover {
+background-image: url(":/controls_ban_HOVER.png");
+}
+PlaybackControlsWidget QPushButton#ban:pressed {
+background-image: url(":/controls_ban_PRESS.png");
+}
 		
 PlaybackControlsWidget QPushButton#play {
-	background-image: url(":/controls_play_REST.png");
-    max-width: 25px;
-    min-width: 25px;
+background-image: url(":/controls_play_REST.png");
+max-width: 25px;
+min-width: 25px;
 }
-PlaybackControlsWidget QPushButton#play:hover { background-image: url(":/controls_play_HOVER.png"); }
-PlaybackControlsWidget QPushButton#play:pressed { background-image: url(":/controls_play_PRESS.png"); }
-PlaybackControlsWidget QPushButton#play:checked { background-image: url(":/controls_pause_REST.png"); }
-PlaybackControlsWidget QPushButton#play:checked:hover { background-image: url(":/controls_pause_HOVER.png"); }
-PlaybackControlsWidget QPushButton#play:checked:pressed { background-image: url(":/controls_pause_PRESS.png"); }
+PlaybackControlsWidget QPushButton#play:hover {
+background-image: url(":/controls_play_HOVER.png");
+}
+PlaybackControlsWidget QPushButton#play:pressed {
+background-image: url(":/controls_play_PRESS.png");
+}
+PlaybackControlsWidget QPushButton#play:checked {
+background-image: url(":/controls_pause_REST.png");
+}
+PlaybackControlsWidget QPushButton#play:checked:hover {
+background-image: url(":/controls_pause_HOVER.png");
+}
+PlaybackControlsWidget QPushButton#play:checked:pressed {
+background-image: url(":/controls_pause_PRESS.png");
+}
 		
 PlaybackControlsWidget QPushButton#skip {
-	background-image: url(":/controls_skip_REST.png");
-    max-width: 39px;
-    min-width: 39px;
+background-image: url(":/controls_skip_REST.png");
+max-width: 39px;
+min-width: 39px;
 }
-PlaybackControlsWidget QPushButton#skip:hover { background-image: url(":/controls_skip_HOVER.png"); }
-PlaybackControlsWidget QPushButton#skip:pressed { background-image: url(":/controls_skip_PRESS.png"); }
+PlaybackControlsWidget QPushButton#skip:hover {
+background-image: url(":/controls_skip_HOVER.png");
+}
+PlaybackControlsWidget QPushButton#skip:pressed {
+background-image: url(":/controls_skip_PRESS.png");
+}
 
 PlaybackControlsWidget ProgressBar {
-	border-top: 1px solid #e5e5e5;
-	border-bottom: 1px solid #9b9b9b;
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #cccccc, stop:0 #e5e5e5);
-	qproperty-chunk: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #b6b6b6, stop:0 #cdcdcd);
-	min-height: 21px;
+border-top: 1px solid #e5e5e5;
+border-bottom: 1px solid #9b9b9b;
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #cccccc, stop:0 #e5e5e5);
+qproperty-chunk: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #b6b6b6, stop:0 #cdcdcd);
+min-height: 21px;
 }
 
-ScrobbleControls QPushButton{
-	background-color: transparent;
-    color: transparent;
-	background-repeat: no-repeat;
-    background-position: center;
-    margin: 0px;
-    padding: 3px 0px;
-    width: 20px;
+ScrobbleControls QPushButton {
+background-color: transparent;
+color: transparent;
+background-repeat: no-repeat;
+background-position: center;
+margin: 0px;
+padding: 3px 0px;
+width: 20px;
 }
 
-ScrobbleControls QPushButton#love { background-image: url(":/meta_love_OFF_REST.png"); }
-ScrobbleControls QPushButton#love:hover { background-image: url(":/meta_love_OFF_HOVER.png"); }
-ScrobbleControls QPushButton#love:pressed { background-image: url(":/meta_love_OFF_PRESS.png"); }
-ScrobbleControls QPushButton#love:checked { background-image: url(":/meta_love_ON_REST.png"); }
-ScrobbleControls QPushButton#love:checked:hover { background-image: url(":/meta_love_ON_HOVER.png"); }
-ScrobbleControls QPushButton#love:checked:pressed { background-image: url(":/meta_love_ON_PRESS.png"); }
+ScrobbleControls QPushButton#love {
+background-image: url(":/meta_love_OFF_REST.png");
+}
+ScrobbleControls QPushButton#love:hover {
+background-image: url(":/meta_love_OFF_HOVER.png");
+}
+ScrobbleControls QPushButton#love:pressed {
+background-image: url(":/meta_love_OFF_PRESS.png");
+}
+ScrobbleControls QPushButton#love:checked {
+background-image: url(":/meta_love_ON_REST.png");
+}
+ScrobbleControls QPushButton#love:checked:hover {
+background-image: url(":/meta_love_ON_HOVER.png");
+}
+ScrobbleControls QPushButton#love:checked:pressed {
+background-image: url(":/meta_love_ON_PRESS.png");
+}
 
-ScrobbleControls QPushButton#tag { background-image: url(":/meta_tag_REST.png"); }
-ScrobbleControls QPushButton#tag:hover { background-image: url(":/meta_tag_HOVER.png"); }
-ScrobbleControls QPushButton#tag:pressed { background-image: url(":/meta_tag_PRESS.png"); }
+ScrobbleControls QPushButton#tag {
+background-image: url(":/meta_tag_REST.png");
+}
+ScrobbleControls QPushButton#tag:hover {
+background-image: url(":/meta_tag_HOVER.png");
+}
+ScrobbleControls QPushButton#tag:pressed {
+background-image: url(":/meta_tag_PRESS.png");
+}
 
-ScrobbleControls QPushButton#share { background-image: url(":/meta_share_REST.png"); }
-ScrobbleControls QPushButton#share:menu-indicator { background: transparent; }
-ScrobbleControls QPushButton#share:hover { background-image: url(":/meta_share_HOVER.png"); }
-ScrobbleControls QPushButton#share:pressed { background-image: url(":/meta_share_PRESS.png"); }
+ScrobbleControls QPushButton#share {
+background-image: url(":/meta_share_REST.png");
+}
+ScrobbleControls QPushButton#share:menu-indicator {
+background: transparent;
+}
+ScrobbleControls QPushButton#share:hover {
+background-image: url(":/meta_share_HOVER.png");
+}
+ScrobbleControls QPushButton#share:pressed {
+background-image: url(":/meta_share_PRESS.png");
+}
 
-ScrobbleControls QPushButton#buy { background-image: url(":/meta_buy_REST.png"); }
-ScrobbleControls QPushButton#buy:menu-indicator { background: transparent; }
-ScrobbleControls QPushButton#buy:hover { background-image: url(":/meta_buy_HOVER.png"); }
-ScrobbleControls QPushButton#buy:pressed { background-image: url(":/meta_buy_PRESS.png"); }
+ScrobbleControls QPushButton#buy {
+background-image: url(":/meta_buy_REST.png");
+}
+ScrobbleControls QPushButton#buy:menu-indicator {
+background: transparent;
+}
+ScrobbleControls QPushButton#buy:hover {
+background-image: url(":/meta_buy_HOVER.png");
+}
+ScrobbleControls QPushButton#buy:pressed {
+background-image: url(":/meta_buy_PRESS.png");
+}
 
 BannerWidgetPrivate {
-    background-color: red;
-    color: white;
-    font-weight: bold;
+background-color: red;
+color: white;
+font-weight: bold;
 }
 
 ShareDialog QFrame#what {
-	border: 1px solid #DBDBDB;
-	border-radius: 5px;
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ABABAB, stop:0.04 #E6E6E6, stop:1 #E6E6E6);
-	padding: 18px;
-	margin: 18px 0px;
+border: 1px solid #DBDBDB;
+border-radius: 5px;
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ABABAB, stop:0.04 #E6E6E6, stop:1 #E6E6E6);
+padding: 18px;
+margin: 18px 0px;
 }
 
 ShareDialog > QRadioButton {
-	margin-left: 10px;
-	font-weight: bold;
+margin-left: 10px;
+font-weight: bold;
 }
 
 ShareDialog > QLabel,
 ShareDialog > QCheckBox,
 ShareDialog > QRadioButton {
-	font-size: 12px;
-	font-weight: bold;
+font-size: 12px;
+font-weight: bold;
 }
 
 ShareDialog QLabel#with {
-	margin-bottom: 10px;
-	font-size: 12px; 
+margin-bottom: 10px;
+font-size: 12px;
 }
 
 ShareDialog QLabel#messageTitle {
-	margin-top: 16px;
-	margin-bottom: 10px;
+margin-top: 16px;
+margin-bottom: 10px;
 }
 
 ShareDialog QFrame#what QLabel#shareSubject,
 ShareDialog QFrame#what QLabel#shareSubject2 {
-	font-size: 12px; 
-	font-weight: bold;
-	margin: 4px 0px 4px 0px;
+font-size: 12px;
+font-weight: bold;
+margin: 4px 0px 4px 0px;
 }
 
 ShareDialog ItemSelectorWidget {
-	background-color: white;
+background-color: white;
 }
 
 ShareDialog ItemSelectorWidget QLineEdit {
-	padding: 1px 2px 2px 3px;
-	margin: 2px;
+padding: 1px 2px 2px 3px;
+margin: 2px;
 }
 
 ShareDialog ItemSelectorWidget QLabel {
-	padding: 2px 3px;
-	margin: 2px 0px 2px 2px;
-	background-color: #DAE7F9;
-	font-weight: bold;
-	border: 1px solid #99BEEE;
-	border-radius: 9px;
-	min-width: 12px;
+padding: 2px 3px;
+margin: 2px 0px 2px 2px;
+background-color: #DAE7F9;
+font-weight: bold;
+border: 1px solid #99BEEE;
+border-radius: 9px;
+min-width: 12px;
 }
 
 ShareDialog QTextEdit {
-	margin-bottom: 16px;
+margin-bottom: 16px;
 }
 
 ShareDialog QLabel#characterLimit {
-	font-size: 11px;
-	font-weight: normal;
+font-size: 11px;
+font-weight: normal;
 }
 
 ShareDialog QLabel#characterLimit[xerror="true"] {
-	color: red;
+color: red;
 }
 
 ShareDialog QLabel#characterLimit,
 ShareDialog QCheckBox {
-	margin-bottom: 16px;
+margin-bottom: 16px;
 }
 
 StatusBar StylableWidget {
-	border: none;
-	background-color: transparent;
-	margin: 1px 0px 2px;
+border: none;
+background-color: transparent;
+margin: 1px 0px 2px;
 }
 
 StatusBar QPushButton#cog {
-	border: 1px solid #cdcdcd;
-	border-radius: 3px;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #e5e5e5);
-	background-image: url(":/settings_REST.png");
-	width: 30px;
-	height: 22px;
-	margin: 0px 10px;
+border: 1px solid #cdcdcd;
+border-radius: 3px;
+background-repeat: no-repeat;
+background-position: center;
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #e5e5e5);
+background-image: url(":/settings_REST.png");
+width: 30px;
+height: 22px;
+margin: 0px 10px;
 }
 
-StatusBar QPushButton#cog:hover { background-image: url(":/settings_HOVER.png"); }
-StatusBar QPushButton#cog:pressed { background-image: url(":/settings_PRESS.png"); }
+StatusBar QPushButton#cog:hover {
+background-image: url(":/settings_HOVER.png");
+}
+StatusBar QPushButton#cog:pressed {
+background-image: url(":/settings_PRESS.png");
+}
 
 StatusBar QLabel#volMin,
 StatusBar QLabel#volMax {
-	border: none;
-	background-repeat: no-repeat;
-	background-position: center;
-	min-width: 16px;
-	height: 16px;
-	background-image: url(":/volume_min.png");
+border: none;
+background-repeat: no-repeat;
+background-position: center;
+min-width: 16px;
+height: 16px;
+background-image: url(":/volume_min.png");
 }
 
 StatusBar QLabel#volMin {
-	min-width: 8px;
-	max-width: 8px;
+min-width: 8px;
+max-width: 8px;
 }
 
 StatusBar QLabel#volMax {
-	background-image: url(":/volume_max.png");
+background-image: url(":/volume_max.png");
 }
 
 StatusBar Phonon--VolumeSlider {
-	qproperty-muteVisible: false;
-	min-width: 104px;
+qproperty-muteVisible: false;
+min-width: 104px;
 }
 
 StatusBar QSlider::groove:horizontal {
-	background-repeat: no-repeat;
-	background-position: center;
-	width: 104px;
-	height: 16px;
-	background-image: url(":/volume_slot_OFF.png");
+background-repeat: no-repeat;
+background-position: center;
+width: 104px;
+height: 16px;
+background-image: url(":/volume_slot_OFF.png");
 }
 
 StatusBar QSlider::handle:horizontal {
-	background-repeat: no-repeat;
-	background-position: center;
-	width: 16px;
-	height: 16px;
-	background-image: url(":/volume_knob_REST.png");
+background-repeat: no-repeat;
+background-position: center;
+width: 16px;
+height: 16px;
+background-image: url(":/volume_knob_REST.png");
 }
 
 StatusBar QSlider::handle:horizontal:pressed {
-	background-image: url(":/volume_knob_PRESS.png");
+background-image: url(":/volume_knob_PRESS.png");
 }
 
 StatusBar QPushButton#scrobbleToggle {
-	border: 1px solid #cdcdcd;
-	border-radius: 3px;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #e5e5e5);
-	background-image: url(":/scrobble_OFF_REST.png");
-	width: 36px;
-	height: 22px;
-	margin-left: 10px;
+border: 1px solid #cdcdcd;
+border-radius: 3px;
+background-repeat: no-repeat;
+background-position: center;
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #e5e5e5);
+background-image: url(":/scrobble_OFF_REST.png");
+width: 36px;
+height: 22px;
+margin-left: 10px;
 }
 
-StatusBar QPushButton#scrobbleToggle:hover { background-image: url(":/scrobble_OFF_HOVER.png"); }
-StatusBar QPushButton#scrobbleToggle:pressed { background-image: url(":/scrobble_OFF_PRESS.png"); }
-StatusBar QPushButton#scrobbleToggle:checked { background-image: url(":/scrobble_ON_REST.png"); }
-StatusBar QPushButton#scrobbleToggle:checked:hover { background-image: url(":/scrobble_ON_HOVER.png"); }
-StatusBar QPushButton#scrobbleToggle:checked:pressed { background-image: url(":/scrobble_ON_PRESS.png"); }
+StatusBar QPushButton#scrobbleToggle:hover {
+background-image: url(":/scrobble_OFF_HOVER.png");
+}
+StatusBar QPushButton#scrobbleToggle:pressed {
+background-image: url(":/scrobble_OFF_PRESS.png");
+}
+StatusBar QPushButton#scrobbleToggle:checked {
+background-image: url(":/scrobble_ON_REST.png");
+}
+StatusBar QPushButton#scrobbleToggle:checked:hover {
+background-image: url(":/scrobble_ON_HOVER.png");
+}
+StatusBar QPushButton#scrobbleToggle:checked:pressed {
+background-image: url(":/scrobble_ON_PRESS.png");
+}

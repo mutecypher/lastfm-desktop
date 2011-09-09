@@ -39,19 +39,26 @@ Session::lastSessionData()
     return sessionData;
 }
 
-Session::Session( QNetworkReply* reply ) throw( lastfm::ws::ParseError )
+Session::Session()
 {
+}
+
+Session*
+Session::fromNetworkReply( QNetworkReply* reply ) throw( lastfm::ws::ParseError )
+{
+    Session* session = new Session();
+
     lastfm::XmlQuery lfm;
     lfm.parse( reply->readAll() );
-    qDebug() << lfm;
-    lastfm::XmlQuery session = lfm["session"];
     
     // replace username; because eg. perhaps the user typed their
     // username with the wrong camel case
-    QString username = session["name"].text();
-    QString sessionKey = session["key"].text();
+    QString username = lfm["session"]["name"].text();
+    QString sessionKey = lfm["session"]["key"].text();
     
-    init( username, sessionKey );
+    session->init( username, sessionKey );
+
+    return session;
 }
 
 Session::Session( const QString& username, QString sessionKey )

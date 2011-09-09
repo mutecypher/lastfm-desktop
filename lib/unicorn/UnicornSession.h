@@ -12,15 +12,15 @@
 
 namespace unicorn {
 
-class UNICORN_DLLEXPORT Session: public QObject
+class UNICORN_DLLEXPORT Session : public QObject
 {
     Q_OBJECT
 public:
     /** Return session object from stored session */
     Session();
     Session( const QString& username, QString sessionKey = "" );
-    Session( QNetworkReply* reply ) throw( lastfm::ws::ParseError );
 
+    static Session* fromNetworkReply( QNetworkReply* reply ) throw( lastfm::ws::ParseError );
 
     QString sessionKey() const;
 

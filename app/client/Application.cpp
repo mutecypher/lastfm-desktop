@@ -40,6 +40,7 @@
 #include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/widgets/UserMenu.h"
+#include "lib/unicorn/Updater/PluginList.h"
 
 #include "AudioscrobblerSettings.h"
 #include "Wizard/FirstRunWizard.h"
@@ -632,7 +633,7 @@ Application::quit()
       result =
           QMessageBoxBuilder( activeWindow()).setTitle( tr("%1 is about to quit.").arg(applicationName()))
                                              .setText( tr("Tracks played in %1 will not be scrobbled if you continue." )
-                                                       .arg( PluginList().availableDescription()) )
+                                             .arg( PluginList().availableDescription() ) )
                                              .dontAskAgain()
                                              .setIcon( QMessageBox::Question )
                                              .setButtons( QMessageBox::Yes | QMessageBox::No )

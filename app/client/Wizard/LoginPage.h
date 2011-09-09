@@ -42,10 +42,12 @@ public:
  
 private slots:
     void onSignUpClicked();
+    void yah();
 
 private:
 
     struct {
+        class QLabel* image;
         class QLabel* description;
     } ui;
 

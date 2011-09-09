@@ -30,7 +30,7 @@ AuthInProgressPage::AuthInProgressPage( QWizard* parent )
                     m_loginProcess( 0 )
 {
     setCommitPage( true );
-    setButtonText( QWizard::CommitButton, tr( "Continue" ));
+    setButtonText( QWizard::CommitButton, tr( "Continue" ) );
     setTitle( tr( "Hmm, we can't tell if you've connected yet." ));
     
     QVBoxLayout* layout = new QVBoxLayout( this );
@@ -50,12 +50,10 @@ void
 AuthInProgressPage::initializePage()
 {
     if ( m_loginProcess )
-    {
         delete m_loginProcess;
-    }
+
     m_loginProcess = new unicorn::LoginProcess( this );
-    connect( m_loginProcess, SIGNAL( gotSession( unicorn::Session* ) ),
-             this, SLOT( onAuthenticated( unicorn::Session* ) ) );
+    connect( m_loginProcess, SIGNAL( gotSession( unicorn::Session* ) ), SLOT( onAuthenticated( unicorn::Session* ) ) );
 
     m_loginProcess->authenticate();
 }
