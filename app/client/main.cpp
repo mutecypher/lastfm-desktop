@@ -32,7 +32,6 @@
 #include <QStringList>
 #include <QRegExp>
 
-#include "_version.h"
 #include "Application.h"
 #include "ScrobSocket.h"
 #include "lib/unicorn/UnicornApplication.h"
@@ -49,20 +48,23 @@ namespace lastfm
 {
     extern LASTFM_DLLEXPORT QByteArray UserAgent;
 }
+
 int main( int argc, char** argv )
 {
     QtSingleCoreApplication::setApplicationName( "Last.fm" );
-    QtSingleCoreApplication::setApplicationVersion( VERSION );
+    QtSingleCoreApplication::setOrganizationName( "Last.fm" );
+    QtSingleCoreApplication::setApplicationVersion( APP_VERSION );
 
     // ATTENTION! Under no circumstance change these strings! --mxcl
 #ifdef WIN32
-    lastfm::UserAgent = "Last.fm Client " VERSION " (Windows)";
+    lastfm::UserAgent = "Last.fm Client " APP_VERSION " (Windows)";
 #elif __APPLE__
-    lastfm::UserAgent = "Last.fm Client " VERSION " (OS X)";
+    lastfm::UserAgent = "Last.fm Client " APP_VERSION " (OS X)";
 #elif defined (Q_WS_X11)
-    lastfm::UserAgent = "Last.fm Client " VERSION " (X11)";
+    lastfm::UserAgent = "Last.fm Client " APP_VERSION " (X11)";
 #endif
-	
+
+
     try
     {
         audioscrobbler::Application app( argc, argv );
