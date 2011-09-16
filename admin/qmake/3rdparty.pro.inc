@@ -1,6 +1,6 @@
 mac {
-    LIBS += -L/opt/local/lib
-    INCLUDEPATH += /opt/local/include
+    LIBS += -L/usr/local/lib
+    INCLUDEPATH += /usr/local/include
 }
 
 CONFIG( taglib ) {
@@ -13,7 +13,7 @@ CONFIG( mad ) {
     win32{
 		LIBS += -L$$COMMON_LIBS_DIR/libmad -lmad
 	}else:CONFIG( app_bundle ){
-		LIBS += /opt/local/lib/libmad.a
+                LIBS += /usr/local/lib/libmad.a
 	}else{
         CONFIG += link_pkgconfig
         PKGCONFIG += mad
@@ -22,7 +22,7 @@ CONFIG( mad ) {
 
 CONFIG( boost ) {
     mac:CONFIG(app_bundle){
-        LIBS += /opt/local/lib/libboost_thread-mt.a
+        LIBS += /usr/local/lib/libboost_thread-mt.a
     }
     else:unix {
         LIBS += -lboost_thread-mt
@@ -33,7 +33,7 @@ CONFIG( fftw3f ) {
     win32{
 		LIBS += -L$$COMMON_LIBS_DIR/libfftw -lfftw3f
 	}else:CONFIG( app_bundle ){
-		LIBS += /opt/local/lib/libfftw3f.a
+                LIBS += /usr/local/lib/libfftw3f.a
 	}else{
         CONFIG += link_pkgconfig
         PKGCONFIG += fftw3f
@@ -44,7 +44,7 @@ CONFIG( samplerate ) {
     win32{
 		LIBS += -L$$COMMON_LIBS_DIR/libsamplerate -lsamplerate
 	}else:mac:CONFIG( app_bundle ){
-		LIBS += libsamplerate.a -L/opt/local/lib
+                LIBS += libsamplerate.a -L/usr/local/lib
 	}else{
         CONFIG += link_pkgconfig
         PKGCONFIG += samplerate
@@ -66,7 +66,7 @@ CONFIG( yajl ) {
 		release:PKGCONFIG += yajl-release
 	}
 	else:CONFIG(app_bundle) {
-		LIBS += /opt/local/lib/libyajl_s.a
+                LIBS += /usr/local/lib/libyajl_s.a
 	}
 	else:LIBS += -lyajl
 }
