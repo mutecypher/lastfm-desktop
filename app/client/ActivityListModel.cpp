@@ -37,6 +37,8 @@ ActivityListModel::ActivityListModel()
     connect( &ScrobbleService::instance(), SIGNAL(paused()), SLOT(onPaused()));
     connect( &ScrobbleService::instance(), SIGNAL(resumed()), SLOT(onResumed()));
     connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
+
+    onSessionChanged( lastfm::ws::Username );
 }
 
 void
@@ -58,8 +60,12 @@ ActivityListModel::onFoundIPodScrobbles( const QList<lastfm::Track>& tracks )
 void 
 ActivityListModel::onSessionChanged( unicorn::Session* session )
 {
-    const QString& username = session->userInfo().name();
+    onSessionChanged( session->userInfo().name() );
+}
 
+void
+ActivityListModel::onSessionChanged( const QString& username )
+{
     if ( !username.isEmpty() )
     {
         QString path = lastfm::dir::runtimeData().filePath( username + "_recent_tracks.xml" );
@@ -73,6 +79,7 @@ ActivityListModel::onSessionChanged( unicorn::Session* session )
         refresh();
     }
 }
+
 
 void
 ActivityListModel::read()

@@ -32,8 +32,16 @@
 class NowPlayingWidget : public QWidget
 {
     Q_OBJECT
+private:
+    struct
+    {
+        class PlaybackControlsWidget* playbackControls;
+    } ui;
+
 public:
     explicit NowPlayingWidget(QWidget *parent = 0);
+
+    class PlaybackControlsWidget* playbackControls() const;
 
 private slots:
     void onTuningIn( const RadioStation& );

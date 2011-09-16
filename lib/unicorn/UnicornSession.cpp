@@ -14,14 +14,18 @@ Session::lastSessionData()
 {
     Settings s;
     QMap<QString, QString> sessionData;
+
     //use the Username setting or the first username if there have been any logged in previously
-    QString username = s.value( "Username", QString()).toString();
+    QString username = s.value( "Username", QString() ).toString();
 
     QStringList groups = s.childGroups();
-    if( (username.isEmpty()||!groups.contains(username, Qt::CaseInsensitive ))
-        && !groups.isEmpty()) {
-        foreach( QString child, s.childGroups()) {
-            if( child == "com" || !s.contains( child + "/SessionKey") ) continue;
+    if( (username.isEmpty()
+         || ( !groups.contains(username, Qt::CaseInsensitive )) && !groups.isEmpty() ) )
+    {
+        foreach( QString child, s.childGroups())
+        {
+            if( child == "com" || !s.contains( child + "/SessionKey") )
+                continue;
             username = child;
             break;
         }
@@ -30,9 +34,13 @@ Session::lastSessionData()
     if( !username.isEmpty() )
     {
         s.beginGroup( username );
+
         sessionData[ "username" ] = username;
-		const QString sk = s.value( "SessionKey", "" ).toString();
-        if( !sk.isEmpty()) sessionData[ "sessionKey" ] = sk;
+        const QString sk = s.value( "SessionKey", "" ).toString();
+
+        if( !sk.isEmpty() )
+            sessionData[ "sessionKey" ] = sk;
+
         s.endGroup();
     }
 
@@ -45,15 +53,11 @@ Session::Session()
 
 Session::Session( const QString& username, QString sessionKey )
 {
+    m_userInfo.setName( username );
+    m_sessionKey = sessionKey;
+
     Settings s;
     s.setValue( "Username", username );
-    if( !s.childGroups().contains( username, Qt::CaseInsensitive )) return;
-
-    if ( sessionKey.isEmpty() )
-    {
-        s.beginGroup( username );
-        sessionKey = s.value( "SessionKey" ).toString();
-    }
 
     init( username, sessionKey );
 }
@@ -74,6 +78,7 @@ void
 Session::init( const QString& username, const QString& sessionKey )
 {
     m_sessionKey = sessionKey;
+
     Settings s;
     s.beginGroup( username );
     m_userInfo.setName( username );
@@ -90,6 +95,7 @@ Session::init( const QString& username, const QString& sessionKey )
         s.setArrayIndex( i );
         imageUrls.append( s.value( "Url", QUrl() ).toUrl() );
     }
+
     s.endArray();
 
     m_userInfo.setImages( imageUrls );
@@ -99,7 +105,8 @@ Session::init( const QString& username, const QString& sessionKey )
     s.endGroup();
 
     fetchUserInfo();
-    connect( qApp, SIGNAL( internetConnectionUp() ), this, SLOT( fetchUserInfo() ) );
+
+    connect( qApp, SIGNAL( internetConnectionUp() ), SLOT( fetchUserInfo() ) );
 }
 
 void
@@ -108,7 +115,7 @@ Session::fetchUserInfo()
     qDebug() << "fetching user info";
     lastfm::ws::Username = m_userInfo.name();
     lastfm::ws::SessionKey = m_sessionKey;
-    connect( lastfm::UserDetails::getInfo(), SIGNAL( finished() ), this, SLOT( onUserGotInfo() ) );
+    connect( lastfm::UserDetails::getInfo(), SIGNAL( finished() ), SLOT( onUserGotInfo() ) );
 }
 
 void

@@ -21,6 +21,12 @@ RecentTracksWidget::RecentTracksWidget( QWidget* parent )
 }
 
 void
+RecentTracksWidget::refresh()
+{
+    m_scrobbles->refresh();
+}
+
+void
 RecentTracksWidget::onCurrentChanged( int index )
 {
     if ( index == 1 )

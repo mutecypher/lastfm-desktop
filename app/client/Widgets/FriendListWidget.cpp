@@ -23,17 +23,38 @@ FriendListWidget::FriendListWidget(QWidget *parent) :
     layout->addWidget( m_main = new QWidget( this ) );
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)) );
+    connect( aApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)) );
+
+    onSessionChanged( aApp->currentSession() );
 }
 
 void
 FriendListWidget::onSessionChanged( unicorn::Session* session )
 {
-    layout()->removeWidget( m_main );
-    delete m_main;
-
-    connect( session->userInfo().getFriends( true, 50, 1 ), SIGNAL(finished()), SLOT(onGotFriends()));
+    changeUser( session->userInfo().name() );
 }
 
+
+void
+FriendListWidget::onGotUserInfo( const lastfm::UserDetails& userDetails )
+{
+    changeUser( userDetails.name() );
+}
+
+void
+FriendListWidget::changeUser( const QString& newUsername )
+{
+    if ( !newUsername.isEmpty() && (newUsername != m_currentUsername) )
+    {
+        m_currentUsername = newUsername;
+
+        // there's a new username and it's different!
+        layout()->removeWidget( m_main );
+        delete m_main;
+
+        connect( User( newUsername ).getFriends( true, 50, 1 ), SIGNAL(finished()), SLOT(onGotFriends()));
+    }
+}
 
 void
 FriendListWidget::onTextChanged( const QString& text )

@@ -42,9 +42,6 @@ unicorn::MainWindow::MainWindow()
 {
     new QShortcut( QKeySequence(Qt::CTRL+Qt::Key_W), this, SLOT(close()) );
     new QShortcut( QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_L), this, SLOT(openLog()) );
-    connect( qApp, SIGNAL(gotUserInfo( const lastfm::UserDetails& )), SLOT(onGotUserInfo( const lastfm::UserDetails& )) );
-    connect( qApp, SIGNAL(sessionChanged( unicorn::Session* ) ),
-             SLOT( onSessionChanged( unicorn::Session* ) ) );
     connect( qApp->desktop(), SIGNAL( resized(int)), SLOT( cleverlyPosition()));
 #ifdef Q_OS_WIN32
     taskBarCreatedMessage = RegisterWindowMessage(L"TaskbarButtonCreated");
@@ -60,36 +57,10 @@ unicorn::MainWindow::~MainWindow()
 void
 unicorn::MainWindow::finishUi()
 {
-    base_ui.account = menuBar()->addMenu( User().name() );
-    base_ui.profile = base_ui.account->addAction( tr("Visit &Profile"), this, SLOT(visitProfile()) );
-    base_ui.account->addSeparator();
-
-    QAction* quit = base_ui.account->addAction( tr("&Quit"), qApp, SLOT(quit()) );
-
-    quit->setMenuRole( QAction::QuitRole );
-
-#ifdef Q_OS_WIN
-    quit->setShortcut( Qt::ALT + Qt::Key_F4 );
-#else
-    quit->setShortcut( Qt::CTRL + Qt::Key_Q );
-#endif
-
-    menuBar()->insertMenu( menuBar()->actions().first(), base_ui.account );
-    QMenu* help = menuBar()->addMenu( tr("Help") );
-    QAction* about = help->addAction( tr("About"), this, SLOT(about()) );
-    QAction* c4u = help->addAction( tr("Check for Updates"), this, SLOT(checkForUpdates()) );
-
-#ifdef Q_OS_MAC
-    about->setMenuRole( QAction::AboutRole );
-    c4u->setMenuRole( QAction::ApplicationSpecificRole );
-#endif
-
 #ifndef NDEBUG
     QMenu* debug = menuBar()->addMenu( "Debug" );
     debug->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()), Qt::CTRL + Qt::Key_R );
 #endif
-
-    base_ui.update = new UpdateDialog( this );
 
     cleverlyPosition();
 }
@@ -168,43 +139,6 @@ unicorn::MainWindow::updateThumbButtons()
 
 
 void
-unicorn::MainWindow::onGotUserInfo( const lastfm::UserDetails& details )
-{
-    base_ui.account->setTitle( details );
-    QString const text = details.getInfoString();
-    if (text.size() && base_ui.account) {
-        QAction* a = base_ui.account->addAction( text );
-        a->setEnabled( false );
-        a->setObjectName( "UserBlurb" );
-        base_ui.account->insertAction( base_ui.profile, a );
-    }
-}
-
-
-void
-unicorn::MainWindow::visitProfile()
-{
-    QDesktopServices::openUrl( User().www() );
-}
-
-
-void
-unicorn::MainWindow::about()
-{
-    if (!base_ui.about) base_ui.about = new AboutDialog( this );
-    base_ui.about.show();
-}
-
-
-void
-unicorn::MainWindow::checkForUpdates()
-{
-    if (!base_ui.update) base_ui.update = new UpdateDialog( this );
-    base_ui.update.show();
-}
-
-
-void
 unicorn::MainWindow::openLog()
 {
     QDesktopServices::openUrl( QUrl::fromLocalFile( unicorn::CoreApplication::log().absoluteFilePath() ) );    
@@ -266,13 +200,6 @@ unicorn::MainWindow::showEvent( QShowEvent* )
     emit shown( true );
 }
 
-
-void
-unicorn::MainWindow::onSessionChanged( Session* session )
-{
-    base_ui.account->findChild<QAction*>("UserBlurb")->deleteLater();
-    base_ui.account->setTitle( session->userInfo().name() );
-}
 
 void 
 unicorn::MainWindow::storeGeometry() const

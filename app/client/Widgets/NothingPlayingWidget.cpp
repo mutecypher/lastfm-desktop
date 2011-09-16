@@ -107,7 +107,7 @@ NothingPlayingWidget::oniTunesClicked()
 
     LSApplicationParameters params;
     params.version = 0;
-    params.flags = kLSLaunchAndHide;
+    params.flags = kLSLaunchDefaults;
     params.application = &appRef;
     params.asyncLaunchRefCon = NULL;
     params.environment = NULL;

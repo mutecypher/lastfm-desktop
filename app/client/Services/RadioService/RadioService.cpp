@@ -230,6 +230,16 @@ RadioService::clear()
     delete m_tuner;
 }
 
+void
+RadioService::volumeUp()
+{
+
+}
+
+void
+RadioService::volumeDown()
+{
+}
 
 void
 RadioService::mute()

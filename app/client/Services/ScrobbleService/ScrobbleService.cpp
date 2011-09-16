@@ -70,6 +70,7 @@ ScrobbleService::ScrobbleService()
 
     m_mediator->follow( new RadioConnection( this ) );
 
+    resetScrobbler();
 }
 
 bool
@@ -104,6 +105,12 @@ ScrobbleService::submitCache()
 
 void 
 ScrobbleService::onSessionChanged( unicorn::Session* ) 
+{
+    resetScrobbler();
+}
+
+void
+ScrobbleService::resetScrobbler()
 {
 /// audioscrobbler
     if( m_as )
@@ -278,7 +285,8 @@ ScrobbleService::onResumed()
 
     m_currentTrack.updateNowPlaying( m_currentTrack.duration() - (m_watch->elapsed()/1000) );
 
-    if(m_watch) m_watch->resume();
+    if (m_watch)
+        m_watch->resume();
 
     emit resumed();
 }

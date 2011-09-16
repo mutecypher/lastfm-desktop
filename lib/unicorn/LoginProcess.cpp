@@ -32,6 +32,7 @@ TinyWebServer::onNewConnection()
 {
     Q_ASSERT( m_tcpServer );
     m_clientSocket = m_tcpServer->nextPendingConnection();
+
     if ( m_clientSocket )
     {
         connect( m_clientSocket, SIGNAL( disconnected() ), m_clientSocket, SLOT( deleteLater() ) );
@@ -92,7 +93,7 @@ TinyWebServer::sendRedirect()
 /** LoginProcess **/
 LoginProcess::LoginProcess( QObject* parent )
     : QObject( parent )
-    , m_lastError( lastfm::ws::ParseError( lastfm::ws::NoError, "" ) )
+    , m_lastError( lastfm::ws::NoError, "" )
     , m_lastNetworkError( QNetworkReply::NoError )
 {
 }
@@ -119,7 +120,7 @@ LoginProcess::authenticate()
 
     if ( QDesktopServices::openUrl( m_authUrl ) )
     {
-        connect( m_webServer, SIGNAL( gotToken( QString ) ), this, SLOT( getSession( QString ) ) );
+        connect( m_webServer, SIGNAL( gotToken( QString ) ), SLOT( getSession( QString ) ) );
     }
 }
 
@@ -138,6 +139,7 @@ LoginProcess::authUrl() const
 void
 LoginProcess::getSession( QString token )
 {
+    m_token = token;
     connect( unicorn::Session::getSession( token ), SIGNAL( finished() ), SLOT( onGotSession() ) );
 }
 
@@ -148,7 +150,7 @@ LoginProcess::onGotSession()
     try
     {
         lastfm::XmlQuery lfm;
-        lfm.parse( qobject_cast<QNetworkReply*>( sender() )->readAll() );
+        lfm.parse( static_cast<QNetworkReply*>( sender() )->readAll() );
 
         QString username = lfm["session"]["name"].text();
         QString sessionKey = lfm["session"]["key"].text();
@@ -157,24 +159,15 @@ LoginProcess::onGotSession()
         emit gotSession( session );
         delete m_webServer;
     }
-    catch ( lastfm::ws::ParseError& e )
+    catch ( const lastfm::ws::ParseError& e )
     {
+        qWarning() << e.message() << e.enumValue();
+
         m_lastError = e;
-        qWarning() << e.what();
+
         if ( m_lastError.enumValue() == lastfm::ws::UnknownError )
         {
-           m_lastNetworkError = ( QNetworkReply::NetworkError )static_cast<QNetworkReply*>( sender() )->error();
-        }
-    }
-    catch ( lastfm::ws::Error& e )
-    {
-        m_lastError = lastfm::ws::ParseError( e, "" );
-
-        qWarning() << e;
-
-        if ( e == lastfm::ws::UnknownError )
-        {
-           m_lastNetworkError = ( QNetworkReply::NetworkError )static_cast<QNetworkReply*>( sender() )->error();
+           m_lastNetworkError = static_cast<QNetworkReply*>( sender() )->error();
         }
     }
 }

@@ -12,20 +12,22 @@ class QImage;
 
 class NowPlayingStackedWidget : public QWidget
 {
-    Q_OBJECT;
-
-public:
-    NowPlayingStackedWidget( QWidget* parent = 0 );
-
-private slots:
-    void showNowPlaying();
-    void showNothingPlaying();
+    Q_OBJECT
 
 private:
     struct {
         class NothingPlayingWidget* nothingPlaying;
         class NowPlayingWidget* nowPlaying;
     } ui;
+
+public:
+    NowPlayingStackedWidget( QWidget* parent = 0 );
+
+    class NowPlayingWidget* nowPlaying() const { return ui.nowPlaying; }
+
+private slots:
+    void showNowPlaying();
+    void showNothingPlaying();
 };
 
 #endif // NOWPLAYINGSTACKEDWIDGET_H

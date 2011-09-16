@@ -25,22 +25,13 @@
 MessageBar::MessageBar( QWidget* parent )
            :QWidget( parent )
 {
-    if( parent )
-        parent->installEventFilter( this );
-
-    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
-    updateGeometry();
     setFixedHeight( 0 );
+
     ui.papyrus = new QWidget( this );
-    
-    QPalette p = palette();
-    p.setColor( QPalette::Text, Qt::black );
-    p.setColor( QPalette::Window, QColor( 0xfa, 0xfa, 0xc7 ) );
-    setPalette( p );
-    setAutoFillBackground( true );
     
     m_timeline = new QTimeLine( 500, this );
     m_timeline->setUpdateInterval( 10 );
+
     connect( m_timeline, SIGNAL(frameChanged( int )), SLOT(animate( int )) );
 }
 
@@ -66,11 +57,6 @@ MessageBar::show( const QString& message, const QString& id )
 void 
 MessageBar::show( QWidget* w )
 {
-    if ( w->objectName().size() && 
-        findChild<QLabel*>( w->objectName() )) {
-        return;
-    }
-    
     QPushButton* close = new QPushButton( "x" );
     QHBoxLayout* h = new QHBoxLayout( w );
     h->addStretch();
@@ -80,7 +66,7 @@ MessageBar::show( QWidget* w )
     
     ui.papyrus->move( 0, -w->height() );
 
-    w->setFixedWidth( width());
+    w->setFixedWidth( width() );
     w->setParent( this );
     w->show();
 
@@ -122,29 +108,9 @@ MessageBar::onLabelDestroyed()
     setFixedHeight( ui.papyrus->height() );
 }
 
-
-void
-MessageBar::resizeEvent( QResizeEvent* /*e*/ )
-{
-    ui.papyrus->setFixedWidth( width() );
-    foreach (QLabel* l, findChildren<QLabel*>())
-        l->setFixedWidth( width() );
-}
-
-
 void
 MessageBar::remove( const QString& id )
 {
     delete findChild<QLabel*>( id );
 }
 
-
-bool
-MessageBar::eventFilter( QObject* /*obj*/, QEvent* event )
-{
-    if( event->type() == QEvent::Resize ) {
-        QResizeEvent* e = static_cast<QResizeEvent*>( event );
-        resize( e->size().width(), height());
-    }
-    return false;
-}

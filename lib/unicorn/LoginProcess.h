@@ -1,12 +1,14 @@
 #ifndef LOGIN_PROCESS_H
 #define LOGIN_PROCESS_H
 
+#include <QObject>
+#include <QPointer>
+
+#include <lastfm/ws.h>
+
 #include "UnicornSession.h"
 
 #include "lib/DllExportMacro.h"
-
-#include <QObject>
-#include <QPointer>
 
 class QHostAddress;
 class QTcpServer;

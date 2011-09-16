@@ -24,13 +24,37 @@ ProfileWidget::ProfileWidget(QWidget *parent)
 
     connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 
+    onSessionChanged( aApp->currentSession() );
 }
 
 void
 ProfileWidget::onSessionChanged( unicorn::Session* session )
 {  
-    if ( !session->userInfo().name().isEmpty() )
+    onGotUserInfo( session->userInfo() );
+}
+
+
+void
+ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userDetails )
+{
+    changeUser( userDetails.name() );
+
+    m_scrobbleCount = userDetails.scrobbleCount();
+    ui.avatar->setUserDetails( userDetails );
+    ui.avatar->loadUrl( userDetails.imageUrl( lastfm::Medium, true ), false );
+    ui.avatar->setHref( userDetails.www() );
+
+    setScrobbleCount();
+}
+
+
+void
+ProfileWidget::changeUser( const QString& newUsername )
+{
+    if ( !newUsername.isEmpty() && newUsername != m_currentUsername )
     {
+        m_currentUsername = newUsername;
+
         // Make sure we don't recieve any updates about the last session
         disconnect( this, SLOT(onGotTopOverallArtists()) );
         disconnect( this, SLOT(onGotTopWeeklyArtists()) );
@@ -51,8 +75,6 @@ ProfileWidget::onSessionChanged( unicorn::Session* session )
 
         hl->addWidget( ui.avatar = new AvatarWidget( this ) );
         ui.avatar->setObjectName( "avatar" );
-        ui.avatar->loadUrl( session->userInfo().imageUrl( lastfm::Medium, true ), false );
-        ui.avatar->setHref( session->userInfo().www() );
 
         QVBoxLayout* vl = new QVBoxLayout();
         vl->setContentsMargins( 0, 0, 0, 0 );
@@ -60,17 +82,14 @@ ProfileWidget::onSessionChanged( unicorn::Session* session )
 
         hl->addLayout( vl, 1 );
 
-        vl->addWidget( ui.name = new QLabel( session->userInfo().name(), this) );
+        vl->addWidget( ui.name = new QLabel( newUsername, this) );
         ui.name->setObjectName( "name" );
 
-        vl->addWidget( ui.scrobbleCount = new QLabel( QString( "%L1" ).arg( session->userInfo().scrobbleCount() ), this ) );
+        vl->addWidget( ui.scrobbleCount = new QLabel( "", this ) );
         ui.scrobbleCount->setObjectName( "scrobbleCount" );
 
         vl->addWidget( ui.scrobbles = new QLabel( tr("Scrobbles"), this) );
         ui.scrobbleCount->setObjectName( "scrobbles" );
-
-        m_scrobbleCount = session->userInfo().scrobbleCount();
-        setScrobbleCount();
 
         {
             QLabel* title = new QLabel( tr("Top Weekly Artists"), this ) ;
@@ -90,18 +109,9 @@ ProfileWidget::onSessionChanged( unicorn::Session* session )
 
         layout->addStretch( 1 );
 
-        connect( session->userInfo().getTopArtists( "overall", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopOverallArtists()));
-        connect( session->userInfo().getTopArtists( "7day", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopWeeklyArtists()));
+        connect( User( newUsername ).getTopArtists( "overall", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopOverallArtists()));
+        connect( User( newUsername ).getTopArtists( "7day", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopWeeklyArtists()));
     }
-}
-
-
-void
-ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userDetails )
-{
-    ui.avatar->setUserDetails( userDetails );
-    m_scrobbleCount = userDetails.scrobbleCount();
-    setScrobbleCount();
 }
 
 

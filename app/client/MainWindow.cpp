@@ -53,6 +53,7 @@
 #include "lib/unicorn/widgets/MessageBar.h"
 #include "lib/unicorn/widgets/GhostWidget.h"
 #include "lib/unicorn/widgets/UserToolButton.h"
+#include "lib/unicorn/widgets/MessageBar.h"
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/qtwin.h"
 #include "lib/unicorn/layouts/SlideOverLayout.h"
@@ -69,13 +70,23 @@ MainWindow::MainWindow()
     
     setCentralWidget(new QWidget);
 
-    QHBoxLayout* layout = new QHBoxLayout( centralWidget() );
-    layout->setSpacing( 0 );
+    QVBoxLayout* layout = new QVBoxLayout( centralWidget() );
     layout->setContentsMargins( 0, 0, 0, 0 );
+    layout->setSpacing( 0 );
 
-    layout->addWidget( ui.sideBar = new SideBar( this ) );
+    layout->addWidget( ui.messageBar = new MessageBar( this ) );
 
-    layout->addWidget( ui.stackedWidget = new QStackedWidget( this ) );
+    ui.messageBar->show( "test" );
+
+    QHBoxLayout* h = new QHBoxLayout();
+    h->setContentsMargins( 0, 0, 0, 0 );
+    h->setSpacing( 0 );
+
+    layout->addLayout( h );
+
+    h->addWidget( ui.sideBar = new SideBar( this ) );
+
+    h->addWidget( ui.stackedWidget = new QStackedWidget( this ) );
 
     connect( ui.sideBar, SIGNAL(currentChanged(int)), ui.stackedWidget, SLOT(setCurrentIndex(int)));
 
@@ -119,6 +130,7 @@ MainWindow::MainWindow()
     connect( &ScrobbleService::instance(), SIGNAL( stopped() ), SLOT( onStopped() ) );
 
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn()));
+    connect( &RadioService::instance(), SIGNAL(error(int,QVariant)), SLOT(onError(int,QVariant)));
 
     menuBar()->hide();
 
@@ -132,12 +144,63 @@ MainWindow::MainWindow()
 
     finishUi();
 
-    QAction* prefs = base_ui.account->addAction( tr("preferences"), this, SLOT(onPrefsTriggered()) );
-    prefs->setMenuRole( QAction::PreferencesRole );
+    setupMenuBar();
 
     resize( 565, 710 );
 
     show();
+}
+
+void
+MainWindow::setupMenuBar()
+{
+    /// File menu (should only show on non-mac)
+    QMenu* fileMenu = menuBar()->addMenu( tr( "File" ) );
+    QAction* quit = fileMenu->addAction( tr("&Quit"), qApp, SLOT(quit()) );
+    quit->setMenuRole( QAction::QuitRole );
+#ifdef Q_OS_WIN
+    quit->setShortcut( Qt::ALT + Qt::Key_F4 );
+#else
+    quit->setShortcut( Qt::CTRL + Qt::Key_Q );
+#endif
+
+    /// View
+    QMenu* viewMenu = menuBar()->addMenu( tr("View") );
+    ui.sideBar->addToMenu( *viewMenu );
+    viewMenu->addSeparator();
+    viewMenu->addAction( "My Last.fm Profile", this, SLOT(onVisitProfile()), Qt::CTRL + Qt::Key_P );
+
+    /// Scrobbles
+    QMenu* scrobblesMenu = menuBar()->addMenu( tr("Scrobbles") );
+    scrobblesMenu->addAction( "Refresh", ui.recentTracks, SLOT(refresh()), Qt::CTRL + Qt::SHIFT + Qt::Key_R );
+
+    /// Controls
+    QMenu* controlsMenu = menuBar()->addMenu( tr("Controls") );
+    ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *controlsMenu  );
+
+    /// Account
+    QMenu* accountMenu = menuBar()->addMenu( tr("Account") );
+
+    /// Tools (should only show on non-mac)
+    QMenu* toolsMenu = menuBar()->addMenu( tr("Tools") );
+    QAction* c4u = toolsMenu->addAction( tr("Check for Updates"), this, SLOT(checkForUpdates()) );
+    c4u->setMenuRole( QAction::ApplicationSpecificRole );
+    QAction* prefs = toolsMenu->addAction( tr("Options"), this, SLOT(onPrefsTriggered()) );
+    prefs->setMenuRole( QAction::PreferencesRole );
+
+    /// Window
+    QMenu* windowMenu = menuBar()->addMenu( tr("Window") );
+
+    /// Help
+    QMenu* helpMenu = menuBar()->addMenu( tr("Help") );
+    QAction* about = helpMenu->addAction( tr("About"), this, SLOT(about()) );
+    about->setMenuRole( QAction::AboutRole );
+}
+
+void
+MainWindow::onVisitProfile()
+{
+    QDesktopServices::openUrl( aApp->currentSession()->userInfo().www() );
 }
 
 void
@@ -193,6 +256,13 @@ MainWindow::onPaused()
         setWindowTitle( tr( "%1 - %2 - Paused - %3" ).arg( QApplication::applicationName(), RadioService::instance().station().title(), m_currentTrack.toString() ) );
     else
         setWindowTitle( tr( "%1 - Paused - %2" ).arg( QApplication::applicationName(), m_currentTrack.toString() ) );
+}
+
+
+void
+MainWindow::onError( int error, const QVariant& data )
+{
+    ui.messageBar->show( tr( "%1: %2" ).arg( data.toString(), QString::number( error ) ), "radio" );
 }
 
 

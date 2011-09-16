@@ -35,15 +35,10 @@ class UNICORN_DLLEXPORT MessageBar : public QWidget
         QWidget* papyrus;
     } ui;
     
-    virtual void resizeEvent( QResizeEvent* );
     void doLayout();
     
 public:
-    /** Parent should be the widget that the messagebar is added to.
-        It should not be added to a layout. */
     MessageBar( QWidget* parent );
-
-    bool eventFilter( QObject* obj, QEvent *event );
     
 public slots:
     void show( QWidget* );

@@ -22,6 +22,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QShortcut>
+#include <QMenu>
 
 #include <lastfm/User.h>
 
@@ -67,12 +68,22 @@ SideBar::SideBar(QWidget *parent)
     connect( ui.profile, SIGNAL(clicked()), SLOT(onButtonClicked()));
     connect( ui.friends, SIGNAL(clicked()), SLOT(onButtonClicked()));
     connect( ui.radio, SIGNAL(clicked()), SLOT(onButtonClicked()));
-
-    //const QKeySequence & key, QWidget * parent, const char * member = 0, const char * ambiguousMember = 0, Qt::ShortcutContext context = Qt::WindowShortcut
-    new QShortcut( Qt::CTRL + Qt::Key_BracketLeft, this, SLOT(onUp()));
-    new QShortcut( Qt::CTRL + Qt::Key_BracketRight, this, SLOT(onDown()));
 }
 
+void
+SideBar::addToMenu( QMenu& menu )
+{
+    menu.addAction( ui.nowPlaying->text(), ui.nowPlaying, SLOT(click()), Qt::CTRL + Qt::Key_1);
+    menu.addAction( ui.scrobbles->text(), ui.scrobbles, SLOT(click()), Qt::CTRL + Qt::Key_2);
+    menu.addAction( ui.profile->text(), ui.profile, SLOT(click()), Qt::CTRL + Qt::Key_3);
+    menu.addAction( ui.friends->text(), ui.friends, SLOT(click()), Qt::CTRL + Qt::Key_4);
+    menu.addAction( ui.radio->text(), ui.radio, SLOT(click()), Qt::CTRL + Qt::Key_5);
+
+    menu.addSeparator();
+
+    menu.addAction( "Next Section", this, SLOT(onDown()), Qt::CTRL + Qt::Key_BracketRight);
+    menu.addAction( "Previous Section", this, SLOT(onUp()), Qt::CTRL + Qt::Key_BracketLeft);
+}
 
 void
 SideBar::onUp()

@@ -91,6 +91,9 @@ protected slots:
     void onResumed(); 
     void onStopped();
 
+private:
+    void resetScrobbler();
+
 protected:
     State state;
 

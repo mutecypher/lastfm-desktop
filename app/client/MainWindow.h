@@ -28,6 +28,8 @@ class MainWindow : public unicorn::MainWindow
         class TitleBar* titleBar;
         class StatusBar* statusBar;
 
+        class MessageBar* messageBar;
+
         class SideBar* sideBar;
         class QStackedWidget* stackedWidget;
 
@@ -59,19 +61,20 @@ signals:
     void finished();
 
 public slots:
+    void onVisitProfile();
     void onPrefsTriggered();
 
-private slots:
     void onTrackStarted(const Track&, const Track&);
     void onStopped();
     void onPaused();
     void onResumed();
     void onTuningIn();
-
+    void onError( int error, const QVariant& data );
 
 private:
     void setCurrentWidget( QWidget* );
     void addWinThumbBarButtons( QList<QAction*>& );
+    void setupMenuBar();
 
     //void resizeEvent( QResizeEvent* event ) { qDebug() << event->size(); }
 

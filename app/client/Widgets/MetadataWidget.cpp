@@ -104,9 +104,12 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
 
     // fetch Track info
     connect( m_track.signalProxy(), SIGNAL( gotInfo(QByteArray)), SLOT( onTrackGotInfo(QByteArray)));
+
     m_track.getInfo();
+
     if( !m_track.album().isNull() )
         connect( m_track.album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
+
     connect( m_track.artist().getInfo(), SIGNAL(finished()), SLOT(onArtistGotInfo()));
 
     connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));

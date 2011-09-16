@@ -66,6 +66,8 @@ public slots:
     void playNext( const RadioStation& station );
     void skip();
     void stop();
+    void volumeUp();
+    void volumeDown();
     void mute();
     void pause();
     void resume();

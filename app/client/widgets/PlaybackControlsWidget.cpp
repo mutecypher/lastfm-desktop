@@ -1,5 +1,6 @@
 
 #include <QShortcut>
+#include <QMenu>
 
 #include "lib/unicorn/UnicornSettings.h"
 
@@ -48,8 +49,32 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     connect( ui->ban, SIGNAL(clicked()), aApp->banAction(), SLOT(trigger()));
     connect( ui->play, SIGNAL(clicked()), aApp->playAction(), SLOT(trigger()));
     connect( ui->skip, SIGNAL(clicked()), aApp->skipAction(), SLOT(trigger()));
+}
 
-    new QShortcut( QKeySequence( Qt::Key_Space ), this, SLOT(onSpace()));
+void
+PlaybackControlsWidget::addToMenu( QMenu& menu )
+{
+    menu.addAction( aApp->playAction() );
+
+    menu.addSeparator();
+
+    menu.addAction( aApp->skipAction() );
+
+    menu.addSeparator();
+
+    menu.addAction( aApp->loveAction() );
+    menu.addAction( aApp->banAction() );
+
+    menu.addSeparator();
+
+    menu.addAction( aApp->tagAction() );
+    menu.addAction( aApp->shareAction() );
+
+    menu.addSeparator();
+
+    menu.addAction( tr( "Volume Up" ), &RadioService::instance(), SLOT(volumeUp()), QKeySequence( Qt::CTRL + Qt::Key_Up ));
+    menu.addAction( tr( "Volume Down" ), &RadioService::instance(), SLOT(volumeDown()), QKeySequence( Qt::CTRL + Qt::Key_Down ));
+    menu.addAction( tr( "Mute" ), &RadioService::instance(), SLOT(mute()), QKeySequence( Qt::CTRL + Qt::ALT + Qt::Key_Down ));
 }
 
 
@@ -226,6 +251,15 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
     setIconForRadio( station );
 
     ui->progressBar->setTrack( Track() );
+
+    aApp->playAction()->setEnabled( true );
+    aApp->loveAction()->setEnabled( false );
+    aApp->banAction()->setEnabled( false );
+    aApp->skipAction()->setEnabled( false );
+    aApp->tagAction()->setEnabled( false );
+    aApp->shareAction()->setEnabled( false );
+
+    ui->controls->show();
 }
 
 void
@@ -238,24 +272,31 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
         disconnect( &RadioService::instance(), SIGNAL(tick(qint64)), this, SLOT(onTick(qint64)));
         disconnect( &ScrobbleService::instance(), SIGNAL(frameChanged(int)), ui->progressBar, SLOT(onFrameChanged(int)) );
 
-        if(  track.source() == Track::LastFmRadio )
+        // you can love tag and share all tracks
+        aApp->loveAction()->setEnabled( true );
+        aApp->tagAction()->setEnabled( true );
+        aApp->shareAction()->setEnabled( true );
+
+        // play is always enabled as you should always
+        // be able to start the radio
+        aApp->playAction()->setEnabled( true );
+
+        aApp->playAction()->setChecked( track.source() == Track::LastFmRadio );
+
+        // can only ban and skip radio tracks
+        aApp->banAction()->setEnabled( track.source() == Track::LastFmRadio );
+        aApp->skipAction()->setEnabled( track.source() == Track::LastFmRadio );
+
+        aApp->loveAction()->setChecked( track.isLoved() );
+
+        ui->controls->setVisible( track.source() == Track::LastFmRadio );
+
+        setScrobbleTrack( track.source() != Track::LastFmRadio  );
+
+        if( track.source() == Track::LastFmRadio )
         {
-            setScrobbleTrack( false );
-
             // A radio track!
-            aApp->playAction()->setEnabled( true );
-            aApp->loveAction()->setEnabled( true );
-            aApp->banAction()->setEnabled( true );
-            aApp->skipAction()->setEnabled( true );
-
-            aApp->playAction()->setChecked( true );
-            aApp->loveAction()->setChecked( track.isLoved() );
-
             connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool)));
-
-            ui->play->setChecked( true );
-
-            ui->controls->show();
 
             ui->status->setText( tr("Listening to...") );
             ui->device->setText( RadioService::instance().station().title() );
@@ -264,16 +305,7 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
         }
         else
         {
-            setScrobbleTrack( true );
-
-            aApp->playAction()->setEnabled( false );
-            aApp->loveAction()->setEnabled( true );
-            aApp->banAction()->setEnabled( false );
-            aApp->skipAction()->setEnabled( false );
-
-            ui->controls->hide();
-
-            // Not a radio track so hide the playback controls!
+            // Not a radio track
 
             if ( track.extra( "playerId" ) == "spt" && !unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool() )
                 ui->status->setText( tr("Listening to...") );
@@ -322,8 +354,11 @@ PlaybackControlsWidget::onStopped()
     ui->progressBar->setTrack( Track() );
     aApp->playAction()->setChecked( false );
 
-    ui->love->setEnabled( false );
-    ui->ban->setEnabled( false );
-    ui->skip->setEnabled( false );
+    aApp->playAction()->setEnabled( true );
+    aApp->loveAction()->setEnabled( false );
+    aApp->banAction()->setEnabled( false );
+    aApp->skipAction()->setEnabled( false );
+    aApp->tagAction()->setEnabled( false );
+    aApp->shareAction()->setEnabled( false );
 }
 

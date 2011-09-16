@@ -38,7 +38,12 @@ private slots:
     void setScrobbleCount();
 
 private:
+    void changeUser( const QString& newUsername );
+
+private:
     QPointer<QWidget> m_main;
+
+    QString m_currentUsername;
 
     int m_scrobbleCount;
 };

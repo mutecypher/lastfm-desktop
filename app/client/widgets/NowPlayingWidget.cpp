@@ -35,7 +35,7 @@ NowPlayingWidget::NowPlayingWidget(QWidget *parent)
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
-    layout->addWidget( new PlaybackControlsWidget( this ) );
+    layout->addWidget( ui.playbackControls = new PlaybackControlsWidget( this ) );
 
     layout->addStretch( 1 );
 
@@ -45,9 +45,15 @@ NowPlayingWidget::NowPlayingWidget(QWidget *parent)
     connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()) );
 }
 
+PlaybackControlsWidget*
+NowPlayingWidget::playbackControls() const
+{
+    return ui.playbackControls;
+}
+
 void
 NowPlayingWidget::onTuningIn( const RadioStation& )
-{
+{   
     if ( m_metadata )
     {
         layout()->removeWidget( m_metadata );
