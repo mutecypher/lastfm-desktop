@@ -105,7 +105,6 @@ HEADERS += \
     Wizard/SystemTrayPage.h \
     Wizard/PluginPage.h \
     Wizard/LoginPage.h \
-    Wizard/IntroPage.h \
     Wizard/FirstRunWizard.h \
     Wizard/BootstrapPage.h \
     Wizard/BootstrapInProgressPage.h \
@@ -187,4 +186,9 @@ FORMS += \
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
+
+
+
+
+
 
