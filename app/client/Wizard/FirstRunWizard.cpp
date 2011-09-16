@@ -23,7 +23,6 @@
 
 #include "lib/unicorn/UnicornSettings.h"
 
-#include "IntroPage.h"
 #include "LoginPage.h"
 #include "AuthInProgressPage.h"
 #include "PluginPage.h"
@@ -49,6 +48,13 @@ FirstRunWizard::FirstRunWizard( QWidget* parent )
     palette.setColor( QPalette::Base, QColor( 0, 0, 0, 0 ) );
 
     aApp->setPalette( palette );
+
+    for ( int i = 0 ; i < QWizard::NButtons ; ++i )
+    {
+        QString objectName = QLatin1String("__qt__passive_wizardbutton");
+        objectName += QString::number( i );
+        button( static_cast<QWizard::WizardButton>( i ) )->setObjectName( objectName );
+    }
 
     resize( 725, 460 );
 

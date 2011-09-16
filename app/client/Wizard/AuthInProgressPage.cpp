@@ -29,21 +29,17 @@ AuthInProgressPage::AuthInProgressPage( QWizard* parent )
                    :QWizardPage( parent ),
                     m_loginProcess( 0 )
 {
-    setCommitPage( true );
-    setButtonText( QWizard::CommitButton, tr( "Continue" ) );
-    setTitle( tr( "Hmm, we can't tell if you've connected yet." ));
+    QHBoxLayout* layout = new QHBoxLayout( this );
     
-    QVBoxLayout* layout = new QVBoxLayout( this );
-    
-    QLabel* description = new QLabel( tr( "If you haven't connected to Last.fm yet (or you clicked cancel) please try again now by opening this link in your browser and clicking <strong>'Yes, I accept'</strong>:" ));
-    description->setWordWrap( true );
+    layout->addWidget( ui.image = new QLabel(), 0, Qt::AlignCenter );
+    ui.image->setObjectName( "image" );
 
-    QLabel* description2 = new QLabel( tr( "If you have already done this, click continue." ));
-    description2->setWordWrap( true );
+    layout->addWidget( ui.description = new QLabel( tr( "<p>Please click the <strong>Yes, Allow Access</strong> button in your web browser to connect your Last.fm account to the Last.fm Desktop App.</p>"
+                                                        "<p>If you haven't connected because you closed the browser window or you clicked cancel, please try again.<p/>" )),
+                       0, Qt::AlignTop);
+    ui.description->setObjectName( "description" );
+    ui.description->setWordWrap( true );
 
-
-    layout->addWidget( description );
-    layout->addWidget( description2 );
 }
 
 void
@@ -52,9 +48,13 @@ AuthInProgressPage::initializePage()
     if ( m_loginProcess )
         delete m_loginProcess;
 
+    setCommitPage( true );
+
+    setButtonText( QWizard::CommitButton, tr( "Continue" ) );
+    setTitle( tr( "We're waiting for you to connect to Last.fm" ));
+
     m_loginProcess = new unicorn::LoginProcess( this );
     connect( m_loginProcess, SIGNAL( gotSession( unicorn::Session* ) ), SLOT( onAuthenticated( unicorn::Session* ) ) );
-
     m_loginProcess->authenticate();
 }
 
@@ -62,7 +62,7 @@ AuthInProgressPage::initializePage()
 void 
 AuthInProgressPage::onAuthenticated( unicorn::Session* session )
 {
-    if( session )
+    if ( session )
     {
         wizard()->next();
         wizard()->showNormal();
@@ -80,13 +80,13 @@ AuthInProgressPage::onAuthenticated( unicorn::Session* session )
 bool
 AuthInProgressPage::validatePage()
 {
-    if( aApp->currentSession() ) return true;
+    if( aApp->currentSession() )
+        return true;
 
-    m_loginProcess->getSession( m_loginProcess->token());
+    m_loginProcess->getSession( m_loginProcess->token() );
     
     qDebug() << "Waiting for session";
-    SignalBlocker( m_loginProcess, SIGNAL( gotSession( unicorn::Session* )), 2000 ).start();
 
-    return aApp->currentSession();
+    return false;
 }
 

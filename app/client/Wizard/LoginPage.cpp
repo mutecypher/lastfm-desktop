@@ -41,7 +41,7 @@ LoginPage::LoginPage( QWidget* parent )
 
     QHBoxLayout* layout = new QHBoxLayout( this );
     
-    layout->addWidget( ui.image = new QLabel( this ), 0 );
+    layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignCenter );
     ui.image->setObjectName( "image" );
 
     layout->addWidget( ui.description = new QLabel( tr( "<p>Already a Last.fm user? You can connect the Last.fm Desktop App to your profile and keep a record of the music you listen to.</p>"

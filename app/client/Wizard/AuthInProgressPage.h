@@ -29,8 +29,16 @@ namespace unicorn{
 
 class AuthInProgressPage : public QWizardPage {
     Q_OBJECT
+private:
+    struct
+    {
+        class QLabel* image;
+        class QLabel* description;
+    } ui;
+
 public:
     AuthInProgressPage( QWizard* parent );
+
     virtual void initializePage();
     virtual bool validatePage();
 

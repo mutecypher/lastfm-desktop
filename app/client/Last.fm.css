@@ -86,7 +86,7 @@ QWizard QAbstractButton#__qt__passive_wizardbutton6:pressed {
 }
 
 LoginPage QLabel#image { background-image: url(":/graphic_connect.png"); }
-
+AuthInProgressPage QLabel#image { background-image: url(":/graphic_access.png"); }
 
 
 SideBar {
