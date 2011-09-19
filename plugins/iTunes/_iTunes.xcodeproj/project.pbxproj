@@ -193,7 +193,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0410;
+				LastUpgradeCheck = 0420;
 			};
 			buildConfigurationList = AF2F40450BD811FE009D75EB /* Build configuration list for PBXProject "_iTunes" */;
 			compatibilityVersion = "Xcode 3.2";

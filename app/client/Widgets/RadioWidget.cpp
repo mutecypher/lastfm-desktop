@@ -176,7 +176,7 @@ RadioWidget::onTuningIn( const RadioStation& station )
 {
     // insert at the front of the list
 
-    if ( ui.recentStations->layout() )
+    if ( ui.recentStations && ui.recentStations->layout() )
     {
         PlayableItemWidget* item = new PlayableItemWidget( station, station.title() );
         item->setObjectName( "station" );

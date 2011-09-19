@@ -69,7 +69,8 @@ public slots:
     void onPaused();
     void onResumed();
     void onTuningIn();
-    void onError( int error, const QVariant& data );
+
+    void onRadioError( int error, const QVariant& data );
 
 private:
     void setCurrentWidget( QWidget* );

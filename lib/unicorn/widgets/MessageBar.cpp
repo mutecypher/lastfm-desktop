@@ -25,6 +25,9 @@
 MessageBar::MessageBar( QWidget* parent )
            :QWidget( parent )
 {
+    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+    updateGeometry();
+
     setFixedHeight( 0 );
 
     ui.papyrus = new QWidget( this );

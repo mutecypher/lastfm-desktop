@@ -130,7 +130,7 @@ MainWindow::MainWindow()
     connect( &ScrobbleService::instance(), SIGNAL( stopped() ), SLOT( onStopped() ) );
 
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn()));
-    connect( &RadioService::instance(), SIGNAL(error(int,QVariant)), SLOT(onError(int,QVariant)));
+    connect( &RadioService::instance(), SIGNAL(error(int,QVariant)), SLOT(onRadioError(int,QVariant)));
 
     menuBar()->hide();
 
@@ -260,7 +260,7 @@ MainWindow::onPaused()
 
 
 void
-MainWindow::onError( int error, const QVariant& data )
+MainWindow::onRadioError( int error, const QVariant& data )
 {
     ui.messageBar->show( tr( "%1: %2" ).arg( data.toString(), QString::number( error ) ), "radio" );
 }

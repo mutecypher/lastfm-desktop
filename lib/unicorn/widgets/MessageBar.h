@@ -23,15 +23,12 @@
 #include <QWidget>
 #include "lib/DllExportMacro.h"
 
-/** @author <max@last.fm> */
-
 class UNICORN_DLLEXPORT MessageBar : public QWidget
 {
     Q_OBJECT
-    
-    class QTimeLine* m_timeline;
 
-    struct Ui {
+    struct
+    {
         QWidget* papyrus;
     } ui;
     
@@ -48,6 +45,9 @@ public slots:
 private slots:
     void animate( int );
     void onLabelDestroyed();
+
+private:
+    class QTimeLine* m_timeline;
 };
 
 #endif
