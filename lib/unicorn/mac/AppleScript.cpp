@@ -94,7 +94,7 @@ AppleScript::compile()
 
     err = OSACompile( s_component, &d, kOSAModeNull, &m_compiled_script );
 
-    qDebug() << "Compiled:" << m_compiled_script << '\n' << m_code.trimmed();
+    //qDebug() << "Compiled:" << m_compiled_script << '\n' << m_code.trimmed();
     
     if (err != noErr) {
         logError();
@@ -153,7 +153,7 @@ AppleScript::exec()
     // iTunes also likes to escape quotes
     s.replace( "\\\"", "\"" );
 
-    qDebug() << "Output from script:" << m_compiled_script << s;
+    //qDebug() << "Output from script:" << m_compiled_script << s;
 
     return s;
 }
