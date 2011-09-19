@@ -76,8 +76,6 @@ MainWindow::MainWindow()
 
     layout->addWidget( ui.messageBar = new MessageBar( this ) );
 
-    ui.messageBar->show( "test" );
-
     QHBoxLayout* h = new QHBoxLayout();
     h->setContentsMargins( 0, 0, 0, 0 );
     h->setSpacing( 0 );
@@ -116,9 +114,7 @@ MainWindow::MainWindow()
     ui.statusBar = new StatusBar( this );
     ui.statusBar->setObjectName( "StatusBar" );
 
-#ifndef Q_OS_MAC
     ui.statusBar->setSizeGripEnabled( false );
-#endif // Q_OS_MAC
 
     setWindowTitle( aApp->applicationName() );
     setUnifiedTitleAndToolBarOnMac( true );

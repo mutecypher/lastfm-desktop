@@ -9,11 +9,6 @@ QWizard QLabel {
 	color: #d51007;
 }
 
-QWizardRuler {
-	max-height: 0px;
-	min-height: 0px;
-}
-
 QWizardPage {
 	background: transparent;
 }
@@ -86,7 +81,16 @@ QWizard QAbstractButton#__qt__passive_wizardbutton6:pressed {
 }
 
 LoginPage QLabel#image { background-image: url(":/graphic_connect.png"); }
-AuthInProgressPage QLabel#image { background-image: url(":/graphic_access.png"); }
+AccessPage QLabel#image { background-image: url(":/graphic_access.png"); }
+PluginsPage QLabel#image { background-image: url(":/graphic_plugins.png"); }
+PluginsInstallPage QLabel#image { background-image: url(":/graphic_plugins.png"); }
+PluginsBootstrapPage QLabel#image { background-image: url(":/graphic_connect.png"); }
+PluginsBootstrapProgressPage QLabel#image { background-image: url(":/graphic_connect.png"); }
+TourScrobblesPage QLabel#image { background-image: url(":/graphic_scrobbles.png"); }
+TourMetadataPage QLabel#image { background-image: url(":/graphic_metadata.png"); }
+TourRadioPage QLabel#image { background-image: url(":/graphic_radio.png"); }
+TourLocationPage QLabel#image { background-image: url(":/graphic_access.png"); }
+TourFinishPage QLabel#image { background-image: url(":/graphic_finish.png"); }
 
 
 SideBar {

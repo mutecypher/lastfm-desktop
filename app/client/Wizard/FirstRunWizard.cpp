@@ -24,12 +24,14 @@
 #include "lib/unicorn/UnicornSettings.h"
 
 #include "LoginPage.h"
-#include "AuthInProgressPage.h"
-#include "PluginPage.h"
+#include "AccessPage.h"
+#include "PluginsPage.h"
 #include "BootstrapPage.h"
-#include "BootstrapInProgressPage.h"
-#include "WelcomePage.h"
-#include "SystemTrayPage.h"
+#include "TourMetadataPage.h"
+#include "TourRadioPage.h"
+#include "TourFinishPage.h"
+#include "TourScrobblesPage.h"
+#include "TourLocationPage.h"
 
 #include "FirstRunWizard.h"
 
@@ -56,18 +58,21 @@ FirstRunWizard::FirstRunWizard( QWidget* parent )
         button( static_cast<QWizard::WizardButton>( i ) )->setObjectName( objectName );
     }
 
+    style()->polish( this );
+
     resize( 725, 460 );
 
-    setPage( Page_Login, new LoginPage(this));
-    setPage( Page_AuthInProgress, new AuthInProgressPage( this ));
-#if defined(Q_WS_MAC) || defined(Q_WS_WIN)
-    setPage( Page_Plugin, new PluginPage());
+    setPage( Page_Login, new LoginPage(this) );
+    setPage( Page_Access, new AccessPage( this ) );
+#ifdef Q_WS_WIN
+    setPage( Page_Plugins, new PluginsPage() );
 #endif
-    setPage( Page_Bootstrap, new BootstrapPage( this ));
-    // This wizard page needs the scrobble service, so don't create it until we have an account
-    //setPage( Page_BootstrapInProgress, new BootstrapInProgressPage( this ));
-    setPage( Page_Welcome, new WelcomePage( this ) );
-    setPage( Page_SystemTray, new SystemTrayPage( this ));
+    setPage( Page_Bootstrap, new BootstrapPage( this ) );
+    setPage( Page_Tour_Scrobbles, new TourScrobblesPage( this ) );
+    setPage( Page_Tour_Metadata, new TourMetadataPage( this ) );
+    setPage( Page_Tour_Radio, new TourRadioPage( this ) );
+    setPage( Page_Tour_Finish, new TourFinishPage( this ) );
+    setPage( Page_Tour_Location, new TourLocationPage( this ) );
 
     connect( this, SIGNAL( rejected() ), this, SLOT( onRejected() ) );
     connect( this, SIGNAL( accepted() ), this, SLOT( onWizardCompleted() ) );
@@ -79,33 +84,35 @@ FirstRunWizard::nextId() const
     switch ( currentId() )
     {
     case Page_Login:
-        return Page_AuthInProgress;
-
-    case Page_AuthInProgress:
-#if defined(Q_WS_WIN) || defined(Q_WS_MAC)
-        return Page_Plugin;
-
-    case Page_Plugin:
+        return Page_Access;
+    case Page_Access:
+#ifdef Q_OS_WIN32
+        return Page_Plugins;
+    case Page_Plugins:
+        return Page_PluginsInstall:
+    case Page_PluginsInstall
         if( aApp->currentSession() && aApp->currentSession()->userInfo().canBootstrap() )
             return Page_Bootstrap;
         else
-            return Page_Welcome;
-
-    case Page_Bootstrap:
-        if( !field( "bootstrap_player" ).toString().isEmpty() )
-            return Page_BootstrapInProgress;
+            return Page_Tour_Scrobbles;
+#elif defined Q_OS_MAC
+        if( aApp->currentSession() && aApp->currentSession()->userInfo().canBootstrap() )
+            return Page_Bootstrap;
         else
-            return Page_Welcome;
-
-    case Page_BootstrapInProgress:
-        return Page_Welcome;
+            return Page_Tour_Scrobbles;
 #elif defined Q_WS_X11
-        return Page_Welcome;
+        return Page_Tour_Scrobbles;
 #endif
-
-    case Page_Welcome:
-        return Page_SystemTray;
-
+    case Page_Bootstrap:
+        return Page_BootstrapProgress;
+    case Page_Tour_Scrobbles:
+        return Page_Tour_Metadata;
+    case Page_Tour_Metadata:
+        return Page_Tour_Radio;
+    case Page_Tour_Radio:
+        return Page_Tour_Location;
+    case Page_Tour_Location:
+        return Page_Tour_Finish;
     default:
         return -1;
     }

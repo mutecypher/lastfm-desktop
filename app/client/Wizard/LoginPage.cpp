@@ -34,8 +34,6 @@
 
 LoginPage::LoginPage( QWidget* parent )
           :QWizardPage( parent )
-          , m_loginProcess( 0 )
-          , m_isComplete( false )
 {
     setTitle( tr( "Hello! Let's get started by connecting your Last.fm account" ) );
 
@@ -64,7 +62,7 @@ LoginPage::initializePage()
 void 
 LoginPage::cleanupPage()
 {
-    disconnect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked()), this, 0 );
+    disconnect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked() ), this, 0 );
 }
 
 bool 
@@ -74,14 +72,8 @@ LoginPage::validatePage()
     return true;
 }
 
-bool
-LoginPage::isComplete() const
-{
-    return true;
-}
-
 void 
 LoginPage::onSignUpClicked()
 {
-    QDesktopServices::openUrl( QUrl( "http://www.last.fm/join" ));
+    QDesktopServices::openUrl( QUrl( "http://www.last.fm/join" ) );
 }

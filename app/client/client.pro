@@ -31,13 +31,8 @@ linux* {
 SUBDIRS=PrefPane
 
 SOURCES += \
-    Wizard/WelcomePage.cpp \
-    Wizard/SystemTrayPage.cpp \
-    Wizard/PluginPage.cpp \
     Wizard/LoginPage.cpp \
     Wizard/BootstrapPage.cpp \
-    Wizard/BootstrapInProgressPage.cpp \
-    Wizard/AuthInProgressPage.cpp \
     Widgets/TitleBar.cpp \
     Widgets/TagFilterDialog.cpp \
     Widgets/StatusBar.cpp \
@@ -98,17 +93,21 @@ SOURCES += \
     Widgets/RefreshButton.cpp \
     Widgets/BackButton.cpp \
     Widgets/WidgetTextObject.cpp \
-    Wizard/FirstRunWizard.cpp
+    Wizard/FirstRunWizard.cpp \
+    Wizard/AccessPage.cpp \
+    Wizard/TourMetadataPage.cpp \
+    Wizard/PluginsPage.cpp \
+    Wizard/TourRadioPage.cpp \
+    Wizard/TourFinishPage.cpp \
+    Wizard/PluginsInstallPage.cpp \
+    Wizard/BootstrapProgressPage.cpp \
+    Wizard/TourScrobblesPage.cpp \
+    Wizard/TourLocationPage.cpp
 
 HEADERS += \
-    Wizard/WelcomePage.h \
-    Wizard/SystemTrayPage.h \
-    Wizard/PluginPage.h \
     Wizard/LoginPage.h \
     Wizard/FirstRunWizard.h \
     Wizard/BootstrapPage.h \
-    Wizard/BootstrapInProgressPage.h \
-    Wizard/AuthInProgressPage.h \
     Widgets/TitleBar.h \
     Widgets/TagFilterDialog.h \
     Widgets/StatusBar.h \
@@ -173,7 +172,16 @@ HEADERS += \
     Widgets/ScrobblesWidget.h \
     Widgets/RefreshButton.h \
     Widgets/BackButton.h \
-    Widgets/WidgetTextObject.h
+    Widgets/WidgetTextObject.h \
+    Wizard/AccessPage.h \
+    Wizard/TourMetadataPage.h \
+    Wizard/PluginsPage.h \
+    Wizard/TourRadioPage.h \
+    Wizard/TourFinishPage.h \
+    Wizard/PluginsInstallPage.h \
+    Wizard/BootstrapProgressPage.h \
+    Wizard/TourScrobblesPage.h \
+    Wizard/TourLocationPage.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
@@ -186,6 +194,46 @@ FORMS += \
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -32,13 +32,17 @@ class FirstRunWizard : public QWizard
 
     enum
     {
-       Page_Login = 0,
-       Page_AuthInProgress,
-       Page_Plugin,
-       Page_Bootstrap,
-       Page_BootstrapInProgress,
-       Page_Welcome,
-       Page_SystemTray
+        Page_Login,
+        Page_Access,
+        Page_Plugins,
+        Page_PluginsInstall,
+        Page_Bootstrap,
+        Page_BootstrapProgress,
+        Page_Tour_Scrobbles,
+        Page_Tour_Metadata,
+        Page_Tour_Radio,
+        Page_Tour_Location,
+        Page_Tour_Finish
     };
 
 public:

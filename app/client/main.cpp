@@ -64,7 +64,6 @@ int main( int argc, char** argv )
     lastfm::UserAgent = "Last.fm Client " APP_VERSION " (X11)";
 #endif
 
-
     try
     {
         audioscrobbler::Application app( argc, argv );

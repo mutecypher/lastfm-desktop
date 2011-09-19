@@ -24,7 +24,7 @@ TinyWebServer::TinyWebServer( QObject* parent )
 {
     m_tcpServer = new QTcpServer( this );
     m_tcpServer->listen( QHostAddress( QHostAddress::LocalHost ), 0 );
-    connect( m_tcpServer, SIGNAL( newConnection() ), this, SLOT( onNewConnection() ) );
+    connect( m_tcpServer, SIGNAL( newConnection() ), SLOT( onNewConnection() ) );
 }
 
 void
@@ -36,7 +36,7 @@ TinyWebServer::onNewConnection()
     if ( m_clientSocket )
     {
         connect( m_clientSocket, SIGNAL( disconnected() ), m_clientSocket, SLOT( deleteLater() ) );
-        connect( m_clientSocket, SIGNAL( readyRead() ), this, SLOT( readFromSocket() ) );
+        connect( m_clientSocket, SIGNAL( readyRead() ), SLOT( readFromSocket() ) );
     }
 }
 

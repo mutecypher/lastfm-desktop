@@ -18,16 +18,15 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "AuthInProgressPage.h"
+#include "AccessPage.h"
 #include <QVBoxLayout>
 #include <QLabel>
 #include "lib/unicorn/LoginProcess.h"
 #include "lib/unicorn/UnicornSession.h"
 #include "../Application.h"
 
-AuthInProgressPage::AuthInProgressPage( QWizard* parent )
-                   :QWizardPage( parent ),
-                    m_loginProcess( 0 )
+AccessPage::AccessPage( QWizard* parent )
+                   :QWizardPage( parent )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     
@@ -43,10 +42,9 @@ AuthInProgressPage::AuthInProgressPage( QWizard* parent )
 }
 
 void
-AuthInProgressPage::initializePage()
+AccessPage::initializePage()
 {
-    if ( m_loginProcess )
-        delete m_loginProcess;
+    delete m_loginProcess;
 
     setCommitPage( true );
 
@@ -58,9 +56,14 @@ AuthInProgressPage::initializePage()
     m_loginProcess->authenticate();
 }
 
+void
+AccessPage::cleanupPage()
+{
+    delete m_loginProcess;
+}
 
 void 
-AuthInProgressPage::onAuthenticated( unicorn::Session* session )
+AccessPage::onAuthenticated( unicorn::Session* session )
 {
     if ( session )
     {
@@ -78,7 +81,7 @@ AuthInProgressPage::onAuthenticated( unicorn::Session* session )
 
 
 bool
-AuthInProgressPage::validatePage()
+AccessPage::validatePage()
 {
     if( aApp->currentSession() )
         return true;
