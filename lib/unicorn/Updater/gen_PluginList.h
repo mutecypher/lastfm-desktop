@@ -10,19 +10,18 @@
 #include "../../../plugins/LFMRadio/PluginInfo.h"
 #include "../../../plugins/winamp/PluginInfo.h"
 #include "../../../plugins/wmp/PluginInfo.h"
+
 class GenPluginList : public QList<IPluginInfo*>
 {
 public:
     GenPluginList()
     { 
-
+        *this << (new ITunesPluginInfo());
+        *this << (new WmpPluginInfo());
+        *this << (new WinampPluginInfo());
         *this << (new FooBar08PluginInfo());
         *this << (new FooBar09PluginInfo());
-        *this << (new ITunesPluginInfo());
         *this << (new LFMRadioPluginInfo());
-        *this << (new WinampPluginInfo());
-        *this << (new WmpPluginInfo());
-
     }
 
     

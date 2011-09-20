@@ -29,6 +29,8 @@ TourMetadataPage::TourMetadataPage( QWidget* w )
 void 
 TourMetadataPage::initializePage()
 {
+    setTitle( tr( "Discover more about the artists you love" ) );
+
     setButtonText( QWizard::NextButton, tr( "Continue" ) );
     setButtonText( QWizard::BackButton, tr( "<< Back" ) );
 

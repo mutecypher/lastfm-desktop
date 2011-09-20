@@ -20,6 +20,7 @@
 */
 
 #include <QPalette>
+#include <QStyle>
 
 #include "lib/unicorn/UnicornSettings.h"
 
@@ -51,21 +52,13 @@ FirstRunWizard::FirstRunWizard( QWidget* parent )
 
     aApp->setPalette( palette );
 
-    for ( int i = 0 ; i < QWizard::NButtons ; ++i )
-    {
-        QString objectName = QLatin1String("__qt__passive_wizardbutton");
-        objectName += QString::number( i );
-        button( static_cast<QWizard::WizardButton>( i ) )->setObjectName( objectName );
-    }
-
-    style()->polish( this );
-
     resize( 725, 460 );
 
     setPage( Page_Login, new LoginPage(this) );
     setPage( Page_Access, new AccessPage( this ) );
 #ifdef Q_WS_WIN
     setPage( Page_Plugins, new PluginsPage() );
+    setPage( Page_Plugins, new PluginsInstallPage() );
 #endif
     setPage( Page_Bootstrap, new BootstrapPage( this ) );
     setPage( Page_Tour_Scrobbles, new TourScrobblesPage( this ) );

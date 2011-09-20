@@ -36,9 +36,8 @@ private:
 public:
     LoginPage( QWidget* parent = 0 );
 
-    virtual void initializePage();
-    virtual void cleanupPage();
-    virtual bool validatePage();
+    void initializePage();
+    bool validatePage();
  
 private slots:
     void onSignUpClicked();

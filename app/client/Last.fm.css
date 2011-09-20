@@ -20,8 +20,8 @@ QWizardPage QLabel {
 QWizardPage QLabel#image {
 	background-repeat: none;
 	background-origin: center;
-	min-width: 257px;
-	min-height: 228px;
+	min-width: 315px;
+	min-height: 305px;
 }
 
 /* QWizard::NextButton */

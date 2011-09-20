@@ -77,8 +77,7 @@ using audioscrobbler::Application;
 #endif
 
 Application::Application(int& argc, char** argv) 
-            : unicorn::Application(argc, argv),
-              m_raiseHotKeyId( (void*)-1 )
+    :unicorn::Application(argc, argv), m_raiseHotKeyId( (void*)-1 )
 {
     setQuitOnLastWindowClosed( false );
 }
@@ -103,9 +102,7 @@ Application::initiateLogin() throw( StubbornUserException )
     //this covers the case where the last user was removed
     //and the main window was closed.
     if ( m_mw )
-    {
         m_mw->show();
-    }
 
     if ( m_tray )
     {
@@ -119,6 +116,13 @@ Application::initiateLogin() throw( StubbornUserException )
 void
 Application::init()
 {
+#ifdef Q_WS_MAC
+    // The mac plugin needs to be installed before we
+    // run the wizard for possible bootstrapping
+    ITunesPluginInstaller installer;
+    installer.install();
+#endif
+
     // Initialise the unicorn base class first!
     unicorn::Application::init();
 
@@ -126,19 +130,12 @@ Application::init()
 
     if ( !currentSession() )
     {
+        // there won't be a current session if one was created by the wizard
+
         QMap<QString, QString> lastSession = unicorn::Session::lastSessionData();
         if ( lastSession.contains( "username" ) && lastSession.contains( "sessionKey" ) )
-        {
             changeSession( lastSession[ "username" ], lastSession[ "sessionKey" ] );
-        }
     }
-
-#ifdef Q_WS_MAC
-    {
-        ITunesPluginInstaller installer;
-        installer.install();
-    }
-#endif
 
     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
     diskCache->setCacheDirectory( lastfm::dir::cache().path() );

@@ -17,7 +17,11 @@ TourLocationPage::TourLocationPage( QWidget* w )
     layout->setSpacing( 0 );
 
     layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignCenter );
-    ui.image->setObjectName( "image" );
+#ifdef Q_OS_MAC
+    ui.image->setObjectName( "imagemac" );
+#else
+    ui.image->setObjectName( "imagewin" );
+#endif
     layout->addWidget( ui.description = new QLabel( tr( "<p>The red arrow on your screen points to the location of the Last.fm Desktop App in your system tray.</p>"
                                                         "<p>Click the icon to quickly access radio play controls, share and tag track, edit your preferences and visit your Last.fm profile.</p>" ), this ),
                          0,
@@ -43,6 +47,14 @@ TourLocationPage::~TourLocationPage()
 void
 TourLocationPage::initializePage()
 {
+#ifdef Q_OS_MAC
+    setTitle( tr( "The Last.fm Desktop App in your menu bar" ) );
+    ui.image->setPixmap( QPixmap( ":/graphic_location_MAC.png" ) );
+#else
+    setTitle( tr( "The Last.fm Desktop App in your system tray" ) );
+    ui.image->setPixmap( QPixmap( ":/graphic_location_WIN.png" ) );
+#endif
+
     QSystemTrayIcon* tray = aApp->tray();
     m_arrow->pointAt( QPoint( tray->geometry().left() + (tray->geometry().width() / 2.0f ), tray->geometry().top() + (tray->geometry().height() / 2.0f ) ));
     m_flashTimer->start();
@@ -60,8 +72,10 @@ TourLocationPage::initializePage()
 void
 TourLocationPage::cleanupPage()
 {
-    m_arrow->hide();
-    m_flashTimer->stop();
+    wizard()->setOption( QWizard::HaveCustomButton1, false );
+
+    delete m_arrow;
+    delete m_flashTimer;
     aApp->tray()->setIcon( m_normalIcon );
 }
 

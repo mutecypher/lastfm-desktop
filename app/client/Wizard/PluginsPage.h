@@ -20,21 +20,22 @@
 #ifndef PLUGINS_PAGE_H
 #define PLUGINS_PAGE_H
 
-#include "lib/unicorn/Updater/PluginList.h"
-
 #include <QWizardPage>
-#include <QVBoxLayout>
-#include <QCheckBox>
-#include <QNetworkReply>
-#include <QLabel>
-#include <QStyle>
-#include "../Application.h"
-#include <QProcess>
-#include <QDebug>
 
 class PluginsPage : public QWizardPage
 {
     Q_OBJECT
+private:
+    struct
+    {
+        class QCheckBox* iTunes;
+        class QCheckBox* iWMP;
+        class QCheckBox* iWinAmp;
+        class QCheckBox* iFoo;
+
+        class QLabel* description;
+    } ui;
+
 public:
     PluginsPage();
 

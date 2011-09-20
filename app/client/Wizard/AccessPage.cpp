@@ -18,17 +18,23 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "AccessPage.h"
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QStyle>
+
 #include "lib/unicorn/LoginProcess.h"
 #include "lib/unicorn/UnicornSession.h"
+
 #include "../Application.h"
 
+#include "AccessPage.h"
+
 AccessPage::AccessPage( QWizard* parent )
-                   :QWizardPage( parent )
+    :QWizardPage( parent )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
+    layout->setContentsMargins( 0, 0, 0, 0 );
+    layout->setSpacing( 0 );
     
     layout->addWidget( ui.image = new QLabel(), 0, Qt::AlignCenter );
     ui.image->setObjectName( "image" );
@@ -38,22 +44,42 @@ AccessPage::AccessPage( QWizard* parent )
                        0, Qt::AlignTop);
     ui.description->setObjectName( "description" );
     ui.description->setWordWrap( true );
-
 }
 
 void
 AccessPage::initializePage()
 {
+    setTitle( tr( "We're waiting for you to connect to Last.fm" ));
+
+    wizard()->style()->polish( this );
+
     delete m_loginProcess;
 
     setCommitPage( true );
 
     setButtonText( QWizard::CommitButton, tr( "Continue" ) );
-    setTitle( tr( "We're waiting for you to connect to Last.fm" ));
 
     m_loginProcess = new unicorn::LoginProcess( this );
     connect( m_loginProcess, SIGNAL( gotSession( unicorn::Session* ) ), SLOT( onAuthenticated( unicorn::Session* ) ) );
     m_loginProcess->authenticate();
+}
+
+void
+AccessPage::onAuthenticated( unicorn::Session* session )
+{
+    if ( session )
+    {
+        // make sure the wizard is shown again after they allow access on the website.
+        wizard()->next();
+        wizard()->showNormal();
+        wizard()->setFocus();
+        wizard()->raise();
+        wizard()->activateWindow();
+    }
+    else
+    {
+        m_loginProcess->showError();
+    }
 }
 
 void
@@ -62,34 +88,16 @@ AccessPage::cleanupPage()
     delete m_loginProcess;
 }
 
-void 
-AccessPage::onAuthenticated( unicorn::Session* session )
-{
-    if ( session )
-    {
-        wizard()->next();
-        wizard()->showNormal();
-        wizard()->setFocus();
-        wizard()->raise();
-        wizard()->activateWindow(); 
-    }
-    else 
-    {
-        m_loginProcess->showError();
-    }
-}
-
 
 bool
 AccessPage::validatePage()
 {
-    if( aApp->currentSession() )
+    if ( aApp->currentSession() )
         return true;
 
+    // There is no session so try to fetch it
+    // onAuthenticated will be called if we find one
     m_loginProcess->getSession( m_loginProcess->token() );
-    
-    qDebug() << "Waiting for session";
-
     return false;
 }
 

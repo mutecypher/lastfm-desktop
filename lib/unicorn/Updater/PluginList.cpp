@@ -68,11 +68,13 @@ PluginList::availableDescription() const
 }
 
 IPluginInfo* 
-PluginList::pluginById( const QString& id ) const {
-    foreach( IPluginInfo* plugin, *this ) {
-        if( !plugin->id().compare( id.toStdString())) {
+PluginList::pluginById( const QString& id ) const
+{
+    foreach( IPluginInfo* plugin, *this )
+    {
+        if( !plugin->id().compare( id.toStdString()))
             return plugin->clone();
-        }
     }
+
     return NULL;
 }

@@ -7,8 +7,8 @@
 class UNICORN_DLLEXPORT PluginList : public GenPluginList
 {
 public:
-    PluginList(){};
-    PluginList( const PluginList& that ) : GenPluginList( that ) { }
+    PluginList(){}
+    PluginList( const PluginList& that ) : GenPluginList( that ) {}
 
     QList<IPluginInfo*> availablePlugins() const;
     QList<IPluginInfo*> installedPlugins() const;

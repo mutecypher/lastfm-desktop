@@ -26,6 +26,8 @@ TourFinishPage::TourFinishPage( QWidget* w )
 void
 TourFinishPage::initializePage()
 {
+    setTitle( tr( "That's it, you're good to go!" ) );
+
     setFinalPage( true );
 
     setButtonText( QWizard::FinishButton, tr( "Finish" ) );

@@ -6,13 +6,19 @@
 class TourScrobblesPage : public QWizardPage
 {
     Q_OBJECT
+private:
+    struct
+    {
+        class QLabel* image;
+        class QLabel* description;
+    } ui;
+
 public:
-    explicit TourScrobblesPage(QWidget *parent = 0);
+    explicit TourScrobblesPage( QWidget* parent = 0 );
 
-signals:
-
-public slots:
-
+private:
+    void initializePage();
+    void cleanupPage();
 };
 
 #endif // TOURSCROBBLESPAGE_H

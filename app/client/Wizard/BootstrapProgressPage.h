@@ -6,13 +6,18 @@
 class BootstrapProgressPage : public QWizardPage
 {
     Q_OBJECT
+private:
+    struct
+    {
+        class QLabel* image;
+        class QLabel* description;
+    } ui;
+
 public:
-    explicit BootstrapProgressPage(QWidget *parent = 0);
+    explicit BootstrapProgressPage( QWidget* parent = 0 );
 
-signals:
-
-public slots:
-
+private:
+    void initializePage();
 };
 
 #endif // BOOTSTRAPPROGRESSPAGE_H

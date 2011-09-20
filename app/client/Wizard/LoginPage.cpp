@@ -31,13 +31,13 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QDesktopServices>
+#include <QStyle>
 
 LoginPage::LoginPage( QWidget* parent )
-          :QWizardPage( parent )
+    :QWizardPage( parent )
 {
-    setTitle( tr( "Hello! Let's get started by connecting your Last.fm account" ) );
-
     QHBoxLayout* layout = new QHBoxLayout( this );
+    layout->setContentsMargins( 0, 0, 0, 0 );
     
     layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignCenter );
     ui.image->setObjectName( "image" );
@@ -53,22 +53,30 @@ LoginPage::LoginPage( QWidget* parent )
 void
 LoginPage::initializePage()
 {
-    wizard()->setOption( QWizard::HaveCustomButton1, true );
-    connect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked()), SLOT( onSignUpClicked()));
+    for ( int i = 0 ; i < QWizard::NButtons ; ++i )
+    {
+        QString objectName = QLatin1String("__qt__passive_wizardbutton");
+        objectName += QString::number( i );
+        wizard()->button( static_cast<QWizard::WizardButton>( i ) )->setObjectName( objectName );
+    }
+
+    style()->polish( wizard() );
+    style()->polish( this );
+
+    setTitle( tr( "Hello! Let's get started by connecting your Last.fm account" ) );
+
     setButtonText( QWizard::NextButton, tr( "Connect Your Account" ) );
+    wizard()->setOption( QWizard::HaveCustomButton1, true );
     setButtonText( QWizard::CustomButton1, tr( "Sign up" ));
+    connect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked()), SLOT( onSignUpClicked()));
 }
 
-void 
-LoginPage::cleanupPage()
-{
-    disconnect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked() ), this, 0 );
-}
-
-bool 
+bool
 LoginPage::validatePage()
 {
+    disconnect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked() ), this, 0 );
     wizard()->setOption( QWizard::HaveCustomButton1, false );
+
     return true;
 }
 
