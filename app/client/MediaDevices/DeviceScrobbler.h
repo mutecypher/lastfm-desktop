@@ -27,10 +27,10 @@ public:
     void iPodDetected( const QStringList& arguments );
 
 signals:
-    void detectedIPod( const QString& serialNumber );
-    void processingScrobbles();
-    void noScrobblesFound();
-    void foundScrobbles( const QList<lastfm::Track>& );
+    void detectedIPod( const QString& id );
+    void processingScrobbles( const QString& id );
+    void noScrobblesFound( const QString& id );
+    void foundScrobbles( const QList<lastfm::Track>& tracks, const QString& id );
 
 public slots:
 #ifdef Q_WS_X11

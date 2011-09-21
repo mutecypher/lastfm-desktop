@@ -128,6 +128,15 @@ MainWindow::MainWindow()
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn()));
     connect( &RadioService::instance(), SIGNAL(error(int,QVariant)), SLOT(onRadioError(int,QVariant)));
 
+    DeviceScrobbler* deviceScrobbler = ScrobbleService::instance().deviceScrobbler();
+    if ( deviceScrobbler )
+    {
+        connect( deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected( QString )));
+        connect( deviceScrobbler, SIGNAL( processingScrobbles()), SLOT( onProcessingScrobbles()));
+        connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), SLOT( onFoundScrobbles( QList<lastfm::Track> )));
+        connect( deviceScrobbler, SIGNAL( noScrobblesFound()),SLOT( onNoScrobblesFound()));
+    }
+
     menuBar()->hide();
 
     //for some reason some of the stylesheet is not being applied properly unless reloaded
@@ -261,6 +270,32 @@ MainWindow::onRadioError( int error, const QVariant& data )
     ui.messageBar->show( tr( "%1: %2" ).arg( data.toString(), QString::number( error ) ), "radio" );
 }
 
+
+void
+MainWindow::onIPodDetected( QString iPod )
+{
+    ui.messageBar->show( tr("The iPod \"%1\" has been detected!").arg( iPod ), "ipod" );
+}
+
+void
+MainWindow::onProcessingScrobbles( QString iPodName )
+{
+    ui.messageBar->show( tr("Processing iPod Scrobbles...") , "ipod");
+}
+
+void
+MainWindow::onFoundScrobbles( const QList<lastfm::Track>& tracks, QString iPod )
+{
+    tracks.count() == 1 ?
+        ui.messageBar->show( tr("%1 track has been scrobbled from the iPod \"%2\"").arg( tracks.count(), iPod ), "ipod" ):
+        ui.messageBar->show( tr("%1 tracks have been scrobbled from the iPod \"%2\"").arg( tracks.count(), iPod ), "ipod" );
+}
+
+void
+MainWindow::onNoScrobblesFound( QString iPod )
+{
+    ui.messageBar->show( tr("No tracks were found from the iPod \"%1\"" ).arg( iPod ), "ipod" );
+}
 
 void
 MainWindow::addWinThumbBarButton( QAction* thumbButtonAction )

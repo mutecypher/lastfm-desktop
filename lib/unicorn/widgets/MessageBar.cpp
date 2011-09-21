@@ -20,6 +20,7 @@
 #include "MessageBar.h"
 #include "common/qt/reverse.cpp"
 #include <QtGui>
+#include <QLabel>
 
 
 MessageBar::MessageBar( QWidget* parent )
@@ -41,7 +42,11 @@ MessageBar::MessageBar( QWidget* parent )
 
 void
 MessageBar::show( const QString& message, const QString& id )
-{    
+{
+    bool animate = findChildren<QLabel*>().count() != 0;
+
+    removeAll();
+
     QLabel* label = new QLabel( message, ui.papyrus );
     label->setBackgroundRole( QPalette::Base );
     label->setMargin( 8 );
@@ -53,13 +58,14 @@ MessageBar::show( const QString& message, const QString& id )
 
     label->adjustSize();
 
-    show( label );
+    show( label, animate );
 }
 
 
 void 
-MessageBar::show( QWidget* w )
+MessageBar::show( QWidget* w, bool animate )
 {
+
     QPushButton* close = new QPushButton( "x" );
     QHBoxLayout* h = new QHBoxLayout( w );
     h->addStretch();
@@ -78,8 +84,15 @@ MessageBar::show( QWidget* w )
     connect( close, SIGNAL(clicked()), w, SLOT(deleteLater()) );    
     connect( w, SIGNAL(destroyed()), SLOT(onLabelDestroyed()), Qt::QueuedConnection );
         
-    m_timeline->setFrameRange( height(), ui.papyrus->height() );
-    m_timeline->start();
+    if ( animate )
+    {
+        m_timeline->setFrameRange( height(), ui.papyrus->height() );
+        m_timeline->start();
+    }
+    else if ( m_timeline->state() != QTimeLine::Running )
+    {
+        setFixedHeight( ui.papyrus->height() );
+    }
 }
 
 
@@ -112,8 +125,9 @@ MessageBar::onLabelDestroyed()
 }
 
 void
-MessageBar::remove( const QString& id )
+MessageBar::removeAll()
 {
-    delete findChild<QLabel*>( id );
+    foreach ( QLabel* label, findChildren<QLabel*>() )
+        delete label;
 }
 

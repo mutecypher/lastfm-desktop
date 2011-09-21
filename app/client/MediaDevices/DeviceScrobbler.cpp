@@ -75,13 +75,15 @@ DeviceScrobbler::checkCachedIPodScrobbles()
 void 
 DeviceScrobbler::handleMessage( const QStringList& message )
 {
+    qDebug() << message;
+
     int pos = message.indexOf( "--twiddly" );
     const QString& action = message[ pos + 1 ];
     
     if( action == "starting" )
-        emit processingScrobbles();
+        emit processingScrobbles( "" );
     else if( action == "no-tracks-found" )
-        emit noScrobblesFound();
+        emit noScrobblesFound( "" );
     else if( action == "complete" )
         twiddled( message );
 }
@@ -100,12 +102,13 @@ DeviceScrobbler::iPodDetected( const QStringList& arguments )
         newIpod = true;
     }
 
-    QString serialNumber;
+    QString id;
     
-    if( pos > -1 ) serialNumber = arguments[ pos + 1 ];
+    if( pos > -1 )
+        id = arguments[ pos + 1 ];
    
     qDebug() << "emitting detectedIPod: " << (long)this;
-    emit detectedIPod( serialNumber );
+    emit detectedIPod( id );
 }
 
 lastfm::User
@@ -258,7 +261,7 @@ DeviceScrobbler::scrobbleIpodFile( QString iPodScrobblesFilename )
                 if ( scrobbles.count() > 1 )
                     qSort ( scrobbles.begin(), scrobbles.end() );
 
-                emit foundScrobbles( scrobbles );
+                emit foundScrobbles( scrobbles, "" );
             }
         }
         else
@@ -267,7 +270,7 @@ DeviceScrobbler::scrobbleIpodFile( QString iPodScrobblesFilename )
             if ( scrobbles.count() > 1 )
                 qSort ( scrobbles.begin(), scrobbles.end() );
 
-            emit foundScrobbles( scrobbles );
+            emit foundScrobbles( scrobbles, "" );
         }
     }
 

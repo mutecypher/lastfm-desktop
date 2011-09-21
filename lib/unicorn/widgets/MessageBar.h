@@ -38,9 +38,11 @@ public:
     MessageBar( QWidget* parent );
     
 public slots:
-    void show( QWidget* );
     void show( const QString&, const QString& id = QString() );
-    void remove( const QString& id );
+
+private:
+    void removeAll();
+    void show( QWidget*, bool animate );
     
 private slots:
     void animate( int );

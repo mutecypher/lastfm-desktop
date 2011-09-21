@@ -45,11 +45,6 @@ class StatusBar : public QStatusBar
         void onConnectionUp();
         void onConnectionDown();
 
-        void onIPodDetected( QString );
-        void onProcessingScrobbles();
-        void onFoundScrobbles( QList<lastfm::Track> );
-        void onNoScrobblesFound();
-
         void onScrobbleToggled( bool );
 
         void onSessionChanged( unicorn::Session* session );
