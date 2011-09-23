@@ -59,7 +59,7 @@ DeviceScrobbler::checkCachedIPodScrobbles()
                     // The user isn't sure if they want to scrobble this iPod yet so ask them
                     ScrobbleSetupDialog* scrobbleSetup = new ScrobbleSetupDialog( deviceId, deviceName, iPodFiles );
                     connect( scrobbleSetup, SIGNAL(clicked(bool,bool,QString,QString,QStringList)), SLOT(onScrobbleSetupClicked(bool,bool,QString,QString,QStringList)));
-                    scrobbleSetup->show();
+                    scrobbleSetup->exec();
                 }
                 else
                     onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), deviceId, deviceName, iPodFiles );
@@ -82,9 +82,8 @@ DeviceScrobbler::handleMessage( const QStringList& message )
     
     if( action == "starting" )
         emit processingScrobbles( "" );
-    else if( action == "no-tracks-found" )
-        emit noScrobblesFound( "" );
-    else if( action == "complete" )
+    else if( action == "no-tracks-found"
+             || action == "complete" )
         twiddled( message );
 }
 
@@ -96,19 +95,18 @@ DeviceScrobbler::iPodDetected( const QStringList& arguments )
 
     int pos = arguments.indexOf( "--ipod-detected" );
 
-    if( pos == -1 )
+    if ( pos == -1 )
     {
         pos = arguments.indexOf( "--new-ipod-detected" );
         newIpod = true;
     }
 
-    QString id;
-    
-    if( pos > -1 )
-        id = arguments[ pos + 1 ];
-   
-    qDebug() << "emitting detectedIPod: " << (long)this;
-    emit detectedIPod( id );
+    QString deviceId;
+
+    if ( pos > -1 )
+        deviceId = arguments[ pos + 1 ];
+
+    emit detectedIPod( deviceId );
 }
 
 lastfm::User
@@ -149,9 +147,6 @@ DeviceScrobbler::associatedUser( QString deviceId )
 void 
 DeviceScrobbler::twiddled( QStringList arguments )
 {
-    if( arguments.contains( "--twiddled-no-tracks" ) )
-        return;
-
     // iPod scrobble time!
 
     // Check if this iPod has been associated to any of our users
@@ -170,11 +165,16 @@ DeviceScrobbler::twiddled( QStringList arguments )
         {
             IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
 
-
             if ( ipod->alwaysAsk() )
                 showSetup = true;
             else
-                onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), deviceId, deviceName, QStringList( iPodPath ) );
+            {
+                if ( arguments.contains( "no-tracks-found" ) )
+                    emit noScrobblesFound( deviceName );
+                else
+                    onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), deviceId, deviceName, QStringList( iPodPath ) );
+;
+            }
 
             delete ipod;
         }

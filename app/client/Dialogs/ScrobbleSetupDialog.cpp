@@ -28,13 +28,26 @@ ScrobbleSetupDialog::ScrobbleSetupDialog( QString deviceId, QString deviceName, 
     m_deviceName( deviceName ),
     m_iPodFiles( iPodFiles )
 {
-    ui->setupUi(this);
+    ui->setupUi( this );
 
-//    vl->addWidget( ui.title = new QLabel( tr("Do you want to scrobble the iPod '%1'?").arg( "Coffey's iPod" )  ) );
-//    ui.title->setObjectName("title");
+    setWindowTitle( "" );
 
-//    vl->addWidget( ui.description = new QLabel( tr("This will automatically scrobble tracks you've played on your iPod everytime it's connected.") ) );
-//    ui.description->setObjectName("description");
+    ui->description->setText( tr("<p>Do you want to start scrobbling the iPod \"%1\"?<p>"
+                                     "<p>This will automatically scrobble tracks you've played on your iPod to the user account <strong>\"%2\"</strong> everytime it's synced with iTunes.</p>" ).arg( deviceName, User().name() ) );
+
+    QList<lastfm::User> roster = unicorn::Settings().userRoster();
+
+    if ( roster.count() > 1 )
+    {
+        ui->description->setText( ui->description->text() + tr( "<p>Not %1? Scrobble this iPod to a different user:</p>" ).arg( User().name() ) );
+
+
+        foreach( lastfm::User user, roster )
+            ui->users->addItem( user.name() );
+    }
+    else
+        ui->users->hide();
+
 
     connect( ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onClicked(QAbstractButton*)));
 }
@@ -50,7 +63,7 @@ ScrobbleSetupDialog::onClicked( QAbstractButton* button )
     QDialogButtonBox::ButtonRole buttonRole = ui->buttonBox->buttonRole( button );
 
     bool scrobble = buttonRole == QDialogButtonBox::YesRole;
-    bool alwaysAsk = !ui->neverAskAgain->isChecked();
+    bool alwaysAsk = false;
 
     emit clicked( scrobble, alwaysAsk, m_deviceId, m_deviceName, m_iPodFiles );
 

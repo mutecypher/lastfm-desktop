@@ -250,7 +250,7 @@ background-image: url(":/control_bar_scrobble_foobar.png");
 NowPlayingWidget QLabel#context {
 margin: 20px 0px;
 padding: 15px 15px;
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #e5e5e5);
+background-color: #ffffff;
 border: 1px solid #cdcdcd;
 border-radius: 5px;
 font-size: 12px;
