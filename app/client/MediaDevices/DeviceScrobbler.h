@@ -34,22 +34,23 @@ public slots:
 #endif
 
 private slots:
-    void onScrobbleSetupClicked( bool scrobble, bool alwaysAsk, QString deviceId, QString deviceName, QStringList iPodFiles );
+    void onScrobbleSetupClicked( bool scrobble, bool alwaysAsk, QString username, QString deviceId, QString deviceName, QStringList iPodFiles );
 #ifdef Q_WS_X11
     void onCalculatingScrobbles( int trackCount );
     void scrobbleIpodTracks( int trackCount );
     void onIpodScrobblingError();
 #endif
 
+public:
+    void checkCachedIPodScrobbles();
+    void handleMessage( const QStringList& );
+    void iPodDetected( const QStringList& arguments );
+
 private:
 #ifdef Q_WS_X11
     QPointer<IpodDeviceLinux> iPod;
 #endif
-
-    void checkCachedIPodScrobbles();
-    void handleMessage( const QStringList& );
     void twiddled( QStringList arguments );
-    void iPodDetected( const QStringList& arguments );
     void scrobbleIpodFile( QString iPodScrobblesFilename );
 
     lastfm::User associatedUser( QString deviceId );

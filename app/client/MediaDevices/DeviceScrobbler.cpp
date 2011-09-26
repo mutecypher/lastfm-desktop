@@ -1,6 +1,7 @@
 #include "DeviceScrobbler.h"
 #include <QDebug>
 
+#include "../Application.h"
 #include "../Dialogs/ScrobbleConfirmationDialog.h"
 #include "lib/unicorn/UnicornApplication.h"
 #include "IpodDevice.h"
@@ -20,7 +21,8 @@ void
 DeviceScrobbler::checkCachedIPodScrobbles()
 {
     // Check if there are any iPod scrobbles
-    unicorn::Session* currentSession = qobject_cast<unicorn::Application*>(qApp)->currentSession();
+    unicorn::Session* currentSession = aApp->currentSession();
+
     if( !currentSession )
         return;
 
@@ -62,7 +64,7 @@ DeviceScrobbler::checkCachedIPodScrobbles()
                     scrobbleSetup->exec();
                 }
                 else
-                    onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), deviceId, deviceName, iPodFiles );
+                    onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), currentSession->userInfo().name(), deviceId, deviceName, iPodFiles );
             }
         }
 
@@ -172,7 +174,7 @@ DeviceScrobbler::twiddled( QStringList arguments )
                 if ( arguments.contains( "no-tracks-found" ) )
                     emit noScrobblesFound( deviceName );
                 else
-                    onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), deviceId, deviceName, QStringList( iPodPath ) );
+                    onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), associatedUser.name(), deviceId, deviceName, QStringList( iPodPath ) );
 ;
             }
 
@@ -193,32 +195,38 @@ DeviceScrobbler::twiddled( QStringList arguments )
     {
         // The device has not been associated yet
         ScrobbleSetupDialog* scrobbleSetup = new ScrobbleSetupDialog( deviceId, deviceName, QStringList( iPodPath ) );
-        connect( scrobbleSetup, SIGNAL(clicked(bool,bool,QString,QString,QStringList)), SLOT(onScrobbleSetupClicked(bool,bool,QString,QString,QStringList)));
+        connect( scrobbleSetup, SIGNAL(clicked(bool,bool,QString,QString,QString,QStringList)), SLOT(onScrobbleSetupClicked(bool,bool,QString,QString,QString,QStringList)));
         scrobbleSetup->show();
     }
 }
 
 
 void
-DeviceScrobbler::onScrobbleSetupClicked( bool scrobble, bool alwaysAsk, QString deviceId, QString deviceName, QStringList iPodFiles )
+DeviceScrobbler::onScrobbleSetupClicked( bool scrobble, bool alwaysAsk, QString username, QString deviceId, QString deviceName, QStringList iPodFiles )
 {
     // We need to store the result so we can check it next time
     IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
 
     if ( !ipod->isDeviceKnown() )
-        ipod->associateDevice( lastfm::ws::Username );
+        ipod->associateDevice( username );
 
-    if ( scrobble )
+    if ( username == User().name() )
     {
-        foreach ( QString iPodFile, iPodFiles )
-            scrobbleIpodFile( iPodFile );
-    }
-    else
-    {
-        foreach ( QString iPodFile, iPodFiles )
-            QFile::remove( iPodFile );
+        // it has been associated to the current user so do the scrobble business
+
+        if ( scrobble )
+        {
+            foreach ( QString iPodFile, iPodFiles )
+                scrobbleIpodFile( iPodFile );
+        }
+        else
+        {
+            foreach ( QString iPodFile, iPodFiles )
+                QFile::remove( iPodFile );
+        }
     }
 
+    // remember the settings that the user selected
     ipod->setScrobble( scrobble );
     ipod->setAlwaysAsk( alwaysAsk );
 

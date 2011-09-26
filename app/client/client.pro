@@ -64,7 +64,6 @@ SOURCES += \
     MediaDevices/DeviceScrobbler.cpp \
     MainWindow.cpp \
     main.cpp \
-    Dialogs/SettingsDialog.cpp \
     Dialogs/ScrobbleSetupDialog.cpp \
     Dialogs/ScrobbleConfirmationDialog.cpp \
     Dialogs/DiagnosticsDialog.cpp \
@@ -102,7 +101,8 @@ SOURCES += \
     Wizard/PluginsInstallPage.cpp \
     Wizard/BootstrapProgressPage.cpp \
     Wizard/TourScrobblesPage.cpp \
-    Wizard/TourLocationPage.cpp
+    Wizard/TourLocationPage.cpp \
+    Dialogs/PreferencesDialog.cpp
 
 HEADERS += \
     Wizard/LoginPage.h \
@@ -142,7 +142,6 @@ HEADERS += \
     MediaDevices/IpodDevice.h \
     MediaDevices/DeviceScrobbler.h \
     MainWindow.h \
-    Dialogs/SettingsDialog.h \
     Dialogs/ScrobbleSetupDialog.h \
     Dialogs/ScrobbleConfirmationDialog.h \
     Dialogs/DiagnosticsDialog.h \
@@ -181,7 +180,8 @@ HEADERS += \
     Wizard/PluginsInstallPage.h \
     Wizard/BootstrapProgressPage.h \
     Wizard/TourScrobblesPage.h \
-    Wizard/TourLocationPage.h
+    Wizard/TourLocationPage.h \
+    Dialogs/PreferencesDialog.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
@@ -190,10 +190,16 @@ FORMS += \
     Widgets/PlaybackControlsWidget.ui \
     Dialogs/ScrobbleSetupDialog.ui \
     Dialogs/DiagnosticsDialog.ui \
-    Widgets/MetadataWidget.ui
+    Widgets/MetadataWidget.ui \
+    Dialogs/PreferencesDialog.ui
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
+
+
+
+
+
 
 
 

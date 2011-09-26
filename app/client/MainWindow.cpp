@@ -32,7 +32,7 @@
 
 #include "MainWindow.h"
 
-#include "Dialogs/SettingsDialog.h"
+#include "Dialogs/PreferencesDialog.h"
 
 #include "Application.h"
 #include "Services/RadioService.h"
@@ -211,8 +211,8 @@ MainWindow::onVisitProfile()
 void
 MainWindow::onPrefsTriggered()
 {
-    SettingsDialog* settingsDialog = new SettingsDialog();
-    settingsDialog->exec();
+    PreferencesDialog* prefsDialog = new PreferencesDialog();
+    prefsDialog->exec();
 }
 
 

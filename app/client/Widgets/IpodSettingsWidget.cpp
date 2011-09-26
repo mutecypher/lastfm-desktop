@@ -44,6 +44,8 @@ enum
 {
     IpodColumnUser,
     IpodColumnDeviceName,
+    IpodColumnScrobble,
+    IpodColumnAlwaysAsk,
     IpodColumnCount
 };
 
@@ -66,41 +68,13 @@ IpodSettingsWidget::IpodSettingsWidget( QWidget* parent )
 void
 IpodSettingsWidget::setupUi()
 {
-    QLabel* title = new QLabel( tr( "Configure Media Devices" ), this );
-    QFrame* line = new QFrame( this );
-    line->setFrameShape( QFrame::HLine );
+    QVBoxLayout* layout = new QVBoxLayout( this );
+    layout->setContentsMargins( 0, 0, 0, 0 );
+    layout->setSpacing( 0 );
 
-    QVBoxLayout* v = new QVBoxLayout;
-    QVBoxLayout* vg = new QVBoxLayout;
-    QVBoxLayout* vg2 = new QVBoxLayout;
-    QHBoxLayout* h1 = new QHBoxLayout;
+    layout->addWidget( new QLabel( tr( "Associated iPods:" ) ) );
 
-    ui.confirmScrobbles = new QCheckBox( this );
-    ui.iPodAssociations = new QTreeWidget( this );
-    ui.clearAssociations = new QPushButton( this );
-    ui.removeAssociation = new QPushButton( this );
-
-    QGroupBox* groupBox1 = new QGroupBox( this );
-    QGroupBox* groupBox2 = new QGroupBox( this );
-
-   // groupBox1->setTitle( tr( "Configure " ) );
-    groupBox2->setTitle( tr( "iPod Associations" ) );
-
-#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
-    ui.enableScrobbling = new QCheckBox( this );
-    ui.enableScrobbling->setText( tr( "Enable iPod scrobbling" ) );
-    ui.enableScrobbling->setChecked( unicorn::UserSettings().value( "enableIpodScrobbling", true ).toBool() );
-    vg->addWidget( ui.enableScrobbling );
-#endif
-
-    ui.confirmScrobbles->setText( tr( "Always confirm iPod scrobbles" ) );
-
-    ui.confirmScrobbles->setChecked( unicorn::UserSettings().value( "confirmIpodScrobbles", false ).toBool() );
-
-    vg->addWidget( ui.confirmScrobbles );
-
-    groupBox1->setLayout( vg );
-
+    layout->addWidget( ui.iPodAssociations = new QTreeWidget( this ) );
 
     ui.iPodAssociations->setColumnCount( IpodColumnCount );
     ui.iPodAssociations->setSortingEnabled( false );
@@ -111,32 +85,18 @@ IpodSettingsWidget::setupUi()
     ui.iPodAssociations->setAllColumnsShowFocus( true );
     ui.iPodAssociations->setStyleSheet( "color: black; " );
 
-    populateIpodAssociations();
-
     QStringList headerLabels;
     headerLabels.append( tr( "User" ) );
     headerLabels.append( tr( "Device Name" ) );
+    headerLabels.append( tr( "Scrobble" ) );
+    headerLabels.append( tr( "Always Ask" ) );
 
     ui.iPodAssociations->setHeaderLabels( headerLabels );
 
-    ui.clearAssociations->setText( tr( "Clear user associations" ) );
-    ui.removeAssociation->setText( tr( "Remove association" ) );
+    layout->addWidget( ui.clearAssociations = new QPushButton( tr( "Clear user associations" ) ) );
+    layout->addWidget( ui.removeAssociation = new QPushButton( tr( "Remove association" ) ) );
 
-    h1->addStretch( 1 );
-    h1->addWidget( ui.removeAssociation );
-    h1->addWidget( ui.clearAssociations );
-    vg2->addWidget( ui.iPodAssociations );
-    vg2->addLayout( h1 );
-
-    groupBox2->setLayout( vg2 );
-
-    v->addWidget( title );
-    v->addWidget( line );
-    v->addWidget( groupBox1 );
-    v->addWidget( groupBox2 );
-    v->addStretch( 1 );
-    setLayout( v );
-
+    populateIpodAssociations();
 }
 
 void
@@ -144,7 +104,7 @@ IpodSettingsWidget::saveSettings()
 {
     if ( hasUnsavedChanges() )
     {
-        //save settings
+        // save settings
         qDebug() << "Saving settings...";
 #if defined(Q_OS_MAC) || defined(Q_OS_WIN)
         unicorn::UserSettings().setValue( "enableIpodScrobbling", ui.enableScrobbling->isChecked() );
@@ -170,6 +130,9 @@ IpodSettingsWidget::populateIpodAssociations()
             item->setText( IpodColumnUser, user.name() );
             item->setText( IpodColumnDeviceName, us.value( "deviceName" ).toString() );
             item->setData( IpodColumnDeviceName, Qt::UserRole, us.value( "deviceId" ).toString() );
+
+            item->setCheckState( IpodColumnScrobble, us.value( "scrobblingOn" ).toBool() ? Qt::Checked : Qt::Unchecked );
+            item->setCheckState( IpodColumnAlwaysAsk, us.value( "alwaysAsk" ).toBool() ? Qt::Checked : Qt::Unchecked );
         }
         us.endArray();
     }
