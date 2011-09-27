@@ -1,57 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>PreferencesDialog</class>
- <widget class="QDialog" name="PreferencesDialog">
+ <widget class="QMainWindow" name="PreferencesDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>514</width>
-    <height>389</height>
+    <width>583</width>
+    <height>466</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>MainWindow</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>2</number>
-     </property>
-     <widget class="QWidget" name="general">
-      <attribute name="title">
-       <string>General</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_2"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QFrame" name="tabFrame">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="generalButton">
+         <property name="text">
+          <string>General</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="accountsButton">
+         <property name="text">
+          <string>Accounts</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="scrobblingButton">
+         <property name="text">
+          <string>Scrobbling</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="ipodButton">
+         <property name="text">
+          <string>iPod</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="advancedButton">
+         <property name="text">
+          <string>Advanced</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
-     <widget class="AccountSettingsWidget" name="accounts">
-      <attribute name="title">
-       <string>Accounts</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_6"/>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <widget class="QWidget" name="general"/>
+      <widget class="AccountSettingsWidget" name="accounts"/>
+      <widget class="ScrobbleSettingsWidget" name="scrobbling"/>
+      <widget class="IpodSettingsWidget" name="ipod"/>
+      <widget class="QWidget" name="advanced"/>
      </widget>
-     <widget class="ScrobbleSettingsWidget" name="scrobbling">
-      <attribute name="title">
-       <string>Scrobbling</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_5"/>
-     </widget>
-     <widget class="IpodSettingsWidget" name="ipod">
-      <attribute name="title">
-       <string>iPod</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_4"/>
-     </widget>
-     <widget class="QWidget" name="advanced">
-      <attribute name="title">
-       <string>Advanced</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_3"/>
-     </widget>
-    </widget>
-   </item>
-  </layout>
+    </item>
+   </layout>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>

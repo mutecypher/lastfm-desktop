@@ -32,8 +32,6 @@
 
 #include "MainWindow.h"
 
-#include "Dialogs/PreferencesDialog.h"
-
 #include "Application.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
@@ -211,8 +209,10 @@ MainWindow::onVisitProfile()
 void
 MainWindow::onPrefsTriggered()
 {
-    PreferencesDialog* prefsDialog = new PreferencesDialog();
-    prefsDialog->exec();
+    if ( !m_preferences )
+        m_preferences = new PreferencesDialog();
+
+    m_preferences->show();
 }
 
 

@@ -9,7 +9,7 @@ namespace Ui {
     class PreferencesDialog;
 }
 
-class PreferencesDialog : public unicorn::Dialog
+class PreferencesDialog : public QMainWindow
 {
     Q_OBJECT
 
@@ -21,6 +21,8 @@ signals:
     void saveNeeded();
 
 private slots:
+    void onTabButtonClicked();
+
     void onAccepted();
     void onSettingsChanged();
     void onApplyButtonClicked();

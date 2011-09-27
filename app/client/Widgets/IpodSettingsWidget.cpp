@@ -54,14 +54,9 @@ IpodSettingsWidget::IpodSettingsWidget( QWidget* parent )
 {
     setupUi();
 
-#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
-    connect( ui.enableScrobbling, SIGNAL( stateChanged( int ) ), this, SLOT( onSettingsChanged() ) );
-#endif
-
-    connect( ui.confirmScrobbles, SIGNAL( stateChanged( int ) ), this, SLOT( onSettingsChanged() ) );
     connect( ui.clearAssociations, SIGNAL( clicked() ), this, SLOT( clearIpodAssociations() ) );
     connect( ui.removeAssociation, SIGNAL( clicked() ), this, SLOT( removeIpodAssociation() ) );
-    connect( ui.iPodAssociations, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), this, SLOT( onItemActivated() ) );
+    connect( ui.iPodAssociations, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), SLOT( onItemActivated() ) );
 }
 
 
@@ -163,7 +158,6 @@ IpodSettingsWidget::clearIpodAssociations()
 void
 IpodSettingsWidget::onItemActivated()
 {
-
     ui.removeAssociation->setEnabled( true );
 }
 

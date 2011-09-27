@@ -1,12 +1,15 @@
 #ifndef METADATA_WINDOW_H_
 #define METADATA_WINDOW_H_
 
-#include "lib/unicorn/UnicornMainWindow.h"
-#include "lib/unicorn/StylableWidget.h"
+#include <QResizeEvent>
+
 #include <lastfm/Track.h>
 #include <lastfm/XmlQuery.h>
 
-#include <QResizeEvent>
+#include "lib/unicorn/UnicornMainWindow.h"
+#include "lib/unicorn/StylableWidget.h"
+
+#include "Dialogs/PreferencesDialog.h"
 
 using lastfm::XmlQuery;
 
@@ -92,6 +95,8 @@ private:
     class ActivityListItem* m_currentActivity;
     class QDockWidget* m_radioSideBar;
     QList<QAction*> m_buttons;
+
+    QPointer<PreferencesDialog> m_preferences;
 };
 
 #endif //METADATA_WINDOW_H_

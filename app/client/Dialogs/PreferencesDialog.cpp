@@ -1,13 +1,19 @@
+
+#include <QToolBar>
+
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
 
 PreferencesDialog::PreferencesDialog( QWidget* parent )
-    :unicorn::Dialog( parent ),
+    :QMainWindow( parent ),
     ui( new Ui::PreferencesDialog )
 {
-    ui->setupUi(this);
+    ui->setupUi( this );
 
-    ui->tabWidget->setCurrentIndex( 0 );
+    setUnifiedTitleAndToolBarOnMac( true );
+
+    QToolBar* toolBar = addToolBar( "tabs" );
+    toolBar->addWidget( ui->tabFrame );
 
     connect( this, SIGNAL( saveNeeded() ), ui->general, SLOT( saveSettings() ) );
     connect( this, SIGNAL( saveNeeded() ), ui->scrobbling, SLOT( saveSettings() ) );
@@ -21,9 +27,17 @@ PreferencesDialog::PreferencesDialog( QWidget* parent )
     connect( ui->accounts, SIGNAL( settingsChanged() ), SLOT( onSettingsChanged() ) );
     connect( ui->advanced, SIGNAL( settingsChanged() ), SLOT( onSettingsChanged() ) );
 
+    connect( ui->generalButton, SIGNAL(clicked()), SLOT(onTabButtonClicked()));
+    connect( ui->scrobblingButton, SIGNAL(clicked()), SLOT(onTabButtonClicked()));
+    connect( ui->ipodButton, SIGNAL(clicked()), SLOT(onTabButtonClicked()));
+    connect( ui->accountsButton, SIGNAL(clicked()), SLOT(onTabButtonClicked()));
+    connect( ui->advancedButton, SIGNAL(clicked()), SLOT(onTabButtonClicked()));
+
 //    connect( ui.buttons, SIGNAL( accepted() ), this, SLOT( onAccepted() ) );
 //    connect( ui.buttons, SIGNAL( rejected() ), this, SLOT( reject() ) );
 //    connect( ui.buttons->button( QDialogButtonBox::Apply ), SIGNAL( clicked() ), SLOT( onApplyButtonClicked() ) );
+
+    ui->generalButton->click();
 }
 
 PreferencesDialog::~PreferencesDialog()
@@ -32,10 +46,29 @@ PreferencesDialog::~PreferencesDialog()
 }
 
 void
+PreferencesDialog::onTabButtonClicked()
+{
+    QPushButton* clickedButton = qobject_cast<QPushButton*>(sender());
+
+    setWindowTitle( clickedButton->text() );
+
+    if ( clickedButton == ui->generalButton )
+        ui->stackedWidget->setCurrentWidget( ui->general );
+    else if ( clickedButton == ui->accountsButton )
+        ui->stackedWidget->setCurrentWidget( ui->accounts );
+    else if ( clickedButton == ui->ipodButton )
+        ui->stackedWidget->setCurrentWidget( ui->ipod );
+    else if ( clickedButton == ui->advancedButton )
+        ui->stackedWidget->setCurrentWidget( ui->advanced );
+    else if ( clickedButton == ui->scrobblingButton )
+        ui->stackedWidget->setCurrentWidget( ui->scrobbling );
+}
+
+void
 PreferencesDialog::onAccepted()
 {
     emit saveNeeded();
-    accept();
+    close();
 }
 
 void
