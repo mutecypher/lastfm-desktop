@@ -16,12 +16,11 @@ private:
     struct
     {
         class QLineEdit* filter;
-        class QWidget* friends;
-        class QScrollArea* scrollArea;
+        class QListWidget* friends;
     } ui;
 
 public:
-    explicit FriendListWidget(QWidget *parent = 0);
+    explicit FriendListWidget( QWidget *parent = 0 );
 
 private slots:
     void onSessionChanged( unicorn::Session* session );

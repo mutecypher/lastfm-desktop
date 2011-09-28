@@ -4,6 +4,7 @@
 #include <QWidget>
 
 #include <lastfm/XmlQuery.h>
+#include <lastfm/User.h>
 
 #include "lib/unicorn/StylableWidget.h"
 
@@ -14,9 +15,7 @@ private:
     struct
     {
         class AvatarWidget* avatar;
-        class Label* name;
-        class Label* details;
-        class Label* lastTrack;
+        class QLabel* details;
         class PlayableItemWidget* radio;
         class PlayableItemWidget* multiRadio;
     } ui;
@@ -31,7 +30,11 @@ private slots:
     void onGotInfo();
 
 private:
+    void setDetails();
+
+private:
     const lastfm::XmlQuery m_user;
+    lastfm::UserDetails m_userDetails;
 };
 
 #endif // FRIENDWIDGET_H
