@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/" >
-		<file alias="bg_clouds.png">wizard/bg_clouds.png</file>
+         <file alias="pointyarrow.png">wizard/arrow_even_bigger_than_dropbox.png</file>		<file alias="bg_clouds.png">wizard/bg_clouds.png</file>
 		<file alias="button_grey_LEFT_HOVER.png">wizard/button_grey_LEFT_HOVER.png</file>
 		<file alias="button_grey_LEFT_REST.png">wizard/button_grey_LEFT_REST.png</file>
 		<file alias="button_grey_MIDDLE_HOVER.png">wizard/button_grey_MIDDLE_HOVER.png</file>
@@ -31,8 +31,8 @@
 		<file alias="player_itunes_64.png">wizard/player_itunes_64.png</file>
 		<file alias="player_winamp_64.png">wizard/player_winamp_64.png</file>
 		<file alias="player_wmp_64.png">wizard/player_wmp_64.png</file>
-		<file alias="scrobbler_32.png">wizard/scrobbler_32.png</file>
-		<file alias="scrobbler_64.png">wizard/scrobbler_64.png</file>
+		<file alias="scrobbler_32.png">wizard/lastfm_icon_32.png</file>
+		<file alias="scrobbler_64.png">wizard/lastfm_icon_64.png</file>
 
 		<file>start_bg.png</file>
 	
@@ -189,7 +189,6 @@
 
 		<file>asterisk_small.png</file>
 
-        <file>pointyarrow.png</file>
 		<file>as.png</file>
         <file>highlight.png</file>
         <file>titlebar_highlight.png</file>
