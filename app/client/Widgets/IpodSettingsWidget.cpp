@@ -29,6 +29,7 @@
 #include <lastfm/User.h>
 
 #include <QCheckBox>
+#include <QComboBox>
 #include <QDebug>
 #include <QFrame>
 #include <QGroupBox>
@@ -78,7 +79,6 @@ IpodSettingsWidget::setupUi()
     ui.iPodAssociations->setUniformRowHeights( true );
     ui.iPodAssociations->setItemsExpandable( false );
     ui.iPodAssociations->setAllColumnsShowFocus( true );
-    ui.iPodAssociations->setStyleSheet( "color: black; " );
 
     QStringList headerLabels;
     headerLabels.append( tr( "User" ) );
@@ -101,10 +101,6 @@ IpodSettingsWidget::saveSettings()
     {
         // save settings
         qDebug() << "Saving settings...";
-#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
-        unicorn::UserSettings().setValue( "enableIpodScrobbling", ui.enableScrobbling->isChecked() );
-#endif
-        unicorn::UserSettings().setValue( "confirmIpodScrobbles", ui.confirmScrobbles->isChecked() );
         onSettingsSaved();
     }
 }
@@ -122,11 +118,22 @@ IpodSettingsWidget::populateIpodAssociations()
         {
             us.setArrayIndex( i );
             QTreeWidgetItem* item = new QTreeWidgetItem( ui.iPodAssociations );
-            item->setText( IpodColumnUser, user.name() );
+            QComboBox* comboBox = new QComboBox( ui.iPodAssociations );
+
+            for ( int i = 0 ; i < roster.count() ; ++i )
+            {
+                comboBox->addItem( roster.at( i ).name() );
+
+                if ( roster.at( i ).name() == user.name() )
+                    comboBox->setCurrentIndex( i );
+            }
+
+            ui.iPodAssociations->setItemWidget( item, IpodColumnUser, comboBox );
+
             item->setText( IpodColumnDeviceName, us.value( "deviceName" ).toString() );
             item->setData( IpodColumnDeviceName, Qt::UserRole, us.value( "deviceId" ).toString() );
 
-            item->setCheckState( IpodColumnScrobble, us.value( "scrobblingOn" ).toBool() ? Qt::Checked : Qt::Unchecked );
+            item->setCheckState( IpodColumnScrobble, us.value( "scrobble" ).toBool() ? Qt::Checked : Qt::Unchecked );
             item->setCheckState( IpodColumnAlwaysAsk, us.value( "alwaysAsk" ).toBool() ? Qt::Checked : Qt::Unchecked );
         }
         us.endArray();
