@@ -43,7 +43,7 @@
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "lib/unicorn/Updater/PluginList.h"
 #ifdef Q_OS_MAC
-#include "lib/unicorn/mac/AppleScript.h"
+#include <Growl.h>
 #endif
 
 #include "AudioscrobblerSettings.h"
@@ -364,14 +364,7 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
         m_currentTrack = track;
 
 #ifdef Q_OS_MAC
-        AppleScript script( QString( "tell application \"GrowlHelperApp\"\r\n"
-                            "set the allNotificationsList to {\"New track\"}\r\n"
-                            "set the enabledNotificationsList to {\"New track\"}\r\n"
-                            "register as application \"Last.fm\" all notifications allNotificationsList default notifications enabledNotificationsList icon of application \"Last.fm.app\"\r\n"
-                            "notify with name \"New track\" title \"%1\" description \"%2\" application name \"Last.fm\" identifier \"Last.fm.app\"\r\n"
-                            "end tell\r\n" ).arg( track.toString(), tr("from %1").arg( track.album() ) ) );
-
-        script.exec();
+        // TODO: Do the growl notification here. It'll be great!
 #else
         m_tray->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
 #endif

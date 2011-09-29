@@ -70,3 +70,11 @@ CONFIG( yajl ) {
 	}
 	else:LIBS += -lyajl
 }
+
+CONFIG( growl ) {
+    mac {
+        QMAKE_CXXFLAGS += -F/Library/Frameworks/
+        LIBS += -framework Growl
+    }
+}
+
