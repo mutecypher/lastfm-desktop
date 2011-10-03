@@ -4,11 +4,13 @@
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
 
-PreferencesDialog::PreferencesDialog( QWidget* parent )
-    :QMainWindow( parent ),
+PreferencesDialog::PreferencesDialog( QMenuBar* menuBar )
+    :unicorn::MainWindow( menuBar ),
     ui( new Ui::PreferencesDialog )
 {
     ui->setupUi( this );
+
+    setAttribute( Qt::WA_DeleteOnClose, true );
 
     setUnifiedTitleAndToolBarOnMac( true );
 
@@ -43,6 +45,13 @@ PreferencesDialog::PreferencesDialog( QWidget* parent )
 PreferencesDialog::~PreferencesDialog()
 {
     delete ui;
+}
+
+
+void
+PreferencesDialog::closeEvent( QCloseEvent* )
+{
+    emit saveNeeded();
 }
 
 void

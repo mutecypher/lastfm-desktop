@@ -24,6 +24,7 @@
 #include "lib/DllExportMacro.h"
 #include <QMainWindow>
 #include <QPointer>
+#include <QMenuBar>
 #include <QDialog>
 #include <QMap>
 
@@ -68,12 +69,14 @@ namespace unicorn
         Q_OBJECT
 
     public:
-        MainWindow();
+        MainWindow( QMenuBar* );
         ~MainWindow();
 
         /** call this to add the account menu and about menu action, etc. */
         void finishUi();
         void addDragHandleWidget( QWidget* );
+
+        QMenuBar* appMenuBar() const { return m_menuBar; }
 
     public slots:
         void openLog();
@@ -89,6 +92,11 @@ namespace unicorn
         virtual void resizeEvent( QResizeEvent* );
 
         virtual void addWinThumbBarButtons( QList<QAction*>& ) {;}
+
+        QMenuBar* menuBar() const {}
+
+    protected:
+        QPointer<QMenuBar> m_menuBar;
 
     private:
         QList<QAction*> m_thumbButtonActions;

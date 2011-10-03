@@ -49,7 +49,7 @@ class MainWindow : public unicorn::MainWindow
     } ui;
 
 public:
-    MainWindow();
+    MainWindow( QMenuBar* );
     const Track& currentTrack() const{ return m_currentTrack; }
 
     void addWinThumbBarButton( QAction* );

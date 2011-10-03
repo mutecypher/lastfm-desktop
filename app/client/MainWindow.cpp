@@ -58,7 +58,8 @@
 #include "lib/listener/PlayerConnection.h"
 
 
-MainWindow::MainWindow()
+MainWindow::MainWindow( QMenuBar* menuBar )
+    :unicorn::MainWindow( menuBar )
 {
     hide();
 
@@ -135,8 +136,6 @@ MainWindow::MainWindow()
         connect( deviceScrobbler, SIGNAL( noScrobblesFound()),SLOT( onNoScrobblesFound()));
     }
 
-    menuBar()->hide();
-
     //for some reason some of the stylesheet is not being applied properly unless reloaded
     //here. StyleSheets see very flaky to me. :s
     aApp->refreshStyleSheet();
@@ -152,13 +151,15 @@ MainWindow::MainWindow()
     resize( 565, 710 );
 
     show();
+
+    m_menuBar->show();
 }
 
 void
 MainWindow::setupMenuBar()
 {
     /// File menu (should only show on non-mac)
-    QMenu* fileMenu = menuBar()->addMenu( tr( "File" ) );
+    QMenu* fileMenu = appMenuBar()->addMenu( tr( "File" ) );
     QAction* quit = fileMenu->addAction( tr("&Quit"), qApp, SLOT(quit()) );
     quit->setMenuRole( QAction::QuitRole );
 #ifdef Q_OS_WIN
@@ -168,34 +169,34 @@ MainWindow::setupMenuBar()
 #endif
 
     /// View
-    QMenu* viewMenu = menuBar()->addMenu( tr("View") );
+    QMenu* viewMenu = appMenuBar()->addMenu( tr("View") );
     ui.sideBar->addToMenu( *viewMenu );
     viewMenu->addSeparator();
     viewMenu->addAction( "My Last.fm Profile", this, SLOT(onVisitProfile()), Qt::CTRL + Qt::Key_P );
 
     /// Scrobbles
-    QMenu* scrobblesMenu = menuBar()->addMenu( tr("Scrobbles") );
+    QMenu* scrobblesMenu = appMenuBar()->addMenu( tr("Scrobbles") );
     scrobblesMenu->addAction( "Refresh", ui.recentTracks, SLOT(refresh()), Qt::CTRL + Qt::SHIFT + Qt::Key_R );
 
     /// Controls
-    QMenu* controlsMenu = menuBar()->addMenu( tr("Controls") );
+    QMenu* controlsMenu = appMenuBar()->addMenu( tr("Controls") );
     ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *controlsMenu  );
 
     /// Account
-    QMenu* accountMenu = menuBar()->addMenu( tr("Account") );
+    QMenu* accountMenu = appMenuBar()->addMenu( tr("Account") );
 
     /// Tools (should only show on non-mac)
-    QMenu* toolsMenu = menuBar()->addMenu( tr("Tools") );
+    QMenu* toolsMenu = appMenuBar()->addMenu( tr("Tools") );
     QAction* c4u = toolsMenu->addAction( tr("Check for Updates"), this, SLOT(checkForUpdates()) );
     c4u->setMenuRole( QAction::ApplicationSpecificRole );
     QAction* prefs = toolsMenu->addAction( tr("Options"), this, SLOT(onPrefsTriggered()) );
     prefs->setMenuRole( QAction::PreferencesRole );
 
     /// Window
-    QMenu* windowMenu = menuBar()->addMenu( tr("Window") );
+    QMenu* windowMenu = appMenuBar()->addMenu( tr("Window") );
 
     /// Help
-    QMenu* helpMenu = menuBar()->addMenu( tr("Help") );
+    QMenu* helpMenu = appMenuBar()->addMenu( tr("Help") );
     QAction* about = helpMenu->addAction( tr("About"), this, SLOT(about()) );
     about->setMenuRole( QAction::AboutRole );
 }
@@ -210,7 +211,7 @@ void
 MainWindow::onPrefsTriggered()
 {
     if ( !m_preferences )
-        m_preferences = new PreferencesDialog();
+        m_preferences = new PreferencesDialog( m_menuBar );
 
     m_preferences->show();
 }

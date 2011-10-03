@@ -36,6 +36,7 @@ class RadioWidget;
 class QAction;
 class ScrobbleInfoFetcher;
 class Drawer;
+class QMenuBar;
 
 #ifdef Q_WS_X11
     class IpodDeviceLinux;
@@ -71,6 +72,7 @@ namespace audioscrobbler
         // we delete these so QPointers
         QPointer<QSystemTrayIcon> m_tray;
         QPointer<MainWindow> m_mw;
+        QPointer<QMenuBar> m_menuBar;
 
         Track m_currentTrack;
         Track m_trackToScrobble;

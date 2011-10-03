@@ -58,6 +58,7 @@
 #include <QDesktopServices>
 #include <QNetworkDiskCache>
 #include <QMenu>
+#include <QMenuBar>
 #include <QDebug>
 
 #ifdef Q_OS_WIN32
@@ -143,6 +144,8 @@ Application::init()
     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
     diskCache->setCacheDirectory( lastfm::dir::cache().path() );
     lastfm::nam()->setCache( diskCache );
+
+    m_menuBar = new QMenuBar( 0 );
 
 /// tray
     tray(); // this will initialise m_tray if it doesn't already exist
@@ -244,7 +247,7 @@ Application::init()
     m_tray->setContextMenu(menu);
 
 /// MainWindow
-    m_mw = new MainWindow;
+    m_mw = new MainWindow( m_menuBar );
     m_mw->addWinThumbBarButton( m_love_action );
     m_mw->addWinThumbBarButton( m_ban_action );
     m_mw->addWinThumbBarButton( m_play_action );

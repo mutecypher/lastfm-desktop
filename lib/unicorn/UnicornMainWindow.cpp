@@ -37,8 +37,8 @@
 #define SETTINGS_POSITION_KEY "MainWindowPosition"
 
 
-unicorn::MainWindow::MainWindow()
-:QMainWindow()
+unicorn::MainWindow::MainWindow( QMenuBar* menuBar )
+    :QMainWindow(), m_menuBar( menuBar )
 {
     new QShortcut( QKeySequence(Qt::CTRL+Qt::Key_W), this, SLOT(close()) );
     new QShortcut( QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_L), this, SLOT(openLog()) );
@@ -58,7 +58,7 @@ void
 unicorn::MainWindow::finishUi()
 {
 #ifndef NDEBUG
-    QMenu* debug = menuBar()->addMenu( "Debug" );
+    QMenu* debug = appMenuBar()->addMenu( "Debug" );
     debug->addAction( tr("Refresh Stylesheet"), qApp, SLOT(refreshStyleSheet()), Qt::CTRL + Qt::Key_R );
 #endif
 

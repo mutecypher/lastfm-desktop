@@ -9,16 +9,19 @@ namespace Ui {
     class PreferencesDialog;
 }
 
-class PreferencesDialog : public QMainWindow
+class PreferencesDialog : public unicorn::MainWindow
 {
     Q_OBJECT
 
 public:
-    explicit PreferencesDialog(QWidget *parent = 0);
+    explicit PreferencesDialog( QMenuBar* menuBar );
     ~PreferencesDialog();
 
 signals:
     void saveNeeded();
+
+private:
+    void closeEvent(QCloseEvent *);
 
 private slots:
     void onTabButtonClicked();
