@@ -28,7 +28,7 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent)
 
     QRegExp re( "/serve/(\\d*)s?/" );
 
-    ui.avatar->loadUrl( user["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
+    ui.avatar->loadUrl( user["image size=medium"].text().replace( re, "/serve/\\1s/" ), HttpImageWidget::ScaleNone );
     ui.avatar->setHref( user["url"].text() );
 
     QVBoxLayout* vl = new QVBoxLayout();

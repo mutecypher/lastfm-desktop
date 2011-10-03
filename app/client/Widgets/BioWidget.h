@@ -4,6 +4,7 @@
 #include <QTextBrowser>
 #include <QTextObjectInterface>
 #include <QDebug>
+#include "lib/unicorn/widgets/HttpImageWidget.h"
 
 /** A specialized QTextBrowser which can insert widgets inline */
 #include <QPlainTextDocumentLayout>
@@ -13,7 +14,7 @@ public:
     BioWidget( QWidget* parent );
     bool eventFilter( QObject* o, QEvent* e );
     
-    void loadImage( const QUrl& );
+    void loadImage( const QUrl&, HttpImageWidget::ScaleType scale = HttpImageWidget::ScaleAuto );
     void setImageHref( const QUrl& );
     
     void setOnTourVisible( bool, const QUrl& = QUrl());

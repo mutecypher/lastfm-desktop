@@ -41,7 +41,7 @@ ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userDetails )
 
     m_scrobbleCount = userDetails.scrobbleCount();
     ui.avatar->setUserDetails( userDetails );
-    ui.avatar->loadUrl( userDetails.imageUrl( lastfm::Medium, true ), false );
+    ui.avatar->loadUrl( userDetails.imageUrl( lastfm::Medium, true ), HttpImageWidget::ScaleNone );
     ui.avatar->setHref( userDetails.www() );
 
     setScrobbleCount();

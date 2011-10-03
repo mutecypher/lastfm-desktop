@@ -22,16 +22,16 @@ BioWidget::BioWidget( QWidget* p )
     document()->documentLayout()->registerHandler( WidgetImageFormat, m_widgetTextObject );
 
     ui.image = new HttpImageWidget(this);
-    ui.image->setFixedSize( QSize( 150, 125 ) );
+    ui.image->setFixedWidth( 200 );
     ui.image->setAlignment( Qt::AlignTop );
     
     ui.onTour = new BannerWidget( tr("On Tour" ));
     ui.onTour->setBannerVisible( false );
     ui.onTour->setWidget( ui.image );
 
-    ui.onTour->setFixedSize( QSize( 150, 125 ));
+    ui.onTour->setFixedWidth( 200 );
     insertWidget( ui.onTour );
-    
+
     connect( ui.image, SIGNAL(loaded()), SLOT(update()));
     connect( this, SIGNAL(highlighted(QString)), SLOT(onHighlighted(QString)) );
 }
@@ -58,18 +58,29 @@ BioWidget::insertWidget( QWidget* w )
 }
 
 bool 
-BioWidget::eventFilter( QObject* o, QEvent* e ) {
+BioWidget::eventFilter( QObject* o, QEvent* e )
+{
     QWidget* w = qobject_cast<QWidget*>( o );
-    if( viewport() == w ) {
-        if( QEvent::MouseMove != e->type() ) return false;
+
+    if( viewport() == w )
+    {
+        if( QEvent::MouseMove != e->type() )
+            return false;
+
         QMouseEvent* event = static_cast<QMouseEvent*>(e);
         //respect child widget cursor
         QWidget* w = m_widgetTextObject->widgetAtPoint(event->pos() );
-        if( w != m_currentHoverWidget ) {
+
+        if( w != m_currentHoverWidget )
+        {
             m_currentHoverWidget = w;
-            if( 0 == w ) {
+
+            if( 0 == w )
+            {
                 viewport()->unsetCursor();
-            } else {
+            }
+            else
+            {
                 QWidget* c = w->childAt(event->pos());
                 c = c ? c : w;
                 viewport()->setCursor( c->cursor());
@@ -85,6 +96,7 @@ BioWidget::eventFilter( QObject* o, QEvent* e ) {
 void
 BioWidget::mousePressEvent( QMouseEvent* event )
 {
+    update();
     if(!sendMouseEvent(event)) {
         QTextBrowser::mousePressEvent( event );
     }
@@ -140,15 +152,15 @@ BioWidget::onAnchorClicked( const QUrl& link )
 void 
 BioWidget::onBioChanged( const QSizeF& size )
 {
-    setFixedHeight( size.toSize().height() );
+    //setFixedHeight( size.toSize().height() );
 }
 
 
 
 void 
-BioWidget::loadImage( const QUrl& url )
+BioWidget::loadImage( const QUrl& url, HttpImageWidget::ScaleType scale )
 {
-    ui.image->loadUrl( url );
+    ui.image->loadUrl( url, scale );
 }
 
 void

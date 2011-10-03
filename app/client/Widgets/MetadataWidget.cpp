@@ -211,7 +211,7 @@ MetadataWidget::onArtistGotInfo()
                 {
                     widgets[i]->setText( artists[i]["name"].text() );
                     widgets[i]->setToolTip( artists[i]["name"].text() );
-                    widgets[i]->loadUrl( artists[i]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
+                    widgets[i]->loadUrl( artists[i]["image size=medium"].text().replace( re, "/serve/\\1s/" ), HttpImageWidget::ScaleNone );
                     widgets[i]->setHref( artists[i]["url"].text() );
                 }
 
@@ -258,8 +258,8 @@ MetadataWidget::onArtistGotInfo()
 
         ui->artistBio->append( bio );
         ui->artistBio->updateGeometry();
-        QUrl url = lfm["artist"]["image size=large"].text();
-        ui->artistBio->loadImage( url );
+        QUrl url = lfm["artist"]["image size=extralarge"].text();
+        ui->artistBio->loadImage( url, HttpImageWidget::ScaleWidth );
         ui->artistBio->setImageHref( QUrl(lfm["artist"]["url"].text()));
         ui->artistBio->setOnTourVisible( false, QUrl(lfm["artist"]["url"].text()+"/+events"));
    }

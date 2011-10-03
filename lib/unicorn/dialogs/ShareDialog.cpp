@@ -55,7 +55,7 @@ ShareDialog::ShareDialog( const Track& t, Type type, QWidget* parent )
     ui->setupUi( this );
 
     ui->recipients->setType( ItemSelectorWidget::User );
-    ui->icon->loadUrl( m_track.imageUrl( lastfm::Small, true ), false );
+    ui->icon->loadUrl( m_track.imageUrl( lastfm::Small, true ), HttpImageWidget::ScaleAuto );
 
     ui->album->setEnabled( !t.album().isNull() );
 
