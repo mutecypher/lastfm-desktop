@@ -74,6 +74,8 @@ signals:
     void backClicked();
 
 private:
+    void paintEvent(QPaintEvent *);
+
     void checkFinished();
 
     void setTrackDetails( const Track& track );

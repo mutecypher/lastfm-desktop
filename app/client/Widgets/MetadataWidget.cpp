@@ -124,6 +124,25 @@ MetadataWidget::~MetadataWidget()
     delete ui;
 }
 
+void
+MetadataWidget::paintEvent( QPaintEvent* event )
+{
+    StylableWidget::paintEvent( event );
+
+    // draw the arrow on the context
+    if ( ui->context->isVisible() )
+    {
+        static QPixmap arrow( ":/meta_context_arrow.png" );
+
+        QPainter p( this );
+
+        //QPoint arrowPoint = ui->context->geometry().topLeft() - QPoint( 0, arrow.size().height() );
+        QPoint arrowPoint(20, 20);
+
+        p.drawPixmap( arrowPoint, arrow );
+    }
+}
+
 ScrobbleControls*
 MetadataWidget::scrobbleControls() const
 {

@@ -134,6 +134,8 @@
 		<file>controls_skip_HOVER.png</file>
 		<file>controls_skip_PRESS.png</file>
 
+        <file>meta_context_arrow.png</file>
+
         <file>meta_buy_HOVER.png</file>
         <file>meta_buy_PRESS.png</file>
         <file>meta_buy_REST.png</file>
