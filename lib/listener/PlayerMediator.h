@@ -17,9 +17,13 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <QList>
+#include <QPointer>
+
 #include "lib/DllExportMacro.h"
 #include "PlayerConnection.h"
-#include <QList>
+
 class PlayerConnection;
 
 
@@ -33,7 +37,7 @@ class LISTENER_DLLEXPORT PlayerMediator : public QObject
     QList<PlayerConnection*> m_connections;
 
 protected:
-    PlayerConnection* m_active;
+    QPointer<PlayerConnection> m_active;
     virtual bool assess( PlayerConnection* );
 
 public:

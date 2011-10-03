@@ -61,7 +61,11 @@ SpotifyListener::loop()
     static AppleScript playerStateScript( "tell application \"Spotify\" to if running then return player state" );
     QString playerState = playerStateScript.exec();
 
-    if ( !playerState.isEmpty() )
+    if ( playerState == "playing"
+         || playerState == "stopped"
+         || playerState == "paused"
+
+         )
     {
         if ( !m_connection )
             emit newConnection( m_connection = new SpotifyConnection );
