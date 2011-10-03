@@ -111,41 +111,6 @@ DeviceScrobbler::iPodDetected( const QStringList& arguments )
     emit detectedIPod( deviceId );
 }
 
-lastfm::User
-DeviceScrobbler::associatedUser( QString deviceId )
-{
-    lastfm::User associatedUser( "" );
-
-    // Check if the device has been associated with a user
-    // and then if it is with the current user
-    QList<lastfm::User> roster = unicorn::Settings().userRoster();
-    foreach( lastfm::User user, roster )
-    {
-        unicorn::UserSettings us( user.name() );
-        int count = us.beginReadArray( "associatedDevices" );
-
-        for ( int i = 0; i < count; i++ )
-        {
-            us.setArrayIndex( i );
-
-            QString tempDeviceId = us.value( "deviceId" ).toString();
-
-            qDebug() << tempDeviceId;
-
-            if ( tempDeviceId == deviceId )
-            {
-                associatedUser = user;
-                break;
-            }
-        }
-        us.endArray();
-
-        if ( !associatedUser.name().isEmpty() ) break;
-    }
-
-    return associatedUser;
-}
-
 void 
 DeviceScrobbler::twiddled( QStringList arguments )
 {
@@ -159,7 +124,7 @@ DeviceScrobbler::twiddled( QStringList arguments )
 
     // Check if the device has been associated with a user
     // and then if it is with the current user
-    lastfm::User associatedUser = this->associatedUser( deviceId );
+    lastfm::User associatedUser = IpodDevice::associatedUser( deviceId );
 
     if ( !associatedUser.name().isEmpty() )
     {

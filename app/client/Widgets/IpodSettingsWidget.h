@@ -49,6 +49,7 @@ private:
 private:
     void setupUi();
     void populateIpodAssociations();
+    void doRemoveIpodAssociation( const QString deviceId, const QString username );
 };
 
 #endif
