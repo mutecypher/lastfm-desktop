@@ -78,10 +78,10 @@ private slots:
     void onRadioError( int error, const QVariant& data );
 
     // iPod scrobbling things
-    void onIPodDetected( QString iPodName );
-    void onProcessingScrobbles( QString iPodName );
-    void onFoundScrobbles( const QList<lastfm::Track>& tracks, QString iPodName );
-    void onNoScrobblesFound( QString iPodName );
+    void onIPodDetected( const QString& iPodName );
+    void onProcessingScrobbles( const QString& iPodName );
+    void onFoundScrobbles( const QList<lastfm::Track>& tracks, const QString& iPodName );
+    void onNoScrobblesFound( const QString& iPodName );
 
 private:
     void setCurrentWidget( QWidget* );

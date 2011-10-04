@@ -52,6 +52,7 @@
 #include "lib/unicorn/widgets/GhostWidget.h"
 #include "lib/unicorn/widgets/UserToolButton.h"
 #include "lib/unicorn/widgets/MessageBar.h"
+#include "lib/unicorn/widgets/UserMenu.h"
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/qtwin.h"
 #include "lib/unicorn/layouts/SlideOverLayout.h"
@@ -131,9 +132,9 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     if ( deviceScrobbler )
     {
         connect( deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected( QString )));
-        connect( deviceScrobbler, SIGNAL( processingScrobbles()), SLOT( onProcessingScrobbles()));
-        connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), SLOT( onFoundScrobbles( QList<lastfm::Track> )));
-        connect( deviceScrobbler, SIGNAL( noScrobblesFound()),SLOT( onNoScrobblesFound()));
+        connect( deviceScrobbler, SIGNAL( processingScrobbles(QString)), SLOT( onProcessingScrobbles(QString)));
+        connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track>, QString )), SLOT( onFoundScrobbles( QList<lastfm::Track>, QString )));
+        connect( deviceScrobbler, SIGNAL( noScrobblesFound(QString)),SLOT( onNoScrobblesFound(QString)));
     }
 
     //for some reason some of the stylesheet is not being applied properly unless reloaded
@@ -183,7 +184,7 @@ MainWindow::setupMenuBar()
     ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *controlsMenu  );
 
     /// Account
-    QMenu* accountMenu = appMenuBar()->addMenu( tr("Account") );
+    appMenuBar()->addMenu( new UserMenu( this ) )->setText( tr( "Account" ) );
 
     /// Tools (should only show on non-mac)
     QMenu* toolsMenu = appMenuBar()->addMenu( tr("Tools") );
@@ -194,11 +195,23 @@ MainWindow::setupMenuBar()
 
     /// Window
     QMenu* windowMenu = appMenuBar()->addMenu( tr("Window") );
+    QAction* minimize = windowMenu->addAction( tr( "Minimize" ) );
+    QAction* zoom = windowMenu->addAction( tr( "Zoom" ) );
+    windowMenu->addSeparator();
+    QAction* lastfm = windowMenu->addAction( tr( "Last.fm" ) );
+    windowMenu->addSeparator();
+    QAction* toFront = windowMenu->addAction( tr( "Bring All to Front" ) );
 
     /// Help
     QMenu* helpMenu = appMenuBar()->addMenu( tr("Help") );
     QAction* about = helpMenu->addAction( tr("About"), this, SLOT(about()) );
     about->setMenuRole( QAction::AboutRole );
+    helpMenu->addSeparator();
+    QAction* faq = helpMenu->addAction( tr("FAQ"), aApp, SLOT(onFaqTriggered()) );
+    QAction* forums = helpMenu->addAction( tr("Forums"), aApp, SLOT(onForumsTriggered()) );
+    //helpMenu->addSeparator();
+    //QAction* diagnostics = helpMenu->addAction( tr("Diagnostics") );
+
 }
 
 void
@@ -273,19 +286,19 @@ MainWindow::onRadioError( int error, const QVariant& data )
 
 
 void
-MainWindow::onIPodDetected( QString iPod )
+MainWindow::onIPodDetected( const QString& iPod )
 {
     ui.messageBar->show( tr("The iPod \"%1\" has been detected!").arg( iPod ), "ipod" );
 }
 
 void
-MainWindow::onProcessingScrobbles( QString iPodName )
+MainWindow::onProcessingScrobbles( const QString& iPodName )
 {
     ui.messageBar->show( tr("Processing iPod Scrobbles...") , "ipod");
 }
 
 void
-MainWindow::onFoundScrobbles( const QList<lastfm::Track>& tracks, QString iPod )
+MainWindow::onFoundScrobbles( const QList<lastfm::Track>& tracks, const QString& iPod )
 {
     tracks.count() == 1 ?
         ui.messageBar->show( tr("%1 track has been scrobbled from the iPod \"%2\"").arg( QString::number( tracks.count() ), iPod ), "ipod" ):
@@ -293,7 +306,7 @@ MainWindow::onFoundScrobbles( const QList<lastfm::Track>& tracks, QString iPod )
 }
 
 void
-MainWindow::onNoScrobblesFound( QString iPod )
+MainWindow::onNoScrobblesFound( const QString& iPod )
 {
     ui.messageBar->show( tr("No tracks were found from the iPod \"%1\"" ).arg( iPod ), "ipod" );
 }

@@ -55,9 +55,9 @@ IpodDevice::setScrobble( bool scrobble )
 }
 
 bool
-IpodDevice::scrobble()
+IpodDevice::scrobble() const
 {
-    return setting( "scrobble", false ).toBool();
+    return const_cast<IpodDevice*>(this)->setting( "scrobble", false ).toBool();
 }
 
 
@@ -68,9 +68,9 @@ IpodDevice::setAlwaysAsk( bool alwaysAsk )
 }
 
 bool
-IpodDevice::alwaysAsk()
+IpodDevice::alwaysAsk() const
 {
-    return setting( "alwaysAsk", true ).toBool();
+    return const_cast<IpodDevice*>(this)->setting( "alwaysAsk", true ).toBool();
 }
 
 

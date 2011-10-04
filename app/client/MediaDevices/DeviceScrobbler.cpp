@@ -51,20 +51,11 @@ DeviceScrobbler::checkCachedIPodScrobbles()
             if ( list.count() > 0 )
             {
                 // There are iPod files!
-
                 QStringList iPodFiles;
                 foreach ( QFileInfo fileInfo, list )
                     iPodFiles << fileInfo.filePath();
 
-                if ( ipod->alwaysAsk() )
-                {
-                    // The user isn't sure if they want to scrobble this iPod yet so ask them
-                    ScrobbleSetupDialog* scrobbleSetup = new ScrobbleSetupDialog( deviceId, deviceName, iPodFiles );
-                    connect( scrobbleSetup, SIGNAL(clicked(bool,bool,QString,QString,QStringList)), SLOT(onScrobbleSetupClicked(bool,bool,QString,QString,QStringList)));
-                    scrobbleSetup->exec();
-                }
-                else
-                    onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), currentSession->userInfo().name(), deviceId, deviceName, iPodFiles );
+                onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), currentSession->userInfo().name(), deviceId, deviceName, iPodFiles );
             }
         }
 
@@ -132,16 +123,10 @@ DeviceScrobbler::twiddled( QStringList arguments )
         {
             IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
 
-            if ( ipod->alwaysAsk() )
-                showSetup = true;
+            if ( arguments.contains( "no-tracks-found" ) )
+                emit noScrobblesFound( deviceName );
             else
-            {
-                if ( arguments.contains( "no-tracks-found" ) )
-                    emit noScrobblesFound( deviceName );
-                else
-                    onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), associatedUser.name(), deviceId, deviceName, QStringList( iPodPath ) );
-;
-            }
+                onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), associatedUser.name(), deviceId, deviceName, QStringList( iPodPath ) );
 
             delete ipod;
         }
@@ -154,11 +139,8 @@ DeviceScrobbler::twiddled( QStringList arguments )
         }
     }
     else
-        showSetup = true;
-
-    if ( showSetup )
     {
-        // The device has not been associated yet
+        // The ipod is not associated with a user so try to do that now
         ScrobbleSetupDialog* scrobbleSetup = new ScrobbleSetupDialog( deviceId, deviceName, QStringList( iPodPath ) );
         connect( scrobbleSetup, SIGNAL(clicked(bool,bool,QString,QString,QString,QStringList)), SLOT(onScrobbleSetupClicked(bool,bool,QString,QString,QString,QStringList)));
         scrobbleSetup->show();
@@ -181,8 +163,7 @@ DeviceScrobbler::onScrobbleSetupClicked( bool scrobble, bool alwaysAsk, QString 
 
         if ( scrobble )
         {
-            foreach ( QString iPodFile, iPodFiles )
-                scrobbleIpodFile( iPodFile );
+            scrobbleIpodFiles( iPodFiles, *ipod );
         }
         else
         {
@@ -199,46 +180,43 @@ DeviceScrobbler::onScrobbleSetupClicked( bool scrobble, bool alwaysAsk, QString 
 }
 
 void 
-DeviceScrobbler::scrobbleIpodFile( QString iPodScrobblesFilename )
+DeviceScrobbler::scrobbleIpodFiles( QStringList iPodScrobbleFiles, const IpodDevice& ipod )
 {
-    qDebug() << iPodScrobblesFilename;
+    qDebug() << iPodScrobbleFiles;
 
-    QFile iPodScrobblesFile( iPodScrobblesFilename );
+    QList<lastfm::Track> scrobbles;
 
-    if ( iPodScrobblesFile.open( QIODevice::ReadOnly | QIODevice::Text ) )
+    foreach ( const QString iPodScrobbleFilename, iPodScrobbleFiles )
     {
-        QDomDocument iPodScrobblesDoc;
-        iPodScrobblesDoc.setContent( &iPodScrobblesFile );
-        QDomNodeList tracks = iPodScrobblesDoc.elementsByTagName( "track" );
+        QFile iPodScrobbleFile( iPodScrobbleFilename );
 
-        QList<lastfm::Track> scrobbles;
-
-        for ( int i(0) ; i < tracks.count() ; ++i )
+        if ( iPodScrobbleFile.open( QIODevice::ReadOnly | QIODevice::Text ) )
         {
-            lastfm::Track track( tracks.at(i).toElement() );
+            QDomDocument iPodScrobblesDoc;
+            iPodScrobblesDoc.setContent( &iPodScrobbleFile );
+            QDomNodeList tracks = iPodScrobblesDoc.elementsByTagName( "track" );
 
-            int playcount = track.extra("playCount").toInt();
-
-            for ( int j(0) ; j < playcount ; ++j )
-                scrobbles << track;
-        }
-
-        if( unicorn::UserSettings().value( "confirmIpodScrobbles", false ).toBool() )
-        {
-            ScrobbleConfirmationDialog confirmDialog( scrobbles );
-            if ( confirmDialog.exec() == QDialog::Accepted )
+            for ( int i(0) ; i < tracks.count() ; ++i )
             {
-                scrobbles = confirmDialog.tracksToScrobble();
+                lastfm::Track track( tracks.at(i).toElement() );
 
-                // sort the iPod scrobbles before caching them
-                if ( scrobbles.count() > 1 )
-                    qSort ( scrobbles.begin(), scrobbles.end() );
+                int playcount = track.extra("playCount").toInt();
 
-                emit foundScrobbles( scrobbles, "" );
+                for ( int j(0) ; j < playcount ; ++j )
+                    scrobbles << track;
             }
         }
-        else
+
+        iPodScrobbleFile.remove();
+    }
+
+    if ( ipod.alwaysAsk() )
+    {
+        ScrobbleConfirmationDialog confirmDialog( scrobbles );
+        if ( confirmDialog.exec() == QDialog::Accepted )
         {
+            scrobbles = confirmDialog.tracksToScrobble();
+
             // sort the iPod scrobbles before caching them
             if ( scrobbles.count() > 1 )
                 qSort ( scrobbles.begin(), scrobbles.end() );
@@ -246,8 +224,14 @@ DeviceScrobbler::scrobbleIpodFile( QString iPodScrobblesFilename )
             emit foundScrobbles( scrobbles, "" );
         }
     }
+    else
+    {
+        // sort the iPod scrobbles before caching them
+        if ( scrobbles.count() > 1 )
+            qSort ( scrobbles.begin(), scrobbles.end() );
 
-    iPodScrobblesFile.remove();
+        emit foundScrobbles( scrobbles, "" );
+    }
 }
 
 #ifdef Q_WS_X11

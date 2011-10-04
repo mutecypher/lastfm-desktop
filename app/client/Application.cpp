@@ -34,7 +34,6 @@
 #include "SkipListener.h"
 #include "Widgets/MetadataWidget.h"
 
-
 #include "lib/unicorn/dialogs/AboutDialog.h"
 #include "lib/unicorn/dialogs/ShareDialog.h"
 #include "lib/unicorn/UnicornSession.h"
@@ -152,13 +151,11 @@ Application::init()
 
     /// tray menu
     QMenu* menu = new QMenu;
-    (menu->addMenu( new UserMenu()))->setText( "Users");
+    menu->addMenu( new UserMenu() )->setText( "Accounts" );
 
     m_show_window_action = menu->addAction( tr("Show Scrobbler"));
     m_show_window_action->setShortcut( Qt::CTRL + Qt::META + Qt::Key_S );
     menu->addSeparator();
-    m_artist_action = menu->addAction( "" );
-    m_title_action = menu->addAction(tr("Ready"));
 
     {
         m_love_action = menu->addAction( tr("Love") );
@@ -224,24 +221,11 @@ Application::init()
     m_submit_scrobbles_toggle = menu->addAction( tr("Submit Scrobbles") );
 
     menu->addSeparator();
-    QMenu* helpMenu = menu->addMenu( tr( "Help" ) );
-
-    m_faq_action    = helpMenu->addAction( tr( "FAQ" ) );
-    m_forums_action = helpMenu->addAction( tr( "Forums" ) );
-    m_about_action  = helpMenu->addAction( tr( "About" ) );
-
-    connect( m_faq_action, SIGNAL( triggered() ), SLOT( onFaqTriggered() ) );
-    connect( m_forums_action, SIGNAL( triggered() ), SLOT( onForumsTriggered() ) );
-    connect( m_about_action, SIGNAL( triggered() ), SLOT( onAboutTriggered() ) );
-
-    menu->addSeparator();
 
     QAction* quit = menu->addAction(tr("Quit %1").arg( applicationName()));
 
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
 
-    m_artist_action->setEnabled( false );
-    m_title_action->setEnabled( false );
     m_submit_scrobbles_toggle->setCheckable( true );
     m_submit_scrobbles_toggle->setChecked( true );
     m_tray->setContextMenu(menu);
@@ -380,20 +364,6 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
 #endif
     }
 
-    QFontMetrics fm( font() );
-    QString durationString = " [" + track.durationString() + "]";
-
-    int actionOffsets = fm.width( durationString );
-    int actionWidth = m_tray->contextMenu()->actionGeometry( m_artist_action ).width() - actionOffsets;
-
-    QString artistActionText = fm.elidedText( track.artist( lastfm::Track::Corrected ), Qt::ElideRight, actionWidth );
-    QString titleActionText = fm.elidedText( track.title( lastfm::Track::Corrected), Qt::ElideRight, actionWidth - fm.width( durationString ) );
-
-    m_artist_action->setText( artistActionText );
-    m_artist_action->setToolTip( track.artist( lastfm::Track::Corrected ) );
-    m_title_action->setText( titleActionText + durationString );
-    m_title_action->setToolTip( track.title( lastfm::Track::Corrected ) + " [" + track.durationString() + "]" );
-
     m_tray->setToolTip( track.toString() );
 
     m_love_action->setEnabled( true );
@@ -430,14 +400,8 @@ Application::onTrackSpooled( const Track& track )
 }
 
 void
-Application::onTrackPaused( bool paused )
+Application::onTrackPaused( bool )
 {
-    if( paused ) {
-        m_artist_action->setText( "" );
-        m_title_action->setText( tr( "Ready" ));
-    } else {
-        onTrackStarted( ScrobbleService::instance().currentTrack(), ScrobbleService::instance().currentTrack());
-    }
 }
 
 void 

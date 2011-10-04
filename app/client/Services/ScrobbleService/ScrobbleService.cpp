@@ -125,8 +125,8 @@ ScrobbleService::resetScrobbler()
         delete m_deviceScrobbler;
 
     m_deviceScrobbler = new DeviceScrobbler;
-    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<lastfm::Track>)), this, SIGNAL( foundIPodScrobbles(QList<lastfm::Track>) ));
-    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), m_as, SLOT( cacheBatch( QList<lastfm::Track> )));
+    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<lastfm::Track>, QString)), this, SIGNAL( foundIPodScrobbles(QList<lastfm::Track>, QString) ));
+    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<lastfm::Track>, QString )), m_as, SLOT( cacheBatch( QList<lastfm::Track>, QString)));
     m_deviceScrobbler->checkCachedIPodScrobbles();
 }
 

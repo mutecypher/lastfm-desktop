@@ -51,7 +51,7 @@ private:
     QPointer<IpodDeviceLinux> iPod;
 #endif
     void twiddled( QStringList arguments );
-    void scrobbleIpodFile( QString iPodScrobblesFilename );
+    void scrobbleIpodFiles( QStringList iPodScrobbleFiles, const IpodDevice& ipod );
 
     lastfm::User associatedUser( QString deviceId );
 };

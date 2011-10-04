@@ -7,7 +7,8 @@ include( $$ROOT_DIR/admin/include.qmake )
 SOURCES += $$ROOT_DIR/common/c++/Logger.cpp \
     dialogs/ShareDialog.cpp \
     widgets/AvatarWidget.cpp \
-    layouts/FlowLayout.cpp
+    layouts/FlowLayout.cpp \
+    widgets/UserMenu.cpp
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 # UniqueApplication
@@ -141,3 +142,4 @@ FORMS += \
 
 RESOURCES += \
 	qrc/unicorn.qrc
+
