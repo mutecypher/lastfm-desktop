@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QPointer>
 
-#include <lastfm/Track>
+#include <types/Track.h>
 
 class SpotifyListener : public QObject
 {

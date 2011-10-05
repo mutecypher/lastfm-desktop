@@ -18,10 +18,10 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <lastfm/Track>
+#include <types/Track.h>
 #include "SpotifyListener.h"
 #include "../PlayerConnection.h"
-#include <lastfm/misc.h>
+#include <core/misc.h>
 #include "lib/unicorn/mac/AppleScript.h"
 
 
@@ -47,7 +47,7 @@ struct SpotifyConnection : PlayerConnection
 
 
 SpotifyListener::SpotifyListener( QObject* parent )
-              :QObject( parent )
+    :QObject( parent )
 {
     QTimer* timer = new QTimer( this );
     timer->start( 1000 );

@@ -1,7 +1,7 @@
 
 #include <QPainter>
 
-#include <lastfm/Track>
+#include <types/Track.h>
 
 #include "../Services/ScrobbleService/ScrobbleService.h"
 #include "../ActivityListModel.h"
