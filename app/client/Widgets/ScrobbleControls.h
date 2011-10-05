@@ -23,8 +23,8 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
-#include <types/Track.h>
-#include <core/XmlQuery.h>
+#include <lastfm/Track.h>
+#include <lastfm/XmlQuery.h>
 
 namespace unicorn{ class Session; };
 namespace lastfm{ class UserDetails; };

@@ -41,11 +41,11 @@
 #include "UnicornCoreApplication.h"
 #include "UnicornSettings.h"
 
-#include <core/misc.h>
-#include <types/User.h>
-#include <ws/InternetConnectionMonitor.h>
-#include <ws/ws.h>
-#include <core/XmlQuery.h>
+#include <lastfm/misc.h>
+#include <lastfm/User.h>
+#include <lastfm/InternetConnectionMonitor.h>
+#include <lastfm/ws.h>
+#include <lastfm/XmlQuery.h>
 
 
 #include <QDebug>
@@ -72,31 +72,32 @@ unicorn::Application::init()
 {
     addLibraryPath(applicationDirPath());
 
-    #ifdef Q_WS_MAC
+#ifdef Q_WS_MAC
     qt_mac_set_menubar_icons( false );
-    #endif
+#endif
 
     CoreApplication::init();
 
     setupHotKeys();
 
-    #ifdef __APPLE__
+#ifdef __APPLE__
     installCocoaEventHandler();
     AEEventHandlerUPP h = NewAEEventHandlerUPP( appleEventHandler );
     AEInstallEventHandler( kCoreEventClass, kAEReopenApplication, h, 0, false );
-    #endif
+#endif
 
-    #ifdef Q_WS_MAC
-    #define CSS_PATH "/../Resources/"
-    #else
-    #define CSS_PATH "/"
-    #endif
+#ifdef Q_WS_MAC
+#define CSS_PATH "/../Resources/"
+#else
+#define CSS_PATH "/"
+#endif
 
     refreshStyleSheet();
 
     translate();
 
     m_icm = new lastfm::InternetConnectionMonitor( this );
+
     connect( m_icm, SIGNAL( up( QString ) ), this, SIGNAL( internetConnectionUp() ) );
     connect( m_icm, SIGNAL( down( QString ) ), this, SIGNAL( internetConnectionDown() ) );
 
@@ -107,10 +108,9 @@ unicorn::Application::init()
 
     m_bus.board();
 
-    #ifdef __APPLE__
+#ifdef __APPLE__
     setQuitOnLastWindowClosed( false );
-    #endif
-
+#endif
 }
 
 void 
@@ -125,6 +125,7 @@ void
 unicorn::Application::initiateLogin() throw( StubbornUserException )
 {
     Session* newSession = 0;
+
     if( m_bus.isWizardRunning() )
     {
         SignalBlocker( &m_bus, SIGNAL( sessionChanged( const QMap<QString, QString>& ) ), -1 ).start();
@@ -280,12 +281,6 @@ unicorn::Application::onBusSessionChanged( const QMap<QString, QString>& session
 }
 
 unicorn::Session*
-unicorn::Application::changeSession( QNetworkReply* reply, bool announce )
-{
-    return changeSession( new Session( reply ), announce );
-}
-
-unicorn::Session*
 unicorn::Application::changeSession( const QString& username, const QString& sessionKey, bool announce )
 {
     return changeSession( new Session( username, sessionKey ), announce );
@@ -325,7 +320,7 @@ unicorn::Application::changeSession( Session* newSession, bool announce )
     lastfm::ws::Username = m_currentSession->userInfo().name();
     lastfm::ws::SessionKey = m_currentSession->sessionKey();
 
-    connect( lastfm::UserDetails::getInfo(), SIGNAL( finished() ), this, SLOT( onUserGotInfo() ) );
+    connect( lastfm::UserDetails::getInfo(), SIGNAL( finished() ), SLOT( onUserGotInfo() ) );
     
     if( announce )
         m_bus.announceSessionChange( currentSession() );

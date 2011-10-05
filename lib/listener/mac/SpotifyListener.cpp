@@ -18,7 +18,11 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+<<<<<<< HEAD
 #include <types/Track.h>
+=======
+#include <lastfm/Track.h>
+>>>>>>> 70b252e9f4dcef74832c647f891cec7ac0d796d9
 #include "SpotifyListener.h"
 #include "../PlayerConnection.h"
 #include <core/misc.h>
@@ -61,7 +65,11 @@ SpotifyListener::loop()
     static AppleScript playerStateScript( "tell application \"Spotify\" to if running then return player state" );
     QString playerState = playerStateScript.exec();
 
-    if ( !playerState.isEmpty() )
+    if ( playerState == "playing"
+         || playerState == "stopped"
+         || playerState == "paused"
+
+         )
     {
         if ( !m_connection )
             emit newConnection( m_connection = new SpotifyConnection );

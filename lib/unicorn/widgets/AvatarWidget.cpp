@@ -47,7 +47,7 @@ AvatarWidget::paintEvent( QPaintEvent* paintEvent )
         QRect rect( (70 / 2) - (width / 2), 70 - (height / 2), width, height ) ;
 
         p.setBrush( brush );
-        p.drawRoundedRect( rect, 2, 2 );
+        p.drawRoundedRect( rect, 4, 4 );
 
         p.setPen( QColor( Qt::white ) );
         p.drawText( rect, Qt::AlignCenter, text );

@@ -23,10 +23,6 @@
 #include "lib/unicorn/LoginProcess.h"
 #include "lib/unicorn/UnicornSession.h"
 
-#ifdef WIN32
-#include <windows.h>
-#endif // WIN32
-
 #include <QDebug>
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -35,60 +31,57 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QDesktopServices>
+#include <QStyle>
 
 LoginPage::LoginPage( QWidget* parent )
-          :QWizardPage( parent )
-          , m_loginProcess( 0 )
-          , m_isComplete( false )
+    :QWizardPage( parent )
 {
-//    setCommitPage( true );
-
-    setTitle( tr( "Connect with Last.fm" ) );
-    QVBoxLayout* pageLayout = new QVBoxLayout( this );
+    QHBoxLayout* layout = new QHBoxLayout( this );
+    layout->setContentsMargins( 0, 0, 0, 0 );
     
-    ui.description = new QLabel( tr( "If you already have a Last.fm account, connect with Last.fm.\n\n" ) +
-                                 tr( "If you don't have a Last.fm account, you can sign up now for free." ) );
+    layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignCenter );
+    ui.image->setObjectName( "image" );
+
+    layout->addWidget( ui.description = new QLabel( tr( "<p>Already a Last.fm user? You can connect the Last.fm Desktop App to your profile and keep a record of the music you listen to.</p>"
+                                                        "<p>If you don't have an account you can sign up now for free.</p>" ) ), 0, Qt::AlignTop );
     
     ui.description->setObjectName( "description" );
     ui.description->setWordWrap( true );
-    
-    pageLayout->addWidget( ui.description );
 }
 
 
 void
 LoginPage::initializePage()
 {
+    for ( int i = 0 ; i < QWizard::NButtons ; ++i )
+    {
+        QString objectName = QLatin1String("__qt__passive_wizardbutton");
+        objectName += QString::number( i );
+        wizard()->button( static_cast<QWizard::WizardButton>( i ) )->setObjectName( objectName );
+    }
+
+    style()->polish( wizard() );
+    style()->polish( this );
+
+    setTitle( tr( "Hello! Let's get started by connecting your Last.fm account" ) );
+
+    setButtonText( QWizard::NextButton, tr( "Connect Your Account" ) );
     wizard()->setOption( QWizard::HaveCustomButton1, true );
-    connect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked()), SLOT( onSignUpClicked()));
-    setButtonText( QWizard::NextButton, tr( "Connect with your Last.fm account" ) );
     setButtonText( QWizard::CustomButton1, tr( "Sign up" ));
-    m_isComplete = false;
-}
-
-
-void 
-LoginPage::cleanupPage()
-{
-    disconnect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked()), this, 0 );
-    m_isComplete = false;
-}
-
-bool 
-LoginPage::validatePage()
-{
-    wizard()->setOption( QWizard::HaveCustomButton1, false );
-    return true;
+    connect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked()), SLOT( onSignUpClicked()));
 }
 
 bool
-LoginPage::isComplete() const
+LoginPage::validatePage()
 {
+    disconnect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked() ), this, 0 );
+    wizard()->setOption( QWizard::HaveCustomButton1, false );
+
     return true;
 }
 
 void 
 LoginPage::onSignUpClicked()
 {
-    QDesktopServices::openUrl( QUrl( "http://www.last.fm/join" ));
+    QDesktopServices::openUrl( QUrl( "http://www.last.fm/join" ) );
 }

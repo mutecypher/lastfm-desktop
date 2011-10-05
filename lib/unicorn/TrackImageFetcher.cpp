@@ -18,9 +18,9 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "TrackImageFetcher.h"
-#include <types/Track.h>
-#include <ws/ws.h>
-#include <core/XmlQuery.h>
+#include <lastfm/Track.h>
+#include <lastfm/ws.h>
+#include <lastfm/XmlQuery.h>
 #include <QImage>
 #include <QStringList>
 
@@ -106,7 +106,9 @@ bool
 TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node )
 {
     try {
-        XmlQuery lfm = reply->readAll();
+        XmlQuery lfm;
+        lfm.parse( reply->readAll() );
+
         foreach (QString size, QStringList() << "mega" << "extralarge" << "large")
         {
             QUrl const url = lfm[root_node]["image size="+size].text();

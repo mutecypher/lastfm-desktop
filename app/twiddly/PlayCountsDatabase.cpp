@@ -27,7 +27,7 @@
 #include "common/c++/fileCreationTime.cpp"
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/mac/AppleScript.h"
-#include <core/misc.h>
+#include <lastfm/misc.h>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>

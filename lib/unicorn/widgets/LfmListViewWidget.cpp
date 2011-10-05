@@ -23,9 +23,9 @@
 #include <QFile>
 
 #include "LfmListViewWidget.h"
-#include <types/User.h>
-#include <types/Artist.h>
-#include <types/Track.h>
+#include <lastfm/User.h>
+#include <lastfm/Artist.h>
+#include <lastfm/Track.h>
 
 #include <iostream>
 

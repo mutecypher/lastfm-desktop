@@ -22,7 +22,7 @@
 #define ABSTRACTFILEBOOTSTRAPPER_H
 
 #include "AbstractBootstrapper.h"
-#include <types/Track.h>
+#include <lastfm/Track.h>
 
 /**
   * @author Jono Cole <jono@last.fm>

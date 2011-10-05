@@ -38,7 +38,7 @@ public:
     ~ScrobbleSetupDialog();
 
 signals:
-    void clicked( bool scrobble, bool alwaysAsk, const QString&, const QString&, const QStringList& );
+    void clicked( bool scrobble, bool alwaysAsk, const QString&, const QString&, const QString&, const QStringList& );
 
 private slots:
     void onClicked( class QAbstractButton* button );
@@ -49,6 +49,8 @@ private:
     QStringList m_iPodFiles;
     QString m_deviceId;
     QString m_deviceName;
+
+    bool m_more;
 };
 
 #endif // SCROBBLESETUPDIALOG_H

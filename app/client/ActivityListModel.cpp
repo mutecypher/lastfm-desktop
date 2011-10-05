@@ -2,7 +2,7 @@
 #include <QApplication>
 #include <QDebug>
 
-#include <core/XmlQuery.h>
+#include <lastfm/XmlQuery.h>
 
 #include "lib/unicorn/UnicornSession.h"
 
@@ -37,6 +37,8 @@ ActivityListModel::ActivityListModel()
     connect( &ScrobbleService::instance(), SIGNAL(paused()), SLOT(onPaused()));
     connect( &ScrobbleService::instance(), SIGNAL(resumed()), SLOT(onResumed()));
     connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
+
+    onSessionChanged( lastfm::ws::Username );
 }
 
 void
@@ -58,8 +60,12 @@ ActivityListModel::onFoundIPodScrobbles( const QList<lastfm::Track>& tracks )
 void 
 ActivityListModel::onSessionChanged( unicorn::Session* session )
 {
-    const QString& username = session->userInfo().name();
+    onSessionChanged( session->userInfo().name() );
+}
 
+void
+ActivityListModel::onSessionChanged( const QString& username )
+{
     if ( !username.isEmpty() )
     {
         QString path = lastfm::dir::runtimeData().filePath( username + "_recent_tracks.xml" );
@@ -73,6 +79,7 @@ ActivityListModel::onSessionChanged( unicorn::Session* session )
         refresh();
     }
 }
+
 
 void
 ActivityListModel::read()
@@ -92,12 +99,7 @@ ActivityListModel::read()
     QList<Track> tracks;
 
     for (QDomNode n = xml.documentElement().lastChild(); !n.isNull(); n = n.previousSibling())
-    {
-        if( n.toElement().attributes().contains( "iPodScrobble" ))
-            continue;
-
         tracks << Track( n.toElement() );
-    }
 
     addTracks( tracks );
 
@@ -183,7 +185,8 @@ ActivityListModel::onGotRecentTracks()
 {
     try
     {
-        XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
+        XmlQuery lfm;
+        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         qDebug() << lfm;
 
@@ -252,22 +255,17 @@ ActivityListModel::addTracks( const QList<lastfm::Track>& tracks )
 
     foreach ( const lastfm::Track& track, tracks )
     {
-        // Tracks with a deviceId are iPod scrobbles
-        // we ignore these at the moment
-        if ( track.extra("deviceId").isEmpty() )
+        if ( qBinaryFind( m_tracks.begin(), m_tracks.end(), track, lessThan ) == m_tracks.end() )
         {
-            if ( qBinaryFind( m_tracks.begin(), m_tracks.end(), track, lessThan ) == m_tracks.end() )
-            {
-                QList<ImageTrack>::iterator insert = qLowerBound( m_tracks.begin(), m_tracks.end(), track, lessThan );
-                QList<ImageTrack>::iterator inserted = m_tracks.insert( insert, track );
+            QList<ImageTrack>::iterator insert = qLowerBound( m_tracks.begin(), m_tracks.end(), track, lessThan );
+            QList<ImageTrack>::iterator inserted = m_tracks.insert( insert, track );
 
-                inserted->getInfo();
-                inserted->fetchImage();
+            inserted->getInfo();
+            inserted->fetchImage();
 
-                connect( &(*inserted), SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
-                connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
-                connect( track.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
-            }
+            connect( &(*inserted), SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
+            connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
+            connect( track.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
         }
     }
 

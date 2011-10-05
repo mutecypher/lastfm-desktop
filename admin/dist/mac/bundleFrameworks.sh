@@ -8,10 +8,6 @@
 # Also ensures that all binaries have the correct paths 
 # installed relative to the bundle's @executable_path
 
-function deposx {
-    otool -L "$1" | sed -n '/\/opt.*/ s/^[^\/]*\([^(]*\) ([^)]*)/\1/p'
-}
-
 function getBundleBin {
     if echo $1|grep -q framework; then
         echo $1/`cat "$1/Contents/Info.plist" | sed -n '/CFBundleExecutable<\/key>/,/<\/string>/ s/.*<string>\(.*\)<.*/\1/p'|sed s/_debug//`
@@ -90,6 +86,9 @@ function fixLocalLibs {
             cpPath=$lib
         fi
         lib=`basename $lib`
+
+		echo $cpPath "$bundlePath/Contents/MacOS"
+
         cp -L -R -f $cpPath "$bundlePath/Contents/MacOS"
         install_name_tool -id @executable_path/$lib "$bundlePath/Contents/MacOS/$lib"
         install_name_tool -change $libPath @executable_path/$lib "$bin"
@@ -100,7 +99,7 @@ function fixLocalLibs {
 }
 
 function locateLib {
-    for p in {$rootdir,/opt/local/lib}; do
+    for p in {$rootdir,/usr/local/lib}; do
         if [ -e $p/$1 ]; then
             echo $p/$1
             return 0

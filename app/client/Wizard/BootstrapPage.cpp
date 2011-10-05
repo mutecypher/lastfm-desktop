@@ -19,77 +19,82 @@
 */
 #include "BootstrapPage.h"
 
-PlayerSelectorListWidget::PlayerSelectorListWidget( QWidget* p )
-                         :QWidget( p )
-{
-    new QVBoxLayout( this );
-    refresh();
-}
+BootstrapPage::BootstrapPage( QWidget* parent )
+    :QWizardPage( parent)
+{ 
+    QHBoxLayout* layout = new QHBoxLayout( this );
+    layout->setContentsMargins( 0, 0, 0, 0 );
+    layout->setSpacing( 0 );
 
+    QHBoxLayout* pluginsLayout = new QHBoxLayout( this );
+    pluginsLayout->setContentsMargins( 0, 0, 0, 0 );
+    pluginsLayout->setSpacing( 0 );
 
-void
-PlayerSelectorListWidget::onPluginToggled( bool checked )
-{
-    if( !checked ) return;
-    QAbstractButton* rb = qobject_cast<QAbstractButton*>( sender());
-    m_playerId = rb->objectName();
-    emit playerChanged();
-}
-
-void
-PlayerSelectorListWidget::refresh()
-{
-    foreach(QRadioButton* rb, findChildren<QRadioButton*>()) {
-        rb->deleteLater();
-    }
+    layout->addLayout( pluginsLayout );
 
     QList<IPluginInfo*> plugins = m_pluginList.bootstrappablePlugins();
 
     bool first = true;
-    QRadioButton* rb;
-    foreach( IPluginInfo* plugin, plugins ) {
-        layout()->addWidget( rb = new QRadioButton( QString::fromStdString( plugin->name())));
-        rb->setObjectName( QString::fromStdString( plugin->id() ) );
-        connect( rb, SIGNAL( toggled( bool )), SLOT( onPluginToggled( bool )));
 
-        if( first ) {
+    QRadioButton* rb;
+
+    foreach ( IPluginInfo* plugin, plugins )
+    {
+        pluginsLayout->addWidget( rb = new QRadioButton( QString::fromStdString( plugin->name())));
+        rb->setObjectName( QString::fromStdString( plugin->id() ) );
+
+        connect( rb, SIGNAL(clicked()), SLOT(playerSelected()));
+
+        if ( first )
+        {
             rb->setChecked( true );
-            m_playerId = rb->objectName();
+            m_playerId = QString::fromStdString( plugin->id() );
         }
+
         first = false;
     }
 
-    layout()->addWidget( rb = new QRadioButton( tr("None")));
-    connect( rb, SIGNAL( toggled( bool )), SLOT( onPluginToggled( bool )));
+    layout->addWidget( ui.description = new QLabel( tr( "<p>For the best possible recommendations based on your music taste we advise that you import your listening history from your media player.</p>"
+                                                        "<p>Please select your prefered media player and click <strong>Start Import</strong></p>" ) ),
+                       0,
+                       Qt::AlignTop);
+    ui.description->setObjectName( "description" );
+    ui.description->setWordWrap( true );
+
+    registerField( "bootstrap_player", this, "playerId", SIGNAL( playerChanged() ));
 }
 
+void
+BootstrapPage::playerSelected()
+{
+    m_playerId = qobject_cast<QRadioButton*>(sender())->objectName();
+    emit playerChanged();
+}
 
-BootstrapPage::BootstrapPage( QWidget* parent )
-              :QWizardPage( parent) 
-{ 
-    new QVBoxLayout( this );
+bool
+BootstrapPage::validatePage()
+{
+    /// start the bootstrap from whatever music player they chose.
 
-#ifdef Q_OS_MAC
-    QLabel* label = new QLabel( tr( "We recommend importing your listening history from your media player. Please select your prefered option below:")); 
-#else
-    QLabel* label = new QLabel( tr( "Cool, we recommend importing your listening history from your media player. Please select your prefered option below:")); 
-#endif
-    label->setWordWrap( true );
-    layout()->addWidget(label);
-    m_psl = new PlayerSelectorListWidget( this );
-    layout()->addWidget( m_psl );
-    registerField( "bootstrap_player", m_psl, "playerId", SIGNAL( playerChanged() ));
-    layout()->addWidget( new QLabel( tr( "Why? So we can give you better recommendations." )));
-    
-    ((QBoxLayout*)layout())->addStretch();
-
+    return true;
 }
 
 
 void 
 BootstrapPage::initializePage()
 {
-    setTitle( tr( "Hi, %1" ).arg( aApp->currentSession()->userInfo().name()));
-    m_psl->refresh();
+    setTitle( tr( "Now let's import your listening history" ) );
+
+    wizard()->setButtonText( QWizard::NextButton, tr( "Start Import" ) );
+    wizard()->setButtonText( QWizard::BackButton, tr( "<< Back" ) );
+    wizard()->setOption( QWizard::HaveCustomButton1, true );
+    wizard()->setButtonText( QWizard::CustomButton1, tr( "Skip >>" ) );
 }
+
+void
+BootstrapPage::cleanupPage()
+{
+    wizard()->setOption( QWizard::HaveCustomButton1, false );
+}
+
 

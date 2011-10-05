@@ -22,7 +22,7 @@
 #ifndef MEDIADEVICE_INTERFACE_H
 #define MEDIADEVICE_INTERFACE_H
 
-#include <types/Track.h>
+#include <lastfm/Track.h>
 #include <QDateTime>
 
 /**

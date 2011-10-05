@@ -1,7 +1,7 @@
 #ifndef AVATARWIDGET_H
 #define AVATARWIDGET_H
 
-#include <types/User.h>
+#include <lastfm/User.h>
 
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 

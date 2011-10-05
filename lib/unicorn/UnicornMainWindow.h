@@ -24,6 +24,7 @@
 #include "lib/DllExportMacro.h"
 #include <QMainWindow>
 #include <QPointer>
+#include <QMenuBar>
 #include <QDialog>
 #include <QMap>
 
@@ -68,38 +69,20 @@ namespace unicorn
         Q_OBJECT
 
     public:
-        MainWindow();
+        MainWindow( QMenuBar* );
         ~MainWindow();
 
         /** call this to add the account menu and about menu action, etc. */
         void finishUi();
         void addDragHandleWidget( QWidget* );
 
+        QMenuBar* appMenuBar() const { return m_menuBar; }
+
     public slots:
-        void about();
-        void checkForUpdates();
-        void visitProfile();
         void openLog();
         void refreshStyleSheet();
 
-    public:
-        struct UI {
-            UI() : account( 0 ), profile( 0 )
-            {}
-
-            QMenu* account;
-            QAction* profile;
-            OneDialogPointer<UpdateDialog> update;
-            OneDialogPointer<AboutDialog> about;
-            
-        } base_ui;
-
-#ifdef Q_OS_WIN32
-        bool canUseTaskBar;
-        UINT taskBarCreatedMessage;
-        ITaskbarList3* taskbar;
-#endif
-
+    private:
         void storeGeometry() const;
 
         virtual bool eventFilter( QObject*, QEvent* );
@@ -110,18 +93,26 @@ namespace unicorn
 
         virtual void addWinThumbBarButtons( QList<QAction*>& ) {;}
 
-        QList<QAction*> m_thumbButtonActions;
+        QMenuBar* menuBar() const { return 0; }
+
+    protected:
+        QPointer<QMenuBar> m_menuBar;
 
     private:
+        QList<QAction*> m_thumbButtonActions;
+
 #ifdef Q_OS_WIN32
+        bool canUseTaskBar;
+        UINT taskBarCreatedMessage;
+        ITaskbarList3* taskbar;
+
+    private:
         bool winEvent(MSG* message, long* result);
 #endif
 
         QMap<QWidget*, QPoint> m_dragHandleMouseDownPos;
 
     private slots:
-        void onGotUserInfo( const lastfm::UserDetails& );
-        void onSessionChanged( unicorn::Session* );
         void cleverlyPosition();
 #ifdef Q_OS_WIN32
         void updateThumbButtons();

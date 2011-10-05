@@ -14,6 +14,7 @@ public:
 
 public slots:
     void onCurrentChanged( int index );
+    void refresh();
 
 protected slots:
     void onTrackClicked( const Track& track );

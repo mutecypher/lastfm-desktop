@@ -22,7 +22,7 @@
 
 #include "common/HideStupidWarnings.h"
 #include "PlayerCommand.h"
-#include <types/Track.h>
+#include <lastfm/Track.h>
 #include <stdexcept>
 
 // ignore the warning about the exception specification

@@ -20,7 +20,7 @@
 #ifndef SEED_H
 #define SEED_H
 
-#include <global.h>
+#include <lastfm/global.h>
 #include <QListWidgetItem>
 #include "app/moose.h"
 

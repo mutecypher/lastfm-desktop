@@ -5,7 +5,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QDialogButtonBox>
-#include <types/User.h>
+#include <lastfm/User.h>
 #include "../Updater/PluginList.h"
 
 class WelcomeDialog : public QMessageBox

@@ -34,18 +34,22 @@
 #include "SkipListener.h"
 #include "Widgets/MetadataWidget.h"
 
-
 #include "lib/unicorn/dialogs/AboutDialog.h"
 #include "lib/unicorn/dialogs/ShareDialog.h"
+#include "lib/unicorn/UnicornSession.h"
 #include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/widgets/UserMenu.h"
+#include "lib/unicorn/Updater/PluginList.h"
+#ifdef Q_OS_MAC
+#include "lib/unicorn/mac/AppleScript.h"
+#endif
 
 #include "AudioscrobblerSettings.h"
 #include "Wizard/FirstRunWizard.h"
 
-#include <ws/InternetConnectionMonitor.h>
-#include <core/XmlQuery.h>
+#include <lastfm/InternetConnectionMonitor.h>
+#include <lastfm/XmlQuery.h>
 
 #include <QRegExp>
 #include <QShortcut>
@@ -53,6 +57,7 @@
 #include <QDesktopServices>
 #include <QNetworkDiskCache>
 #include <QMenu>
+#include <QMenuBar>
 #include <QDebug>
 
 #ifdef Q_OS_WIN32
@@ -75,8 +80,7 @@ using audioscrobbler::Application;
 #endif
 
 Application::Application(int& argc, char** argv) 
-            : unicorn::Application(argc, argv),
-              m_raiseHotKeyId( (void*)-1 )
+    :unicorn::Application(argc, argv), m_raiseHotKeyId( (void*)-1 )
 {
     setQuitOnLastWindowClosed( false );
 }
@@ -84,23 +88,24 @@ Application::Application(int& argc, char** argv)
 void
 Application::initiateLogin() throw( StubbornUserException )
 {
-    if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool())
+    if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool() )
     {
         setWizardRunning( true );
+
         FirstRunWizard w;
-        if( w.exec() != QDialog::Accepted ) {
+        if( w.exec() != QDialog::Accepted )
+        {
             setWizardRunning( false );
             throw StubbornUserException();
         }
+
+        setWizardRunning( false );
     }
-    setWizardRunning( false );
 
     //this covers the case where the last user was removed
     //and the main window was closed.
     if ( m_mw )
-    {
         m_mw->show();
-    }
 
     if ( m_tray )
     {
@@ -114,50 +119,46 @@ Application::initiateLogin() throw( StubbornUserException )
 void
 Application::init()
 {
+#ifdef Q_WS_MAC
+    // The mac plugin needs to be installed before we
+    // run the wizard for possible bootstrapping
+    ITunesPluginInstaller installer;
+    installer.install();
+#endif
+
     // Initialise the unicorn base class first!
     unicorn::Application::init();
 
-#ifdef Q_WS_MAC
+    initiateLogin();
+
+    if ( !currentSession() )
     {
-        ITunesPluginInstaller installer;
-        installer.install();
+        // there won't be a current session if one was created by the wizard
+
+        QMap<QString, QString> lastSession = unicorn::Session::lastSessionData();
+        if ( lastSession.contains( "username" ) && lastSession.contains( "sessionKey" ) )
+            changeSession( lastSession[ "username" ], lastSession[ "sessionKey" ] );
     }
-#endif
 
     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
     diskCache->setCacheDirectory( lastfm::dir::cache().path() );
     lastfm::nam()->setCache( diskCache );
 
+    m_menuBar = new QMenuBar( 0 );
+
 /// tray
-    m_tray = new QSystemTrayIcon(this);
-    QIcon trayIcon( AS_TRAY_ICON );
-#ifdef Q_WS_MAC
-    trayIcon.addFile( ":systray_icon_pressed_mac.png", QSize(), QIcon::Selected );
-#endif
-
-#ifdef Q_WS_WIN
-    connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
-#endif
-
-#ifdef Q_WS_X11
-    connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
-#endif
-    m_tray->setIcon(trayIcon);
-    m_tray->show();
-    connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
+    tray(); // this will initialise m_tray if it doesn't already exist
 
     /// tray menu
     QMenu* menu = new QMenu;
-    (menu->addMenu( new UserMenu()))->setText( "Users");
+    menu->addMenu( new UserMenu() )->setText( "Accounts" );
 
     m_show_window_action = menu->addAction( tr("Show Scrobbler"));
     m_show_window_action->setShortcut( Qt::CTRL + Qt::META + Qt::Key_S );
     menu->addSeparator();
-    m_artist_action = menu->addAction( "" );
-    m_title_action = menu->addAction(tr("Ready"));
 
     {
-        m_love_action = menu->addAction(tr("Love"));
+        m_love_action = menu->addAction( tr("Love") );
         m_love_action->setCheckable( true );
         QIcon loveIcon;
         loveIcon.addFile( ":/meta_love_OFF_REST.png", QSize( 16, 16 ), QIcon::Normal, QIcon::Off );
@@ -186,6 +187,7 @@ Application::init()
         QIcon banIcon;
         banIcon.addFile( ":/controls_ban_REST.png" );
         m_ban_action->setIcon( banIcon );
+        m_ban_action->setEnabled( false );
     }
     {
         m_play_action = new QAction( tr( "Play" ), this );
@@ -200,6 +202,7 @@ Application::init()
         QIcon skipIcon;
         skipIcon.addFile( ":/controls_skip_REST.png" );
         m_skip_action->setIcon( skipIcon );
+        m_skip_action->setEnabled( false );
     }
 
 #ifdef Q_WS_X11
@@ -218,29 +221,17 @@ Application::init()
     m_submit_scrobbles_toggle = menu->addAction( tr("Submit Scrobbles") );
 
     menu->addSeparator();
-    QMenu* helpMenu = menu->addMenu( tr( "Help" ) );
-
-    m_faq_action    = helpMenu->addAction( tr( "FAQ" ) );
-    m_forums_action = helpMenu->addAction( tr( "Forums" ) );
-    m_about_action  = helpMenu->addAction( tr( "About" ) );
-
-    connect( m_faq_action, SIGNAL( triggered() ), SLOT( onFaqTriggered() ) );
-    connect( m_forums_action, SIGNAL( triggered() ), SLOT( onForumsTriggered() ) );
-    connect( m_about_action, SIGNAL( triggered() ), SLOT( onAboutTriggered() ) );
-    menu->addSeparator();
 
     QAction* quit = menu->addAction(tr("Quit %1").arg( applicationName()));
 
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
 
-    m_artist_action->setEnabled( false );
-    m_title_action->setEnabled( false );
     m_submit_scrobbles_toggle->setCheckable( true );
     m_submit_scrobbles_toggle->setChecked( true );
     m_tray->setContextMenu(menu);
 
 /// MainWindow
-    m_mw = new MainWindow;
+    m_mw = new MainWindow( m_menuBar );
     m_mw->addWinThumbBarButton( m_love_action );
     m_mw->addWinThumbBarButton( m_ban_action );
     m_mw->addWinThumbBarButton( m_play_action );
@@ -251,12 +242,12 @@ Application::init()
      AudioscrobblerSettings settings;
      setRaiseHotKey( settings.raiseShortcutModifiers(), settings.raiseShortcutKey() );
 #endif
-    //although the shortcuts are actually set on the ScrobbleControls widget,
-    //setting it here adds the shortkey text to the trayicon menu
-    //and it's no problem since, for some reason, the shortcuts don't trigger the actions.
+    m_play_action->setShortcut( Qt::Key_Space );
+    m_skip_action->setShortcut( Qt::CTRL + Qt::Key_Right );
     m_tag_action->setShortcut( Qt::CTRL + Qt::Key_T );
     m_share_action->setShortcut( Qt::CTRL + Qt::Key_S );
     m_love_action->setShortcut( Qt::CTRL + Qt::Key_L );
+    m_ban_action->setShortcut( Qt::CTRL + Qt::Key_B );
 
     // make the love buttons sychronised
     connect(this, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
@@ -290,23 +281,8 @@ Application::init()
 
     connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) );
 
-    //We're not going to catch the first session change as it happened in the unicorn application before
-    //we could connect to the signal!
-
-    if ( !currentSession() )
-    {
-        QMap<QString, QString> lastSession = unicorn::Session::lastSessionData();
-        if ( lastSession.contains( "username" ) && lastSession.contains( "sessionKey" ) )
-        {
-            changeSession( lastSession[ "username" ], lastSession[ "sessionKey" ] );
-        }
-    }
-
     // clicking on a system tray message should show the scrobbler
     connect( m_tray, SIGNAL(messageClicked()), m_show_window_action, SLOT(trigger()));
-
-    // Do this last so that when the user logs in all the interested widgets find out
-    initiateLogin();
 
     // make sure cached scrobbles get submitted when the connection comes back online
     connect( m_icm, SIGNAL(up(QString)), &ScrobbleService::instance(), SLOT(submitCache()) );
@@ -316,6 +292,32 @@ Application::init()
 #ifdef CLIENT_ROOM_RADIO
     new SkipListener( this );
 #endif
+}
+
+QSystemTrayIcon*
+Application::tray()
+{
+    if ( !m_tray )
+    {
+        m_tray = new QSystemTrayIcon(this);
+        QIcon trayIcon( AS_TRAY_ICON );
+#ifdef Q_WS_MAC
+        trayIcon.addFile( ":systray_icon_pressed_mac.png", QSize(), QIcon::Selected );
+#endif
+
+#ifdef Q_WS_WIN
+        connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+#endif
+
+#ifdef Q_WS_X11
+        connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
+#endif
+        m_tray->setIcon(trayIcon);
+        m_tray->show();
+        connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
+    }
+
+    return m_tray;
 }
 
 void
@@ -347,22 +349,20 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
     if ( track != m_currentTrack )
     {
         m_currentTrack = track;
+
+#ifdef Q_OS_MAC
+        AppleScript script( QString( "tell application \"GrowlHelperApp\"\r\n"
+                            "set the allNotificationsList to {\"New track\"}\r\n"
+                            "set the enabledNotificationsList to {\"New track\"}\r\n"
+                            "register as application \"Last.fm\" all notifications allNotificationsList default notifications enabledNotificationsList icon of application \"Last.fm.app\"\r\n"
+                            "notify with name \"New track\" title \"%1\" description \"%2\" application name \"Last.fm\" identifier \"Last.fm.app\"\r\n"
+                            "end tell\r\n" ).arg( track.toString(), tr("from %1").arg( track.album() ) ) );
+
+        script.exec();
+#else
         m_tray->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
+#endif
     }
-
-    QFontMetrics fm( font() );
-    QString durationString = " [" + track.durationString() + "]";
-
-    int actionOffsets = fm.width( durationString );
-    int actionWidth = m_tray->contextMenu()->actionGeometry( m_artist_action ).width() - actionOffsets;
-
-    QString artistActionText = fm.elidedText( track.artist( lastfm::Track::Corrected ), Qt::ElideRight, actionWidth );
-    QString titleActionText = fm.elidedText( track.title( lastfm::Track::Corrected), Qt::ElideRight, actionWidth - fm.width( durationString ) );
-
-    m_artist_action->setText( artistActionText );
-    m_artist_action->setToolTip( track.artist( lastfm::Track::Corrected ) );
-    m_title_action->setText( titleActionText + durationString );
-    m_title_action->setToolTip( track.title( lastfm::Track::Corrected ) + " [" + track.durationString() + "]" );
 
     m_tray->setToolTip( track.toString() );
 
@@ -400,14 +400,8 @@ Application::onTrackSpooled( const Track& track )
 }
 
 void
-Application::onTrackPaused( bool paused )
+Application::onTrackPaused( bool )
 {
-    if( paused ) {
-        m_artist_action->setText( "" );
-        m_title_action->setText( tr( "Ready" ));
-    } else {
-        onTrackStarted( ScrobbleService::instance().currentTrack(), ScrobbleService::instance().currentTrack());
-    }
 }
 
 void 
@@ -449,7 +443,8 @@ Application::onForumsTriggered()
 void
 Application::onAboutTriggered()
 {
-    if ( m_aboutDialog ) m_aboutDialog = new AboutDialog( m_mw );
+    if ( m_aboutDialog )
+        m_aboutDialog = new AboutDialog( m_mw );
     m_aboutDialog->show();
 }
 
@@ -619,7 +614,7 @@ Application::quit()
       result =
           QMessageBoxBuilder( activeWindow()).setTitle( tr("%1 is about to quit.").arg(applicationName()))
                                              .setText( tr("Tracks played in %1 will not be scrobbled if you continue." )
-                                                       .arg( PluginList().availableDescription()) )
+                                             .arg( PluginList().availableDescription() ) )
                                              .dontAskAgain()
                                              .setIcon( QMessageBox::Question )
                                              .setButtons( QMessageBox::Yes | QMessageBox::No )

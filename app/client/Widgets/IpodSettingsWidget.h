@@ -41,8 +41,6 @@ private slots:
 private:
     struct Ui
     {
-        class QCheckBox* enableScrobbling;
-        class QCheckBox* confirmScrobbles;
         class QTreeWidget* iPodAssociations;
         class QPushButton* clearAssociations;
         class QPushButton* removeAssociation;
@@ -51,6 +49,7 @@ private:
 private:
     void setupUi();
     void populateIpodAssociations();
+    void doRemoveIpodAssociation( const QString deviceId, const QString username );
 };
 
 #endif

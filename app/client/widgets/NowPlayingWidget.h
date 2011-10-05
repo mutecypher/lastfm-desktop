@@ -24,16 +24,24 @@
 #include <QWidget>
 #include <QPointer>
 
-#include <types/Track.h>
-#include <radio/RadioStation.h>
+#include <lastfm/Track.h>
+#include <lastfm/RadioStation.h>
 
 #include "MetadataWidget.h"
 
 class NowPlayingWidget : public QWidget
 {
     Q_OBJECT
+private:
+    struct
+    {
+        class PlaybackControlsWidget* playbackControls;
+    } ui;
+
 public:
     explicit NowPlayingWidget(QWidget *parent = 0);
+
+    class PlaybackControlsWidget* playbackControls() const;
 
 private slots:
     void onTuningIn( const RadioStation& );

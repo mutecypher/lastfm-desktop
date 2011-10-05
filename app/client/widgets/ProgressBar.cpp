@@ -26,7 +26,7 @@
 #include "../Services/ScrobbleService.h"
 #include "../Services/ScrobbleService/StopWatch.h"
 
-#include <types/Track.h>
+#include <lastfm/Track.h>
 #include <QWidget>
 #include <QPaintEvent>
 #include <QHBoxLayout>

@@ -88,20 +88,10 @@ StatusBar::StatusBar( QWidget* parent )
     connect( aApp, SIGNAL( internetConnectionDown() ), SLOT( onConnectionDown() ) );
     connect( aApp, SIGNAL( internetConnectionUp() ), SLOT( onConnectionUp() ) );
 
-    connect( aApp, SIGNAL( gotUserInfo(lastfm::UserDetails)), SLOT( onGotUserInfo(lastfm::UserDetails) ) );
-
-    DeviceScrobbler* deviceScrobbler = ScrobbleService::instance().deviceScrobbler();
-    if( deviceScrobbler )
-    {
-        connect( deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected( QString )));
-        connect( deviceScrobbler, SIGNAL( processingScrobbles()), SLOT( onProcessingScrobbles()));
-        connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), SLOT( onFoundScrobbles( QList<lastfm::Track> )));
-        connect( deviceScrobbler, SIGNAL( noScrobblesFound()),SLOT( onNoScrobblesFound()));
-    }
-
     connect( this, SIGNAL(messageChanged(QString)), SLOT(onMessagedChanged(QString)));
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)));
+    connect( aApp, SIGNAL( gotUserInfo(lastfm::UserDetails)), SLOT( onGotUserInfo(lastfm::UserDetails) ) );
 }
 
 
@@ -110,8 +100,14 @@ StatusBar::onSessionChanged( unicorn::Session* session )
 {
     bool scrobblingOn = unicorn::UserSettings( session->userInfo() ).value( "scrobblingOn", true ).toBool();
     onScrobbleToggled( scrobblingOn );
+    setStatus();
 }
 
+void
+StatusBar::onGotUserInfo( lastfm::UserDetails /*userDetails*/ )
+{
+    setStatus();
+}
 
 void
 StatusBar::onScrobbleToggled( bool scrobblingOn )
@@ -143,12 +139,6 @@ StatusBar::setStatus()
 }
 
 void
-StatusBar::onGotUserInfo( lastfm::UserDetails /*userDetails*/ )
-{
-    setStatus();
-}
-
-void
 StatusBar::onConnectionUp()
 {
     m_online = true;
@@ -161,31 +151,4 @@ StatusBar::onConnectionDown()
     m_online = false;
     setStatus();
 }
-
-void
-StatusBar::onIPodDetected( QString iPod )
-{
-    //showMessage( tr("iPod Detected... ") + iPod, 3 * 1000 );
-}
-
-void
-StatusBar::onProcessingScrobbles()
-{
-    //showMessage( tr("Processing iPod Scrobbles..."), 3 * 1000 );
-}
-
-void
-StatusBar::onFoundScrobbles( QList<lastfm::Track> tracks )
-{
-//    tracks.count() == 1 ?
-//        showMessage( tr("%1 scrobble found").arg( tracks.count() ), 10 * 1000 ):
-//        showMessage( tr("%1 scrobbles found").arg( tracks.count() ), 10 * 1000 );
-}
-
-void
-StatusBar::onNoScrobblesFound()
-{
-    //showMessage( tr("No scrobbles found"), 10 * 1000 );
-}
-
 

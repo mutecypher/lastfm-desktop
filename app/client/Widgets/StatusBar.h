@@ -20,8 +20,8 @@
 
 #include <QStatusBar>
 
-#include <types/Track.h>
-#include <types/User.h>
+#include <lastfm/Track.h>
+#include <lastfm/User.h>
 
 class QLabel;
 
@@ -44,11 +44,6 @@ class StatusBar : public QStatusBar
 
         void onConnectionUp();
         void onConnectionDown();
-
-        void onIPodDetected( QString );
-        void onProcessingScrobbles();
-        void onFoundScrobbles( QList<lastfm::Track> );
-        void onNoScrobblesFound();
 
         void onScrobbleToggled( bool );
 

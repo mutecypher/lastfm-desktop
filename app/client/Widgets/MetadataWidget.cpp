@@ -35,11 +35,11 @@
 #include <QMenu>
 #include <QDebug>
 
-#include <core/XmlQuery.h>
-#include <ws/ws.h>
-#include <types/User.h>
-#include <types/Track.h>
-#include <types/Artist.h>
+#include <lastfm/XmlQuery.h>
+#include <lastfm/ws.h>
+#include <lastfm/User.h>
+#include <lastfm/Track.h>
+#include <lastfm/Artist.h>
 
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/widgets/DataBox.h"
@@ -104,9 +104,12 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
 
     // fetch Track info
     connect( m_track.signalProxy(), SIGNAL( gotInfo(QByteArray)), SLOT( onTrackGotInfo(QByteArray)));
+
     m_track.getInfo();
+
     if( !m_track.album().isNull() )
         connect( m_track.album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
+
     connect( m_track.artist().getInfo(), SIGNAL(finished()), SLOT(onArtistGotInfo()));
 
     connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
@@ -119,6 +122,25 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
 MetadataWidget::~MetadataWidget()
 {
     delete ui;
+}
+
+void
+MetadataWidget::paintEvent( QPaintEvent* event )
+{
+    StylableWidget::paintEvent( event );
+
+    // draw the arrow on the context
+    if ( ui->context->isVisible() )
+    {
+        static QPixmap arrow( ":/meta_context_arrow.png" );
+
+        QPainter p( this );
+
+        //QPoint arrowPoint = ui->context->geometry().topLeft() - QPoint( 0, arrow.size().height() );
+        QPoint arrowPoint(20, 20);
+
+        p.drawPixmap( arrowPoint, arrow );
+    }
 }
 
 ScrobbleControls*
@@ -176,7 +198,8 @@ MetadataWidget::onArtistGotInfo()
 
     try
     {
-        const XmlQuery& lfm = reply->readAll();
+        XmlQuery lfm;
+        lfm.parse( reply->readAll() );
 
         int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
         int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
@@ -207,7 +230,7 @@ MetadataWidget::onArtistGotInfo()
                 {
                     widgets[i]->setText( artists[i]["name"].text() );
                     widgets[i]->setToolTip( artists[i]["name"].text() );
-                    widgets[i]->loadUrl( artists[i]["image size=medium"].text().replace( re, "/serve/\\1s/" ), false );
+                    widgets[i]->loadUrl( artists[i]["image size=medium"].text().replace( re, "/serve/\\1s/" ), HttpImageWidget::ScaleNone );
                     widgets[i]->setHref( artists[i]["url"].text() );
                 }
 
@@ -254,8 +277,8 @@ MetadataWidget::onArtistGotInfo()
 
         ui->artistBio->append( bio );
         ui->artistBio->updateGeometry();
-        QUrl url = lfm["artist"]["image size=large"].text();
-        ui->artistBio->loadImage( url );
+        QUrl url = lfm["artist"]["image size=extralarge"].text();
+        ui->artistBio->loadImage( url, HttpImageWidget::ScaleWidth );
         ui->artistBio->setImageHref( QUrl(lfm["artist"]["url"].text()));
         ui->artistBio->setOnTourVisible( false, QUrl(lfm["artist"]["url"].text()+"/+events"));
    }
@@ -277,7 +300,8 @@ MetadataWidget::onArtistGotYourTags()
 
     try
     {
-        const XmlQuery& lfm = reply->readAll();
+        XmlQuery lfm;
+        lfm.parse( reply->readAll() );
 
         QList<XmlQuery> tags = lfm["tags"].children("tag").mid(0, 5);
 
@@ -316,7 +340,8 @@ MetadataWidget::onArtistGotEvents()
 
    try
    {
-       const XmlQuery& lfm = reply->readAll();
+       XmlQuery lfm;
+       lfm.parse( reply->readAll() );
 
        if (lfm["events"].children("event").count() > 0)
        {
@@ -338,10 +363,10 @@ MetadataWidget::onArtistGotEvents()
 void
 MetadataWidget::onAlbumGotInfo()
 {
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
     try
     {
-        const XmlQuery& lfm = reply->readAll();
+        XmlQuery lfm;
+        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 //        int scrobbles = lfm["album"]["playcount"].text().toInt();
 //        int listeners = lfm["album"]["listeners"].text().toInt();
 //        int userListens = lfm["album"]["userplaycount"].text().toInt();
@@ -366,7 +391,8 @@ MetadataWidget::onTrackGotBuyLinks()
     {
         QByteArray data = qobject_cast<QNetworkReply*>(sender())->readAll() ;
         qDebug() << data;
-        XmlQuery lfm( data );
+        XmlQuery lfm;
+        lfm.parse( data );
 
         QMenu* menu = new QMenu( this );
 
@@ -429,7 +455,9 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
 {
     try
     {
-        XmlQuery lfm(data);
+        XmlQuery lfm;
+        lfm.parse( data );
+
         m_globalTrackScrobbles = lfm["track"]["playcount"].text().toInt();
         int listeners = lfm["track"]["listeners"].text().toInt();
         m_userTrackScrobbles = lfm["track"]["userplaycount"].text().toInt();
@@ -494,11 +522,10 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
 void
 MetadataWidget::onTrackGotYourTags()
 {
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-
     try
     {
-        const XmlQuery& lfm = reply->readAll();
+        XmlQuery lfm;
+        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         QList<XmlQuery> tags = lfm["tags"].children("tag").mid(0, 5);
 

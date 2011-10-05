@@ -20,16 +20,6 @@
 #ifndef FIRST_RUN_WIZARD_H_
 #define FIRST_RUN_WIZARD_H_
 
-#include "IntroPage.h"
-#include "LoginPage.h"
-#include "AuthInProgressPage.h"
-#include "PluginPage.h"
-#include "BootstrapPage.h"
-#include "BootstrapInProgressPage.h"
-#include "WelcomePage.h"
-#include "SystemTrayPage.h"
-
-#include "lib/unicorn/UnicornSettings.h"
 #include <QWizard>
 #include <QDebug>
 
@@ -39,100 +29,32 @@
 class FirstRunWizard : public QWizard
 {
     Q_OBJECT
-    enum {
-       Page_Login = 0,
-       Page_AuthInProgress,
-       Page_Plugin,
-       Page_Bootstrap,
-       Page_BootstrapInProgress,
-       Page_Welcome,
-       Page_SystemTray
+
+    enum
+    {
+        Page_Login,
+        Page_Access,
+        Page_Plugins,
+        Page_PluginsInstall,
+        Page_Bootstrap,
+        Page_BootstrapProgress,
+        Page_Tour_Scrobbles,
+        Page_Tour_Metadata,
+        Page_Tour_Radio,
+        Page_Tour_Location,
+        Page_Tour_Finish
     };
 
 public:
-    FirstRunWizard( QWidget* parent = 0 )
-    : QWizard( parent )
-    {
-		setOption( QWizard::NoBackButtonOnStartPage, true );
-        resize( 625, 440 );
-		#ifdef Q_OS_MAC
-			QWizard::WizardPixmap wpm = QWizard::BackgroundPixmap;
-		#else
-			QWizard::WizardPixmap wpm = QWizard::WatermarkPixmap;
-		#endif
-			
-		setPixmap( wpm, QPixmap( ":/as_watermark.png" ));
-        setPage( Page_Login, new LoginPage(this));
-        setPage( Page_AuthInProgress, new AuthInProgressPage( this ));
-#if defined(Q_WS_MAC) || defined(Q_WS_WIN)
-        setPage( Page_Plugin, new PluginPage());
-#endif
-        setPage( Page_Bootstrap, new BootstrapPage( this ));
-        setPage( Page_BootstrapInProgress, new BootstrapInProgressPage( this ));
-        setPage( Page_Welcome, new WelcomePage( this ) );
-        setPage( Page_SystemTray, new SystemTrayPage( this ));
-        connect( this, SIGNAL( rejected() ), this, SLOT( onRejected() ) );
-        connect( this, SIGNAL( accepted() ), this, SLOT( onWizardCompleted() ) );
-    }
-
-    int nextId() const
-    {
-        switch( currentId()) {
-            case Page_Login:
-                return Page_AuthInProgress;
-
-            case Page_AuthInProgress:
-#if defined(Q_WS_WIN) || defined(Q_WS_MAC)
-                return Page_Plugin;
-            
-            case Page_Plugin:
-				if( aApp->currentSession() &&
-					aApp->currentSession()->userInfo().canBootstrap() ) {
-					return Page_Bootstrap;
-				} else {
-					return Page_Welcome;
-				}
-                 
-            case Page_Bootstrap:
-                if( !field( "bootstrap_player" ).toString().isEmpty()) {
-                    return Page_BootstrapInProgress;
-                } else {
-                    return Page_Welcome;
-                }
-
-            case Page_BootstrapInProgress:
-                    return Page_Welcome;
-#elif defined Q_WS_X11
-                return Page_Welcome;
-#endif
-
-            case Page_Welcome:
-                return Page_SystemTray;
-
-            default:
-                return -1;
-        }
-    }
+    FirstRunWizard( QWidget* parent = 0 );
+    int nextId() const;
 
 private slots:
-    void onWizardCompleted()
-    {
-        unicorn::Settings().setValue( "FirstRunWizardCompleted", true );
-    }
+    void onWizardCompleted();
+    void onRejected();
 
-
-    void onRejected()
-    {
-        //if the user doesn't finish the wizard then we make sure
-        //the settings are removed.
-        QMap<QString, QString> lastSession = unicorn::Session::lastSessionData();
-        if ( lastSession.contains( "username" ) )
-        {
-            unicorn::Settings us;
-            us.remove( lastSession[ "username" ] );
-        }
-    }
-
+private:
+    QPalette m_palette;
 };
 
 #endif //FIRST_RUN_WIZARD_H_

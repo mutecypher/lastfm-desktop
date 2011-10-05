@@ -1,11 +1,14 @@
 #ifndef LOGIN_PROCESS_H
 #define LOGIN_PROCESS_H
 
+#include <QObject>
+#include <QPointer>
+
+#include <lastfm/ws.h>
+
 #include "UnicornSession.h"
 
 #include "lib/DllExportMacro.h"
-
-#include <QObject>
 
 class QHostAddress;
 class QTcpServer;
@@ -40,8 +43,8 @@ private slots:
     void readFromSocket();
 
 private:
-    QTcpServer* m_tcpServer;
-    QTcpSocket* m_clientSocket;
+    QPointer<QTcpServer> m_tcpServer;
+    QPointer<QTcpSocket> m_clientSocket;
     QString     m_header;
     QString     m_token;
 };
@@ -76,7 +79,7 @@ private slots:
     void onGotDesktopToken();
 
 private: 
-    TinyWebServer* m_webServer;
+    QPointer<TinyWebServer> m_webServer;
     QString m_token;
     lastfm::ws::ParseError m_lastError;
     QNetworkReply::NetworkError m_lastNetworkError;

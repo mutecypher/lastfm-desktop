@@ -22,7 +22,7 @@
 #define ITUNES_LIBRARY_H
 
 #include "ITunesLibraryTrack.h"
-#include <types/Track.h>
+#include <lastfm/Track.h>
 #include <QList>
 
 

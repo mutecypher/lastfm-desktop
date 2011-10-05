@@ -21,7 +21,7 @@
 #define PLAYABLE_ITEM_WIDGET_H
 
 #include <QPushButton>
-#include <radio/RadioStation.h>
+#include <lastfm/RadioStation.h>
 
 class QMouseEvent;
 

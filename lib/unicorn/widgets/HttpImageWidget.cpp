@@ -65,7 +65,7 @@ HttpImageWidget::paintEvent( QPaintEvent* event )
 }
 
 void
-HttpImageWidget::loadUrl( const QUrl& url, bool scale )
+HttpImageWidget::loadUrl( const QUrl& url, ScaleType scale )
 {
     m_scale = scale;
     connect( lastfm::nam()->get(QNetworkRequest(url)), SIGNAL(finished()), SLOT(onUrlLoaded()));
@@ -115,13 +115,25 @@ void HttpImageWidget::onUrlLoaded()
         QPixmap px;
         if ( px.loadFromData(static_cast<QNetworkReply*>(sender())->readAll()) )
         {
-            if ( m_scale ) {
+            switch ( m_scale )
+            {
+            case ScaleAuto:
                 // Decide which way to scale based on the ratio of height to width
                 // of the image and the area that the image is going to be drawn to
                 if ( (px.height() * 1000) / px.width() > (height() * 1000) / width() )
-                    px = px.scaledToWidth( width(), Qt::SmoothTransformation );
+                    px = px.scaledToWidth( contentsRect().width(), Qt::SmoothTransformation );
                 else
-                    px = px.scaledToHeight( height(), Qt::SmoothTransformation );
+                    px = px.scaledToHeight( contentsRect().height(), Qt::SmoothTransformation );
+
+                break;
+            case ScaleNone:
+                break;
+            case ScaleWidth:
+                px = px.scaledToWidth( contentsRect().width(), Qt::SmoothTransformation );
+                break;
+            case ScaleHeight:
+                px = px.scaledToHeight( contentsRect().height(), Qt::SmoothTransformation );
+                break;
             }
 
             setPixmap( px );

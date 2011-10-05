@@ -80,7 +80,7 @@ ITunesPlaysDatabase::sync( void* that )
         {
             // do as infrequently as possible because it spawns applescript
             int const diff = track.playCountDifference();
-        
+            
             if (diff)
             {
                 ITunesPlaysDatabase db;
@@ -94,8 +94,8 @@ ITunesPlaysDatabase::sync( void* that )
                 // is fine since the UPDATE will fail in this case.
                 char* format = "UPDATE itunes_db SET play_count='%d' WHERE persistent_id='%q'";
                 char* token = sqlite3_mprintf( format,
-                                               db.playCount( track ) + diff,
-                                               track.persistentId().c_str() );
+                                              db.playCount( track ) + diff,
+                                              track.persistentId().c_str() );
                 db.query( token );
                 sqlite3_free( token );
                 break;
@@ -133,6 +133,8 @@ ITunesPlaysDatabase::onPlayStateChanged( void* )
 
     static ExtendedITunesTrack s_track;
     ExtendedITunesTrack currentTrack = ExtendedITunesTrack::currentTrack();
+    
+    LOG( 3, "kind: " << s_track.kind() );
 
     {
         PThreadMutexLocker locker( s_mutex );

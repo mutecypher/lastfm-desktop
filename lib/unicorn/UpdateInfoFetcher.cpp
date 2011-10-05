@@ -1,6 +1,6 @@
 #include "UpdateInfoFetcher.h"
-#include <ws/ws.h>
-#include <core/XmlQuery.h>
+#include <lastfm/ws.h>
+#include <lastfm/XmlQuery.h>
 #include <QDebug>
 #include <QSettings>
 #include <QString>
@@ -80,7 +80,9 @@ Plugin::canBootstrap() const
 UpdateInfoFetcher::UpdateInfoFetcher( QNetworkReply* reply, QObject* parent )
                   :QObject( parent )
 {
-    XmlQuery xq = reply->readAll();
+    XmlQuery xq;
+    xq.parse( reply->readAll() );
+
     QList<XmlQuery> plugins = xq.children( "Plugin" );
     foreach( const XmlQuery& plugin, plugins ) {
         m_plugins << Plugin( plugin );

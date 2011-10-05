@@ -22,7 +22,7 @@
 
 #include <QObject>
 #include <QSqlDatabase>
-#include <types/Track.h>
+#include <lastfm/Track.h>
 
 #define DB_NAME "MediaDevicesScrobbles"
 
@@ -68,6 +68,8 @@ public:
      * @return true if the device is already associated with the user account, false otherwise.
      */
     bool isDeviceKnown() const;
+
+    static lastfm::User associatedUser( const QString deviceId );
 
 signals:
     void deviceScrobblingStarted();

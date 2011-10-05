@@ -4,8 +4,8 @@
 #include <QVBoxLayout>
 #include <QScrollArea>
 
-#include <radio/RadioStation.h>
-#include <core/XmlQuery.h>
+#include <lastfm/RadioStation.h>
+#include <lastfm/XmlQuery.h>
 
 #include "lib/unicorn/StylableWidget.h"
 
@@ -23,15 +23,36 @@ RadioWidget::RadioWidget(QWidget *parent)
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
-    connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*) ) );
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation) ) );
+
+    connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*) ) );
+    connect( aApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)) );
+
+    changeUser( aApp->currentSession()->userInfo().name() );
 }
+
 
 void
 RadioWidget::onSessionChanged( unicorn::Session* session )
 {
-    if ( !session->userInfo().name().isEmpty() )
+    changeUser( session->userInfo().name() );
+}
+
+
+void
+RadioWidget::onGotUserInfo( const lastfm::UserDetails& userDetails )
+{
+    changeUser( userDetails.name() );
+}
+
+
+void
+RadioWidget::changeUser( const QString& newUsername )
+{
+    if ( !newUsername.isEmpty() && ( m_currentUsername != newUsername ) )
     {
+        m_currentUsername = newUsername;
+
         // remove any previous layout
         layout()->removeWidget( m_main );
         delete m_main;
@@ -53,11 +74,11 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
             QVBoxLayout* personalLayout = new QVBoxLayout( ui.personal );
             personalLayout->setContentsMargins( 0, 0, 0, 0 );
             personalLayout->setSpacing( 0 );
-            personalLayout->addWidget( ui.library = new PlayableItemWidget( RadioStation::library( session->userInfo() ), tr( "My Library Radio" ), tr( "Music you know and love" ) ) );
+            personalLayout->addWidget( ui.library = new PlayableItemWidget( RadioStation::library( User( newUsername ) ), tr( "My Library Radio" ), tr( "Music you know and love" ) ) );
             ui.library->setObjectName( "library" );
-            personalLayout->addWidget( ui.mix = new PlayableItemWidget( RadioStation::mix( session->userInfo() ), tr( "My Mix Radio" ), tr( "Your library plus new music" ) ) );
+            personalLayout->addWidget( ui.mix = new PlayableItemWidget( RadioStation::mix( User( newUsername ) ), tr( "My Mix Radio" ), tr( "Your library plus new music" ) ) );
             ui.mix->setObjectName( "mix" );
-            personalLayout->addWidget( ui.rec = new PlayableItemWidget( RadioStation::recommendations( session->userInfo() ), tr( "My Recommended Radio" ), tr( "New music from Last.fm" ) ) );
+            personalLayout->addWidget( ui.rec = new PlayableItemWidget( RadioStation::recommendations( User( newUsername ) ), tr( "My Recommended Radio" ), tr( "New music from Last.fm" ) ) );
             ui.rec->setObjectName( "rec" );
         }
 
@@ -70,9 +91,9 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
             QVBoxLayout* networkLayout = new QVBoxLayout( ui.network );
             networkLayout->setContentsMargins( 0, 0, 0, 0 );
             networkLayout->setSpacing( 0 );
-            networkLayout->addWidget( ui.friends = new PlayableItemWidget( RadioStation::friends( session->userInfo() ), tr( "My Friends' Radio" ), tr( "Music your friends like" ) ) );
+            networkLayout->addWidget( ui.friends = new PlayableItemWidget( RadioStation::friends( User( newUsername ) ), tr( "My Friends' Radio" ), tr( "Music your friends like" ) ) );
             ui.friends->setObjectName( "friends" );
-            networkLayout->addWidget( ui.neighbours = new PlayableItemWidget( RadioStation::neighbourhood( session->userInfo() ), tr( "My Neighbours' Radio" ), tr ( "Music from listeners you like" ) ) );
+            networkLayout->addWidget( ui.neighbours = new PlayableItemWidget( RadioStation::neighbourhood( User( newUsername ) ), tr( "My Neighbours' Radio" ), tr ( "Music from listeners you like" ) ) );
             ui.neighbours->setObjectName( "neighbours" );
         }
 
@@ -84,9 +105,8 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
 
         //layout->addWidget( ui.topArtists = new StylableWidget( this ) );
 
-        // fetch top artists and recent stations
-        //connect( session->userInfo().getTopArtists( "3month", 5 ), SIGNAL(finished()), SLOT(onGotTopArtists()));
-        connect( session->userInfo().getRecentStations( 5 ), SIGNAL(finished()), SLOT(onGotRecentStations()));
+        // fetch recent stations
+        connect( User( newUsername ).getRecentStations( 5 ), SIGNAL(finished()), SLOT(onGotRecentStations()));
 
         layout->addStretch( 1 );
     }
@@ -101,7 +121,8 @@ RadioWidget::onGotTopArtists()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        lastfm::XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
+        lastfm::XmlQuery lfm;
+        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
         {
@@ -126,7 +147,8 @@ RadioWidget::onGotRecentStations()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        lastfm::XmlQuery lfm( qobject_cast<QNetworkReply*>(sender())->readAll() );
+        lastfm::XmlQuery lfm;
+        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         foreach ( const lastfm::XmlQuery& station, lfm["recentstations"].children("station") )
         {
@@ -154,7 +176,7 @@ RadioWidget::onTuningIn( const RadioStation& station )
 {
     // insert at the front of the list
 
-    if ( ui.recentStations->layout() )
+    if ( ui.recentStations && ui.recentStations->layout() )
     {
         PlayableItemWidget* item = new PlayableItemWidget( station, station.title() );
         item->setObjectName( "station" );

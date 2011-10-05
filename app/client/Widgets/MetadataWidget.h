@@ -23,8 +23,8 @@
 
 #include <QWidget>
 
-#include <types/Album.h>
-#include <types/Track.h>
+#include <lastfm/Album.h>
+#include <lastfm/Track.h>
 
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
@@ -74,6 +74,8 @@ signals:
     void backClicked();
 
 private:
+    void paintEvent(QPaintEvent *);
+
     void checkFinished();
 
     void setTrackDetails( const Track& track );

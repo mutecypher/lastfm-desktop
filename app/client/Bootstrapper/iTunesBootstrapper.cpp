@@ -30,9 +30,7 @@ iTunesBootstrapper::iTunesBootstrapper( QObject* parent )
 {
     m_iTunesDatabase = new ITunesDevice;
 
-    connect( m_iTunesDatabase, SIGNAL( progress( int, Track ) ),
-             this,             SIGNAL( trackProcessed( int, Track ) ),
-             Qt::DirectConnection );
+    connect( m_iTunesDatabase, SIGNAL(progress(int,Track)), SIGNAL(trackProcessed(int,Track)));
 }
 
 

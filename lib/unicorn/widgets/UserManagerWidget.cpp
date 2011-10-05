@@ -9,7 +9,7 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/UnicornSession.h"
 
-#include <types/User.h>
+#include <lastfm/User.h>
 
 #include <QApplication>
 #include <QButtonGroup>

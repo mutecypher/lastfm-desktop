@@ -20,7 +20,7 @@
 #ifndef DIAGNOSTICS_DIALOG_H
 #define DIAGNOSTICS_DIALOG_H
 
-#include <global.h>
+#include <lastfm/global.h>
 #include "ui_DiagnosticsDialog.h"
 #include <QDateTime>
 #include <QPointer>

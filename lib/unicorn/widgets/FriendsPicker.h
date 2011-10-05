@@ -21,7 +21,7 @@
 #define FRIENDS_PICKER_H
 
 #include <QDialog>
-#include <types/User.h>
+#include <lastfm/User.h>
 #include "lib/DllExportMacro.h"
 
 class UNICORN_DLLEXPORT FriendsPicker : public QDialog

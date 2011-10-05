@@ -1,6 +1,6 @@
 #include "UserManagerDialog.h"
 
-#include <types/User.h>
+#include <lastfm/User.h>
 
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/UnicornSettings.h"

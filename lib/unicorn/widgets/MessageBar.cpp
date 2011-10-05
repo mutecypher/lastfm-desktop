@@ -20,57 +20,68 @@
 #include "MessageBar.h"
 #include "common/qt/reverse.cpp"
 #include <QtGui>
+#include <QLabel>
+
+#include "lib/unicorn/dialogs/ScrobbleConfirmationDialog.h"
 
 
 MessageBar::MessageBar( QWidget* parent )
            :QWidget( parent )
 {
-    if( parent )
-        parent->installEventFilter( this );
-
     setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
     updateGeometry();
+
     setFixedHeight( 0 );
+
     ui.papyrus = new QWidget( this );
-    
-    QPalette p = palette();
-    p.setColor( QPalette::Text, Qt::black );
-    p.setColor( QPalette::Window, QColor( 0xfa, 0xfa, 0xc7 ) );
-    setPalette( p );
-    setAutoFillBackground( true );
     
     m_timeline = new QTimeLine( 500, this );
     m_timeline->setUpdateInterval( 10 );
+
     connect( m_timeline, SIGNAL(frameChanged( int )), SLOT(animate( int )) );
 }
 
+void
+MessageBar::setTracks( const QList<lastfm::Track>& tracks )
+{
+    m_tracks = tracks;
+}
 
 void
 MessageBar::show( const QString& message, const QString& id )
-{    
+{
+    bool animate = findChildren<QLabel*>().count() != 0;
+
+    removeAll();
+
     QLabel* label = new QLabel( message, ui.papyrus );
     label->setBackgroundRole( QPalette::Base );
     label->setMargin( 8 );
     label->setIndent( 4 );
     label->setTextFormat( Qt::RichText );
-    label->setOpenExternalLinks( true );
+    label->setOpenExternalLinks( false );
     label->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse );
     label->setObjectName( id );
 
     label->adjustSize();
 
-    show( label );
+    connect( label, SIGNAL(linkActivated(QString)), SLOT(onLinkActivated(QString)));
+
+    show( label, animate );
 }
 
+void
+MessageBar::onLinkActivated( const QString& link )
+{
+    // Show a dialog with the tracks
+    ScrobbleConfirmationDialog confirmDialog( m_tracks );
+    confirmDialog.setReadOnly();
+    confirmDialog.exec();
+}
 
 void 
-MessageBar::show( QWidget* w )
+MessageBar::show( QWidget* w, bool animate )
 {
-    if ( w->objectName().size() && 
-        findChild<QLabel*>( w->objectName() )) {
-        return;
-    }
-    
     QPushButton* close = new QPushButton( "x" );
     QHBoxLayout* h = new QHBoxLayout( w );
     h->addStretch();
@@ -80,7 +91,7 @@ MessageBar::show( QWidget* w )
     
     ui.papyrus->move( 0, -w->height() );
 
-    w->setFixedWidth( width());
+    w->setFixedWidth( width() );
     w->setParent( this );
     w->show();
 
@@ -89,8 +100,15 @@ MessageBar::show( QWidget* w )
     connect( close, SIGNAL(clicked()), w, SLOT(deleteLater()) );    
     connect( w, SIGNAL(destroyed()), SLOT(onLabelDestroyed()), Qt::QueuedConnection );
         
-    m_timeline->setFrameRange( height(), ui.papyrus->height() );
-    m_timeline->start();
+    if ( animate )
+    {
+        m_timeline->setFrameRange( height(), ui.papyrus->height() );
+        m_timeline->start();
+    }
+    else if ( m_timeline->state() != QTimeLine::Running )
+    {
+        setFixedHeight( ui.papyrus->height() );
+    }
 }
 
 
@@ -122,29 +140,10 @@ MessageBar::onLabelDestroyed()
     setFixedHeight( ui.papyrus->height() );
 }
 
-
 void
-MessageBar::resizeEvent( QResizeEvent* /*e*/ )
+MessageBar::removeAll()
 {
-    ui.papyrus->setFixedWidth( width() );
-    foreach (QLabel* l, findChildren<QLabel*>())
-        l->setFixedWidth( width() );
+    foreach ( QLabel* label, findChildren<QLabel*>() )
+        delete label;
 }
 
-
-void
-MessageBar::remove( const QString& id )
-{
-    delete findChild<QLabel*>( id );
-}
-
-
-bool
-MessageBar::eventFilter( QObject* /*obj*/, QEvent* event )
-{
-    if( event->type() == QEvent::Resize ) {
-        QResizeEvent* e = static_cast<QResizeEvent*>( event );
-        resize( e->size().width(), height());
-    }
-    return false;
-}

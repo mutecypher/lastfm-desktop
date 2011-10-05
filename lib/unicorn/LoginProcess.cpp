@@ -2,9 +2,9 @@
 #include "QMessageBoxBuilder.h"
 #include "UnicornApplication.h"
 
-#include <ws/ws.h>
-#include <core/misc.h>
-#include <core/XmlQuery.h>
+#include <lastfm/ws.h>
+#include <lastfm/misc.h>
+#include <lastfm/XmlQuery.h>
 
 #include <QApplication>
 #include <QDesktopServices>
@@ -21,11 +21,10 @@ namespace unicorn
 
 TinyWebServer::TinyWebServer( QObject* parent )
     : QObject( parent )
-    , m_tcpServer( 0 )
 {
     m_tcpServer = new QTcpServer( this );
     m_tcpServer->listen( QHostAddress( QHostAddress::LocalHost ), 0 );
-    connect( m_tcpServer, SIGNAL( newConnection() ), this, SLOT( onNewConnection() ) );
+    connect( m_tcpServer, SIGNAL( newConnection() ), SLOT( onNewConnection() ) );
 }
 
 void
@@ -33,10 +32,11 @@ TinyWebServer::onNewConnection()
 {
     Q_ASSERT( m_tcpServer );
     m_clientSocket = m_tcpServer->nextPendingConnection();
+
     if ( m_clientSocket )
     {
         connect( m_clientSocket, SIGNAL( disconnected() ), m_clientSocket, SLOT( deleteLater() ) );
-        connect( m_clientSocket, SIGNAL( readyRead() ), this, SLOT( readFromSocket() ) );
+        connect( m_clientSocket, SIGNAL( readyRead() ), SLOT( readFromSocket() ) );
     }
 }
 
@@ -93,8 +93,7 @@ TinyWebServer::sendRedirect()
 /** LoginProcess **/
 LoginProcess::LoginProcess( QObject* parent )
     : QObject( parent )
-    , m_webServer( 0 )
-    , m_lastError( lastfm::ws::ParseError( lastfm::ws::NoError, "" ) )
+    , m_lastError( lastfm::ws::NoError, "" )
     , m_lastNetworkError( QNetworkReply::NoError )
 {
 }
@@ -109,10 +108,7 @@ void
 LoginProcess::authenticate()
 {
     if ( m_webServer )
-    {
         delete m_webServer;
-        m_webServer = 0;
-    }
 
     m_webServer = new TinyWebServer( this );
 
@@ -124,7 +120,7 @@ LoginProcess::authenticate()
 
     if ( QDesktopServices::openUrl( m_authUrl ) )
     {
-        connect( m_webServer, SIGNAL( gotToken( QString ) ), this, SLOT( getSession( QString ) ) );
+        connect( m_webServer, SIGNAL( gotToken( QString ) ), SLOT( getSession( QString ) ) );
     }
 }
 
@@ -143,8 +139,8 @@ LoginProcess::authUrl() const
 void
 LoginProcess::getSession( QString token )
 {
-    connect( unicorn::Session::getSession( token ), SIGNAL( finished() ),
-             this, SLOT( onGotSession() ) );
+    m_token = token;
+    connect( unicorn::Session::getSession( token ), SIGNAL( finished() ), SLOT( onGotSession() ) );
 }
 
 
@@ -153,18 +149,25 @@ LoginProcess::onGotSession()
 {
     try
     {
-        Session* session = qobject_cast<unicorn::Application* >( qApp )->changeSession( static_cast<QNetworkReply*>( sender() ) );
+        lastfm::XmlQuery lfm;
+        lfm.parse( static_cast<QNetworkReply*>( sender() )->readAll() );
+
+        QString username = lfm["session"]["name"].text();
+        QString sessionKey = lfm["session"]["key"].text();
+
+        Session* session = qobject_cast<unicorn::Application*>( qApp )->changeSession( username, sessionKey );
         emit gotSession( session );
         delete m_webServer;
-        m_webServer = 0;
     }
-    catch ( lastfm::ws::ParseError& e )
+    catch ( const lastfm::ws::ParseError& e )
     {
+        qWarning() << e.message() << e.enumValue();
+
         m_lastError = e;
-        qWarning() << e.what();
+
         if ( m_lastError.enumValue() == lastfm::ws::UnknownError )
         {
-           m_lastNetworkError = ( QNetworkReply::NetworkError )static_cast<QNetworkReply*>( sender() )->error();
+           m_lastNetworkError = static_cast<QNetworkReply*>( sender() )->error();
         }
     }
 }

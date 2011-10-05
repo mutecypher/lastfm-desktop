@@ -18,6 +18,11 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QPushButton>
+#include <QFile>
+
+#include "lib/unicorn/QMessageBoxBuilder.h"
+
 #include "ScrobbleSetupDialog.h"
 #include "ui_ScrobbleSetupDialog.h"
 
@@ -26,15 +31,45 @@ ScrobbleSetupDialog::ScrobbleSetupDialog( QString deviceId, QString deviceName, 
     ui( new Ui::ScrobbleSetupDialog ),
     m_deviceId( deviceId ),
     m_deviceName( deviceName ),
-    m_iPodFiles( iPodFiles )
+    m_iPodFiles( iPodFiles ),
+    m_more( false )
 {
-    ui->setupUi(this);
+    ui->setupUi( this );
 
-//    vl->addWidget( ui.title = new QLabel( tr("Do you want to scrobble the iPod '%1'?").arg( "Coffey's iPod" )  ) );
-//    ui.title->setObjectName("title");
+    setWindowTitle( "" );
 
-//    vl->addWidget( ui.description = new QLabel( tr("This will automatically scrobble tracks you've played on your iPod everytime it's connected.") ) );
-//    ui.description->setObjectName("description");
+    ui->description->setText( tr("<p>Do you want to start scrobbling the iPod \"%1\"?<p>"
+                                     "<p>This will automatically scrobble tracks you've played on your iPod to the user account <strong>\"%2\"</strong> everytime it's synced with iTunes.</p>" ).arg( deviceName, User().name() ) );
+
+    ui->multiUser->setText( tr( "<p>How would you like to manage scrobbling from iPod \"%1\"?</p>" ).arg( deviceName ) );
+    ui->always->setChecked( true );
+
+    ui->moreFrame->hide();
+
+    QList<lastfm::User> roster = unicorn::Settings().userRoster();
+
+    if ( roster.count() > 1 )
+    {
+        ui->multiUser->setText( tr( "<p>Not %1? Scrobble this iPod to a different user:</p>" ).arg( User().name() ) );
+
+
+        for ( int i = 0 ; i < roster.count() ; i++ )
+        {
+            ui->users->addItem( roster.at( i ).name() );
+
+            if ( roster.at( i ).name() == User().name() )
+                ui->users->setCurrentIndex( i );
+        }
+    }
+    else
+    {
+        ui->users->hide();
+        ui->multiUser->hide();
+    }
+
+    ui->buttonBox->button( QDialogButtonBox::Apply )->setText( tr( "More Options" ) );
+    ui->buttonBox->button( QDialogButtonBox::Yes )->setText( tr( "Scrobble" ) );
+    ui->buttonBox->button( QDialogButtonBox::No )->setText( tr( "Not Now" ) );
 
     connect( ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onClicked(QAbstractButton*)));
 }
@@ -47,12 +82,82 @@ ScrobbleSetupDialog::~ScrobbleSetupDialog()
 void
 ScrobbleSetupDialog::onClicked( QAbstractButton* button )
 {
-    QDialogButtonBox::ButtonRole buttonRole = ui->buttonBox->buttonRole( button );
+    switch ( ui->buttonBox->buttonRole( button ) )
+    {
+    case QDialogButtonBox::YesRole:
+    case QDialogButtonBox::AcceptRole:
+    {
+        QString user = User().name();
 
-    bool scrobble = buttonRole == QDialogButtonBox::YesRole;
-    bool alwaysAsk = !ui->neverAskAgain->isChecked();
+        if ( ui->users->isVisible() )
+            user = ui->users->currentText();
 
-    emit clicked( scrobble, alwaysAsk, m_deviceId, m_deviceName, m_iPodFiles );
+        QString title = tr( "Your iPod is ready for scrobbling!" )  ;
+        QString text = tr( "<p>From now on, anything you listen to on your iPod will be automatically scrobbled to the user \"<strong>%1</strong>\" when the device is synced.</p>"
+                           "<p>Change your iPod scrobble settings and user associations at any time in the preferences area.</p>" ).arg( user );
 
-    done( 0 );
+        if ( m_more )
+        {
+            if ( ui->always->isChecked() )
+                emit clicked( true, false, user, m_deviceId, m_deviceName, m_iPodFiles );
+            else if ( ui->manual->isChecked() )
+            {
+                emit clicked( true, true, user, m_deviceId, m_deviceName, m_iPodFiles );
+                text = tr( "<p>From now on, you'll be asked to confirm any scrobbles from your iPod to the user \"<strong>%1</strong>\" when the device is synced.</p>"
+                           "<p>Change your iPod scrobble settings and user associations at any time in the preferences area.</p>" ).arg( user );
+
+            }
+            else if ( ui->never )
+            {
+                emit clicked( false, false, user, m_deviceId, m_deviceName, m_iPodFiles );
+                title = tr( "You seleceted to never scrobble :c" );
+                text = tr( "<p>Change your iPod scrobble settings and user associations at any time in the preferences area.</p>" );
+
+            }
+        }
+        else
+            emit clicked( true, false, user, m_deviceId, m_deviceName, m_iPodFiles );
+
+        done( 0 );
+
+        QMessageBoxBuilder( 0 )
+            .setIcon( QMessageBox::Information )
+            .setTitle( title )
+            .setText( text )
+            .setButtons( QMessageBox::Ok )
+            .exec();
+
+        break;
+    }
+    case QDialogButtonBox::ApplyRole:
+
+        // remove all the buttons
+        foreach ( QAbstractButton* button, ui->buttonBox->buttons() )
+            ui->buttonBox->removeButton( button );
+
+        // add new awesome buttons
+        ui->buttonBox->addButton( QDialogButtonBox::Ok );
+        ui->buttonBox->addButton( QDialogButtonBox::Cancel );
+
+        // show the correct frame
+        ui->basicFrame->hide();
+        ui->moreFrame->show();
+
+        ui->moreFrame->setFixedHeight( ui->moreFrame->sizeHint().height() );
+
+        m_more = true;
+
+        break;
+    case QDialogButtonBox::NoRole:
+    case QDialogButtonBox::RejectRole:
+    default:
+        // just close the dialog, they will be asked all these thingsthe next time
+
+        foreach ( const QString& iPodFile, m_iPodFiles )
+            QFile::remove( iPodFile );
+
+        done( 0 );
+
+        break;
+    }
 }

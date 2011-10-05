@@ -21,38 +21,43 @@
 #define MESSAGE_BAR_H
 
 #include <QWidget>
-#include "lib/DllExportMacro.h"
 
-/** @author <max@last.fm> */
+#include <lastfm/Track.h>
+
+#include "lib/DllExportMacro.h"
 
 class UNICORN_DLLEXPORT MessageBar : public QWidget
 {
     Q_OBJECT
-    
-    class QTimeLine* m_timeline;
 
-    struct Ui {
+    struct
+    {
         QWidget* papyrus;
     } ui;
     
-    virtual void resizeEvent( QResizeEvent* );
     void doLayout();
     
 public:
-    /** Parent should be the widget that the messagebar is added to.
-        It should not be added to a layout. */
     MessageBar( QWidget* parent );
 
-    bool eventFilter( QObject* obj, QEvent *event );
+    void setTracks( const QList<lastfm::Track>& tracks );
     
 public slots:
-    void show( QWidget* );
     void show( const QString&, const QString& id = QString() );
-    void remove( const QString& id );
+
+private:
+    void removeAll();
+    void show( QWidget*, bool animate );
     
 private slots:
     void animate( int );
     void onLabelDestroyed();
+    void onLinkActivated( const QString& link );
+
+private:
+    class QTimeLine* m_timeline;
+
+    QList<lastfm::Track> m_tracks;
 };
 
 #endif

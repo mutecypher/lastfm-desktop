@@ -23,34 +23,24 @@
 #include <QWizardPage>
 #include <QAbstractButton>
 
-namespace unicorn
-{
-    class LoginProcess;
-    class Session;
-}
-
 class LoginPage : public QWizardPage
 {
     Q_OBJECT
-public:
-    LoginPage( QWidget* parent = 0 );
-
-    virtual void initializePage();
-    virtual void cleanupPage();
-    virtual bool validatePage();
-    virtual bool isComplete() const;
- 
-private slots:
-    void onSignUpClicked();
 
 private:
-
     struct {
+        class QLabel* image;
         class QLabel* description;
     } ui;
 
-    unicorn::LoginProcess* m_loginProcess;
-    bool m_isComplete;
+public:
+    LoginPage( QWidget* parent = 0 );
+
+    void initializePage();
+    bool validatePage();
+ 
+private slots:
+    void onSignUpClicked();
 };
 
 #endif //LOGIN_PAGE_H_

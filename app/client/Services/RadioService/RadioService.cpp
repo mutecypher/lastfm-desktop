@@ -21,7 +21,7 @@
 #include <QThread>
 #include <QTimer>
 #include <cmath>
-#include <radio/RadioTuner.h>
+#include <lastfm/RadioTuner.h>
 #include <phonon/mediaobject.h>
 #include <phonon/backendcapabilities.h>
 
@@ -230,6 +230,16 @@ RadioService::clear()
     delete m_tuner;
 }
 
+void
+RadioService::volumeUp()
+{
+
+}
+
+void
+RadioService::volumeDown()
+{
+}
 
 void
 RadioService::mute()
@@ -350,13 +360,12 @@ RadioService::phononEnqueue()
             try
             {
                 m_mediaObject->setCurrentSource( ms );
+                m_mediaObject->play();
             }
             catch (...)
             {
                 continue;
             }
-
-            m_mediaObject->play();
         }
         break;
     }

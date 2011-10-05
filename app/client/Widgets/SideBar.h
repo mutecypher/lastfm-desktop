@@ -44,6 +44,8 @@ private:
 public:
     explicit SideBar(QWidget *parent = 0);
 
+    void addToMenu( class QMenu& menu );
+
     void click( int index );
 
 signals:

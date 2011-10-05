@@ -20,7 +20,7 @@
 #include "TagBuckets.h"
 #include "common/qt/reverse.cpp"
 #include "PlayableMimeData.h"
-#include <types/Tag.h>
+#include <lastfm/Tag.h>
 #include <QtGui>
 
 static int gint = 0;

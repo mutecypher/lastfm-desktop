@@ -22,7 +22,7 @@
 
 #include <QObject>
 #include <QPointer>
-#include <types/Track.h>
+#include <lastfm/Track.h>
 
 namespace unicorn { class Session; }
 class PlayerMediator;
@@ -73,7 +73,7 @@ signals:
     void scrobblesCached( const QList<lastfm::Track>& tracks );
     void scrobblesSubmitted( const QList<lastfm::Track>& tracks );
 
-    void foundIPodScrobbles( const QList<lastfm::Track>& tracks );
+    void foundIPodScrobbles( const QList<lastfm::Track>& tracks, const QString& id );
     void bootstrapReady( const QString& playerId );
 
     void paused( bool );
@@ -90,6 +90,9 @@ protected slots:
     void onPaused();
     void onResumed(); 
     void onStopped();
+
+private:
+    void resetScrobbler();
 
 protected:
     State state;

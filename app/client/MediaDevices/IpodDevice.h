@@ -33,10 +33,10 @@ public:
     virtual QString deviceName() const;
 
     void setScrobble( bool scrobble );
-    bool scrobble();
+    bool scrobble() const;
 
     void setAlwaysAsk( bool alwaysAsk );
-    bool alwaysAsk();
+    bool alwaysAsk() const;
 
 #ifdef Q_WS_X11
     /**

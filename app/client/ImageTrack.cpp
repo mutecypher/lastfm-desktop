@@ -1,8 +1,8 @@
 
 #include <QPixmap>
 
-#include <ws/ws.h>
-#include <core/XmlQuery.h>
+#include <lastfm/ws.h>
+#include <lastfm/XmlQuery.h>
 
 #include "ImageTrack.h"
 
@@ -35,33 +35,40 @@ void
 ImageTrack::fetchImage()
 {
     const QUrl imgUrl = imageUrl( lastfm::Medium, false );
+
     if( imgUrl.isEmpty() )
     {
-        qDebug() << "Getting info for track..";
+        // We don't know where the image is so first try album.getInfo
+        // and then fall back on track.getInfo
 
         if ( !album().isNull() )
             connect( album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
         else
         {
             getInfo();
-            connect( signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(fetchImage()) );
+            connect( signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(onTrackGotInfo()) );
         }
-
-
-        return;
     }
-
-    QNetworkReply* r = lastfm::nam()->get(QNetworkRequest(imgUrl));
-    connect( r, SIGNAL(finished()), SLOT(onGotImage()));
+    else
+        connect( lastfm::nam()->get( QNetworkRequest(imgUrl) ), SIGNAL(finished()), SLOT(onGotImage()));
 }
 
+void
+ImageTrack::onTrackGotInfo()
+{
+    const QUrl imgUrl = imageUrl( lastfm::Medium, false );
+
+    if( !imgUrl.isEmpty() )
+        connect( lastfm::nam()->get( QNetworkRequest(imgUrl) ), SIGNAL(finished()), SLOT(onGotImage()));
+}
 
 void
 ImageTrack::onAlbumGotInfo()
 {
     try
     {
-        XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
+        XmlQuery lfm;
+        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         lastfm::MutableTrack t( *this );
         t.setImageUrl( lastfm::Small, lfm["album"]["image size=small"].text() );
@@ -70,13 +77,21 @@ ImageTrack::onAlbumGotInfo()
         t.setImageUrl( lastfm::ExtraLarge, lfm["album"]["image size=extralarge"].text() );
         t.setImageUrl( lastfm::Mega, lfm["album"]["image size=mega"].text() );
 
-        fetchImage();
+        const QUrl imgUrl = imageUrl( lastfm::Medium, false );
+
+        if ( !imgUrl.isEmpty() )
+            connect( lastfm::nam()->get( QNetworkRequest(imgUrl) ), SIGNAL(finished()), SLOT(onGotImage()));
+        else
+        {
+            // We were unable to get the album image from album.getInfo
+            // so let Last.fm guess with track.getInfo
+            getInfo();
+            connect( signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(onTrackGotInfo()) );
+        }
+
     }
     catch (...)
     {
-        // we failed to fetch album info so try the track
-        getInfo();
-        connect( signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(fetchImage()) );
     }
 }
 

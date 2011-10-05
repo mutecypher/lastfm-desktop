@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include <radio/RadioStation.h>
+#include <lastfm/RadioStation.h>
 
 namespace Ui {
     class TagFilterDialog;

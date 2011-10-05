@@ -24,11 +24,14 @@
 #include "../MediaDevices/IpodDevice_linux.h"
 #endif
 
+#include "../MediaDevices/IpodDevice.h"
+
 #include "lib/unicorn/UnicornSettings.h"
 
-#include <types/User.h>
+#include <lastfm/User.h>
 
 #include <QCheckBox>
+#include <QComboBox>
 #include <QDebug>
 #include <QFrame>
 #include <QGroupBox>
@@ -44,6 +47,8 @@ enum
 {
     IpodColumnUser,
     IpodColumnDeviceName,
+    IpodColumnScrobble,
+    IpodColumnAlwaysAsk,
     IpodColumnCount
 };
 
@@ -52,55 +57,23 @@ IpodSettingsWidget::IpodSettingsWidget( QWidget* parent )
 {
     setupUi();
 
-#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
-    connect( ui.enableScrobbling, SIGNAL( stateChanged( int ) ), this, SLOT( onSettingsChanged() ) );
-#endif
-
-    connect( ui.confirmScrobbles, SIGNAL( stateChanged( int ) ), this, SLOT( onSettingsChanged() ) );
     connect( ui.clearAssociations, SIGNAL( clicked() ), this, SLOT( clearIpodAssociations() ) );
     connect( ui.removeAssociation, SIGNAL( clicked() ), this, SLOT( removeIpodAssociation() ) );
-    connect( ui.iPodAssociations, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), this, SLOT( onItemActivated() ) );
+    connect( ui.iPodAssociations, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), SLOT( onItemActivated() ) );
+    connect( ui.iPodAssociations, SIGNAL( itemChanged(QTreeWidgetItem*,int)), SLOT( onSettingsChanged() ) );
 }
 
 
 void
 IpodSettingsWidget::setupUi()
 {
-    QLabel* title = new QLabel( tr( "Configure Media Devices" ), this );
-    QFrame* line = new QFrame( this );
-    line->setFrameShape( QFrame::HLine );
+    QVBoxLayout* layout = new QVBoxLayout( this );
+    layout->setContentsMargins( 0, 0, 0, 0 );
+    layout->setSpacing( 0 );
 
-    QVBoxLayout* v = new QVBoxLayout;
-    QVBoxLayout* vg = new QVBoxLayout;
-    QVBoxLayout* vg2 = new QVBoxLayout;
-    QHBoxLayout* h1 = new QHBoxLayout;
+    layout->addWidget( new QLabel( tr( "Associated iPods:" ) ) );
 
-    ui.confirmScrobbles = new QCheckBox( this );
-    ui.iPodAssociations = new QTreeWidget( this );
-    ui.clearAssociations = new QPushButton( this );
-    ui.removeAssociation = new QPushButton( this );
-
-    QGroupBox* groupBox1 = new QGroupBox( this );
-    QGroupBox* groupBox2 = new QGroupBox( this );
-
-   // groupBox1->setTitle( tr( "Configure " ) );
-    groupBox2->setTitle( tr( "iPod Associations" ) );
-
-#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
-    ui.enableScrobbling = new QCheckBox( this );
-    ui.enableScrobbling->setText( tr( "Enable iPod scrobbling" ) );
-    ui.enableScrobbling->setChecked( unicorn::UserSettings().value( "enableIpodScrobbling", true ).toBool() );
-    vg->addWidget( ui.enableScrobbling );
-#endif
-
-    ui.confirmScrobbles->setText( tr( "Always confirm iPod scrobbles" ) );
-
-    ui.confirmScrobbles->setChecked( unicorn::UserSettings().value( "confirmIpodScrobbles", false ).toBool() );
-
-    vg->addWidget( ui.confirmScrobbles );
-
-    groupBox1->setLayout( vg );
-
+    layout->addWidget( ui.iPodAssociations = new QTreeWidget( this ) );
 
     ui.iPodAssociations->setColumnCount( IpodColumnCount );
     ui.iPodAssociations->setSortingEnabled( false );
@@ -109,34 +82,19 @@ IpodSettingsWidget::setupUi()
     ui.iPodAssociations->setUniformRowHeights( true );
     ui.iPodAssociations->setItemsExpandable( false );
     ui.iPodAssociations->setAllColumnsShowFocus( true );
-    ui.iPodAssociations->setStyleSheet( "color: black; " );
-
-    populateIpodAssociations();
 
     QStringList headerLabels;
     headerLabels.append( tr( "User" ) );
     headerLabels.append( tr( "Device Name" ) );
+    headerLabels.append( tr( "Scrobble" ) );
+    headerLabels.append( tr( "Always Ask" ) );
 
     ui.iPodAssociations->setHeaderLabels( headerLabels );
 
-    ui.clearAssociations->setText( tr( "Clear user associations" ) );
-    ui.removeAssociation->setText( tr( "Remove association" ) );
+    layout->addWidget( ui.clearAssociations = new QPushButton( tr( "Clear user associations" ) ) );
+    layout->addWidget( ui.removeAssociation = new QPushButton( tr( "Remove association" ) ) );
 
-    h1->addStretch( 1 );
-    h1->addWidget( ui.removeAssociation );
-    h1->addWidget( ui.clearAssociations );
-    vg2->addWidget( ui.iPodAssociations );
-    vg2->addLayout( h1 );
-
-    groupBox2->setLayout( vg2 );
-
-    v->addWidget( title );
-    v->addWidget( line );
-    v->addWidget( groupBox1 );
-    v->addWidget( groupBox2 );
-    v->addStretch( 1 );
-    setLayout( v );
-
+    populateIpodAssociations();
 }
 
 void
@@ -144,12 +102,28 @@ IpodSettingsWidget::saveSettings()
 {
     if ( hasUnsavedChanges() )
     {
-        //save settings
+        // save settings
         qDebug() << "Saving settings...";
-#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
-        unicorn::UserSettings().setValue( "enableIpodScrobbling", ui.enableScrobbling->isChecked() );
-#endif
-        unicorn::UserSettings().setValue( "confirmIpodScrobbles", ui.confirmScrobbles->isChecked() );
+
+        // remove all associations and add them again with the current settings
+
+        for ( int i = 0 ; i < ui.iPodAssociations->topLevelItemCount() ; ++i )
+        {
+            QTreeWidgetItem* item = ui.iPodAssociations->topLevelItem( i );
+            QString deviceName = item->text( IpodColumnDeviceName );
+            QString deviceId = item->data( IpodColumnDeviceName, Qt::UserRole ).toString();
+
+            lastfm::User associatedUser = IpodDevice::associatedUser( deviceId );
+
+            doRemoveIpodAssociation( deviceId, associatedUser.name() );
+
+            IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
+
+            ipod->associateDevice( static_cast<QComboBox*>( ui.iPodAssociations->itemWidget( item, IpodColumnUser ) )->currentText() );
+            ipod->setScrobble( item->checkState( IpodColumnScrobble ) == Qt::Checked );
+            ipod->setAlwaysAsk( item->checkState( IpodColumnAlwaysAsk ) == Qt::Checked );
+        }
+
         onSettingsSaved();
     }
 }
@@ -167,9 +141,24 @@ IpodSettingsWidget::populateIpodAssociations()
         {
             us.setArrayIndex( i );
             QTreeWidgetItem* item = new QTreeWidgetItem( ui.iPodAssociations );
-            item->setText( IpodColumnUser, user.name() );
+            QComboBox* comboBox = new QComboBox( ui.iPodAssociations );
+
+            for ( int i = 0 ; i < roster.count() ; ++i )
+            {
+                comboBox->addItem( roster.at( i ).name() );
+
+                if ( roster.at( i ).name() == user.name() )
+                    comboBox->setCurrentIndex( i );
+            }
+
+            ui.iPodAssociations->setItemWidget( item, IpodColumnUser, comboBox );
+
             item->setText( IpodColumnDeviceName, us.value( "deviceName" ).toString() );
             item->setData( IpodColumnDeviceName, Qt::UserRole, us.value( "deviceId" ).toString() );
+
+            item->setCheckState( IpodColumnScrobble, us.value( "scrobble" ).toBool() ? Qt::Checked : Qt::Unchecked );
+            item->setCheckState( IpodColumnAlwaysAsk, us.value( "alwaysAsk" ).toBool() ? Qt::Checked : Qt::Unchecked );
+
         }
         us.endArray();
     }
@@ -200,7 +189,6 @@ IpodSettingsWidget::clearIpodAssociations()
 void
 IpodSettingsWidget::onItemActivated()
 {
-
     ui.removeAssociation->setEnabled( true );
 }
 
@@ -209,9 +197,16 @@ IpodSettingsWidget::removeIpodAssociation()
 {
     QTreeWidgetItem* association = ui.iPodAssociations->currentItem();
     QString deviceId = association->data( IpodColumnDeviceName, Qt::UserRole ).toString();
-    QString userName = association->text( IpodColumnUser );
+    QString username = static_cast<QComboBox*>( ui.iPodAssociations->itemWidget( association, IpodColumnUser ) )->currentText();
+    doRemoveIpodAssociation( deviceId, username );
+    ui.iPodAssociations->takeTopLevelItem( ui.iPodAssociations->indexOfTopLevelItem( association ) );
+    ui.removeAssociation->setEnabled( false );
+}
 
-    unicorn::UserSettings us( userName );
+void
+IpodSettingsWidget::doRemoveIpodAssociation( const QString deviceId, const QString username )
+{
+    unicorn::UserSettings us( username );
     int count = us.beginReadArray( "associatedDevices" );
     for ( int i = 0; i < count; i++ )
     {
@@ -229,6 +224,4 @@ IpodSettingsWidget::removeIpodAssociation()
     }
     us.endArray();
     us.setValue( "associatedDevices/size", count - 1 );
-    ui.iPodAssociations->takeTopLevelItem( ui.iPodAssociations->indexOfTopLevelItem( association ) );
-    ui.removeAssociation->setEnabled( false );
 }

@@ -26,13 +26,12 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
-    layout->addWidget( ui.hello = new Label( tr( "Hello! Let's start a RadioStation..." ) ) );
-    ui.hello->setObjectName( "hello" );
-    setUser( User() );
+    layout->addWidget( ui.top = new QLabel( tr( "<p>Hello! Let's start a radio station...</p>"
+                                                 "<p>Type an artist or genre into the box and press play, or visit the Radio tab for more advanced options.</p>" ) ) );
+    ui.top->setObjectName( "top" );
+    ui.top->setWordWrap( true );
 
-    layout->addWidget( ui.type = new QLabel( tr( "Type an artist or genre into the box and press play, or visit the Radio tab for more advanced options." ) ) );
-    ui.type->setObjectName( "type" );
-    ui.type->setWordWrap( true );
+    setUser( User() );
 
     layout->addWidget( ui.quickStart = new QuickStartWidget( this ) );
     ui.quickStart->setObjectName( "quickStart" );
@@ -40,17 +39,16 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
     layout->addWidget( ui.split = new QLabel( tr( "OR" ) ) );
     ui.split->setObjectName( "split" );
 
-    layout->addWidget( ui.scrobble = new QLabel( tr( "Scrobble from your music player." ) ) );
-    ui.scrobble->setObjectName( "scrobble" );
-
-    layout->addWidget( ui.scrobbleExplain = new QLabel( tr( "Effortlessly keep your Last.fm profile updated with the tracks you're playing on other media players. You can see more about the track you're playing on the scrobbles tab." ) ) );
-    ui.scrobbleExplain->setObjectName( "scrobbleExplain" );
-    ui.scrobbleExplain->setWordWrap( true );
+    layout->addWidget( ui.bottom = new QLabel( tr( "<p>Scrobble from your music player.</p>"
+                                                     "<p>Effortlessly keep your Last.fm profile updated with the tracks you're playing on other media players. You can see more about the track you're playing on the scrobbles tab.</p>"
+#if  defined( Q_OS_WIN32 ) || defined( Q_OS_MAC )
+                                                     "<p>Click on a player below to launch it.</p>"
+#endif
+                                                   ) ) );
+    ui.bottom->setObjectName( "bottom" );
+    ui.bottom->setWordWrap( true );
 
 #if  defined( Q_OS_WIN32 ) || defined( Q_OS_MAC )
-    layout->addWidget( ui.clickPlayers = new QLabel( tr( "Click on a player below to launch it." ) ) );
-    ui.clickPlayers->setObjectName( "clickPlayers" );
-
     layout->addWidget( ui.players = new StylableWidget );
     ui.players->setObjectName( "players" );
     QHBoxLayout* hl = new QHBoxLayout( ui.players );
@@ -95,7 +93,8 @@ void
 NothingPlayingWidget::setUser( const lastfm::User& user )
 {
     if ( !user.name().isEmpty() )
-        ui.hello->setText( tr( "Hello, %1! Let's start a radio station..." ).arg( user.name() ) );
+        ui.top->setText( tr(  "<p>Hello, %1! Let's start a radio station...</p>"
+                              "<p>Type an artist or genre into the box and press play, or visit the Radio tab for more advanced options.</p>" ).arg( user.name() ) );
 }
 
 void
@@ -108,7 +107,7 @@ NothingPlayingWidget::oniTunesClicked()
 
     LSApplicationParameters params;
     params.version = 0;
-    params.flags = kLSLaunchAndHide;
+    params.flags = kLSLaunchDefaults;
     params.application = &appRef;
     params.asyncLaunchRefCon = NULL;
     params.environment = NULL;

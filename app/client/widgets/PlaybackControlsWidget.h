@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include <radio/RadioStation.h>
+#include <lastfm/RadioStation.h>
 
 #include "lib/unicorn/StylableWidget.h"
 
@@ -24,6 +24,8 @@ public:
 
     bool scrobbleTrack() { return m_scrobbleTrack; }
     void setScrobbleTrack( bool scrobbleTrack );
+
+    void addToMenu( class QMenu& menu );
 
 private slots:
     void onActionsChanged();

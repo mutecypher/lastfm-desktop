@@ -1,6 +1,7 @@
 TEMPLATE = app
 TARGET = "Last.fm"
 VERSION = 2.0.0
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql phonon
 CONFIG += lastfm unicorn listener
 win32:LIBS += user32.lib
@@ -30,13 +31,8 @@ linux* {
 SUBDIRS=PrefPane
 
 SOURCES += \
-    Wizard/WelcomePage.cpp \
-    Wizard/SystemTrayPage.cpp \
-    Wizard/PluginPage.cpp \
     Wizard/LoginPage.cpp \
     Wizard/BootstrapPage.cpp \
-    Wizard/BootstrapInProgressPage.cpp \
-    Wizard/AuthInProgressPage.cpp \
     Widgets/TitleBar.cpp \
     Widgets/TagFilterDialog.cpp \
     Widgets/StatusBar.cpp \
@@ -62,15 +58,12 @@ SOURCES += \
     Services/ScrobbleService/ScrobbleService.cpp \
     Services/RadioService/RadioService.cpp \
     ScrobSocket.cpp \
-    ScrobblesModel.cpp \
     MediaDevices/MediaDevice.cpp \
     MediaDevices/IpodDevice.cpp \
     MediaDevices/DeviceScrobbler.cpp \
     MainWindow.cpp \
     main.cpp \
-    Dialogs/SettingsDialog.cpp \
     Dialogs/ScrobbleSetupDialog.cpp \
-    Dialogs/ScrobbleConfirmationDialog.cpp \
     Dialogs/DiagnosticsDialog.cpp \
     Bootstrapper/PluginBootstrapper.cpp \
     Bootstrapper/ITunesDevice/itunesdevice.cpp \
@@ -96,18 +89,23 @@ SOURCES += \
     Widgets/ScrobblesWidget.cpp \
     Widgets/RefreshButton.cpp \
     Widgets/BackButton.cpp \
-    Widgets/WidgetTextObject.cpp
+    Widgets/WidgetTextObject.cpp \
+    Wizard/FirstRunWizard.cpp \
+    Wizard/AccessPage.cpp \
+    Wizard/TourMetadataPage.cpp \
+    Wizard/PluginsPage.cpp \
+    Wizard/TourRadioPage.cpp \
+    Wizard/TourFinishPage.cpp \
+    Wizard/PluginsInstallPage.cpp \
+    Wizard/BootstrapProgressPage.cpp \
+    Wizard/TourScrobblesPage.cpp \
+    Wizard/TourLocationPage.cpp \
+    Dialogs/PreferencesDialog.cpp
 
 HEADERS += \
-    Wizard/WelcomePage.h \
-    Wizard/SystemTrayPage.h \
-    Wizard/PluginPage.h \
     Wizard/LoginPage.h \
-    Wizard/IntroPage.h \
     Wizard/FirstRunWizard.h \
     Wizard/BootstrapPage.h \
-    Wizard/BootstrapInProgressPage.h \
-    Wizard/AuthInProgressPage.h \
     Widgets/TitleBar.h \
     Widgets/TagFilterDialog.h \
     Widgets/StatusBar.h \
@@ -137,14 +135,11 @@ HEADERS += \
     Services/ITunesPluginInstaller.h \
     Services/ITunesPluginInstaller/ITunesPluginInstaller.h \
     ScrobSocket.h \
-    ScrobblesModel.h \
     MediaDevices/MediaDevice.h \
     MediaDevices/IpodDevice.h \
     MediaDevices/DeviceScrobbler.h \
     MainWindow.h \
-    Dialogs/SettingsDialog.h \
     Dialogs/ScrobbleSetupDialog.h \
-    Dialogs/ScrobbleConfirmationDialog.h \
     Dialogs/DiagnosticsDialog.h \
     Bootstrapper/PluginBootstrapper.h \
     Bootstrapper/ITunesDevice/MediaDeviceInterface.h \
@@ -172,7 +167,17 @@ HEADERS += \
     Widgets/ScrobblesWidget.h \
     Widgets/RefreshButton.h \
     Widgets/BackButton.h \
-    Widgets/WidgetTextObject.h
+    Widgets/WidgetTextObject.h \
+    Wizard/AccessPage.h \
+    Wizard/TourMetadataPage.h \
+    Wizard/PluginsPage.h \
+    Wizard/TourRadioPage.h \
+    Wizard/TourFinishPage.h \
+    Wizard/PluginsInstallPage.h \
+    Wizard/BootstrapProgressPage.h \
+    Wizard/TourScrobblesPage.h \
+    Wizard/TourLocationPage.h \
+    Dialogs/PreferencesDialog.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
@@ -181,7 +186,59 @@ FORMS += \
     Widgets/PlaybackControlsWidget.ui \
     Dialogs/ScrobbleSetupDialog.ui \
     Dialogs/DiagnosticsDialog.ui \
-    Widgets/MetadataWidget.ui
+    Widgets/MetadataWidget.ui \
+    Dialogs/PreferencesDialog.ui
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

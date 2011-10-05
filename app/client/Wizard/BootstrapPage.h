@@ -26,43 +26,43 @@
 #include <QGroupBox>
 #include <QRadioButton>
 #include <QNetworkReply>
+#include <QPointer>
 
 #include "lib/unicorn/Updater/PluginList.h"
 #include "../Application.h"
 
-class PlayerSelectorListWidget : public QWidget
+class BootstrapPage: public QWizardPage
 {
     Q_OBJECT
-    Q_PROPERTY( QString playerId READ playerId )
-public:
-    PlayerSelectorListWidget( QWidget* p = 0 );
-    
-    QString playerId() {
-        return m_playerId;
-    }
 
-    void refresh();
+private:
+    Q_PROPERTY( QString playerId READ playerId WRITE setPlayerId )
+
+    struct
+    {
+        class QLabel* description;
+    } ui;
+
+public:
+    BootstrapPage( QWidget* parent = 0 );
+
+    QString playerId() const { return m_playerId; }
+    void setPlayerId( const QString& playerId ) { m_playerId = playerId; }
+
+private:
+    void initializePage();
+    bool validatePage();
+    void cleanupPage();
 
 signals:
     void playerChanged();
 
 private slots:
-    void onPluginToggled( bool checked );
-
-private:
-    PluginList m_pluginList;
-    QString m_playerId;
-};
-
-class BootstrapPage: public QWizardPage
-{
-    Q_OBJECT
-public:
-    BootstrapPage( QWidget* parent = 0 );
-    void initializePage();
+    void playerSelected();
     
 protected:
-    class PlayerSelectorListWidget* m_psl;
+    PluginList m_pluginList;
+    QString m_playerId;
 };
 
 #endif //BOOTSTRAP_WIZARD_H

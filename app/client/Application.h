@@ -24,9 +24,9 @@
 #include <QPointer>
 #include <QSystemTrayIcon>
 
-#include <global.h>
-#include <types/Track.h>
-#include <ws/ws.h>
+#include <lastfm/global.h>
+#include <lastfm/Track.h>
+#include <lastfm/ws.h>
 
 #include "lib/unicorn/UnicornApplication.h"
 
@@ -36,6 +36,7 @@ class RadioWidget;
 class QAction;
 class ScrobbleInfoFetcher;
 class Drawer;
+class QMenuBar;
 
 #ifdef Q_WS_X11
     class IpodDeviceLinux;
@@ -71,6 +72,7 @@ namespace audioscrobbler
         // we delete these so QPointers
         QPointer<QSystemTrayIcon> m_tray;
         QPointer<MainWindow> m_mw;
+        QPointer<QMenuBar> m_menuBar;
 
         Track m_currentTrack;
         Track m_trackToScrobble;
@@ -80,8 +82,6 @@ namespace audioscrobbler
         AboutDialog* m_aboutDialog;
         
         QAction* m_submit_scrobbles_toggle;
-        QAction* m_artist_action;
-        QAction* m_title_action;
         QAction* m_love_action;
         QAction* m_tag_action;
         QAction* m_share_action;
@@ -92,9 +92,6 @@ namespace audioscrobbler
         QAction* m_toggle_window_action;
         QAction* m_scrobble_ipod_action;
         QAction* m_visit_profile_action;
-        QAction* m_faq_action;
-        QAction* m_forums_action;
-        QAction* m_about_action;
         
     public:
         Application(int& argc, char** argv);
@@ -108,8 +105,7 @@ namespace audioscrobbler
         QAction* playAction() const { return m_play_action; }
         QAction* skipAction() const { return m_skip_action; }
         QAction* scrobbleToggleAction() const { return m_submit_scrobbles_toggle; }
-
-        QSystemTrayIcon* tray() const { return m_tray.data(); }
+        QSystemTrayIcon* tray() ;
         void setRaiseHotKey( Qt::KeyboardModifiers mods, int key );
         
     signals:
@@ -166,9 +162,9 @@ namespace audioscrobbler
 
         void onMessageReceived(const QStringList& message);
 		
-		/** all webservices connect to this and emit in the case of bad errors that
+        /** all webservices connect to this and emit in the case of bad errors that
 	     * need to be handled at a higher level */
-	    void onWsError( lastfm::ws::Error );
+        void onWsError( lastfm::ws::Error );
     };
 }
 

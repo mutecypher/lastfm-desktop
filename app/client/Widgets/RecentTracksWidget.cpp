@@ -3,7 +3,7 @@
 #include "ScrobblesWidget.h"
 #include "MetadataWidget.h"
 #include "lib/unicorn/layouts/SideBySideLayout.h"
-#include <types/Track.h>
+#include <lastfm/Track.h>
 #include <QDebug>
 
 #include "RecentTracksWidget.h"
@@ -18,6 +18,12 @@ RecentTracksWidget::RecentTracksWidget( QWidget* parent )
 
     connect( m_scrobbles, SIGNAL( trackClicked(Track)), SLOT( onTrackClicked(Track)));
     connect( m_layout, SIGNAL( moveFinished(QLayoutItem*)), SLOT(onMoveFinished(QLayoutItem*)));
+}
+
+void
+RecentTracksWidget::refresh()
+{
+    m_scrobbles->refresh();
 }
 
 void

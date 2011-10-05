@@ -1,12 +1,15 @@
 #ifndef METADATA_WINDOW_H_
 #define METADATA_WINDOW_H_
 
+#include <QResizeEvent>
+
+#include <lastfm/Track.h>
+#include <lastfm/XmlQuery.h>
+
 #include "lib/unicorn/UnicornMainWindow.h"
 #include "lib/unicorn/StylableWidget.h"
-#include <types/Track.h>
-#include <core/XmlQuery.h>
 
-#include <QResizeEvent>
+#include "Dialogs/PreferencesDialog.h"
 
 using lastfm::XmlQuery;
 
@@ -28,6 +31,8 @@ class MainWindow : public unicorn::MainWindow
         class TitleBar* titleBar;
         class StatusBar* statusBar;
 
+        class MessageBar* messageBar;
+
         class SideBar* sideBar;
         class QStackedWidget* stackedWidget;
 
@@ -44,7 +49,7 @@ class MainWindow : public unicorn::MainWindow
     } ui;
 
 public:
-    MainWindow();
+    MainWindow( QMenuBar* );
     const Track& currentTrack() const{ return m_currentTrack; }
 
     void addWinThumbBarButton( QAction* );
@@ -62,16 +67,26 @@ public slots:
     void onPrefsTriggered();
 
 private slots:
+    void onVisitProfile();
+
     void onTrackStarted(const Track&, const Track&);
     void onStopped();
     void onPaused();
     void onResumed();
     void onTuningIn();
 
+    void onRadioError( int error, const QVariant& data );
+
+    // iPod scrobbling things
+    void onIPodDetected( const QString& iPodName );
+    void onProcessingScrobbles( const QString& iPodName );
+    void onFoundScrobbles( const QList<lastfm::Track>& tracks, const QString& iPodName );
+    void onNoScrobblesFound( const QString& iPodName );
 
 private:
     void setCurrentWidget( QWidget* );
     void addWinThumbBarButtons( QList<QAction*>& );
+    void setupMenuBar();
 
     //void resizeEvent( QResizeEvent* event ) { qDebug() << event->size(); }
 
@@ -80,6 +95,8 @@ private:
     class ActivityListItem* m_currentActivity;
     class QDockWidget* m_radioSideBar;
     QList<QAction*> m_buttons;
+
+    QPointer<PreferencesDialog> m_preferences;
 };
 
 #endif //METADATA_WINDOW_H_

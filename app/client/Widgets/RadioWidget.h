@@ -33,6 +33,7 @@ public:
 
 private slots:
     void onSessionChanged( unicorn::Session* session );
+    void onGotUserInfo( const lastfm::UserDetails& userDetails );
 
     void onTuningIn( const RadioStation& station );
 
@@ -40,8 +41,12 @@ private slots:
     void onGotRecentStations();
 
 private:
+    void changeUser( const QString& newUsername );
+
+private:
     QPointer<QWidget> m_main;
 
+    QString m_currentUsername;
 };
 
 #endif // RADIOWIDGET_H

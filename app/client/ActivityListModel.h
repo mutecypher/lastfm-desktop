@@ -7,8 +7,8 @@
 #include <QIcon>
 #include <QDebug>
 
-#include <ws/ws.h>
-#include <types/Track.h>
+#include <lastfm/ws.h>
+#include <lastfm/Track.h>
 
 #include "ImageTrack.h"
 
@@ -61,6 +61,7 @@ private slots:
 private:
     void read();
     void limit( int limit );
+    void onSessionChanged( const QString& username );
 
     QModelIndex adjustedIndex( const QModelIndex& a_index ) const;
     const ImageTrack& indexedTrack( const QModelIndex& index, const QModelIndex& adjustedIndex ) const;

@@ -33,8 +33,8 @@
 #include <QCheckBox>
 #include <QDesktopWidget>
 
-#include <types/User.h>
-#include <core/XmlQuery.h>
+#include <lastfm/User.h>
+#include <lastfm/XmlQuery.h>
 
 #include "lib/unicorn/widgets/TrackWidget.h"
 
@@ -55,7 +55,7 @@ ShareDialog::ShareDialog( const Track& t, Type type, QWidget* parent )
     ui->setupUi( this );
 
     ui->recipients->setType( ItemSelectorWidget::User );
-    ui->icon->loadUrl( m_track.imageUrl( lastfm::Small, true ), false );
+    ui->icon->loadUrl( m_track.imageUrl( lastfm::Small, true ), HttpImageWidget::ScaleAuto );
 
     ui->album->setEnabled( !t.album().isNull() );
 
@@ -234,7 +234,8 @@ ShareDialog::onShared()
 {
     try
     {
-        XmlQuery lfm = qobject_cast<QNetworkReply*>(sender())->readAll();
+        XmlQuery lfm;
+        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         if ( lfm.attribute( "status" ) == "ok" )
             close();

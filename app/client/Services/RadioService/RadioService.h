@@ -20,10 +20,10 @@
 #ifndef RADIO_SERVICE_H
 #define RADIO_SERVICE_H
 
-#include <types/Track.h>
-#include <radio/RadioStation.h>
-#include <radio/RadioTuner.h>
-#include <ws/ws.h>
+#include <lastfm/Track.h>
+#include <lastfm/RadioStation.h>
+#include <lastfm/RadioTuner.h>
+#include <lastfm/ws.h>
 #include <phonon/phononnamespace.h>
 #include <phonon/audiooutput.h>
 #include <phonon/mediasource.h>
@@ -66,6 +66,8 @@ public slots:
     void playNext( const RadioStation& station );
     void skip();
     void stop();
+    void volumeUp();
+    void volumeDown();
     void mute();
     void pause();
     void resume();
