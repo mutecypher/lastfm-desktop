@@ -2,13 +2,15 @@
 #include <QDebug>
 
 #include "../Application.h"
-#include "../Dialogs/ScrobbleConfirmationDialog.h"
+#include "lib/unicorn/dialogs/ScrobbleConfirmationDialog.h"
 #include "lib/unicorn/UnicornApplication.h"
 #include "IpodDevice.h"
 
+#include "lib/unicorn/QMessageBoxBuilder.h"
+
 #ifdef Q_WS_X11
 #include <QFileDialog>
-#include "lib/unicorn/QMessageBoxBuilder.h"
+
 #endif
 
 QString getIpodMountPath();
@@ -111,7 +113,6 @@ DeviceScrobbler::twiddled( QStringList arguments )
     QString deviceId = arguments[ arguments.indexOf( "--deviceId" ) + 1 ];
     QString deviceName = arguments[ arguments.indexOf( "--deviceName" ) + 1 ];
     QString iPodPath = arguments[ arguments.indexOf( "--ipod-path" ) + 1 ];
-    bool showSetup = false;
 
     // Check if the device has been associated with a user
     // and then if it is with the current user
@@ -119,24 +120,39 @@ DeviceScrobbler::twiddled( QStringList arguments )
 
     if ( !associatedUser.name().isEmpty() )
     {
+        IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
+
         if ( associatedUser.name() == lastfm::ws::Username )
         {
-            IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
-
             if ( arguments.contains( "no-tracks-found" ) )
                 emit noScrobblesFound( deviceName );
             else
                 onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), associatedUser.name(), deviceId, deviceName, QStringList( iPodPath ) );
-
-            delete ipod;
         }
         else
         {
-            // Show a warning
             // The iPod is associated with a differnt user
             // it will be scrobbled the next time that user is online
-            // TODO: Needs better copy
+
+            int result = QMessageBoxBuilder( 0 )
+                .setIcon( QMessageBox::Question )
+                .setTitle( tr( "Switch user accounts to scrobble iPod \"%1\"?" ).arg( ipod->deviceName() ) )
+                .setText( tr( "This iPod is associated with a different user. To scrobble tracks from it, please switch to the account \"%1\"?" ).arg( associatedUser.name() ) )
+                .setButtons( QMessageBox::Yes | QMessageBox::No )
+                .exec();
+
+            if ( result == QMessageBox::Yes )
+            {
+                unicorn::Settings s;
+                // Switch accounts!
+                s.beginGroup( associatedUser.name() );
+                QString sessionKey = s.value( "SessionKey", "" ).toString();
+                aApp->changeSession( associatedUser.name(), sessionKey );
+                s.endGroup();
+            }
         }
+
+        delete ipod;
     }
     else
     {
@@ -210,28 +226,33 @@ DeviceScrobbler::scrobbleIpodFiles( QStringList iPodScrobbleFiles, const IpodDev
         iPodScrobbleFile.remove();
     }
 
-    if ( ipod.alwaysAsk() )
+    if ( scrobbles.count() > 0 )
     {
-        ScrobbleConfirmationDialog confirmDialog( scrobbles );
-        if ( confirmDialog.exec() == QDialog::Accepted )
+        if ( ipod.alwaysAsk() )
         {
-            scrobbles = confirmDialog.tracksToScrobble();
+            ScrobbleConfirmationDialog confirmDialog( scrobbles );
+            if ( confirmDialog.exec() == QDialog::Accepted )
+            {
+                scrobbles = confirmDialog.tracksToScrobble();
 
+                // sort the iPod scrobbles before caching them
+                if ( scrobbles.count() > 1 )
+                    qSort ( scrobbles.begin(), scrobbles.end() );
+
+                emit foundScrobbles( scrobbles, ipod.deviceName() );
+            }
+        }
+        else
+        {
             // sort the iPod scrobbles before caching them
             if ( scrobbles.count() > 1 )
                 qSort ( scrobbles.begin(), scrobbles.end() );
 
-            emit foundScrobbles( scrobbles, "" );
+            emit foundScrobbles( scrobbles, ipod.deviceName()  );
         }
     }
     else
-    {
-        // sort the iPod scrobbles before caching them
-        if ( scrobbles.count() > 1 )
-            qSort ( scrobbles.begin(), scrobbles.end() );
-
-        emit foundScrobbles( scrobbles, "" );
-    }
+        emit noScrobblesFound( ipod.deviceName() );
 }
 
 #ifdef Q_WS_X11

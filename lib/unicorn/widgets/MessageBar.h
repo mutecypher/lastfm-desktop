@@ -21,6 +21,9 @@
 #define MESSAGE_BAR_H
 
 #include <QWidget>
+
+#include <lastfm/Track.h>
+
 #include "lib/DllExportMacro.h"
 
 class UNICORN_DLLEXPORT MessageBar : public QWidget
@@ -36,6 +39,8 @@ class UNICORN_DLLEXPORT MessageBar : public QWidget
     
 public:
     MessageBar( QWidget* parent );
+
+    void setTracks( const QList<lastfm::Track>& tracks );
     
 public slots:
     void show( const QString&, const QString& id = QString() );
@@ -47,9 +52,12 @@ private:
 private slots:
     void animate( int );
     void onLabelDestroyed();
+    void onLinkActivated( const QString& link );
 
 private:
     class QTimeLine* m_timeline;
+
+    QList<lastfm::Track> m_tracks;
 };
 
 #endif

@@ -22,6 +22,8 @@
 #include <QtGui>
 #include <QLabel>
 
+#include "lib/unicorn/dialogs/ScrobbleConfirmationDialog.h"
+
 
 MessageBar::MessageBar( QWidget* parent )
            :QWidget( parent )
@@ -39,6 +41,11 @@ MessageBar::MessageBar( QWidget* parent )
     connect( m_timeline, SIGNAL(frameChanged( int )), SLOT(animate( int )) );
 }
 
+void
+MessageBar::setTracks( const QList<lastfm::Track>& tracks )
+{
+    m_tracks = tracks;
+}
 
 void
 MessageBar::show( const QString& message, const QString& id )
@@ -52,20 +59,29 @@ MessageBar::show( const QString& message, const QString& id )
     label->setMargin( 8 );
     label->setIndent( 4 );
     label->setTextFormat( Qt::RichText );
-    label->setOpenExternalLinks( true );
+    label->setOpenExternalLinks( false );
     label->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse );
     label->setObjectName( id );
 
     label->adjustSize();
 
+    connect( label, SIGNAL(linkActivated(QString)), SLOT(onLinkActivated(QString)));
+
     show( label, animate );
 }
 
+void
+MessageBar::onLinkActivated( const QString& link )
+{
+    // Show a dialog with the tracks
+    ScrobbleConfirmationDialog confirmDialog( m_tracks );
+    confirmDialog.setReadOnly();
+    confirmDialog.exec();
+}
 
 void 
 MessageBar::show( QWidget* w, bool animate )
 {
-
     QPushButton* close = new QPushButton( "x" );
     QHBoxLayout* h = new QHBoxLayout( w );
     h->addStretch();

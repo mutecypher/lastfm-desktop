@@ -41,6 +41,17 @@ ScrobbleConfirmationDialog::ScrobbleConfirmationDialog( const QList<lastfm::Trac
 }
 
 void
+ScrobbleConfirmationDialog::setReadOnly()
+{
+    ui.infoText->setText( tr( m_scrobblesModel->rowCount() == 1 ? "%1 track has been scrobbled" : "%1 tracks have been scrobbled" ).arg( m_scrobblesModel->rowCount() ) );
+
+    ui.buttons->removeButton( ui.buttons->button( QDialogButtonBox::Cancel ) );
+    ui.toggleButton->hide();
+
+    m_scrobblesModel->setReadOnly();
+}
+
+void
 ScrobbleConfirmationDialog::setupUi()
 {
     QVBoxLayout* mainLayout = new QVBoxLayout( this );

@@ -22,14 +22,14 @@ BioWidget::BioWidget( QWidget* p )
     document()->documentLayout()->registerHandler( WidgetImageFormat, m_widgetTextObject );
 
     ui.image = new HttpImageWidget(this);
-    ui.image->setFixedWidth( 160 );
+    ui.image->setFixedWidth( 170 );
     ui.image->setAlignment( Qt::AlignTop );
     
     ui.onTour = new BannerWidget( tr("On Tour" ));
     ui.onTour->setBannerVisible( false );
     ui.onTour->setWidget( ui.image );
 
-    ui.onTour->setFixedWidth( 160 );
+    ui.onTour->setFixedWidth( 170 );
     ui.onTour->setObjectName( "onTour" );
     insertWidget( ui.onTour );
 

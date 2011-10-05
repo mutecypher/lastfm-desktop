@@ -1,12 +1,14 @@
 #ifndef SCROBBLES_MODEL_H
 #define SCROBBLES_MODEL_H
 
-#include <lastfm/Track.h>
-
 #include <QAbstractTableModel>
 #include <QStringList>
 
-class ScrobblesModel : public QAbstractTableModel
+#include <lastfm/Track.h>
+
+#include "lib/DllExportMacro.h"
+
+class UNICORN_DLLEXPORT ScrobblesModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
@@ -22,6 +24,8 @@ public:
 
 
     ScrobblesModel( const QList<lastfm::Track> tracks, QObject* parent = 0 );
+
+    void setReadOnly();
 
     int rowCount( const QModelIndex& parent = QModelIndex() ) const;
     int columnCount( const QModelIndex& parent = QModelIndex() ) const;
@@ -59,6 +63,7 @@ private:
 private:
     QList<Scrobble> m_scrobbleList;
     QStringList m_headerTitles;
+    bool m_readOnly;
 };
 
 #endif // SCROBBLES_MODEL_H

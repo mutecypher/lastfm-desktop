@@ -58,14 +58,12 @@ SOURCES += \
     Services/ScrobbleService/ScrobbleService.cpp \
     Services/RadioService/RadioService.cpp \
     ScrobSocket.cpp \
-    ScrobblesModel.cpp \
     MediaDevices/MediaDevice.cpp \
     MediaDevices/IpodDevice.cpp \
     MediaDevices/DeviceScrobbler.cpp \
     MainWindow.cpp \
     main.cpp \
     Dialogs/ScrobbleSetupDialog.cpp \
-    Dialogs/ScrobbleConfirmationDialog.cpp \
     Dialogs/DiagnosticsDialog.cpp \
     Bootstrapper/PluginBootstrapper.cpp \
     Bootstrapper/ITunesDevice/itunesdevice.cpp \
@@ -137,13 +135,11 @@ HEADERS += \
     Services/ITunesPluginInstaller.h \
     Services/ITunesPluginInstaller/ITunesPluginInstaller.h \
     ScrobSocket.h \
-    ScrobblesModel.h \
     MediaDevices/MediaDevice.h \
     MediaDevices/IpodDevice.h \
     MediaDevices/DeviceScrobbler.h \
     MainWindow.h \
     Dialogs/ScrobbleSetupDialog.h \
-    Dialogs/ScrobbleConfirmationDialog.h \
     Dialogs/DiagnosticsDialog.h \
     Bootstrapper/PluginBootstrapper.h \
     Bootstrapper/ITunesDevice/MediaDeviceInterface.h \

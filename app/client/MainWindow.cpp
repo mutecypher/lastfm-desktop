@@ -300,9 +300,11 @@ MainWindow::onProcessingScrobbles( const QString& iPodName )
 void
 MainWindow::onFoundScrobbles( const QList<lastfm::Track>& tracks, const QString& iPod )
 {
+    ui.messageBar->setTracks( tracks );
+
     tracks.count() == 1 ?
-        ui.messageBar->show( tr("%1 track has been scrobbled from the iPod \"%2\"").arg( QString::number( tracks.count() ), iPod ), "ipod" ):
-        ui.messageBar->show( tr("%1 tracks have been scrobbled from the iPod \"%2\"").arg( QString::number( tracks.count() ), iPod ), "ipod" );
+        ui.messageBar->show( tr("<a href=\"tracks\">%1 track</a> has been scrobbled from the iPod \"%2\"").arg( QString::number( tracks.count() ), iPod ), "ipod" ):
+        ui.messageBar->show( tr("<a href=\"tracks\">%1 tracks</a> have been scrobbled from the iPod \"%2\"").arg( QString::number( tracks.count() ), iPod ), "ipod" );
 }
 
 void
