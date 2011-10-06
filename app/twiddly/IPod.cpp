@@ -65,6 +65,7 @@ IPod::fromCommandLineArguments( const QStringList& args )
     THROW_IF_EMPTY( vid );
     THROW_IF_EMPTY( pid );
     THROW_IF_EMPTY( serial );
+    THROW_IF_EMPTY( name );
     
     #undef THROW_IF_EMPTY
     
