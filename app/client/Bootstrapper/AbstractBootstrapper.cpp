@@ -20,7 +20,7 @@
 
 #include "AbstractBootstrapper.h"
 
-#include <ws/ws.h>
+#include <lastfm/ws.h>
 #include <QNetworkRequest>
 #include <QUrl>
 #include <QFile>

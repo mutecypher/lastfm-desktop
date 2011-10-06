@@ -17,13 +17,16 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "UnicornCoreApplication.h"
-#include <ws/ws.h>
-#include <core/misc.h>
-//#include "UnicornSettings.h"
-#include "common/c++/Logger.h"
+
 #include <QDebug>
 #include <QLocale>
+
+#include <lastfm/ws.h>
+#include <lastfm/misc.h>
+
+#include "UnicornCoreApplication.h"
+#include "common/c++/Logger.h"
+
 using namespace lastfm;
 
 #ifdef WIN32

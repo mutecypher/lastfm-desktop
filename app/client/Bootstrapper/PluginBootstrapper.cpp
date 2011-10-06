@@ -19,8 +19,8 @@
 */
 #include "PluginBootstrapper.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
-#include <core/misc.h>
-#include <ws/ws.h>
+#include <lastfm/misc.h>
+#include <lastfm/ws.h>
 #include <QSettings>
 #include <QFile>
 

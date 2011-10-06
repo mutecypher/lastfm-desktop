@@ -18,16 +18,13 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-<<<<<<< HEAD
-#include <types/Track.h>
-=======
 #include <lastfm/Track.h>
->>>>>>> 70b252e9f4dcef74832c647f891cec7ac0d796d9
-#include "SpotifyListener.h"
-#include "../PlayerConnection.h"
-#include <core/misc.h>
+#include <lastfm/misc.h>
+
 #include "lib/unicorn/mac/AppleScript.h"
 
+#include "../PlayerConnection.h"
+#include "SpotifyListener.h"
 
 struct SpotifyConnection : PlayerConnection
 {

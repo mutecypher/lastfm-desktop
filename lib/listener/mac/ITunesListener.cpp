@@ -17,12 +17,14 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "ITunesListener.h"
-#include "../PlayerConnection.h"
-#include <core/misc.h>
-#include "lib/unicorn/mac/AppleScript.h"
 #include <QThread>
 
+#include <lastfm/misc.h>
+
+#include "lib/unicorn/mac/AppleScript.h"
+
+#include "ITunesListener.h"
+#include "../PlayerConnection.h"
 
 struct ITunesConnection : PlayerConnection
 {
