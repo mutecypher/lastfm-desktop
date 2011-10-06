@@ -43,6 +43,7 @@
             const COMMON_STD_STRING twiddlyFlags() const;
             const COMMON_STD_STRING& serial() const { return m_serial; }
             COMMON_STD_STRING device() const;
+            const COMMON_STD_STRING& displayName() const { return m_displayName; }
 
             enum deviceType { unknown = 0,
                    iPod,

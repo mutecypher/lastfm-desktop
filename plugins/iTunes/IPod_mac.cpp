@@ -424,6 +424,9 @@ IPod::queryIPhoneManual() const
 void 
 IPod::getDisplayName()
 {
+    // fall back on the serial number if we can't find the display name
+    m_displayName = m_serial;
+    
     CFStringRef displayName;
     
     CFMutableStringRef infoPlistPath = CFStringCreateMutable( kCFAllocatorDefault, 0 );

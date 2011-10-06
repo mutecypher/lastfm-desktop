@@ -42,6 +42,8 @@ IPod::fromCommandLineArguments( const QStringList& args )
     #define args myArgs
 #endif
 
+
+
     QMap<QString, QString> map;
     QListIterator<QString> i( args );
     while (i.hasNext())
@@ -50,7 +52,13 @@ IPod::fromCommandLineArguments( const QStringList& args )
         if (!arg.startsWith( "--" ) || !i.hasNext() || i.peekNext().startsWith( "--" ))
             continue;
         arg = arg.mid( 2 );
-        map[arg] = i.next();
+
+        // get all the strings up until the end or the next --
+        QString value = i.next();
+        while ( i.hasNext() && !i.peekNext().startsWith("--") )
+            value.append( " " + i.next() );
+
+        map[arg] = value;
     }
 
     IPod* ipod;
