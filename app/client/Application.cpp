@@ -549,7 +549,11 @@ Application::onMessageReceived( const QStringList& message )
         ScrobbleService::instance().handleIPodDetectedMessage( message );
     }
 
-    if ( !(message.contains( "--tray" ) || message.contains( "--settings" )))
+    if ( !( message.contains( "--tray" )
+           || message.contains( "--twiddly" )
+           || message.contains( "--new-ipod-detected" )
+           || message.contains( "--ipod-detected" )
+           || message.contains( "--settings" ) ) )
     {
         // raise the app
         m_show_window_action->trigger();
