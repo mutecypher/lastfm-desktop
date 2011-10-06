@@ -24,7 +24,10 @@
 #include <QToolButton>
 #include <QPainter>
 #include <lastfm/User.h>
-#include "lib/unicorn/widgets/UserMenu.h"
+
+#include "UserMenu.h"
+
+#include "../UnicornSettings.h"
 
 using namespace lastfm;
 

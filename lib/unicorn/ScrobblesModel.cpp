@@ -21,7 +21,7 @@ ScrobblesModel::Scrobble::attribute( int index ) const
 }
 
 ScrobblesModel::ScrobblesModel( const QList<lastfm::Track> tracks, QObject* parent )
-    : QAbstractTableModel( parent )
+    : QAbstractTableModel( parent ), m_readOnly( false )
 {
     foreach( lastfm::Track t, tracks )
     {
@@ -32,6 +32,12 @@ ScrobblesModel::ScrobblesModel( const QList<lastfm::Track> tracks, QObject* pare
     m_headerTitles.append( "Album" );
     m_headerTitles.append( "Time listened" );
     m_headerTitles.append( "Loved" );
+}
+
+void
+ScrobblesModel::setReadOnly()
+{
+    m_readOnly = true;
 }
 
 int
@@ -65,7 +71,10 @@ ScrobblesModel::data( const QModelIndex& index, int role ) const
     }
     else if ( role == Qt::CheckStateRole && index.column() == 0 )
     {
-        return m_scrobbleList.at( index.row() ).isScrobblingEnabled()? Qt::Checked : Qt::Unchecked;
+        if ( m_readOnly )
+            return QVariant();
+        else
+            return m_scrobbleList.at( index.row() ).isScrobblingEnabled() ? Qt::Checked : Qt::Unchecked;
     }
     else
         return QVariant();

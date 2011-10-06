@@ -21,6 +21,8 @@
 #include <QPushButton>
 #include <QFile>
 
+#include "lib/unicorn/QMessageBoxBuilder.h"
+
 #include "ScrobbleSetupDialog.h"
 #include "ui_ScrobbleSetupDialog.h"
 
@@ -83,25 +85,47 @@ ScrobbleSetupDialog::onClicked( QAbstractButton* button )
     switch ( ui->buttonBox->buttonRole( button ) )
     {
     case QDialogButtonBox::YesRole:
+    case QDialogButtonBox::AcceptRole:
     {
         QString user = User().name();
 
         if ( ui->users->isVisible() )
             user = ui->users->currentText();
 
+        QString title = tr( "Your iPod is ready for scrobbling!" )  ;
+        QString text = tr( "<p>From now on, anything you listen to on your iPod will be automatically scrobbled to the user \"<strong>%1</strong>\" when the device is synced.</p>"
+                           "<p>Change your iPod scrobble settings and user associations at any time in the preferences area.</p>" ).arg( user );
+
         if ( m_more )
         {
             if ( ui->always->isChecked() )
                 emit clicked( true, false, user, m_deviceId, m_deviceName, m_iPodFiles );
             else if ( ui->manual->isChecked() )
+            {
                 emit clicked( true, true, user, m_deviceId, m_deviceName, m_iPodFiles );
+                text = tr( "<p>From now on, you'll be asked to confirm any scrobbles from your iPod to the user \"<strong>%1</strong>\" when the device is synced.</p>"
+                           "<p>Change your iPod scrobble settings and user associations at any time in the preferences area.</p>" ).arg( user );
+
+            }
             else if ( ui->never )
+            {
                 emit clicked( false, false, user, m_deviceId, m_deviceName, m_iPodFiles );
+                title = tr( "You seleceted to never scrobble :c" );
+                text = tr( "<p>Change your iPod scrobble settings and user associations at any time in the preferences area.</p>" );
+
+            }
         }
         else
             emit clicked( true, false, user, m_deviceId, m_deviceName, m_iPodFiles );
 
         done( 0 );
+
+        QMessageBoxBuilder( 0 )
+            .setIcon( QMessageBox::Information )
+            .setTitle( title )
+            .setText( text )
+            .setButtons( QMessageBox::Ok )
+            .exec();
 
         break;
     }

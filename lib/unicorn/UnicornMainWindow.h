@@ -93,7 +93,7 @@ namespace unicorn
 
         virtual void addWinThumbBarButtons( QList<QAction*>& ) {;}
 
-        QMenuBar* menuBar() const {}
+        QMenuBar* menuBar() const { return 0; }
 
     protected:
         QPointer<QMenuBar> m_menuBar;

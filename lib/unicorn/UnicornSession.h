@@ -1,5 +1,6 @@
 #ifndef UNICORN_SESSION_H_
 #define UNICORN_SESSION_H_
+
 #include <lastfm/XmlQuery.h>
 #include <lastfm/misc.h>
 #include <lastfm/User.h>

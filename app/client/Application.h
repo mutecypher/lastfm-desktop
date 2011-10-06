@@ -82,8 +82,6 @@ namespace audioscrobbler
         AboutDialog* m_aboutDialog;
         
         QAction* m_submit_scrobbles_toggle;
-        QAction* m_artist_action;
-        QAction* m_title_action;
         QAction* m_love_action;
         QAction* m_tag_action;
         QAction* m_share_action;
@@ -94,9 +92,6 @@ namespace audioscrobbler
         QAction* m_toggle_window_action;
         QAction* m_scrobble_ipod_action;
         QAction* m_visit_profile_action;
-        QAction* m_faq_action;
-        QAction* m_forums_action;
-        QAction* m_about_action;
         
     public:
         Application(int& argc, char** argv);

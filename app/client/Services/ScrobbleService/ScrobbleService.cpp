@@ -34,6 +34,9 @@
 #include "lib/listener/mac/SpotifyListener.h"
 #include "lib/listener/mac/ITunesListener.h"
 #endif
+#ifdef Q_OS_WIN
+#include "lib/listener/win/SpotifyListener.h"
+#endif
 
 ScrobbleService::ScrobbleService()
     :m_scrobblingOn( true )
@@ -48,7 +51,8 @@ ScrobbleService::ScrobbleService()
         ITunesListener* itunes = new ITunesListener(m_mediator);
         connect(itunes, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
         itunes->start();
-
+#endif
+#if defined(Q_WS_MAC) || defined(Q_OS_WIN)
         SpotifyListener* spotify = new SpotifyListener(m_mediator);
         connect(spotify, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
 #endif
@@ -125,8 +129,8 @@ ScrobbleService::resetScrobbler()
         delete m_deviceScrobbler;
 
     m_deviceScrobbler = new DeviceScrobbler;
-    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<lastfm::Track>)), this, SIGNAL( foundIPodScrobbles(QList<lastfm::Track>) ));
-    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), m_as, SLOT( cacheBatch( QList<lastfm::Track> )));
+    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<lastfm::Track>, QString)), this, SIGNAL( foundIPodScrobbles(QList<lastfm::Track>, QString) ));
+    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<lastfm::Track>, QString )), m_as, SLOT( cacheBatch( QList<lastfm::Track>, QString)));
     m_deviceScrobbler->checkCachedIPodScrobbles();
 }
 

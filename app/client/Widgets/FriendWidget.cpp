@@ -16,7 +16,7 @@
 
 
 
-FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent)
+FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget* parent)
     :StylableWidget( parent ), m_user( user )
 {   
     QHBoxLayout* layout = new QHBoxLayout( this );
@@ -43,7 +43,8 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget *parent)
     vl->addWidget( ui.radio = new PlayableItemWidget( RadioStation::library( User( user["name"].text() ) ), tr( "Play Library Radio" ) ) );
     ui.radio->setObjectName( "radio" );
 
-    connect( lastfm::UserDetails::getInfo( user["name"].text() ), SIGNAL(finished()), SLOT(onGotInfo()));
+    // Don't get user details for each friend, it is silly and wasteful
+    //connect( lastfm::UserDetails::getInfo( user["name"].text() ), SIGNAL(finished()), SLOT(onGotInfo()));
 }
 
 void
@@ -65,9 +66,19 @@ FriendWidget::setDetails()
     recentTrack.setAlbum( m_user["recenttrack"]["album"]["name"].text() );
     recentTrack.setArtist( m_user["recenttrack"]["artist"]["name"].text() );
 
+//    ui.details->setText( tr( "<p>%1</p>"
+//                             "<p>%2</p>"
+//                             "<p>%3</p>" ).arg( m_user["name"].text(), m_userDetails.getInfoString(), tr( "Last track: %1" ).arg( recentTrack.toString() ) ) );
+
+    QString nameString = name();
+    QString realnameString = realname();
+
+    if ( !realnameString.isEmpty() )
+        nameString += QString( " - %1" ).arg( realnameString );
+
     ui.details->setText( tr( "<p>%1</p>"
-                             "<p>%2</p>"
-                             "<p>%3</p>" ).arg( m_user["name"].text(), m_userDetails.getInfoString(), tr( "Last track: %1" ).arg( recentTrack.toString() ) ) );
+                             "<p>%2</p>" ).arg( nameString, tr( "Last track: %1" ).arg( recentTrack.toString() ) ) );
+
 }
 
 QString

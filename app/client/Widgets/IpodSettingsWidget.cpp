@@ -197,7 +197,7 @@ IpodSettingsWidget::removeIpodAssociation()
 {
     QTreeWidgetItem* association = ui.iPodAssociations->currentItem();
     QString deviceId = association->data( IpodColumnDeviceName, Qt::UserRole ).toString();
-    QString username = association->text( IpodColumnUser );
+    QString username = static_cast<QComboBox*>( ui.iPodAssociations->itemWidget( association, IpodColumnUser ) )->currentText();
     doRemoveIpodAssociation( deviceId, username );
     ui.iPodAssociations->takeTopLevelItem( ui.iPodAssociations->indexOfTopLevelItem( association ) );
     ui.removeAssociation->setEnabled( false );

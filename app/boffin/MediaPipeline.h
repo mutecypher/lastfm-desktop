@@ -18,7 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <lastfm/global.h>
-#include <lastfm/Track>
+#include <types/Track.h>
 #include <lastfm/ws.h>
 #include <QPointer>
 #include <QObject>

@@ -19,7 +19,7 @@
 */
 #include "ITunesListener.h"
 #include "../PlayerConnection.h"
-#include <lastfm/misc.h>
+#include <core/misc.h>
 #include "lib/unicorn/mac/AppleScript.h"
 #include <QThread>
 

@@ -107,7 +107,7 @@ namespace unicorn {
         QCheckBox* checkbox;
         int m_clickedButton;
     };
-};
+}
 
 class UNICORN_DLLEXPORT QMessageBoxBuilder
 {
@@ -137,14 +137,14 @@ public:
 
     int exec( bool* dontAskAgain = 0 );
 	
-	QMessageBoxBuilder& sheet()
-	{
-	#ifdef Q_WS_MAC
+    QMessageBoxBuilder& sheet()
+    {
+#ifdef Q_WS_MAC
         if( box.parentWidget())
             box.setWindowFlags( Qt::Sheet | ( box.windowFlags() & ~Qt::Drawer ) );
-	#endif
-		return *this;
-	}
+#endif
+        return *this;
+    }
 };
 
 #endif // MESSAGE_BOX_BUILDER_H

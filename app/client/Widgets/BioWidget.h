@@ -25,6 +25,8 @@ protected slots:
 
     void onHighlighted( const QString& url );
 
+    void onImageLoaded();
+
 protected:
     void insertWidget( QWidget* w );
     class WidgetTextObject* m_widgetTextObject;
@@ -38,6 +40,8 @@ protected:
     enum WidgetProperties { WidgetData = 1 };
     enum { WidgetImageFormat = QTextFormat::UserObject + 1 };
     QWidget* m_currentHoverWidget;
+
+    QTextImageFormat m_widgetImageFormat;
 
     struct {
         class BannerWidget* onTour;

@@ -25,7 +25,7 @@
 #include "lib/unicorn/UnicornApplication.h"
 #include <lastfm/global.h>
 #include <QPointer>
-#include <lastfm/Track>
+#include <types/Track.h>
 
 
 namespace Phonon { class AudioOutput; }

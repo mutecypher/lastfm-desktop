@@ -24,9 +24,12 @@
 
 #include "lib/unicorn/UnicornSettings.h"
 
+#include "../Application.h"
+
 #include "LoginPage.h"
 #include "AccessPage.h"
 #include "PluginsPage.h"
+#include "PluginsInstallPage.h"
 #include "BootstrapPage.h"
 #include "TourMetadataPage.h"
 #include "TourRadioPage.h"
@@ -82,8 +85,8 @@ FirstRunWizard::nextId() const
 #ifdef Q_OS_WIN32
         return Page_Plugins;
     case Page_Plugins:
-        return Page_PluginsInstall:
-    case Page_PluginsInstall
+        return Page_PluginsInstall;
+    case Page_PluginsInstall:
         if( aApp->currentSession() && aApp->currentSession()->userInfo().canBootstrap() )
             return Page_Bootstrap;
         else

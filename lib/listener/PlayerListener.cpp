@@ -53,7 +53,7 @@ PlayerListener::PlayerListener( QObject* parent ) throw( std::runtime_error )
     if( QFile::exists( QDir::tempPath() + "/" + name ))
         QFile::remove( QDir::tempPath() + "/" + name );
 #endif
-    
+
     if (!listen( name ))
         throw std::runtime_error( errorString().toStdString() );
 }
