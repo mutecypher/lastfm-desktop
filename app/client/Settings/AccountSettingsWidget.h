@@ -40,7 +40,6 @@ private:
     struct Ui
     {
         class UserManagerWidget* users;
-        class QComboBox* languages;
     } ui;
 
 };

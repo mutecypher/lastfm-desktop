@@ -1,6 +1,6 @@
 /*
-   Copyright 2005-2009 Last.fm Ltd. 
-      - Primarily authored by Jono Cole
+   Copyright 2010 Last.fm Ltd.
+      - Primarily authored by Jono Cole, Michael Coffey, and William Viana
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -18,28 +18,33 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IPOD_SCROBBLE_INFO_WIDGET_H_
-#define IPOD_SCROBBLE_INFO_WIDGET_H_
+#ifndef SETTINGS_WIDGET_H
+#define SETTINGS_WIDGET_H
 
-#include "lib/unicorn/StylableWidget.h"
+#include <QWidget>
 
-#include <lastfm/Track.h>
-
-namespace unicorn{ class Session; }
-namespace lastfm{ class UserDetails; }
-
-class IPodScrobbleInfoWidget : public StylableWidget
+class SettingsWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    IPodScrobbleInfoWidget( const QList<Track>& tracks, QWidget* p = 0 );
+    SettingsWidget( QWidget* parent = 0 );
+    bool hasUnsavedChanges();
 
-protected:
-    struct {
-        class QLabel* iPod;
-        class QLabel* title;
-    } ui;
+public slots:
+    virtual void saveSettings() = 0;
+
+signals:
+    void settingsChanged();
+    void settingsSaved();
+
+protected slots:
+    void onSettingsChanged();
+    void onSettingsSaved();
+
+private:
+    bool m_settingsChanged;
 };
 
-#endif //IPOD_SCROBBLE_INFO_WIDGET_H_
+
+#endif

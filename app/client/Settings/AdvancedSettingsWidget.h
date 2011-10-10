@@ -18,16 +18,16 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KEYBOARD_SETTINGS_WIDGET_H_
-#define KEYBOARD_SETTINGS_WIDGET_H_
+#ifndef ADVANCED_SETTINGS_WIDGET_H_
+#define ADVANCED_SETTINGS_WIDGET_H_
 
 #include "SettingsWidget.h"
 
-class KeyboardSettingsWidget: public SettingsWidget
+class AdvancedSettingsWidget: public SettingsWidget
 {
 Q_OBJECT
 public:
-    KeyboardSettingsWidget( QWidget* parent = 0 );
+    AdvancedSettingsWidget( QWidget* parent = 0 );
 
 public slots:
     virtual void saveSettings();

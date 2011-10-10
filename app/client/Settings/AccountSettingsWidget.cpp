@@ -42,9 +42,8 @@ AccountSettingsWidget::AccountSettingsWidget( QWidget* parent )
     : SettingsWidget( parent )
 {
     setupUi();
-    populateLanguages();
+    
     connect( ui.users, SIGNAL( userChanged() ), this, SLOT( onSettingsChanged() ) );
-    connect( ui.languages, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onSettingsChanged() ) );
     connect( ui.users, SIGNAL( rosterUpdated() ), qApp, SIGNAL( rosterUpdated() ) );
 }
 
@@ -54,9 +53,6 @@ AccountSettingsWidget::setupUi()
     QLabel* title = new QLabel( tr( "Configure Account Settings" ), this );
     QFrame* line = new QFrame( this );
     QGroupBox* groupBox = new QGroupBox( this );
-    QLabel* langLabel = new QLabel( tr( "Language:" ), this );
-    ui.languages = new QComboBox( this );
-    ui.languages->setStyleSheet( "color: black;" );
 
     line->setFrameShape( QFrame::HLine );
 
@@ -67,8 +63,6 @@ AccountSettingsWidget::setupUi()
 
     groupBox->setTitle( tr( "Preferences" ) );
 
-    h->addWidget( langLabel );
-    h->addWidget( ui.languages );
     h->addStretch( 1 );
 
     vb->addLayout( h );
@@ -100,43 +94,6 @@ AccountSettingsWidget::saveSettings()
             qobject_cast<unicorn::Application *>( qApp )->changeSession( urb->user(), sessionKey, true );
         }
 
-        int currIndex = ui.languages->currentIndex();
-        QString currLanguage = ui.languages->itemData( currIndex ).toString();
-
-        if ( unicorn::AppSettings().value( "language", "" ) != currLanguage )
-        {
-            unicorn::AppSettings().setValue( "language", currLanguage );
-            QMessageBoxBuilder( 0 )
-                .setIcon( QMessageBox::Information )
-                .setTitle( tr( "Restart needed" ) )
-                .setText( tr( "You need to restart the application for the language change to take effect." ) )
-                .exec();
-        }
         onSettingsSaved();
-    }
-}
-
-void
-AccountSettingsWidget::populateLanguages()
-{
-    ui.languages->addItem( tr( "System Language" ), "" );
-    ui.languages->addItem( "English", QLocale( QLocale::English ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "Français" ), QLocale( QLocale::French ).name().left( 2 ) );
-    ui.languages->addItem( "Italiano", QLocale( QLocale::Italian ).name().left( 2 )  );
-    ui.languages->addItem( "Deutsch", QLocale( QLocale::German ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "Español" ), QLocale( QLocale::Spanish ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "Portugués" ), QLocale( QLocale::Portuguese ).name().left( 2 ) );
-    ui.languages->addItem( "Polski", QLocale( QLocale::Polish ).name().left( 2 ) );
-    ui.languages->addItem( "Svenska", QLocale( QLocale::Swedish ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "Tükçe" ), QLocale( QLocale::Turkish ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "� усский" ), QLocale( QLocale::Russian ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "中文" ), QLocale( QLocale::Chinese ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "日本語" ), QLocale( QLocale::Japanese ).name().left( 2 ) );
-
-    QString currLanguage = unicorn::AppSettings().value( "language", "" ).toString();
-    int index = ui.languages->findData( currLanguage );
-    if ( index != -1 )
-    {
-        ui.languages->setCurrentIndex( index );
     }
 }

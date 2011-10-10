@@ -18,7 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "KeyboardSettingsWidget.h"
+#include "AdvancedSettingsWidget.h"
 #include "../AudioscrobblerSettings.h"
 #include "../Application.h"
 
@@ -133,14 +133,14 @@ public:
     int m_key;
 };
 
-KeyboardSettingsWidget::KeyboardSettingsWidget( QWidget* parent )
+AdvancedSettingsWidget::AdvancedSettingsWidget( QWidget* parent )
     : SettingsWidget( parent )
 {
     setupUi();
 }
 
 void
-KeyboardSettingsWidget::setupUi()
+AdvancedSettingsWidget::setupUi()
 {
     QVBoxLayout* v = new QVBoxLayout();
     QHBoxLayout* h = new QHBoxLayout();
@@ -161,7 +161,7 @@ KeyboardSettingsWidget::setupUi()
 }
 
 void
-KeyboardSettingsWidget::saveSettings()
+AdvancedSettingsWidget::saveSettings()
 {
     qDebug() << "has unsaved changes?" << hasUnsavedChanges();
 

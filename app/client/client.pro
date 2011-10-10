@@ -37,8 +37,8 @@ SOURCES += \
     Widgets/TagFilterDialog.cpp \
     Widgets/StatusBar.cpp \
     Widgets/SideBar.cpp \
-    Widgets/SettingsWidget.cpp \
-    Widgets/ScrobbleSettingsWidget.cpp \
+    Settings/SettingsWidget.cpp \
+    Settings/ScrobbleSettingsWidget.cpp \
     Widgets/ScrobbleControls.cpp \
     Widgets/ProgressBar.cpp \
     Widgets/QuickStartWidget.cpp \
@@ -46,12 +46,10 @@ SOURCES += \
     Widgets/PlaybackControlsWidget.cpp \
     Widgets/PlayableItemWidget.cpp \
     Widgets/NowPlayingWidget.cpp \
-    Widgets/KeyboardSettingsWidget.cpp \
-    Widgets/IpodSettingsWidget.cpp \
-    Widgets/IPodScrobbleInfoWidget.cpp \
+    Settings/IpodSettingsWidget.cpp \
     Widgets/ActivityListWidget.cpp \
     Widgets/RecentTracksWidget.cpp \
-    Widgets/AccountSettingsWidget.cpp \
+    Settings/AccountSettingsWidget.cpp \
     StationSearch.cpp \
     SkipListener.cpp \
     Services/ScrobbleService/StopWatch.cpp \
@@ -100,7 +98,9 @@ SOURCES += \
     Wizard/BootstrapProgressPage.cpp \
     Wizard/TourScrobblesPage.cpp \
     Wizard/TourLocationPage.cpp \
-    Dialogs/PreferencesDialog.cpp
+    Settings/PreferencesDialog.cpp \
+    Settings/AdvancedSettingsWidget.cpp \
+    Settings/GeneralSettingsWidget.cpp
 
 HEADERS += \
     Wizard/LoginPage.h \
@@ -110,8 +110,8 @@ HEADERS += \
     Widgets/TagFilterDialog.h \
     Widgets/StatusBar.h \
     Widgets/SideBar.h \
-    Widgets/SettingsWidget.h \
-    Widgets/ScrobbleSettingsWidget.h \
+    Settings/SettingsWidget.h \
+    Settings/ScrobbleSettingsWidget.h \
     Widgets/ScrobbleControls.h \
     Widgets/ProgressBar.h \
     Widgets/QuickStartWidget.h \
@@ -119,12 +119,10 @@ HEADERS += \
     Widgets/PlaybackControlsWidget.h \
     Widgets/PlayableItemWidget.h \
     Widgets/NowPlayingWidget.h \
-    Widgets/KeyboardSettingsWidget.h \
-    Widgets/IpodSettingsWidget.h \
-    Widgets/IPodScrobbleInfoWidget.h \
+    Settings/IpodSettingsWidget.h \
     Widgets/ActivityListWidget.h \
     Widgets/RecentTracksWidget.h \
-    Widgets/AccountSettingsWidget.h \
+    Settings/AccountSettingsWidget.h \
     StationSearch.h \
     SkipListener.h \
     Services/ScrobbleService.h \
@@ -177,7 +175,9 @@ HEADERS += \
     Wizard/BootstrapProgressPage.h \
     Wizard/TourScrobblesPage.h \
     Wizard/TourLocationPage.h \
-    Dialogs/PreferencesDialog.h
+    Settings/PreferencesDialog.h \
+    Settings/AdvancedSettingsWidget.h \
+    Settings/GeneralSettingsWidget.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
@@ -187,10 +187,22 @@ FORMS += \
     Dialogs/ScrobbleSetupDialog.ui \
     Dialogs/DiagnosticsDialog.ui \
     Widgets/MetadataWidget.ui \
-    Dialogs/PreferencesDialog.ui
+    Settings/PreferencesDialog.ui
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
