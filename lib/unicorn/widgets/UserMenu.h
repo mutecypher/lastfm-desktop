@@ -2,6 +2,7 @@
 #define USER_MENU_H_
 
 #include <QMenu>
+#include <QPointer>
 
 #include "lib/DllExportMacro.h"
 #include "lib/unicorn/UnicornSession.h"
@@ -18,6 +19,9 @@ protected slots:
     void manageUsers();
     void refresh();
     void subscribe();
+
+private:
+    QPointer<QAction> m_subscribe;
 };
 
 #endif

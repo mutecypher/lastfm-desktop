@@ -32,6 +32,9 @@ UserMenu::onSessionChanged( unicorn::Session* s )
         if( a->text() == s->userInfo().name() )
             return a->setChecked( true );
     }
+
+    if ( m_subscribe )
+        m_subscribe->setVisible( !s->userInfo().isSubscriber() );
 }
 
 void
@@ -66,7 +69,7 @@ UserMenu::manageUsers()
 void
 UserMenu::subscribe()
 {
-    QDesktopServices::openUrl( lastfm::UrlBuilder( "join" ).url() );
+    QDesktopServices::openUrl( lastfm::UrlBuilder( "subscribe" ).url() );
 }
 
 void
@@ -75,7 +78,7 @@ UserMenu::refresh()
     clear();
 
     addAction( tr( "Manage Accounts" ), this, SLOT(manageUsers()));
-    addAction( tr( "Subscribe" ), this, SLOT(subscribe()));
+    m_subscribe = addAction( tr( "Subscribe" ), this, SLOT(subscribe()));
 
     addSeparator();
 
