@@ -149,12 +149,11 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     finishUi();
 
-    setupMenuBar();
-
     resize( 565, 710 );
 
     show();
 
+    setupMenuBar();
     m_menuBar->show();
 }
 
