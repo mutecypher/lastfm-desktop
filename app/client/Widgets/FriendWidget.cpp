@@ -36,11 +36,13 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget* parent)
     vl->setSpacing( 0 );
     layout->addLayout( vl, 1 );
 
-    vl->addWidget( ui.details = new QLabel( "", this) );
-    ui.details->setObjectName( "details" );
+    vl->addWidget( ui.name = new QLabel( "", this) );
+    ui.name->setObjectName( "name" );
+    vl->addWidget( ui.lastTrack = new QLabel( "", this) );
+    ui.lastTrack->setObjectName( "lastTrack" );
     setDetails();
 
-    vl->addWidget( ui.radio = new PlayableItemWidget( RadioStation::library( User( user["name"].text() ) ), tr( "Play Library Radio" ) ) );
+    vl->addWidget( ui.radio = new PlayableItemWidget( RadioStation::library( User( user["name"].text() ) ), tr( "%2%1s Library Radio" ).arg( QChar( 0x2019 ), user["name"].text() ) ) );
     ui.radio->setObjectName( "radio" );
 
     // Don't get user details for each friend, it is silly and wasteful
@@ -66,18 +68,14 @@ FriendWidget::setDetails()
     recentTrack.setAlbum( m_user["recenttrack"]["album"]["name"].text() );
     recentTrack.setArtist( m_user["recenttrack"]["artist"]["name"].text() );
 
-//    ui.details->setText( tr( "<p>%1</p>"
-//                             "<p>%2</p>"
-//                             "<p>%3</p>" ).arg( m_user["name"].text(), m_userDetails.getInfoString(), tr( "Last track: %1" ).arg( recentTrack.toString() ) ) );
-
     QString nameString = name();
     QString realnameString = realname();
 
     if ( !realnameString.isEmpty() )
         nameString += QString( " - %1" ).arg( realnameString );
 
-    ui.details->setText( tr( "<p>%1</p>"
-                             "<p>%2</p>" ).arg( nameString, tr( "Last track: %1" ).arg( recentTrack.toString() ) ) );
+    ui.name->setText( nameString );
+    ui.lastTrack->setText( tr( "Last track: %1" ).arg( recentTrack.toString() ) );
 
 }
 

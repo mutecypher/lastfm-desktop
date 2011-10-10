@@ -547,7 +547,6 @@ font-size: 14px;
 color: #333;
 }
 
-FriendWidget QLabel#details,
 ProfileWidget QLabel#scrobbleCount {
 font-size: 11px;
 color: #898989;

@@ -128,7 +128,9 @@ PlayableItemWidget::getMultiStation() const
     users << User( m_rs.url().mid( 14, endPos - 14 ) );
     users << User();
 
-    return RadioStation::library( users );
+    RadioStation station = RadioStation::library( users );
+    station.setTitle( tr( "Multi-Library Radio" ) );
+    return station;
 }
 
 void
