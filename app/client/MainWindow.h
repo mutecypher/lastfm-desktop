@@ -9,7 +9,7 @@
 #include "lib/unicorn/UnicornMainWindow.h"
 #include "lib/unicorn/StylableWidget.h"
 
-#include "Dialogs/PreferencesDialog.h"
+#include "Settings/PreferencesDialog.h"
 
 using lastfm::XmlQuery;
 

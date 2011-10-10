@@ -64,11 +64,11 @@
     </item>
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
-      <widget class="QWidget" name="general"/>
+      <widget class="GeneralSettingsWidget" name="general"/>
       <widget class="AccountSettingsWidget" name="accounts"/>
       <widget class="ScrobbleSettingsWidget" name="scrobbling"/>
       <widget class="IpodSettingsWidget" name="ipod"/>
-      <widget class="QWidget" name="advanced"/>
+      <widget class="AdvancedSettingsWidget" name="advanced"/>
      </widget>
     </item>
    </layout>
@@ -78,19 +78,31 @@
   <customwidget>
    <class>AccountSettingsWidget</class>
    <extends>QWidget</extends>
-   <header>../Widgets/AccountSettingsWidget.h</header>
+   <header>../Settings/AccountSettingsWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>ScrobbleSettingsWidget</class>
    <extends>QWidget</extends>
-   <header>../Widgets/ScrobbleSettingsWidget.h</header>
+   <header>../Settings/ScrobbleSettingsWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>IpodSettingsWidget</class>
    <extends>QWidget</extends>
-   <header>../Widgets/IpodSettingsWidget.h</header>
+   <header>../Settings/IpodSettingsWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GeneralSettingsWidget</class>
+   <extends>QWidget</extends>
+   <header>../Settings/GeneralSettingsWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>AdvancedSettingsWidget</class>
+   <extends>QWidget</extends>
+   <header>../Settings/AdvancedSettingsWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
