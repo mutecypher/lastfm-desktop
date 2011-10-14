@@ -11,7 +11,7 @@
 
 
 ActivityListModel::ActivityListModel()
-    :m_noArt( ":/noArt.png" ),
+    :m_noArt( ":/meta_album_no_art.png" ),
      m_nowPlayingTrack( Track() ),
      m_nowScrobblingTrack( Track() ),
      m_paused( false )

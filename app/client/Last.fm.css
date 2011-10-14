@@ -102,6 +102,15 @@ MessageBar QLabel#radio {
   border-bottom: 1px solid #413F33;
 }
 
+MessageBar QPushButton#close {
+  background-repeat: none;
+  background-color: transparent;
+  color: transparent;
+  background-image: url(":/message_close.png");
+  max-width: 17px;
+  max-height: 17px;
+}
+
 SideBar {
 	border: none;
 	background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #2d2d2d, stop:0.925 #2d2d2d, stop:1 #232323);
@@ -467,12 +476,44 @@ ScrobblesWidget QPushButton#refresh:disabled {
 background-color: #cccccc;
 }
 
-FriendListWidget QLineEdit {
-margin: 20px 20px 20px 20px;
+FriendListWidget QListWidget {
+background-color: #eeeeee;
+border: none;
 }
 
-QuickStartWidget QLineEdit,
+FriendListWidget QListWidget::item {
+border: none;
+border-top: 1px solid white;
+border-bottom: 1px solid #cdcdcd;
+}
+
+FriendListWidget QListWidget::item:first {
+border: none;
+}
+
+FriendListWidget QListWidget::item:last {
+border: none;
+}
+
+FriendListWidget QWidget#filterBackground {
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
+border-bottom: 1px solid #989898;
+}
+
 FriendListWidget QLineEdit {
+margin: 16px;
+border: 1px solid #989898;
+border-radius: 5px;
+padding: 5px;
+selection-background-color: darkgray;
+font-size: 14px;
+}
+
+FriendListWidget QListView::item:selected {
+  background-color: #dddddd;
+}
+
+QuickStartWidget QLineEdit {
 border: 1px solid #cdcdcd;
 border-radius: 5px;
 padding: 10px 10px;
@@ -522,8 +563,7 @@ margin: 20px 0px 10px;
 FriendWidget {
 margin: 0px 20px;
 padding: 10px 0px;
-border-top: 1px solid white;
-border-bottom: 1px solid #cdcdcd;
+border: none;
 }
 
 FriendWidget AvatarWidget#avatar,
@@ -848,10 +888,16 @@ ScrobbleControls QPushButton#buy:pressed {
 background-image: url(":/meta_buy_PRESS.png");
 }
 
+BannerWidget {
+  border: 1px solid #cdcdcd;
+  background-color: white;
+  padding: 4px;
+}
+
 BannerWidgetPrivate {
 background-color: red;
 color: white;
-font-weight: bold;
+font-size: 11px;
 }
 
 ShareDialog QFrame#what {

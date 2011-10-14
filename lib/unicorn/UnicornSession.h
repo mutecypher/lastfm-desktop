@@ -23,7 +23,7 @@ public:
 
     QString sessionKey() const;
 
-    lastfm::UserDetails userInfo() const;
+    lastfm::User userInfo() const;
 
     static QNetworkReply* 
     getToken()
@@ -65,13 +65,13 @@ public:
     }
 
 signals:
-    void userInfoUpdated( const lastfm::UserDetails& userInfo );
+    void userInfoUpdated( const lastfm::User& userInfo );
 
 protected:
     void init( const QString& username, const QString& sessionKey );
 
 private:
-    void cacheUserInfo( const lastfm::UserDetails& userInfo );
+    void cacheUserInfo( const lastfm::User& userInfo );
 
 private slots:
     void fetchUserInfo();
@@ -80,7 +80,7 @@ private slots:
 private:
     QString m_prevUsername;
     QString m_sessionKey;
-    lastfm::UserDetails m_userInfo;
+    lastfm::User m_userInfo;
 };
 
 }

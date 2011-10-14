@@ -100,7 +100,8 @@ SOURCES += \
     Wizard/TourLocationPage.cpp \
     Settings/PreferencesDialog.cpp \
     Settings/AdvancedSettingsWidget.cpp \
-    Settings/GeneralSettingsWidget.cpp
+    Settings/GeneralSettingsWidget.cpp \
+    Widgets/ShortcutEdit.cpp
 
 HEADERS += \
     Wizard/LoginPage.h \
@@ -177,7 +178,8 @@ HEADERS += \
     Wizard/TourLocationPage.h \
     Settings/PreferencesDialog.h \
     Settings/AdvancedSettingsWidget.h \
-    Settings/GeneralSettingsWidget.h
+    Settings/GeneralSettingsWidget.h \
+    Widgets/ShortcutEdit.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
@@ -187,10 +189,26 @@ FORMS += \
     Dialogs/ScrobbleSetupDialog.ui \
     Dialogs/DiagnosticsDialog.ui \
     Widgets/MetadataWidget.ui \
-    Settings/PreferencesDialog.ui
+    Settings/PreferencesDialog.ui \
+    Settings/GeneralSettingsWidget.ui \
+    Settings/AccountSettingsWidget.ui \
+    Settings/IpodSettingsWidget.ui \
+    Settings/ScrobbleSettingsWidget.ui \
+    Settings/AdvancedSettingsWidget.ui
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
+
+
+
+
+
+
+
+
+
+
+
 
 
 

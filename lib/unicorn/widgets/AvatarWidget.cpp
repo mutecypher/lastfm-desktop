@@ -3,10 +3,11 @@
 AvatarWidget::AvatarWidget( QWidget *parent ) :
     HttpImageWidget(parent)
 {
+    setPixmap( QPixmap( ":/user_default.png" ) );
 }
 
 void
-AvatarWidget::setUserDetails( const lastfm::UserDetails& user )
+AvatarWidget::setUser( const lastfm::User& user )
 {
     m_user = user;
     update();
@@ -25,16 +26,21 @@ AvatarWidget::paintEvent( QPaintEvent* paintEvent )
         QString text = tr( "Subscriber" );
         QColor brush( Qt::black );
 
-//        if ( m_user.isAlumi() )
-//        {
-//            text = m_user.gender().female() ? tr( "Alumna" ) : tr( "Alumnus" );
-//            brush = QColor( 0x5336BD );
-//        }
-//        else if ( m_user.isStaff() )
-//        {
-//            text = tr( "Staff" );
-//            brush = QColor( 0xD51007 );
-//        }
+        switch ( m_user.type() )
+        {
+        case User::TypeModerator:
+            text = tr( "Moderator" );
+            brush = QColor( 0xFFA500 );
+            break;
+        case User::TypeStaff:
+            text = tr( "Staff" );
+            brush = QColor( 0xD51007 );
+            break;
+        case User::TypeAlumni:
+            text = m_user.gender().female() ? tr( "Alumna" ) : tr( "Alumnus" );
+            brush = QColor( 0x5336BD );
+            break;
+        }
 
         QFont font = p.font();
         font.setPixelSize( 10 );

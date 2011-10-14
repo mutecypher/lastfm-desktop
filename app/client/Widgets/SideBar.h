@@ -25,7 +25,7 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
-namespace lastfm { class UserDetails; }
+namespace lastfm { class User; }
 namespace unicorn { class Session; }
 
 class SideBar : public StylableWidget

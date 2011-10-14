@@ -23,6 +23,7 @@
 
 #include "SettingsWidget.h"
 
+namespace Ui { class ScrobbleSettingsWidget; }
 
 class ScrobbleSettingsWidget: public SettingsWidget
 {
@@ -34,22 +35,11 @@ public:
 public slots:
     virtual void saveSettings();
 
-private:
-    struct Ui
-    {
-        class QSlider* scrobblePoint;
-        class QCheckBox* allowFingerprint;
-        class QCheckBox* launchItunes;
-        class QCheckBox* scrobbleSpotify;
-        class QLabel* percentText;
-        class QFrame* line;
-    } ui;
-
-private:
-    void setupUi();
-
 private slots:
     void onSliderMoved( int value );
+
+private:
+    Ui::ScrobbleSettingsWidget* ui;
 };
 
 #endif

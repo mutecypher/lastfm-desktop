@@ -27,6 +27,8 @@
 #include <QShortcut>
 #include <QTcpSocket>
 
+#include <lastfm/UrlBuilder.h>
+
 #include "Widgets/PointyArrow.h"
 
 #include "MainWindow.h"
@@ -140,9 +142,9 @@ Application::init()
             changeSession( lastSession[ "username" ], lastSession[ "sessionKey" ] );
     }
 
-    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
-    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
-    lastfm::nam()->setCache( diskCache );
+//    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
+//    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
+//    lastfm::nam()->setCache( diskCache );
 
     m_menuBar = new QMenuBar( 0 );
 
@@ -431,13 +433,15 @@ Application::onVisitProfileTriggered()
 void
 Application::onFaqTriggered()
 {
-    QDesktopServices::openUrl( "http://" + tr( "www.last.fm" ) + "/help/faq/" );
+    QDesktopServices::openUrl( lastfm::UrlBuilder( "help" ).slash( "faq" ).url() );
 }
 
 void
 Application::onForumsTriggered()
 {
-    QDesktopServices::openUrl( "http://" + tr( "www.last.fm" ) + "/forum/34905/" );
+
+
+    QDesktopServices::openUrl( lastfm::UrlBuilder( "forum" ).slash( "34905" ).url() );
 }
 
 void

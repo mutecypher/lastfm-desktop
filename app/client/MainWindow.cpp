@@ -58,6 +58,9 @@
 #include "lib/unicorn/layouts/SlideOverLayout.h"
 #include "lib/listener/PlayerConnection.h"
 
+#ifdef Q_OS_MAC
+void qt_mac_set_dock_menu(QMenu *menu);
+#endif
 
 MainWindow::MainWindow( QMenuBar* menuBar )
     :unicorn::MainWindow( menuBar )
@@ -155,6 +158,12 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     setupMenuBar();
     m_menuBar->show();
+
+#ifdef Q_OS_MAC
+    QMenu* dockMenu = new QMenu( this );
+    ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *dockMenu  );
+    qt_mac_set_dock_menu( dockMenu );
+#endif
 }
 
 void
@@ -212,7 +221,6 @@ MainWindow::setupMenuBar()
     QAction* forums = helpMenu->addAction( tr("Forums"), aApp, SLOT(onForumsTriggered()) );
     //helpMenu->addSeparator();
     //QAction* diagnostics = helpMenu->addAction( tr("Diagnostics") );
-
 }
 
 void

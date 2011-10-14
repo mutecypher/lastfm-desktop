@@ -474,7 +474,7 @@ bool
 RadioService::initRadio()
 {
     qDebug() << "initRadio";
-	Phonon::AudioOutput* audioOutput = new Phonon::AudioOutput( Phonon::MusicCategory, this );
+    Phonon::AudioOutput* audioOutput = new Phonon::AudioOutput( Phonon::MusicCategory, this );
 
     // restore the last volume
     if (unicorn::AppSettings().contains("Volume"))

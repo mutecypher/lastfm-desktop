@@ -23,6 +23,8 @@
 
 #include "SettingsWidget.h"
 
+namespace Ui { class AdvancedSettingsWidget; }
+
 class AdvancedSettingsWidget: public SettingsWidget
 {
 Q_OBJECT
@@ -33,11 +35,7 @@ public slots:
     virtual void saveSettings();
 
 private:
-    void setupUi();
-    void populateLanguages();
-
-private:
-    class ShortCutEdit* m_sce;
+    Ui::AdvancedSettingsWidget* ui;
 };
 
 #endif //KEYBOARD_SETTINGS_WIDGET_H_

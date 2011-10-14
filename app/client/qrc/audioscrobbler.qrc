@@ -33,10 +33,13 @@
 		<file alias="player_wmp_64.png">wizard/player_wmp_64.png</file>
 		<file alias="scrobbler_32.png">wizard/lastfm_icon_32.png</file>
 		<file alias="scrobbler_64.png">wizard/lastfm_icon_64.png</file>
+		
+         <file>message_close.png</file>         <file>message_error.png</file>         <file>message_info.png</file>
 
 		<file>start_bg.png</file>
 	
-		<file>noArt.png</file>
+     	<file>user_default.png</file>
+		<file>meta_album_no_art.png</file>		<file>meta_artist_no_photo.png</file>
 		
 		<file>scrobbles_buy_HOVER.png</file>
 		<file>scrobbles_buy_PRESS.png</file>

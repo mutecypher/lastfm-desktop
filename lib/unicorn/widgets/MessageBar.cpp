@@ -83,6 +83,7 @@ void
 MessageBar::show( QWidget* w, bool animate )
 {
     QPushButton* close = new QPushButton( "x" );
+    close->setObjectName( "close" );
     QHBoxLayout* h = new QHBoxLayout( w );
     h->addStretch();
 

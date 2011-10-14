@@ -18,13 +18,13 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "ui_AccountSettingsWidget.h"
 #include "AccountSettingsWidget.h"
 
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/UnicornSession.h"
 #include "lib/unicorn/UnicornSettings.h"
-#include "lib/unicorn/widgets/UserManagerWidget.h"
 
 #include <lastfm/User.h>
 
@@ -39,42 +39,13 @@ using lastfm::User;
 
 
 AccountSettingsWidget::AccountSettingsWidget( QWidget* parent )
-    : SettingsWidget( parent )
+    : SettingsWidget( parent ),
+      ui( new Ui::AccountSettingsWidget )
 {
-    setupUi();
+    ui->setupUi( this );
     
-    connect( ui.users, SIGNAL( userChanged() ), this, SLOT( onSettingsChanged() ) );
-    connect( ui.users, SIGNAL( rosterUpdated() ), qApp, SIGNAL( rosterUpdated() ) );
-}
-
-void
-AccountSettingsWidget::setupUi()
-{
-    QLabel* title = new QLabel( tr( "Configure Account Settings" ), this );
-    QFrame* line = new QFrame( this );
-    QGroupBox* groupBox = new QGroupBox( this );
-
-    line->setFrameShape( QFrame::HLine );
-
-    ui.users = new UserManagerWidget( this );
-    QVBoxLayout* v = new QVBoxLayout();
-    QVBoxLayout* vb = new QVBoxLayout();
-    QHBoxLayout* h = new QHBoxLayout();
-
-    groupBox->setTitle( tr( "Preferences" ) );
-
-    h->addStretch( 1 );
-
-    vb->addLayout( h );
-
-    groupBox->setLayout( vb );
-
-    v->addWidget( title );
-    v->addWidget( line );
-    v->addWidget( qobject_cast<QWidget* >( ui.users ) );
-    v->addWidget( groupBox );
-
-    setLayout( v );
+    connect( ui->users, SIGNAL(userChanged() ), SLOT(onSettingsChanged() ) );
+    connect( ui->users, SIGNAL(rosterUpdated() ), qApp, SIGNAL(rosterUpdated() ) );
 }
 
 void
@@ -84,7 +55,7 @@ AccountSettingsWidget::saveSettings()
     if ( hasUnsavedChanges() )
     {
         unicorn::Settings s;
-        UserRadioButton* urb = qobject_cast<UserRadioButton*>( ui.users->checkedButton() );
+        UserRadioButton* urb = qobject_cast<UserRadioButton*>( ui->users->checkedButton() );
         if ( urb && urb->user() != User().name() )
         {
             s.setValue( "Username", urb->user() );

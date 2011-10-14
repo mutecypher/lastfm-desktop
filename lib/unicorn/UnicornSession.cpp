@@ -68,7 +68,7 @@ Session::sessionKey() const
     return m_sessionKey;
 }
 
-lastfm::UserDetails
+lastfm::User
 Session::userInfo() const
 {
     return m_userInfo;
@@ -115,7 +115,7 @@ Session::fetchUserInfo()
     qDebug() << "fetching user info";
     lastfm::ws::Username = m_userInfo.name();
     lastfm::ws::SessionKey = m_sessionKey;
-    connect( lastfm::UserDetails::getInfo(), SIGNAL( finished() ), SLOT( onUserGotInfo() ) );
+    connect( lastfm::User::getInfo(), SIGNAL( finished() ), SLOT( onUserGotInfo() ) );
 }
 
 void
@@ -125,11 +125,25 @@ Session::onUserGotInfo()
 
     if ( reply->error() == QNetworkReply::NoError  )
     {
-        lastfm::UserDetails userInfo( reply );
+        XmlQuery lfm;
+        try
+        {
+            lfm.parse( reply->readAll() );
 
-        m_userInfo = userInfo;
-        emit userInfoUpdated( m_userInfo );
-        cacheUserInfo( m_userInfo );
+            lastfm::User userInfo( lfm["user"] );
+
+            m_userInfo = userInfo;
+            emit userInfoUpdated( m_userInfo );
+            cacheUserInfo( m_userInfo );
+        }
+        catch ( lastfm::ws::ParseError error )
+        {
+            qDebug() << error.message();
+        }
+        catch ( lastfm::ws::Error error )
+        {
+            qDebug() << error;
+        }
     }
     else
     {
@@ -138,7 +152,7 @@ Session::onUserGotInfo()
 }
 
 void
-Session::cacheUserInfo( const lastfm::UserDetails& userInfo )
+Session::cacheUserInfo( const lastfm::User& userInfo )
 {
     const char* key = UserSettings::subscriptionKey();
     Settings s;

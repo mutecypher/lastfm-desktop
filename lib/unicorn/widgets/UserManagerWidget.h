@@ -32,7 +32,7 @@ public:
     const QString user() const;
 
 protected slots:
-    void onUserDetailsFetched();
+    void onUserFetched();
     void onImageLoaded();
     void removeMe();
 

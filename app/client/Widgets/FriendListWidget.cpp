@@ -46,7 +46,7 @@ FriendListWidget::FriendListWidget(QWidget *parent) :
     layout->addWidget( m_main = new QWidget( this ) );
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)) );
-    connect( aApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)) );
+    connect( aApp, SIGNAL(gotUserInfo(lastfm::User)), SLOT(onGotUserInfo(lastfm::User)) );
 
     onSessionChanged( aApp->currentSession() );
 }
@@ -59,7 +59,7 @@ FriendListWidget::onSessionChanged( unicorn::Session* session )
 
 
 void
-FriendListWidget::onGotUserInfo( const lastfm::UserDetails& userDetails )
+FriendListWidget::onGotUserInfo( const lastfm::User& userDetails )
 {
     changeUser( userDetails.name() );
 }
@@ -123,7 +123,15 @@ FriendListWidget::onGotFriends()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        layout->addWidget( ui.filter = new QLineEdit( this ) );
+        QWidget* filterBackground = new QWidget( this );
+        filterBackground->setObjectName( "filterBackground" );
+        layout->addWidget( filterBackground );
+
+        QHBoxLayout* filterLayout = new QHBoxLayout( filterBackground );
+        filterLayout->setContentsMargins( 0, 0, 0, 0 );
+        filterLayout->setSpacing( 0 );
+
+        filterLayout->addWidget( ui.filter = new QLineEdit( this ) );
         ui.filter->setPlaceholderText( tr( "Search for a friend by username or real name" ) );
         ui.filter->setAttribute( Qt::WA_MacShowFocusRect, false );
 

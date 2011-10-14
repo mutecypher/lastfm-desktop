@@ -22,14 +22,14 @@ BioWidget::BioWidget( QWidget* p )
     document()->documentLayout()->registerHandler( WidgetImageFormat, m_widgetTextObject );
 
     ui.image = new HttpImageWidget(this);
-    ui.image->setFixedWidth( 170 );
+    ui.image->setFixedWidth( 150 );
     ui.image->setAlignment( Qt::AlignTop );
     
     ui.onTour = new BannerWidget( tr("On Tour" ));
     ui.onTour->setBannerVisible( false );
     ui.onTour->setWidget( ui.image );
 
-    ui.onTour->setFixedWidth( 170 );
+    ui.onTour->setFixedWidth( 150 );
     ui.onTour->setObjectName( "onTour" );
     insertWidget( ui.onTour );
 
@@ -49,8 +49,9 @@ BioWidget::onHighlighted( const QString& url )
 void
 BioWidget::onImageLoaded()
 {
-    m_widgetImageFormat.setHeight( ui.image->height() );
-    m_widgetImageFormat.setWidth( ui.image->width() );
+    m_widgetImageFormat.setHeight( ui.image->pixmap()->height() );
+    m_widgetImageFormat.setWidth( ui.image->pixmap()->width() );
+    update();
 }
 
 void 
@@ -62,7 +63,6 @@ BioWidget::insertWidget( QWidget* w )
     m_widgetImageFormat.setName( w->objectName() );
     
     QTextCursor cursor = textCursor();
-
     cursor.insertImage( m_widgetImageFormat, QTextFrameFormat::FloatLeft );
     setTextCursor( cursor );
 }
@@ -165,7 +165,12 @@ BioWidget::onBioChanged( const QSizeF& size )
     setFixedHeight( size.toSize().height() );
 }
 
-
+void
+BioWidget::setPixmap( const QPixmap& pixmap )
+{
+    ui.image->setPixmap( pixmap );
+    onImageLoaded();
+}
 
 void 
 BioWidget::loadImage( const QUrl& url, HttpImageWidget::ScaleType scale )

@@ -23,6 +23,8 @@
 
 #include "SettingsWidget.h"
 
+namespace Ui { class AccountSettingsWidget; }
+
 class AccountSettingsWidget: public SettingsWidget
 {
 Q_OBJECT
@@ -37,11 +39,7 @@ private:
     void populateLanguages();
 
 private:
-    struct Ui
-    {
-        class UserManagerWidget* users;
-    } ui;
-
+    Ui::AccountSettingsWidget* ui;
 };
 
 #endif //ACCOUNT_SETTINGS_WIDGET_H_

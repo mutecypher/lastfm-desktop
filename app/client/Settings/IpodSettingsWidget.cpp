@@ -18,6 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "ui_IpodSettingsWidget.h"
 #include "IpodSettingsWidget.h"
 
 #ifdef Q_WS_X11
@@ -53,46 +54,24 @@ enum
 };
 
 IpodSettingsWidget::IpodSettingsWidget( QWidget* parent )
-    : SettingsWidget( parent )
+    : SettingsWidget( parent ),
+      ui( new Ui::IpodSettingsWidget )
 {
-    setupUi();
+    ui->setupUi( this );
 
-    connect( ui.clearAssociations, SIGNAL( clicked() ), this, SLOT( clearIpodAssociations() ) );
-    connect( ui.removeAssociation, SIGNAL( clicked() ), this, SLOT( removeIpodAssociation() ) );
-    connect( ui.iPodAssociations, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), SLOT( onItemActivated() ) );
-    connect( ui.iPodAssociations, SIGNAL( itemChanged(QTreeWidgetItem*,int)), SLOT( onSettingsChanged() ) );
-}
+    connect( ui->clearAssociations, SIGNAL( clicked() ), this, SLOT( clearIpodAssociations() ) );
+    connect( ui->removeAssociation, SIGNAL( clicked() ), this, SLOT( removeIpodAssociation() ) );
+    connect( ui->iPodAssociations, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), SLOT( onItemActivated() ) );
+    connect( ui->iPodAssociations, SIGNAL( itemChanged(QTreeWidgetItem*,int)), SLOT( onSettingsChanged() ) );
 
-
-void
-IpodSettingsWidget::setupUi()
-{
-    QVBoxLayout* layout = new QVBoxLayout( this );
-    layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
-
-    layout->addWidget( new QLabel( tr( "Associated iPods:" ) ) );
-
-    layout->addWidget( ui.iPodAssociations = new QTreeWidget( this ) );
-
-    ui.iPodAssociations->setColumnCount( IpodColumnCount );
-    ui.iPodAssociations->setSortingEnabled( false );
-    ui.iPodAssociations->header()->setResizeMode( QHeaderView::ResizeToContents );
-    ui.iPodAssociations->setRootIsDecorated( false );
-    ui.iPodAssociations->setUniformRowHeights( true );
-    ui.iPodAssociations->setItemsExpandable( false );
-    ui.iPodAssociations->setAllColumnsShowFocus( true );
+    ui->iPodAssociations->header()->setResizeMode( QHeaderView::ResizeToContents );
 
     QStringList headerLabels;
     headerLabels.append( tr( "User" ) );
     headerLabels.append( tr( "Device Name" ) );
     headerLabels.append( tr( "Scrobble" ) );
     headerLabels.append( tr( "Always Ask" ) );
-
-    ui.iPodAssociations->setHeaderLabels( headerLabels );
-
-    layout->addWidget( ui.clearAssociations = new QPushButton( tr( "Clear user associations" ) ) );
-    layout->addWidget( ui.removeAssociation = new QPushButton( tr( "Remove association" ) ) );
+    ui->iPodAssociations->setHeaderLabels( headerLabels );
 
     populateIpodAssociations();
 }
@@ -107,9 +86,9 @@ IpodSettingsWidget::saveSettings()
 
         // remove all associations and add them again with the current settings
 
-        for ( int i = 0 ; i < ui.iPodAssociations->topLevelItemCount() ; ++i )
+        for ( int i = 0 ; i < ui->iPodAssociations->topLevelItemCount() ; ++i )
         {
-            QTreeWidgetItem* item = ui.iPodAssociations->topLevelItem( i );
+            QTreeWidgetItem* item = ui->iPodAssociations->topLevelItem( i );
             QString deviceName = item->text( IpodColumnDeviceName );
             QString deviceId = item->data( IpodColumnDeviceName, Qt::UserRole ).toString();
 
@@ -119,7 +98,7 @@ IpodSettingsWidget::saveSettings()
 
             IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
 
-            ipod->associateDevice( static_cast<QComboBox*>( ui.iPodAssociations->itemWidget( item, IpodColumnUser ) )->currentText() );
+            ipod->associateDevice( static_cast<QComboBox*>( ui->iPodAssociations->itemWidget( item, IpodColumnUser ) )->currentText() );
             ipod->setScrobble( item->checkState( IpodColumnScrobble ) == Qt::Checked );
             ipod->setAlwaysAsk( item->checkState( IpodColumnAlwaysAsk ) == Qt::Checked );
         }
@@ -140,8 +119,8 @@ IpodSettingsWidget::populateIpodAssociations()
         for ( int i = 0; i < count; i++ )
         {
             us.setArrayIndex( i );
-            QTreeWidgetItem* item = new QTreeWidgetItem( ui.iPodAssociations );
-            QComboBox* comboBox = new QComboBox( ui.iPodAssociations );
+            QTreeWidgetItem* item = new QTreeWidgetItem( ui->iPodAssociations );
+            QComboBox* comboBox = new QComboBox( ui->iPodAssociations );
 
             for ( int i = 0 ; i < roster.count() ; ++i )
             {
@@ -151,7 +130,7 @@ IpodSettingsWidget::populateIpodAssociations()
                     comboBox->setCurrentIndex( i );
             }
 
-            ui.iPodAssociations->setItemWidget( item, IpodColumnUser, comboBox );
+            ui->iPodAssociations->setItemWidget( item, IpodColumnUser, comboBox );
 
             item->setText( IpodColumnDeviceName, us.value( "deviceName" ).toString() );
             item->setData( IpodColumnDeviceName, Qt::UserRole, us.value( "deviceId" ).toString() );
@@ -163,8 +142,8 @@ IpodSettingsWidget::populateIpodAssociations()
         us.endArray();
     }
 
-    ui.clearAssociations->setEnabled( ui.iPodAssociations->topLevelItemCount() > 0 );
-    ui.removeAssociation->setEnabled( false );
+    ui->clearAssociations->setEnabled( ui->iPodAssociations->topLevelItemCount() > 0 );
+    ui->removeAssociation->setEnabled( false );
 }
 
 void
@@ -181,26 +160,26 @@ IpodSettingsWidget::clearIpodAssociations()
     IpodDeviceLinux::deleteDevicesHistory();
 #endif
 
-    ui.iPodAssociations->clear();
-    ui.clearAssociations->setEnabled( false );
-    ui.removeAssociation->setEnabled( false );
+    ui->iPodAssociations->clear();
+    ui->clearAssociations->setEnabled( false );
+    ui->removeAssociation->setEnabled( false );
 }
 
 void
 IpodSettingsWidget::onItemActivated()
 {
-    ui.removeAssociation->setEnabled( true );
+    ui->removeAssociation->setEnabled( true );
 }
 
 void
 IpodSettingsWidget::removeIpodAssociation()
 {
-    QTreeWidgetItem* association = ui.iPodAssociations->currentItem();
+    QTreeWidgetItem* association = ui->iPodAssociations->currentItem();
     QString deviceId = association->data( IpodColumnDeviceName, Qt::UserRole ).toString();
-    QString username = static_cast<QComboBox*>( ui.iPodAssociations->itemWidget( association, IpodColumnUser ) )->currentText();
+    QString username = static_cast<QComboBox*>( ui->iPodAssociations->itemWidget( association, IpodColumnUser ) )->currentText();
     doRemoveIpodAssociation( deviceId, username );
-    ui.iPodAssociations->takeTopLevelItem( ui.iPodAssociations->indexOfTopLevelItem( association ) );
-    ui.removeAssociation->setEnabled( false );
+    ui->iPodAssociations->takeTopLevelItem( ui->iPodAssociations->indexOfTopLevelItem( association ) );
+    ui->removeAssociation->setEnabled( false );
 }
 
 void

@@ -4,40 +4,64 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 
+#include "ui_GeneralSettingsWidget.h"
 #include "GeneralSettingsWidget.h"
 
+
+#define SETTING_SHOW_AS "showAS"
+#define SETTING_LAUNCH_ITUNES "launchItunes"
+#define SETTING_NOTIFICATIONS "notifications"
+#define SETTING_LAST_RADIO "lastRadio"
+#define SETTING_SEND_CRASH_REPORTS "sendCrashReports"
+#define SETTING_CHECK_UPDATES "checkUpdates"
+
 GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
-    :SettingsWidget( parent )
+    :SettingsWidget( parent ),
+      ui( new Ui::GeneralSettingsWidget )
 {
-    ui.languages = new QComboBox( this );
+    ui->setupUi( this );
 
     populateLanguages();
 
-    connect( ui.languages, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onSettingsChanged() ) );
+    connect( ui->languages, SIGNAL( currentIndexChanged( int ) ), SLOT( onSettingsChanged() ) );
+
+    connect( ui->showAs, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+    connect( ui->launch, SIGNAL(stateChanged(int) ), SLOT( onSettingsChanged() ) );
+    connect( ui->notifications, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+    connect( ui->lastRadio, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+    connect( ui->sendCrashReports, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+    connect( ui->updates, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+
+    ui->showAs->setChecked( unicorn::Settings().value( SETTING_SHOW_AS, ui->showAs->isChecked() ).toBool() );
+    ui->launch->setChecked( unicorn::Settings().value( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() ).toBool() );
+    ui->notifications->setChecked( unicorn::Settings().value( SETTING_NOTIFICATIONS, ui->notifications->isChecked() ).toBool() );
+    ui->lastRadio->setChecked( unicorn::Settings().value( SETTING_LAST_RADIO, ui->lastRadio->isChecked() ).toBool() );
+    ui->sendCrashReports->setChecked( unicorn::Settings().value( SETTING_SEND_CRASH_REPORTS, ui->sendCrashReports->isChecked() ).toBool() );
+    ui->updates->setChecked( unicorn::Settings().value( SETTING_CHECK_UPDATES, ui->updates->isChecked() ).toBool() );
 }
 
 void
 GeneralSettingsWidget::populateLanguages()
 {
-    ui.languages->addItem( tr( "System Language" ), "" );
-    ui.languages->addItem( "English", QLocale( QLocale::English ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "FranÃ§ais" ), QLocale( QLocale::French ).name().left( 2 ) );
-    ui.languages->addItem( "Italiano", QLocale( QLocale::Italian ).name().left( 2 )  );
-    ui.languages->addItem( "Deutsch", QLocale( QLocale::German ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "EspaÃ±ol" ), QLocale( QLocale::Spanish ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "PortuguÃ©s" ), QLocale( QLocale::Portuguese ).name().left( 2 ) );
-    ui.languages->addItem( "Polski", QLocale( QLocale::Polish ).name().left( 2 ) );
-    ui.languages->addItem( "Svenska", QLocale( QLocale::Swedish ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "TÃ¼kÃ§e" ), QLocale( QLocale::Turkish ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "Ð ÑÑÑÐºÐ¸Ð¹" ), QLocale( QLocale::Russian ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "ä¸­æ" ), QLocale( QLocale::Chinese ).name().left( 2 ) );
-    ui.languages->addItem( QString::fromUtf8( "æ¥æ¬èª" ), QLocale( QLocale::Japanese ).name().left( 2 ) );
+    ui->languages->addItem( tr( "System Language" ), "" );
+    ui->languages->addItem( "English", QLocale( QLocale::English ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "FranÃ§ais" ), QLocale( QLocale::French ).name().left( 2 ) );
+    ui->languages->addItem( "Italiano", QLocale( QLocale::Italian ).name().left( 2 )  );
+    ui->languages->addItem( "Deutsch", QLocale( QLocale::German ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "EspaÃ±ol" ), QLocale( QLocale::Spanish ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "PortuguÃ©s" ), QLocale( QLocale::Portuguese ).name().left( 2 ) );
+    ui->languages->addItem( "Polski", QLocale( QLocale::Polish ).name().left( 2 ) );
+    ui->languages->addItem( "Svenska", QLocale( QLocale::Swedish ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "TÃ¼kÃ§e" ), QLocale( QLocale::Turkish ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "Ð ÑÑÑÐºÐ¸Ð¹" ), QLocale( QLocale::Russian ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "ä¸­æ" ), QLocale( QLocale::Chinese ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "æ¥æ¬èª" ), QLocale( QLocale::Japanese ).name().left( 2 ) );
 
     QString currLanguage = unicorn::AppSettings().value( "language", "" ).toString();
-    int index = ui.languages->findData( currLanguage );
+    int index = ui->languages->findData( currLanguage );
     if ( index != -1 )
     {
-        ui.languages->setCurrentIndex( index );
+        ui->languages->setCurrentIndex( index );
     }
 }
 
@@ -47,8 +71,8 @@ GeneralSettingsWidget::saveSettings()
     qDebug() << "has unsaved changes?" << hasUnsavedChanges();
     if ( hasUnsavedChanges() )
     {
-        int currIndex = ui.languages->currentIndex();
-        QString currLanguage = ui.languages->itemData( currIndex ).toString();
+        int currIndex = ui->languages->currentIndex();
+        QString currLanguage = ui->languages->itemData( currIndex ).toString();
 
         if ( unicorn::AppSettings().value( "language", "" ) != currLanguage )
         {
@@ -59,6 +83,14 @@ GeneralSettingsWidget::saveSettings()
                 .setText( tr( "You need to restart the application for the language change to take effect." ) )
                 .exec();
         }
+
+        unicorn::Settings().setValue( SETTING_SHOW_AS, ui->showAs->isChecked() );
+        unicorn::Settings().setValue( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() );
+        unicorn::Settings().setValue( SETTING_NOTIFICATIONS, ui->notifications->isChecked() );
+        unicorn::Settings().setValue( SETTING_LAST_RADIO, ui->lastRadio->isChecked() );
+        unicorn::Settings().setValue( SETTING_SEND_CRASH_REPORTS, ui->sendCrashReports->isChecked() );
+        unicorn::Settings().setValue( SETTING_CHECK_UPDATES, ui->updates->isChecked() );
+
         onSettingsSaved();
     }
 }

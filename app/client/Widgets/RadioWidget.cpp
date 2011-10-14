@@ -26,7 +26,7 @@ RadioWidget::RadioWidget(QWidget *parent)
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation) ) );
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*) ) );
-    connect( aApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)) );
+    connect( aApp, SIGNAL(gotUserInfo(lastfm::User)), SLOT(onGotUserInfo(lastfm::User)) );
 
     changeUser( aApp->currentSession()->userInfo().name() );
 }
@@ -40,7 +40,7 @@ RadioWidget::onSessionChanged( unicorn::Session* session )
 
 
 void
-RadioWidget::onGotUserInfo( const lastfm::UserDetails& userDetails )
+RadioWidget::onGotUserInfo( const lastfm::User& userDetails )
 {
     changeUser( userDetails.name() );
 }

@@ -58,7 +58,7 @@ template <typename D> struct OneDialogPointer : public QPointer<D>
     }
 };
 
-namespace lastfm { class UserDetails; }
+namespace lastfm { class User; }
 
 namespace unicorn
 {

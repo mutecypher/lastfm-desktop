@@ -40,7 +40,7 @@ class StatusBar : public QStatusBar
         void onMessagedChanged( const QString& text );
         void setStatus();
 
-        void onGotUserInfo(lastfm::UserDetails userDetails);
+        void onGotUserInfo(lastfm::User userDetails);
 
         void onConnectionUp();
         void onConnectionDown();

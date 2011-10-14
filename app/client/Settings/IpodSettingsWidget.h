@@ -23,6 +23,8 @@
 
 #include "SettingsWidget.h"
 
+namespace Ui { class IpodSettingsWidget; }
+
 class IpodSettingsWidget: public SettingsWidget
 {
     Q_OBJECT
@@ -39,17 +41,11 @@ private slots:
     void onItemActivated();
 
 private:
-    struct Ui
-    {
-        class QTreeWidget* iPodAssociations;
-        class QPushButton* clearAssociations;
-        class QPushButton* removeAssociation;
-    } ui;
-
-private:
-    void setupUi();
     void populateIpodAssociations();
     void doRemoveIpodAssociation( const QString deviceId, const QString username );
+
+private:
+    Ui::IpodSettingsWidget* ui;
 };
 
 #endif

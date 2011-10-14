@@ -33,7 +33,7 @@ public:
 
 private slots:
     void onSessionChanged( unicorn::Session* session );
-    void onGotUserInfo( const lastfm::UserDetails& userDetails );
+    void onGotUserInfo( const lastfm::User& userDetails );
 
     void onTuningIn( const RadioStation& station );
 

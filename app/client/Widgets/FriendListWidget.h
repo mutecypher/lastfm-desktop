@@ -7,7 +7,7 @@
 
 namespace unicorn { class Session; }
 namespace lastfm { class XmlQuery; }
-namespace lastfm { class UserDetails; }
+namespace lastfm { class User; }
 
 class FriendListWidget : public QWidget
 {
@@ -24,7 +24,7 @@ public:
 
 private slots:
     void onSessionChanged( unicorn::Session* session );
-    void onGotUserInfo( const lastfm::UserDetails& userDetails );
+    void onGotUserInfo( const lastfm::User& userDetails );
     void onGotFriends();
     void onTextChanged( const QString& text );
 

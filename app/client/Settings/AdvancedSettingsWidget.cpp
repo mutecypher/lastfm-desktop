@@ -18,7 +18,9 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "ui_AdvancedSettingsWidget.h"
 #include "AdvancedSettingsWidget.h"
+#include "../Widgets/ShortcutEdit.h"
 #include "../AudioscrobblerSettings.h"
 #include "../Application.h"
 
@@ -43,121 +45,18 @@
 
 using lastfm::User;
 
-class ShortCutEdit : public QComboBox {
-public:
-    ShortCutEdit() {
-        setEditable( true );
-        QStringList keys;
-        keys << QString::fromUtf8("⌃⌘ S")
-             << "F1"
-             << "F3"
-             << "F2"
-             << "F4"
-             << "F5"
-             << "F6"
-             << "F7"
-             << "F8"
-             << "F9";
-        QStringListModel* model = new QStringListModel(keys, this);
-        setModel(model);
-    }
-
-    void setTextValue( QString str ) {
-        setCurrentIndex( findText(str));
-        lineEdit()->setText( str );
-    }
-
-    void keyPressEvent( QKeyEvent* e ) {
-        QString text;
-
-        Qt::KeyboardModifiers modifiers;
-
-        //Modifier to symbol
-        if( e->modifiers() & Qt::ShiftModifier ) {
-            text += QString::fromUtf8( "⇧" );
-            modifiers |= Qt::ShiftModifier;
-        }
-        if( e->modifiers() & Qt::MetaModifier ) {
-            text += QString::fromUtf8( "⌃" );
-            modifiers |= Qt::MetaModifier;
-        }
-        if( e->modifiers() & Qt::AltModifier ) {
-            text += QString::fromUtf8( "⌥" );
-            modifiers |= Qt::AltModifier;
-        }
-        if( e->modifiers() & Qt::ControlModifier ) {
-            text += QString::fromUtf8( "⌘" );
-            modifiers |= Qt::ControlModifier;
-        }
-
-        //Backspace key to clear shortcut
-        if( !e->modifiers() && e->key() == Qt::Key_Backspace) {
-            lineEdit()->clear();
-            m_modifiers = 0;
-            m_key = 0;
-            return;
-        }
-        //Don't allow shortcuts with no modifier unless they're F keys
-        if( !e->modifiers() && !( e->key() >= 0x01000030 && e->key() <= 0x01000052 )) return;
-
-        //Don't allow pure modifier shortcuts
-        switch(e->key()) {
-            case Qt::Key_Control:
-            case Qt::Key_Alt:
-            case Qt::Key_Meta:
-            case Qt::Key_Shift:
-                return;
-        }
-
-        //Literal Space to Space text
-        if( e->key() == Qt::Key_Space)
-            text += " Space" ;
-        else if( e->key() == Qt::Key_Escape )
-            text += QString::fromUtf8(" ⎋");
-        else if( e->key() == Qt::Key_Backspace )
-            text += QString::fromUtf8(" ⌫");
-        else if( e->key() >= 0x01000030 && e->key() <= 0x01000052 )
-            text += QString( " F%1" ).arg(((int)e->key() - 0x0100002F) );
-        else
-            text = text + " " + e->key();
-
-        m_key = e->nativeVirtualKey();
-        m_modifiers = e->modifiers();
-
-        setCurrentIndex( findText( text, Qt::MatchFixedString ) );
-        lineEdit()->setText( text );
-    }
-
-    QString textValue() const{ return lineEdit()->text(); }
-    Qt::KeyboardModifiers m_modifiers;
-    int m_key;
-};
-
 AdvancedSettingsWidget::AdvancedSettingsWidget( QWidget* parent )
-    : SettingsWidget( parent )
+    : SettingsWidget( parent ),
+      ui( new Ui::AdvancedSettingsWidget )
 {
-    setupUi();
-}
-
-void
-AdvancedSettingsWidget::setupUi()
-{
-    QVBoxLayout* v = new QVBoxLayout();
-    QHBoxLayout* h = new QHBoxLayout();
-
-    h->addWidget( new QCheckBox( "Raise Scrobbler"));
-    h->addWidget( m_sce = new ShortCutEdit );
+    ui->setupUi( this );
 
     AudioscrobblerSettings settings;
-    m_sce->setTextValue( settings.raiseShortcutDescription() );
-    m_sce->m_modifiers = settings.raiseShortcutModifiers();
-    m_sce->m_key = settings.raiseShortcutKey();
-    connect( m_sce, SIGNAL(editTextChanged(QString)), this, SLOT(onSettingsChanged()));
+    ui->sce->setTextValue( settings.raiseShortcutDescription() );
+    ui->sce->setModifiers( settings.raiseShortcutModifiers() );
+    ui->sce->setKey( settings.raiseShortcutKey() );
 
-    v->addLayout(h);
-
-    v->addStretch();
-    setLayout( v );
+    connect( ui->sce, SIGNAL(editTextChanged(QString)), this, SLOT(onSettingsChanged()));
 }
 
 void
@@ -166,9 +65,9 @@ AdvancedSettingsWidget::saveSettings()
     qDebug() << "has unsaved changes?" << hasUnsavedChanges();
 
     AudioscrobblerSettings settings;
-    settings.setRaiseShortcutKey( m_sce->m_key );
-    settings.setRaiseShortcutModifiers( m_sce->m_modifiers );
-    settings.setRaiseShortcutDescription( m_sce->textValue() );
+    settings.setRaiseShortcutKey( ui->sce->key() );
+    settings.setRaiseShortcutModifiers( ui->sce->modifiers() );
+    settings.setRaiseShortcutDescription( ui->sce->textValue() );
 
-    aApp->setRaiseHotKey( m_sce->m_modifiers, m_sce->m_key );
+    aApp->setRaiseHotKey( ui->sce->modifiers(), ui->sce->key() );
 }

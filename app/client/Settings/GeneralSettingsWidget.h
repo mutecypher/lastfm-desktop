@@ -3,15 +3,13 @@
 
 #include "SettingsWidget.h"
 
+namespace Ui {
+    class GeneralSettingsWidget;
+}
+
 class GeneralSettingsWidget : public SettingsWidget
 {
     Q_OBJECT
-
-private:
-    struct
-    {
-        class QComboBox* languages;
-    } ui;
 
 public:
     GeneralSettingsWidget( QWidget* parent = 0 );
@@ -19,6 +17,9 @@ public:
 private:
     void saveSettings();
     void populateLanguages();
+
+private:
+    Ui::GeneralSettingsWidget* ui;
 };
 
 #endif // GENERALSETTINGSWIDGET_H

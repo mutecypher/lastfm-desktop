@@ -35,7 +35,7 @@
 #endif
 
 namespace lastfm{
-    class UserDetails;
+    class User;
     class InternetConnectionMonitor;
 }
 
@@ -217,7 +217,7 @@ namespace unicorn
         void onBusSessionChanged( const QMap<QString, QString>& sessionData );
 
     signals:
-        void gotUserInfo( const lastfm::UserDetails& );
+        void gotUserInfo( const lastfm::User& );
         void sessionChanged( unicorn::Session* newSession );
         void rosterUpdated();
         void busLovedStateChanged(bool loved);

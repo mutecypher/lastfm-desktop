@@ -233,11 +233,24 @@ void
 unicorn::Application::onUserGotInfo()
 {
     QNetworkReply* reply = (QNetworkReply*)sender();
-    lastfm::UserDetails userInfo( reply );
+    XmlQuery lfm;
+    try
+    {
+        lfm.parse( reply->readAll() );
+        lastfm::User userInfo( lfm["user"] );
 
-    const char* key = UserSettings::subscriptionKey();
-    Settings().setValue( key, userInfo.isSubscriber() );
-    emit gotUserInfo( userInfo );
+        const char* key = UserSettings::subscriptionKey();
+        Settings().setValue( key, userInfo.isSubscriber() );
+        emit gotUserInfo( userInfo );
+    }
+    catch ( lastfm::ws::ParseError error )
+    {
+        qDebug() << error.message();
+    }
+    catch ( lastfm::ws::Error error )
+    {
+        qDebug() << error;
+    }
 }
 
 void
@@ -320,7 +333,7 @@ unicorn::Application::changeSession( Session* newSession, bool announce )
     lastfm::ws::Username = m_currentSession->userInfo().name();
     lastfm::ws::SessionKey = m_currentSession->sessionKey();
 
-    connect( lastfm::UserDetails::getInfo(), SIGNAL( finished() ), SLOT( onUserGotInfo() ) );
+    connect( lastfm::User::getInfo(), SIGNAL( finished() ), SLOT( onUserGotInfo() ) );
     
     if( announce )
         m_bus.announceSessionChange( currentSession() );

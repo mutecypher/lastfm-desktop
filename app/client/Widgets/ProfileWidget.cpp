@@ -20,7 +20,7 @@ ProfileWidget::ProfileWidget(QWidget *parent)
     layout->setSpacing( 0 );
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)) );
-    connect( aApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)) );
+    connect( aApp, SIGNAL(gotUserInfo(lastfm::User)), SLOT(onGotUserInfo(lastfm::User)) );
 
     connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
 
@@ -35,12 +35,12 @@ ProfileWidget::onSessionChanged( unicorn::Session* session )
 
 
 void
-ProfileWidget::onGotUserInfo( const lastfm::UserDetails& userDetails )
+ProfileWidget::onGotUserInfo( const lastfm::User& userDetails )
 {
     changeUser( userDetails.name() );
 
     m_scrobbleCount = userDetails.scrobbleCount();
-    ui.avatar->setUserDetails( userDetails );
+    ui.avatar->setUser( userDetails );
     ui.avatar->loadUrl( userDetails.imageUrl( lastfm::Medium, true ), HttpImageWidget::ScaleNone );
     ui.avatar->setHref( userDetails.www() );
 

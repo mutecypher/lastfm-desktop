@@ -97,6 +97,9 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
 
     setTrackDetails( track );
 
+    ui->albumImage->setPixmap( QPixmap( ":/meta_album_no_art.png" ) );
+    ui->artistBio->setPixmap( QPixmap( ":/meta_artist_no_photo.png" ) );
+
     connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesCached(QList<lastfm::Track>)));
     connect( track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onTrackCorrected(QString)));
 

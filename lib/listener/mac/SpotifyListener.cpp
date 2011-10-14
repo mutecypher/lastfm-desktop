@@ -64,9 +64,7 @@ SpotifyListener::loop()
 
     if ( playerState == "playing"
          || playerState == "stopped"
-         || playerState == "paused"
-
-         )
+         || playerState == "paused" )
     {
         if ( !m_connection )
             emit newConnection( m_connection = new SpotifyConnection );

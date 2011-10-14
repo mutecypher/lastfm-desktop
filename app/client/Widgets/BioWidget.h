@@ -14,6 +14,7 @@ public:
     BioWidget( QWidget* parent );
     bool eventFilter( QObject* o, QEvent* e );
     
+    void setPixmap( const QPixmap& pixmap );
     void loadImage( const QUrl&, HttpImageWidget::ScaleType scale = HttpImageWidget::ScaleAuto );
     void setImageHref( const QUrl& );
     

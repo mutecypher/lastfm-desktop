@@ -14,7 +14,6 @@ BannerWidget::BannerWidget( const QString& pText, QWidget* parent )
     m_layout->setStackingMode( QStackedLayout::StackAll );
     m_layout->addWidget( m_banner = new BannerWidgetPrivate(pText) );
     connect( m_banner, SIGNAL( clicked() ), this, SLOT( onClick() ) );
-    setStyleSheet(".BannerWidget {border:1px solid #aaa;}");
     setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
 }
 
@@ -26,7 +25,6 @@ BannerWidget::setWidget( QWidget* w ) {
         m_layout->removeWidget( m_childWidget );
     }
     m_childWidget = w;
-    w->setContentsMargins( 5, 5, 5, 5 );
     m_childWidget->installEventFilter( this );
     m_layout->insertWidget( 0, m_childWidget );
     m_layout->setCurrentWidget( m_banner );

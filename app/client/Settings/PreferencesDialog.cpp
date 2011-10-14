@@ -14,8 +14,8 @@ PreferencesDialog::PreferencesDialog( QMenuBar* menuBar )
 
     setUnifiedTitleAndToolBarOnMac( true );
 
-    QToolBar* toolBar = addToolBar( "tabs" );
-    toolBar->addWidget( ui->tabFrame );
+    m_toolBar = addToolBar( "tabs" );
+    m_toolBar->addWidget( ui->tabFrame );
 
     connect( this, SIGNAL( saveNeeded() ), ui->general, SLOT( saveSettings() ) );
     connect( this, SIGNAL( saveNeeded() ), ui->scrobbling, SLOT( saveSettings() ) );
@@ -71,6 +71,8 @@ PreferencesDialog::onTabButtonClicked()
         ui->stackedWidget->setCurrentWidget( ui->advanced );
     else if ( clickedButton == ui->scrobblingButton )
         ui->stackedWidget->setCurrentWidget( ui->scrobbling );
+
+    resize( QSize( width(), ui->stackedWidget->currentWidget()->sizeHint().height() + m_toolBar->height() ) );
 }
 
 void

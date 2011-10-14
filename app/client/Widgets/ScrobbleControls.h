@@ -27,7 +27,7 @@
 #include <lastfm/XmlQuery.h>
 
 namespace unicorn{ class Session; };
-namespace lastfm{ class UserDetails; };
+namespace lastfm{ class User; };
 
 class QPushButton;
 

@@ -91,7 +91,7 @@ StatusBar::StatusBar( QWidget* parent )
     connect( this, SIGNAL(messageChanged(QString)), SLOT(onMessagedChanged(QString)));
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)));
-    connect( aApp, SIGNAL( gotUserInfo(lastfm::UserDetails)), SLOT( onGotUserInfo(lastfm::UserDetails) ) );
+    connect( aApp, SIGNAL( gotUserInfo(lastfm::User)), SLOT( onGotUserInfo(lastfm::User) ) );
 }
 
 
@@ -104,7 +104,7 @@ StatusBar::onSessionChanged( unicorn::Session* session )
 }
 
 void
-StatusBar::onGotUserInfo( lastfm::UserDetails /*userDetails*/ )
+StatusBar::onGotUserInfo( lastfm::User /*userDetails*/ )
 {
     setStatus();
 }
