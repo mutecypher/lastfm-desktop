@@ -307,7 +307,7 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
         {
             // Not a radio track
 
-            if ( track.extra( "playerId" ) == "spt" && !unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool() )
+            if ( track.extra( "playerId" ) == "spt" )
                 ui->status->setText( tr("Listening to...") );
             else
                 ui->status->setText( tr("Scrobbling from...") );

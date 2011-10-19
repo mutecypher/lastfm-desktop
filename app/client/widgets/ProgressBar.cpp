@@ -80,66 +80,73 @@ ProgressBar::paintEvent( QPaintEvent* e )
 
     if ( !m_track.isNull() )
     {
-        // draw the chunk
-        p.setPen( Qt::transparent );
-        p.setBrush( m_chunk );
-        p.drawRect( rect().adjusted( 0, 0, ((m_frame * width()) / (m_track.duration() * 1000)) - width(), -1) );
-
-        QString format( "m:ss" );
-
-        QTime duration( 0, 0 );
-        duration = duration.addMSecs( m_track.duration() * 1000 );
-        QTime progress( 0, 0 );
-        progress = progress.addMSecs( m_frame );
-
-        QTextOption timeTextOption;
-        timeTextOption.setAlignment( Qt::AlignVCenter | Qt::AlignLeft );
-
-        QFont timeFont = font();
-        timeFont.setPixelSize( 10 );
-        setFont( timeFont );
-
-        p.setPen( QColor( 0x333333 ) );
-
-        if ( m_track.source() == Track::LastFmRadio )
-            p.drawText( rect().adjusted( 6, 0, 0, 0 ), QString( "%1 / %2" ).arg( progress.toString( format ) ,duration.toString( format ) ), timeTextOption );
-        else
-            p.drawText( rect().adjusted( 6, 0, 0, 0 ), QString( "%1" ).arg( progress.toString( format ) ), timeTextOption );
-
-        bool spotifyTrackNotScrobbling = m_track.extra( "playerId" ) == "spt" && !unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool();
-
-        if ( m_track.extra( "playerId" ) != "spt" || !spotifyTrackNotScrobbling
-             && ScrobbleService::instance().scrobblingOn() || m_track.scrobbleStatus() != Track::Null )
+        if ( m_track.extra( "playerId" ) != "spt" )
         {
-            if ( !ScrobbleService::instance().scrobblingOn() && m_track.scrobbleStatus() != Track::Null )
+            // draw the chunk
+            p.setPen( Qt::transparent );
+            p.setBrush( m_chunk );
+            p.drawRect( rect().adjusted( 0, 0, ((m_frame * width()) / (m_track.duration() * 1000)) - width(), -1) );
+
+            QString format( "m:ss" );
+
+            QTime duration( 0, 0 );
+            duration = duration.addMSecs( m_track.duration() * 1000 );
+            QTime progress( 0, 0 );
+            progress = progress.addMSecs( m_frame );
+
+            QTextOption timeTextOption;
+            timeTextOption.setAlignment( Qt::AlignVCenter | Qt::AlignLeft );
+
+            QFont timeFont = font();
+            timeFont.setPixelSize( 10 );
+            setFont( timeFont );
+
+            p.setPen( QColor( 0x333333 ) );
+
+            if ( m_track.source() == Track::LastFmRadio )
+                p.drawText( rect().adjusted( 6, 0, 0, 0 ), QString( "%1 / %2" ).arg( progress.toString( format ) ,duration.toString( format ) ), timeTextOption );
+            else
+                p.drawText( rect().adjusted( 6, 0, 0, 0 ), QString( "%1" ).arg( progress.toString( format ) ), timeTextOption );
+
+            if ( ScrobbleService::instance().scrobblingOn() ||
+                 !ScrobbleService::instance().scrobblingOn() && m_track.scrobbleStatus() != Track::Null )
+            {
+                if ( !ScrobbleService::instance().scrobblingOn() && m_track.scrobbleStatus() != Track::Null )
+                {
+                    QTextOption textOption;
+                    textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
+                    p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr( "Scrobbling off" ), textOption );
+                }
+
+                uint scrobblePoint = sw->scrobblePoint() * 1000;
+
+                int scrobbleMarker = (scrobblePoint * width()) / ( m_track.duration() * 1000 ) ;
+
+                p.setPen( QColor( 0xbdbdbd ) );
+                p.drawLine( QPoint( scrobbleMarker, rect().top() ),
+                            QPoint( scrobbleMarker, rect().bottom() - 1 ) );
+
+                p.setPen( QColor( 0xe6e6e6 ) );
+                p.drawLine( QPoint( scrobbleMarker + 1, rect().top() ),
+                            QPoint( scrobbleMarker + 1, rect().bottom() - 1 ) );
+
+                // draw the as!
+                QImage as( m_track.scrobbleStatus() != Track::Null ? m_scrobbleMarkerOn : m_scrobbleMarkerOff );
+                QPoint asPoint( scrobbleMarker - 25, (rect().height() / 2) - (as.height() / 2) );
+                p.drawImage( asPoint, as );
+            }
+            else
             {
                 QTextOption textOption;
                 textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
                 p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr( "Scrobbling off" ), textOption );
             }
-
-            uint scrobblePoint = sw->scrobblePoint() * 1000;
-
-            int scrobbleMarker = (scrobblePoint * width()) / ( m_track.duration() * 1000 ) ;
-
-            p.setPen( QColor( 0xbdbdbd ) );
-            p.drawLine( QPoint( scrobbleMarker, rect().top() ),
-                        QPoint( scrobbleMarker, rect().bottom() - 1 ) );
-
-            p.setPen( QColor( 0xe6e6e6 ) );
-            p.drawLine( QPoint( scrobbleMarker + 1, rect().top() ),
-                        QPoint( scrobbleMarker + 1, rect().bottom() - 1 ) );
-
-            // draw the as!
-            QImage as( m_track.scrobbleStatus() != Track::Null ? m_scrobbleMarkerOn : m_scrobbleMarkerOff );
-            QPoint asPoint( scrobbleMarker - 25, (rect().height() / 2) - (as.height() / 2) );
-            p.drawImage( asPoint, as );
         }
         else
         {
             QTextOption textOption;
             textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
-            p.drawText( rect().adjusted( 0, 0, -6, 0 ), spotifyTrackNotScrobbling ? tr("Make sure scrobbling is turned on in either Last.fm or Spotify's preferences!") : tr( "Not scrobbling" ), textOption );
+            p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr("You can enable scrobbling in Spotify's preferences!"), textOption );
         }
     }
 }

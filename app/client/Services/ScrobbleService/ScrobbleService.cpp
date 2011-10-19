@@ -223,16 +223,7 @@ ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
         if ( m_scrobblingOn )
         {
             qDebug() << "************** Now Playing..";
-
-            if ( t.extra( "playerId" ) == "spt" )
-            {
-                if ( unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool() )
-                    m_as->nowPlaying( t );
-            }
-            else
-                m_as->nowPlaying( t );
-
-
+            m_as->nowPlaying( t );
         }
     }
 
@@ -301,15 +292,7 @@ ScrobbleService::onScrobble()
     Q_ASSERT(m_connection);
 
     if( m_as && m_scrobblingOn )
-    {
-        if ( m_trackToScrobble.extra( "playerId" ) == "spt" )
-        {
-            if ( unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool() )
-                m_as->cache( m_trackToScrobble );
-        }
-        else
             m_as->cache( m_trackToScrobble );
-    }
 }
 
 void 

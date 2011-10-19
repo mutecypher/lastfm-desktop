@@ -155,6 +155,8 @@ namespace audioscrobbler
         void showWindow();
         void toggleWindow();
 
+        void onScrobbleToggled( bool scrobblingOn );
+
         void onTrackStarted( const Track&, const Track& );
         void onTrackPaused( bool );
 

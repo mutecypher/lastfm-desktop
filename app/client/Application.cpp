@@ -221,6 +221,12 @@ Application::init()
     menu->addSeparator();
 
     m_submit_scrobbles_toggle = menu->addAction( tr("Submit Scrobbles") );
+    m_submit_scrobbles_toggle->setCheckable( true );
+    bool scrobblingOn = unicorn::UserSettings().value( "scrobblingOn", true ).toBool();
+    m_submit_scrobbles_toggle->setChecked( scrobblingOn );
+    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
+
+    connect( m_submit_scrobbles_toggle, SIGNAL(toggled(bool)), SLOT(onScrobbleToggled(bool)) );
 
     menu->addSeparator();
 
@@ -228,9 +234,9 @@ Application::init()
 
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
 
-    m_submit_scrobbles_toggle->setCheckable( true );
-    m_submit_scrobbles_toggle->setChecked( true );
+
     m_tray->setContextMenu(menu);
+
 
 /// MainWindow
     m_mw = new MainWindow( m_menuBar );
@@ -461,6 +467,14 @@ Application::changeLovedState(bool loved)
         track.love();
     else
         track.unlove();
+}
+
+void
+Application::onScrobbleToggled( bool scrobblingOn )
+{
+    unicorn::UserSettings().setValue( "scrobblingOn", scrobblingOn );
+    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
+    m_submit_scrobbles_toggle->setChecked( scrobblingOn );
 }
 
 void
