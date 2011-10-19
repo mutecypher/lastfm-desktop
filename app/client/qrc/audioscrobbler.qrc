@@ -203,13 +203,6 @@
 		<file>settings_PRESS.png</file>
 		<file>settings_REST.png</file>
 		
-		<file>scrobble_OFF_HOVER.png</file>
-		<file>scrobble_OFF_PRESS.png</file>
-		<file>scrobble_OFF_REST.png</file>
-		<file>scrobble_ON_HOVER.png</file>
-		<file>scrobble_ON_PRESS.png</file>
-		<file>scrobble_ON_REST.png</file>
-		
 		<file>volume_knob_REST.png</file>
 		<file>volume_knob_PRESS.png</file>
 		<file>volume_slot_OFF.png</file>

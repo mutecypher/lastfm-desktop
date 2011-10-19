@@ -34,8 +34,6 @@ class StatusBar : public QStatusBar
     public:
         StatusBar( QWidget* parent = 0);
 
-        void setSizeGripVisible( bool visible );
-
     private slots:
         void onMessagedChanged( const QString& text );
         void setStatus();
@@ -44,8 +42,6 @@ class StatusBar : public QStatusBar
 
         void onConnectionUp();
         void onConnectionDown();
-
-        void onScrobbleToggled( bool );
 
         void onSessionChanged( unicorn::Session* session );
 
@@ -60,8 +56,6 @@ class StatusBar : public QStatusBar
             class QLabel* volMin;
             Phonon::VolumeSlider* volumeSlider;
             class QLabel* volMax;
-            class QPushButton* scrobbleToggle;
-            class QSizeGrip* sizeGrip;
         } ui;
 
         bool m_online;

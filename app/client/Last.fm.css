@@ -1043,30 +1043,6 @@ StatusBar QSlider::handle:horizontal:pressed {
 background-image: url(":/volume_knob_PRESS.png");
 }
 
-StatusBar QPushButton#scrobbleToggle {
-border: 1px solid #cdcdcd;
-border-radius: 3px;
-background-repeat: no-repeat;
-background-position: center;
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #e5e5e5);
-background-image: url(":/scrobble_OFF_REST.png");
-width: 36px;
-height: 22px;
-margin-left: 10px;
-}
-
-StatusBar QPushButton#scrobbleToggle:hover {
-background-image: url(":/scrobble_OFF_HOVER.png");
-}
-StatusBar QPushButton#scrobbleToggle:pressed {
-background-image: url(":/scrobble_OFF_PRESS.png");
-}
-StatusBar QPushButton#scrobbleToggle:checked {
-background-image: url(":/scrobble_ON_REST.png");
-}
-StatusBar QPushButton#scrobbleToggle:checked:hover {
-background-image: url(":/scrobble_ON_HOVER.png");
-}
-StatusBar QPushButton#scrobbleToggle:checked:pressed {
-background-image: url(":/scrobble_ON_PRESS.png");
+StatusBar StylableWidget#permanentWidget {
+margin: 0px 10px;
 }

@@ -56,10 +56,12 @@ StatusBar::StatusBar( QWidget* parent )
     setStatus();
 
     addPermanentWidget( ui.permanentWidget = new StylableWidget( this ) );
+    ui.permanentWidget->setObjectName( "permanentWidget" );
     QHBoxLayout* permanentWidgetLayout = new QHBoxLayout( ui.permanentWidget );
     permanentWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
     permanentWidgetLayout->setSpacing( 0 );
 
+    permanentWidgetLayout->addStretch( 1 );
     permanentWidgetLayout->addWidget( ui.volMin = new QLabel( this ) );
     ui.volMin->setObjectName( "volMin" );
     ui.volMin->setAttribute( Qt::WA_LayoutUsesWidgetRect );
@@ -68,20 +70,6 @@ StatusBar::StatusBar( QWidget* parent )
     permanentWidgetLayout->addWidget( ui.volMax = new QLabel( this ) );
     ui.volMax->setObjectName( "volMax" );
     ui.volMax->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-
-    bool scrobblingOn = unicorn::UserSettings().value( "scrobblingOn", true ).toBool();
-    permanentWidgetLayout->addWidget( ui.scrobbleToggle = new QPushButton( this ) );
-    ui.scrobbleToggle->setObjectName( "scrobbleToggle" );
-    ui.scrobbleToggle->setCheckable( true );
-    ui.scrobbleToggle->setChecked( scrobblingOn );
-    onScrobbleToggled( scrobblingOn );
-    ui.scrobbleToggle->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-
-    aApp->scrobbleToggleAction()->setChecked( scrobblingOn );
-
-    connect( aApp->scrobbleToggleAction(), SIGNAL(toggled(bool)), SLOT(onScrobbleToggled(bool)) );
-
-    connect( ui.scrobbleToggle, SIGNAL(toggled(bool)), SLOT(onScrobbleToggled(bool)) );
 
     aApp->isInternetConnectionUp() ? onConnectionUp() : onConnectionDown();
 
@@ -98,8 +86,6 @@ StatusBar::StatusBar( QWidget* parent )
 void
 StatusBar::onSessionChanged( unicorn::Session* session )
 {
-    bool scrobblingOn = unicorn::UserSettings( session->userInfo() ).value( "scrobblingOn", true ).toBool();
-    onScrobbleToggled( scrobblingOn );
     setStatus();
 }
 
@@ -109,21 +95,6 @@ StatusBar::onGotUserInfo( lastfm::User /*userDetails*/ )
     setStatus();
 }
 
-void
-StatusBar::onScrobbleToggled( bool scrobblingOn )
-{
-    unicorn::UserSettings().setValue( "scrobblingOn", scrobblingOn );
-    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
-    ui.scrobbleToggle->setChecked( scrobblingOn );
-    ui.scrobbleToggle->setToolTip( scrobblingOn ? tr( "Scrobbling on" ) : tr( "Scrobbling off" ) );
-    aApp->scrobbleToggleAction()->setChecked( scrobblingOn );
-}
-
-void
-StatusBar::setSizeGripVisible( bool visible )
-{
-    ui.sizeGrip->setVisible( visible );
-}
 
 void
 StatusBar::onMessagedChanged( const QString& message )
