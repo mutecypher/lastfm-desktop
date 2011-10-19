@@ -18,6 +18,8 @@ private:
         class QLabel* name;
         class QLabel* scrobbleCount;
         class QLabel* scrobbles;
+        class QLabel* lovedCount;
+        class QLabel* loved;
 
         class StylableWidget* topWeeklyArtists;
         class StylableWidget* topOverallArtists;
@@ -32,6 +34,8 @@ private slots:
 
     void onGotTopWeeklyArtists();
     void onGotTopOverallArtists();
+
+    void onGotLovedTracks();
 
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
     void onScrobbleStatusChanged();
