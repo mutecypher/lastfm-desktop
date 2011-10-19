@@ -37,89 +37,204 @@
 #include "TourScrobblesPage.h"
 #include "TourLocationPage.h"
 
+#include "ui_FirstRunWizard.h"
 #include "FirstRunWizard.h"
 
 FirstRunWizard::FirstRunWizard( QWidget* parent )
-    :QWizard( parent )
+    :QDialog( parent ),
+      ui( new Ui::FirstRunWizard )
 {
-    setOption( QWizard::NoBackButtonOnStartPage, true );
+    ui->setupUi( this );
 
-    // We don't want the bowtie and the space on the left
-    setWizardStyle( ClassicStyle );
+    for ( int i = 0 ; i < ui->stackedWidget->count() ; ++i )
+    {
+        qobject_cast<WizardPage*>(ui->stackedWidget->widget( i ))->setWizard( this );
+    }
 
-    // get rid of the QWizardRuler
-    m_palette = aApp->palette();
-    QPalette palette = m_palette;
-    palette.setColor( QPalette::Mid, QColor( 0, 0, 0, 0 ) );
-    palette.setColor( QPalette::Base, QColor( 0, 0, 0, 0 ) );
-
-    aApp->setPalette( palette );
-
-    resize( 725, 460 );
-
-    setPage( Page_Login, new LoginPage(this) );
-    setPage( Page_Access, new AccessPage( this ) );
-#ifdef Q_WS_WIN
-    setPage( Page_Plugins, new PluginsPage() );
-    setPage( Page_Plugins, new PluginsInstallPage() );
-#endif
-    setPage( Page_Bootstrap, new BootstrapPage( this ) );
-    setPage( Page_Tour_Scrobbles, new TourScrobblesPage( this ) );
-    setPage( Page_Tour_Metadata, new TourMetadataPage( this ) );
-    setPage( Page_Tour_Radio, new TourRadioPage( this ) );
-    setPage( Page_Tour_Finish, new TourFinishPage( this ) );
-    setPage( Page_Tour_Location, new TourLocationPage( this ) );
+    connect( ui->next, SIGNAL(clicked()), SLOT(next()));
+    connect( ui->back, SIGNAL(clicked()), SLOT(back()));
+    connect( ui->skip, SIGNAL(clicked()), SLOT(skip()));
+    connect( ui->finish, SIGNAL(clicked()), SLOT(accept()));
 
     connect( this, SIGNAL( rejected() ), this, SLOT( onRejected() ) );
     connect( this, SIGNAL( accepted() ), this, SLOT( onWizardCompleted() ) );
+
+    ui->stackedWidget->setCurrentWidget( ui->loginPage );
+    initializePage( ui->stackedWidget->currentWidget() );
 }
 
-int
-FirstRunWizard::nextId() const
+void
+FirstRunWizard::setTitle( const QString& title )
 {
-    switch ( currentId() )
+    ui->title->setText( title );
+}
+
+
+QAbstractButton*
+FirstRunWizard::setButton( Button button, const QString& text )
+{
+    QAbstractButton* returnButton;
+
+    switch ( button )
     {
-    case Page_Login:
-        return Page_Access;
-    case Page_Access:
+    case CustomButton:
+        returnButton = ui->custom;
+        break;
+    case BackButton:
+        returnButton = ui->back;
+        break;
+    case SkipButton:
+        returnButton = ui->skip;
+        break;
+    case NextButton:
+        returnButton = ui->next;
+        break;
+    case FinishButton:
+        returnButton = ui->finish;
+        break;
+    }
+
+    returnButton->setText( text );
+    returnButton->show();
+
+    return returnButton;
+}
+
+void
+FirstRunWizard::next()
+{
+    QWidget* currentPage = ui->stackedWidget->currentWidget();
+
+    if ( qobject_cast<WizardPage*>(currentPage)->validatePage() )
+    {
+        // go to the next page
+        cleanupPage( currentPage );
+
+        // remember what the last page was so we can go back()
+        m_pages << currentPage;
+
+        if ( currentPage == ui->loginPage )
+            ui->stackedWidget->setCurrentWidget( ui->accessPage );
+        else if ( currentPage == ui->accessPage )
 #ifdef Q_OS_WIN32
-        return Page_Plugins;
-    case Page_Plugins:
+            ui->stackedWidget->setCurrentWidget( ui->pluginsPage );
+        else if ( currentPage == ui->pluginsPage )
+            return Page_PluginsInstall;
+        else if ( currentPage == ui->pluginsInstallPage ):
+            if( aApp->currentSession() && aApp->currentSession()->userInfo().canBootstrap() )
+                ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
+            else
+                ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
+#elif defined Q_OS_MAC
+            if( aApp->currentSession() && aApp->currentSession()->userInfo().canBootstrap() )
+                ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
+            else
+                ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
+#elif defined Q_WS_X11
+            ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
+#endif
+        else if ( currentPage == ui->bootstrapPage )
+            ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
+        else if ( currentPage == ui->tourScrobblesPage )
+            ui->stackedWidget->setCurrentWidget( ui->tourMetadataPage );
+        else if ( currentPage == ui->tourMetadataPage )
+            ui->stackedWidget->setCurrentWidget( ui->tourRadioPage );
+        else if ( currentPage == ui->tourRadioPage )
+            ui->stackedWidget->setCurrentWidget( ui->tourLocationPage );
+        else if ( currentPage == ui->tourLocationPage )
+            ui->stackedWidget->setCurrentWidget( ui->tourFinishPage );
+
+        initializePage( ui->stackedWidget->currentWidget() );
+    }
+}
+
+void
+FirstRunWizard::back()
+{
+    cleanupPage( ui->stackedWidget->currentWidget() );
+    ui->stackedWidget->setCurrentWidget( m_pages.takeLast() );
+    initializePage( ui->stackedWidget->currentWidget() );
+}
+
+void
+FirstRunWizard::skip()
+{
+    // skip is mostly the same as next but we don't call validatePage()
+    // and the tour pages all go ot the last page
+
+    QWidget* currentPage = ui->stackedWidget->currentWidget();
+
+    // go to the next page
+    cleanupPage( currentPage );
+
+    // remember what the last page was so we can go back()
+    m_pages << currentPage;
+
+    if ( currentPage == ui->loginPage )
+        ui->stackedWidget->setCurrentWidget( ui->accessPage );
+    else if ( currentPage == ui->accessPage )
+#ifdef Q_OS_WIN32
+        ui->stackedWidget->setCurrentWidget( ui->pluginsPage );
+    else if ( currentPage == ui->pluginsPage )
         return Page_PluginsInstall;
-    case Page_PluginsInstall:
+    else if ( currentPage == ui->pluginsInstallPage ):
         if( aApp->currentSession() && aApp->currentSession()->userInfo().canBootstrap() )
-            return Page_Bootstrap;
+            ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
         else
-            return Page_Tour_Scrobbles;
+            ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
 #elif defined Q_OS_MAC
         if( aApp->currentSession() && aApp->currentSession()->userInfo().canBootstrap() )
-            return Page_Bootstrap;
+            ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
         else
-            return Page_Tour_Scrobbles;
+            ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
 #elif defined Q_WS_X11
-        return Page_Tour_Scrobbles;
+        ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
 #endif
-    case Page_Bootstrap:
-        return Page_BootstrapProgress;
-    case Page_Tour_Scrobbles:
-        return Page_Tour_Metadata;
-    case Page_Tour_Metadata:
-        return Page_Tour_Radio;
-    case Page_Tour_Radio:
-        return Page_Tour_Location;
-    case Page_Tour_Location:
-        return Page_Tour_Finish;
-    default:
-        return -1;
-    }
+    else if ( currentPage == ui->bootstrapPage )
+        ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
+    else if ( currentPage == ui->tourScrobblesPage
+              || currentPage == ui->tourMetadataPage
+              || currentPage == ui->tourRadioPage
+              || currentPage == ui->tourLocationPage )
+        ui->stackedWidget->setCurrentWidget( ui->tourFinishPage );
+
+    initializePage( ui->stackedWidget->currentWidget() );
+}
+
+void
+FirstRunWizard::cleanupPage( QWidget* widget )
+{
+    WizardPage* page = qobject_cast<WizardPage*>(widget);
+
+    // disconect any buttons from page
+    disconnect( ui->next, 0, page, 0 );
+    disconnect( ui->back, 0, page, 0 );
+    disconnect( ui->finish, 0, page, 0 );
+    disconnect( ui->custom, 0, page, 0 );
+    disconnect( ui->skip, 0, page, 0 );
+
+    page->cleanupPage();
+}
+
+void
+FirstRunWizard::initializePage( QWidget* widget )
+{
+    WizardPage* page = qobject_cast<WizardPage*>(widget);
+
+    // hide all the buttons
+    ui->next->hide();
+    ui->back->hide();
+    ui->finish->hide();
+    ui->custom->hide();
+    ui->skip->hide();
+
+    page->initializePage();
 }
 
 void
 FirstRunWizard::onWizardCompleted()
 {
     unicorn::Settings().setValue( "FirstRunWizardCompleted", true );
-
-    aApp->setPalette( m_palette );
 }
 
 

@@ -5,16 +5,16 @@
 #include <QPixmap>
 #include <QBoxLayout>
 
+#include "FirstRunWizard.h"
 #include "../Application.h"
 #include "../Widgets/PointyArrow.h"
 
-TourLocationPage::TourLocationPage( QWidget* w )
-               :QWizardPage( w ),
-                m_flash( true )
+TourLocationPage::TourLocationPage()
+    :m_flash( true )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
+    layout->setSpacing( 20 );
 
     layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignCenter );
 #ifdef Q_OS_MAC
@@ -38,7 +38,7 @@ TourLocationPage::TourLocationPage( QWidget* w )
 
 TourLocationPage::~TourLocationPage()
 {
-    m_flashTimer->stop();
+    if ( m_flashTimer ) m_flashTimer->stop();
     aApp->tray()->setIcon( m_normalIcon );
     delete m_arrow;
 }
@@ -62,18 +62,13 @@ TourLocationPage::initializePage()
     m_transparentIcon = QPixmap( ":22x22_transparent.png" ).scaled( m_normalIcon.availableSizes().first());
     m_flash = false;
 
-    setButtonText( QWizard::NextButton, tr( "Continue" ) );
-    setButtonText( QWizard::BackButton, tr( "<< Back" ) );
-
-    wizard()->setOption( QWizard::HaveCustomButton1, true );
-    setButtonText( QWizard::CustomButton1, tr( "Skip Tour >>" ) );
+    wizard()->setButton( FirstRunWizard::NextButton, tr( "Continue" ) );
+    wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
 }
 
 void
 TourLocationPage::cleanupPage()
 {
-    wizard()->setOption( QWizard::HaveCustomButton1, false );
-
     delete m_arrow;
     delete m_flashTimer;
     aApp->tray()->setIcon( m_normalIcon );

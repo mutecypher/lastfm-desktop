@@ -20,9 +20,9 @@
 #ifndef PLUGINS_PAGE_H
 #define PLUGINS_PAGE_H
 
-#include <QWizardPage>
+#include "WizardPage.h"
 
-class PluginsPage : public QWizardPage
+class PluginsPage : public WizardPage
 {
     Q_OBJECT
 private:

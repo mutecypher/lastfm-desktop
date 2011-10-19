@@ -21,20 +21,22 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QStyle>
+#include <QAbstractButton>
 
 #include "lib/unicorn/LoginProcess.h"
 #include "lib/unicorn/UnicornSession.h"
 
 #include "../Application.h"
 
+#include "FirstRunWizard.h"
+
 #include "AccessPage.h"
 
-AccessPage::AccessPage( QWizard* parent )
-    :QWizardPage( parent )
+AccessPage::AccessPage()
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
+    layout->setSpacing( 20 );
     
     layout->addWidget( ui.image = new QLabel(), 0, Qt::AlignCenter );
     ui.image->setObjectName( "image" );
@@ -51,14 +53,19 @@ AccessPage::initializePage()
 {
     setTitle( tr( "We're waiting for you to connect to Last.fm" ));
 
-    wizard()->style()->polish( this );
+    wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
+    wizard()->setButton( FirstRunWizard::NextButton, tr( "Continue" ) );
+    QAbstractButton* custom = wizard()->setButton( FirstRunWizard::CustomButton, tr( "Try Again" ) );
 
+    connect( custom, SIGNAL(clicked()), SLOT(tryAgain()));
+
+    tryAgain();
+}
+
+void
+AccessPage::tryAgain()
+{
     delete m_loginProcess;
-
-    setCommitPage( true );
-
-    setButtonText( QWizard::CommitButton, tr( "Continue" ) );
-
     m_loginProcess = new unicorn::LoginProcess( this );
     connect( m_loginProcess, SIGNAL( gotSession( unicorn::Session* ) ), SLOT( onAuthenticated( unicorn::Session* ) ) );
     m_loginProcess->authenticate();
@@ -69,12 +76,8 @@ AccessPage::onAuthenticated( unicorn::Session* session )
 {
     if ( session )
     {
-        // make sure the wizard is shown again after they allow access on the website.
-        wizard()->next();
-        wizard()->showNormal();
-        wizard()->setFocus();
-        wizard()->raise();
-        wizard()->activateWindow();
+        // Wait to find out they're details such as canBootstrap, subscriber, etc
+        connect( aApp, SIGNAL(gotUserInfo(lastfm::User)), SLOT(onGotUserInfo(lastfm::User)));
     }
     else
     {
@@ -83,9 +86,20 @@ AccessPage::onAuthenticated( unicorn::Session* session )
 }
 
 void
+AccessPage::onGotUserInfo( const lastfm::User& user )
+{
+    // make sure the wizard is shown again after they allow access on the website.
+    wizard()->next();
+    wizard()->showNormal();
+    wizard()->setFocus();
+    wizard()->raise();
+    wizard()->activateWindow();
+}
+
+void
 AccessPage::cleanupPage()
 {
-    delete m_loginProcess;
+    m_loginProcess->deleteLater();
 }
 
 

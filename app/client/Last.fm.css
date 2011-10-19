@@ -1,35 +1,38 @@
 
-QWizard {
+FirstRunWizard {
 	background-repeat: none;
 	background-color: white;
 	background-image: url(":/bg_clouds.png");
 }
 
-QWizard QLabel {
+FirstRunWizard QLabel#title {
 	color: #d51007;
+	font-size: 16px;
+	font-weight: bold;
+	margin: 30px;
 }
 
-QWizardPage {
-	background: transparent;
-}
-
-QWizardPage QLabel {
+WizardPage QLabel {
 	color: #333;
 	font-size: 14px;
 }
-QWizardPage QLabel#image {
-	background-repeat: none;
-	background-origin: center;
-	min-width: 315px;
-	min-height: 305px;
+
+FirstRunWizard QStackedWidget {
+  margin: 0px 40px;
+}
+
+FirstRunWizard QAbstractButton {
+background-color: transparent;
+border: none;
+fon-size: 11px;
+color: #333;
 }
 
 /* QWizard::NextButton */
 /* QWizard::FinishButton */
 /* QWizard::CommitButton */
-QWizard QAbstractButton#__qt__passive_wizardbutton1,
-QWizard QAbstractButton#__qt__passive_wizardbutton2,
-QWizard QAbstractButton#__qt__passive_wizardbutton3 {
+FirstRunWizard QAbstractButton#next,
+FirstRunWizard QAbstractButton#finish {
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #cc4d25, stop:1 #a02b1e);
 	font-size: 14px;
 	color: white;
@@ -38,15 +41,13 @@ QWizard QAbstractButton#__qt__passive_wizardbutton3 {
 	border-radius: 3px;
 }
 
-QWizard QAbstractButton#__qt__passive_wizardbutton1:hover,
-QWizard QAbstractButton#__qt__passive_wizardbutton2:hover,
-QWizard QAbstractButton#__qt__passive_wizardbutton3:hover {
+FirstRunWizard QAbstractButton#next:hover,
+FirstRunWizard QAbstractButton#finish:hover {
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #e34729, stop:1 #b23d21);
 }
 
-QWizard QAbstractButton#__qt__passive_wizardbutton1:pressed,
-QWizard QAbstractButton#__qt__passive_wizardbutton2:pressed,
-QWizard QAbstractButton#__qt__passive_wizardbutton3:pressed {
+FirstRunWizard QAbstractButton#next:pressed,
+FirstRunWizard QAbstractButton#finish:pressed {
 	background-color: #9f2a1d;
 }
 
@@ -54,10 +55,7 @@ QWizard QAbstractButton#__qt__passive_wizardbutton3:pressed {
 /* QWizard::CancelButton */
 /* QWizard::HelpButton */
 /* QWizard::CustomButton1 */
-QWizard QAbstractButton#__qt__passive_wizardbutton0,
-QWizard QAbstractButton#__qt__passive_wizardbutton4,
-QWizard QAbstractButton#__qt__passive_wizardbutton5,
-QWizard QAbstractButton#__qt__passive_wizardbutton6 {
+FirstRunWizard QAbstractButton#custom {
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #b8b8b8, stop:1 #a3a3a3);
 	font-size: 14px;
 	color: white;
@@ -66,31 +64,25 @@ QWizard QAbstractButton#__qt__passive_wizardbutton6 {
 	border-radius: 3px;
 }
 
-QWizard QAbstractButton#__qt__passive_wizardbutton0:hover,
-QWizard QAbstractButton#__qt__passive_wizardbutton4:hover,
-QWizard QAbstractButton#__qt__passive_wizardbutton5:hover,
-QWizard QAbstractButton#__qt__passive_wizardbutton6:hover {
+FirstRunWizard QAbstractButton#custom:hover {
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #cdcdcd, stop:1 #b6b6b6);
 }
 	
-QWizard QAbstractButton#__qt__passive_wizardbutton0:pressed,
-QWizard QAbstractButton#__qt__passive_wizardbutton4:pressed,
-QWizard QAbstractButton#__qt__passive_wizardbutton5:pressed,
-QWizard QAbstractButton#__qt__passive_wizardbutton6:pressed {
+FirstRunWizard QAbstractButton#custom:pressed {
 	background-color: #a2a2a2;
 }
 
-LoginPage QLabel#image { background-image: url(":/graphic_connect.png"); }
-AccessPage QLabel#image { background-image: url(":/graphic_access.png"); }
-PluginsPage QLabel#image { background-image: url(":/graphic_plugins.png"); }
-PluginsInstallPage QLabel#image { background-image: url(":/graphic_plugins.png"); }
-PluginsBootstrapPage QLabel#image { background-image: url(":/graphic_connect.png"); }
-PluginsBootstrapProgressPage QLabel#image { background-image: url(":/graphic_connect.png"); }
-TourScrobblesPage QLabel#image { background-image: url(":/graphic_scrobbles.png"); }
-TourMetadataPage QLabel#image { background-image: url(":/graphic_metadata.png"); }
-TourRadioPage QLabel#image { background-image: url(":/graphic_radio.png"); }
-TourLocationPage QLabel#image { background-image: url(":/graphic_access.png"); }
-TourFinishPage QLabel#image { background-image: url(":/graphic_finish.png"); }
+LoginPage QLabel#image { qproperty-pixmap: url(":/graphic_connect.png"); }
+AccessPage QLabel#image { qproperty-pixmap: url(":/graphic_access.png"); }
+PluginsPage QLabel#image { qproperty-pixmap: url(":/graphic_plugins.png"); }
+PluginsInstallPage QLabel#image { qproperty-pixmap: url(":/graphic_plugins.png"); }
+PluginsBootstrapPage QLabel#image { qproperty-pixmap: url(":/graphic_connect.png"); }
+PluginsBootstrapProgressPage QLabel#image { qproperty-pixmap: url(":/graphic_connect.png"); }
+TourScrobblesPage QLabel#image { qproperty-pixmap: url(":/graphic_scrobbles.png"); }
+TourMetadataPage QLabel#image { qproperty-pixmap: url(":/graphic_metadata.png"); }
+TourRadioPage QLabel#image { qproperty-pixmap: url(":/graphic_radio.png"); }
+TourLocationPage QLabel#image { qproperty-pixmap: url(":/graphic_access.png"); }
+TourFinishPage QLabel#image { qproperty-pixmap: url(":/graphic_finish.png"); }
 
 MessageBar QLabel#ipod {
   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #E4F1FF, stop:1 #C3CEDA);

@@ -22,39 +22,48 @@
 
 #include <QWizard>
 #include <QDebug>
+#include <QList>
 
-/**  @author Jono Cole <jono@last.fm>
-  *  @brief Initial wizard to guide the user through login, plugin installation, bootstrapping etc 
-  */
-class FirstRunWizard : public QWizard
+namespace Ui { class FirstRunWizard; }
+
+
+class FirstRunWizard : public QDialog
 {
     Q_OBJECT
-
-    enum
+public:
+    enum Button
     {
-        Page_Login,
-        Page_Access,
-        Page_Plugins,
-        Page_PluginsInstall,
-        Page_Bootstrap,
-        Page_BootstrapProgress,
-        Page_Tour_Scrobbles,
-        Page_Tour_Metadata,
-        Page_Tour_Radio,
-        Page_Tour_Location,
-        Page_Tour_Finish
+        CustomButton,
+        BackButton,
+        SkipButton,
+        NextButton,
+        FinishButton
     };
 
 public:
-    FirstRunWizard( QWidget* parent = 0 );
-    int nextId() const;
+    FirstRunWizard( QWidget* parent = 0);
+
+    void setTitle( const QString& title );
+
+    QAbstractButton* setButton( Button button, const QString& text );
+
+public slots:
+    void next();
+    void back();
+    void skip();
 
 private slots:
     void onWizardCompleted();
     void onRejected();
 
 private:
-    QPalette m_palette;
+    void initializePage( QWidget* page );
+    void cleanupPage( QWidget* page );
+
+private:
+    Ui::FirstRunWizard* ui;
+
+    QList<QWidget*> m_pages;
 };
 
 #endif //FIRST_RUN_WIZARD_H_

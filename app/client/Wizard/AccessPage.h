@@ -20,15 +20,18 @@
 #ifndef ACCESS_PAGE_H
 #define ACCESS_PAGE_H
 
-#include <QWizardPage>
+#include "WizardPage.h"
 #include <QPointer>
+
+namespace lastfm { class User; }
 
 namespace unicorn{ 
     class LoginProcess;
     class Session;
 }
 
-class AccessPage : public QWizardPage {
+class AccessPage : public WizardPage
+{
     Q_OBJECT
 private:
     struct
@@ -38,14 +41,16 @@ private:
     } ui;
 
 public:
-    AccessPage( QWizard* parent );
+    AccessPage();
 
     void initializePage();
     bool validatePage();
     void cleanupPage();
 
-public slots:
+private slots:
     void onAuthenticated( unicorn::Session* );
+    void tryAgain();
+    void onGotUserInfo( const lastfm::User& user );
 
 protected:
     QPointer<unicorn::LoginProcess> m_loginProcess;

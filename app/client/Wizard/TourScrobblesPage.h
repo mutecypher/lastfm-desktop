@@ -1,9 +1,9 @@
 #ifndef TOURSCROBBLESPAGE_H
 #define TOURSCROBBLESPAGE_H
 
-#include <QWizardPage>
+#include "WizardPage.h"
 
-class TourScrobblesPage : public QWizardPage
+class TourScrobblesPage : public WizardPage
 {
     Q_OBJECT
 private:
@@ -14,7 +14,7 @@ private:
     } ui;
 
 public:
-    explicit TourScrobblesPage( QWidget* parent = 0 );
+    explicit TourScrobblesPage();
 
 private:
     void initializePage();

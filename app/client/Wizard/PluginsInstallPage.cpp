@@ -2,14 +2,14 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
+#include "FirstRunWizard.h"
 #include "PluginsInstallPage.h"
 
-PluginsInstallPage::PluginsInstallPage( QWidget* w )
-               :QWizardPage( w )
+PluginsInstallPage::PluginsInstallPage()
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
+    layout->setSpacing( 20 );
 
     layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignCenter );
     ui.image->setObjectName( "image" );
@@ -27,6 +27,12 @@ PluginsInstallPage::initializePage()
 {
     setTitle( tr( "Your plugins are now being installed" ) );
 
-    setButtonText( QWizard::NextButton, tr( "Continue" ) );
-    setButtonText( QWizard::BackButton, tr( "<< Back" ) );
+    wizard()->setButton( FirstRunWizard::NextButton, tr( "Continue" ) );
+    wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
+}
+
+
+void
+PluginsInstallPage::cleanupPage()
+{
 }

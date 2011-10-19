@@ -1,9 +1,9 @@
 #ifndef BOOTSTRAPPROGRESSPAGE_H
 #define BOOTSTRAPPROGRESSPAGE_H
 
-#include <QWizardPage>
+#include "WizardPage.h"
 
-class BootstrapProgressPage : public QWizardPage
+class BootstrapProgressPage : public WizardPage
 {
     Q_OBJECT
 private:
@@ -14,10 +14,11 @@ private:
     } ui;
 
 public:
-    explicit BootstrapProgressPage( QWidget* parent = 0 );
+    explicit BootstrapProgressPage();
 
 private:
     void initializePage();
+    void cleanupPage();
 };
 
 #endif // BOOTSTRAPPROGRESSPAGE_H

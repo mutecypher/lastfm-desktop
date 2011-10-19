@@ -2,14 +2,14 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
+#include "FirstRunWizard.h"
 #include "TourFinishPage.h"
 
-TourFinishPage::TourFinishPage( QWidget* w )
-               :QWizardPage( w )
+TourFinishPage::TourFinishPage()
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
+    layout->setSpacing( 20 );
 
     layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignCenter );
     ui.image->setObjectName( "image" );
@@ -28,8 +28,11 @@ TourFinishPage::initializePage()
 {
     setTitle( tr( "That's it, you're good to go!" ) );
 
-    setFinalPage( true );
+    wizard()->setButton( FirstRunWizard::FinishButton, tr( "Finish" ) );
+    wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
+}
 
-    setButtonText( QWizard::FinishButton, tr( "Finish" ) );
-    setButtonText( QWizard::BackButton, tr( "<< Back" ) );
+void
+TourFinishPage::cleanupPage()
+{
 }

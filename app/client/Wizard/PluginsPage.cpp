@@ -26,13 +26,14 @@
 
 #include "lib/unicorn/Updater/PluginList.h"
 
+#include "FirstRunWizard.h"
 #include "PluginsPage.h"
 
 PluginsPage::PluginsPage()
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
+    layout->setSpacing( 20 );
 
     // add the radio buttons
     QVBoxLayout* pluginsLayout = new QVBoxLayout( this );
@@ -94,7 +95,6 @@ PluginsPage::validatePage()
 void
 PluginsPage::cleanupPage()
 {
-    wizard()->setOption( QWizard::HaveCustomButton1, false );
 }
 
 void
@@ -102,9 +102,7 @@ PluginsPage::initializePage()
 {
     setTitle( tr( "Next step, install the Last.fm plugins to be able to scrobble the music you listen to." ));
 
-    wizard()->setButtonText( QWizard::NextButton, tr( "Install Plugins" ) );
-    wizard()->setButtonText( QWizard::BackButton, tr( "<< Back" ) );
-
-    wizard()->setOption( QWizard::HaveCustomButton1, true );
-    wizard()->setButtonText( QWizard::CustomButton1, tr( "Skip >>" ) );
+    wizard()->setButton( FirstRunWizard::NextButton, tr( "Install Plugins" ) );
+    wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
+    wizard()->setButton( FirstRunWizard::SkipButton, tr( "Skip >>" ) );
 }

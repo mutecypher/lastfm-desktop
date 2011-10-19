@@ -1,9 +1,9 @@
 #ifndef TOURFINISHPAGE_H
 #define TOURFINISHPAGE_H
 
-#include <QWizardPage>
+#include "WizardPage.h"
 
-class TourFinishPage : public QWizardPage
+class TourFinishPage : public WizardPage
 {
     Q_OBJECT
 private:
@@ -14,11 +14,11 @@ private:
     } ui;
 
 public:
-    explicit TourFinishPage(QWidget *parent = 0);
+    explicit TourFinishPage();
 
 private:
     void initializePage();
-
+    void cleanupPage();
 };
 
 #endif // TOURFINISHPAGE_H

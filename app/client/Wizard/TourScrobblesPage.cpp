@@ -2,14 +2,14 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
+#include "FirstRunWizard.h"
 #include "TourScrobblesPage.h"
 
-TourScrobblesPage::TourScrobblesPage( QWidget* w )
-               :QWizardPage( w )
+TourScrobblesPage::TourScrobblesPage()
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
+    layout->setSpacing( 20 );
 
     layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignCenter );
     ui.image->setObjectName( "image" );
@@ -27,15 +27,12 @@ TourScrobblesPage::initializePage()
 {
     setTitle( tr( "Welcome to the Last.fm Desktop App!" ) );
 
-    setButtonText( QWizard::NextButton, tr( "Continue" ) );
-    setButtonText( QWizard::BackButton, tr( "<< Back" ) );
-
-    wizard()->setOption( QWizard::HaveCustomButton1, true );
-    setButtonText( QWizard::CustomButton1, tr( "Skip Tour >>" ) );
+    wizard()->setButton( FirstRunWizard::NextButton, tr( "Continue" ) );
+    wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
+    wizard()->setButton( FirstRunWizard::SkipButton, tr( "Skip Tour >>" ) );
 }
 
 void
 TourScrobblesPage::cleanupPage()
 {
-    wizard()->setOption( QWizard::HaveCustomButton1, false );
 }

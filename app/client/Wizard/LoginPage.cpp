@@ -17,8 +17,12 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include "FirstRunWizard.h"
 #include "LoginPage.h"
 #include "../Application.h"
+
+#include <lastfm/UrlBuilder.h>
 
 #include "lib/unicorn/LoginProcess.h"
 #include "lib/unicorn/UnicornSession.h"
@@ -33,17 +37,19 @@
 #include <QDesktopServices>
 #include <QStyle>
 
-LoginPage::LoginPage( QWidget* parent )
-    :QWizardPage( parent )
+LoginPage::LoginPage()
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
+    layout->setSpacing( 20 );
     
     layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignCenter );
     ui.image->setObjectName( "image" );
 
     layout->addWidget( ui.description = new QLabel( tr( "<p>Already a Last.fm user? You can connect the Last.fm Desktop App to your profile and keep a record of the music you listen to.</p>"
-                                                        "<p>If you don't have an account you can sign up now for free.</p>" ) ), 0, Qt::AlignTop );
+                                                        "<p>If you don't have an account you can sign up now for free.</p>" ) ),
+                       0,
+                       Qt::AlignTop );
     
     ui.description->setObjectName( "description" );
     ui.description->setWordWrap( true );
@@ -53,35 +59,22 @@ LoginPage::LoginPage( QWidget* parent )
 void
 LoginPage::initializePage()
 {
-    for ( int i = 0 ; i < QWizard::NButtons ; ++i )
-    {
-        QString objectName = QLatin1String("__qt__passive_wizardbutton");
-        objectName += QString::number( i );
-        wizard()->button( static_cast<QWizard::WizardButton>( i ) )->setObjectName( objectName );
-    }
-
-    style()->polish( wizard() );
-    style()->polish( this );
-
     setTitle( tr( "Hello! Let's get started by connecting your Last.fm account" ) );
 
-    setButtonText( QWizard::NextButton, tr( "Connect Your Account" ) );
-    wizard()->setOption( QWizard::HaveCustomButton1, true );
-    setButtonText( QWizard::CustomButton1, tr( "Sign up" ));
-    connect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked()), SLOT( onSignUpClicked()));
+    wizard()->setButton( FirstRunWizard::NextButton, tr( "Connect Your Account" ) );
+    QAbstractButton* custom = wizard()->setButton( FirstRunWizard::CustomButton, tr( "Sign up" ) );
+
+    connect( custom, SIGNAL(clicked()), SLOT(onSignUpClicked()));
 }
 
-bool
-LoginPage::validatePage()
-{
-    disconnect( wizard()->button( QWizard::CustomButton1 ), SIGNAL( clicked() ), this, 0 );
-    wizard()->setOption( QWizard::HaveCustomButton1, false );
 
-    return true;
+void
+LoginPage::cleanupPage()
+{
 }
 
 void 
 LoginPage::onSignUpClicked()
 {
-    QDesktopServices::openUrl( QUrl( "http://www.last.fm/join" ) );
+    QDesktopServices::openUrl( lastfm::UrlBuilder( "join" ).url() );
 }

@@ -1,9 +1,9 @@
 #ifndef TOURRADIOPAGE_H
 #define TOURRADIOPAGE_H
 
-#include <QWizardPage>
+#include "WizardPage.h"
 
-class TourRadioPage : public QWizardPage
+class TourRadioPage : public WizardPage
 {
     Q_OBJECT
 private:
@@ -14,7 +14,10 @@ private:
     } ui;
 
 public:
-    explicit TourRadioPage( QWidget* parent = 0 );
+    explicit TourRadioPage();
+
+private slots:
+    void subscribe();
 
 private:
     void initializePage();

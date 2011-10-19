@@ -101,7 +101,8 @@ SOURCES += \
     Settings/PreferencesDialog.cpp \
     Settings/AdvancedSettingsWidget.cpp \
     Settings/GeneralSettingsWidget.cpp \
-    Widgets/ShortcutEdit.cpp
+    Widgets/ShortcutEdit.cpp \
+    Wizard/WizardPage.cpp
 
 HEADERS += \
     Wizard/LoginPage.h \
@@ -179,7 +180,8 @@ HEADERS += \
     Settings/PreferencesDialog.h \
     Settings/AdvancedSettingsWidget.h \
     Settings/GeneralSettingsWidget.h \
-    Widgets/ShortcutEdit.h
+    Widgets/ShortcutEdit.h \
+    Wizard/WizardPage.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
@@ -194,10 +196,14 @@ FORMS += \
     Settings/AccountSettingsWidget.ui \
     Settings/IpodSettingsWidget.ui \
     Settings/ScrobbleSettingsWidget.ui \
-    Settings/AdvancedSettingsWidget.ui
+    Settings/AdvancedSettingsWidget.ui \
+    Wizard/FirstRunWizard.ui
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
+
+
+
 
 
 

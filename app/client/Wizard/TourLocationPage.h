@@ -1,10 +1,14 @@
 #ifndef TOUR_LOCATION_PAGE_H
 #define TOUR_LOCATION_PAGE_H
 
-#include <QWizardPage>
+#include "WizardPage.h"
 #include <QIcon>
+#include <QPointer>
 
-class TourLocationPage : public QWizardPage {
+class PointyArrow;
+
+class TourLocationPage : public WizardPage
+{
     Q_OBJECT
 private:
     struct
@@ -14,7 +18,7 @@ private:
     } ui;
 
 public:
-    TourLocationPage( QWidget* );
+    TourLocationPage();
     ~TourLocationPage();
 
     void initializePage();
@@ -24,8 +28,8 @@ protected slots:
     void flashSysTray();
 
 private:
-    class PointyArrow* m_arrow;
-    class QTimer* m_flashTimer;
+    QPointer<PointyArrow> m_arrow;
+    QPointer<QTimer> m_flashTimer;
     QIcon m_transparentIcon;
     QIcon m_normalIcon;
     bool m_flash;

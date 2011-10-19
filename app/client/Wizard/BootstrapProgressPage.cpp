@@ -2,14 +2,14 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
+#include "FirstRunWizard.h"
 #include "BootstrapProgressPage.h"
 
-BootstrapProgressPage::BootstrapProgressPage( QWidget* parent )
-    :QWizardPage( parent )
+BootstrapProgressPage::BootstrapProgressPage()
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
+    layout->setSpacing( 20 );
 
     layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignCenter );
     ui.image->setObjectName( "image" );
@@ -25,7 +25,11 @@ BootstrapProgressPage::BootstrapProgressPage( QWidget* parent )
 void
 BootstrapProgressPage::initializePage()
 {
-    setButtonText( QWizard::NextButton, tr( "Continue" ) );
-    setButtonText( QWizard::BackButton, tr( "<< Back" ) );
+    wizard()->setButton( FirstRunWizard::NextButton, tr( "Continue" ) );
+    wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
 }
 
+void
+BootstrapProgressPage::cleanupPage()
+{
+}
