@@ -92,7 +92,8 @@ ScrobbleService::setScrobblingOn( bool scrobblingOn )
             && m_watch
             && m_watch->scrobbled()
             && m_currentTrack.scrobbleStatus() == Track::Null
-            && m_scrobblingOn )
+            && m_scrobblingOn
+            && m_trackToScrobble.extra( "playerId" ) != "spt" )
         m_as->cache( m_trackToScrobble );
 
     emit scrobblingOnChanged( scrobblingOn );
@@ -220,7 +221,7 @@ ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
     {
         m_as->submit();
 
-        if ( m_scrobblingOn )
+        if ( m_scrobblingOn && t.extra( "playerId" ) != "spt" )
         {
             qDebug() << "************** Now Playing..";
             m_as->nowPlaying( t );
@@ -291,7 +292,7 @@ ScrobbleService::onScrobble()
 {
     Q_ASSERT(m_connection);
 
-    if( m_as && m_scrobblingOn )
+    if( m_as && m_scrobblingOn && m_trackToScrobble.extra( "playerId" ) != "spt" )
             m_as->cache( m_trackToScrobble );
 }
 
