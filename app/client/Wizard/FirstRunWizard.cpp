@@ -21,6 +21,7 @@
 
 #include <QPalette>
 #include <QStyle>
+#include <QMovie>
 
 #include "lib/unicorn/UnicornSettings.h"
 
@@ -62,6 +63,9 @@ FirstRunWizard::FirstRunWizard( QWidget* parent )
 
     connect( this, SIGNAL( rejected() ), this, SLOT( onRejected() ) );
     connect( this, SIGNAL( accepted() ), this, SLOT( onWizardCompleted() ) );
+
+    connect( aApp, SIGNAL(bootstrapStarted(QString)), SLOT(onBootstrapStarted(QString)));
+    connect( aApp, SIGNAL(bootstrapDone(int)), SLOT(onBootstrapDone(int)));
 
     ui->stackedWidget->setCurrentWidget( ui->loginPage );
     initializePage( ui->stackedWidget->currentWidget() );
@@ -233,6 +237,8 @@ FirstRunWizard::skip()
         ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
 #endif
     else if ( currentPage == ui->bootstrapPage )
+        ui->stackedWidget->setCurrentWidget( ui->bootstrapProgressPage );
+    else if ( currentPage == ui->bootstrapProgressPage )
         ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
     else if ( currentPage == ui->tourScrobblesPage
               || currentPage == ui->tourMetadataPage
@@ -271,6 +277,31 @@ FirstRunWizard::initializePage( QWidget* widget )
     ui->skip->hide();
 
     page->initializePage();
+}
+
+
+void
+FirstRunWizard::onBootstrapStarted( const QString& pluginId )
+{
+    ui->bootstrapProgressPage->setPluginId( pluginId );
+
+    ui->importLabel->setText( tr( "Importing..." ) );
+
+    QMovie* movie = new QMovie( ":/graphic_import.gif", QByteArray(), this );
+    ui->importIcon->setMovie( movie );
+    movie->start();
+
+    ui->importIcon->show();
+    ui->importLabel->show();
+}
+
+void
+FirstRunWizard::onBootstrapDone( int status )
+{
+    qDebug() << status;
+
+    ui->importIcon->setPixmap( QPixmap( ":/lastfm_icon_32.png" ) );
+    ui->importLabel->setText( tr( "Import complete!" ) );
 }
 
 void

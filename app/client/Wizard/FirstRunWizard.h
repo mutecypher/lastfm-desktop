@@ -61,6 +61,9 @@ private slots:
     void onWizardCompleted();
     void onRejected();
 
+    void onBootstrapStarted( const QString& pluginId );
+    void onBootstrapDone( int status );
+
 private:
     void initializePage( QWidget* page );
     void cleanupPage( QWidget* page );

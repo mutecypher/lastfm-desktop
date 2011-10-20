@@ -30,6 +30,9 @@
 
 #include "lib/unicorn/UnicornApplication.h"
 
+#include "Bootstrapper/iTunesBootstrapper.h"
+#include "Bootstrapper/PluginBootstrapper.h"
+
 class AboutDialog;
 class MainWindow;
 class RadioWidget;
@@ -74,6 +77,8 @@ namespace audioscrobbler
         QPointer<MainWindow> m_mw;
         QPointer<QMenuBar> m_menuBar;
 
+        QPointer<AbstractBootstrapper> m_bootstrapper;
+
         Track m_currentTrack;
         Track m_trackToScrobble;
 
@@ -106,7 +111,10 @@ namespace audioscrobbler
         QAction* skipAction() const { return m_skip_action; }
         QAction* scrobbleToggleAction() const { return m_submit_scrobbles_toggle; }
         QSystemTrayIcon* tray() ;
+
         void setRaiseHotKey( Qt::KeyboardModifiers mods, int key );
+
+        void startBootstrap( const QString& pluginId );
         
     signals:
         void lovedStateChanged(bool loved);
@@ -123,6 +131,9 @@ namespace audioscrobbler
 		
         void error( const QString& message );
         void status( const QString& message, const QString& id );
+
+        void bootstrapStarted( const QString& pluginId );
+        void bootstrapDone( int status );
 
     public slots:
         void quit();

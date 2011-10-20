@@ -61,8 +61,6 @@ BootstrapPage::BootstrapPage()
                        Qt::AlignTop);
     ui.description->setObjectName( "description" );
     ui.description->setWordWrap( true );
-
-//    registerField( "bootstrap_player", this, "playerId", SIGNAL( playerChanged() ));
 }
 
 void
@@ -76,6 +74,12 @@ bool
 BootstrapPage::validatePage()
 {
     /// start the bootstrap from whatever music player they chose.
+    aApp->startBootstrap( m_playerId );
+
+    // once you start importing you can't go back
+    // if they didn't click "Start Import" they won't get here
+    // so we allow them to go back and bootstrap
+    wizard()->setCommitPage( true );
 
     return true;
 }

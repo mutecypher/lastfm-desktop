@@ -2,6 +2,8 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
+#include "../Application.h"
+
 #include "FirstRunWizard.h"
 #include "BootstrapProgressPage.h"
 
@@ -21,6 +23,20 @@ BootstrapProgressPage::BootstrapProgressPage()
     ui.description->setWordWrap( true );
 }
 
+void
+BootstrapProgressPage::setPluginId( const QString& pluginId )
+{
+    if ( pluginId == "itw"
+         || pluginId == "osx" )
+        ui.image->setPixmap( QPixmap( ":/graphic_import_itunes.png" ) );
+    else if ( pluginId == "wmp" )
+        ui.image->setPixmap( QPixmap( ":/graphic_import_wmp.png" ) );
+    else if ( pluginId == "wa2" )
+        ui.image->setPixmap( QPixmap( ":/graphic_import_winamp.png" ) );
+    else if ( pluginId == "foo2"
+              || pluginId == "foo3" )
+        ui.image->setPixmap( QPixmap( ":/graphic_import_foobar.png" ) );
+}
 
 void
 BootstrapProgressPage::initializePage()

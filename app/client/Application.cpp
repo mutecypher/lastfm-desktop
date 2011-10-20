@@ -338,6 +338,20 @@ Application::setRaiseHotKey( Qt::KeyboardModifiers mods, int key )
 }
 
 void
+Application::startBootstrap( const QString& pluginId )
+{
+    if ( pluginId == "itw"
+         || pluginId == "osx" )
+        m_bootstrapper = new iTunesBootstrapper( this );
+    else
+        m_bootstrapper = new PluginBootstrapper( pluginId, this );
+
+    connect( m_bootstrapper, SIGNAL(done(int)), SIGNAL(bootstrapDone(int)) );
+    emit bootstrapStarted( pluginId );
+    m_bootstrapper->bootStrap();
+}
+
+void
 Application::onTrackGotInfo( const XmlQuery& lfm )
 {
     MutableTrack( ScrobbleService::instance().currentConnection()->track() ).setFromLfm( lfm );

@@ -16,6 +16,8 @@ private:
 public:
     explicit BootstrapProgressPage();
 
+    void setPluginId( const QString& pluginId );
+
 private:
     void initializePage();
     void cleanupPage();
