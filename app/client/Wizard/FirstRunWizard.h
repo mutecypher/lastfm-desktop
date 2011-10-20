@@ -20,8 +20,8 @@
 #ifndef FIRST_RUN_WIZARD_H_
 #define FIRST_RUN_WIZARD_H_
 
-#include <QWizard>
-#include <QDebug>
+#include <QDialog>
+#include <QAbstractButton>
 #include <QList>
 
 namespace Ui { class FirstRunWizard; }
@@ -47,6 +47,11 @@ public:
 
     QAbstractButton* setButton( Button button, const QString& text );
 
+    void setCommitPage( bool commitPage );
+    bool canGoBack() const;
+
+    void showWelcome();
+
 public slots:
     void next();
     void back();
@@ -64,6 +69,9 @@ private:
     Ui::FirstRunWizard* ui;
 
     QList<QWidget*> m_pages;
+
+    bool m_commitPage;
+    bool m_showWelcome;
 };
 
 #endif //FIRST_RUN_WIZARD_H_

@@ -87,7 +87,8 @@ BootstrapPage::initializePage()
     setTitle( tr( "Now let's import your listening history" ) );
 
     wizard()->setButton( FirstRunWizard::NextButton, tr( "Start Import" ) );
-    wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
+    if ( wizard()->canGoBack() )
+        wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
     wizard()->setButton( FirstRunWizard::SkipButton, tr( "Skip >>" ) );
 }
 

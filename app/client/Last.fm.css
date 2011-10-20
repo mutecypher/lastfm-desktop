@@ -5,6 +5,12 @@ FirstRunWizard {
 	background-image: url(":/bg_clouds.png");
 }
 
+FirstRunWizard QLabel#welcome {
+	color: #333;
+	font-size: 14px;
+	margin: 30px 30px 0px;
+}
+
 FirstRunWizard QLabel#title {
 	color: #d51007;
 	font-size: 16px;

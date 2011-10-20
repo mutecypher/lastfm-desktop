@@ -103,6 +103,7 @@ PluginsPage::initializePage()
     setTitle( tr( "Next step, install the Last.fm plugins to be able to scrobble the music you listen to." ));
 
     wizard()->setButton( FirstRunWizard::NextButton, tr( "Install Plugins" ) );
-    wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
+    if ( wizard()->canGoBack() )
+        wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
     wizard()->setButton( FirstRunWizard::SkipButton, tr( "Skip >>" ) );
 }

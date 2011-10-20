@@ -42,9 +42,13 @@
 
 FirstRunWizard::FirstRunWizard( QWidget* parent )
     :QDialog( parent ),
-      ui( new Ui::FirstRunWizard )
+      ui( new Ui::FirstRunWizard ),
+      m_commitPage( false ),
+      m_showWelcome( false )
 {
     ui->setupUi( this );
+
+    ui->welcome->hide();
 
     for ( int i = 0 ; i < ui->stackedWidget->count() ; ++i )
     {
@@ -69,6 +73,23 @@ FirstRunWizard::setTitle( const QString& title )
     ui->title->setText( title );
 }
 
+void
+FirstRunWizard::setCommitPage( bool commitPage )
+{
+    m_commitPage = commitPage;
+}
+
+bool
+FirstRunWizard::canGoBack() const
+{
+    return m_pages.count() > 0;
+}
+
+void
+FirstRunWizard::showWelcome()
+{
+    m_showWelcome = true;
+}
 
 QAbstractButton*
 FirstRunWizard::setButton( Button button, const QString& text )
@@ -103,6 +124,8 @@ FirstRunWizard::setButton( Button button, const QString& text )
 void
 FirstRunWizard::next()
 {
+    setUpdatesEnabled( false );
+
     QWidget* currentPage = ui->stackedWidget->currentWidget();
 
     if ( qobject_cast<WizardPage*>(currentPage)->validatePage() )
@@ -112,6 +135,12 @@ FirstRunWizard::next()
 
         // remember what the last page was so we can go back()
         m_pages << currentPage;
+
+        if ( m_commitPage )
+        {
+            m_commitPage = false;
+            m_pages.clear();
+        }
 
         if ( currentPage == ui->loginPage )
             ui->stackedWidget->setCurrentWidget( ui->accessPage );
@@ -144,13 +173,26 @@ FirstRunWizard::next()
         else if ( currentPage == ui->tourLocationPage )
             ui->stackedWidget->setCurrentWidget( ui->tourFinishPage );
 
+        ui->welcome->hide();
+
+        if ( m_showWelcome )
+        {
+            m_showWelcome = false;
+            ui->welcome->setText( tr( "Thanks <strong>%1</strong>, your account is now connected!" ).arg( aApp->currentSession()->userInfo().name() ) );
+            ui->welcome->show();
+        }
+
         initializePage( ui->stackedWidget->currentWidget() );
     }
+
+    setUpdatesEnabled( true );
 }
 
 void
 FirstRunWizard::back()
 {
+    setCommitPage( false );
+
     cleanupPage( ui->stackedWidget->currentWidget() );
     ui->stackedWidget->setCurrentWidget( m_pages.takeLast() );
     initializePage( ui->stackedWidget->currentWidget() );

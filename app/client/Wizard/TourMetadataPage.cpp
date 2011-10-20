@@ -15,7 +15,7 @@ TourMetadataPage::TourMetadataPage()
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 20 );
 
-    layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignCenter );
+    layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignTop );
     ui.image->setObjectName( "image" );
     layout->addWidget( ui.description = new QLabel( tr( "<p>Discover more about the artists you love, including biographies, photos, similar artists and how users tag them, as well as their listening stats</p>"
                                                           "<p>Check out the artist info for your current track on the <strong>Now Playing</strong> tab, or simply click on any track in your listening history to learn more.</p>"), this ),
@@ -32,7 +32,8 @@ TourMetadataPage::initializePage()
     setTitle( tr( "Discover more about the artists you love" ) );
 
     wizard()->setButton( FirstRunWizard::NextButton, tr( "Continue" ) );
-    wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
+    if ( wizard()->canGoBack() )
+        wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
     wizard()->setButton( FirstRunWizard::SkipButton, tr( "Skip Tour >>" ) );
 }
 

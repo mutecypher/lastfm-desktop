@@ -16,7 +16,7 @@ TourLocationPage::TourLocationPage()
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 20 );
 
-    layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignCenter );
+    layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignTop );
 #ifdef Q_OS_MAC
     ui.image->setObjectName( "imagemac" );
 #else
@@ -28,11 +28,6 @@ TourLocationPage::TourLocationPage()
                          Qt::AlignTop);
     ui.description->setObjectName( "description" );
     ui.description->setWordWrap( true );
-
-    m_arrow = new PointyArrow;
-    m_flashTimer = new QTimer(this);
-    m_flashTimer->setInterval( 300 );
-    connect( m_flashTimer, SIGNAL(timeout()), SLOT(flashSysTray()));
 }
 
 
@@ -47,6 +42,13 @@ TourLocationPage::~TourLocationPage()
 void
 TourLocationPage::initializePage()
 {
+    delete m_arrow;
+    m_arrow = new PointyArrow;
+    delete m_flashTimer;
+    m_flashTimer = new QTimer(this);
+    m_flashTimer->setInterval( 300 );
+    connect( m_flashTimer, SIGNAL(timeout()), SLOT(flashSysTray()));
+
 #ifdef Q_OS_MAC
     setTitle( tr( "The Last.fm Desktop App in your menu bar" ) );
     ui.image->setPixmap( QPixmap( ":/graphic_location_MAC.png" ) );
@@ -63,7 +65,9 @@ TourLocationPage::initializePage()
     m_flash = false;
 
     wizard()->setButton( FirstRunWizard::NextButton, tr( "Continue" ) );
-    wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
+
+    if ( wizard()->canGoBack() )
+        wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
 }
 
 void

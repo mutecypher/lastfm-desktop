@@ -53,7 +53,7 @@ private slots:
     void onGotUserInfo( const lastfm::User& user );
 
 protected:
-    QPointer<unicorn::LoginProcess> m_loginProcess;
+    QList<unicorn::LoginProcess*> m_loginProcesses;
 };
 
 #endif //AUTH_IN_PROGRESS_PAGE_H
