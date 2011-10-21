@@ -24,7 +24,7 @@
 #include "lib/unicorn/mac/AppleScript.h"
 
 #include "../PlayerConnection.h"
-#include "SpotifyListenerWin.h"
+#include "SpotifyListener.h"
 
 struct SpotifyConnection : PlayerConnection
 {

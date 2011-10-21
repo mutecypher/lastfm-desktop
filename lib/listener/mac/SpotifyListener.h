@@ -30,6 +30,7 @@ class SpotifyListenerMac : public QObject
     Q_OBJECT
 public:
     SpotifyListenerMac( QObject* parent );
+    ~SpotifyListenerMac();
 
 signals:
     void newConnection( class PlayerConnection* );
