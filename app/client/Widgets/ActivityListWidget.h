@@ -21,8 +21,14 @@ public slots:
 private slots: 
     void onItemClicked( const QModelIndex& index );
 
+    void onShareLastFm();
+    void onShareTwitter();
+    void onShareFacebook();
+
 private:
     class ActivityListModel* m_model;
+
+    QModelIndex m_shareIndex;
 };
 
 

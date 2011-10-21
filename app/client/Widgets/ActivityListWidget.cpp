@@ -44,7 +44,11 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
 void 
 ActivityListWidget::onItemClicked( const QModelIndex& index ) 
 {
-    if( index.column() == 2 && index.data( ActivityListModel::HoverStateRole ).toBool() )
+    if( index.column() == 1 && index.data( ActivityListModel::HoverStateRole ).toBool() )
+    {
+        // do nothing here, loving is done in the ActivityListModel
+    }
+    else if( index.column() == 2 && index.data( ActivityListModel::HoverStateRole ).toBool() )
     {
         TagDialog* td = new TagDialog( index.data(ActivityListModel::TrackRole).value<Track>(), window() );
         td->raise(); 
@@ -53,16 +57,48 @@ ActivityListWidget::onItemClicked( const QModelIndex& index )
     }
     else if( index.column() == 3 && index.data( ActivityListModel::HoverStateRole ).toBool() )
     {
-        ShareDialog* td = new ShareDialog( index.data(ActivityListModel::TrackRole).value<Track>(), ShareDialog::ShareLastFm, window() );
-        td->raise(); 
-        td->show(); 
-        td->activateWindow(); 
-        return;
+        m_shareIndex = index;
+
+        QMenu* shareMenu = new QMenu( this );
+
+        shareMenu->addAction( tr( "Share on Last.fm" ), this, SLOT(onShareLastFm()) );
+        shareMenu->addAction( tr( "Share on Twitter" ), this, SLOT(onShareTwitter()) );
+        shareMenu->addAction( tr( "Share on Facebook" ), this, SLOT(onShareFacebook()) );
+
+        shareMenu->exec( cursor().pos() );
+
     }
     else
     {
         emit trackClicked( index.data(ActivityListModel::TrackRole).value<Track>());
     }
+}
+
+void
+ActivityListWidget::onShareLastFm()
+{
+    ShareDialog* sd = new ShareDialog( m_shareIndex.data(ActivityListModel::TrackRole).value<Track>(), ShareDialog::ShareLastFm, window() );
+    sd->raise();
+    sd->show();
+    sd->activateWindow();
+}
+
+void
+ActivityListWidget::onShareTwitter()
+{
+    ShareDialog* sd = new ShareDialog( m_shareIndex.data(ActivityListModel::TrackRole).value<Track>(), ShareDialog::ShareTwitter, window() );
+    sd->raise();
+    sd->show();
+    sd->activateWindow();
+}
+
+void
+ActivityListWidget::onShareFacebook()
+{
+    ShareDialog* sd = new ShareDialog( m_shareIndex.data(ActivityListModel::TrackRole).value<Track>(), ShareDialog::ShareFacebook, window() );
+    sd->raise();
+    sd->show();
+    sd->activateWindow();
 }
 
 
