@@ -30,7 +30,7 @@ FirstRunWizard QStackedWidget {
 FirstRunWizard QAbstractButton {
 background-color: transparent;
 border: none;
-fon-size: 11px;
+font-size: 11px;
 color: #333;
 }
 
