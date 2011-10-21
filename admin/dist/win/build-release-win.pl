@@ -91,27 +91,10 @@ sub getVersion
 
     # Due to a MS quirk, no part of the version number can be bigger than 16 bits, so we mod it
     $revision = $revision % 0xFFFF;
-    
-    open DATA, '../../../_version.h' or die;
-    my @lines = <DATA>;
-    close( DATA );
 
-    foreach my $line (@lines)
-    {
-        if ( $line =~ m/^#define VERSION "(\d+\.\d+\.\d+)"/ )
-        {
-            #my $oldver = $1;
-            my $newver = $1 . "." . $revision;
+	my $newver = "2.0.0." . $revision;
 
-            #if ( !( $oldver eq $newver) )
-            #{
-            #    system( "perl -pi\".bak\" -e \"s/$oldver/$newver/g\" src/version.h" );
-            #}
-            return $newver;
-        }
-    }
-
-    die;
+	return $newver;
 }
 
 sub getGitRevision
