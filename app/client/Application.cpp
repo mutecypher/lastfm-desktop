@@ -84,7 +84,6 @@ using audioscrobbler::Application;
 Application::Application(int& argc, char** argv) 
     :unicorn::Application(argc, argv), m_raiseHotKeyId( (void*)-1 )
 {
-    setQuitOnLastWindowClosed( false );
 }
 
 void
@@ -321,12 +320,24 @@ Application::tray()
         connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
 #endif
         m_tray->setIcon(trayIcon);
-        m_tray->show();
+        showAs( unicorn::Settings().value( SETTING_SHOW_AS, true ).toBool() );
         connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
     }
 
     return m_tray;
 }
+
+void
+Application::showAs( bool showAs )
+{
+    m_tray->setVisible( showAs  );
+#ifdef Q_OS_MAC
+    setQuitOnLastWindowClosed( false );
+#else
+    setQuitOnLastWindowClosed( !showAs );
+#endif
+}
+
 
 void
 Application::setRaiseHotKey( Qt::KeyboardModifiers mods, int key )
@@ -554,6 +565,11 @@ Application::Argument Application::argument( const QString& arg )
     return ArgUnknown;
 }
 
+void
+Application::onPrefsTriggered()
+{
+    m_mw->onPrefsTriggered();
+}
     
 void
 Application::onMessageReceived( const QStringList& message )

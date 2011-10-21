@@ -80,6 +80,8 @@ StatusBar::StatusBar( QWidget* parent )
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)));
     connect( aApp, SIGNAL( gotUserInfo(lastfm::User)), SLOT( onGotUserInfo(lastfm::User) ) );
+
+    connect( ui.cog, SIGNAL(clicked()), aApp, SLOT(onPrefsTriggered()));
 }
 
 

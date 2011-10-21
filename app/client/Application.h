@@ -50,6 +50,13 @@ class QMenuBar;
 #endif
 #define aApp (static_cast<audioscrobbler::Application*>(QCoreApplication::instance()))
 
+#define SETTING_SHOW_AS "showAS"
+#define SETTING_LAUNCH_ITUNES "launchItunes"
+#define SETTING_NOTIFICATIONS "notifications"
+#define SETTING_LAST_RADIO "lastRadio"
+#define SETTING_SEND_CRASH_REPORTS "sendCrashReports"
+#define SETTING_CHECK_UPDATES "checkUpdates"
+
 namespace audioscrobbler
 {
     
@@ -115,6 +122,8 @@ namespace audioscrobbler
         void setRaiseHotKey( Qt::KeyboardModifiers mods, int key );
 
         void startBootstrap( const QString& pluginId );
+
+        void showAs( bool showAs );
         
     signals:
         void lovedStateChanged(bool loved);
@@ -144,6 +153,8 @@ namespace audioscrobbler
 
         void onTrackGotInfo(const XmlQuery& );
         void parseArguments( const QStringList& args );
+
+        void onPrefsTriggered();
 
     protected:
         virtual void initiateLogin()throw( StubbornUserException );

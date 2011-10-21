@@ -4,16 +4,11 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 
+#include "../Application.h"
+
 #include "ui_GeneralSettingsWidget.h"
 #include "GeneralSettingsWidget.h"
 
-
-#define SETTING_SHOW_AS "showAS"
-#define SETTING_LAUNCH_ITUNES "launchItunes"
-#define SETTING_NOTIFICATIONS "notifications"
-#define SETTING_LAST_RADIO "lastRadio"
-#define SETTING_SEND_CRASH_REPORTS "sendCrashReports"
-#define SETTING_CHECK_UPDATES "checkUpdates"
 
 GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
     :SettingsWidget( parent ),
@@ -85,6 +80,8 @@ GeneralSettingsWidget::saveSettings()
         }
 
         unicorn::Settings().setValue( SETTING_SHOW_AS, ui->showAs->isChecked() );
+        aApp->showAs( ui->showAs->isChecked() );
+
         unicorn::Settings().setValue( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() );
         unicorn::Settings().setValue( SETTING_NOTIFICATIONS, ui->notifications->isChecked() );
         unicorn::Settings().setValue( SETTING_LAST_RADIO, ui->lastRadio->isChecked() );
