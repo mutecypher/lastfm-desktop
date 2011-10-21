@@ -111,7 +111,7 @@ Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Pa
 ; Register last.fm protocol only if it isn't already
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: ""; ValueData: "URL:lastfm"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Flags: uninsdeletekey
-Root: HKCR; Subkey: "lastfm\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\Last.fm"" ""%1"""; Flags: uninsdeletekey
+Root: HKCR; Subkey: "lastfm\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\Last.fm.exe"" ""%1"""; Flags: uninsdeletekey
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Flags: uninsdeletekey
 
 ; Register Last.fm in the control panel
