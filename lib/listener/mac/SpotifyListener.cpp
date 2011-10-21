@@ -24,7 +24,7 @@
 #include "lib/unicorn/mac/AppleScript.h"
 
 #include "../PlayerConnection.h"
-#include "SpotifyListener.h"
+#include "SpotifyListenerWin.h"
 
 struct SpotifyConnection : PlayerConnection
 {
@@ -47,7 +47,7 @@ struct SpotifyConnection : PlayerConnection
 };
 
 
-SpotifyListener::SpotifyListener( QObject* parent )
+SpotifyListenerMac::SpotifyListenerMac( QObject* parent )
     :QObject( parent )
 {
     QTimer* timer = new QTimer( this );
@@ -55,9 +55,13 @@ SpotifyListener::SpotifyListener( QObject* parent )
     connect( timer, SIGNAL(timeout()), SLOT(loop()));
 }
 
+SpotifyListenerMac::~SpotifyListenerMac()
+{
+    delete m_connection;
+}
 
 void
-SpotifyListener::loop()
+SpotifyListenerMac::loop()
 {
     static AppleScript playerStateScript( "tell application \"Spotify\" to if running then return player state" );
     QString playerState = playerStateScript.exec();
@@ -123,3 +127,5 @@ SpotifyListener::loop()
 
     m_lastPlayerState = playerState;
 }
+
+

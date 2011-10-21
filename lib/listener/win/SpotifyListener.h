@@ -20,16 +20,29 @@
 #ifndef SPOTIFY_LISTENER_H
 #define SPOTIFY_LISTENER_H
 
+#include <Windows.h>
+
 #include <QObject>
 #include <QPointer>
 
 #include <lastfm/Track.h>
 
-class SpotifyListenerMac : public QObject
+#include "lib/DllExportMacro.h"
+
+class LISTENER_DLLEXPORT SpotifyListenerWin : public QObject
 {
     Q_OBJECT
+private:
+    enum State
+    {
+        Playing,
+        Paused,
+        Stopped
+    };
+
 public:
-    SpotifyListenerMac( QObject* parent );
+    SpotifyListenerWin( QObject* parent );
+    ~SpotifyListenerWin();
 
 signals:
     void newConnection( class PlayerConnection* );
@@ -38,9 +51,13 @@ private slots:
     void loop();
 
 private:
-    QString m_lastPlayerState;
+    static BOOL CALLBACK callback( HWND hWnd, LPARAM lParam );
+
+private:
+    State m_lastPlayerState;
     lastfm::Track m_lastTrack;
     QPointer<class SpotifyConnection> m_connection;
+    QString m_windowTitle;
 };
 
 #endif

@@ -51,9 +51,12 @@ ScrobbleService::ScrobbleService()
         ITunesListener* itunes = new ITunesListener(m_mediator);
         connect(itunes, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
         itunes->start();
+
+        SpotifyListenerMac* spotify = new SpotifyListenerMac(m_mediator);
+        connect(spotify, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
 #endif
-#if defined(Q_WS_MAC) || defined(Q_OS_WIN)
-        SpotifyListener* spotify = new SpotifyListener(m_mediator);
+#ifdef Q_OS_WIN
+        SpotifyListenerWin* spotify = new SpotifyListenerWin(m_mediator);
         connect(spotify, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
 #endif
 
