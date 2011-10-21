@@ -17,7 +17,7 @@ TourRadioPage::TourRadioPage()
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 20 );
 
-    layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignTop );
+    layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignTop | Qt::AlignHCenter );
     ui.image->setObjectName( "image" );
     layout->addWidget( ui.description = new QLabel( "", this ), 0, Qt::AlignTop);
     ui.description->setObjectName( "description" );

@@ -43,7 +43,7 @@ LoginPage::LoginPage()
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 20 );
     
-    layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignTop );
+    layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignTop | Qt::AlignHCenter );
     ui.image->setObjectName( "image" );
 
     layout->addWidget( ui.description = new QLabel( tr( "<p>Already a Last.fm user? You can connect the Last.fm Desktop App to your profile and keep a record of the music you listen to.</p>"

@@ -152,8 +152,8 @@ FirstRunWizard::next()
 #ifdef Q_OS_WIN32
             ui->stackedWidget->setCurrentWidget( ui->pluginsPage );
         else if ( currentPage == ui->pluginsPage )
-            return Page_PluginsInstall;
-        else if ( currentPage == ui->pluginsInstallPage ):
+            ui->stackedWidget->setCurrentWidget( ui->pluginsInstallPage );
+        else if ( currentPage == ui->pluginsInstallPage )
             if( aApp->currentSession() && aApp->currentSession()->userInfo().canBootstrap() )
                 ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
             else
@@ -222,8 +222,8 @@ FirstRunWizard::skip()
 #ifdef Q_OS_WIN32
         ui->stackedWidget->setCurrentWidget( ui->pluginsPage );
     else if ( currentPage == ui->pluginsPage )
-        return Page_PluginsInstall;
-    else if ( currentPage == ui->pluginsInstallPage ):
+        ui->stackedWidget->setCurrentWidget( ui->pluginsInstallPage );
+    else if ( currentPage == ui->pluginsInstallPage )
         if( aApp->currentSession() && aApp->currentSession()->userInfo().canBootstrap() )
             ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
         else

@@ -84,6 +84,8 @@ PluginsPage::validatePage()
     // we're not going to use this anymore we should bundle the installers
     // and just run them ourselves
 
+    wizard()->setCommitPage( true );
+
 //    QProcess pluginInstaller;
 //    qDebug() << "Starting PluginInstaller";
 //    pluginInstaller.start( "PluginInstaller.exe" );

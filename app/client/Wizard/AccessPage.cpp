@@ -38,7 +38,7 @@ AccessPage::AccessPage()
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 20 );
     
-    layout->addWidget( ui.image = new QLabel(), 0, Qt::AlignTop );
+    layout->addWidget( ui.image = new QLabel(), 0, Qt::AlignTop | Qt::AlignHCenter );
     ui.image->setObjectName( "image" );
 
     layout->addWidget( ui.description = new QLabel( tr( "<p>Please click the <strong>Yes, Allow Access</strong> button in your web browser to connect your Last.fm account to the Last.fm Desktop App.</p>"
