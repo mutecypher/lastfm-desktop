@@ -87,9 +87,9 @@ Application::Application(int& argc, char** argv)
 }
 
 void
-Application::initiateLogin() throw( StubbornUserException )
+Application::initiateLogin( bool forceWizard ) throw( StubbornUserException )
 {
-    if( !unicorn::Settings().value( SETTING_FIRST_RUN_WIZARD_COMPLETED, false ).toBool() )
+    if( forceWizard || !unicorn::Settings().value( SETTING_FIRST_RUN_WIZARD_COMPLETED, false ).toBool() )
     {
         setWizardRunning( true );
 
@@ -130,16 +130,16 @@ Application::init()
     // Initialise the unicorn base class first!
     unicorn::Application::init();
 
-    initiateLogin();
-
     if ( !currentSession() )
     {
-        // there won't be a current session if one was created by the wizard
+        // there won't be a current session if one wasn't created by the wizard
 
         QMap<QString, QString> lastSession = unicorn::Session::lastSessionData();
         if ( lastSession.contains( "username" ) && lastSession.contains( "sessionKey" ) )
             changeSession( lastSession[ "username" ], lastSession[ "sessionKey" ] );
     }
+
+    initiateLogin( !currentSession() );
 
 //    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
 //    diskCache->setCacheDirectory( lastfm::dir::cache().path() );

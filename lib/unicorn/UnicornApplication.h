@@ -63,7 +63,7 @@ namespace unicorn
             {
                 connect( this, SIGNAL( message(QByteArray)), SLOT( onMessage(QByteArray)));
                 connect( this, SIGNAL( queryRequest( QString, QByteArray )), SLOT( onQuery( QString, QByteArray )));
-            };
+            }
 
             bool isWizardRunning(){ return sendQuery( "WIZARDRUNNING" ) == "TRUE"; }
 

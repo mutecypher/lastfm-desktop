@@ -150,7 +150,7 @@ namespace audioscrobbler
         void onPrefsTriggered();
 
     protected:
-        virtual void initiateLogin()throw( StubbornUserException );
+        virtual void initiateLogin( bool forceWizard ) throw( StubbornUserException );
 
     private:
         static Argument argument( const QString& arg );
