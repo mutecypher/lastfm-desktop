@@ -71,10 +71,8 @@ UserRadioButton::onUserFetched()
     Q_ASSERT( reply );
 
     XmlQuery lfm;
-    try
+    if ( lfm.parse( reply->readAll() ) )
     {
-        lfm.parse( reply->readAll() );
-
         User user( lfm["user"] );
 
         m_name->setText( user.name());
@@ -89,13 +87,9 @@ UserRadioButton::onUserFetched()
 
         m_userName = user.name();
     }
-    catch ( lastfm::ws::ParseError error )
+    else
     {
-        qDebug() << error.message();
-    }
-    catch ( lastfm::ws::Error error )
-    {
-        qDebug() << error;
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 

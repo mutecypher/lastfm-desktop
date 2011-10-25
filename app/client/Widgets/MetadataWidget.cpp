@@ -199,11 +199,10 @@ MetadataWidget::onArtistGotInfo()
 {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
 
-    try
-    {
-        XmlQuery lfm;
-        lfm.parse( reply->readAll() );
+    XmlQuery lfm;
 
+    if ( lfm.parse( reply->readAll() ) )
+    {
         int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
         int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
         m_userArtistScrobbles = lfm["artist"]["stats"]["userplaycount"].text().toInt();
@@ -285,14 +284,10 @@ MetadataWidget::onArtistGotInfo()
         ui->artistBio->setImageHref( QUrl(lfm["artist"]["url"].text()));
         ui->artistBio->setOnTourVisible( false, QUrl(lfm["artist"]["url"].text()+"/+events"));
    }
-   catch ( lastfm::ws::ParseError e )
+   else
    {
        // TODO: what happens when we fail?
-       qDebug() << e.message() << e.enumValue();
-   }
-   catch ( lastfm::ws::Error e )
-   {
-       qDebug() << e;
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
    }
 }
 
@@ -301,11 +296,10 @@ MetadataWidget::onArtistGotYourTags()
 {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
 
-    try
-    {
-        XmlQuery lfm;
-        lfm.parse( reply->readAll() );
+    XmlQuery lfm;
 
+    if ( lfm.parse( reply->readAll() ) )
+    {
         QList<XmlQuery> tags = lfm["tags"].children("tag").mid(0, 5);
 
         if ( tags.count() == 0 )
@@ -325,14 +319,10 @@ MetadataWidget::onArtistGotYourTags()
             ui->artistYourTags->setText( tagString );
         }
     }
-    catch ( lastfm::ws::ParseError e )
+    else
     {
        // TODO: what happens when we fail?
-       qDebug() << e.message() << e.enumValue();
-    }
-    catch ( lastfm::ws::Error e )
-    {
-       qDebug() << e;
+       qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 
@@ -341,10 +331,9 @@ MetadataWidget::onArtistGotEvents()
 {
    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
 
-   try
+   XmlQuery lfm;
+   if ( lfm.parse( reply->readAll() ) )
    {
-       XmlQuery lfm;
-       lfm.parse( reply->readAll() );
 
        if (lfm["events"].children("event").count() > 0)
        {
@@ -352,51 +341,40 @@ MetadataWidget::onArtistGotEvents()
            ui->artistBio->setOnTourVisible( true );
        }
    }
-   catch ( lastfm::ws::ParseError e )
+   else
    {
        // TODO: what happens when we fail?
-       qDebug() << e.message() << e.enumValue();
-   }
-   catch ( lastfm::ws::Error e )
-   {
-       qDebug() << e;
+       qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
    }
 }
 
 void
 MetadataWidget::onAlbumGotInfo()
 {
-    try
+    XmlQuery lfm;
+
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
-        XmlQuery lfm;
-        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 //        int scrobbles = lfm["album"]["playcount"].text().toInt();
 //        int listeners = lfm["album"]["listeners"].text().toInt();
 //        int userListens = lfm["album"]["userplaycount"].text().toInt();
 
         ui->albumImage->loadUrl( lfm["album"]["image size=large"].text() );
     }
-    catch ( lastfm::ws::ParseError e )
+    else
     {
        // TODO: what happens when we fail?
-       qDebug() << e.message() << e.enumValue();
-    }
-    catch ( lastfm::ws::Error e )
-    {
-       qDebug() << e;
+       qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 
 void
 MetadataWidget::onTrackGotBuyLinks()
 {
-    try
-    {
-        QByteArray data = qobject_cast<QNetworkReply*>(sender())->readAll() ;
-        qDebug() << data;
-        XmlQuery lfm;
-        lfm.parse( data );
+    XmlQuery lfm;
 
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    {
         QMenu* menu = new QMenu( this );
 
         menu->addAction( tr("Physical") )->setEnabled( false );
@@ -436,14 +414,10 @@ MetadataWidget::onTrackGotBuyLinks()
 
         connect( menu, SIGNAL(triggered(QAction*)), SLOT(onBuyActionTriggered(QAction*)) );
     }
-    catch ( lastfm::ws::ParseError e )
+    else
     {
         // TODO: what happens when we fail?
-        qDebug() << e.message() << e.enumValue();
-    }
-    catch ( lastfm::ws::Error e )
-    {
-        qDebug() << e;
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 
@@ -456,11 +430,10 @@ MetadataWidget::onBuyActionTriggered( QAction* buyAction )
 void
 MetadataWidget::onTrackGotInfo( const QByteArray& data )
 {
-    try
-    {
-        XmlQuery lfm;
-        lfm.parse( data );
+    XmlQuery lfm;
 
+    if ( lfm.parse( data ) )
+    {
         m_globalTrackScrobbles = lfm["track"]["playcount"].text().toInt();
         int listeners = lfm["track"]["listeners"].text().toInt();
         m_userTrackScrobbles = lfm["track"]["userplaycount"].text().toInt();
@@ -510,14 +483,10 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
             }
         }
     }
-    catch ( lastfm::ws::ParseError e )
+    else
     {
         // TODO: what happens when we fail?
-        qDebug() << e.message() << e.enumValue();
-    }
-    catch ( lastfm::ws::Error e )
-    {
-        qDebug() << e;
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 
@@ -525,11 +494,10 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
 void
 MetadataWidget::onTrackGotYourTags()
 {
-    try
-    {
-        XmlQuery lfm;
-        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
+    XmlQuery lfm;
 
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    {
         QList<XmlQuery> tags = lfm["tags"].children("tag").mid(0, 5);
 
         if ( tags.count() == 0 )
@@ -549,14 +517,10 @@ MetadataWidget::onTrackGotYourTags()
             ui->trackYourTags->setText( tagString );
         }
     }
-    catch ( lastfm::ws::ParseError e )
+    else
     {
         // TODO: what happens when we fail?
-        qDebug() << e.message() << e.enumValue();
-    }
-    catch ( lastfm::ws::Error e )
-    {
-        qDebug() << e;
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 

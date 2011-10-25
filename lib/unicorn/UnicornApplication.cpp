@@ -234,22 +234,18 @@ unicorn::Application::onUserGotInfo()
 {
     QNetworkReply* reply = (QNetworkReply*)sender();
     XmlQuery lfm;
-    try
+
+    if ( lfm.parse( reply->readAll() ) )
     {
-        lfm.parse( reply->readAll() );
         lastfm::User userInfo( lfm["user"] );
 
         const char* key = UserSettings::subscriptionKey();
         Settings().setValue( key, userInfo.isSubscriber() );
         emit gotUserInfo( userInfo );
     }
-    catch ( lastfm::ws::ParseError error )
+    else
     {
-        qDebug() << error.message();
-    }
-    catch ( lastfm::ws::Error error )
-    {
-        qDebug() << error;
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 

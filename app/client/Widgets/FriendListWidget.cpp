@@ -146,8 +146,8 @@ FriendListWidget::onGotFriends()
 
     // add this set of users to the list
     lastfm::XmlQuery lfm;
-    try {
-        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    {
 
         foreach( const lastfm::XmlQuery& user, lfm["friends"].children( "user" ) )
         {
@@ -174,7 +174,7 @@ FriendListWidget::onGotFriends()
 
         ui.friends->sortItems( Qt::AscendingOrder );
     }
-    catch (...)
+    else
     {
         setUpdatesEnabled( true );
     }

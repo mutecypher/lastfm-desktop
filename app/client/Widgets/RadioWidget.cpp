@@ -115,14 +115,13 @@ RadioWidget::changeUser( const QString& newUsername )
 void
 RadioWidget::onGotTopArtists()
 {
-    try
+    lastfm::XmlQuery lfm;
+
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
         QVBoxLayout* layout = new QVBoxLayout( ui.topArtists );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
-
-        lastfm::XmlQuery lfm;
-        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
         {
@@ -132,23 +131,22 @@ RadioWidget::onGotTopArtists()
             layout->addWidget( item );
         }
     }
-    catch ( lastfm::ws::ParseError error )
+    else
     {
-        qDebug() << error.message();
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 
 void
 RadioWidget::onGotRecentStations()
 {
-    try
+    lastfm::XmlQuery lfm;
+
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
         QVBoxLayout* layout = new QVBoxLayout( ui.recentStations );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
-
-        lastfm::XmlQuery lfm;
-        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         foreach ( const lastfm::XmlQuery& station, lfm["recentstations"].children("station") )
         {
@@ -157,17 +155,9 @@ RadioWidget::onGotRecentStations()
             layout->addWidget( item );
         }
     }
-    catch ( lastfm::ws::ParseError error )
+    else
     {
-        qDebug() << error.message();
-    }
-    catch ( lastfm::ws::Error error )
-    {
-        qDebug() << error;
-    }
-    catch ( ... )
-    {
-        qDebug() << "Something went terribly wrong";
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 

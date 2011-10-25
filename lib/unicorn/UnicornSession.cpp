@@ -126,23 +126,17 @@ Session::onUserGotInfo()
     if ( reply->error() == QNetworkReply::NoError  )
     {
         XmlQuery lfm;
-        try
+        if ( lfm.parse( reply->readAll() ) )
         {
-            lfm.parse( reply->readAll() );
-
             lastfm::User userInfo( lfm["user"] );
 
             m_userInfo = userInfo;
             emit userInfoUpdated( m_userInfo );
             cacheUserInfo( m_userInfo );
         }
-        catch ( lastfm::ws::ParseError error )
+        else
         {
-            qDebug() << error.message();
-        }
-        catch ( lastfm::ws::Error error )
-        {
-            qDebug() << error;
+            qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
         }
     }
     else

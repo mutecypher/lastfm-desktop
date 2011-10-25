@@ -105,10 +105,10 @@ TrackImageFetcher::onArtistImageDownloaded()
 bool
 TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node )
 {
-    try {
-        XmlQuery lfm;
-        lfm.parse( reply->readAll() );
+    XmlQuery lfm;
 
+    if ( lfm.parse( reply->readAll() ) )
+    {
         foreach (QString size, QStringList() << "mega" << "extralarge" << "large")
         {
             QUrl const url = lfm[root_node]["image size="+size].text();
@@ -125,9 +125,9 @@ TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node
             return true;
         }
     }
-    catch (std::runtime_error& e)
+    else
     {
-        qWarning() << e.what();
+        qWarning() << lfm.parseError().what();
     }
     return false;
 }

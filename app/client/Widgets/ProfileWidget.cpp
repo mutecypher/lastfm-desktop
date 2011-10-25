@@ -136,14 +136,13 @@ ProfileWidget::changeUser( const QString& newUsername )
 void
 ProfileWidget::onGotTopWeeklyArtists()
 {
-    try
+    lastfm::XmlQuery lfm;
+
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
         QVBoxLayout* layout = new QVBoxLayout( ui.topWeeklyArtists );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
-
-        lastfm::XmlQuery lfm;
-        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
         {
@@ -155,9 +154,9 @@ ProfileWidget::onGotTopWeeklyArtists()
             layout->addWidget( item );
         }
     }
-    catch ( lastfm::ws::ParseError error )
+    else
     {
-        qDebug() << error.message();
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 
@@ -165,14 +164,13 @@ ProfileWidget::onGotTopWeeklyArtists()
 void
 ProfileWidget::onGotTopOverallArtists()
 {
-    try
+    lastfm::XmlQuery lfm;
+
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
         QVBoxLayout* layout = new QVBoxLayout( ui.topOverallArtists );
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
-
-        lastfm::XmlQuery lfm;
-        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
         {
@@ -184,25 +182,24 @@ ProfileWidget::onGotTopOverallArtists()
             layout->addWidget( item );
         }
     }
-    catch ( lastfm::ws::ParseError error )
+    else
     {
-        qDebug() << error.message();
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 
 void
 ProfileWidget::onGotLovedTracks()
 {
-    try
-    {
-        lastfm::XmlQuery lfm;
-        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
+    lastfm::XmlQuery lfm;
 
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    {
         ui.lovedCount->setText( tr( "%L1" ).arg( lfm["lovedtracks"].attribute( "total" ).toInt() ) );
     }
-    catch ( lastfm::ws::ParseError error )
+    else
     {
-        qDebug() << error.message();
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 
