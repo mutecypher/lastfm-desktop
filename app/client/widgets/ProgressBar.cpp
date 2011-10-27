@@ -80,6 +80,12 @@ ProgressBar::paintEvent( QPaintEvent* e )
 
     if ( !m_track.isNull() )
     {
+        QFont timeFont = font();
+        timeFont.setPixelSize( 10 );
+        setFont( timeFont );
+
+        p.setPen( QColor( 0x333333 ) );
+
         if ( m_track.extra( "playerId" ) != "spt" )
         {
             // draw the chunk
@@ -96,10 +102,6 @@ ProgressBar::paintEvent( QPaintEvent* e )
 
             QTextOption timeTextOption;
             timeTextOption.setAlignment( Qt::AlignVCenter | Qt::AlignLeft );
-
-            QFont timeFont = font();
-            timeFont.setPixelSize( 10 );
-            setFont( timeFont );
 
             p.setPen( QColor( 0x333333 ) );
 

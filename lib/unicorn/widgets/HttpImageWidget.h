@@ -44,8 +44,6 @@ public:
 
     HttpImageWidget( QWidget* parent = 0 );
 
-    bool gradient();
-    void setGradient( bool gradient );
     void setPlaceholder( const QPixmap& );
 
 public slots:
@@ -55,7 +53,6 @@ public slots:
 protected:
     void mousePressEvent( QMouseEvent* event );
     void mouseReleaseEvent( QMouseEvent* event );
-    void paintEvent( QPaintEvent* paintEvent );
 
 private slots:
     void onClick();
@@ -67,11 +64,8 @@ signals:
 
 private:
     bool m_mouseDown;
-    bool m_gradient;
     ScaleType m_scale;
     QUrl m_href;
-
-    Q_PROPERTY(bool gradient READ gradient WRITE setGradient);
 };
 
 #endif

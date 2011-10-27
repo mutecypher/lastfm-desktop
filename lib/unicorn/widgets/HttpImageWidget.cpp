@@ -21,48 +21,17 @@
 #include "HttpImageWidget.h"
 
 HttpImageWidget::HttpImageWidget( QWidget* parent )
-    :QLabel( parent ), m_mouseDown( false ), m_gradient( false )
+    :QLabel( parent ), m_mouseDown( false )
 {
-}
-
-bool
-HttpImageWidget::gradient()
-{
-    return m_gradient;
-}
-
-void
-HttpImageWidget::setGradient( bool gradient )
-{
-    m_gradient = gradient;
-    update();
 }
 
 void 
 HttpImageWidget::setPlaceholder( const QPixmap& placeholder )
 {
-    if( !pixmap() || pixmap()->isNull()) {
+    if( !pixmap() || pixmap()->isNull())
         setPixmap( placeholder.scaled( maximumWidth(), maximumHeight(), Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
-    }
 }
 
-void
-HttpImageWidget::paintEvent( QPaintEvent* event )
-{
-    QLabel::paintEvent(event);
-
-    if ( pixmap() && m_gradient)
-    {
-        QLinearGradient g(QPoint(), pixmap()->rect().bottomLeft());
-        g.setColorAt( 0.0, QColor(0, 0, 0, 0.11*255));
-        g.setColorAt( 1.0, QColor(0, 0, 0, 0.88*255));
-
-        QPainter p(this);
-        p.setCompositionMode(QPainter::CompositionMode_Multiply);
-        p.fillRect(pixmap()->rect(), g);
-        p.end();
-    }
-}
 
 void
 HttpImageWidget::loadUrl( const QUrl& url, ScaleType scale )
