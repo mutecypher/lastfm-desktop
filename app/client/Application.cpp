@@ -84,6 +84,16 @@ using audioscrobbler::Application;
 Application::Application(int& argc, char** argv) 
     :unicorn::Application(argc, argv), m_raiseHotKeyId( (void*)-1 )
 {
+    FSRef outRef;
+    OSStatus err = FSPathMakeRef( reinterpret_cast<const UInt8*>( QCoreApplication::applicationDirPath().append( "/../.." ).toUtf8().data() ), &outRef, NULL );
+
+    if ( err == noErr )
+    {
+        OSStatus status = LSRegisterFSRef( &outRef, true );
+
+        if ( status == noErr )
+            qDebug() << "Registered the app with launch services!";
+    }
 }
 
 void
