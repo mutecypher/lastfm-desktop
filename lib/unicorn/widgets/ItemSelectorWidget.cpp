@@ -27,7 +27,7 @@
 
 #include "lib/unicorn/widgets/SearchBox.h"
 
-#include "lib/unicorn/layouts/flowlayout.h"
+#include "lib/unicorn/layouts/FlowLayout.h"
 
 #include "ItemSelectorWidget.h"
 

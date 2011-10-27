@@ -435,7 +435,7 @@ unicorn::Application::unInstallHotKey( void* id )
 {
 #ifdef __APPLE__
     UnregisterEventHotKey( (EventHotKeyRef)id );
-#else
+#elif defined WIN32
     UnregisterHotKey( NULL, (int)id );
 #endif
 }

@@ -199,6 +199,9 @@ FORMS += \
     Settings/AdvancedSettingsWidget.ui \
     Wizard/FirstRunWizard.ui
 
+linux*:HEADERS += MediaDevices/IpodDevice_linux.h
+linux*:SOURCES += MediaDevices/IpodDevice_linux.cpp
+
 RESOURCES += \
     qrc/audioscrobbler.qrc
 

@@ -217,9 +217,10 @@ Application::init()
     }
 
 #ifdef Q_WS_X11
-    menu->addSeparator();
-    m_scrobble_ipod_action = menu->addAction( tr( "Scrobble iPod..." ) );
-    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), ScrobbleService::instance().deviceScrobbler(), SLOT( onScrobbleIpodTriggered() ) );
+// TODO: fix this!
+//    menu->addSeparator();
+//    m_scrobble_ipod_action = menu->addAction( tr( "Scrobble iPod..." ) );
+//    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), ScrobbleService::instance().deviceScrobbler(), SLOT( onScrobbleIpodTriggered() ) );
 #endif
 
     menu->addSeparator();

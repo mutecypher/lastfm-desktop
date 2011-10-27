@@ -366,7 +366,7 @@ DeviceScrobbler::scrobbleIpodTracks( int trackCount )
                     if ( tracks.count() > 1 )
                         qSort ( tracks.begin(), tracks.end() );
 
-                    emit foundScrobbles( tracks );
+                    emit foundScrobbles( tracks, iPod->deviceName() );
                 }
             }
             else
@@ -375,7 +375,7 @@ DeviceScrobbler::scrobbleIpodTracks( int trackCount )
                 if ( tracks.count() > 1 )
                     qSort ( tracks.begin(), tracks.end() );
 
-                emit foundScrobbles( tracks );
+                emit foundScrobbles( tracks, iPod->deviceName()  );
                 QMessageBoxBuilder( 0 )
                     .setIcon( QMessageBox::Information )
                     .setTitle( tr( "Scrobble iPod" ) )
