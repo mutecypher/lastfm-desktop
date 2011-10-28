@@ -173,8 +173,10 @@ FirstRunWizard::next()
         else if ( currentPage == ui->tourMetadataPage )
             ui->stackedWidget->setCurrentWidget( ui->tourRadioPage );
         else if ( currentPage == ui->tourRadioPage )
+#ifndef Q_WS_X11 // don't show the sys tray page on linux because therer isn't one
             ui->stackedWidget->setCurrentWidget( ui->tourLocationPage );
         else if ( currentPage == ui->tourLocationPage )
+#endif
             ui->stackedWidget->setCurrentWidget( ui->tourFinishPage );
 
         ui->welcome->hide();
