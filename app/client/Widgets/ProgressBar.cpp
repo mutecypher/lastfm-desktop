@@ -95,13 +95,16 @@ ProgressBar::paintEvent( QPaintEvent* e )
             QTime progress( 0, 0 );
             progress = progress.addMSecs( m_frame );
 
+            if ( duration.hour() > 0 )
+                format = "h:mm:ss";
+
             QTextOption timeTextOption;
             timeTextOption.setAlignment( Qt::AlignVCenter | Qt::AlignLeft );
 
             QString timeText;
 
             if ( m_track.source() == Track::LastFmRadio )
-                timeText = QString( "%1 / %2" ).arg( progress.toString( format ) ,duration.toString( format ) );
+                timeText = QString( "%1 / %2" ).arg( progress.toString( format ), duration.toString( format ) );
             else
                 timeText = QString( "%1" ).arg( progress.toString( format ) );
 
@@ -143,12 +146,12 @@ ProgressBar::paintEvent( QPaintEvent* e )
                 int scrobbleMarker = indent + (scrobblePoint * width) / ( m_track.duration() * 1000 ) ;
 
                 p.setPen( QPen( QColor( 0xbdbdbd ), 1, Qt::DotLine) );
-                p.drawLine( QPoint( scrobbleMarker, rect().top() ),
-                            QPoint( scrobbleMarker, rect().bottom() ) );
+                p.drawLine( QPoint( scrobbleMarker - 1, rect().top() ),
+                            QPoint( scrobbleMarker - 1, rect().bottom() ) );
 
                 p.setPen( QPen( QColor( 0xe6e6e6 ), 1, Qt::DotLine) );
-                p.drawLine( QPoint( scrobbleMarker + 1, rect().top() ),
-                            QPoint( scrobbleMarker + 1, rect().bottom() ) );
+                p.drawLine( QPoint( scrobbleMarker, rect().top() ),
+                            QPoint( scrobbleMarker, rect().bottom() ) );
 
                 // Draw the 'as'!
                 // if the scrobble marker is too close to the left draw the 'as' on the right hand side
