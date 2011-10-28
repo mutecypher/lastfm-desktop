@@ -68,6 +68,7 @@ ScrobbleControls::ScrobbleControls( QWidget* parent )
     ui.buy->setObjectName("buy");
     ui.buy->setToolTip( tr( "Buy" ) );
     ui.buy->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui.buy->setVisible( false );
 
     layout->addStretch( 1 );
 

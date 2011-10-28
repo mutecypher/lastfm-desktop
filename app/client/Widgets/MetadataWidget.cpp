@@ -375,6 +375,8 @@ MetadataWidget::onTrackGotBuyLinks()
 
     if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
+        bool thingsToBuy = false;
+
         QMenu* menu = new QMenu( this );
 
         menu->addAction( tr("Physical") )->setEnabled( false );
@@ -391,6 +393,8 @@ MetadataWidget::onTrackGotBuyLinks()
                 buyAction = menu->addAction( tr("Buy on %1 %2 %3").arg( affiliation["supplierName"].text(), affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) );
 
             buyAction->setData( affiliation["buyLink"].text() );
+
+            thingsToBuy = true;
         }
 
         menu->addSeparator();
@@ -408,8 +412,11 @@ MetadataWidget::onTrackGotBuyLinks()
                 buyAction = menu->addAction( tr("Buy on %1 %2 %3").arg( affiliation["supplierName"].text(), affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) );
 
             buyAction->setData( affiliation["buyLink"].text() );
+
+            thingsToBuy = true;
         }
 
+        ui->scrobbleControls->ui.buy->setVisible( thingsToBuy );
         ui->scrobbleControls->ui.buy->setMenu( menu );
 
         connect( menu, SIGNAL(triggered(QAction*)), SLOT(onBuyActionTriggered(QAction*)) );
