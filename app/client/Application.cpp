@@ -17,25 +17,26 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "Application.h"
-#include "lib/unicorn/QMessageBoxBuilder.h"
-#include "Services/RadioService.h"
-#include "Services/ScrobbleService.h"
-#include "lib/listener/PlayerConnection.h"
+
+#include <QRegExp>
+#include <QShortcut>
+#include <QFileDialog>
+#include <QDesktopServices>
+#include <QNetworkDiskCache>
+#include <QMenu>
+#include <QMenuBar>
 #include <QDebug>
 #include <QProcess>
 #include <QShortcut>
 #include <QTcpSocket>
+#include <QAction>
 
 #include <lastfm/UrlBuilder.h>
+#include <lastfm/InternetConnectionMonitor.h>
+#include <lastfm/XmlQuery.h>
 
-#include "Widgets/PointyArrow.h"
-
-#include "MainWindow.h"
-#include "../Widgets/ScrobbleControls.h"
-#include "SkipListener.h"
-#include "Widgets/MetadataWidget.h"
-
+#include "lib/listener/PlayerConnection.h"
+#include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/dialogs/AboutDialog.h"
 #include "lib/unicorn/dialogs/ShareDialog.h"
 #include "lib/unicorn/UnicornSession.h"
@@ -47,20 +48,17 @@
 #include "lib/unicorn/mac/AppleScript.h"
 #endif
 
-#include "AudioscrobblerSettings.h"
+#include "MediaDevices/DeviceScrobbler.h"
+#include "Services/RadioService.h"
+#include "Services/ScrobbleService.h"
+#include "Widgets/PointyArrow.h"
+#include "Widgets/ScrobbleControls.h"
+#include "Widgets/MetadataWidget.h"
 #include "Wizard/FirstRunWizard.h"
-
-#include <lastfm/InternetConnectionMonitor.h>
-#include <lastfm/XmlQuery.h>
-
-#include <QRegExp>
-#include <QShortcut>
-#include <QFileDialog>
-#include <QDesktopServices>
-#include <QNetworkDiskCache>
-#include <QMenu>
-#include <QMenuBar>
-#include <QDebug>
+#include "Application.h"
+#include "MainWindow.h"
+#include "SkipListener.h"
+#include "AudioscrobblerSettings.h"
 
 #ifdef Q_OS_WIN32
 #include "windows.h"
@@ -219,10 +217,9 @@ Application::init()
     }
 
 #ifdef Q_WS_X11
-// TODO: fix this!
-//    menu->addSeparator();
-//    m_scrobble_ipod_action = menu->addAction( tr( "Scrobble iPod..." ) );
-//    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), ScrobbleService::instance().deviceScrobbler(), SLOT( onScrobbleIpodTriggered() ) );
+    menu->addSeparator();
+    m_scrobble_ipod_action = menu->addAction( tr( "Scrobble iPod..." ) );
+    connect( m_scrobble_ipod_action, SIGNAL( triggered() ), ScrobbleService::instance().deviceScrobbler(), SLOT( onScrobbleIpodTriggered() ) );
 #endif
 
     menu->addSeparator();
