@@ -6,6 +6,7 @@
 #include "lib/unicorn/StylableWidget.h"
 
 #include "PlayableItemWidget.h"
+#include "ProfileArtistWidget.h"
 
 #include "../Services/ScrobbleService/ScrobbleService.h"
 #include "../Application.h"
@@ -107,7 +108,7 @@ ProfileWidget::changeUser( const QString& newUsername )
         ui.loved->setObjectName( "loved" );
 
         {
-            QLabel* title = new QLabel( tr("Top Weekly Artists"), this ) ;
+            QLabel* title = new QLabel( tr("Top Artists This Week"), this ) ;
             layout->addWidget( title );
             title->setObjectName( "title" );
             layout->addWidget( ui.topWeeklyArtists = new StylableWidget( this ) );
@@ -115,7 +116,7 @@ ProfileWidget::changeUser( const QString& newUsername )
         }
 
         {
-            QLabel* title = new QLabel( tr("Top Overall Artists"), this ) ;
+            QLabel* title = new QLabel( tr("Top Artists Overall"), this ) ;
             layout->addWidget( title );
             title->setObjectName( "title" );
             layout->addWidget( ui.topOverallArtists = new StylableWidget( this ) );
@@ -144,15 +145,10 @@ ProfileWidget::onGotTopWeeklyArtists()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
-        {
-            QString artistName = artist["name"].text();
-            int playCount = artist["playcount"].text().toInt();
+        int maxPlays = lfm["topartists"]["artist"]["playcount"].text().toInt();
 
-            PlayableItemWidget* item = new PlayableItemWidget( RadioStation::similar( lastfm::Artist( artistName ) ), tr( "%1 Similar Radio" ).arg( artistName ), tr( "(%L1 plays)" ).arg( playCount ) );
-            item->setObjectName( "station" );
-            layout->addWidget( item );
-        }
+        foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
+            layout->addWidget( new ProfileArtistWidget( artist, maxPlays, this ) );
     }
     else
     {
@@ -172,15 +168,10 @@ ProfileWidget::onGotTopOverallArtists()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
-        {
-            QString artistName = artist["name"].text();
-            int playCount = artist["playcount"].text().toInt();
+        int maxPlays = lfm["topartists"]["artist"]["playcount"].text().toInt();
 
-            PlayableItemWidget* item = new PlayableItemWidget( RadioStation::similar( lastfm::Artist( artistName ) ), tr( "%1 Similar Radio" ).arg( artistName ), tr( "(%L1 plays)" ).arg( playCount ) );
-            item->setObjectName( "station" );
-            layout->addWidget( item );
-        }
+        foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
+            layout->addWidget( new ProfileArtistWidget( artist, maxPlays, this ) );
     }
     else
     {

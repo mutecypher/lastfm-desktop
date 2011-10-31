@@ -309,7 +309,7 @@ MetadataWidget HttpImageWidget#albumImage {
 color: transparent;
 background-color: white;
 qproperty-scaledContents: true;
-border: 1px solid #cdcdcd;
+border: 1px solid #aaaaaa;
 min-width: 128px;
 min-height: 128px;
 max-width: 128px;
@@ -357,7 +357,7 @@ font-size: 16px;
 font-weight: bold;
 padding: 10px 0px;
 border: none;
-border-bottom: 1px solid #cdcdcd;
+border-bottom: 1px solid #aaaaaa;
 }
 
 MetadataWidget QFrame#trackStats {
@@ -435,7 +435,7 @@ border-top: 1px solid white;
 
 MetadataWidget QFrame#similarArtistFrame QLabel {
 padding: 2px;
-border: 1px solid #cdcdcd;
+border: 1px solid #aaaaaa;
 background-color: white;
 margin-bottom: 20px;
 color: black;
@@ -566,11 +566,12 @@ border: none;
 
 FriendWidget AvatarWidget#avatar,
 ProfileWidget AvatarWidget#avatar,
+ProfileArtistWidget QLabel#artistImage,
 ShareDialog AvatarWidget#icon {
 padding: 2px;
 background-color: white;
 color: transparent;
-border: 1px solid #cdcdcd;
+border: 1px solid #aaaaaa;
 min-width: 64px;
 min-height: 64px;
 max-width: 64px;
@@ -614,6 +615,31 @@ color: #333;
 height: 40px;
 padding: 3px 0px 3px 54px;
 margin: 5px 0px;
+}
+
+ProfileArtistWidget {
+  border: none;
+  margin: 5px 0px;
+}
+
+ProfileArtistWidget QLabel#artistImage {
+  margin-right: 20px;
+}
+
+ProfileArtistWidget QLabel#artistName {
+  color: #333;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0px 0px 3px;
+}
+
+ProfileArtistWidget QLabel#plays {
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  min-height: 20px;
+  max-height: 20px;
+  padding-left: 5px;
 }
 
 RadioWidget PlayableItemWidget#library {
@@ -891,7 +917,7 @@ margin-top: 6px;
 }
 
 BannerWidget HttpImageWidget {
-  border: 1px solid #cdcdcd;
+  border: 1px solid #aaaaaa;
   background-color: white;
   padding: 4px;
 }

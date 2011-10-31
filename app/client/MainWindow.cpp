@@ -56,6 +56,7 @@
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/qtwin.h"
 #include "lib/unicorn/layouts/SlideOverLayout.h"
+#include "lib/unicorn/widgets/SlidingStackedWidget.h"
 #include "lib/listener/PlayerConnection.h"
 
 #ifdef Q_OS_MAC
@@ -89,9 +90,9 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     h->addWidget( ui.sideBar = new SideBar( this ) );
 
-    h->addWidget( ui.stackedWidget = new QStackedWidget( this ) );
+    h->addWidget( ui.stackedWidget = new SlidingStackedWidget( this ) );
 
-    connect( ui.sideBar, SIGNAL(currentChanged(int)), ui.stackedWidget, SLOT(setCurrentIndex(int)));
+    connect( ui.sideBar, SIGNAL(currentChanged(int)), ui.stackedWidget, SLOT(slide(int)));
 
     ui.stackedWidget->addWidget( ui.nowPlaying = new NowPlayingStackedWidget(this) );
     ui.nowPlaying->setObjectName( "nowPlaying" );

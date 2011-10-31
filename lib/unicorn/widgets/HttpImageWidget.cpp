@@ -49,6 +49,8 @@ void HttpImageWidget::setHref( const QUrl& url )
     m_href = url;
 #endif
 
+    setToolTip( m_href.toString() );
+
     if( m_href.isValid()) {
         setCursor( Qt::PointingHandCursor );
         connect( this, SIGNAL(clicked()), SLOT(onClick()));
