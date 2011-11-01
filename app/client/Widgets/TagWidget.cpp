@@ -8,6 +8,7 @@
 #include <QEvent>
 
 #include "lib/unicorn/widgets/Label.h"
+#include "lib/unicorn/DesktopServices.h"
 
 #include "TagWidget.h"
 
@@ -93,5 +94,5 @@ TagWidget::sizeHint() const
 void
 TagWidget::onClicked()
 {
-    QDesktopServices::openUrl( m_url );
+    unicorn::DesktopServices::openUrl( m_url );
 }

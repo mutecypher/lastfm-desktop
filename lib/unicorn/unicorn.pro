@@ -9,7 +9,8 @@ SOURCES += $$ROOT_DIR/common/c++/Logger.cpp \
     widgets/AvatarWidget.cpp \
     layouts/FlowLayout.cpp \
     widgets/UserMenu.cpp \
-    widgets/SlidingStackedWidget.cpp
+    widgets/SlidingStackedWidget.cpp \
+    DesktopServices.cpp
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 # UniqueApplication
@@ -132,7 +133,8 @@ HEADERS += \
     dialogs/ShareDialog.h \
     widgets/AvatarWidget.h \
     layouts/FlowLayout.h \
-    widgets/SlidingStackedWidget.h
+    widgets/SlidingStackedWidget.h \
+    DesktopServices.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	
@@ -148,6 +150,8 @@ FORMS += \
 
 RESOURCES += \
 	qrc/unicorn.qrc
+
+
 
 
 

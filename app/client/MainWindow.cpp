@@ -58,6 +58,7 @@
 #include "lib/unicorn/layouts/SlideOverLayout.h"
 #include "lib/unicorn/widgets/SlidingStackedWidget.h"
 #include "lib/listener/PlayerConnection.h"
+#include "lib/unicorn/DesktopServices.h"
 
 #ifdef Q_OS_MAC
 void qt_mac_set_dock_menu(QMenu *menu);
@@ -227,7 +228,7 @@ MainWindow::setupMenuBar()
 void
 MainWindow::onVisitProfile()
 {
-    QDesktopServices::openUrl( aApp->currentSession()->userInfo().www() );
+    unicorn::DesktopServices::openUrl( aApp->currentSession()->userInfo().www() );
 }
 
 void

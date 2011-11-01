@@ -8,6 +8,7 @@
 
 #include "lib/unicorn/UnicornApplication.h"
 #include "lib/unicorn/UnicornSettings.h"
+#include "lib/unicorn/DesktopServices.h"
 
 #include "UserMenu.h"
 
@@ -69,7 +70,7 @@ UserMenu::manageUsers()
 void
 UserMenu::subscribe()
 {
-    QDesktopServices::openUrl( lastfm::UrlBuilder( "subscribe" ).url() );
+    unicorn::DesktopServices::openUrl( lastfm::UrlBuilder( "subscribe" ).url() );
 }
 
 void

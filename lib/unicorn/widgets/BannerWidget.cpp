@@ -6,6 +6,8 @@
 #include <QDebug>
 #include <QCoreApplication>
 
+#include "lib/unicorn/DesktopServices.h"
+
 BannerWidget::BannerWidget( const QString& pText, QWidget* parent )
     :QFrame( parent ), m_childWidget( 0 )
 {
@@ -47,7 +49,7 @@ BannerWidget::setHref( const QUrl& url )
 void
 BannerWidget::onClick()
 {
-    QDesktopServices::openUrl( m_href );
+    unicorn::DesktopServices::openUrl( m_href );
 }
 
 QSize 

@@ -6,6 +6,8 @@
 
 #include <lastfm/UrlBuilder.h>
 
+#include "lib/unicorn/DesktopServices.h"
+
 #include "../Application.h"
 
 #include "FirstRunWizard.h"
@@ -58,5 +60,5 @@ TourRadioPage::cleanupPage()
 void
 TourRadioPage::subscribe()
 {
-    QDesktopServices::openUrl( lastfm::UrlBuilder( "subscribe" ).url() );
+    unicorn::DesktopServices::openUrl( lastfm::UrlBuilder( "subscribe" ).url() );
 }
