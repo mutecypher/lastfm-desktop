@@ -4,7 +4,7 @@
 #include "WidgetTextObject.h"
 
 WidgetTextObject::WidgetTextObject()
-    :kMargin(20,10)
+    :kMargin( 10, 5 )
 {
 }
 

@@ -1,9 +1,9 @@
 #ifndef PLUGINSINSTALLPAGE_H
 #define PLUGINSINSTALLPAGE_H
 
-#include <QWizardPage>
+#include "WizardPage.h"
 
-class PluginsInstallPage : public QWizardPage
+class PluginsInstallPage : public WizardPage
 {
     Q_OBJECT
 private:
@@ -14,10 +14,11 @@ private:
     } ui;
 
 public:
-    explicit PluginsInstallPage( QWidget* parent = 0 );
+    explicit PluginsInstallPage();
 
 private:
     void initializePage();
+    void cleanupPage();
 };
 
 #endif // PLUGINSINSTALLPAGE_H

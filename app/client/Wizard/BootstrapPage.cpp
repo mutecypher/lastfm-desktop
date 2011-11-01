@@ -17,16 +17,17 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include "FirstRunWizard.h"
 #include "BootstrapPage.h"
 
-BootstrapPage::BootstrapPage( QWidget* parent )
-    :QWizardPage( parent)
+BootstrapPage::BootstrapPage()
 { 
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
+    layout->setSpacing( 20 );
 
-    QHBoxLayout* pluginsLayout = new QHBoxLayout( this );
+    QVBoxLayout* pluginsLayout = new QVBoxLayout( this );
     pluginsLayout->setContentsMargins( 0, 0, 0, 0 );
     pluginsLayout->setSpacing( 0 );
 
@@ -60,8 +61,6 @@ BootstrapPage::BootstrapPage( QWidget* parent )
                        Qt::AlignTop);
     ui.description->setObjectName( "description" );
     ui.description->setWordWrap( true );
-
-    registerField( "bootstrap_player", this, "playerId", SIGNAL( playerChanged() ));
 }
 
 void
@@ -75,6 +74,12 @@ bool
 BootstrapPage::validatePage()
 {
     /// start the bootstrap from whatever music player they chose.
+    aApp->startBootstrap( m_playerId );
+
+    // once you start importing you can't go back
+    // if they didn't click "Start Import" they won't get here
+    // so we allow them to go back and bootstrap
+    wizard()->setCommitPage( true );
 
     return true;
 }
@@ -85,16 +90,15 @@ BootstrapPage::initializePage()
 {
     setTitle( tr( "Now let's import your listening history" ) );
 
-    wizard()->setButtonText( QWizard::NextButton, tr( "Start Import" ) );
-    wizard()->setButtonText( QWizard::BackButton, tr( "<< Back" ) );
-    wizard()->setOption( QWizard::HaveCustomButton1, true );
-    wizard()->setButtonText( QWizard::CustomButton1, tr( "Skip >>" ) );
+    wizard()->setButton( FirstRunWizard::NextButton, tr( "Start Import" ) );
+    if ( wizard()->canGoBack() )
+        wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
+    wizard()->setButton( FirstRunWizard::SkipButton, tr( "Skip >>" ) );
 }
 
 void
 BootstrapPage::cleanupPage()
 {
-    wizard()->setOption( QWizard::HaveCustomButton1, false );
 }
 
 

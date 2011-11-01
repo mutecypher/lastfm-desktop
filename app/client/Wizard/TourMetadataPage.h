@@ -1,10 +1,11 @@
 #ifndef TOUR_METADATA_PAGE_H
 #define TOUR_METADATA_PAGE_H
 
-#include <QWizardPage>
+#include "WizardPage.h"
 #include <QIcon>
 
-class TourMetadataPage : public QWizardPage {
+class TourMetadataPage : public WizardPage
+{
     Q_OBJECT
 private:
     struct
@@ -14,10 +15,11 @@ private:
     } ui;
 
 public:
-    TourMetadataPage( QWidget* );
+    TourMetadataPage();
 
 private:
     void initializePage();
+    void cleanupPage();
 };
 
 #endif // TOUR_METADATA_PAGE_H

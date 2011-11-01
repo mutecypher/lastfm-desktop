@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PreferencesDialog</class>
+ <widget class="QMainWindow" name="PreferencesDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>583</width>
+    <height>466</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QFrame" name="tabFrame">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="generalButton">
+         <property name="text">
+          <string>General</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="accountsButton">
+         <property name="text">
+          <string>Accounts</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="scrobblingButton">
+         <property name="text">
+          <string>Scrobbling</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="ipodButton">
+         <property name="text">
+          <string>iPod</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="advancedButton">
+         <property name="text">
+          <string>Advanced</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <widget class="GeneralSettingsWidget" name="general"/>
+      <widget class="AccountSettingsWidget" name="accounts"/>
+      <widget class="ScrobbleSettingsWidget" name="scrobbling"/>
+      <widget class="IpodSettingsWidget" name="ipod"/>
+      <widget class="AdvancedSettingsWidget" name="advanced"/>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AccountSettingsWidget</class>
+   <extends>QWidget</extends>
+   <header>../Settings/AccountSettingsWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ScrobbleSettingsWidget</class>
+   <extends>QWidget</extends>
+   <header>../Settings/ScrobbleSettingsWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>IpodSettingsWidget</class>
+   <extends>QWidget</extends>
+   <header>../Settings/IpodSettingsWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GeneralSettingsWidget</class>
+   <extends>QWidget</extends>
+   <header>../Settings/GeneralSettingsWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>AdvancedSettingsWidget</class>
+   <extends>QWidget</extends>
+   <header>../Settings/AdvancedSettingsWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

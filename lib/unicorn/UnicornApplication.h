@@ -34,8 +34,17 @@
 #include <Carbon/Carbon.h>
 #endif
 
+#define SETTING_SHOW_AS "showAS"
+#define SETTING_LAUNCH_ITUNES "launchItunes"
+#define SETTING_NOTIFICATIONS "notifications"
+#define SETTING_LAST_RADIO "lastRadio"
+#define SETTING_SEND_CRASH_REPORTS "sendCrashReports"
+#define SETTING_CHECK_UPDATES "checkUpdates"
+
+#define SETTING_FIRST_RUN_WIZARD_COMPLETED "FirstRunWizardCompletedAlpha"
+
 namespace lastfm{
-    class UserDetails;
+    class User;
     class InternetConnectionMonitor;
 }
 
@@ -54,7 +63,7 @@ namespace unicorn
             {
                 connect( this, SIGNAL( message(QByteArray)), SLOT( onMessage(QByteArray)));
                 connect( this, SIGNAL( queryRequest( QString, QByteArray )), SLOT( onQuery( QString, QByteArray )));
-            };
+            }
 
             bool isWizardRunning(){ return sendQuery( "WIZARDRUNNING" ) == "TRUE"; }
 
@@ -217,7 +226,7 @@ namespace unicorn
         void onBusSessionChanged( const QMap<QString, QString>& sessionData );
 
     signals:
-        void gotUserInfo( const lastfm::UserDetails& );
+        void gotUserInfo( const lastfm::User& );
         void sessionChanged( unicorn::Session* newSession );
         void rosterUpdated();
         void busLovedStateChanged(bool loved);

@@ -92,6 +92,7 @@ public:
     QString vid;
     QString pid; //product id, not persistent id
     QString serial;
+    QString name;
 
 protected:    
     ScrobbleList m_scrobbles;

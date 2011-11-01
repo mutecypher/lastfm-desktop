@@ -955,7 +955,7 @@ IPodDetector::notifyIfUnknownIPod( IPod* ipod )
         args.push_back( "--ipod-detected" );
     }
     
-    args.push_back( ipod->serial() );
+    args.push_back( ipod->displayName() );
     
     Moose::launchAudioscrobbler( args );
     

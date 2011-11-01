@@ -76,3 +76,38 @@ MediaDevice::isDeviceKnown() const
     us.endArray();
     return isKnown;
 }
+
+lastfm::User
+MediaDevice::associatedUser( const QString deviceId )
+{
+    lastfm::User associatedUser( "" );
+
+    // Check if the device has been associated with a user
+    // and then if it is with the current user
+    QList<lastfm::User> roster = unicorn::Settings().userRoster();
+    foreach( lastfm::User user, roster )
+    {
+        unicorn::UserSettings us( user.name() );
+        int count = us.beginReadArray( "associatedDevices" );
+
+        for ( int i = 0; i < count; i++ )
+        {
+            us.setArrayIndex( i );
+
+            QString tempDeviceId = us.value( "deviceId" ).toString();
+
+            qDebug() << tempDeviceId;
+
+            if ( tempDeviceId == deviceId )
+            {
+                associatedUser = user;
+                break;
+            }
+        }
+        us.endArray();
+
+        if ( !associatedUser.name().isEmpty() ) break;
+    }
+
+    return associatedUser;
+}

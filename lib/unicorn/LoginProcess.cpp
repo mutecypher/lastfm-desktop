@@ -147,11 +147,10 @@ LoginProcess::getSession( QString token )
 void
 LoginProcess::onGotSession()
 {
-    try
-    {
-        lastfm::XmlQuery lfm;
-        lfm.parse( static_cast<QNetworkReply*>( sender() )->readAll() );
+    lastfm::XmlQuery lfm;
 
+    if ( lfm.parse( static_cast<QNetworkReply*>( sender() )->readAll() ) )
+    {
         QString username = lfm["session"]["name"].text();
         QString sessionKey = lfm["session"]["key"].text();
 
@@ -159,11 +158,11 @@ LoginProcess::onGotSession()
         emit gotSession( session );
         delete m_webServer;
     }
-    catch ( const lastfm::ws::ParseError& e )
+    else
     {
-        qWarning() << e.message() << e.enumValue();
+        qWarning() << lfm.parseError().message() << lfm.parseError().enumValue();
 
-        m_lastError = e;
+        m_lastError = lfm.parseError();
 
         if ( m_lastError.enumValue() == lastfm::ws::UnknownError )
         {

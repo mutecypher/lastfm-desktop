@@ -17,6 +17,7 @@ CONFIG( lastfm ) {
     win32 {
         CONFIG += link_pkgconfig
         PKGCONFIG += lastfm
+
     }
     mac{
         LIBS += -framework Carbon -framework CoreFoundation # various

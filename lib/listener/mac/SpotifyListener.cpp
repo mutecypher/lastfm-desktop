@@ -19,11 +19,12 @@
 */
 
 #include <lastfm/Track.h>
-#include "SpotifyListener.h"
-#include "../PlayerConnection.h"
 #include <lastfm/misc.h>
+
 #include "lib/unicorn/mac/AppleScript.h"
 
+#include "../PlayerConnection.h"
+#include "SpotifyListener.h"
 
 struct SpotifyConnection : PlayerConnection
 {
@@ -46,22 +47,28 @@ struct SpotifyConnection : PlayerConnection
 };
 
 
-SpotifyListener::SpotifyListener( QObject* parent )
-              :QObject( parent )
+SpotifyListenerMac::SpotifyListenerMac( QObject* parent )
+    :QObject( parent )
 {
     QTimer* timer = new QTimer( this );
     timer->start( 1000 );
     connect( timer, SIGNAL(timeout()), SLOT(loop()));
 }
 
+SpotifyListenerMac::~SpotifyListenerMac()
+{
+    delete m_connection;
+}
 
 void
-SpotifyListener::loop()
+SpotifyListenerMac::loop()
 {
     static AppleScript playerStateScript( "tell application \"Spotify\" to if running then return player state" );
     QString playerState = playerStateScript.exec();
 
-    if ( !playerState.isEmpty() )
+    if ( playerState == "playing"
+         || playerState == "stopped"
+         || playerState == "paused" )
     {
         if ( !m_connection )
             emit newConnection( m_connection = new SpotifyConnection );
@@ -120,3 +127,5 @@ SpotifyListener::loop()
 
     m_lastPlayerState = playerState;
 }
+
+

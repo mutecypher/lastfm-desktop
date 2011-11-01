@@ -29,8 +29,7 @@ PluginBootstrapper::PluginBootstrapper( QString pluginId, QObject* parent )
                    :AbstractBootstrapper( parent ),
                     m_pluginId( pluginId )
 {
-    connect( this, SIGNAL( done( int ) ),
-             this, SLOT( onUploadCompleted( int ) ) );
+    connect( this, SIGNAL( done( int ) ), SLOT( onUploadCompleted( int ) ) );
 }
 
 
@@ -40,7 +39,7 @@ PluginBootstrapper::bootStrap()
     QSettings bootstrap( QSettings::NativeFormat, QSettings::UserScope, "Last.fm", "Bootstrap", this );
 
     bootstrap.setValue( m_pluginId, lastfm::ws::Username );
-	bootstrap.setValue( "data_path", lastfm::dir::runtimeData().path() );
+    bootstrap.setValue( "data_path", lastfm::dir::runtimeData().path() );
 
     bootstrap.setValue( "Strings/progress_label",       tr("test! Last.fm is importing your current media library...") );
     bootstrap.setValue( "Strings/complete_label",       tr("Last.fm has imported your media library.\n\n Click OK to continue.") );

@@ -22,7 +22,6 @@
 
 PlayerMediator::PlayerMediator( QObject* parent )
               : QObject( parent )
-              , m_active( 0 )
 {}
 
 

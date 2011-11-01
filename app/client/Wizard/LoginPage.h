@@ -20,10 +20,10 @@
 #ifndef LOGIN_PAGE_H_
 #define LOGIN_PAGE_H_
 
-#include <QWizardPage>
+#include "WizardPage.h"
 #include <QAbstractButton>
 
-class LoginPage : public QWizardPage
+class LoginPage : public WizardPage
 {
     Q_OBJECT
 
@@ -34,10 +34,10 @@ private:
     } ui;
 
 public:
-    LoginPage( QWidget* parent = 0 );
+    LoginPage();
 
     void initializePage();
-    bool validatePage();
+    void cleanupPage();
  
 private slots:
     void onSignUpClicked();

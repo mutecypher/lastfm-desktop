@@ -374,6 +374,12 @@
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
             </property>
+            <property name="openExternalLinks">
+             <bool>false</bool>
+            </property>
+            <property name="openLinks">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
           <item>

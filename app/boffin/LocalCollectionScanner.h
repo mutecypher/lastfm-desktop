@@ -24,7 +24,7 @@
 #include <QDir>
 #include <QProcess>
 #include <QStringList>
-#include <lastfm/Track>
+#include <types/Track.h>
 
 
 class LocalCollectionScanner : public QObject

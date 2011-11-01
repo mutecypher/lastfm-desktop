@@ -34,6 +34,9 @@
 #include "lib/listener/mac/SpotifyListener.h"
 #include "lib/listener/mac/ITunesListener.h"
 #endif
+#ifdef Q_OS_WIN
+#include "lib/listener/win/SpotifyListener.h"
+#endif
 
 ScrobbleService::ScrobbleService()
     :m_scrobblingOn( true )
@@ -49,7 +52,11 @@ ScrobbleService::ScrobbleService()
         connect(itunes, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
         itunes->start();
 
-        SpotifyListener* spotify = new SpotifyListener(m_mediator);
+        SpotifyListenerMac* spotify = new SpotifyListenerMac(m_mediator);
+        connect(spotify, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
+#endif
+#ifdef Q_OS_WIN
+        SpotifyListenerWin* spotify = new SpotifyListenerWin(m_mediator);
         connect(spotify, SIGNAL(newConnection(PlayerConnection*)), m_mediator, SLOT(follow(PlayerConnection*)));
 #endif
 
@@ -88,7 +95,8 @@ ScrobbleService::setScrobblingOn( bool scrobblingOn )
             && m_watch
             && m_watch->scrobbled()
             && m_currentTrack.scrobbleStatus() == Track::Null
-            && m_scrobblingOn )
+            && m_scrobblingOn
+            && m_trackToScrobble.extra( "playerId" ) != "spt" )
         m_as->cache( m_trackToScrobble );
 
     emit scrobblingOnChanged( scrobblingOn );
@@ -125,8 +133,8 @@ ScrobbleService::resetScrobbler()
         delete m_deviceScrobbler;
 
     m_deviceScrobbler = new DeviceScrobbler;
-    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<lastfm::Track>)), this, SIGNAL( foundIPodScrobbles(QList<lastfm::Track>) ));
-    connect( m_deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track> )), m_as, SLOT( cacheBatch( QList<lastfm::Track> )));
+    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<lastfm::Track>, QString)), this, SIGNAL( foundIPodScrobbles(QList<lastfm::Track>, QString) ));
+    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<lastfm::Track>, QString )), m_as, SLOT( cacheBatch( QList<lastfm::Track>, QString)));
     m_deviceScrobbler->checkCachedIPodScrobbles();
 }
 
@@ -216,19 +224,10 @@ ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
     {
         m_as->submit();
 
-        if ( m_scrobblingOn )
+        if ( m_scrobblingOn && t.extra( "playerId" ) != "spt" )
         {
             qDebug() << "************** Now Playing..";
-
-            if ( t.extra( "playerId" ) == "spt" )
-            {
-                if ( unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool() )
-                    m_as->nowPlaying( t );
-            }
-            else
-                m_as->nowPlaying( t );
-
-
+            m_as->nowPlaying( t );
         }
     }
 
@@ -296,16 +295,8 @@ ScrobbleService::onScrobble()
 {
     Q_ASSERT(m_connection);
 
-    if( m_as && m_scrobblingOn )
-    {
-        if ( m_trackToScrobble.extra( "playerId" ) == "spt" )
-        {
-            if ( unicorn::AppSettings().value( "scrobbleSpotify", false ).toBool() )
-                m_as->cache( m_trackToScrobble );
-        }
-        else
+    if( m_as && m_scrobblingOn && m_trackToScrobble.extra( "playerId" ) != "spt" )
             m_as->cache( m_trackToScrobble );
-    }
 }
 
 void 

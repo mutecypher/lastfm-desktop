@@ -18,6 +18,8 @@ private:
         class QLabel* name;
         class QLabel* scrobbleCount;
         class QLabel* scrobbles;
+        class QLabel* lovedCount;
+        class QLabel* loved;
 
         class StylableWidget* topWeeklyArtists;
         class StylableWidget* topOverallArtists;
@@ -28,10 +30,12 @@ public:
 
 private slots:
     void onSessionChanged( unicorn::Session* session );
-    void onGotUserInfo( const lastfm::UserDetails& userDetails );
+    void onGotUserInfo( const lastfm::User& userDetails );
 
     void onGotTopWeeklyArtists();
     void onGotTopOverallArtists();
+
+    void onGotLovedTracks();
 
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
     void onScrobbleStatusChanged();

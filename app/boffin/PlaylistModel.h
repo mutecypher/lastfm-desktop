@@ -21,7 +21,7 @@
 #define PLAYLIST_MODEL_H_
 
 #include <QAbstractItemModel>
-#include <lastfm/Track>
+#include <types/Track.h>
 
 class PlaylistModel : public QAbstractItemModel
 {

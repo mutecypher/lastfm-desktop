@@ -20,41 +20,61 @@
 #ifndef FIRST_RUN_WIZARD_H_
 #define FIRST_RUN_WIZARD_H_
 
-#include <QWizard>
-#include <QDebug>
+#include <QDialog>
+#include <QAbstractButton>
+#include <QList>
 
-/**  @author Jono Cole <jono@last.fm>
-  *  @brief Initial wizard to guide the user through login, plugin installation, bootstrapping etc 
-  */
-class FirstRunWizard : public QWizard
+namespace Ui { class FirstRunWizard; }
+
+
+class FirstRunWizard : public QDialog
 {
     Q_OBJECT
-
-    enum
+public:
+    enum Button
     {
-        Page_Login,
-        Page_Access,
-        Page_Plugins,
-        Page_PluginsInstall,
-        Page_Bootstrap,
-        Page_BootstrapProgress,
-        Page_Tour_Scrobbles,
-        Page_Tour_Metadata,
-        Page_Tour_Radio,
-        Page_Tour_Location,
-        Page_Tour_Finish
+        CustomButton,
+        BackButton,
+        SkipButton,
+        NextButton,
+        FinishButton
     };
 
 public:
-    FirstRunWizard( QWidget* parent = 0 );
-    int nextId() const;
+    FirstRunWizard( QWidget* parent = 0);
+
+    void setTitle( const QString& title );
+
+    QAbstractButton* setButton( Button button, const QString& text );
+
+    void setCommitPage( bool commitPage );
+    bool canGoBack() const;
+
+    void showWelcome();
+
+public slots:
+    void next();
+    void back();
+    void skip();
 
 private slots:
     void onWizardCompleted();
     void onRejected();
 
+    void onBootstrapStarted( const QString& pluginId );
+    void onBootstrapDone( int status );
+
 private:
-    QPalette m_palette;
+    void initializePage( QWidget* page );
+    void cleanupPage( QWidget* page );
+
+private:
+    Ui::FirstRunWizard* ui;
+
+    QList<QWidget*> m_pages;
+
+    bool m_commitPage;
+    bool m_showWelcome;
 };
 
 #endif //FIRST_RUN_WIZARD_H_

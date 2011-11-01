@@ -38,20 +38,22 @@ StationSearch::startSearch(const QString& name)
 void
 StationSearch::onFinished()
 {
-    try {
-        sender()->deleteLater();
-        lastfm::XmlQuery x;
-        x.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
+    lastfm::XmlQuery x;
+
+    if ( x.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    {
         lastfm::XmlQuery station = x["stations"]["station"];
         RadioStation rs(QUrl::fromPercentEncoding( station["url"].text().toUtf8()));
-        if (rs.url().length()) {
+
+        if (rs.url().length())
+        {
             rs.setTitle(station["name"].text());
             emit searchResult(rs);
             return;
         }
-    } catch (...) {
-        qDebug() << "exception";
     }
+    else
+        qDebug() << "exception";
 
     // no artist or tag result
     // maybe the user wanted to hear a friend's library?
@@ -65,14 +67,16 @@ StationSearch::onUserGotFriends()
     sender()->deleteLater();
 
     lastfm::XmlQuery lfm;
-    lfm.parse( qobject_cast<QNetworkReply*>( sender() )->readAll() );
 
-    foreach (lastfm::XmlQuery e, lfm["friends"].children("user")) {
-        if (m_name == e["name"].text().toLower()) {
-            // friend!
-            RadioStation rs = RadioStation::library(User(m_name));
-            emit searchResult(rs);
-            return;
+    if ( lfm.parse( qobject_cast<QNetworkReply*>( sender() )->readAll() ) )
+    {
+        foreach (lastfm::XmlQuery e, lfm["friends"].children("user")) {
+            if (m_name == e["name"].text().toLower()) {
+                // friend!
+                RadioStation rs = RadioStation::library(User(m_name));
+                emit searchResult(rs);
+                return;
+            }
         }
     }
 }

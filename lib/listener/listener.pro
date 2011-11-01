@@ -10,7 +10,7 @@ include( $$ROOT_DIR/admin/include.qmake )
 
 DEFINES += _LISTENER_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
-win32:LIBS += Advapi32.lib
+win32:LIBS += Advapi32.lib User32.lib
 
 SOURCES += \
 	PlayerMediator.cpp \
@@ -35,3 +35,7 @@ mac:SOURCES += mac/ITunesListener.cpp \
 
 mac:HEADERS += mac/ITunesListener.h \
                 mac/SpotifyListener.h
+				
+win32:SOURCES += win/SpotifyListener.cpp
+
+win32:HEADERS += win/SpotifyListener.h

@@ -43,6 +43,7 @@
             const COMMON_STD_STRING twiddlyFlags() const;
             const COMMON_STD_STRING& serial() const { return m_serial; }
             COMMON_STD_STRING device() const;
+            const COMMON_STD_STRING& displayName() const { return m_displayName; }
 
             enum deviceType { unknown = 0,
                    iPod,
@@ -92,6 +93,7 @@
                 void setMountPoint( const std::string& mountPoint ){ m_mountPoint = mountPoint; }
                 void setDiskID( const std::string& diskID ){ m_diskID = diskID; }
                 const std::string& diskID() const{ return m_diskID; }
+                void getDisplayName();
             #endif
 
         private:
@@ -111,6 +113,7 @@
             deviceType m_type;
 
             std::string m_mountPoint;
+            std::string m_displayName;
 
             #ifdef WIN32
                 static void tokenize( const std::wstring& str, 

@@ -32,7 +32,7 @@
 
 #include "DataListWidget.h"
 
-#include "lib/unicorn/layouts/flowlayout.h"
+#include "lib/unicorn/layouts/FlowLayout.h"
 #include "lib/unicorn/UnicornApplication.h"
 
 class DataItem : public QLabel

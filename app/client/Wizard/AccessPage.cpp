@@ -21,22 +21,24 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QStyle>
+#include <QAbstractButton>
 
 #include "lib/unicorn/LoginProcess.h"
 #include "lib/unicorn/UnicornSession.h"
 
 #include "../Application.h"
 
+#include "FirstRunWizard.h"
+
 #include "AccessPage.h"
 
-AccessPage::AccessPage( QWizard* parent )
-    :QWizardPage( parent )
+AccessPage::AccessPage()
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
+    layout->setSpacing( 20 );
     
-    layout->addWidget( ui.image = new QLabel(), 0, Qt::AlignCenter );
+    layout->addWidget( ui.image = new QLabel(), 0, Qt::AlignTop | Qt::AlignHCenter );
     ui.image->setObjectName( "image" );
 
     layout->addWidget( ui.description = new QLabel( tr( "<p>Please click the <strong>Yes, Allow Access</strong> button in your web browser to connect your Last.fm account to the Last.fm Desktop App.</p>"
@@ -51,17 +53,25 @@ AccessPage::initializePage()
 {
     setTitle( tr( "We're waiting for you to connect to Last.fm" ));
 
-    wizard()->style()->polish( this );
+    wizard()->setCommitPage( true );
 
-    delete m_loginProcess;
+    if ( wizard()->canGoBack() )
+        wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
+    wizard()->setButton( FirstRunWizard::NextButton, tr( "Continue" ) );
+    QAbstractButton* custom = wizard()->setButton( FirstRunWizard::CustomButton, tr( "Try Again" ) );
 
-    setCommitPage( true );
+    connect( custom, SIGNAL(clicked()), SLOT(tryAgain()));
 
-    setButtonText( QWizard::CommitButton, tr( "Continue" ) );
+    tryAgain();
+}
 
-    m_loginProcess = new unicorn::LoginProcess( this );
-    connect( m_loginProcess, SIGNAL( gotSession( unicorn::Session* ) ), SLOT( onAuthenticated( unicorn::Session* ) ) );
-    m_loginProcess->authenticate();
+void
+AccessPage::tryAgain()
+{
+    unicorn::LoginProcess* loginProcess = new unicorn::LoginProcess( this );
+    m_loginProcesses << loginProcess;
+    connect( loginProcess, SIGNAL( gotSession( unicorn::Session* ) ), SLOT( onAuthenticated( unicorn::Session* ) ) );
+    loginProcess->authenticate();
 }
 
 void
@@ -69,23 +79,33 @@ AccessPage::onAuthenticated( unicorn::Session* session )
 {
     if ( session )
     {
-        // make sure the wizard is shown again after they allow access on the website.
-        wizard()->next();
-        wizard()->showNormal();
-        wizard()->setFocus();
-        wizard()->raise();
-        wizard()->activateWindow();
+        // Wait to find out they're details such as canBootstrap, subscriber, etc
+        connect( aApp, SIGNAL(gotUserInfo(lastfm::User)), SLOT(onGotUserInfo(lastfm::User)));
     }
     else
     {
-        m_loginProcess->showError();
+        qobject_cast<unicorn::LoginProcess*>(sender())->showError();
     }
+}
+
+void
+AccessPage::onGotUserInfo( const lastfm::User& user )
+{
+    // make sure the wizard is shown again after they allow access on the website.
+    wizard()->showWelcome();
+    wizard()->next();
+    wizard()->showNormal();
+    wizard()->setFocus();
+    wizard()->raise();
+    wizard()->activateWindow();
+
+    foreach ( unicorn::LoginProcess* loginProcess, m_loginProcesses )
+        loginProcess->deleteLater();
 }
 
 void
 AccessPage::cleanupPage()
 {
-    delete m_loginProcess;
 }
 
 
@@ -97,7 +117,10 @@ AccessPage::validatePage()
 
     // There is no session so try to fetch it
     // onAuthenticated will be called if we find one
-    m_loginProcess->getSession( m_loginProcess->token() );
+    // just try with the most recent one
+    unicorn::LoginProcess* loginProcess = m_loginProcesses[ m_loginProcesses.count() - 1 ];
+
+    loginProcess->getSession( loginProcess->token() );
     return false;
 }
 

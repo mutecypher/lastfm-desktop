@@ -30,12 +30,16 @@
 
 #include "lib/unicorn/UnicornApplication.h"
 
+#include "Bootstrapper/iTunesBootstrapper.h"
+#include "Bootstrapper/PluginBootstrapper.h"
+
 class AboutDialog;
 class MainWindow;
 class RadioWidget;
 class QAction;
 class ScrobbleInfoFetcher;
 class Drawer;
+class QMenuBar;
 
 #ifdef Q_WS_X11
     class IpodDeviceLinux;
@@ -71,6 +75,9 @@ namespace audioscrobbler
         // we delete these so QPointers
         QPointer<QSystemTrayIcon> m_tray;
         QPointer<MainWindow> m_mw;
+        QPointer<QMenuBar> m_menuBar;
+
+        QPointer<AbstractBootstrapper> m_bootstrapper;
 
         Track m_currentTrack;
         Track m_trackToScrobble;
@@ -80,8 +87,6 @@ namespace audioscrobbler
         AboutDialog* m_aboutDialog;
         
         QAction* m_submit_scrobbles_toggle;
-        QAction* m_artist_action;
-        QAction* m_title_action;
         QAction* m_love_action;
         QAction* m_tag_action;
         QAction* m_share_action;
@@ -92,9 +97,6 @@ namespace audioscrobbler
         QAction* m_toggle_window_action;
         QAction* m_scrobble_ipod_action;
         QAction* m_visit_profile_action;
-        QAction* m_faq_action;
-        QAction* m_forums_action;
-        QAction* m_about_action;
         
     public:
         Application(int& argc, char** argv);
@@ -109,7 +111,12 @@ namespace audioscrobbler
         QAction* skipAction() const { return m_skip_action; }
         QAction* scrobbleToggleAction() const { return m_submit_scrobbles_toggle; }
         QSystemTrayIcon* tray() ;
+
         void setRaiseHotKey( Qt::KeyboardModifiers mods, int key );
+
+        void startBootstrap( const QString& pluginId );
+
+        void showAs( bool showAs );
         
     signals:
         void lovedStateChanged(bool loved);
@@ -127,6 +134,9 @@ namespace audioscrobbler
         void error( const QString& message );
         void status( const QString& message, const QString& id );
 
+        void bootstrapStarted( const QString& pluginId );
+        void bootstrapDone( int status );
+
     public slots:
         void quit();
         void actuallyQuit();
@@ -137,8 +147,10 @@ namespace audioscrobbler
         void onTrackGotInfo(const XmlQuery& );
         void parseArguments( const QStringList& args );
 
+        void onPrefsTriggered();
+
     protected:
-        virtual void initiateLogin()throw( StubbornUserException );
+        virtual void initiateLogin( bool forceWizard ) throw( StubbornUserException );
 
     private:
         static Argument argument( const QString& arg );
@@ -157,6 +169,8 @@ namespace audioscrobbler
 
         void showWindow();
         void toggleWindow();
+
+        void onScrobbleToggled( bool scrobblingOn );
 
         void onTrackStarted( const Track&, const Track& );
         void onTrackPaused( bool );

@@ -21,7 +21,7 @@
 #define TRACK_SOURCE_H
 
 #include <QList>
-#include <lastfm/Track>
+#include <types/Track.h>
 #include "playdar/BoffinPlayableItem.h"
 
 class Shuffler;

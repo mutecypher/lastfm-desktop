@@ -46,7 +46,7 @@ FriendListWidget::FriendListWidget(QWidget *parent) :
     layout->addWidget( m_main = new QWidget( this ) );
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)) );
-    connect( aApp, SIGNAL(gotUserInfo(lastfm::UserDetails)), SLOT(onGotUserInfo(lastfm::UserDetails)) );
+    connect( aApp, SIGNAL(gotUserInfo(lastfm::User)), SLOT(onGotUserInfo(lastfm::User)) );
 
     onSessionChanged( aApp->currentSession() );
 }
@@ -59,7 +59,7 @@ FriendListWidget::onSessionChanged( unicorn::Session* session )
 
 
 void
-FriendListWidget::onGotUserInfo( const lastfm::UserDetails& userDetails )
+FriendListWidget::onGotUserInfo( const lastfm::User& userDetails )
 {
     changeUser( userDetails.name() );
 }
@@ -113,8 +113,6 @@ FriendListWidget::onTextChanged( const QString& text )
 void
 FriendListWidget::onGotFriends()
 {
-    setUpdatesEnabled( false );
-
     // create the layout for all the users if it's not already there
     if ( !m_main )
     {
@@ -123,7 +121,15 @@ FriendListWidget::onGotFriends()
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        layout->addWidget( ui.filter = new QLineEdit( this ) );
+        QWidget* filterBackground = new QWidget( this );
+        filterBackground->setObjectName( "filterBackground" );
+        layout->addWidget( filterBackground );
+
+        QHBoxLayout* filterLayout = new QHBoxLayout( filterBackground );
+        filterLayout->setContentsMargins( 0, 0, 0, 0 );
+        filterLayout->setSpacing( 0 );
+
+        filterLayout->addWidget( ui.filter = new QLineEdit( this ) );
         ui.filter->setPlaceholderText( tr( "Search for a friend by username or real name" ) );
         ui.filter->setAttribute( Qt::WA_MacShowFocusRect, false );
 
@@ -136,32 +142,40 @@ FriendListWidget::onGotFriends()
         connect( ui.filter, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
     }
 
+    setUpdatesEnabled( false );
+
     // add this set of users to the list
     lastfm::XmlQuery lfm;
-    lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
-
-    foreach( const lastfm::XmlQuery& user, lfm["friends"].children( "user" ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
-        FriendWidgetItem* item = new FriendWidgetItem( ui.friends );
-        FriendWidget* friendWidget = new FriendWidget( user, this );
-        ui.friends->setItemWidget( item, friendWidget );
-        item->setSizeHint( friendWidget->sizeHint() );
+
+        foreach( const lastfm::XmlQuery& user, lfm["friends"].children( "user" ) )
+        {
+            FriendWidgetItem* item = new FriendWidgetItem( ui.friends );
+            FriendWidget* friendWidget = new FriendWidget( user, this );
+            ui.friends->setItemWidget( item, friendWidget );
+            item->setSizeHint( friendWidget->sizeHint() );
+        }
+
+        int page = lfm["friends"].attribute( "page" ).toInt();
+        int perPage = lfm["friends"].attribute( "perPage" ).toInt();
+        int totalPages = lfm["friends"].attribute( "totalPages" ).toInt();
+        //int total = lfm["friends"].attribute( "total" ).toInt();
+
+        // Check if we need to fetch another page of users
+        if ( page != totalPages )
+            connect( lastfm::User().getFriends( true, perPage, page + 1 ), SIGNAL(finished()), SLOT(onGotFriends()) );
+        else
+        {
+            // we have fetched all the pages!
+            onTextChanged( ui.filter->text() );
+            setUpdatesEnabled( true );
+        }
+
+        ui.friends->sortItems( Qt::AscendingOrder );
     }
-
-    int page = lfm["friends"].attribute( "page" ).toInt();
-    int perPage = lfm["friends"].attribute( "perPage" ).toInt();
-    int totalPages = lfm["friends"].attribute( "totalPages" ).toInt();
-    //int total = lfm["friends"].attribute( "total" ).toInt();
-
-    // Check if we need to fetch another page of users
-    if ( page != totalPages )
-        connect( lastfm::User().getFriends( true, perPage, page + 1 ), SIGNAL(finished()), SLOT(onGotFriends()) );
     else
     {
-        onTextChanged( ui.filter->text() );
+        setUpdatesEnabled( true );
     }
-
-    ui.friends->sortItems( Qt::AscendingOrder );
-
-    setUpdatesEnabled( true );
 }

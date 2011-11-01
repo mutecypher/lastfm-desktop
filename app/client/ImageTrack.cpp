@@ -65,10 +65,10 @@ ImageTrack::onTrackGotInfo()
 void
 ImageTrack::onAlbumGotInfo()
 {
-    try
+    XmlQuery lfm;
+
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
-        XmlQuery lfm;
-        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
 
         lastfm::MutableTrack t( *this );
         t.setImageUrl( lastfm::Small, lfm["album"]["image size=small"].text() );
@@ -89,9 +89,6 @@ ImageTrack::onAlbumGotInfo()
             connect( signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(onTrackGotInfo()) );
         }
 
-    }
-    catch (...)
-    {
     }
 }
 

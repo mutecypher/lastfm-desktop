@@ -14,13 +14,13 @@ class UNICORN_DLLEXPORT AvatarWidget : public HttpImageWidget
 public:
     explicit AvatarWidget( QWidget* parent = 0 );
 
-    void setUserDetails( const lastfm::UserDetails& user );
+    void setUser( const lastfm::User& user );
 
 private:
     void paintEvent( QPaintEvent *paintEvent );
 
 private:
-    lastfm::UserDetails m_user;
+    lastfm::User m_user;
 };
 
 #endif // AVATARWIDGET_H

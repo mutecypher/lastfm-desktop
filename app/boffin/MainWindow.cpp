@@ -24,7 +24,7 @@
 #include <QComboBox>
 #include <QStatusBar>
 #include <QPushButton>
-#include <lastfm/Track>
+#include <types/Track.h>
 #include "PlaydarHostsModel.h"
 #include "playdar/PlaydarConnection.h"
 

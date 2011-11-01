@@ -34,20 +34,25 @@ class UNICORN_DLLEXPORT HttpImageWidget : public QLabel
 {
     Q_OBJECT
 public:
+    enum ScaleType
+    {
+        ScaleNone,
+        ScaleAuto,
+        ScaleWidth,
+        ScaleHeight
+    };
+
     HttpImageWidget( QWidget* parent = 0 );
 
-    bool gradient();
-    void setGradient( bool gradient );
     void setPlaceholder( const QPixmap& );
 
 public slots:
-    void loadUrl( const QUrl& url, bool scale = true );
+    void loadUrl( const QUrl& url, ScaleType scale = ScaleAuto );
     void setHref( const QUrl& url );
     
 protected:
     void mousePressEvent( QMouseEvent* event );
     void mouseReleaseEvent( QMouseEvent* event );
-    void paintEvent( QPaintEvent* paintEvent );
 
 private slots:
     void onClick();
@@ -59,11 +64,8 @@ signals:
 
 private:
     bool m_mouseDown;
-    bool m_gradient;
-    bool m_scale;
+    ScaleType m_scale;
     QUrl m_href;
-
-    Q_PROPERTY(bool gradient READ gradient WRITE setGradient);
 };
 
 #endif

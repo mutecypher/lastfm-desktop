@@ -11,7 +11,7 @@
 
 
 ActivityListModel::ActivityListModel()
-    :m_noArt( ":/noArt.png" ),
+    :m_noArt( ":/meta_album_no_art.png" ),
      m_nowPlayingTrack( Track() ),
      m_nowScrobblingTrack( Track() ),
      m_paused( false )
@@ -183,11 +183,10 @@ ActivityListModel::refresh()
 void
 ActivityListModel::onGotRecentTracks()
 {
-    try
-    {
-        XmlQuery lfm;
-        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
+    XmlQuery lfm;
 
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) );
+    {
         qDebug() << lfm;
 
         m_nowPlayingTrack = Track();
@@ -234,10 +233,6 @@ ActivityListModel::onGotRecentTracks()
         }
 
         addTracks( tracks );
-    }
-    catch (...)
-    {
-
     }
 
     emit refreshing( false );

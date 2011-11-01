@@ -21,51 +21,20 @@
 #include "HttpImageWidget.h"
 
 HttpImageWidget::HttpImageWidget( QWidget* parent )
-    :QLabel( parent ), m_mouseDown( false ), m_gradient( false )
+    :QLabel( parent ), m_mouseDown( false )
 {
-}
-
-bool
-HttpImageWidget::gradient()
-{
-    return m_gradient;
-}
-
-void
-HttpImageWidget::setGradient( bool gradient )
-{
-    m_gradient = gradient;
-    update();
 }
 
 void 
 HttpImageWidget::setPlaceholder( const QPixmap& placeholder )
 {
-    if( !pixmap() || pixmap()->isNull()) {
+    if( !pixmap() || pixmap()->isNull())
         setPixmap( placeholder.scaled( maximumWidth(), maximumHeight(), Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
-    }
 }
 
-void
-HttpImageWidget::paintEvent( QPaintEvent* event )
-{
-    QLabel::paintEvent(event);
-
-    if ( pixmap() && m_gradient)
-    {
-        QLinearGradient g(QPoint(), pixmap()->rect().bottomLeft());
-        g.setColorAt( 0.0, QColor(0, 0, 0, 0.11*255));
-        g.setColorAt( 1.0, QColor(0, 0, 0, 0.88*255));
-
-        QPainter p(this);
-        p.setCompositionMode(QPainter::CompositionMode_Multiply);
-        p.fillRect(pixmap()->rect(), g);
-        p.end();
-    }
-}
 
 void
-HttpImageWidget::loadUrl( const QUrl& url, bool scale )
+HttpImageWidget::loadUrl( const QUrl& url, ScaleType scale )
 {
     m_scale = scale;
     connect( lastfm::nam()->get(QNetworkRequest(url)), SIGNAL(finished()), SLOT(onUrlLoaded()));
@@ -79,6 +48,8 @@ void HttpImageWidget::setHref( const QUrl& url )
 #else
     m_href = url;
 #endif
+
+    setToolTip( m_href.toString() );
 
     if( m_href.isValid()) {
         setCursor( Qt::PointingHandCursor );
@@ -115,13 +86,25 @@ void HttpImageWidget::onUrlLoaded()
         QPixmap px;
         if ( px.loadFromData(static_cast<QNetworkReply*>(sender())->readAll()) )
         {
-            if ( m_scale ) {
+            switch ( m_scale )
+            {
+            case ScaleAuto:
                 // Decide which way to scale based on the ratio of height to width
                 // of the image and the area that the image is going to be drawn to
                 if ( (px.height() * 1000) / px.width() > (height() * 1000) / width() )
-                    px = px.scaledToWidth( width(), Qt::SmoothTransformation );
+                    px = px.scaledToWidth( contentsRect().width(), Qt::SmoothTransformation );
                 else
-                    px = px.scaledToHeight( height(), Qt::SmoothTransformation );
+                    px = px.scaledToHeight( contentsRect().height(), Qt::SmoothTransformation );
+
+                break;
+            case ScaleNone:
+                break;
+            case ScaleWidth:
+                px = px.scaledToWidth( contentsRect().width(), Qt::SmoothTransformation );
+                break;
+            case ScaleHeight:
+                px = px.scaledToHeight( contentsRect().height(), Qt::SmoothTransformation );
+                break;
             }
 
             setPixmap( px );

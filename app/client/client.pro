@@ -31,52 +31,43 @@ linux* {
 SUBDIRS=PrefPane
 
 SOURCES += \
-    Wizard/LoginPage.cpp \
-    Wizard/BootstrapPage.cpp \
-    Widgets/TitleBar.cpp \
-    Widgets/TagFilterDialog.cpp \
-    Widgets/StatusBar.cpp \
-    Widgets/SideBar.cpp \
-    Widgets/SettingsWidget.cpp \
-    Widgets/ScrobbleSettingsWidget.cpp \
-    Widgets/ScrobbleControls.cpp \
-    Widgets/ProgressBar.cpp \
-    Widgets/QuickStartWidget.cpp \
-    Widgets/PointyArrow.cpp \
-    Widgets/PlaybackControlsWidget.cpp \
-    Widgets/PlayableItemWidget.cpp \
-    Widgets/NowPlayingWidget.cpp \
-    Widgets/KeyboardSettingsWidget.cpp \
-    Widgets/IpodSettingsWidget.cpp \
-    Widgets/IPodScrobbleInfoWidget.cpp \
-    Widgets/ActivityListWidget.cpp \
-    Widgets/RecentTracksWidget.cpp \
-    Widgets/AccountSettingsWidget.cpp \
+    AudioscrobblerSettings.cpp \
+    Application.cpp \
+    ActivityListModel.cpp \
+    ImageTrack.cpp \
     StationSearch.cpp \
     SkipListener.cpp \
-    Services/ScrobbleService/StopWatch.cpp \
-    Services/ScrobbleService/ScrobbleService.cpp \
-    Services/RadioService/RadioService.cpp \
     ScrobSocket.cpp \
-    ScrobblesModel.cpp \
     MediaDevices/MediaDevice.cpp \
     MediaDevices/IpodDevice.cpp \
     MediaDevices/DeviceScrobbler.cpp \
     MainWindow.cpp \
     main.cpp \
+    Settings/SettingsWidget.cpp \
+    Settings/ScrobbleSettingsWidget.cpp \
+    Settings/IpodSettingsWidget.cpp \
+    Settings/AccountSettingsWidget.cpp \
+    Settings/PreferencesDialog.cpp \
+    Settings/AdvancedSettingsWidget.cpp \
+    Settings/GeneralSettingsWidget.cpp \
+    Services/ScrobbleService/StopWatch.cpp \
+    Services/ScrobbleService/ScrobbleService.cpp \
+    Services/RadioService/RadioService.cpp \
+    Services/RadioService/RadioConnection.cpp \
     Dialogs/ScrobbleSetupDialog.cpp \
-    Dialogs/ScrobbleConfirmationDialog.cpp \
     Dialogs/DiagnosticsDialog.cpp \
     Bootstrapper/PluginBootstrapper.cpp \
     Bootstrapper/ITunesDevice/itunesdevice.cpp \
     Bootstrapper/iTunesBootstrapper.cpp \
     Bootstrapper/AbstractFileBootstrapper.cpp \
     Bootstrapper/AbstractBootstrapper.cpp \
-    AudioscrobblerSettings.cpp \
-    Application.cpp \
-    ActivityListModel.cpp \
+    Widgets/ActivityListWidget.cpp \
+    Widgets/RecentTracksWidget.cpp \
+    Widgets/TitleBar.cpp \
+    Widgets/TagFilterDialog.cpp \
+    Widgets/StatusBar.cpp \
+    Widgets/SideBar.cpp \
     Widgets/RadioWidget.cpp \
-    Services/RadioService/RadioConnection.cpp \
     Widgets/NothingPlayingWidget.cpp \
     Widgets/NowPlayingStackedWidget.cpp \
     Widgets/ProfileWidget.cpp \
@@ -87,11 +78,21 @@ SOURCES += \
     Widgets/TagWidget.cpp \
     Widgets/CheckableDelegate.cpp \
     Widgets/TrackDelegate.cpp \
-    ImageTrack.cpp \
+    Widgets/ShortcutEdit.cpp \
+    Widgets/ProfileArtistWidget.cpp \
+    Widgets/ScrobbleControls.cpp \
+    Widgets/ProgressBar.cpp \
+    Widgets/QuickStartWidget.cpp \
+    Widgets/PointyArrow.cpp \
+    Widgets/PlaybackControlsWidget.cpp \
+    Widgets/PlayableItemWidget.cpp \
+    Widgets/NowPlayingWidget.cpp \
     Widgets/ScrobblesWidget.cpp \
     Widgets/RefreshButton.cpp \
     Widgets/BackButton.cpp \
     Widgets/WidgetTextObject.cpp \
+    Wizard/LoginPage.cpp \
+    Wizard/BootstrapPage.cpp \
     Wizard/FirstRunWizard.cpp \
     Wizard/AccessPage.cpp \
     Wizard/TourMetadataPage.cpp \
@@ -102,33 +103,18 @@ SOURCES += \
     Wizard/BootstrapProgressPage.cpp \
     Wizard/TourScrobblesPage.cpp \
     Wizard/TourLocationPage.cpp \
-    Dialogs/PreferencesDialog.cpp
+    Wizard/WizardPage.cpp
 
 HEADERS += \
-    Wizard/LoginPage.h \
-    Wizard/FirstRunWizard.h \
-    Wizard/BootstrapPage.h \
-    Widgets/TitleBar.h \
-    Widgets/TagFilterDialog.h \
-    Widgets/StatusBar.h \
-    Widgets/SideBar.h \
-    Widgets/SettingsWidget.h \
-    Widgets/ScrobbleSettingsWidget.h \
-    Widgets/ScrobbleControls.h \
-    Widgets/ProgressBar.h \
-    Widgets/QuickStartWidget.h \
-    Widgets/PointyArrow.h \
-    Widgets/PlaybackControlsWidget.h \
-    Widgets/PlayableItemWidget.h \
-    Widgets/NowPlayingWidget.h \
-    Widgets/KeyboardSettingsWidget.h \
-    Widgets/IpodSettingsWidget.h \
-    Widgets/IPodScrobbleInfoWidget.h \
-    Widgets/ActivityListWidget.h \
-    Widgets/RecentTracksWidget.h \
-    Widgets/AccountSettingsWidget.h \
+    ScrobSocket.h \
+    ImageTrack.h \
+    AudioscrobblerSettings.h \
+    Application.h \
+    ActivityListModel.h \
+    MainWindow.h \
     StationSearch.h \
     SkipListener.h \
+    Services/RadioService/RadioConnection.h \
     Services/ScrobbleService.h \
     Services/ScrobbleService/StopWatch.h \
     Services/ScrobbleService/ScrobbleService.h \
@@ -136,14 +122,10 @@ HEADERS += \
     Services/RadioService/RadioService.h \
     Services/ITunesPluginInstaller.h \
     Services/ITunesPluginInstaller/ITunesPluginInstaller.h \
-    ScrobSocket.h \
-    ScrobblesModel.h \
     MediaDevices/MediaDevice.h \
     MediaDevices/IpodDevice.h \
     MediaDevices/DeviceScrobbler.h \
-    MainWindow.h \
     Dialogs/ScrobbleSetupDialog.h \
-    Dialogs/ScrobbleConfirmationDialog.h \
     Dialogs/DiagnosticsDialog.h \
     Bootstrapper/PluginBootstrapper.h \
     Bootstrapper/ITunesDevice/MediaDeviceInterface.h \
@@ -152,11 +134,28 @@ HEADERS += \
     Bootstrapper/iTunesBootstrapper.h \
     Bootstrapper/AbstractFileBootstrapper.h \
     Bootstrapper/AbstractBootstrapper.h \
-    AudioscrobblerSettings.h \
-    Application.h \
-    ActivityListModel.h \
+    Settings/SettingsWidget.h \
+    Settings/ScrobbleSettingsWidget.h \
+    Settings/PreferencesDialog.h \
+    Settings/AdvancedSettingsWidget.h \
+    Settings/GeneralSettingsWidget.h \
+    Settings/IpodSettingsWidget.h \
+    Settings/AccountSettingsWidget.h \
+    Widgets/ShortcutEdit.h \
+    Widgets/TitleBar.h \
+    Widgets/TagFilterDialog.h \
+    Widgets/StatusBar.h \
+    Widgets/SideBar.h \
+    Widgets/ScrobbleControls.h \
+    Widgets/ProgressBar.h \
+    Widgets/QuickStartWidget.h \
+    Widgets/PointyArrow.h \
+    Widgets/PlaybackControlsWidget.h \
+    Widgets/PlayableItemWidget.h \
+    Widgets/NowPlayingWidget.h \
+    Widgets/ActivityListWidget.h \
+    Widgets/RecentTracksWidget.h \
     Widgets/RadioWidget.h \
-    Services/RadioService/RadioConnection.h \
     Widgets/NothingPlayingWidget.h \
     Widgets/NowPlayingStackedWidget.h \
     Widgets/ProfileWidget.h \
@@ -167,7 +166,7 @@ HEADERS += \
     Widgets/TagWidget.h \
     Widgets/CheckableDelegate.h \
     Widgets/TrackDelegate.h \
-    ImageTrack.h \
+    Widgets/ProfileArtistWidget.h \
     Widgets/ScrobblesWidget.h \
     Widgets/RefreshButton.h \
     Widgets/BackButton.h \
@@ -181,7 +180,11 @@ HEADERS += \
     Wizard/BootstrapProgressPage.h \
     Wizard/TourScrobblesPage.h \
     Wizard/TourLocationPage.h \
-    Dialogs/PreferencesDialog.h
+    Wizard/LoginPage.h \
+    Wizard/FirstRunWizard.h \
+    Wizard/BootstrapPage.h \
+    Wizard/WizardPage.h
+
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
@@ -191,10 +194,45 @@ FORMS += \
     Dialogs/ScrobbleSetupDialog.ui \
     Dialogs/DiagnosticsDialog.ui \
     Widgets/MetadataWidget.ui \
-    Dialogs/PreferencesDialog.ui
+    Settings/PreferencesDialog.ui \
+    Settings/GeneralSettingsWidget.ui \
+    Settings/AccountSettingsWidget.ui \
+    Settings/IpodSettingsWidget.ui \
+    Settings/ScrobbleSettingsWidget.ui \
+    Settings/AdvancedSettingsWidget.ui \
+    Wizard/FirstRunWizard.ui
+
+linux*:HEADERS += MediaDevices/IpodDevice_linux.h
+linux*:SOURCES += MediaDevices/IpodDevice_linux.cpp
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

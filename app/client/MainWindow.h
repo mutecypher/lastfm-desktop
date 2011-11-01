@@ -9,7 +9,7 @@
 #include "lib/unicorn/UnicornMainWindow.h"
 #include "lib/unicorn/StylableWidget.h"
 
-#include "Dialogs/PreferencesDialog.h"
+#include "Settings/PreferencesDialog.h"
 
 using lastfm::XmlQuery;
 
@@ -49,7 +49,7 @@ class MainWindow : public unicorn::MainWindow
     } ui;
 
 public:
-    MainWindow();
+    MainWindow( QMenuBar* );
     const Track& currentTrack() const{ return m_currentTrack; }
 
     void addWinThumbBarButton( QAction* );
@@ -78,10 +78,10 @@ private slots:
     void onRadioError( int error, const QVariant& data );
 
     // iPod scrobbling things
-    void onIPodDetected( QString iPodName );
-    void onProcessingScrobbles( QString iPodName );
-    void onFoundScrobbles( const QList<lastfm::Track>& tracks, QString iPodName );
-    void onNoScrobblesFound( QString iPodName );
+    void onIPodDetected( const QString& iPodName );
+    void onProcessingScrobbles( const QString& iPodName );
+    void onFoundScrobbles( const QList<lastfm::Track>& tracks, const QString& iPodName );
+    void onNoScrobblesFound( const QString& iPodName );
 
 private:
     void setCurrentWidget( QWidget* );

@@ -69,6 +69,8 @@ public:
      */
     bool isDeviceKnown() const;
 
+    static lastfm::User associatedUser( const QString deviceId );
+
 signals:
     void deviceScrobblingStarted();
     void calculatingScrobbles( int trackCount );

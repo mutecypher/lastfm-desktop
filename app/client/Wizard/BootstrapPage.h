@@ -20,7 +20,7 @@
 #ifndef BOOTSTRAP_WIZARD_H
 #define BOOTSTRAP_WIZARD_H
 
-#include <QWizardPage>
+#include "WizardPage.h"
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QGroupBox>
@@ -31,7 +31,7 @@
 #include "lib/unicorn/Updater/PluginList.h"
 #include "../Application.h"
 
-class BootstrapPage: public QWizardPage
+class BootstrapPage: public WizardPage
 {
     Q_OBJECT
 
@@ -44,7 +44,7 @@ private:
     } ui;
 
 public:
-    BootstrapPage( QWidget* parent = 0 );
+    BootstrapPage();
 
     QString playerId() const { return m_playerId; }
     void setPlayerId( const QString& playerId ) { m_playerId = playerId; }

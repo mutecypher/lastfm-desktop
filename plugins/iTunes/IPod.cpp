@@ -51,6 +51,7 @@ IPod::twiddlyFlags() const
     ss << " --pid " << m_pid;
     ss << " --vid " << m_vid;
     ss << " --serial " << m_serial;
+    ss << " --name " << m_displayName;
     
     if( m_manualMode )
         ss << " --manual";

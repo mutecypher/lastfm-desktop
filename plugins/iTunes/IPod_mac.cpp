@@ -77,6 +77,8 @@ IPod::newFromUsbDevice( io_object_t device, deviceType type /* = unknown */ )
         return NULL;
     }
     
+    ipod->getDisplayName();
+    
     if( ipod->m_type == iTouch ||
         ipod->m_type == iPhone ||
         ipod->m_type == iPad)
@@ -417,6 +419,48 @@ IPod::queryIPhoneManual() const
 
     CFRelease( iTunesPrefsData );
     return (manualMode == 0);
+}
+
+void 
+IPod::getDisplayName()
+{
+    // fall back on the serial number if we can't find the display name
+    m_displayName = m_serial;
+    
+    CFStringRef displayName;
+    
+    CFMutableStringRef infoPlistPath = CFStringCreateMutable( kCFAllocatorDefault, 0 );
+    CFStringAppendCString( infoPlistPath, ::getenv( "HOME" ), kCFStringEncodingASCII );
+    CFStringAppendCString( infoPlistPath, "/Library/Application Support/MobileSync/Backup/", kCFStringEncodingASCII );
+    CFStringAppendCString( infoPlistPath, m_serial.c_str(), kCFStringEncodingASCII );
+    CFStringAppendCString( infoPlistPath, "/Info.plist", kCFStringEncodingASCII );
+    
+    CFDictionaryRef propertyList = createDictionaryFromXML( infoPlistPath );
+    CFRelease( infoPlistPath );
+    
+    if( propertyList == NULL )
+    {
+        LOG( 3, "Error: Could not read Info.plist file - presuming automatic sync enabled" );
+        return;
+    }
+    
+    displayName = (CFStringRef)CFDictionaryGetValue( propertyList, CFSTR( "Display Name" ) );
+        
+    if( displayName == NULL )
+    {
+        LOG( 3, "Error: Could not read Display Name data from Info.plist." );
+        return;
+    }
+    
+    CFIndex length = CFStringGetLength( displayName );
+    length = CFStringGetMaximumSizeForEncoding( length, kCFStringEncodingUTF8 );
+    char* buffer = new char[length];
+    CFStringGetCString( displayName, buffer, length, kCFStringEncodingUTF8 );
+    
+    m_displayName = buffer;
+    delete[] buffer;
+     
+    CFRelease( displayName );
 }
 
 

@@ -7,7 +7,9 @@ include( $$ROOT_DIR/admin/include.qmake )
 SOURCES += $$ROOT_DIR/common/c++/Logger.cpp \
     dialogs/ShareDialog.cpp \
     widgets/AvatarWidget.cpp \
-    layouts/FlowLayout.cpp
+    layouts/FlowLayout.cpp \
+    widgets/UserMenu.cpp \
+    widgets/SlidingStackedWidget.cpp
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 # UniqueApplication
@@ -44,6 +46,7 @@ SOURCES += \
 	UnicornCoreApplication.cpp \
 	UnicornApplication.cpp \
 	TrackImageFetcher.cpp \
+        ScrobblesModel.cpp \
 	qtwin.cpp \
 	qtsingleapplication/qtsinglecoreapplication.cpp \
 	qtsingleapplication/qtsingleapplication.cpp \
@@ -51,7 +54,7 @@ SOURCES += \
 	qtsingleapplication/qtlockedfile.cpp \
 	qtsingleapplication/qtlocalpeer.cpp \
 	QMessageBoxBuilder.cpp \
-    LoginProcess.cpp \
+        LoginProcess.cpp \
 	layouts/SlideOverLayout.cpp \
 	layouts/SideBySideLayout.cpp \
 	layouts/AnimatedListLayout.cpp \
@@ -61,6 +64,7 @@ SOURCES += \
 	dialogs/LoginDialog.cpp \
 	dialogs/LoginContinueDialog.cpp \
 	dialogs/AboutDialog.cpp \
+        dialogs/ScrobbleConfirmationDialog.cpp \
 	AnimatedStatusBar.cpp
 
 HEADERS += \
@@ -102,6 +106,7 @@ HEADERS += \
 	TrackImageFetcher.h \
 	StylableWidget.h \
 	SignalBlocker.h \
+        ScrobblesModel.h \
 	qtwin.h \
 	qtsingleapplication/qtsinglecoreapplication.h \
 	qtsingleapplication/qtsingleapplication.h \
@@ -121,11 +126,13 @@ HEADERS += \
 	dialogs/LoginDialog.h \
 	dialogs/LoginContinueDialog.h \
 	dialogs/AboutDialog.h \
+        dialogs/ScrobbleConfirmationDialog.h \
 	AnimatedStatusBar.h \
 	AnimatedPushButton.h \
     dialogs/ShareDialog.h \
     widgets/AvatarWidget.h \
-    layouts/FlowLayout.h
+    layouts/FlowLayout.h \
+    widgets/SlidingStackedWidget.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	
@@ -141,3 +148,6 @@ FORMS += \
 
 RESOURCES += \
 	qrc/unicorn.qrc
+
+
+

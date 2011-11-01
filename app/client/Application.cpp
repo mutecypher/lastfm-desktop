@@ -17,24 +17,26 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "Application.h"
-#include "lib/unicorn/QMessageBoxBuilder.h"
-#include "Services/RadioService.h"
-#include "Services/ScrobbleService.h"
-#include "lib/listener/PlayerConnection.h"
+
+#include <QRegExp>
+#include <QShortcut>
+#include <QFileDialog>
+#include <QDesktopServices>
+#include <QNetworkDiskCache>
+#include <QMenu>
+#include <QMenuBar>
 #include <QDebug>
 #include <QProcess>
 #include <QShortcut>
 #include <QTcpSocket>
+#include <QAction>
 
-#include "Widgets/PointyArrow.h"
+#include <lastfm/UrlBuilder.h>
+#include <lastfm/InternetConnectionMonitor.h>
+#include <lastfm/XmlQuery.h>
 
-#include "MainWindow.h"
-#include "../Widgets/ScrobbleControls.h"
-#include "SkipListener.h"
-#include "Widgets/MetadataWidget.h"
-
-
+#include "lib/listener/PlayerConnection.h"
+#include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/dialogs/AboutDialog.h"
 #include "lib/unicorn/dialogs/ShareDialog.h"
 #include "lib/unicorn/UnicornSession.h"
@@ -46,19 +48,17 @@
 #include <Growl.h>
 #endif
 
-#include "AudioscrobblerSettings.h"
+#include "MediaDevices/DeviceScrobbler.h"
+#include "Services/RadioService.h"
+#include "Services/ScrobbleService.h"
+#include "Widgets/PointyArrow.h"
+#include "Widgets/ScrobbleControls.h"
+#include "Widgets/MetadataWidget.h"
 #include "Wizard/FirstRunWizard.h"
-
-#include <lastfm/InternetConnectionMonitor.h>
-#include <lastfm/XmlQuery.h>
-
-#include <QRegExp>
-#include <QShortcut>
-#include <QFileDialog>
-#include <QDesktopServices>
-#include <QNetworkDiskCache>
-#include <QMenu>
-#include <QDebug>
+#include "Application.h"
+#include "MainWindow.h"
+#include "SkipListener.h"
+#include "AudioscrobblerSettings.h"
 
 #ifdef Q_OS_WIN32
 #include "windows.h"
@@ -82,13 +82,24 @@ using audioscrobbler::Application;
 Application::Application(int& argc, char** argv) 
     :unicorn::Application(argc, argv), m_raiseHotKeyId( (void*)-1 )
 {
-    setQuitOnLastWindowClosed( false );
+#ifdef Q_OS_MAC
+    FSRef outRef;
+    OSStatus err = FSPathMakeRef( reinterpret_cast<const UInt8*>( QCoreApplication::applicationDirPath().append( "/../.." ).toUtf8().data() ), &outRef, NULL );
+
+    if ( err == noErr )
+    {
+        OSStatus status = LSRegisterFSRef( &outRef, true );
+
+        if ( status == noErr )
+            qDebug() << "Registered the app with launch services!";
+    }
+#endif
 }
 
 void
-Application::initiateLogin() throw( StubbornUserException )
+Application::initiateLogin( bool forceWizard ) throw( StubbornUserException )
 {
-    if( !unicorn::Settings().value( "FirstRunWizardCompleted", false ).toBool() )
+    if( forceWizard || !unicorn::Settings().value( SETTING_FIRST_RUN_WIZARD_COMPLETED, false ).toBool() )
     {
         setWizardRunning( true );
 
@@ -129,33 +140,33 @@ Application::init()
     // Initialise the unicorn base class first!
     unicorn::Application::init();
 
-    initiateLogin();
-
     if ( !currentSession() )
     {
-        // there won't be a current session if one was created by the wizard
+        // there won't be a current session if one wasn't created by the wizard
 
         QMap<QString, QString> lastSession = unicorn::Session::lastSessionData();
         if ( lastSession.contains( "username" ) && lastSession.contains( "sessionKey" ) )
             changeSession( lastSession[ "username" ], lastSession[ "sessionKey" ] );
     }
 
-    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
-    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
-    lastfm::nam()->setCache( diskCache );
+    initiateLogin( !currentSession() );
+
+//    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
+//    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
+//    lastfm::nam()->setCache( diskCache );
+
+    m_menuBar = new QMenuBar( 0 );
 
 /// tray
     tray(); // this will initialise m_tray if it doesn't already exist
 
     /// tray menu
     QMenu* menu = new QMenu;
-    (menu->addMenu( new UserMenu()))->setText( "Users");
+    menu->addMenu( new UserMenu() )->setText( "Accounts" );
 
     m_show_window_action = menu->addAction( tr("Show Scrobbler"));
     m_show_window_action->setShortcut( Qt::CTRL + Qt::META + Qt::Key_S );
     menu->addSeparator();
-    m_artist_action = menu->addAction( "" );
-    m_title_action = menu->addAction(tr("Ready"));
 
     {
         m_love_action = menu->addAction( tr("Love") );
@@ -219,17 +230,12 @@ Application::init()
     menu->addSeparator();
 
     m_submit_scrobbles_toggle = menu->addAction( tr("Submit Scrobbles") );
+    m_submit_scrobbles_toggle->setCheckable( true );
+    bool scrobblingOn = unicorn::UserSettings().value( "scrobblingOn", true ).toBool();
+    m_submit_scrobbles_toggle->setChecked( scrobblingOn );
+    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
 
-    menu->addSeparator();
-    QMenu* helpMenu = menu->addMenu( tr( "Help" ) );
-
-    m_faq_action    = helpMenu->addAction( tr( "FAQ" ) );
-    m_forums_action = helpMenu->addAction( tr( "Forums" ) );
-    m_about_action  = helpMenu->addAction( tr( "About" ) );
-
-    connect( m_faq_action, SIGNAL( triggered() ), SLOT( onFaqTriggered() ) );
-    connect( m_forums_action, SIGNAL( triggered() ), SLOT( onForumsTriggered() ) );
-    connect( m_about_action, SIGNAL( triggered() ), SLOT( onAboutTriggered() ) );
+    connect( m_submit_scrobbles_toggle, SIGNAL(toggled(bool)), SLOT(onScrobbleToggled(bool)) );
 
     menu->addSeparator();
 
@@ -237,14 +243,12 @@ Application::init()
 
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
 
-    m_artist_action->setEnabled( false );
-    m_title_action->setEnabled( false );
-    m_submit_scrobbles_toggle->setCheckable( true );
-    m_submit_scrobbles_toggle->setChecked( true );
+
     m_tray->setContextMenu(menu);
 
+
 /// MainWindow
-    m_mw = new MainWindow;
+    m_mw = new MainWindow( m_menuBar );
     m_mw->addWinThumbBarButton( m_love_action );
     m_mw->addWinThumbBarButton( m_ban_action );
     m_mw->addWinThumbBarButton( m_play_action );
@@ -326,12 +330,24 @@ Application::tray()
         connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
 #endif
         m_tray->setIcon(trayIcon);
-        m_tray->show();
+        showAs( unicorn::Settings().value( SETTING_SHOW_AS, true ).toBool() );
         connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
     }
 
     return m_tray;
 }
+
+void
+Application::showAs( bool showAs )
+{
+    m_tray->setVisible( showAs  );
+#ifdef Q_OS_MAC
+    setQuitOnLastWindowClosed( false );
+#else
+    setQuitOnLastWindowClosed( !showAs );
+#endif
+}
+
 
 void
 Application::setRaiseHotKey( Qt::KeyboardModifiers mods, int key )
@@ -340,6 +356,20 @@ Application::setRaiseHotKey( Qt::KeyboardModifiers mods, int key )
         unInstallHotKey( m_raiseHotKeyId );
 
     m_raiseHotKeyId = installHotKey( mods, key, m_toggle_window_action, SLOT(trigger()));
+}
+
+void
+Application::startBootstrap( const QString& pluginId )
+{
+    if ( pluginId == "itw"
+         || pluginId == "osx" )
+        m_bootstrapper = new iTunesBootstrapper( this );
+    else
+        m_bootstrapper = new PluginBootstrapper( pluginId, this );
+
+    connect( m_bootstrapper, SIGNAL(done(int)), SIGNAL(bootstrapDone(int)) );
+    emit bootstrapStarted( pluginId );
+    m_bootstrapper->bootStrap();
 }
 
 void
@@ -369,20 +399,6 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
         m_tray->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
 #endif
     }
-
-    QFontMetrics fm( font() );
-    QString durationString = " [" + track.durationString() + "]";
-
-    int actionOffsets = fm.width( durationString );
-    int actionWidth = m_tray->contextMenu()->actionGeometry( m_artist_action ).width() - actionOffsets;
-
-    QString artistActionText = fm.elidedText( track.artist( lastfm::Track::Corrected ), Qt::ElideRight, actionWidth );
-    QString titleActionText = fm.elidedText( track.title( lastfm::Track::Corrected), Qt::ElideRight, actionWidth - fm.width( durationString ) );
-
-    m_artist_action->setText( artistActionText );
-    m_artist_action->setToolTip( track.artist( lastfm::Track::Corrected ) );
-    m_title_action->setText( titleActionText + durationString );
-    m_title_action->setToolTip( track.title( lastfm::Track::Corrected ) + " [" + track.durationString() + "]" );
 
     m_tray->setToolTip( track.toString() );
 
@@ -420,14 +436,8 @@ Application::onTrackSpooled( const Track& track )
 }
 
 void
-Application::onTrackPaused( bool paused )
+Application::onTrackPaused( bool )
 {
-    if( paused ) {
-        m_artist_action->setText( "" );
-        m_title_action->setText( tr( "Ready" ));
-    } else {
-        onTrackStarted( ScrobbleService::instance().currentTrack(), ScrobbleService::instance().currentTrack());
-    }
 }
 
 void 
@@ -457,13 +467,15 @@ Application::onVisitProfileTriggered()
 void
 Application::onFaqTriggered()
 {
-    QDesktopServices::openUrl( "http://" + tr( "www.last.fm" ) + "/help/faq/" );
+    QDesktopServices::openUrl( lastfm::UrlBuilder( "help" ).slash( "faq" ).url() );
 }
 
 void
 Application::onForumsTriggered()
 {
-    QDesktopServices::openUrl( "http://" + tr( "www.last.fm" ) + "/forum/34905/" );
+
+
+    QDesktopServices::openUrl( lastfm::UrlBuilder( "forum" ).slash( "34905" ).url() );
 }
 
 void
@@ -483,6 +495,14 @@ Application::changeLovedState(bool loved)
         track.love();
     else
         track.unlove();
+}
+
+void
+Application::onScrobbleToggled( bool scrobblingOn )
+{
+    unicorn::UserSettings().setValue( "scrobblingOn", scrobblingOn );
+    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
+    m_submit_scrobbles_toggle->setChecked( scrobblingOn );
 }
 
 void
@@ -548,6 +568,11 @@ Application::Argument Application::argument( const QString& arg )
     return ArgUnknown;
 }
 
+void
+Application::onPrefsTriggered()
+{
+    m_mw->onPrefsTriggered();
+}
     
 void
 Application::onMessageReceived( const QStringList& message )
@@ -575,7 +600,11 @@ Application::onMessageReceived( const QStringList& message )
         ScrobbleService::instance().handleIPodDetectedMessage( message );
     }
 
-    if ( !(message.contains( "--tray" ) || message.contains( "--settings" )))
+    if ( !( message.contains( "--tray" )
+           || message.contains( "--twiddly" )
+           || message.contains( "--new-ipod-detected" )
+           || message.contains( "--ipod-detected" )
+           || message.contains( "--settings" ) ) )
     {
         // raise the app
         m_show_window_action->trigger();

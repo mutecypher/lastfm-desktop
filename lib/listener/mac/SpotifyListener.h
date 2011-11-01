@@ -25,11 +25,12 @@
 
 #include <lastfm/Track.h>
 
-class SpotifyListener : public QObject
+class SpotifyListenerMac : public QObject
 {
     Q_OBJECT
 public:
-    SpotifyListener( QObject* parent );
+    SpotifyListenerMac( QObject* parent );
+    ~SpotifyListenerMac();
 
 signals:
     void newConnection( class PlayerConnection* );

@@ -1,19 +1,23 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QDesktopServices>
+#include <QAbstractButton>
+
+#include <lastfm/UrlBuilder.h>
 
 #include "../Application.h"
 
+#include "FirstRunWizard.h"
 #include "TourRadioPage.h"
 
-TourRadioPage::TourRadioPage( QWidget* w )
-               :QWizardPage( w )
+TourRadioPage::TourRadioPage()
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
+    layout->setSpacing( 20 );
 
-    layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignCenter );
+    layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignTop | Qt::AlignHCenter );
     ui.image->setObjectName( "image" );
     layout->addWidget( ui.description = new QLabel( "", this ), 0, Qt::AlignTop);
     ui.description->setObjectName( "description" );
@@ -35,20 +39,24 @@ TourRadioPage::initializePage()
         setTitle( tr( "Subscrobe and listen to non-stop, personalised radio." ) );
         ui.description->setText( "<p>Subscribe to Last.fm for just [3/$3/3 localised] a month and listen to radio using the Last.fm Desktop App.</p>"
                                  "<p>Every play of every Last.fm station is totally different, from stations based on aritsts and tags to brand new recommendations tailored to your music taste.</p>" );
-        wizard()->setOption( QWizard::HaveCustomButton2, true );
-        setButtonText( QWizard::CustomButton2, tr( "Subscribe" ) );
+
+        QAbstractButton* custom = wizard()->setButton( FirstRunWizard::CustomButton, tr( "Subscribe" ) );
+        connect( custom, SIGNAL(clicked()), SLOT(subscribe()));
     }
 
-    setButtonText( QWizard::NextButton, tr( "Continue" ) );
-    setButtonText( QWizard::BackButton, tr( "<< Back" ) );
-
-    wizard()->setOption( QWizard::HaveCustomButton1, true );
-    setButtonText( QWizard::CustomButton1, tr( "Skip Tour >>" ) );
+    wizard()->setButton( FirstRunWizard::NextButton, tr( "Continue" ) );
+    if ( wizard()->canGoBack() )
+        wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
+    wizard()->setButton( FirstRunWizard::SkipButton, tr( "Skip Tour >>" ) );
 }
 
 void
 TourRadioPage::cleanupPage()
 {
-    wizard()->setOption( QWizard::HaveCustomButton1, false );
-    wizard()->setOption( QWizard::HaveCustomButton2, false );
+}
+
+void
+TourRadioPage::subscribe()
+{
+    QDesktopServices::openUrl( lastfm::UrlBuilder( "subscribe" ).url() );
 }

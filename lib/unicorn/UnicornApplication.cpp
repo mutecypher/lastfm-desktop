@@ -233,11 +233,20 @@ void
 unicorn::Application::onUserGotInfo()
 {
     QNetworkReply* reply = (QNetworkReply*)sender();
-    lastfm::UserDetails userInfo( reply );
+    XmlQuery lfm;
 
-    const char* key = UserSettings::subscriptionKey();
-    Settings().setValue( key, userInfo.isSubscriber() );
-    emit gotUserInfo( userInfo );
+    if ( lfm.parse( reply->readAll() ) )
+    {
+        lastfm::User userInfo( lfm["user"] );
+
+        const char* key = UserSettings::subscriptionKey();
+        Settings().setValue( key, userInfo.isSubscriber() );
+        emit gotUserInfo( userInfo );
+    }
+    else
+    {
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
+    }
 }
 
 void
@@ -320,7 +329,7 @@ unicorn::Application::changeSession( Session* newSession, bool announce )
     lastfm::ws::Username = m_currentSession->userInfo().name();
     lastfm::ws::SessionKey = m_currentSession->sessionKey();
 
-    connect( lastfm::UserDetails::getInfo(), SIGNAL( finished() ), SLOT( onUserGotInfo() ) );
+    connect( lastfm::User::getInfo(), SIGNAL( finished() ), SLOT( onUserGotInfo() ) );
     
     if( announce )
         m_bus.announceSessionChange( currentSession() );
@@ -426,7 +435,7 @@ unicorn::Application::unInstallHotKey( void* id )
 {
 #ifdef __APPLE__
     UnregisterEventHotKey( (EventHotKeyRef)id );
-#else
+#elif defined WIN32
     UnregisterHotKey( NULL, (int)id );
 #endif
 }

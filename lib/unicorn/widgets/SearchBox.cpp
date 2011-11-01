@@ -82,9 +82,11 @@ SearchBox::onSearchFinished()
 {
     sender()->deleteLater();
     QString searchTerm;
-    try {
-        XmlQuery lfm;
-        lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() );
+
+    XmlQuery lfm;
+
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    {
 
         searchTerm = ((QDomElement)lfm["results"]).attribute("for");
         m_completer->setModel(
@@ -92,8 +94,6 @@ SearchBox::onSearchFinished()
                 handleSearchResponse(lfm)));
         m_completer->complete();
     } 
-    catch (...) {
-    }
 
     m_searching = false;
     // possibly a search pending:

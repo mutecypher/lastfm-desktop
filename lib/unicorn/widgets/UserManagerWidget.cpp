@@ -23,7 +23,7 @@
 #include <QTimer>
 #include <QVBoxLayout>
 
-using lastfm::UserDetails;
+using lastfm::User;
 UserRadioButton::UserRadioButton( const User& user )
                 :m_userName( user.name() )
 {
@@ -42,8 +42,8 @@ UserRadioButton::UserRadioButton( const User& user )
     
     installEventFilter( this );
     if( user.imageUrl( lastfm::Medium ).isEmpty()) {
-        QNetworkReply* reply = UserDetails::getInfo( user.name() );
-        connect( reply, SIGNAL(finished()), SLOT( onUserDetailsFetched()));
+        QNetworkReply* reply = User::getInfo( user.name() );
+        connect( reply, SIGNAL(finished()), SLOT( onUserFetched()));
     } else {
         QNetworkReply* reply = lastfm::nam()->get( QNetworkRequest( user.imageUrl(lastfm::Medium)));
         connect( reply, SIGNAL(finished()), SLOT( onImageLoaded()));
@@ -65,24 +65,32 @@ UserRadioButton::UserRadioButton( const User& user )
 }
 
 void 
-UserRadioButton::onUserDetailsFetched()
+UserRadioButton::onUserFetched()
 {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>( sender());
     Q_ASSERT( reply );
 
-    UserDetails user( reply );
+    XmlQuery lfm;
+    if ( lfm.parse( reply->readAll() ) )
+    {
+        User user( lfm["user"] );
 
-    m_name->setText( user.name());
-    if( !user.realName().isEmpty())
-        m_realName->setText( QString( " (%1)" ).arg(user.realName()));
-    
-    if( user == User())
-        m_loggedIn->setText( "(" + tr( "currently logged in" ) + ")" );
+        m_name->setText( user.name());
+        if( !user.realName().isEmpty())
+            m_realName->setText( QString( " (%1)" ).arg(user.realName()));
 
-    reply = lastfm::nam()->get( QNetworkRequest( user.imageUrl(lastfm::Medium)));
-    connect( reply, SIGNAL(finished()), SLOT( onImageLoaded()));
+        if( user == User())
+            m_loggedIn->setText( "(" + tr( "currently logged in" ) + ")" );
 
-    m_userName = user.name();
+        reply = lastfm::nam()->get( QNetworkRequest( user.imageUrl(lastfm::Medium)));
+        connect( reply, SIGNAL(finished()), SLOT( onImageLoaded()));
+
+        m_userName = user.name();
+    }
+    else
+    {
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
+    }
 }
 
 void 
@@ -132,7 +140,7 @@ UserRadioButton::removeMe()
 
     if ( us.userRoster().count() == 0 )
     {
-        us.setValue( "FirstRunWizardCompleted", false );
+        us.setValue( SETTING_FIRST_RUN_WIZARD_COMPLETED, false );
         qApp->closeAllWindows();
         qobject_cast<unicorn::Application*>( qApp )->restart();
     }
@@ -166,25 +174,24 @@ UserManagerWidget::UserManagerWidget( QWidget* parent )
 
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setSpacing( 10 );
-    layout->addWidget( new QLabel( tr( "Users authenticated with this application" )));
 
     layout->addWidget( ui.groupBox = new QGroupBox() );
 
     ui.usersLayout = new QVBoxLayout( ui.groupBox );
 
-    ui.groupBox->setTitle( tr( "Log me in as:" ));
-
-    ui.usersLayout->addStretch( 1 );
-    ui.groupBox->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
+    ui.groupBox->setTitle( tr( "Connected User Accounts:" ));
+    ui.groupBox->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
 
     QHBoxLayout* buttonLayout = new QHBoxLayout();
 
-    ui.addUserButton = new QPushButton( tr( "Add new user" ), this );
+    ui.addUserButton = new QPushButton( tr( "Add New User Account" ), this );
 
     buttonLayout->addWidget( ui.addUserButton );
     buttonLayout->addStretch( 1 );
 
-    ui.usersLayout->addLayout( buttonLayout );
+    layout->addLayout( buttonLayout );
+
+    layout->addStretch();
 
     QList<lastfm::User> roster = unicorn::Settings().userRoster();
 

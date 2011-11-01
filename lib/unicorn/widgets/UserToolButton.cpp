@@ -24,7 +24,10 @@
 #include <QToolButton>
 #include <QPainter>
 #include <lastfm/User.h>
-#include "lib/unicorn/widgets/UserMenu.h"
+
+#include "UserMenu.h"
+
+#include "../UnicornSettings.h"
 
 using namespace lastfm;
 
@@ -41,7 +44,7 @@ UserToolButton::UserToolButton()
 
     connect( this, SIGNAL( toggled( bool )), window(), SLOT( toggleProfile( bool )));
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session, unicorn::Session )), SLOT( onSessionChanged()));
-    connect( qApp, SIGNAL( gotUserInfo( lastfm::UserDetails )), SLOT( onUserGotInfo( lastfm::UserDetails )));
+    connect( qApp, SIGNAL( gotUserInfo( lastfm::User )), SLOT( onUserGotInfo( lastfm::User )));
     connect( qApp, SIGNAL( rosterUpdated()), SLOT( onRosterUpdated()));
 }
 
@@ -52,7 +55,7 @@ UserToolButton::onSessionChanged()
 }
 
 void 
-UserToolButton::onUserGotInfo( const UserDetails& user )
+UserToolButton::onUserGotInfo( const User& user )
 {
     connect( lastfm::nam()->get(QNetworkRequest( user.imageUrl( lastfm::Medium))), SIGNAL( finished()),
                                                                           SLOT( onImageDownloaded()));
