@@ -1,15 +1,9 @@
 TARGET = unicorn
 TEMPLATE = lib
-CONFIG += dll
-CONFIG += lastfm
+CONFIG += dll lastfm sparkle
 QT = core gui xml network
 include( $$ROOT_DIR/admin/include.qmake )
-SOURCES += $$ROOT_DIR/common/c++/Logger.cpp \
-    dialogs/ShareDialog.cpp \
-    widgets/AvatarWidget.cpp \
-    layouts/FlowLayout.cpp \
-    widgets/UserMenu.cpp \
-    widgets/SlidingStackedWidget.cpp
+
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 # UniqueApplication
@@ -18,6 +12,13 @@ win32:LIBS += user32.lib shell32.lib ole32.lib
 macx:LIBS += -framework Cocoa
 
 SOURCES += \
+    $$ROOT_DIR/common/c++/Logger.cpp \
+    dialogs/ShareDialog.cpp \
+    widgets/AvatarWidget.cpp \
+    layouts/FlowLayout.cpp \
+    widgets/UserMenu.cpp \
+    widgets/SlidingStackedWidget.cpp \
+    Updater/Updater.mm
 	widgets/UserToolButton.cpp \
 	widgets/UserManagerWidget.cpp \
 	widgets/UnicornTabWidget.cpp \
@@ -132,7 +133,8 @@ HEADERS += \
     dialogs/ShareDialog.h \
     widgets/AvatarWidget.h \
     layouts/FlowLayout.h \
-    widgets/SlidingStackedWidget.h
+    widgets/SlidingStackedWidget.h \
+    Updater/Updater.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	
@@ -148,6 +150,10 @@ FORMS += \
 
 RESOURCES += \
 	qrc/unicorn.qrc
+
+
+
+
 
 
 
