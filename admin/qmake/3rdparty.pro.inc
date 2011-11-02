@@ -51,6 +51,12 @@ CONFIG( samplerate ) {
     }
 }
 
+CONFIG( sparkle ) {
+    mac{
+        LIBS += -framework Sparkle
+    }
+}
+
 CONFIG( sqlite3 ) {
     win32 {
         CONFIG += link_pkgconfig
