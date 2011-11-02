@@ -3,7 +3,7 @@ TARGET = "Last.fm"
 VERSION = 2.0.0
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql phonon
-CONFIG += lastfm unicorn listener growl
+CONFIG += lastfm unicorn listener
 win32:LIBS += user32.lib
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 

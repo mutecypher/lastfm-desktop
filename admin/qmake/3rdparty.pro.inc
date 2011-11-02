@@ -40,6 +40,12 @@ CONFIG( fftw3f ) {
     }
 }
 
+CONFIG( growl ) {
+    mac {
+        LIBS += -framework Growl
+    }
+}
+
 CONFIG( samplerate ) {
     win32{
 		LIBS += -L$$COMMON_LIBS_DIR/libsamplerate -lsamplerate
@@ -69,12 +75,5 @@ CONFIG( yajl ) {
                 LIBS += /usr/local/lib/libyajl_s.a
 	}
 	else:LIBS += -lyajl
-}
-
-CONFIG( growl ) {
-    mac {
-        QMAKE_CXXFLAGS += -F/Library/Frameworks/
-        LIBS += -framework Growl
-    }
 }
 
