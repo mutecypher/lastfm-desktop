@@ -45,7 +45,7 @@
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "lib/unicorn/Updater/PluginList.h"
 #ifdef Q_OS_MAC
-#include "lib/unicorn/mac/AppleScript.h"
+#include "lib/unicorn/notify/Notify.h"
 #endif
 
 #include "MediaDevices/DeviceScrobbler.h"
@@ -306,6 +306,11 @@ Application::init()
 
     emit messageReceived( arguments() );
 
+#ifdef Q_OS_MAC
+    m_notify = new Notify( this );
+    connect( m_notify, SIGNAL(clicked()), SLOT(showWindow()) );
+#endif
+
 #ifdef CLIENT_ROOM_RADIO
     new SkipListener( this );
 #endif
@@ -392,18 +397,10 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
     if ( track != m_currentTrack )
     {
         m_currentTrack = track;
-
 #ifdef Q_OS_MAC
-        AppleScript script( QString( "tell application \"GrowlHelperApp\"\r\n"
-                            "set the allNotificationsList to {\"New track\"}\r\n"
-                            "set the enabledNotificationsList to {\"New track\"}\r\n"
-                            "register as application \"Last.fm\" all notifications allNotificationsList default notifications enabledNotificationsList icon of application \"Last.fm.app\"\r\n"
-                            "notify with name \"New track\" title \"%1\" description \"%2\" application name \"Last.fm\" identifier \"Last.fm.app\"\r\n"
-                            "end tell\r\n" ).arg( track.toString(), tr("from %1").arg( track.album() ) ) );
-
-        script.exec();
+        m_notify->newTrack( track );
 #else
-        m_tray->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
+        tray()->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
 #endif
     }
 

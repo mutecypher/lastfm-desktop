@@ -37,9 +37,9 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget* parent)
     vl->setSpacing( 0 );
     layout->addLayout( vl, 1 );
 
-    vl->addWidget( ui.name = new QLabel( "", this) );
+    vl->addWidget( ui.name = new Label( "", this) );
     ui.name->setObjectName( "name" );
-    vl->addWidget( ui.lastTrack = new QLabel( "", this) );
+    vl->addWidget( ui.lastTrack = new Label( "", this) );
     ui.lastTrack->setObjectName( "lastTrack" );
     setDetails();
 

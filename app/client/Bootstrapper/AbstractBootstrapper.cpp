@@ -110,8 +110,7 @@ AbstractBootstrapper::sendZip( const QString& inFile )
 
     bytes.append( "\r\n" );
     bytes.append( "--AaB03x--" );
-    request.setHeader( QNetworkRequest::ContentLengthHeader, 
-                       bytes.length() );
+    request.setHeader( QNetworkRequest::ContentLengthHeader, bytes.length() );
 
     qDebug() << "Sending " << path;
 

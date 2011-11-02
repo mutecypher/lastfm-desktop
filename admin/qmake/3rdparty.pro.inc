@@ -40,6 +40,12 @@ CONFIG( fftw3f ) {
     }
 }
 
+CONFIG( growl ) {
+    mac {
+        LIBS += -framework Growl
+    }
+}
+
 CONFIG( samplerate ) {
     win32{
 		LIBS += -L$$COMMON_LIBS_DIR/libsamplerate -lsamplerate
@@ -49,6 +55,17 @@ CONFIG( samplerate ) {
         CONFIG += link_pkgconfig
         PKGCONFIG += samplerate
     }
+}
+
+CONFIG( sparkle ) {
+    win32{
+        LIBS += -L$$COMMON_LIBS_DIR/WinSparkle -lWinSparkle
+    }
+    else:mac{
+        LIBS += -framework Sparkle
+    }
+    CONFIG += link_pkgconfig
+    PKGCONFIG += sparkle
 }
 
 CONFIG( sqlite3 ) {
@@ -70,3 +87,4 @@ CONFIG( yajl ) {
 	}
 	else:LIBS += -lyajl
 }
+

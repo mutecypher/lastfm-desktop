@@ -16,8 +16,8 @@ private:
     struct
     {
         class AvatarWidget* avatar;
-        class QLabel* name;
-        class QLabel* lastTrack;
+        class Label* name;
+        class Label* lastTrack;
         class PlayableItemWidget* radio;
         class PlayableItemWidget* multiRadio;
     } ui;
