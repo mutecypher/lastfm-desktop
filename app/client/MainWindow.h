@@ -11,6 +11,9 @@
 
 #include "Settings/PreferencesDialog.h"
 
+namespace unicorn { class Updater; }
+using unicorn::Updater;
+
 using lastfm::XmlQuery;
 
 class QAbstractButton;
@@ -77,6 +80,8 @@ private slots:
 
     void onRadioError( int error, const QVariant& data );
 
+    void checkForUpdates();
+
     // iPod scrobbling things
     void onIPodDetected( const QString& iPodName );
     void onProcessingScrobbles( const QString& iPodName );
@@ -97,6 +102,7 @@ private:
     QList<QAction*> m_buttons;
 
     QPointer<PreferencesDialog> m_preferences;
+    QPointer<Updater> m_updater;
 };
 
 #endif //METADATA_WINDOW_H_

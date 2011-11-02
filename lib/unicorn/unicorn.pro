@@ -3,7 +3,10 @@ TEMPLATE = lib
 CONFIG += dll lastfm sparkle
 QT = core gui xml network
 include( $$ROOT_DIR/admin/include.qmake )
+<<<<<<< HEAD
 
+=======
+>>>>>>> a064a1c9ca88ed0d49b340a7c4dd2e2c615cd9ce
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 # UniqueApplication
@@ -12,6 +15,7 @@ win32:LIBS += user32.lib shell32.lib ole32.lib
 macx:LIBS += -framework Cocoa
 
 SOURCES += \
+<<<<<<< HEAD
     $$ROOT_DIR/common/c++/Logger.cpp \
     dialogs/ShareDialog.cpp \
     widgets/AvatarWidget.cpp \
@@ -19,6 +23,14 @@ SOURCES += \
     widgets/UserMenu.cpp \
     widgets/SlidingStackedWidget.cpp \
     Updater/Updater.mm
+=======
+        $$ROOT_DIR/common/c++/Logger.cpp \
+        dialogs/ShareDialog.cpp \
+        widgets/AvatarWidget.cpp \
+        layouts/FlowLayout.cpp \
+        widgets/UserMenu.cpp \
+        widgets/SlidingStackedWidget.cpp \
+>>>>>>> a064a1c9ca88ed0d49b340a7c4dd2e2c615cd9ce
 	widgets/UserToolButton.cpp \
 	widgets/UserManagerWidget.cpp \
 	widgets/UnicornTabWidget.cpp \
@@ -66,7 +78,8 @@ SOURCES += \
 	dialogs/LoginContinueDialog.cpp \
 	dialogs/AboutDialog.cpp \
         dialogs/ScrobbleConfirmationDialog.cpp \
-	AnimatedStatusBar.cpp
+	AnimatedStatusBar.cpp \
+    Updater/Updater.mm
 
 HEADERS += \
 	widgets/UserToolButton.h \
@@ -157,3 +170,8 @@ RESOURCES += \
 
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> a064a1c9ca88ed0d49b340a7c4dd2e2c615cd9ce

@@ -58,6 +58,7 @@
 #include "lib/unicorn/layouts/SlideOverLayout.h"
 #include "lib/unicorn/widgets/SlidingStackedWidget.h"
 #include "lib/listener/PlayerConnection.h"
+#include "lib/unicorn/Updater/Updater.h"
 
 #ifdef Q_OS_MAC
 void qt_mac_set_dock_menu(QMenu *menu);
@@ -160,6 +161,8 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     setupMenuBar();
     m_menuBar->show();
 
+    m_updater = new Updater( this );
+
 #ifdef Q_OS_MAC
     QMenu* dockMenu = new QMenu( this );
     ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *dockMenu  );
@@ -239,6 +242,12 @@ MainWindow::onPrefsTriggered()
     m_preferences->show();
 }
 
+
+void
+MainWindow::checkForUpdates()
+{
+    m_updater->checkForUpdates();
+}
 
 void
 MainWindow::onTuningIn()

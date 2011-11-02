@@ -52,7 +52,7 @@ CONFIG( samplerate ) {
 }
 
 CONFIG( sparkle ) {
-    mac {
+    mac{
         LIBS += -framework Sparkle
     }
 }

@@ -3,18 +3,23 @@
 
 #include <QObject>
 
+#include "lib/DllExportMacro.h"
+
 namespace unicorn
 {
 
-class Updater : public QObject
+class UNICORN_DLLEXPORT Updater : public QObject
 {
     Q_OBJECT
 public:
-    explicit Updater( QObject* parent = 0 );
+    explicit Updater(QObject *parent = 0);
 
 signals:
 
 public slots:
+    void checkForUpdates();
+
+private:
 
 };
 
