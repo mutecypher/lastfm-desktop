@@ -4,8 +4,6 @@ include( qmake/QtOverride.pro.inc )
 include( qmake/3rdparty.pro.inc )
 include( qmake/1stparty.pro.inc )
 
-CONFIG+=silent
-
 linux*{
 	CONFIG += link_pkgconfig
 	# use KDE phonon if installed in preference

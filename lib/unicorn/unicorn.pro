@@ -17,8 +17,6 @@ SOURCES += \
     layouts/FlowLayout.cpp \
     widgets/UserMenu.cpp \
     widgets/SlidingStackedWidget.cpp \
-    Updater/Updater.mm \
-    notify/Notify.mm \
     widgets/UserToolButton.cpp \
     widgets/UserManagerWidget.cpp \
     widgets/UnicornTabWidget.cpp \
@@ -134,16 +132,19 @@ HEADERS += \
     widgets/AvatarWidget.h \
     layouts/FlowLayout.h \
     widgets/SlidingStackedWidget.h \
-    Updater/Updater.h \
-    notify/Notify.h
+    Updater/Updater.h
 	
-win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
+win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp \
+               Updater/Updater.cpp
 	
 
-mac:SOURCES += mac/AppleScript.cpp \
-               UnicornApplication_mac.mm
+macx:SOURCES += mac/AppleScript.cpp \
+               UnicornApplication_mac.mm \
+               Updater/Updater.mm \
+               notify/Notify.mm
 
-mac:HEADERS += mac/AppleScript.h
+macx:HEADERS += mac/AppleScript.h \
+                notify/Notify.h
 
 FORMS += \
 	dialogs/ShareDialog.ui \

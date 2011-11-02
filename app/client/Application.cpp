@@ -44,7 +44,9 @@
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "lib/unicorn/Updater/PluginList.h"
+#ifdef Q_OS_MAC
 #include "lib/unicorn/notify/Notify.h"
+#endif
 
 #include "MediaDevices/DeviceScrobbler.h"
 #include "Services/RadioService.h"
@@ -283,7 +285,6 @@ Application::init()
     connect( m_mw, SIGNAL(trackGotTags(XmlQuery)), SIGNAL(trackGotTags(XmlQuery)));
     connect( m_mw, SIGNAL(finished()), SIGNAL(finished()));
 
-
     connect( m_mw, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
 
     connect( m_show_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
@@ -305,9 +306,10 @@ Application::init()
 
     emit messageReceived( arguments() );
 
+#ifdef Q_OS_MAC
     m_notify = new Notify( this );
-
     connect( m_notify, SIGNAL(clicked()), SLOT(showWindow()) );
+#endif
 
 #ifdef CLIENT_ROOM_RADIO
     new SkipListener( this );
@@ -395,8 +397,11 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
     if ( track != m_currentTrack )
     {
         m_currentTrack = track;
-
+#ifdef Q_OS_MAC
         m_notify->newTrack( track );
+#else
+        tray()->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
+#endif
     }
 
     m_tray->setToolTip( track.toString() );

@@ -45,7 +45,6 @@ unicorn::Notify::newTrack( const lastfm::Track& track )
     QString title = track.toString();
     QString description = tr("from %1").arg( track.album() );
 
-#ifdef Q_OS_MAC
     NSString* nsTitle = [NSString stringWithCharacters:(const unichar *)title.unicode() length:(NSUInteger)title.length() ];
     NSString* nsDescription = [NSString stringWithCharacters:(const unichar *)description.unicode() length:(NSUInteger)description.length() ];
 
@@ -58,9 +57,6 @@ unicorn::Notify::newTrack( const lastfm::Track& track )
                                 isSticky:(BOOL)NO
                                 clickContext:(id)@"context"];
 
-#else
-    m_tray->showMessage( title, description );
-#endif
 }
 
 void

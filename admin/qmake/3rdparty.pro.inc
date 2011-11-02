@@ -58,9 +58,14 @@ CONFIG( samplerate ) {
 }
 
 CONFIG( sparkle ) {
-    mac{
+    win32{
+        LIBS += -L$$COMMON_LIBS_DIR/WinSparkle -lWinSparkle
+    }
+    else:mac{
         LIBS += -framework Sparkle
     }
+    CONFIG += link_pkgconfig
+    PKGCONFIG += sparkle
 }
 
 CONFIG( sqlite3 ) {

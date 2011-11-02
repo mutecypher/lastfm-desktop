@@ -17,3 +17,8 @@ unicorn::Updater::checkForUpdates()
 {
     [[SUUpdater sharedUpdater] checkForUpdates:0];
 }
+
+unicorn::Updater::~Updater()
+{
+    // do nothing - included here for header compatibility with windows version
+}
