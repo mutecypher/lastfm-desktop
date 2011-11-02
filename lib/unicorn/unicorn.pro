@@ -3,10 +3,6 @@ TEMPLATE = lib
 CONFIG += dll lastfm sparkle
 QT = core gui xml network
 include( $$ROOT_DIR/admin/include.qmake )
-<<<<<<< HEAD
-
-=======
->>>>>>> a064a1c9ca88ed0d49b340a7c4dd2e2c615cd9ce
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 # UniqueApplication
@@ -15,22 +11,13 @@ win32:LIBS += user32.lib shell32.lib ole32.lib
 macx:LIBS += -framework Cocoa
 
 SOURCES += \
-<<<<<<< HEAD
     $$ROOT_DIR/common/c++/Logger.cpp \
     dialogs/ShareDialog.cpp \
     widgets/AvatarWidget.cpp \
     layouts/FlowLayout.cpp \
     widgets/UserMenu.cpp \
     widgets/SlidingStackedWidget.cpp \
-    Updater/Updater.mm
-=======
-        $$ROOT_DIR/common/c++/Logger.cpp \
-        dialogs/ShareDialog.cpp \
-        widgets/AvatarWidget.cpp \
-        layouts/FlowLayout.cpp \
-        widgets/UserMenu.cpp \
-        widgets/SlidingStackedWidget.cpp \
->>>>>>> a064a1c9ca88ed0d49b340a7c4dd2e2c615cd9ce
+    Updater/Updater.mm \
 	widgets/UserToolButton.cpp \
 	widgets/UserManagerWidget.cpp \
 	widgets/UnicornTabWidget.cpp \
@@ -59,7 +46,7 @@ SOURCES += \
 	UnicornCoreApplication.cpp \
 	UnicornApplication.cpp \
 	TrackImageFetcher.cpp \
-        ScrobblesModel.cpp \
+    ScrobblesModel.cpp \
 	qtwin.cpp \
 	qtsingleapplication/qtsinglecoreapplication.cpp \
 	qtsingleapplication/qtsingleapplication.cpp \
@@ -67,7 +54,7 @@ SOURCES += \
 	qtsingleapplication/qtlockedfile.cpp \
 	qtsingleapplication/qtlocalpeer.cpp \
 	QMessageBoxBuilder.cpp \
-        LoginProcess.cpp \
+    LoginProcess.cpp \
 	layouts/SlideOverLayout.cpp \
 	layouts/SideBySideLayout.cpp \
 	layouts/AnimatedListLayout.cpp \
@@ -77,7 +64,7 @@ SOURCES += \
 	dialogs/LoginDialog.cpp \
 	dialogs/LoginContinueDialog.cpp \
 	dialogs/AboutDialog.cpp \
-        dialogs/ScrobbleConfirmationDialog.cpp \
+    dialogs/ScrobbleConfirmationDialog.cpp \
 	AnimatedStatusBar.cpp \
     Updater/Updater.mm
 
@@ -120,7 +107,7 @@ HEADERS += \
 	TrackImageFetcher.h \
 	StylableWidget.h \
 	SignalBlocker.h \
-        ScrobblesModel.h \
+    ScrobblesModel.h \
 	qtwin.h \
 	qtsingleapplication/qtsinglecoreapplication.h \
 	qtsingleapplication/qtsingleapplication.h \
@@ -140,7 +127,7 @@ HEADERS += \
 	dialogs/LoginDialog.h \
 	dialogs/LoginContinueDialog.h \
 	dialogs/AboutDialog.h \
-        dialogs/ScrobbleConfirmationDialog.h \
+    dialogs/ScrobbleConfirmationDialog.h \
 	AnimatedStatusBar.h \
 	AnimatedPushButton.h \
     dialogs/ShareDialog.h \
@@ -164,14 +151,3 @@ FORMS += \
 RESOURCES += \
 	qrc/unicorn.qrc
 
-
-
-
-
-
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> a064a1c9ca88ed0d49b340a7c4dd2e2c615cd9ce
