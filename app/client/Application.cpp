@@ -44,9 +44,7 @@
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "lib/unicorn/Updater/PluginList.h"
-#ifdef Q_OS_MAC
-#include "lib/unicorn/mac/AppleScript.h"
-#endif
+#include "lib/unicorn/notify/Notify.h"
 
 #include "MediaDevices/DeviceScrobbler.h"
 #include "Services/RadioService.h"
@@ -285,6 +283,7 @@ Application::init()
     connect( m_mw, SIGNAL(trackGotTags(XmlQuery)), SIGNAL(trackGotTags(XmlQuery)));
     connect( m_mw, SIGNAL(finished()), SIGNAL(finished()));
 
+
     connect( m_mw, SIGNAL(trackGotInfo(XmlQuery)), this, SLOT(onTrackGotInfo(XmlQuery)));
 
     connect( m_show_window_action, SIGNAL( triggered()), SLOT( showWindow()), Qt::QueuedConnection );
@@ -305,6 +304,10 @@ Application::init()
     connect( m_icm, SIGNAL(up(QString)), &ScrobbleService::instance(), SLOT(submitCache()) );
 
     emit messageReceived( arguments() );
+
+    m_notify = new Notify( this );
+
+    connect( m_notify, SIGNAL(clicked()), SLOT(showWindow()) );
 
 #ifdef CLIENT_ROOM_RADIO
     new SkipListener( this );
@@ -393,18 +396,7 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
     {
         m_currentTrack = track;
 
-#ifdef Q_OS_MAC
-        AppleScript script( QString( "tell application \"GrowlHelperApp\"\r\n"
-                            "set the allNotificationsList to {\"New track\"}\r\n"
-                            "set the enabledNotificationsList to {\"New track\"}\r\n"
-                            "register as application \"Last.fm\" all notifications allNotificationsList default notifications enabledNotificationsList icon of application \"Last.fm.app\"\r\n"
-                            "notify with name \"New track\" title \"%1\" description \"%2\" application name \"Last.fm\" identifier \"Last.fm.app\"\r\n"
-                            "end tell\r\n" ).arg( track.toString(), tr("from %1").arg( track.album() ) ) );
-
-        script.exec();
-#else
-        m_tray->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
-#endif
+        m_notify->newTrack( track );
     }
 
     m_tray->setToolTip( track.toString() );

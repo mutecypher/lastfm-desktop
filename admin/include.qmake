@@ -28,11 +28,14 @@ macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
         }
     }
 
+	## copy the public key for updates
 	QMAKE_POST_LINK += echo Copying dsa_pub.pem file..; cp \"$$ROOT_DIR/admin/dist/mac/dsa_pub.pem\" \"$$BUNDLE_DIR/Contents/Resources\";
+    
+	## copy the growl registration file
+    QMAKE_POST_LINK += echo Copying growl registration file..; cp \"$$ROOT_DIR/admin/dist/mac/Growl Registration Ticket.growlRegDict\" \"$$BUNDLE_DIR/Contents/Resources\";
 
     ## install_name_tool / copy frameworks, dylibs etc
     QMAKE_POST_LINK += $$DISTDIR/bundleFrameworks.sh \'$$BUNDLE_DIR\';
-
 
     QMAKE_POST_LINK += find \'$$BUNDLE_DIR\' -iname \\*Headers -print0| xargs -0 rm -rf; find \'$$BUNDLE_DIR\' -iname \\*_debug -print0|xargs -0 rm
     

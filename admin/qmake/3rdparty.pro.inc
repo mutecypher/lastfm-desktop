@@ -40,6 +40,12 @@ CONFIG( fftw3f ) {
     }
 }
 
+CONFIG( growl ) {
+    mac {
+        LIBS += -framework Growl
+    }
+}
+
 CONFIG( samplerate ) {
     win32{
 		LIBS += -L$$COMMON_LIBS_DIR/libsamplerate -lsamplerate
@@ -76,3 +82,4 @@ CONFIG( yajl ) {
 	}
 	else:LIBS += -lyajl
 }
+

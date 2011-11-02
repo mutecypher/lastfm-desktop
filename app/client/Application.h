@@ -41,6 +41,9 @@ class ScrobbleInfoFetcher;
 class Drawer;
 class QMenuBar;
 
+namespace unicorn { class Notify; }
+using unicorn::Notify;
+
 #ifdef Q_WS_X11
     class IpodDeviceLinux;
 #endif
@@ -76,6 +79,7 @@ namespace audioscrobbler
         QPointer<QSystemTrayIcon> m_tray;
         QPointer<MainWindow> m_mw;
         QPointer<QMenuBar> m_menuBar;
+        QPointer<Notify> m_notify;
 
         QPointer<AbstractBootstrapper> m_bootstrapper;
 

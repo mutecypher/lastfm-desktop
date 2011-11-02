@@ -1,6 +1,6 @@
 TARGET = unicorn
 TEMPLATE = lib
-CONFIG += dll lastfm sparkle
+CONFIG += dll lastfm sparkle growl
 QT = core gui xml network
 include( $$ROOT_DIR/admin/include.qmake )
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
@@ -18,6 +18,7 @@ SOURCES += \
     widgets/UserMenu.cpp \
     widgets/SlidingStackedWidget.cpp \
     Updater/Updater.mm \
+    notify/Notify.mm \
     widgets/UserToolButton.cpp \
     widgets/UserManagerWidget.cpp \
     widgets/UnicornTabWidget.cpp \
@@ -134,6 +135,7 @@ HEADERS += \
     layouts/FlowLayout.h \
     widgets/SlidingStackedWidget.h \
     Updater/Updater.h
+    notify/Notify.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	
