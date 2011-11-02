@@ -11,8 +11,20 @@
 	<key>CFBundleIdentifier</key>
 	<string>fm.last.@EXECUTABLE@</string>
 	<key>CFBundleVersion</key>
-	<string>@VERSION@</string>
+	<string>2.0.0</string>
 	<key>SUFeedURL</key>
-	<string>http://mobbler.co.uk/updates.xml</string>
+	<string>http://users.last.fm/~michael/updates.xml</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUEnableSystemProfiling</key>
+	<false/>
+	<key>SUShowReleaseNotes</key>
+	<false/>
+	<key>SUScheduledCheckInterval</key>
+	<integer>3600</integer>
+	<key>SUAllowsAutomaticUpdates</key>
+	<false/>
+	<key>SUPublicDSAKeyFile</key>
+	<string>dsa_pub.pem</string>
 </dict>
 </plist>

@@ -4,18 +4,16 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/NSNibDeclarations.h>
 
-#include <Sparkle/SUUpdater.h>
-
-SUUpdateDriver* g_updater;
+#include <Sparkle/Sparkle.h>
 
 unicorn::Updater::Updater(QObject *parent) :
     QObject(parent)
 {
-    g_updater = [SUUpdateDriver alloc];
+    [[SUUpdater sharedUpdater] checkForUpdatesInBackground];
 }
 
 void
 unicorn::Updater::checkForUpdates()
 {
-    [g_updater checkForUpdates];
+    [[SUUpdater sharedUpdater] checkForUpdates:0];
 }

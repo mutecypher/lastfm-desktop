@@ -14,13 +14,8 @@ class UNICORN_DLLEXPORT Updater : public QObject
 public:
     explicit Updater(QObject *parent = 0);
 
-signals:
-
 public slots:
     void checkForUpdates();
-
-private:
-
 };
 
 }
