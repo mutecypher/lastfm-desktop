@@ -3,7 +3,7 @@ IDI_ICON1  ICON DISCARDABLE "audioscrobbler.ico"
 #include <winver.h>
 
 // Get updates from this appcast feed:
-FeedURL     APPCAST     {"http://users.last.fm/~michael/updates.xml"}
+FeedURL     APPCAST     {"http://users.last.fm/~michael/updates_win.xml"}
 
 // Version information; this, too, is used by WinSparkle
 1 VERSIONINFO

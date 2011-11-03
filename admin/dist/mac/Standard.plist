@@ -13,7 +13,7 @@
 	<key>CFBundleVersion</key>
 	<string>2.0.0</string>
 	<key>SUFeedURL</key>
-	<string>http://users.last.fm/~michael/updates.xml</string>
+	<string>http://users.last.fm/~michael/updates_mac.xml</string>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUEnableSystemProfiling</key>
