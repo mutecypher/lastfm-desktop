@@ -80,7 +80,7 @@ Source: "..\..\..\_bin\listener.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "%VSDIR%\VC\redist\x86\Microsoft.VC90.CRT\*"; DestDir: "{app}"; Flags: ignoreversion
 Source: "%VSDIR%\VC\redist\x86\Microsoft.VC90.ATL\*"; DestDir: "{app}"; Flags: ignoreversion
 
-; Qt binaries
+;Qt binaries
 Source: "%QTDIR%\bin\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "%QTDIR%\bin\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "%QTDIR%\bin\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -95,6 +95,9 @@ Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\imageformats";
 
 ;phonon backend plugin
 Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\phonon_backend"; Flags: ignoreversion
+
+;3rd party
+Source: "..\..\..\_bin\WinSparkle.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ;The stylesheets
 Source: "..\..\..\app\client\Last.fm.css"; DestDir: "{app}"; Flags: ignoreversion
@@ -122,6 +125,9 @@ Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: 
 Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}"; ValueType: string; ValueName: "System.ControlPanel.Category"; ValueData: "8"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Last.fm.exe, -2"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "CLSID\{{7BC5FBA0-A70A-406e-A50B-235D5AFE67FB}\Shell\Open\Command"; ValueType: string; ValueName: ""; ValueData: "{app}\Last.fm.exe --settings"; Flags: uninsdeletekey
+
+; WinSparkle - This stop it asking the user if they want to check for updates on first run.
+Root: HKCU; Subkey: "Software\Last.fm\Last.fm Desktop App\WinSparkle"; ValueType: string; ValueName: "CheckForUpdates"; ValueData: "1"; Flags: uninsdeletekey
 
 ; This is just for deleting keys at uninstall
 Root: HKCU; Subkey: "Software\Last.fm"; Flags: dontcreatekey uninsdeletekey
