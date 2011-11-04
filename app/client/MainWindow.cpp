@@ -218,7 +218,7 @@ MainWindow::setupMenuBar()
 
     /// Help
     QMenu* helpMenu = appMenuBar()->addMenu( tr("Help") );
-    QAction* about = helpMenu->addAction( tr("About"), this, SLOT(about()) );
+    QAction* about = helpMenu->addAction( tr("About"), aApp, SLOT(onAboutTriggered()) );
     about->setMenuRole( QAction::AboutRole );
     helpMenu->addSeparator();
     QAction* faq = helpMenu->addAction( tr("FAQ"), aApp, SLOT(onFaqTriggered()) );
@@ -241,7 +241,6 @@ MainWindow::onPrefsTriggered()
 
     m_preferences->show();
 }
-
 
 void
 MainWindow::checkForUpdates()

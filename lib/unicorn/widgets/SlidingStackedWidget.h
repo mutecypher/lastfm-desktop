@@ -23,9 +23,17 @@ public:
         //! The Constructor and Destructor
         explicit SlidingStackedWidget(QWidget *parent);
 
+        Q_PROPERTY( QEasingCurve::Type easingCurve READ easingCurve WRITE setEasingCurve )
+        Q_PROPERTY( int speed READ speed WRITE setSpeed )
+
+        QEasingCurve::Type easingCurve() const { return m_animationtype; }
+        void setEasingCurve( QEasingCurve::Type animationtype ) { m_animationtype = animationtype; }
+
+        int speed() const { return m_speed; }
+        void setSpeed( int speed ) { m_speed = speed; }
+
 public slots:
         //! Some basic settings API
-        void setSpeed(int speed);   //animation duration in milliseconds
         void setAnimation(enum QEasingCurve::Type animationtype); //check out the QEasingCurve documentation for different styles
 
         //! The Animation / Page Change API

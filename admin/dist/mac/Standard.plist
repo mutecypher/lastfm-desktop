@@ -11,7 +11,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>fm.last.@EXECUTABLE@</string>
 	<key>CFBundleVersion</key>
-	<string>2.0.0</string>
+	<string>2.0.4</string>
 	<key>SUFeedURL</key>
 	<string>http://users.last.fm/~michael/updates_mac.xml</string>
 	<key>SUEnableAutomaticChecks</key>
@@ -19,12 +19,14 @@
 	<key>SUEnableSystemProfiling</key>
 	<false/>
 	<key>SUShowReleaseNotes</key>
-	<false/>
+	<true/>
 	<key>SUScheduledCheckInterval</key>
-	<integer>3600</integer>
+	<integer>86400</integer>
 	<key>SUAllowsAutomaticUpdates</key>
 	<false/>
 	<key>SUPublicDSAKeyFile</key>
 	<string>dsa_pub.pem</string>
+	<key>CFBundleDisplayName</key>
+	<string>@EXECUTABLE@</string>
 </dict>
 </plist>

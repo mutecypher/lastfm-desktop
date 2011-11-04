@@ -485,7 +485,7 @@ Application::onForumsTriggered()
 void
 Application::onAboutTriggered()
 {
-    if ( m_aboutDialog )
+    if ( !m_aboutDialog )
         m_aboutDialog = new AboutDialog( m_mw );
     m_aboutDialog->show();
 }

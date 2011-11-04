@@ -8,20 +8,14 @@
 SlidingStackedWidget::SlidingStackedWidget( QWidget* parent )
     : QStackedWidget(parent),
     m_vertical( false ),
-    m_speed( 300 ),
-    m_animationtype( QEasingCurve::OutCubic ),
+    m_speed( 200 ),
+    m_animationtype( QEasingCurve::InQuad ),
     m_now( 0 ),
     m_next( 0 ),
     m_pnow( QPoint(0,0) ),
     m_active( false ),
     m_index( 0 )
 {
-}
-
-
-void SlidingStackedWidget::setSpeed(int speed)
-{
-        m_speed = speed;
 }
 
 void SlidingStackedWidget::setAnimation(enum QEasingCurve::Type animationtype)

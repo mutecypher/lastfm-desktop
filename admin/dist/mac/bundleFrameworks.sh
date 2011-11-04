@@ -135,6 +135,13 @@ fi
 
 echo
 
+echo ======= Copying 3rd party frameworks ===========
+
+cp -Rf /Library/Frameworks/Growl.framework "$bundlePath/Contents/Frameworks"
+cp -Rf /Library/Frameworks/Sparkle.framework "$bundlePath/Contents/Frameworks"
+
+echo
+
 echo ======= Copying image plugins ===========
 mkdir -p "$bundlePath/Contents/plugins"
 

@@ -9,7 +9,7 @@
 unicorn::Updater::Updater(QObject *parent) :
     QObject(parent)
 {
-    [[SUUpdater sharedUpdater] checkForUpdatesInBackground];
+    [SUUpdater sharedUpdater];
 }
 
 void
