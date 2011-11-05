@@ -1,4 +1,9 @@
 
+SlidingStackedWidget {
+	qproperty-speed: 200;
+	qproperty-easingCurve: OutCirc;
+}
+
 FirstRunWizard {
 	background-repeat: none;
 	background-color: white;

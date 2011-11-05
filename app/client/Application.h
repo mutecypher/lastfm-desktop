@@ -88,7 +88,7 @@ namespace audioscrobbler
 
         void* m_raiseHotKeyId;
 
-        AboutDialog* m_aboutDialog;
+        QPointer<AboutDialog> m_aboutDialog;
         
         QAction* m_submit_scrobbles_toggle;
         QAction* m_love_action;

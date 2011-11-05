@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = "Last.fm"
-VERSION = 2.0.0
+VERSION = 2.0.4
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql phonon
 CONFIG += lastfm unicorn listener
@@ -9,7 +9,7 @@ DEFINES += LASTFM_COLLAPSE_NAMESPACE
 
 macx:LIBS += -framework Cocoa
 win32:release {
-	LIBS += -lAdvAPI32
+        LIBS += -lAdvAPI32
 }
 
 include( $$ROOT_DIR/admin/include.qmake )

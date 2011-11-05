@@ -4,6 +4,7 @@ _build_parameters.pl.h
 Makefile*
 /_bin/
 /_include/
+admin/dist/mac/dsa_priv.pem
 *.idb
 *.pdb
 *.ncb
