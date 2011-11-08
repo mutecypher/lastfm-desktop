@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+<dictionary xmlns:xi="http://www.w3.org/2001/XInclude" title="AirfoilIntegrationSample Terminology">
+    
+	<!-- <xi:include href="file:///System/Library/ScriptingDefinitions/CocoaStandard.sdef" xpointer="xpointer(/dictionary/suite)"/> -->
+    
+	<suite name="AirfoilIntegrationSample Suite" code="AFiS" description="AirfoilIntegrationSample Scripting Suite">
+        
+		<value-type name="airfoil image" code="aImg" description="Image data in TIFF format">
+			<cocoa class="NSData"/>
+		</value-type>
+        
+		<class name="application" code="capp" description="The application's top-level scripting object.">
+			<cocoa class="NSApplication"/>
+            
+			<property name="track title" code="aTtl" description="Title of currently playing track." type="text" access="r">
+				<cocoa key="trackTitle"/>
+			</property>
+			
+			<property name="artist" code="aArt" description="Artist of currently playing track." type="text" access="r"/>
+			
+			<property name="album" code="aAlb" description="Album of currently playing track." type="text" access="r"/>
+            
+			<property name="duration" code="aDur" description="Duration of currently playing track." type="integer" access="r"/>
+            
+			<property name="logo" code="aLog" description="Logo for the currently playing track." access="r">
+				<type type="airfoil image"/>
+			</property>
+            
+		</class>
+		
+		<command name="playpause" code="AFiSplpa" description="Toggle playback between playing and paused.">
+			<cocoa class="AFAppleScriptPlayPauseCommand"/>
+		</command>
+        
+		<command name="next" code="AFiSnext" description="Play the next track.">
+			<cocoa class="AFAppleScriptNextCommand"/>
+		</command>
+        
+		<command name="previous" code="AFiSprev" description="Play the previous track.">
+			<cocoa class="AFAppleScriptPrevCommand"/>
+		</command>
+        
+	</suite>
+</dictionary>

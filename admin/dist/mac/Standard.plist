@@ -28,5 +28,9 @@
 	<string>dsa_pub.pem</string>
 	<key>CFBundleDisplayName</key>
 	<string>@EXECUTABLE@</string>
+	<key>OSAScriptingDefinition</key>
+	<string>AppleScriptSuite.sdef</string>
+	<key>NSAppleScriptEnabled</key>
+	<true/>
 </dict>
 </plist>

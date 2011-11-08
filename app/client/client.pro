@@ -103,7 +103,8 @@ SOURCES += \
     Wizard/BootstrapProgressPage.cpp \
     Wizard/TourScrobblesPage.cpp \
     Wizard/TourLocationPage.cpp \
-    Wizard/WizardPage.cpp
+    Wizard/WizardPage.cpp \
+    CommandReciever/CommandReciever.mm
 
 HEADERS += \
     ScrobSocket.h \
@@ -183,7 +184,8 @@ HEADERS += \
     Wizard/LoginPage.h \
     Wizard/FirstRunWizard.h \
     Wizard/BootstrapPage.h \
-    Wizard/WizardPage.h
+    Wizard/WizardPage.h \
+    CommandReciever/CommandReciever.h
 
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
@@ -207,6 +209,10 @@ linux*:SOURCES += MediaDevices/IpodDevice_linux.cpp
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
+
+
+
+
 
 
 

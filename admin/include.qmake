@@ -32,6 +32,10 @@ macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
 	## copy the growl registration file
     QMAKE_POST_LINK += echo Copying growl registration file..; cp \"$$ROOT_DIR/admin/dist/mac/Growl Registration Ticket.growlRegDict\" \"$$BUNDLE_DIR/Contents/Resources\";
 
+        ## copy the apple script suite definition
+    QMAKE_POST_LINK += echo Copying apple script suite definition file..; cp \"$$ROOT_DIR/admin/dist/mac/AppleScriptSuite.sdef\" \"$$BUNDLE_DIR/Contents/Resources\";
+
+
     ## install_name_tool / copy frameworks, dylibs etc
     QMAKE_POST_LINK += $$DISTDIR/bundleFrameworks.sh \'$$BUNDLE_DIR\';
 
