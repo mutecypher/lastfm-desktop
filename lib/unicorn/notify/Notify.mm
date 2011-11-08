@@ -55,8 +55,11 @@ unicorn::Notify::onFinished( const QPixmap& pixmap )
 {
     Track track = m_trackImageFetcher->track();
 
-    QString title = track.toString();
-    QString description = tr("from %1").arg( track.album() );
+    QString title = track.title();
+    QString description = tr("%1\n%2").arg( track.artist(), track.album() );
+
+    if ( track.album().isNull() )
+        description = track.artist();
 
     NSString* nsTitle = [NSString stringWithCharacters:(const unichar *)title.unicode() length:(NSUInteger)title.length() ];
     NSString* nsDescription = [NSString stringWithCharacters:(const unichar *)description.unicode() length:(NSUInteger)description.length() ];
