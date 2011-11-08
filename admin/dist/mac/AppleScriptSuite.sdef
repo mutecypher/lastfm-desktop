@@ -6,7 +6,7 @@
     
 	<suite name="Last.fm Suite" code="AFiS" description="Last.fm Scripting Suite">
         
-		<value-type name="Last.fm image" code="aImg" description="Image data in TIFF format">
+		<value-type name="Lastfm image" code="aImg" description="Image data in TIFF format">
 			<cocoa class="NSData"/>
 		</value-type>
         
@@ -23,8 +23,8 @@
             
 			<property name="duration" code="aDur" description="Duration of currently playing track." type="integer" access="r"/>
             
-			<property name="logo" code="aLog" description="Logo for the currently playing track." access="r">
-				<type type="Last.fm image"/>
+			<property name="artwork" code="aLog" description="Logo for the currently playing track." access="r">
+				<type type="Lastfm image"/>
 			</property>
             
 		</class>

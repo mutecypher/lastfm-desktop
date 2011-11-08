@@ -29,8 +29,6 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include <QCoreApplication>
 
-#include "../../CommandReciever/CommandReciever.h"
-
 RadioService::RadioService( )
      : m_audioOutput( 0 ),
        m_mediaObject( 0 ),
@@ -38,7 +36,6 @@ RadioService::RadioService( )
        m_bErrorRecover( false )
 {
     initRadio();
-    new CommandReciever( this );
 }
 
 

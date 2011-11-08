@@ -39,14 +39,14 @@
 
 - (BOOL)application:(NSApplication*)sender delegateHandlesKey:(NSString*)key
 {
-        return [[NSSet setWithObjects: @"trackTitle", @"artist", @"album", @"duration", @"logo", nil] containsObject:key];
+        return [[NSSet setWithObjects: @"trackTitle", @"artist", @"album", @"duration", @"artwork", nil] containsObject:key];
 }
 
 - (NSString*)trackTitle
 {
-    Track track = RadioService::instance().currentTrack();
+    Track track = m_observer->track();
 
-    if ( !track.isNull() )
+    if ( !track.isNull() && m_observer->artworkDownloaded() )
     {
         QString title = track.title();
         NSString* nsTitle = [NSString stringWithCharacters:(const unichar *)title.unicode() length:(NSUInteger)title.length() ];
@@ -58,11 +58,11 @@
 
 - (NSString*)artist
 {
-    Track track = RadioService::instance().currentTrack();
+    Track track = m_observer->track();
 
-    if ( !track.isNull() )
+    if ( !track.isNull() && m_observer->artworkDownloaded() )
     {
-        QString artist = RadioService::instance().currentTrack().artist();
+        QString artist = track.artist();
         NSString* nsArtist = [NSString stringWithCharacters:(const unichar *)artist.unicode() length:(NSUInteger)artist.length() ];
         return nsArtist;
     }
@@ -72,13 +72,16 @@
 
 - (NSString*)album
 {
-    Track track = RadioService::instance().currentTrack();
+    Track track = m_observer->track();
 
-    if ( !track.isNull() )
+    if ( !track.isNull() && m_observer->artworkDownloaded() )
     {
-        QString album = RadioService::instance().currentTrack().album();
-        NSString* nsAlbum = [NSString stringWithCharacters:(const unichar *)album.unicode() length:(NSUInteger)album.length() ];
-        return nsAlbum;
+        if ( !track.album().isNull() )
+        {
+            QString album = track.album();
+            NSString* nsAlbum = [NSString stringWithCharacters:(const unichar *)album.unicode() length:(NSUInteger)album.length() ];
+            return nsAlbum;
+        }
     }
 
     return nil;
@@ -86,9 +89,9 @@
 
 - (NSNumber*)duration
 {
-    Track track = RadioService::instance().currentTrack();
+    Track track = m_observer->track();
 
-    if ( !track.isNull() )
+    if ( !track.isNull() && m_observer->artworkDownloaded() )
     {
         int duration = RadioService::instance().currentTrack().duration();
         return [NSNumber numberWithInt:duration];
@@ -97,29 +100,27 @@
     return nil;
 }
 
-- (NSData*)logo
+- (NSData*)artwork
 {
-    return nil;
+    Track track = RadioService::instance().currentTrack();
 
-    NSImage* img = [NSImage imageNamed: NSImageNameApplicationIcon];
-    m_logo = [img TIFFRepresentation];
-    return m_logo;
-
-    m_observer->logo();
-
-    QPixmap pixmap = m_observer->getLogo();
-
-    if ( !pixmap.isNull() )
+    if ( !track.isNull() )
     {
-        CGImageRef cgImage = pixmap.toMacCGImageRef();
-        NSImage* nsImage = [[NSImage alloc] initWithCGImage:(CGImageRef)cgImage size:(NSSize)NSZeroSize];
-        return [nsImage TIFFRepresentation];
-    }
-    else
-    {
-        NSImage* img = [NSImage imageNamed: NSImageNameApplicationIcon];
-        NSData* data = [img TIFFRepresentation];
-        return data;
+        QPixmap pixmap = m_observer->getArtwork();
+
+        if ( !pixmap.isNull() && m_observer->artworkDownloaded() )
+        {
+            CGImageRef cgImage = pixmap.toMacCGImageRef();
+            NSImage* nsImage = [[NSImage alloc] initWithCGImage:(CGImageRef)cgImage size:(NSSize)NSZeroSize];
+            NSData* data = [nsImage TIFFRepresentation];
+            return data;
+        }
+        else
+        {
+            NSImage* img = [NSImage imageNamed: NSImageNameApplicationIcon];
+            NSData* data = [img TIFFRepresentation];
+            return data;
+        }
     }
 
     return nil;
@@ -157,10 +158,38 @@
 
 @end
 
+@implementation NSData (LastfmAdditions)
+
++ (id)scriptingLastfmImageWithDescriptor:(NSAppleEventDescriptor *)descriptor
+{
+        if ( [descriptor descriptorType] == typeType && [descriptor typeCodeValue] == cMissingValue )
+        {
+                return nil;
+        }
+
+        if ( [descriptor descriptorType] != typeTIFF )
+        {
+                descriptor = [descriptor coerceToDescriptorType: typeTIFF];
+                if (descriptor == nil)
+                {
+                        return nil;
+                }
+        }
+
+        return [descriptor data];
+}
+
+- (id)scriptingLastfmImageDescriptor
+{
+        return [NSAppleEventDescriptor descriptorWithDescriptorType: typeTIFF data: self];
+}
+
+@end
+
 AirfoilIntegrationSampleAppDelegate* g_delegate;
 
 CommandReciever::CommandReciever( QObject *parent )
-    :QObject( parent )
+    :QObject( parent ), m_artworkDownloaded( false )
 {
     bool success = QDir::home().mkdir( "Library/Application Support/Airfoil/" );
     success = QDir::home().mkdir( "Library/Application Support/Airfoil/RemoteControl/" );
@@ -176,41 +205,64 @@ CommandReciever::CommandReciever( QObject *parent )
     //
     g_delegate = [[AirfoilIntegrationSampleAppDelegate alloc] init:this];
     [[NSApplication sharedApplication] setDelegate:(id < NSApplicationDelegate >)g_delegate];
+
+    connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) );
+    connect( &RadioService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
+}
+
+bool
+CommandReciever::artworkDownloaded() const
+{
+    return m_artworkDownloaded;
+}
+
+Track
+CommandReciever::track()
+{
+    if ( m_trackImageFetcher )
+        return m_trackImageFetcher->track();
+
+    return Track();
 }
 
 void
-CommandReciever::logo()
+CommandReciever::onTrackSpooled( const Track& track )
 {
-    Track currentTrack = RadioService::instance().currentTrack();
-
     // if the track has changed or stopped playing get rid of the track fetcher
     if ( m_trackImageFetcher )
     {
-        if ( m_trackImageFetcher->track() != currentTrack || currentTrack.isNull() )
+        if ( m_trackImageFetcher->track() != track || track.isNull() )
         {
             delete m_trackImageFetcher;
             m_pixmap = QPixmap();
         }
     }
 
-
     // if we haven't fetched the new track image yet then do it now
-    if ( !m_trackImageFetcher && !currentTrack.isNull() )
+    if ( !m_trackImageFetcher && !track.isNull() )
     {
-        m_trackImageFetcher = new TrackImageFetcher( RadioService::instance().currentTrack() );
+        m_artworkDownloaded = false;
+        m_trackImageFetcher = new TrackImageFetcher( track );
         connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), SLOT(onFinished(QPixmap)));
         m_trackImageFetcher->startAlbum();
     }
 }
 
 void
+CommandReciever::onStopped()
+{
+    delete m_trackImageFetcher;
+}
+
+void
 CommandReciever::onFinished( const QPixmap& pixmap )
 {  
+    m_artworkDownloaded = true;
     m_pixmap = pixmap;
 }
 
 QPixmap
-CommandReciever::getLogo() const
+CommandReciever::getArtwork() const
 {
     return m_pixmap;
 }

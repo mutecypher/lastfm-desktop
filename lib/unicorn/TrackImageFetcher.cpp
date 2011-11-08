@@ -136,5 +136,5 @@ TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node
 void
 TrackImageFetcher::fail()
 {
-    emit finished( QPixmap( ":/lastfm/no/cover.png" ) );
+    emit finished( QPixmap() );
 }

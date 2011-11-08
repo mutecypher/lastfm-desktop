@@ -14,17 +14,22 @@ public:
     explicit CommandReciever(QObject *parent = 0);
     ~CommandReciever();
 
-    void logo();
-    QPixmap getLogo() const;
+    bool artworkDownloaded() const;
+    QPixmap getArtwork() const;
+    Track track();
 
 signals:
 
 private slots:
     void onFinished( const class QPixmap& image );
 
+    void onTrackSpooled( const Track& track );
+    void onStopped();
+
 private:
     QPointer<TrackImageFetcher> m_trackImageFetcher;
     QPixmap m_pixmap;
+    bool m_artworkDownloaded;
 };
 
 #endif // COMMANDRECIEVER_H
