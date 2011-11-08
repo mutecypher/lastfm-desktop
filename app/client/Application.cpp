@@ -48,6 +48,8 @@
 #include "lib/unicorn/notify/Notify.h"
 #endif
 
+
+#include "CommandReciever/CommandReciever.h"
 #include "MediaDevices/DeviceScrobbler.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
@@ -309,6 +311,8 @@ Application::init()
 #ifdef Q_OS_MAC
     m_notify = new Notify( this );
     connect( m_notify, SIGNAL(clicked()), SLOT(showWindow()) );
+
+    new CommandReciever( this );
 #endif
 
 #ifdef CLIENT_ROOM_RADIO
