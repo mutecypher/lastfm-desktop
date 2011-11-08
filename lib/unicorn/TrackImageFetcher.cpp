@@ -127,7 +127,7 @@ TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node
     }
     else
     {
-        qWarning() << lfm.parseError().what();
+        qWarning() << lfm.parseError().message();
     }
     return false;
 }

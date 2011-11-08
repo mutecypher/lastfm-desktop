@@ -38,6 +38,8 @@ public:
     void startAlbum();
     void startArtist();
 
+    Track track() const { return m_track; }
+
 private:
     Track m_track;
 

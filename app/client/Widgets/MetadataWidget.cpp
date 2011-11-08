@@ -255,7 +255,7 @@ MetadataWidget::onArtistGotInfo()
 
             for ( int i = 0 ; i < tags.count() ; ++i )
             {
-                if ( i ==0 )
+                if ( i == 0 )
                     tagString.append( tr( " %1" ).arg( Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
                 else
                     tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "・" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
