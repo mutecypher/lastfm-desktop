@@ -7,8 +7,6 @@
 #include <lastfm/Track.h>
 #include <lastfm/RadioStation.h>
 
-#include "lib/unicorn/TrackImageFetcher.h"
-
 #include "../Services/RadioService/RadioService.h"
 #include "../Services/ScrobbleService/ScrobbleService.h"
 

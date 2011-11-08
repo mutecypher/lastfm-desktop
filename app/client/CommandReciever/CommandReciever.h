@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QPointer>
+#include <QPixmap>
 
 #include <lib/unicorn/TrackImageFetcher.h>
 
@@ -14,14 +15,16 @@ public:
     ~CommandReciever();
 
     void logo();
+    QPixmap getLogo() const;
 
 signals:
 
 private slots:
-    void onFinished( const class QImage& image );
+    void onFinished( const class QPixmap& image );
 
 private:
     QPointer<TrackImageFetcher> m_trackImageFetcher;
+    QPixmap m_pixmap;
 };
 
 #endif // COMMANDRECIEVER_H

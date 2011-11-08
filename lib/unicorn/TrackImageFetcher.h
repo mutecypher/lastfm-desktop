@@ -51,7 +51,7 @@ private:
     Artist artist() const { return m_track.artist(); }
 
 signals:
-    void finished( const class QImage& );
+    void finished( const class QPixmap& );
 
 private slots:
     void onAlbumGotInfo();

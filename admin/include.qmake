@@ -35,6 +35,9 @@ macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
         ## copy the apple script suite definition
     QMAKE_POST_LINK += echo Copying apple script suite definition file..; cp \"$$ROOT_DIR/admin/dist/mac/AppleScriptSuite.sdef\" \"$$BUNDLE_DIR/Contents/Resources\";
 
+    QMAKE_POST_LINK += echo Copying airfoil remote file..; cp \"$$ROOT_DIR/admin/dist/mac/dacp.fm.last.Last.fm.scpt\" \"$$BUNDLE_DIR/Contents/Resources\";
+    QMAKE_POST_LINK += echo Copying airfoil tracks file..; cp \"$$ROOT_DIR/admin/dist/mac/fm.last.Last.fm.scpt\" \"$$BUNDLE_DIR/Contents/Resources\";
+
 
     ## install_name_tool / copy frameworks, dylibs etc
     QMAKE_POST_LINK += $$DISTDIR/bundleFrameworks.sh \'$$BUNDLE_DIR\';

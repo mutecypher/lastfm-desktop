@@ -23,7 +23,6 @@
 #include <lastfm/global.h>
 #include <lastfm/Track.h>
 #include <QWidget>
-#include <QPixmap>
 #include "lib/DllExportMacro.h"
 #include <QStackedWidget>
 
@@ -56,8 +55,8 @@ public:
     Type type() const;
     
 private slots:
-    void onCoverDownloaded( const class QImage& );
-    void onArtistDownloaded( const class QImage& );
+    void onCoverDownloaded( const class QPixmap& );
+    void onArtistDownloaded( const class QPixmap& );
 
     void onRadioButtonsClicked( bool );
 

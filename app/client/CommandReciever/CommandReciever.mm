@@ -17,7 +17,6 @@
 }
 
 - (AirfoilIntegrationSampleAppDelegate*) init:(CommandReciever*)observer;
-- (void) setLogo:(NSData*)logo;
 @end
 
 @interface AFAppleScriptPlayPauseCommand: NSScriptCommand { } @end
@@ -98,17 +97,30 @@
     return nil;
 }
 
-- (void)setLogo:(NSData*)logo
-{
-    m_logo = logo;
-}
-
 - (NSData*)logo
 {
+    return nil;
+
+    NSImage* img = [NSImage imageNamed: NSImageNameApplicationIcon];
+    m_logo = [img TIFFRepresentation];
+    return m_logo;
+
     m_observer->logo();
 
-    if ( m_logo != nil )
-        return m_logo;
+    QPixmap pixmap = m_observer->getLogo();
+
+    if ( !pixmap.isNull() )
+    {
+        CGImageRef cgImage = pixmap.toMacCGImageRef();
+        NSImage* nsImage = [[NSImage alloc] initWithCGImage:(CGImageRef)cgImage size:(NSSize)NSZeroSize];
+        return [nsImage TIFFRepresentation];
+    }
+    else
+    {
+        NSImage* img = [NSImage imageNamed: NSImageNameApplicationIcon];
+        NSData* data = [img TIFFRepresentation];
+        return data;
+    }
 
     return nil;
 }
@@ -150,6 +162,18 @@ AirfoilIntegrationSampleAppDelegate* g_delegate;
 CommandReciever::CommandReciever( QObject *parent )
     :QObject( parent )
 {
+    bool success = QDir::home().mkdir( "Library/Application Support/Airfoil/" );
+    success = QDir::home().mkdir( "Library/Application Support/Airfoil/RemoteControl/" );
+    success = QDir::home().mkdir( "Library/Application Support/Airfoil/TrackTitles/" );
+
+    // make sure the scripts are copied
+    success = QFile::copy( QApplication::applicationDirPath() + "/../Resources/dacp.fm.last.Last.fm.scpt",
+                                    QDir::home().filePath( "Library/Application Support/Airfoil/RemoteControl/dacp.fm.last.Last.fm.scpt" ) );
+
+    success = QFile::copy( QApplication::applicationDirPath() + "/../Resources/fm.last.Last.fm.scpt",
+                                    QDir::home().filePath( "Library/Application Support/Airfoil/TrackTitles/fm.last.Last.fm.scpt" ) );
+
+    //
     g_delegate = [[AirfoilIntegrationSampleAppDelegate alloc] init:this];
     [[NSApplication sharedApplication] setDelegate:(id < NSApplicationDelegate >)g_delegate];
 }
@@ -165,7 +189,7 @@ CommandReciever::logo()
         if ( m_trackImageFetcher->track() != currentTrack || currentTrack.isNull() )
         {
             delete m_trackImageFetcher;
-            [g_delegate setLogo:(NSData*)nil];
+            m_pixmap = QPixmap();
         }
     }
 
@@ -174,21 +198,21 @@ CommandReciever::logo()
     if ( !m_trackImageFetcher && !currentTrack.isNull() )
     {
         m_trackImageFetcher = new TrackImageFetcher( RadioService::instance().currentTrack() );
-        connect( m_trackImageFetcher, SIGNAL(finished(QImage)), SLOT(onFinished(QImage)));
+        connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), SLOT(onFinished(QPixmap)));
         m_trackImageFetcher->startAlbum();
     }
 }
 
 void
-CommandReciever::onFinished( const class QImage& image )
+CommandReciever::onFinished( const QPixmap& pixmap )
+{  
+    m_pixmap = pixmap;
+}
+
+QPixmap
+CommandReciever::getLogo() const
 {
-    CGImageRef cgImage = QPixmap::fromImage( image ).toMacCGImageRef();
-
-    NSImage* nsImage = [[NSImage alloc] initWithCGImage:(CGImageRef)cgImage size:(NSSize)NSZeroSize];
-
-    NSData *data = [nsImage TIFFRepresentation];
-
-    [g_delegate setLogo:(NSData*)data];
+    return m_pixmap;
 }
 
 CommandReciever::~CommandReciever()

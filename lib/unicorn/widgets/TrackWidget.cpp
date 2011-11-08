@@ -24,6 +24,7 @@
 #include <QLabel>
 #include <QStackedWidget>
 #include <QRadioButton>
+#include <QPixmap>
 
 
 TrackWidget::TrackWidget( const lastfm::Track& track )
@@ -49,12 +50,12 @@ TrackWidget::TrackWidget( const lastfm::Track& track )
 
     // start fetching the image
     m_fetcherAlbum = new TrackImageFetcher( track );
-    connect( m_fetcherAlbum, SIGNAL(finished( QImage )), SLOT(onCoverDownloaded( QImage )) );
+    connect( m_fetcherAlbum, SIGNAL(finished( QPixmap )), SLOT(onCoverDownloaded( QPixmap )) );
     m_fetcherAlbum->startAlbum();
 
     // start fetching the image
     m_fetcherArtist = new TrackImageFetcher( track );
-    connect( m_fetcherArtist, SIGNAL(finished( QImage )), SLOT(onArtistDownloaded( QImage )) );
+    connect( m_fetcherArtist, SIGNAL(finished( QPixmap )), SLOT(onArtistDownloaded( QPixmap )) );
     m_fetcherArtist->startArtist();
 
     // default the track being selected
@@ -113,9 +114,9 @@ TrackWidget::type() const
 }
 
 void
-TrackWidget::onCoverDownloaded( const QImage& image )
+TrackWidget::onCoverDownloaded( const QPixmap& pixmap )
 {
-    ui.albumImage = QPixmap::fromImage( image );
+    ui.albumImage = pixmap;
 
     onRadioButtonsClicked( true );
 
@@ -123,9 +124,9 @@ TrackWidget::onCoverDownloaded( const QImage& image )
 }
 
 void
-TrackWidget::onArtistDownloaded( const QImage& image )
+TrackWidget::onArtistDownloaded( const QPixmap& pixmap )
 {
-    ui.artistImage = QPixmap::fromImage( image );
+    ui.artistImage = pixmap;
 
     onRadioButtonsClicked( true );
 

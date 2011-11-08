@@ -21,7 +21,7 @@
 #include <lastfm/Track.h>
 #include <lastfm/ws.h>
 #include <lastfm/XmlQuery.h>
-#include <QImage>
+#include <QPixmap>
 #include <QStringList>
 
 
@@ -56,9 +56,9 @@ TrackImageFetcher::onAlbumGotInfo()
 void
 TrackImageFetcher::onAlbumImageDownloaded()
 {
-    QImage i;
-    i.loadFromData( ((QNetworkReply*)sender())->readAll() );
-    if (!i.isNull())
+    QPixmap i;
+
+    if ( i.loadFromData( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
         emit finished( i );
     else
         artistGetInfo();
@@ -91,9 +91,9 @@ TrackImageFetcher::onArtistGotInfo()
 void
 TrackImageFetcher::onArtistImageDownloaded()
 {
-    QImage i;
-    i.loadFromData( ((QNetworkReply*)sender())->readAll() );
-    if (!i.isNull())
+    QPixmap i;
+
+    if ( i.loadFromData( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
         emit finished( i );
     else
         fail();
@@ -136,5 +136,5 @@ TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node
 void
 TrackImageFetcher::fail()
 {
-    emit finished( QImage( ":/lastfm/no/cover.png" ) );
+    emit finished( QPixmap( ":/lastfm/no/cover.png" ) );
 }
