@@ -401,11 +401,15 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
     if ( track != m_currentTrack )
     {
         m_currentTrack = track;
+
+        if ( track.extra( "playerId" ) != "spt" )
+        {
 #ifdef Q_OS_MAC
-        m_notify->newTrack( track );
+            m_notify->newTrack( track );
 #else
-        tray()->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
+            tray()->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
 #endif
+        }
     }
 
     m_tray->setToolTip( track.toString() );

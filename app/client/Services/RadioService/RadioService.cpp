@@ -53,6 +53,12 @@ RadioService::play( const RadioStation& station )
         return;
     }
 
+    if( m_state != Stopped && station.url() == "" )
+    {
+        // do nothing
+        return;
+    }
+
     if (m_state != Stopped)
     {
         //FIXME filthy! get us to a clean slate
