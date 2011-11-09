@@ -12,6 +12,8 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
+#include "lib/unicorn/DesktopServices.h"
+
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -118,7 +120,7 @@ LoginProcess::authenticate()
     m_authUrl.addQueryItem( "api_key", lastfm::ws::ApiKey );
     m_authUrl.addQueryItem( "cb", callbackUrl );
 
-    if ( QDesktopServices::openUrl( m_authUrl ) )
+    if ( unicorn::DesktopServices::openUrl( m_authUrl ) )
     {
         connect( m_webServer, SIGNAL( gotToken( QString ) ), SLOT( getSession( QString ) ) );
     }

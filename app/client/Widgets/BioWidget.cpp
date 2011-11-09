@@ -5,6 +5,7 @@
 
 #include "lib/unicorn/widgets/BannerWidget.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
+#include "lib/unicorn/DesktopServices.h"
 
 #include "WidgetTextObject.h"
 #include "BioWidget.h"
@@ -157,7 +158,7 @@ BioWidget::sendMouseEvent( QMouseEvent* event )
 void 
 BioWidget::onAnchorClicked( const QUrl& link )
 {
-    QDesktopServices::openUrl( link );
+    unicorn::DesktopServices::openUrl( link );
 }
 
 void 

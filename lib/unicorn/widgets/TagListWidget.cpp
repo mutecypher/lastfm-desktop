@@ -27,6 +27,8 @@
 #include <QMenu>
 #include <QUrl>
 
+#include "lib/unicorn/DesktopServices.h"
+
 
 TagListWidget::TagListWidget( QWidget* parent ) 
              : QTreeWidget( parent )
@@ -126,7 +128,7 @@ TagListWidget::sortByPopularity()
 void
 TagListWidget::openTagPageForCurrentItem()
 {
-	QDesktopServices::openUrl( Tag( currentItem()->text( 0 ) ).www() );
+	unicorn::DesktopServices::openUrl( Tag( currentItem()->text( 0 ) ).www() );
 }
 
 

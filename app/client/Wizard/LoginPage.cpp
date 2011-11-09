@@ -26,6 +26,7 @@
 
 #include "lib/unicorn/LoginProcess.h"
 #include "lib/unicorn/UnicornSession.h"
+#include "lib/unicorn/DesktopServices.h"
 
 #include <QDebug>
 #include <QGridLayout>
@@ -76,5 +77,5 @@ LoginPage::cleanupPage()
 void 
 LoginPage::onSignUpClicked()
 {
-    QDesktopServices::openUrl( lastfm::UrlBuilder( "join" ).url() );
+    unicorn::DesktopServices::openUrl( lastfm::UrlBuilder( "join" ).url() );
 }

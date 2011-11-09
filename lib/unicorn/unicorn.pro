@@ -132,7 +132,8 @@ HEADERS += \
     widgets/AvatarWidget.h \
     layouts/FlowLayout.h \
     widgets/SlidingStackedWidget.h \
-    Updater/Updater.h
+    Updater/Updater.h \
+    DesktopServices.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp \
                Updater/Updater.cpp

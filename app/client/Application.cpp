@@ -44,6 +44,7 @@
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "lib/unicorn/Updater/PluginList.h"
+#include "lib/unicorn/DesktopServices.h"
 #ifdef Q_OS_MAC
 #include "lib/unicorn/notify/Notify.h"
 #endif
@@ -473,13 +474,13 @@ Application::onShareTriggered()
 void
 Application::onVisitProfileTriggered()
 {
-    QDesktopServices::openUrl( User().www() );
+    unicorn::DesktopServices::openUrl( User().www() );
 }
 
 void
 Application::onFaqTriggered()
 {
-    QDesktopServices::openUrl( lastfm::UrlBuilder( "help" ).slash( "faq" ).url() );
+    unicorn::DesktopServices::openUrl( lastfm::UrlBuilder( "help" ).slash( "faq" ).url() );
 }
 
 void
@@ -487,7 +488,7 @@ Application::onForumsTriggered()
 {
 
 
-    QDesktopServices::openUrl( lastfm::UrlBuilder( "forum" ).slash( "34905" ).url() );
+    unicorn::DesktopServices::openUrl( lastfm::UrlBuilder( "forum" ).slash( "34905" ).url() );
 }
 
 void
