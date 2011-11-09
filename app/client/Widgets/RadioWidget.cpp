@@ -65,6 +65,12 @@ RadioWidget::changeUser( const QString& newUsername )
         QuickStartWidget* quickStartWidget = new QuickStartWidget();
         layout->addWidget( quickStartWidget );
 
+        QLabel* title = new QLabel( tr("Recent Stations"), this ) ;
+        layout->addWidget( title );
+        title->setObjectName( "title" );
+        layout->addWidget( ui.recentStations = new StylableWidget( this ) );
+        ui.recentStations->setObjectName( "section" );
+
         {
             QLabel* title = new QLabel( tr("Personal Stations"), this );
             layout->addWidget( title );
@@ -96,14 +102,6 @@ RadioWidget::changeUser( const QString& newUsername )
             networkLayout->addWidget( ui.neighbours = new PlayableItemWidget( RadioStation::neighbourhood( User( newUsername ) ), tr( "My Neighbours' Radio" ), tr ( "Music from listeners you like" ) ) );
             ui.neighbours->setObjectName( "neighbours" );
         }
-
-        QLabel* title = new QLabel( tr("Recent Stations"), this ) ;
-        layout->addWidget( title );
-        title->setObjectName( "title" );
-        layout->addWidget( ui.recentStations = new StylableWidget( this ) );
-        ui.recentStations->setObjectName( "section" );
-
-        //layout->addWidget( ui.topArtists = new StylableWidget( this ) );
 
         // fetch recent stations
         connect( User( newUsername ).getRecentStations( 5 ), SIGNAL(finished()), SLOT(onGotRecentStations()));

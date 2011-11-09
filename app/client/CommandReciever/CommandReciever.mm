@@ -197,26 +197,26 @@
 
 + (id)scriptingLastfmImageWithDescriptor:(NSAppleEventDescriptor *)descriptor
 {
-        if ( [descriptor descriptorType] == typeType && [descriptor typeCodeValue] == cMissingValue )
-        {
-                return nil;
-        }
+    if ( [descriptor descriptorType] == typeType && [descriptor typeCodeValue] == cMissingValue )
+    {
+        return nil;
+    }
 
-        if ( [descriptor descriptorType] != typeTIFF )
+    if ( [descriptor descriptorType] != typeTIFF )
+    {
+        descriptor = [descriptor coerceToDescriptorType: typeTIFF];
+        if (descriptor == nil)
         {
-                descriptor = [descriptor coerceToDescriptorType: typeTIFF];
-                if (descriptor == nil)
-                {
-                        return nil;
-                }
+            return nil;
         }
+    }
 
-        return [descriptor data];
+    return [descriptor data];
 }
 
 - (id)scriptingLastfmImageDescriptor
 {
-        return [NSAppleEventDescriptor descriptorWithDescriptorType: typeTIFF data: self];
+    return [NSAppleEventDescriptor descriptorWithDescriptorType: typeTIFF data: self];
 }
 
 @end
