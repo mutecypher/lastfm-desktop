@@ -11,21 +11,23 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface AirfoilIntegrationSampleAppDelegate : NSObject <NSApplicationDelegate> {
+@interface AppleScriptDelegate : NSObject <NSApplicationDelegate> {
     CommandReciever* m_observer;
     NSData* m_logo;
 }
 
-- (AirfoilIntegrationSampleAppDelegate*) init:(CommandReciever*)observer;
+- (AppleScriptDelegate*) init:(CommandReciever*)observer;
 @end
 
-@interface AFAppleScriptPlayPauseCommand: NSScriptCommand { } @end
-@interface AFAppleScriptNextCommand: NSScriptCommand { } @end
-@interface AFAppleScriptPrevCommand: NSScriptCommand { } @end
+@interface LastfmPlayPauseCommand: NSScriptCommand { } @end
+@interface LastfmNextCommand: NSScriptCommand { } @end
+@interface LastfmPrevCommand: NSScriptCommand { } @end
+@interface LastfmLoveCommand: NSScriptCommand { } @end
+@interface LastfmBanCommand: NSScriptCommand { } @end
 
-@implementation AirfoilIntegrationSampleAppDelegate
+@implementation AppleScriptDelegate
 
-- (AirfoilIntegrationSampleAppDelegate*) init:(CommandReciever*)observer
+- (AppleScriptDelegate*) init:(CommandReciever*)observer
 {
     if ( self = [super init] )
     {
@@ -39,7 +41,7 @@
 
 - (BOOL)application:(NSApplication*)sender delegateHandlesKey:(NSString*)key
 {
-        return [[NSSet setWithObjects: @"trackTitle", @"artist", @"album", @"duration", @"artwork", nil] containsObject:key];
+    return [[NSSet setWithObjects: @"trackTitle", @"artist", @"album", @"duration", @"artwork", @"loved", nil] containsObject:key];
 }
 
 - (NSString*)trackTitle
@@ -93,7 +95,7 @@
 
     if ( !track.isNull() && m_observer->artworkDownloaded() )
     {
-        int duration = RadioService::instance().currentTrack().duration();
+        int duration = track.duration();
         return [NSNumber numberWithInt:duration];
     }
 
@@ -102,7 +104,7 @@
 
 - (NSData*)artwork
 {
-    Track track = RadioService::instance().currentTrack();
+    Track track = m_observer->track();
 
     if ( !track.isNull() )
     {
@@ -126,9 +128,22 @@
     return nil;
 }
 
+- (BOOL)loved
+{
+    Track track = m_observer->track();
+
+    if ( !track.isNull() && m_observer->artworkDownloaded() )
+    {
+
+        return track.isLoved() ? YES : NO;
+    }
+
+    return nil;
+}
+
 @end
 
-@implementation AFAppleScriptPlayPauseCommand
+@implementation LastfmPlayPauseCommand
 
 - (id)performDefaultImplementation
 {
@@ -138,7 +153,7 @@
 
 @end
 
-@implementation AFAppleScriptNextCommand
+@implementation LastfmNextCommand
 
 - (id)performDefaultImplementation
 {
@@ -148,11 +163,31 @@
 
 @end
 
-@implementation AFAppleScriptPrevCommand
+@implementation LastfmPrevCommand
 
 - (id)performDefaultImplementation
 {
     // do nothing for the back button
+    return nil;
+}
+
+@end
+
+@implementation LastfmLoveCommand
+
+- (id)performDefaultImplementation
+{
+    aApp->loveAction()->trigger();
+    return nil;
+}
+
+@end
+
+@implementation LastfmBanCommand
+
+- (id)performDefaultImplementation
+{
+    aApp->banAction()->trigger();
     return nil;
 }
 
@@ -186,7 +221,7 @@
 
 @end
 
-AirfoilIntegrationSampleAppDelegate* g_delegate;
+AppleScriptDelegate* g_delegate;
 
 CommandReciever::CommandReciever( QObject *parent )
     :QObject( parent ), m_artworkDownloaded( false )
@@ -203,8 +238,8 @@ CommandReciever::CommandReciever( QObject *parent )
                                     QDir::home().filePath( "Library/Application Support/Airfoil/TrackTitles/fm.last.Last.fm.scpt" ) );
 
     //
-    g_delegate = [[AirfoilIntegrationSampleAppDelegate alloc] init:this];
-    [[NSApplication sharedApplication] setDelegate:(id < NSApplicationDelegate >)g_delegate];
+    g_delegate = [[AppleScriptDelegate alloc] init:this];
+    [[NSApplication sharedApplication] setDelegate:(id<NSApplicationDelegate>)g_delegate];
 
     connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) );
     connect( &RadioService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
