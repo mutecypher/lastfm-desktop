@@ -64,7 +64,8 @@ SOURCES += \
     dialogs/LoginContinueDialog.cpp \
     dialogs/AboutDialog.cpp \
     dialogs/ScrobbleConfirmationDialog.cpp \
-    AnimatedStatusBar.cpp
+    AnimatedStatusBar.cpp \
+    DesktopServices.cpp
 
 HEADERS += \
     widgets/UserToolButton.h \
