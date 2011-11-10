@@ -113,6 +113,9 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     ui.stackedWidget->addWidget( ui.friends = new FriendListWidget(this) );
     ui.friends->setObjectName( "friends" );
 
+    connect( ui.stackedWidget, SIGNAL(currentChanged(int)), ui.friends, SLOT(onCurrentChanged(int)) );
+
+
     ui.stackedWidget->addWidget( ui.radioScrollArea = new QScrollArea( this ) );
     ui.radioScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     ui.radioScrollArea->setWidget( ui.radio = new RadioWidget( this ) );
