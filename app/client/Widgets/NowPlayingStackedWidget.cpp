@@ -15,14 +15,10 @@
 #include "NothingPlayingWidget.h"
 
 NowPlayingStackedWidget::NowPlayingStackedWidget( QWidget* parent )
-    :QWidget( parent )
+    :unicorn::SlidingStackedWidget( parent )
 {
-    QStackedLayout* layout = new QStackedLayout( this );
-    layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
-
-    layout->addWidget( ui.nothingPlaying = new NothingPlayingWidget( this ) );
-    layout->addWidget( ui.nowPlaying = new NowPlayingWidget( this ) );
+    addWidget( ui.nothingPlaying = new NothingPlayingWidget( this ) );
+    addWidget( ui.nowPlaying = new NowPlayingWidget( this ) );
 
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(showNowPlaying()) );
     connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(showNowPlaying()));
@@ -32,13 +28,13 @@ NowPlayingStackedWidget::NowPlayingStackedWidget( QWidget* parent )
 void
 NowPlayingStackedWidget::showNowPlaying()
 {
-    qobject_cast<QStackedLayout*>(layout())->setCurrentWidget( ui.nowPlaying );
+    slide( 1 );
 }
 
 void
 NowPlayingStackedWidget::showNothingPlaying()
 {
-    qobject_cast<QStackedLayout*>(layout())->setCurrentWidget( ui.nothingPlaying );
+    slide( 0 );
 }
 
 

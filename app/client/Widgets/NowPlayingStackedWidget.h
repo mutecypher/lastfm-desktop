@@ -5,12 +5,14 @@
 #include <lastfm/Track.h>
 #include <lastfm/RadioStation.h>
 
+#include "lib/unicorn/widgets/SlidingStackedWidget.h"
+
 class TrackItem;
 class RadioProgressBar;
 class QLabel;
 class QImage;
 
-class NowPlayingStackedWidget : public QWidget
+class NowPlayingStackedWidget : public unicorn::SlidingStackedWidget
 {
     Q_OBJECT
 

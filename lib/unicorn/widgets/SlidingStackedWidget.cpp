@@ -5,7 +5,7 @@
 
 #include "SlidingStackedWidget.h"
 
-SlidingStackedWidget::SlidingStackedWidget( QWidget* parent )
+unicorn::SlidingStackedWidget::SlidingStackedWidget( QWidget* parent )
     : QStackedWidget(parent),
     m_vertical( false ),
     m_speed( 200 ),
@@ -18,12 +18,14 @@ SlidingStackedWidget::SlidingStackedWidget( QWidget* parent )
 {
 }
 
-void SlidingStackedWidget::setAnimation(enum QEasingCurve::Type animationtype)
+void
+unicorn::SlidingStackedWidget::setAnimation(enum QEasingCurve::Type animationtype)
 {
         m_animationtype = animationtype;
 }
 
-void SlidingStackedWidget::slide( int index )
+void
+unicorn::SlidingStackedWidget::slide( int index )
 {
     m_index = index;
 
@@ -38,7 +40,8 @@ void SlidingStackedWidget::slide( int index )
     }
 }
 
-void SlidingStackedWidget::slideWidget( QWidget* newwidget )
+void
+unicorn::SlidingStackedWidget::slideWidget( QWidget* newwidget )
 {
     m_active=true;
 
@@ -126,7 +129,8 @@ void SlidingStackedWidget::slideWidget( QWidget* newwidget )
 }
 
 
-void SlidingStackedWidget::animationDoneSlot(void)
+void
+unicorn::SlidingStackedWidget::animationDoneSlot(void)
 {
     setCurrentIndex( m_next );
     widget(m_now)->hide();

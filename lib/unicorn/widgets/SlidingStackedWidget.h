@@ -6,6 +6,8 @@
 
 #include "lib/DllExportMacro.h"
 
+namespace unicorn {
+
 class UNICORN_DLLEXPORT SlidingStackedWidget : public QStackedWidget
 {
         Q_OBJECT
@@ -63,5 +65,7 @@ protected:
 
         int m_index;
 };
+
+}
 
 #endif // SLIDINGSTACKEDWIDGET_H

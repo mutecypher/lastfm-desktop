@@ -92,7 +92,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     h->addWidget( ui.sideBar = new SideBar( this ) );
 
-    h->addWidget( ui.stackedWidget = new SlidingStackedWidget( this ) );
+    h->addWidget( ui.stackedWidget = new unicorn::SlidingStackedWidget( this ) );
 
     connect( ui.sideBar, SIGNAL(currentChanged(int)), ui.stackedWidget, SLOT(slide(int)));
 
