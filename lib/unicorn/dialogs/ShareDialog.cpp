@@ -37,6 +37,7 @@
 #include <lastfm/XmlQuery.h>
 
 #include "lib/unicorn/widgets/TrackWidget.h"
+#include "lib/unicorn/DesktopServices.h"
 
 #include "ShareDialog.h"
 
@@ -216,7 +217,7 @@ ShareDialog::accept()
         twitterShareIntent.addEncodedQueryItem( "url", QUrl::toPercentEncoding( shareUrl().toEncoded() ) );
         twitterShareIntent.addQueryItem( "related", "lastfm" );
         twitterShareIntent.addQueryItem( "hashtags", "lastfm" );
-        QDesktopServices::openUrl( twitterShareIntent );
+        unicorn::DesktopServices::openUrl( twitterShareIntent );
         close();
     }
     else if ( m_type == ShareFacebook )
@@ -224,7 +225,7 @@ ShareDialog::accept()
         QUrl facebookShareIntent( "http://www.facebook.com/sharer.php" );
         facebookShareIntent.addEncodedQueryItem( "t", QUrl::toPercentEncoding( shareText() ) );
         facebookShareIntent.addEncodedQueryItem( "u", QUrl::toPercentEncoding( shareUrl().toEncoded() ) );
-        QDesktopServices::openUrl( facebookShareIntent );
+        unicorn::DesktopServices::openUrl( facebookShareIntent );
         close();
     }
 }

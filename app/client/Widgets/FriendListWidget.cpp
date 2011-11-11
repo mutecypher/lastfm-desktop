@@ -32,8 +32,8 @@ FriendWidgetItem::FriendWidgetItem( QListWidget* parent )
 bool
 FriendWidgetItem::operator<( const QListWidgetItem& that ) const
 {
-    return static_cast<FriendWidget*>(listWidget()->itemWidget( const_cast<FriendWidgetItem*>(this) ))->name().toLower() <
-            static_cast<FriendWidget*>(listWidget()->itemWidget( const_cast<QListWidgetItem*>(&that) ))->name().toLower();
+    return *static_cast<FriendWidget*>(listWidget()->itemWidget( const_cast<FriendWidgetItem*>(this) )) <
+            *static_cast<FriendWidget*>(listWidget()->itemWidget( const_cast<QListWidgetItem*>(&that) ));
 }
 
 FriendListWidget::FriendListWidget(QWidget *parent) :
@@ -49,6 +49,10 @@ FriendListWidget::FriendListWidget(QWidget *parent) :
     connect( aApp, SIGNAL(gotUserInfo(lastfm::User)), SLOT(onGotUserInfo(lastfm::User)) );
 
     onSessionChanged( aApp->currentSession() );
+
+    QTimer* timer = new QTimer( this );
+    //timer->start( 10000 );
+    connect( timer, SIGNAL(timeout()), SLOT(refresh()) );
 }
 
 void
@@ -110,6 +114,23 @@ FriendListWidget::onTextChanged( const QString& text )
 }
 
 
+void FriendListWidget::onCurrentChanged( int index )
+{
+    if ( index = 3 )
+    {
+        refresh();
+    }
+}
+
+void
+FriendListWidget::refresh()
+{
+    if ( m_main )
+    {
+        connect( User().getFriendsListeningNow( 50, 1 ), SIGNAL(finished()), SLOT(onGotFriendsListeningNow()));
+    }
+}
+
 void
 FriendListWidget::onGotFriends()
 {
@@ -155,6 +176,60 @@ FriendListWidget::onGotFriends()
             FriendWidget* friendWidget = new FriendWidget( user, this );
             ui.friends->setItemWidget( item, friendWidget );
             item->setSizeHint( friendWidget->sizeHint() );
+        }
+
+        int page = lfm["friends"].attribute( "page" ).toInt();
+        int perPage = lfm["friends"].attribute( "perPage" ).toInt();
+        int totalPages = lfm["friends"].attribute( "totalPages" ).toInt();
+        //int total = lfm["friends"].attribute( "total" ).toInt();
+
+        // Check if we need to fetch another page of users
+        if ( page != totalPages )
+            connect( lastfm::User().getFriends( true, perPage, page + 1 ), SIGNAL(finished()), SLOT(onGotFriends()) );
+        else
+        {
+            // we have fetched all the pages!
+            onTextChanged( ui.filter->text() );
+            setUpdatesEnabled( true );
+            connect( User().getFriendsListeningNow( 50, 1 ), SIGNAL(finished()), SLOT(onGotFriendsListeningNow()));
+        }
+
+        ui.friends->sortItems( Qt::AscendingOrder );
+    }
+    else
+    {
+        setUpdatesEnabled( true );
+    }
+}
+
+
+void
+FriendListWidget::onGotFriendsListeningNow()
+{
+    setUpdatesEnabled( false );
+
+    // update the users in the list
+    lastfm::XmlQuery lfm;
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    {
+        // reset all the friends to have the same order of max unsigned int
+        for ( int i = 0 ; i < ui.friends->count() ; ++i )
+            static_cast<FriendWidget*>( ui.friends->itemWidget( ui.friends->item( i ) ) )->setOrder( 0 - 1 );
+
+        QList<XmlQuery> users = lfm["friendslisteningnow"].children( "user" );
+
+        for ( int i = 0 ; i < users.count() ; ++i )
+        {
+            XmlQuery& user = users[i];
+
+            for ( int j = 0 ; j < ui.friends->count() ; ++j )
+            {
+                FriendWidget* friendWidget = static_cast<FriendWidget*>( ui.friends->itemWidget( ui.friends->item( j ) ) );
+
+                if ( friendWidget->name() == user["name"].text() )
+                    friendWidget->update( user, i );
+            }
+
         }
 
         int page = lfm["friends"].attribute( "page" ).toInt();

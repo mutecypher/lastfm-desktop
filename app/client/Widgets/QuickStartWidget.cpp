@@ -48,12 +48,10 @@ QuickStartWidget::QuickStartWidget( QWidget* parent )
     layout->addWidget( ui.button = new QPushButton( tr("Play"), this ) );
     ui.button->setToolTip( tr( "Play" ) );
     ui.button->setContextMenuPolicy( Qt::CustomContextMenu );
-    ui.button->setEnabled( false );
+    ui.button->setEnabled( true );
 
     connect( ui.button, SIGNAL(clicked()), SLOT(play()));
     connect( ui.button, SIGNAL(customContextMenuRequested(QPoint)), SLOT(customContextMenuRequested(QPoint)));
-
-    connect( ui.edit, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
 
     QShortcut* shortcut = new QShortcut( ui.edit );
     shortcut->setKey( Qt::CTRL + Qt::Key_D );
@@ -68,26 +66,27 @@ QuickStartWidget::setToCurrent()
 }
 
 void
-QuickStartWidget::onTextChanged( const QString& text )
-{
-    ui.button->setEnabled( !text.isEmpty() );
-}
-
-void
 QuickStartWidget::play()
 {
     QString trimmedText = ui.edit->text().trimmed();
 
-    if( trimmedText.startsWith("lastfm://") )
-        RadioService::instance().play( RadioStation( trimmedText ) );
-    else if ( ui.edit->text().length() )
+    if ( !trimmedText.isEmpty() )
     {
-        StationSearch* s = new StationSearch();
-        connect(s, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)));
-        s->startSearch( ui.edit->text() );
-    }
+        if( trimmedText.startsWith("lastfm://") )
+            RadioService::instance().play( RadioStation( trimmedText ) );
+        else if ( ui.edit->text().length() )
+        {
+            StationSearch* s = new StationSearch();
+            connect(s, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)));
+            s->startSearch( ui.edit->text() );
+        }
 
-    ui.edit->clear();
+        ui.edit->clear();
+    }
+    else
+    {
+        RadioService::instance().play( RadioStation() );
+    }
 }
 
 void

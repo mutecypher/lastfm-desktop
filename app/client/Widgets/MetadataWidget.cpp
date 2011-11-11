@@ -48,6 +48,7 @@
 #include "lib/unicorn/widgets/LfmListViewWidget.h"
 #include "lib/unicorn/widgets/Label.h"
 #include "lib/unicorn/layouts/FlowLayout.h"
+#include "lib/unicorn/DesktopServices.h"
 
 #include "../Application.h"
 #include "../Services/ScrobbleService.h"
@@ -255,7 +256,7 @@ MetadataWidget::onArtistGotInfo()
 
             for ( int i = 0 ; i < tags.count() ; ++i )
             {
-                if ( i ==0 )
+                if ( i == 0 )
                     tagString.append( tr( " %1" ).arg( Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
                 else
                     tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "・" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
@@ -431,7 +432,7 @@ MetadataWidget::onTrackGotBuyLinks()
 void
 MetadataWidget::onBuyActionTriggered( QAction* buyAction )
 {
-    QDesktopServices::openUrl( buyAction->data().toString() );
+    unicorn::DesktopServices::openUrl( buyAction->data().toString() );
 }
 
 void
@@ -536,7 +537,7 @@ void
 MetadataWidget::listItemClicked( const QModelIndex& i )
 {
    const QUrl& url = i.data( LfmListModel::WwwRole ).toUrl();
-   QDesktopServices::openUrl( url );
+   unicorn::DesktopServices::openUrl( url );
 }
 
 void

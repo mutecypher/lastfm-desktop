@@ -59,6 +59,7 @@
 #include "lib/unicorn/widgets/SlidingStackedWidget.h"
 #include "lib/listener/PlayerConnection.h"
 #include "lib/unicorn/Updater/Updater.h"
+#include "lib/unicorn/DesktopServices.h"
 
 #ifdef Q_OS_MAC
 void qt_mac_set_dock_menu(QMenu *menu);
@@ -91,7 +92,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     h->addWidget( ui.sideBar = new SideBar( this ) );
 
-    h->addWidget( ui.stackedWidget = new SlidingStackedWidget( this ) );
+    h->addWidget( ui.stackedWidget = new unicorn::SlidingStackedWidget( this ) );
 
     connect( ui.sideBar, SIGNAL(currentChanged(int)), ui.stackedWidget, SLOT(slide(int)));
 
@@ -111,6 +112,9 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     ui.stackedWidget->addWidget( ui.friends = new FriendListWidget(this) );
     ui.friends->setObjectName( "friends" );
+
+    connect( ui.stackedWidget, SIGNAL(currentChanged(int)), ui.friends, SLOT(onCurrentChanged(int)) );
+
 
     ui.stackedWidget->addWidget( ui.radioScrollArea = new QScrollArea( this ) );
     ui.radioScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
@@ -230,7 +234,7 @@ MainWindow::setupMenuBar()
 void
 MainWindow::onVisitProfile()
 {
-    QDesktopServices::openUrl( aApp->currentSession()->userInfo().www() );
+    unicorn::DesktopServices::openUrl( aApp->currentSession()->userInfo().www() );
 }
 
 void

@@ -1,4 +1,6 @@
 
+#include <QPixmap>
+
 #include <Growl/Growl.h>
 
 #include <lastfm/Track.h>
@@ -42,22 +44,46 @@ unicorn::Notify::Notify(QObject *parent) :
 void
 unicorn::Notify::newTrack( const lastfm::Track& track )
 {
-    QString title = track.toString();
-    QString description = tr("from %1").arg( track.album() );
+    delete m_trackImageFetcher;
+    m_trackImageFetcher = new TrackImageFetcher( track );
+    connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), SLOT(onFinished(QPixmap)) );
+    m_trackImageFetcher->startAlbum();
+}
+
+void
+unicorn::Notify::onFinished( const QPixmap& pixmap )
+{
+    Track track = m_trackImageFetcher->track();
+
+    QString title = track.title();
+    QString description = tr("%1\n%2").arg( track.artist(), track.album() );
+
+    if ( track.album().isNull() )
+        description = track.artist();
 
     NSString* nsTitle = [NSString stringWithCharacters:(const unichar *)title.unicode() length:(NSUInteger)title.length() ];
     NSString* nsDescription = [NSString stringWithCharacters:(const unichar *)description.unicode() length:(NSUInteger)description.length() ];
+
+    NSData* data = nil;
+
+    if ( !pixmap.isNull() )
+    {
+        CGImageRef cgImage = pixmap.toMacCGImageRef();
+        NSImage* nsImage = [[NSImage alloc] initWithCGImage:(CGImageRef)cgImage size:(NSSize)NSZeroSize];
+        data = [nsImage TIFFRepresentation];
+    }
 
     // TODO: Do the growl notification here. It'll be great!
     [GrowlApplicationBridge notifyWithTitle:(NSString *)nsTitle
       description:(NSString *)nsDescription
       notificationName:(NSString *)@"New track"
-                                iconData:(NSData *)nil
+                                iconData:(NSData *)data
                                 priority:(signed int)0
                                 isSticky:(BOOL)NO
                                 clickContext:(id)@"context"];
 
 }
+
 
 void
 unicorn::Notify::growlNotificationWasClicked()

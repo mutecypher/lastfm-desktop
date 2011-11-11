@@ -20,6 +20,8 @@
 
 #include "HttpImageWidget.h"
 
+#include "lib/unicorn/DesktopServices.h"
+
 HttpImageWidget::HttpImageWidget( QWidget* parent )
     :QLabel( parent ), m_mouseDown( false )
 {
@@ -76,7 +78,7 @@ void HttpImageWidget::mouseReleaseEvent( QMouseEvent* event )
 
 void HttpImageWidget::onClick()
 {
-    QDesktopServices::openUrl( m_href );
+    unicorn::DesktopServices::openUrl( m_href );
 }
 
 void HttpImageWidget::onUrlLoaded()

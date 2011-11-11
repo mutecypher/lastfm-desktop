@@ -38,6 +38,8 @@ public:
     void startAlbum();
     void startArtist();
 
+    Track track() const { return m_track; }
+
 private:
     Track m_track;
 
@@ -49,7 +51,7 @@ private:
     Artist artist() const { return m_track.artist(); }
 
 signals:
-    void finished( const class QImage& );
+    void finished( const class QPixmap& );
 
 private slots:
     void onAlbumGotInfo();

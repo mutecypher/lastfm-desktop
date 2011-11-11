@@ -30,6 +30,8 @@
 #include <QShortcut>
 #include <QMouseEvent>
 
+#include "lib/unicorn/DesktopServices.h"
+
 #ifdef Q_OS_WIN32
 #include <Objbase.h>
 #endif
@@ -141,7 +143,7 @@ unicorn::MainWindow::updateThumbButtons()
 void
 unicorn::MainWindow::openLog()
 {
-    QDesktopServices::openUrl( QUrl::fromLocalFile( unicorn::CoreApplication::log().absoluteFilePath() ) );    
+    unicorn::DesktopServices::openUrl( QUrl::fromLocalFile( unicorn::CoreApplication::log().absoluteFilePath() ) );    
 }
 
 

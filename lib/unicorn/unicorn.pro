@@ -64,7 +64,8 @@ SOURCES += \
     dialogs/LoginContinueDialog.cpp \
     dialogs/AboutDialog.cpp \
     dialogs/ScrobbleConfirmationDialog.cpp \
-    AnimatedStatusBar.cpp
+    AnimatedStatusBar.cpp \
+    DesktopServices.cpp
 
 HEADERS += \
     widgets/UserToolButton.h \
@@ -132,7 +133,8 @@ HEADERS += \
     widgets/AvatarWidget.h \
     layouts/FlowLayout.h \
     widgets/SlidingStackedWidget.h \
-    Updater/Updater.h
+    Updater/Updater.h \
+    DesktopServices.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp \
                Updater/Updater.cpp

@@ -103,7 +103,8 @@ SOURCES += \
     Wizard/BootstrapProgressPage.cpp \
     Wizard/TourScrobblesPage.cpp \
     Wizard/TourLocationPage.cpp \
-    Wizard/WizardPage.cpp
+    Wizard/WizardPage.cpp \
+    CommandReciever/CommandReciever.mm
 
 HEADERS += \
     ScrobSocket.h \
@@ -183,7 +184,8 @@ HEADERS += \
     Wizard/LoginPage.h \
     Wizard/FirstRunWizard.h \
     Wizard/BootstrapPage.h \
-    Wizard/WizardPage.h
+    Wizard/WizardPage.h \
+    CommandReciever/CommandReciever.h
 
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
@@ -200,13 +202,19 @@ FORMS += \
     Settings/IpodSettingsWidget.ui \
     Settings/ScrobbleSettingsWidget.ui \
     Settings/AdvancedSettingsWidget.ui \
-    Wizard/FirstRunWizard.ui
+    Wizard/FirstRunWizard.ui \
+    Widgets/NothingPlayingWidget.ui
 
 linux*:HEADERS += MediaDevices/IpodDevice_linux.h
 linux*:SOURCES += MediaDevices/IpodDevice_linux.cpp
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
+
+
+
+
+
 
 
 

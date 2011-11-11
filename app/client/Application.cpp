@@ -44,10 +44,13 @@
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "lib/unicorn/Updater/PluginList.h"
+#include "lib/unicorn/DesktopServices.h"
 #ifdef Q_OS_MAC
 #include "lib/unicorn/notify/Notify.h"
 #endif
 
+
+#include "CommandReciever/CommandReciever.h"
 #include "MediaDevices/DeviceScrobbler.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
@@ -309,6 +312,8 @@ Application::init()
 #ifdef Q_OS_MAC
     m_notify = new Notify( this );
     connect( m_notify, SIGNAL(clicked()), SLOT(showWindow()) );
+
+    new CommandReciever( this );
 #endif
 
 #ifdef CLIENT_ROOM_RADIO
@@ -397,11 +402,15 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
     if ( track != m_currentTrack )
     {
         m_currentTrack = track;
+
+        if ( track.extra( "playerId" ) != "spt" )
+        {
 #ifdef Q_OS_MAC
-        m_notify->newTrack( track );
+            m_notify->newTrack( track );
 #else
-        tray()->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
+            tray()->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
 #endif
+        }
     }
 
     m_tray->setToolTip( track.toString() );
@@ -465,13 +474,13 @@ Application::onShareTriggered()
 void
 Application::onVisitProfileTriggered()
 {
-    QDesktopServices::openUrl( User().www() );
+    unicorn::DesktopServices::openUrl( User().www() );
 }
 
 void
 Application::onFaqTriggered()
 {
-    QDesktopServices::openUrl( lastfm::UrlBuilder( "help" ).slash( "faq" ).url() );
+    unicorn::DesktopServices::openUrl( lastfm::UrlBuilder( "help" ).slash( "faq" ).url() );
 }
 
 void
@@ -479,7 +488,7 @@ Application::onForumsTriggered()
 {
 
 
-    QDesktopServices::openUrl( lastfm::UrlBuilder( "forum" ).slash( "34905" ).url() );
+    unicorn::DesktopServices::openUrl( lastfm::UrlBuilder( "forum" ).slash( "34905" ).url() );
 }
 
 void

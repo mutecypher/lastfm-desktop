@@ -44,8 +44,6 @@ private slots:
 
     void setToCurrent();
 
-    void onTextChanged( const QString& text );
-
     void customContextMenuRequested( const class QPoint& point );
 
 private:

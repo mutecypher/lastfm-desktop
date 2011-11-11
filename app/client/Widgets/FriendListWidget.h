@@ -22,11 +22,17 @@ private:
 public:
     explicit FriendListWidget( QWidget *parent = 0 );
 
+public slots:
+    void onCurrentChanged(int);
+
 private slots:
     void onSessionChanged( unicorn::Session* session );
     void onGotUserInfo( const lastfm::User& userDetails );
     void onGotFriends();
+    void onGotFriendsListeningNow();
     void onTextChanged( const QString& text );
+
+    void refresh();
 
 private:
     void changeUser( const QString& newUsername );

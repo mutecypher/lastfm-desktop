@@ -30,6 +30,8 @@
 #include <QNetworkReply>
 #include <QVBoxLayout>
 
+#include "lib/unicorn/DesktopServices.h"
+
 #ifdef WIN32
 #include <QApplication>
 #include <windows.h>
@@ -147,7 +149,7 @@ void
 UpdateDialog::install()
 {
 #ifdef __APPLE__
-    QDesktopServices::openUrl( QUrl::fromLocalFile( tmpFileName ) );
+    unicorn::DesktopServices::openUrl( QUrl::fromLocalFile( tmpFileName ) );
     qApp->quit();
     //TODO auto shut this instance if possible
 #endif
