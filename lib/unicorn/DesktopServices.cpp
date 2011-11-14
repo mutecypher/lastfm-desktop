@@ -3,6 +3,8 @@
 #include <QCoreApplication>
 #include <QUrl>
 
+#include <lastfm/UrlBuilder.h>
+
 #include "DesktopServices.h"
 
 unicorn::DesktopServices::DesktopServices()
@@ -13,7 +15,7 @@ unicorn::DesktopServices::DesktopServices()
 bool
 unicorn::DesktopServices::openUrl( QUrl url )
 {
-    if ( url.host() == "www.last.fm" )
+    if ( lastfm::UrlBuilder::isHost( url ) )
     {
         url.addQueryItem( "utm_source", "last.fm" );
         url.addQueryItem( "utm_medium", "application" );
