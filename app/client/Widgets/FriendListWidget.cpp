@@ -116,7 +116,7 @@ FriendListWidget::onTextChanged( const QString& text )
 
 void FriendListWidget::onCurrentChanged( int index )
 {
-    if ( index = 3 )
+    if ( index == 3 )
     {
         refresh();
     }

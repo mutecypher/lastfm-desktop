@@ -26,6 +26,9 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
 {   
     ui->setupUi( this );
 
+    setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->top->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
     setUser( User() );
 
     ui->scrobble->setText( tr( "<p>Scrobble from your music player.</p>"
@@ -65,8 +68,8 @@ NothingPlayingWidget::onSessionChanged( unicorn::Session* session )
 void
 NothingPlayingWidget::setUser( const lastfm::User& user )
 {
-//    if ( !user.name().isEmpty() )
-//        ui->top->setText( tr(  "<p>Hello, %1!" ).arg( user.name() ) );
+    if ( !user.name().isEmpty() )
+        ui->top->setText( tr(  "Hello, %1!" ).arg( user.name() ) );
 }
 
 void
