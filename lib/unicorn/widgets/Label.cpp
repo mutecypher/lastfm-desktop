@@ -4,15 +4,18 @@
 #include <QToolTip>
 #include <QUrl>
 
+#include "../DesktopServices.h"
+
 #include "Label.h"
 
 Label::Label( QWidget* parent )
     :QLabel( parent ), m_linkColor( Qt::black )
 {
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    setOpenExternalLinks( true );
+    setOpenExternalLinks( false );
 
     connect( this, SIGNAL(linkHovered(QString)), SLOT(onHovered(QString)));
+    connect( this, SIGNAL(linkActivated(QString)), SLOT(onActivated(QString)));
 }
 
 
@@ -21,9 +24,16 @@ Label::Label( const QString& text, QWidget* parent )
 {
     setText( text );
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    setOpenExternalLinks( true );
+    setOpenExternalLinks( false );
 
     connect( this, SIGNAL(linkHovered(QString)), SLOT(onHovered(QString)));
+    connect( this, SIGNAL(linkActivated(QString)), SLOT(onActivated(QString)));
+}
+
+void
+Label::onActivated( const QString& url )
+{
+    unicorn::DesktopServices::openUrl( url );
 }
 
 void

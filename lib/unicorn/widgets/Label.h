@@ -25,6 +25,7 @@ private:
 
 private slots:
     void onHovered( const QString& url );
+    void onActivated( const QString& url );
 
 private:
     QString m_text;
