@@ -102,6 +102,8 @@ private slots:
     void onOutputDeviceChanged(const Phonon::AudioOutputDevice&);
     void onVolumeChanged(qreal);
 
+    void onLastFmUrl( const QUrl& url );
+
 	/** we get a "proper" station name from the tune webservice */
     void setStationName( const QString& );
 	
