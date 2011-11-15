@@ -48,7 +48,7 @@ StatusBar::StatusBar( QWidget* parent )
     ui.cog->setObjectName( "cog" );
     ui.cog->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-    widgetLayout->addWidget( ui.message = new Label( this ), 1, Qt::AlignVCenter );
+    widgetLayout->addWidget( ui.message = new unicorn::Label( this ), 1, Qt::AlignVCenter );
     ui.message->setObjectName( "message" );
     ui.message->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui.message->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );

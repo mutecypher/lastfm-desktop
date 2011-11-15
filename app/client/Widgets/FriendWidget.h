@@ -9,6 +9,9 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
+namespace unicorn { class Label; }
+using unicorn::Label;
+
 class FriendWidget : public StylableWidget
 {
     Q_OBJECT
@@ -16,8 +19,8 @@ private:
     struct
     {
         class AvatarWidget* avatar;
-        class Label* name;
-        class Label* lastTrack;
+        Label* name;
+        Label* lastTrack;
         class PlayableItemWidget* radio;
         class PlayableItemWidget* multiRadio;
     } ui;

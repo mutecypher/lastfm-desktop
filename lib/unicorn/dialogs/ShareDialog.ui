@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>385</width>
+    <width>406</width>
     <height>393</height>
    </rect>
   </property>
@@ -95,14 +95,14 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="Label" name="shareSubject">
+         <widget class="unicorn::Label" name="shareSubject">
           <property name="text">
            <string>TextLabel</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="Label" name="shareSubject2">
+         <widget class="unicorn::Label" name="shareSubject2">
           <property name="text">
            <string>TextLabel</string>
           </property>
@@ -218,7 +218,7 @@
    <header>lib/unicorn/widgets/HttpImageWidget.h</header>
   </customwidget>
   <customwidget>
-   <class>Label</class>
+   <class>unicorn::Label</class>
    <extends>QLabel</extends>
    <header>lib/unicorn/widgets/Label.h</header>
   </customwidget>

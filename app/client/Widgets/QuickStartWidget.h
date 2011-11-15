@@ -25,6 +25,9 @@
 
 class QComboBox;
 
+namespace unicorn { class Label; }
+using unicorn::Label;
+
 class QuickStartWidget : public StylableWidget
 {
     Q_OBJECT
@@ -33,7 +36,7 @@ private:
     {
         class QLineEdit* edit;
         class QPushButton* button;
-        class Label* whyNotTry;
+        Label* whyNotTry;
     } ui;
 
 public:

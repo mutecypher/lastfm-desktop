@@ -106,7 +106,7 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="Label" name="trackTitle">
+                <widget class="unicorn::Label" name="trackTitle">
                  <property name="text">
                   <string>Track title</string>
                  </property>
@@ -122,7 +122,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="Label" name="trackArtist">
+                <widget class="unicorn::Label" name="trackArtist">
                  <property name="text">
                   <string>Artist</string>
                  </property>
@@ -148,7 +148,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="Label" name="trackAlbum">
+                <widget class="unicorn::Label" name="trackAlbum">
                  <property name="text">
                   <string>Album</string>
                  </property>
@@ -182,107 +182,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="trackStats">
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QGridLayout" name="gridLayout">
-             <property name="margin">
-              <number>0</number>
-             </property>
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <item row="0" column="0">
-              <widget class="QLabel" name="trackListeners">
-               <property name="text">
-                <string>0</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="trackListenersLabel">
-               <property name="text">
-                <string>Listeners</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="3">
-              <widget class="QLabel" name="trackPlays">
-               <property name="text">
-                <string>0</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="6">
-              <widget class="QLabel" name="trackUserPlays">
-               <property name="text">
-                <string>0</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="3">
-              <widget class="QLabel" name="trackPlaysLabel">
-               <property name="text">
-                <string>Plays</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="6">
-              <widget class="QLabel" name="trackUserPlaysLabel">
-               <property name="text">
-                <string>Plays in your library</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2" rowspan="2">
-              <widget class="QFrame" name="trackSeperator2">
-               <property name="frameShape">
-                <enum>QFrame::NoFrame</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1" rowspan="2">
-              <widget class="QFrame" name="trackSeperator1">
-               <property name="frameShape">
-                <enum>QFrame::NoFrame</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="4" rowspan="2">
-              <widget class="QFrame" name="trackSeperator3">
-               <property name="frameShape">
-                <enum>QFrame::NoFrame</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="5" rowspan="2">
-              <widget class="QFrame" name="trackSeperator4">
-               <property name="frameShape">
-                <enum>QFrame::NoFrame</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="Label" name="context">
+           <widget class="ContextLabel" name="context">
             <property name="text">
              <string>Context</string>
             </property>
@@ -310,7 +210,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="Label" name="trackPopTags">
+              <widget class="unicorn::Label" name="trackPopTags">
                <property name="text">
                 <string>Popular tags:</string>
                </property>
@@ -323,7 +223,7 @@
               </widget>
              </item>
              <item>
-              <widget class="Label" name="trackYourTags">
+              <widget class="unicorn::Label" name="trackYourTags">
                <property name="text">
                 <string>Your tags:</string>
                </property>
@@ -357,7 +257,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="Label" name="artistArtist">
+           <widget class="unicorn::Label" name="artistArtist">
             <property name="text">
              <string>Artist</string>
             </property>
@@ -411,46 +311,36 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="3">
+             <item row="0" column="2">
               <widget class="QLabel" name="artistPlays">
                <property name="text">
                 <string>0</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="6">
+             <item row="0" column="4">
               <widget class="QLabel" name="artistUserPlays">
                <property name="text">
                 <string>0</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="3">
+             <item row="1" column="2">
               <widget class="QLabel" name="artistPlaysLabel">
                <property name="text">
                 <string>Plays</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="6">
+             <item row="1" column="4">
               <widget class="QLabel" name="artistUserPlaysLabel">
                <property name="text">
                 <string>Plays in your library</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="2" rowspan="2">
-              <widget class="QFrame" name="artistSeperator2">
-               <property name="frameShape">
-                <enum>QFrame::NoFrame</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-              </widget>
-             </item>
              <item row="0" column="1" rowspan="2">
-              <widget class="QFrame" name="artistSeperator1">
+              <widget class="QFrame" name="splitter3">
                <property name="frameShape">
                 <enum>QFrame::NoFrame</enum>
                </property>
@@ -459,18 +349,8 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="4" rowspan="2">
-              <widget class="QFrame" name="artistSeperator3">
-               <property name="frameShape">
-                <enum>QFrame::NoFrame</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="5" rowspan="2">
-              <widget class="QFrame" name="artistSeperator4">
+             <item row="0" column="3" rowspan="2">
+              <widget class="QFrame" name="splitter4">
                <property name="frameShape">
                 <enum>QFrame::NoFrame</enum>
                </property>
@@ -498,7 +378,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="Label" name="artistPopTags">
+              <widget class="unicorn::Label" name="artistPopTags">
                <property name="text">
                 <string>Popular tags:</string>
                </property>
@@ -511,7 +391,7 @@
               </widget>
              </item>
              <item>
-              <widget class="Label" name="artistYourTags">
+              <widget class="unicorn::Label" name="artistYourTags">
                <property name="text">
                 <string>Your tags:</string>
                </property>
@@ -524,6 +404,16 @@
               </widget>
              </item>
             </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="splitter">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
            </widget>
           </item>
           <item>
@@ -649,6 +539,22 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>HttpImageWidget</class>
+   <extends>QLabel</extends>
+   <header>lib/unicorn/widgets/HttpImageWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>unicorn::Label</class>
+   <extends>QLabel</extends>
+   <header>lib/unicorn/widgets/Label.h</header>
+  </customwidget>
+  <customwidget>
+   <class>StylableWidget</class>
+   <extends>QWidget</extends>
+   <header>lib/unicorn/StylableWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>ScrobbleControls</class>
    <extends>QFrame</extends>
    <header>../Widgets/ScrobbleControls.h</header>
@@ -660,22 +566,6 @@
    <header>../Widgets/BioWidget.h</header>
   </customwidget>
   <customwidget>
-   <class>HttpImageWidget</class>
-   <extends>QLabel</extends>
-   <header>lib/unicorn/widgets/HttpImageWidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>StylableWidget</class>
-   <extends>QWidget</extends>
-   <header>lib/unicorn/StylableWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>Label</class>
-   <extends>QLabel</extends>
-   <header>lib/unicorn/widgets/Label.h</header>
-  </customwidget>
-  <customwidget>
    <class>PlayableItemWidget</class>
    <extends>QPushButton</extends>
    <header>../Widgets/PlayableItemWidget.h</header>
@@ -684,6 +574,11 @@
    <class>BackButton</class>
    <extends>QPushButton</extends>
    <header>../Widgets/BackButton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ContextLabel</class>
+   <extends>QLabel</extends>
+   <header>../Widgets/ContextLabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

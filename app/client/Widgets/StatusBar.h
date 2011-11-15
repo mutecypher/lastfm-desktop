@@ -27,6 +27,7 @@ class QLabel;
 
 namespace Phonon { class VolumeSlider; }
 namespace unicorn { class Session; }
+namespace unicorn { class Label; }
 
 class StatusBar : public QStatusBar
 {
@@ -50,7 +51,7 @@ class StatusBar : public QStatusBar
         {
             class StylableWidget* widget;
             class QPushButton* cog;
-            class Label* message;
+            unicorn::Label* message;
 
             class StylableWidget* permanentWidget;
             class QLabel* volMin;

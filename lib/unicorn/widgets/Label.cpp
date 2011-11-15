@@ -3,12 +3,13 @@
 #include <QPainter>
 #include <QToolTip>
 #include <QUrl>
+#include <QGraphicsDropShadowEffect>
 
 #include "../DesktopServices.h"
 
 #include "Label.h"
 
-Label::Label( QWidget* parent )
+unicorn::Label::Label( QWidget* parent )
     :QLabel( parent ), m_linkColor( Qt::black )
 {
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
@@ -19,7 +20,7 @@ Label::Label( QWidget* parent )
 }
 
 
-Label::Label( const QString& text, QWidget* parent )
+unicorn::Label::Label( const QString& text, QWidget* parent )
     :QLabel( parent )
 {
     setText( text );
@@ -31,20 +32,20 @@ Label::Label( const QString& text, QWidget* parent )
 }
 
 void
-Label::onActivated( const QString& url )
+unicorn::Label::onActivated( const QString& url )
 {
     unicorn::DesktopServices::openUrl( url );
 }
 
 void
-Label::onHovered( const QString& url )
+unicorn::Label::onHovered( const QString& url )
 {   
     QUrl displayUrl( url );
     QToolTip::showText( cursor().pos(), displayUrl.toString(), this, QRect() );
 }
 
 QString
-Label::boldLinkStyle( const QString& text, QColor linkColor )
+unicorn::Label::boldLinkStyle( const QString& text, QColor linkColor )
 {
     return QString( "<html><head><style type=text/css>"
                      "a:link {color:%1; font-weight: bold; text-decoration:none;}"
@@ -53,13 +54,13 @@ Label::boldLinkStyle( const QString& text, QColor linkColor )
 }
 
 QString
-Label::boldLinkStyle( const QString& text )
+unicorn::Label::boldLinkStyle( const QString& text )
 {
     return boldLinkStyle( text, m_linkColor );
 }
 
 void
-Label::setText( const QString& text )
+unicorn::Label::setText( const QString& text )
 {
     m_text = text;
 
@@ -72,19 +73,19 @@ Label::setText( const QString& text )
 }
 
 void
-Label::setLinkColor( QColor linkColor )
+unicorn::Label::setLinkColor( QColor linkColor )
 {
     m_linkColor = linkColor;
 }
 
 QString
-Label::anchor( const QString& url, const QString& text )
+unicorn::Label::anchor( const QString& url, const QString& text )
 {
     return QString( "<a href=\"%1\">%2</a>" ).arg( url, text );
 }
 
 void
-Label::paintEvent( QPaintEvent* event )
+unicorn::Label::paintEvent( QPaintEvent* event )
 {
     if ( textFormat() == Qt::RichText )
         QLabel::paintEvent( event );

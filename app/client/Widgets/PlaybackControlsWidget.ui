@@ -58,14 +58,14 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="Label" name="status">
+          <widget class="unicorn::Label" name="status">
            <property name="text">
             <string>Status</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="Label" name="device">
+          <widget class="unicorn::Label" name="device">
            <property name="text">
             <string>Device</string>
            </property>
@@ -176,7 +176,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Label</class>
+   <class>unicorn::Label</class>
    <extends>QLabel</extends>
    <header>lib/unicorn/widgets/Label.h</header>
   </customwidget>
