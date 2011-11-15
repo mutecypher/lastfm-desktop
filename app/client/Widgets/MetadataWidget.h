@@ -74,8 +74,6 @@ signals:
     void backClicked();
 
 private:
-    void paintEvent(QPaintEvent *);
-
     void checkFinished();
 
     void setTrackDetails( const Track& track );
@@ -90,7 +88,9 @@ private:
 
     int m_globalTrackScrobbles;
     int m_userTrackScrobbles;
+    int m_globalArtistScrobbles;
     int m_userArtistScrobbles;
+    int m_artistListeners;
 
     Album m_albumGuess;
 };

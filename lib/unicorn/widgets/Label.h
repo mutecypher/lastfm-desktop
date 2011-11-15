@@ -5,6 +5,9 @@
 
 #include "lib/DllExportMacro.h"
 
+namespace unicorn
+{
+
 class UNICORN_DLLEXPORT Label : public QLabel
 {
     Q_OBJECT
@@ -31,5 +34,7 @@ private:
     QString m_text;
     QColor m_linkColor;
 };
+
+}
 
 #endif // LABEL_H
