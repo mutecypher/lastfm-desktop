@@ -154,9 +154,9 @@ Application::init()
 
     initiateLogin( !currentSession() );
 
-//    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
-//    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
-//    lastfm::nam()->setCache( diskCache );
+    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
+    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
+    lastfm::nam()->setCache( diskCache );
 
     m_menuBar = new QMenuBar( 0 );
 
