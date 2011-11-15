@@ -25,6 +25,9 @@
 
 class QComboBox;
 
+namespace unicorn { class Label; }
+using unicorn::Label;
+
 class QuickStartWidget : public StylableWidget
 {
     Q_OBJECT
@@ -33,6 +36,7 @@ private:
     {
         class QLineEdit* edit;
         class QPushButton* button;
+        Label* whyNotTry;
     } ui;
 
 public:
@@ -46,8 +50,17 @@ private slots:
 
     void customContextMenuRequested( const class QPoint& point );
 
-private:
+    void onGotTagSuggestions();
+    void onGotTopTags();
+    void onUserGotTopArtists();
+    void onChartGotTopArtists();
 
+private:
+    void setSuggestions();
+
+private:
+    QStringList m_tags;
+    QStringList m_artists;
 };
 
 #endif

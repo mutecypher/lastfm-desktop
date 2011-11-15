@@ -190,16 +190,40 @@ SideBar QAbstractButton#radio:checked {
 background-image: url(":/tab_radio_ACTIVE.png");
 }
 
+QFrame#splitter1,
+QFrame#splitter2,
+QFrame#splitter3,
+QFrame#splitter4 {
+	border: none;
+	border-right: 1px solid white;
+	border-left: 1px solid #cdcdcd;
+	min-width: 0px;
+	max-width: 0px;
+	margin: 0px 10px;
+}
+
+QFrame#splitter {
+	border: none;
+	border-bottom: 1px solid white;
+	border-top: 1px solid #cdcdcd;
+	min-height: 0px;
+	margin: 10px 0px;
+}
+
 NothingPlayingWidget QLabel {
 color: #333;
-font-weight: bold;
 font-size: 12px;
 }
 
-NothingPlayingWidget {
+NothingPlayingWidget QFrame#contents {
 	border: none;
 	padding: 0px;
-	margin: 0px;
+	margin: 20px;
+}
+
+NothingPlayingWidget QLabel#start {
+	font-size: 16px;
+	font-weight: bold;
 }
 
 NothingPlayingWidget QLabel#top {
@@ -211,37 +235,21 @@ NothingPlayingWidget QLabel#top {
 	border-bottom: 1px solid #989898;
 	min-height: 65px;
 	margin: 0px;
-}
-
-NothingPlayingWidget QFrame#split {
-	border: none;
-	border-bottom: 1px solid white;
-	border-top: 1px solid black;
-	min-height: 0px;
+	padding-left: 20px;
 }
 
 NothingPlayingWidget QLabel#scrobble {
-font-size: 16px;
-margin-bottom: 28px;
+	margin: 10px 0px 20px;
 }
 
-NothingPlayingWidget QLabel#scrobbleExplain {
-margin-bottom: 20px;
-}
-
-NothingPlayingWidget StylableWidget#players {
-padding-top: 40px;
-border: none;
-}
-
-NothingPlayingWidget StylableWidget#players  QAbstractButton {
+NothingPlayingWidget QAbstractButton {
 background-color: transparent;
 background-repeat: no-repeat;
-background-position: center;
+background-position: left;
 border: none;
 height: 44px;
 width: 44px;
-margin: 0px 10px;
+margin: 0px;
 }
 
 NothingPlayingWidget QAbstractButton#itunes {
@@ -260,7 +268,7 @@ NothingPlayingWidget QAbstractButton#foobar {
 background-image: url(":/control_bar_scrobble_foobar.png");
 }
 
-NowPlayingWidget QLabel#context {
+MetadataWidget QLabel#context {
 margin: 20px 0px;
 padding: 15px 15px;
 background-color: #ffffff;
@@ -305,10 +313,6 @@ padding: 20px 20px 20px 20px;
 
 MetadataWidget QFrame#artistFrame {
 padding-bottom: 0px;
-}
-
-MetadataWidget QFrame#trackDetails {
-padding-bottom: 10px;
 }
 
 MetadataWidget HttpImageWidget#albumImage {
@@ -361,9 +365,8 @@ font-size: 11px;
 MetadataWidget QLabel#similarArtists {
 font-size: 16px;
 font-weight: bold;
-padding: 10px 0px;
+padding: 0px 0px 10px;
 border: none;
-border-bottom: 1px solid #aaaaaa;
 }
 
 MetadataWidget QFrame#trackStats {
@@ -392,24 +395,6 @@ font-size: 10pt;
 font-weight: normal;
 }
 
-MetadataWidget QFrame#trackSeperator1,
-MetadataWidget QFrame#trackSeperator3,
-MetadataWidget QFrame#artistSeperator1,
-MetadataWidget QFrame#artistSeperator3 {
-border: none;
-border-right: 1px solid #cdcdcd;
-margin: 0px;
-}
-
-MetadataWidget QFrame#trackSeperator2,
-MetadataWidget QFrame#trackSeperator4,
-MetadataWidget QFrame#artistSeperator2,
-MetadataWidget QFrame#artistSeperator4 {
-border: none;
-border-left: 1px solid white;
-margin: 0px;
-}
-
 MetadataWidget QWidget#artistFrame {
 background-color: #dedede;
 }
@@ -418,7 +403,7 @@ MetadataWidget QLabel#artistArtist {
 font-size: 16pt;
 font-weight: bold;
 color: #333;
-padding-top: 10px 0px;
+padding: 0px 0px 5px;
 }
 
 MetadataWidget BioWidget#artistBio {
@@ -432,11 +417,6 @@ MetadataWidget TagWidget {
 height: 19px;
 color: white;
 font-size: 11px;
-}
-
-MetadataWidget QFrame#similarArtistFrame {
-padding: 10px 0px;
-border-top: 1px solid white;
 }
 
 MetadataWidget QFrame#similarArtistFrame QLabel {
@@ -536,11 +516,11 @@ width: 58px;
 margin: 0px 0px 0px 10px;
 }
 
-QuickStartWidget QPushButton:hover {
-background-image: url(":/radio_play_large_HOVER.png");
-}
-QuickStartWidget QPushButton:pressed {
-background-image: url(":/radio_play_large_PRESS.png");
+QuickStartWidget QPushButton:hover { background-image: url(":/radio_play_large_HOVER.png"); }
+QuickStartWidget QPushButton:pressed { background-image: url(":/radio_play_large_PRESS.png"); }
+
+QuickStartWidget Label#whyNotTry {
+	margin: 2px 0px 2px 1px;
 }
 
 QScrollArea {
@@ -555,8 +535,6 @@ margin: 0px 20px;
 RadioWidget QFrame#section,
 ProfileWidget QFrame#section {
 border: none;
-border-top: 1px solid white;
-padding: 7px 0px;
 }
 
 ProfileWidget QFrame#user {
@@ -715,9 +693,8 @@ background-image: url(":/radio_play_small_PRESS.png");
 
 RadioWidget QLabel#title,
 ProfileWidget QLabel#title {
-padding: 10px 0px;
-border: 1px solid #cdcdcd;
-border-width: 0px 0px 1px 0px;
+padding: 0px 0px 10px;
+border: none;
 font-weight: bold;
 font-size: 15px;
 }

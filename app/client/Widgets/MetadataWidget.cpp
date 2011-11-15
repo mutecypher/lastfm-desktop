@@ -60,6 +60,7 @@
 #include "MetadataWidget.h"
 #include "ui_MetadataWidget.h"
 
+using unicorn::Label;
 
 MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
    :StylableWidget( p ),
@@ -74,13 +75,6 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     ui->scrollArea->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->back->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->trackTagsFrame->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-
-    ui->trackPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    ui->trackPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    ui->trackUserPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    ui->trackUserPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    ui->trackListeners->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    ui->trackListenersLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
     ui->artistPlays->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->artistPlaysLabel->setAttribute( Qt::WA_LayoutUsesWidgetRect );
@@ -128,25 +122,6 @@ MetadataWidget::~MetadataWidget()
     delete ui;
 }
 
-void
-MetadataWidget::paintEvent( QPaintEvent* event )
-{
-    StylableWidget::paintEvent( event );
-
-    // draw the arrow on the context
-    if ( ui->context->isVisible() )
-    {
-        static QPixmap arrow( ":/meta_context_arrow.png" );
-
-        QPainter p( this );
-
-        //QPoint arrowPoint = ui->context->geometry().topLeft() - QPoint( 0, arrow.size().height() );
-        QPoint arrowPoint(20, 20);
-
-        p.drawPixmap( arrowPoint, arrow );
-    }
-}
-
 ScrobbleControls*
 MetadataWidget::scrobbleControls() const
 {
@@ -159,6 +134,7 @@ MetadataWidget::onTrackCorrected( QString )
 {
    setTrackDetails( m_track );
 }
+
 
 void
 MetadataWidget::setTrackDetails( const Track& track )
@@ -204,13 +180,13 @@ MetadataWidget::onArtistGotInfo()
 
     if ( lfm.parse( reply->readAll() ) )
     {
-        int scrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
-        int listeners = lfm["artist"]["stats"]["listeners"].text().toInt();
+        m_globalArtistScrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
+        m_artistListeners = lfm["artist"]["stats"]["listeners"].text().toInt();
         m_userArtistScrobbles = lfm["artist"]["stats"]["userplaycount"].text().toInt();
 
-        ui->artistPlays->setText( tr( "%L1" ).arg( scrobbles ) );
+        ui->artistPlays->setText( tr( "%L1" ).arg( m_globalArtistScrobbles ) );
         ui->artistUserPlays->setText( tr( "%L1" ).arg( m_userArtistScrobbles ) );
-        ui->artistListeners->setText( tr( "%L1" ).arg( listeners ) );
+        ui->artistListeners->setText( tr( "%L1" ).arg( m_artistListeners ) );
 
         // Update the context now that we have the user track listens
         ui->context->setText( contextString( m_track ) );
@@ -449,10 +425,6 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
         // Update the context now that we have the user track listens
         ui->context->setText( contextString( m_track ) );
 
-        ui->trackUserPlays->setText( QString("%L1").arg(m_userTrackScrobbles));
-        ui->trackPlays->setText( QString("%L1").arg(m_globalTrackScrobbles));
-        ui->trackListeners->setText( QString("%L1").arg( listeners ));
-
         //ui->albumImage->loadUrl( lfm["track"]["album"]["image size=medium"].text() );
         ui->albumImage->setHref( lfm["track"]["url"].text());
 
@@ -554,11 +526,14 @@ MetadataWidget::onScrobbleStatusChanged()
    if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
    {
        // update total scrobbles and your scrobbles!
-       ui->trackUserPlays->setText( QString("%L1").arg( ++m_userTrackScrobbles ));
-       ui->trackPlays->setText( QString("%L1").arg( ++m_globalTrackScrobbles ));
-       ++m_userArtistScrobbles;
+       ++m_userTrackScrobbles;
+       ++m_globalTrackScrobbles;
+       ui->artistUserPlays->setText( QString("%L1").arg( ++m_userArtistScrobbles ) );
+       ui->artistPlays->setText( QString("%L1").arg( ++m_globalArtistScrobbles ) );
+       if ( m_userTrackScrobbles == 1 )
+               ui->artistListeners->setText( QString("%L1").arg( ++m_artistListeners ) );
 
-       ui->context->setText( contextString( m_track ) );
+       //ui->context->setText( contextString( m_track ) );
    }
 }
 
@@ -681,8 +656,6 @@ MetadataWidget::setBackButtonVisible( bool visible )
    ui->context->setText( contextString( m_track ) );
 
    ui->back->setVisible( visible );
-   ui->trackStats->setVisible( visible );
-   ui->context->setVisible( !visible );
 
    ui->scrobbleControls->ui.love->setVisible( visible );
 

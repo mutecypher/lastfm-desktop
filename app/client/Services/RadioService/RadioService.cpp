@@ -20,7 +20,8 @@
 
 #include <QThread>
 #include <QTimer>
-#include <cmath>
+#include <QDesktopServices>
+
 #include <lastfm/RadioTuner.h>
 #include <phonon/mediaobject.h>
 #include <phonon/backendcapabilities.h>
@@ -36,8 +37,16 @@ RadioService::RadioService( )
        m_bErrorRecover( false )
 {
     initRadio();
+
+    QDesktopServices::setUrlHandler( "lastfm", this, "onLastFmUrl" );
 }
 
+void
+RadioService::onLastFmUrl( const QUrl& url )
+{
+    RadioStation rs( url.toString() );
+    play( rs );
+}
 
 // fixme:
 // todo:

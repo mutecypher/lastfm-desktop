@@ -108,6 +108,10 @@ ProfileWidget::changeUser( const QString& newUsername )
         ui.loved->setObjectName( "loved" );
 
         {
+            QFrame* splitter = new QFrame( this );
+            layout->addWidget( splitter );
+            splitter->setObjectName( "splitter" );
+
             QLabel* title = new QLabel( tr("Top Artists This Week"), this ) ;
             layout->addWidget( title );
             title->setObjectName( "title" );
@@ -116,6 +120,10 @@ ProfileWidget::changeUser( const QString& newUsername )
         }
 
         {
+            QFrame* splitter = new QFrame( this );
+            layout->addWidget( splitter );
+            splitter->setObjectName( "splitter" );
+
             QLabel* title = new QLabel( tr("Top Artists Overall"), this ) ;
             layout->addWidget( title );
             title->setObjectName( "title" );

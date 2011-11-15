@@ -16,6 +16,8 @@
 
 #include "RadioWidget.h"
 
+#define MAX_RECENT_STATIONS 5
+
 RadioWidget::RadioWidget(QWidget *parent)
     :StylableWidget( parent )
 {
@@ -65,13 +67,26 @@ RadioWidget::changeUser( const QString& newUsername )
         QuickStartWidget* quickStartWidget = new QuickStartWidget();
         layout->addWidget( quickStartWidget );
 
-        QLabel* title = new QLabel( tr("Recent Stations"), this ) ;
-        layout->addWidget( title );
-        title->setObjectName( "title" );
-        layout->addWidget( ui.recentStations = new StylableWidget( this ) );
-        ui.recentStations->setObjectName( "section" );
-
         {
+            QFrame* splitter = new QFrame( this );
+            layout->addWidget( splitter );
+            splitter->setObjectName( "splitter" );
+
+            QLabel* title = new QLabel( tr("Recent Stations"), this ) ;
+            layout->addWidget( title );
+            title->setObjectName( "title" );
+            layout->addWidget( ui.recentStations = new StylableWidget( this ) );
+            ui.recentStations->setObjectName( "section" );
+
+            QVBoxLayout* layout = new QVBoxLayout( ui.recentStations );
+            layout->setContentsMargins( 0, 0, 0, 0 );
+            layout->setSpacing( 0 );
+        }
+        {
+            QFrame* splitter = new QFrame( this );
+            layout->addWidget( splitter );
+            splitter->setObjectName( "splitter" );
+
             QLabel* title = new QLabel( tr("Personal Stations"), this );
             layout->addWidget( title );
             title->setObjectName( "title" );
@@ -89,6 +104,10 @@ RadioWidget::changeUser( const QString& newUsername )
         }
 
         {
+            QFrame* splitter = new QFrame( this );
+            layout->addWidget( splitter );
+            splitter->setObjectName( "splitter" );
+
             QLabel* title = new QLabel( tr("Network Stations"), this ) ;
             layout->addWidget( title );
             title->setObjectName( "title" );
@@ -104,7 +123,7 @@ RadioWidget::changeUser( const QString& newUsername )
         }
 
         // fetch recent stations
-        connect( User( newUsername ).getRecentStations( 5 ), SIGNAL(finished()), SLOT(onGotRecentStations()));
+        connect( User( newUsername ).getRecentStations( MAX_RECENT_STATIONS ), SIGNAL(finished()), SLOT(onGotRecentStations()));
 
         layout->addStretch( 1 );
     }
@@ -142,15 +161,11 @@ RadioWidget::onGotRecentStations()
 
     if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
-        QVBoxLayout* layout = new QVBoxLayout( ui.recentStations );
-        layout->setContentsMargins( 0, 0, 0, 0 );
-        layout->setSpacing( 0 );
-
         foreach ( const lastfm::XmlQuery& station, lfm["recentstations"].children("station") )
         {
             PlayableItemWidget* item = new PlayableItemWidget( RadioStation( station["url"].text() ), station["name"].text() );
             item->setObjectName( "station" );
-            layout->addWidget( item );
+            ui.recentStations->layout()->addWidget( item );
         }
     }
     else
@@ -164,7 +179,7 @@ RadioWidget::onTuningIn( const RadioStation& station )
 {
     // insert at the front of the list
 
-    if ( ui.recentStations && ui.recentStations->layout() )
+    if ( ui.recentStations && ui.recentStations->layout() && !station.url().isEmpty() )
     {
         PlayableItemWidget* item = new PlayableItemWidget( station, station.title() );
         item->setObjectName( "station" );
@@ -184,7 +199,7 @@ RadioWidget::onTuningIn( const RadioStation& station )
             }
         }
 
-        if ( !removed )
+        if ( !removed && ui.recentStations->layout()->count() > MAX_RECENT_STATIONS )
         {
             QWidget* taken = ui.recentStations->layout()->takeAt( ui.recentStations->layout()->count() - 1 )->widget();
             taken->deleteLater();

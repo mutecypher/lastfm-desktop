@@ -29,9 +29,11 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->top->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
+    ui->contents->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
     setUser( User() );
 
-    ui->scrobble->setText( tr( "<p>Scrobble from your music player.</p>"
+    ui->scrobble->setText( tr( "<h2>Scrobble from your music player</h2>"
                                "<p>Start listening to some music in your media player. You can see more information about the tracks you play on the Now Playing tab.</p>") );
 
     ui->itunes->hide();

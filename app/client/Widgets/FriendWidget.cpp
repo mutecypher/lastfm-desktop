@@ -24,7 +24,7 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget* parent)
 
     QDateTime timestamp = QDateTime::fromString( user["recenttrack"].attribute( "date" ), "d MMM yyyy, hh:mm" );
     qDebug() << timestamp;
-    //m_recentTrack.setTimeStamp( timestamp );
+    m_recentTrack.setTimeStamp( timestamp );
 
 
     QHBoxLayout* layout = new QHBoxLayout( this );
