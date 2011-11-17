@@ -2,6 +2,7 @@
 #include <QEventLoop>
 #include <QApplication>
 #include <QToolTip>
+#include <QTimer>
 
 #include "lib/unicorn/widgets/BannerWidget.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
@@ -11,11 +12,12 @@
 #include "BioWidget.h"
 
 BioWidget::BioWidget( QWidget* p ) 
-          : QTextBrowser( p ), 
-            m_currentHoverWidget(0)
+    :QTextBrowser( p ),
+      m_currentHoverWidget(0)
 {
     setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     connect(document()->documentLayout(), SIGNAL( documentSizeChanged(QSizeF)), SLOT( onBioChanged(QSizeF)));
+
     connect(this, SIGNAL(anchorClicked(QUrl)), SLOT(onAnchorClicked(QUrl)));
 
     m_widgetTextObject = new WidgetTextObject;
@@ -30,14 +32,19 @@ BioWidget::BioWidget( QWidget* p )
     ui.onTour->setBannerVisible( false );
     ui.onTour->setWidget( ui.image );
 
-    ui.onTour->setFixedWidth( 160 );
+    ui.onTour->setFixedWidth( 170 );
     ui.onTour->setObjectName( "onTour" );
-    insertWidget( ui.onTour );
 
     connect( ui.image, SIGNAL(loaded()), SLOT(onImageLoaded()));
     connect( ui.image, SIGNAL(loaded()), SLOT(update()));
 
     connect( this, SIGNAL(highlighted(QString)), SLOT(onHighlighted(QString)) );
+}
+
+void
+BioWidget::setBioText( const QString& bioText )
+{
+    m_bioText = bioText;
 }
 
 void
@@ -52,10 +59,27 @@ BioWidget::onImageLoaded()
 {
     qDebug() << ui.image->pixmap()->width() << ui.image->pixmap()->height();
 
-    ui.onTour->resize( 160, ui.image->pixmap()->height() );
-    ui.image->resize( 160, ui.image->pixmap()->height() );
-    m_widgetImageFormat.setHeight( ui.image->pixmap()->height() - 10 );
-    update();
+    //ui.onTour->resize( 160, ui.image->pixmap()->height() );
+    //ui.image->resize( 160, ui.image->pixmap()->height() );
+    //m_widgetImageFormat.setHeight( ui.image->pixmap()->height() + 10 );
+
+    insertWidget( ui.onTour );
+    QTimer::singleShot( 20, this, SLOT(appendBioText()) );
+}
+
+void
+BioWidget::appendBioText()
+{
+    append( m_bioText );
+
+    QTimer::singleShot( 20, this, SLOT(updateGeometryPlease()) );
+}
+
+void
+BioWidget::updateGeometryPlease()
+{
+    // okay then
+    updateGeometry();
 }
 
 void 
@@ -161,12 +185,24 @@ BioWidget::onAnchorClicked( const QUrl& link )
     unicorn::DesktopServices::openUrl( link );
 }
 
+
+void
+BioWidget::onDocumentLayoutChanged()
+{
+    qDebug() << document()->size();
+
+    setFixedHeight( document()->size().height() );
+}
+
 void 
 BioWidget::onBioChanged( const QSizeF& size )
 {
-    qDebug() << size.toSize().height();
+    qDebug() << size.toSize();
+    qDebug() << document()->size();
 
-    setFixedHeight( size.toSize().height() );
+    //setFixedHeight( size.toSize().height() );
+
+    QTimer::singleShot( 20, this, SLOT(onDocumentLayoutChanged()));
 }
 
 void
@@ -175,7 +211,7 @@ BioWidget::setPixmap( const QPixmap& pixmap )
     qDebug() << pixmap.height();
 
     ui.image->setPixmap( pixmap );
-    onImageLoaded();
+    //onImageLoaded();
 }
 
 void 

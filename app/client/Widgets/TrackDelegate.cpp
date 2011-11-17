@@ -3,6 +3,8 @@
 
 #include <lastfm/Track.h>
 
+#include "lib/unicorn/widgets/Label.h"
+
 #include "../Services/ScrobbleService/ScrobbleService.h"
 #include "../ActivityListModel.h"
 
@@ -50,35 +52,10 @@ TrackDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option, con
 
     painter->setPen( QColor(0x777777) );
 
-    QString timestampString = isNowPlaying ? tr( "Now playing" ) : prettyTime( timestamp );
+    QString timestampString = isNowPlaying ? tr( "Now playing" ) : unicorn::Label::prettyTime( timestamp );
 
     f.setPointSize( 11 );
     painter->setFont( f );
     painter->drawText( option.rect.left() + 94, option.rect.bottom() - 12, timestampString );
 }
 
-QString
-TrackDelegate::prettyTime( const QDateTime& timestamp ) const
-{
-    QString dateFormat( "d MMM h:mmap" );
-    QDateTime now = QDateTime::currentDateTime();
-    int secondsAgo = timestamp.secsTo( now );
-
-    if ( secondsAgo < (60 * 60) )
-    {
-        // Less than an hour ago
-        int minutesAgo = ( timestamp.secsTo( now ) / 60 );
-        return (minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) );
-    }
-    else if ( secondsAgo < (60 * 60 * 6) || now.date() == timestamp.date() )
-    {
-        // Less than 6 hours ago or on the same date
-        int hoursAgo = ( timestamp.secsTo( now ) / (60 * 60) );
-        return (hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) );
-    }
-    else
-    {
-        return timestamp.toString( dateFormat );
-        // We don't need to set the timer because this date will never change
-    }
-}

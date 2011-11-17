@@ -88,6 +88,11 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     ui->artistYourTags->setLinkColor( QRgb( 0x008AC7 ) );
     ui->artistPopTags->setLinkColor( QRgb( 0x008AC7 ) );
 
+    ui->artist1->setPlaceholder( QPixmap( ":/meta_artist_no_photo.png" ) );
+    ui->artist2->setPlaceholder( QPixmap( ":/meta_artist_no_photo.png" ) );
+    ui->artist3->setPlaceholder( QPixmap( ":/meta_artist_no_photo.png" ) );
+    ui->artist4->setPlaceholder( QPixmap( ":/meta_artist_no_photo.png" ) );
+
     ui->scrobbleControls->setTrack( track );
 
     setTrackDetails( track );
@@ -151,7 +156,7 @@ MetadataWidget::setTrackDetails( const Track& track )
    else
    {
        if ( m_track.album().isNull() )
-           ui->trackAlbum->setText( tr("from %1").arg( track.album( Track::Corrected )));
+           ui->trackAlbum->hide();
        else
            ui->trackAlbum->setText( tr("from %1").arg( Label::anchor( track.album( Track::Corrected ).www().toString(), track.album( Track::Corrected ))));
    }
@@ -200,14 +205,14 @@ MetadataWidget::onArtistGotInfo()
                 ui->similarArtistFrame->show();
                 ui->similarArtists->show();
 
-                QList<HttpImageWidget*> widgets;
+                QList<SimilarArtistWidget*> widgets;
                 widgets << ui->artist1 << ui->artist2 << ui->artist3 << ui->artist4;
 
                 QRegExp re( "/serve/(\\d*)s?/" );
 
                 for ( int i = 0 ; i < artists.count() ; ++i )
                 {
-                    widgets[i]->setText( artists[i]["name"].text() );
+                    widgets[i]->setArtist( artists[i]["name"].text() );
                     widgets[i]->setToolTip( artists[i]["name"].text() );
                     widgets[i]->loadUrl( artists[i]["image size=medium"].text().replace( re, "/serve/\\1s/" ), HttpImageWidget::ScaleNone );
                     widgets[i]->setHref( artists[i]["url"].text() );
@@ -254,7 +259,7 @@ MetadataWidget::onArtistGotInfo()
 
         bio = Label::boldLinkStyle( bio, Qt::black );
 
-        ui->artistBio->append( bio );
+        ui->artistBio->setBioText( bio );
         ui->artistBio->updateGeometry();
         QUrl url = lfm["artist"]["image size=extralarge"].text();
         ui->artistBio->loadImage( url, HttpImageWidget::ScaleWidth );
@@ -484,7 +489,7 @@ MetadataWidget::onTrackGotYourTags()
             ui->trackYourTags->hide();
         else
         {
-            QString tagString = tr( "Popular tags:" );
+            QString tagString = tr( "Your tags:" );
 
             for ( int i = 0 ; i < tags.count() ; ++i )
             {

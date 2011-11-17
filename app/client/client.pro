@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = "Last.fm"
-VERSION = 2.0.4
+VERSION = 2.0.5
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql phonon
 CONFIG += lastfm unicorn listener
@@ -105,7 +105,8 @@ SOURCES += \
     Wizard/TourLocationPage.cpp \
     Wizard/WizardPage.cpp \
     CommandReciever/CommandReciever.mm \
-    Widgets/ContextLabel.cpp
+    Widgets/ContextLabel.cpp \
+    Widgets/SimilarArtistWidget.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -187,7 +188,8 @@ HEADERS += \
     Wizard/BootstrapPage.h \
     Wizard/WizardPage.h \
     CommandReciever/CommandReciever.h \
-    Widgets/ContextLabel.h
+    Widgets/ContextLabel.h \
+    Widgets/SimilarArtistWidget.h
 
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
@@ -205,13 +207,15 @@ FORMS += \
     Settings/ScrobbleSettingsWidget.ui \
     Settings/AdvancedSettingsWidget.ui \
     Wizard/FirstRunWizard.ui \
-    Widgets/NothingPlayingWidget.ui
+    Widgets/NothingPlayingWidget.ui \
+    Widgets/FriendWidget.ui
 
 linux*:HEADERS += MediaDevices/IpodDevice_linux.h
 linux*:SOURCES += MediaDevices/IpodDevice_linux.cpp
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
+
 
 
 

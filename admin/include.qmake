@@ -13,6 +13,8 @@ linux*{
 #default install target
 target.path = $$INSTALL_DIR/lib
 
+CONFIG += silent
+
 macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
     DISTDIR = $$ROOT_DIR/admin/dist/mac
     BUNDLE_DIR = $$DESTDIR/$$TARGET$$quote(.app)

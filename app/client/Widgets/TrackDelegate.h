@@ -11,7 +11,6 @@ public:
 
 private:
     void paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
-    QString prettyTime( const QDateTime& timestamp ) const;
 };
 
 #endif // TRACKDELEGATE_H

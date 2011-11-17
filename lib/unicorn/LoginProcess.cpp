@@ -120,7 +120,7 @@ LoginProcess::authenticate()
     m_authUrl.addQueryItem( "api_key", lastfm::ws::ApiKey );
     m_authUrl.addQueryItem( "cb", callbackUrl );
 
-    if ( unicorn::DesktopServices::openUrl( m_authUrl ) )
+    if ( QDesktopServices::openUrl( m_authUrl ) )
     {
         connect( m_webServer, SIGNAL( gotToken( QString ) ), SLOT( getSession( QString ) ) );
     }
