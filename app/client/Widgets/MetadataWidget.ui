@@ -265,7 +265,7 @@
              <enum>Qt::RichText</enum>
             </property>
             <property name="openExternalLinks">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -439,7 +439,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="HttpImageWidget" name="artist1">
+              <widget class="SimilarArtistWidget" name="artist1">
                <property name="text">
                 <string>Artist</string>
                </property>
@@ -459,7 +459,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="HttpImageWidget" name="artist2">
+              <widget class="SimilarArtistWidget" name="artist2">
                <property name="text">
                 <string>Artist</string>
                </property>
@@ -479,7 +479,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="HttpImageWidget" name="artist3">
+              <widget class="SimilarArtistWidget" name="artist3">
                <property name="text">
                 <string>Artist</string>
                </property>
@@ -499,7 +499,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="HttpImageWidget" name="artist4">
+              <widget class="SimilarArtistWidget" name="artist4">
                <property name="text">
                 <string>Artist</string>
                </property>
@@ -523,7 +523,7 @@
             <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
-              <height>0</height>
+              <height>20</height>
              </size>
             </property>
            </spacer>
@@ -579,6 +579,11 @@
    <class>ContextLabel</class>
    <extends>QLabel</extends>
    <header>../Widgets/ContextLabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SimilarArtistWidget</class>
+   <extends>QLabel</extends>
+   <header>../Widgets/SimilarArtistWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -21,6 +21,8 @@ public:
     static QString anchor( const QString& url, const QString& text );
     static QString boldLinkStyle( const QString& text, QColor linkColor );
 
+    static QString prettyTime( const class QDateTime& timestamp );
+
 private:
     void paintEvent( QPaintEvent* event );
 

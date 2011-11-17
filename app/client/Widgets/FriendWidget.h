@@ -9,24 +9,15 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
+namespace Ui { class FriendWidget; }
 namespace unicorn { class Label; }
 using unicorn::Label;
 
 class FriendWidget : public StylableWidget
 {
     Q_OBJECT
-private:
-    struct
-    {
-        class AvatarWidget* avatar;
-        Label* name;
-        Label* lastTrack;
-        class PlayableItemWidget* radio;
-        class PlayableItemWidget* multiRadio;
-    } ui;
-
 public:
-    explicit FriendWidget( const lastfm::XmlQuery& user, QWidget *parent = 0);
+    explicit FriendWidget( const lastfm::XmlQuery& user, QWidget *parent = 0 );
 
     void update( const lastfm::XmlQuery& user, unsigned int order );
     void setOrder( int order );
@@ -40,6 +31,8 @@ private:
     void setDetails();
 
 private:
+    Ui::FriendWidget* ui;
+
     lastfm::User m_user;
     lastfm::MutableTrack m_recentTrack;
     unsigned int m_order;

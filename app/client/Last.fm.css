@@ -199,7 +199,7 @@ QFrame#splitter4 {
 	border-left: 1px solid #cdcdcd;
 	min-width: 0px;
 	max-width: 0px;
-	margin: 0px 10px;
+	margin: 0px 20px;
 }
 
 QFrame#splitter {
@@ -208,6 +208,10 @@ QFrame#splitter {
 	border-top: 1px solid #cdcdcd;
 	min-height: 0px;
 	margin: 10px 0px;
+}
+
+NothingPlayingWidget {
+	border: none;
 }
 
 NothingPlayingWidget QLabel {
@@ -242,14 +246,19 @@ NothingPlayingWidget QLabel#scrobble {
 	margin: 10px 0px 20px;
 }
 
-NothingPlayingWidget QAbstractButton {
+NothingPlayingWidget QAbstractButton#itunes,
+NothingPlayingWidget QAbstractButton#wmp,
+NothingPlayingWidget QAbstractButton#winamp,
+NothingPlayingWidget QAbstractButton#foobar {
 background-color: transparent;
 background-repeat: no-repeat;
 background-position: left;
+text-align: center left;
 border: none;
 height: 44px;
 width: 44px;
 margin: 0px;
+padding-left: 50px;
 }
 
 NothingPlayingWidget QAbstractButton#itunes {
@@ -308,7 +317,7 @@ border: none;
 
 MetadataWidget QFrame#trackFrame,
 MetadataWidget QFrame#artistFrame {
-padding: 20px 20px 20px 20px;
+padding: 20px 20px 10px;
 }
 
 MetadataWidget QFrame#artistFrame {
@@ -338,7 +347,7 @@ padding-bottom: 5px;
 MetadataWidget QLabel#trackArtist {
 border: 1px solid #cdcdcd;
 border-width: 0px 0px 1px 0px;
-padding-bottom: 11px;
+padding-bottom: 12px;
 color: #333;
 }
 
@@ -352,7 +361,12 @@ padding: 7px 0px;
 MetadataWidget QLabel#trackAlbum {
 border-top: 1px solid #ffffff;
 padding-top: 11px;
-font-size: 11pt;
+font-size: 12pt;
+}
+
+MetadataWidget QFrame#artistTagsFrame,
+MetadataWidget QFrame#trackTagsFrame {
+	margin: 0px 5px 10px;
 }
 
 MetadataWidget QLabel#trackPopTags,
@@ -365,12 +379,12 @@ font-size: 11px;
 MetadataWidget QLabel#similarArtists {
 font-size: 16px;
 font-weight: bold;
-padding: 0px 0px 10px;
+padding: 0px 2px 10px;
 border: none;
 }
 
-MetadataWidget QFrame#trackStats {
-padding: 10px 0px 20px;
+MetadataWidget QFrame#artistStats {
+padding: 20px 40px 20px 5px;
 }
 
 MetadataWidget QLabel#trackPlays,
@@ -413,19 +427,18 @@ font-size: 12pt;
 color: #333;
 }
 
-MetadataWidget TagWidget {
-height: 19px;
-color: white;
-font-size: 11px;
+MetadataWidget QFrame#similarArtistFrame {
+	margin-right: 20px;
 }
 
 MetadataWidget QFrame#similarArtistFrame QLabel {
 padding: 2px;
 border: 1px solid #aaaaaa;
 background-color: white;
-margin-bottom: 20px;
-color: black;
-qproperty-alignment: AlignBottom;
+margin: 0px 10px 30px;
+color: #333;
+text-align: bottom left;
+font-size: 10px;
 background-origin: margin;
 }
 
@@ -519,8 +532,9 @@ margin: 0px 0px 0px 10px;
 QuickStartWidget QPushButton:hover { background-image: url(":/radio_play_large_HOVER.png"); }
 QuickStartWidget QPushButton:pressed { background-image: url(":/radio_play_large_PRESS.png"); }
 
-QuickStartWidget Label#whyNotTry {
+QuickStartWidget QLabel#whyNotTry {
 	margin: 2px 0px 2px 1px;
+	font-size: 12px;
 }
 
 QScrollArea {
@@ -577,6 +591,11 @@ color: #898989;
 
 FriendWidget QLabel#lastTrack,
 ProfileWidget QLabel#scrobbles {
+font-size: 11px;
+color: #333;
+}
+
+FriendWidget QLabel#timestamp {
 font-size: 11px;
 color: #333;
 }
@@ -896,7 +915,8 @@ background-image: url(":/meta_buy_PRESS.png");
 }
 
 BannerWidget {
-margin-top: 6px;
+background-color: #dedede;
+margin: 6px 7px 0px 3px;
 }
 
 BannerWidget HttpImageWidget {

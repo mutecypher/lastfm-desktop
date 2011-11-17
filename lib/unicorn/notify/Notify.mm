@@ -80,7 +80,8 @@ unicorn::Notify::onFinished( const QPixmap& pixmap )
                                 iconData:(NSData *)data
                                 priority:(signed int)0
                                 isSticky:(BOOL)NO
-                                clickContext:(id)@"context"];
+                                clickContext:(id)@"context"
+                                identifier:(NSString*)@"identifier" ];
 
 }
 

@@ -4,13 +4,14 @@
 #include <QToolTip>
 #include <QUrl>
 #include <QGraphicsDropShadowEffect>
+#include <QDateTime>
 
 #include "../DesktopServices.h"
 
 #include "Label.h"
 
 unicorn::Label::Label( QWidget* parent )
-    :QLabel( parent ), m_linkColor( Qt::black )
+    :QLabel( parent ), m_linkColor( QRgb( 0x333333 ) )
 {
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
     setOpenExternalLinks( false );
@@ -82,6 +83,32 @@ QString
 unicorn::Label::anchor( const QString& url, const QString& text )
 {
     return QString( "<a href=\"%1\">%2</a>" ).arg( url, text );
+}
+
+QString
+unicorn::Label::prettyTime( const QDateTime& timestamp )
+{
+    QString dateFormat( "d MMM h:mmap" );
+    QDateTime now = QDateTime::currentDateTime();
+    int secondsAgo = timestamp.secsTo( now );
+
+    if ( secondsAgo < (60 * 60) )
+    {
+        // Less than an hour ago
+        int minutesAgo = ( timestamp.secsTo( now ) / 60 );
+        return (minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) );
+    }
+    else if ( secondsAgo < (60 * 60 * 6) || now.date() == timestamp.date() )
+    {
+        // Less than 6 hours ago or on the same date
+        int hoursAgo = ( timestamp.secsTo( now ) / (60 * 60) );
+        return (hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) );
+    }
+    else
+    {
+        return timestamp.toString( dateFormat );
+        // We don't need to set the timer because this date will never change
+    }
 }
 
 void

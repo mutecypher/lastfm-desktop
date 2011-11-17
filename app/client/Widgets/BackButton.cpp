@@ -29,6 +29,8 @@ BackButton::paintEvent( QPaintEvent* e )
 
     QTextOption to;
     to.setAlignment( Qt::AlignVCenter | Qt::AlignLeft );
-    p.drawText( rect().adjusted( 50, 16, 0, 0 ), m_description, to );
+    QRect descRect = rect().adjusted( 50, 16, -20, 0 );
+    QFontMetrics fm( font );
+    p.drawText( descRect, fm.elidedText( m_description, Qt::ElideRight, descRect.width() ), to );
 }
 

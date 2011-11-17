@@ -233,8 +233,8 @@ PlaybackControlsWidget::setIconForRadio( const RadioStation& station )
     else if ( url.startsWith("lastfm://tag")
                 || url.startsWith( "lastfm://globaltags" ) )
         ui->icon->setPixmap( QPixmap( ":/control_bar_radio_tag.png" ) );
-
-    //ui->icon->setPixmap( ":/control_bar_back.png" );
+    else
+        ui->icon->setPixmap( QPixmap( ":/control_bar_radio_library.png" ) );
 }
 
 void
@@ -344,8 +344,6 @@ PlaybackControlsWidget::onTick( qint64 tick )
 void
 PlaybackControlsWidget::onError( int error, const QVariant& errorText )
 {
-    ui->progressBar->setTrack( Track() );
-    ui->status->setText( errorText.toString() + ": " + QString::number(error) );
 }
 
 void

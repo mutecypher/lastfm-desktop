@@ -55,6 +55,7 @@ PlayableItemWidget::PlayableItemWidget( const RadioStation& rs, const QString& t
 
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
     setCursor( Qt::PointingHandCursor );
+    setAttribute( Qt::WA_Hover );
 }
 
 bool
@@ -202,7 +203,9 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
             p.drawPixmap( rect().topLeft() + QPoint( rect().width() - m_radio_right_rest.width(), 0 ), m_radio_right_rest );
         }
 
-        p.drawText( rect().adjusted( 40, 8, 0, 0 ), text() );
+        QFontMetrics fmText( font() );
+        QRect textRect = rect().adjusted( 40, 8, -20, 0 );
+        p.drawText( textRect, fmText.elidedText( text(), Qt::ElideRight, textRect.width() ) );
 
         p.setPen( QColor( 0x898989 ) );
 
@@ -210,7 +213,9 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
         font.setPixelSize( 10 );
         p.setFont( font );
 
-        p.drawText( rect().adjusted( 40, 28, 0, 0 ), m_description );
+        QFontMetrics fmDesc( font );
+        QRect descRect = rect().adjusted( 40, 28, -20, 0 );
+        p.drawText( descRect, fmDesc.elidedText( m_description, Qt::ElideRight, descRect.width() ) );
     }
     else
     {
@@ -227,9 +232,11 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
         QTextOption to;
         to.setAlignment( Qt::AlignBottom );
 
+        QFontMetrics fm( font );
+
         QRect rect = contentsRect();
         rect.adjust( 54, 0, 0, -14 );
-        p.drawText( rect, m_description, to );
+        p.drawText( rect, fm.elidedText( m_description, Qt::ElideRight, rect.width() ), to );
     }
 
 }
