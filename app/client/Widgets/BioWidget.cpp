@@ -62,10 +62,6 @@ BioWidget::onImageLoaded()
 {
     qDebug() << ui.image->pixmap()->width() << ui.image->pixmap()->height();
 
-    //ui.onTour->resize( 160, ui.image->pixmap()->height() );
-    //ui.image->resize( 160, ui.image->pixmap()->height() );
-    //m_widgetImageFormat.setHeight( ui.image->pixmap()->height() + 10 );
-
     insertWidget( ui.onTour );
     QTimer::singleShot( 20, this, SLOT(appendBioText()) );
 }
@@ -74,10 +70,7 @@ void
 BioWidget::appendBioText()
 {
 
-
     append( m_bioText );
-
-
 
     QTimer::singleShot( 20, this, SLOT(updateGeometryPlease()) );
 }
