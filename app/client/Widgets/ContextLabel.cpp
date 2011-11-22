@@ -19,7 +19,7 @@ ContextLabel::paintEvent( QPaintEvent* event )
     p.begin( this );
 
     static QPixmap arrow( ":/meta_context_arrow.png" );
-    QPoint arrowPoint = QPoint( ( 128 + 10 - arrow.size().width() )  / 2, 21 - arrow.size().height() );
+    QPoint arrowPoint = QPoint( 20 + (( 128 + 10 - arrow.size().width() )  / 2), 21 - arrow.size().height() );
     p.drawPixmap( arrowPoint, arrow );
 
     p.end();
