@@ -50,14 +50,14 @@ static QDomElement
 trackToDom( const Track& t, QDomDocument& d )
 {
     QDomElement item = d.createElement( "item" );
-    QDomElement artist = d.createElement( "Artist" );
-    QDomElement album = d.createElement( "Album" );
-    QDomElement track = d.createElement( "Track" );
-    QDomElement duration = d.createElement( "Duration" );
-    QDomElement timestamp = d.createElement( "Timestamp" );
-    QDomElement playcount = d.createElement( "Playcount" );
-    QDomElement filename = d.createElement( "Filename" );
-    QDomElement uniqueid = d.createElement( "UniqueID" );
+    QDomElement artist = d.createElement( "artist" );
+    QDomElement album = d.createElement( "album" );
+    QDomElement track = d.createElement( "track" );
+    QDomElement duration = d.createElement( "duration" );
+    QDomElement timestamp = d.createElement( "timestamp" );
+    QDomElement playcount = d.createElement( "playcount" );
+    QDomElement filename = d.createElement( "filename" );
+    QDomElement uniqueid = d.createElement( "uniqueID" );
 
     artist.appendChild( d.createTextNode( t.artist()));
     album.appendChild( d.createTextNode( t.album()));

@@ -21,18 +21,15 @@
 #include "AbstractBootstrapper.h"
 
 #include <lastfm/ws.h>
+#include <lastfm/misc.h>
+
 #include <QNetworkRequest>
 #include <QUrl>
 #include <QFile>
 #include <QDir>
 #include <QTextStream>
 
-#include <time.h>
-
 #include "zlib.h"
-
-static const QString k_host = "bootstrap.last.fm";
-
 
 AbstractBootstrapper::AbstractBootstrapper( QObject* parent )
                      :QObject( parent )
@@ -74,21 +71,34 @@ void
 AbstractBootstrapper::sendZip( const QString& inFile )
 {
     QString username = lastfm::ws::Username;
+    QString timestamp = QString::number( QDateTime::currentDateTimeUtc().toTime_t() );
 
-    // Get Unix time
-    time_t now;
-    time( &now );
-    QString time = QString::number( now );
+    QMap<QString, QString> params;
+    params["user"] = username;
+    params["time"] = timestamp;
+    params["auth"] = lastfm::md5( QString( QString( lastfm::ws::SharedSecret ) + timestamp ).toUtf8() );
+    params["api_key"] = lastfm::ws::ApiKey;
+    params["sk"] = lastfm::ws::SessionKey;
 
-    QString path = QString( "http://" + k_host + "/bootstrap/index.php?user=%1&time=%2" )
-        .arg( username, time );
+    //lastfm::ws::sign( params, true );
+    //params["auth"] = params.take( "api_sig" );
+
+    QUrl url( "http://bootstrap.last.fm/bootstrap/index.php" );
+
+    QMapIterator<QString, QString> i( params );
+    while ( i.hasNext() )
+    {
+        i.next();
+        QByteArray const key = QUrl::toPercentEncoding( i.key() );
+        QByteArray const value = QUrl::toPercentEncoding( i.value() );
+        url.addEncodedQueryItem( key, value );
+    }
 
     QFile* zipFile = new QFile( this );
     zipFile->setFileName( inFile );
     zipFile->open( QIODevice::ReadOnly );
 
-    QNetworkRequest request;
-    request.setUrl( path );
+    QNetworkRequest request( url );
     request.setRawHeader( "Content-type", "multipart/form-data, boundary=AaB03x" );
     request.setRawHeader( "Cache-Control", "no-cache" );
     request.setRawHeader( "Accept", "*/*" );
@@ -112,7 +122,7 @@ AbstractBootstrapper::sendZip( const QString& inFile )
     bytes.append( "--AaB03x--" );
     request.setHeader( QNetworkRequest::ContentLengthHeader, bytes.length() );
 
-    qDebug() << "Sending " << path;
+    qDebug() << "Sending " << url;
 
     emit percentageUploaded( 0 );
 
@@ -132,7 +142,10 @@ AbstractBootstrapper::onUploadProgress( qint64 done, qint64 total )
 void
 AbstractBootstrapper::onUploadDone()
 {
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>( sender());
+    QNetworkReply* reply = qobject_cast<QNetworkReply*>( sender() );
+
+    qDebug() << reply->readAll();
+
     if( reply->error() == QNetworkReply::ContentAccessDenied ||
         reply->error() == QNetworkReply::ContentOperationNotPermittedError )
     {
