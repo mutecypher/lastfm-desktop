@@ -278,7 +278,7 @@ background-image: url(":/control_bar_scrobble_foobar.png");
 }
 
 MetadataWidget QLabel#context {
-margin: 20px 0px;
+margin: 20px 20px;
 padding: 15px 15px;
 background-color: #ffffff;
 border: 1px solid #cdcdcd;
@@ -304,24 +304,17 @@ font-size: 12px;
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
 border: none;
 border-bottom: 1px solid #989898;
-text-align: top left;
-height: 51px;
-padding-top: 13px;
-padding-left: 50px;
+height: 64px;
 }
 
-
-MetadataWidget QWidget#scrollAreaWidgetContents {
-border: none;
-}
-
-MetadataWidget QFrame#trackFrame,
-MetadataWidget QFrame#artistFrame {
-padding: 20px 20px 10px;
+MetadataWidget QFrame#trackDetails {
+	border: none;
+	margin: 20px 20px 0px;
 }
 
 MetadataWidget QFrame#artistFrame {
-padding-bottom: 0px;
+	padding: 20px 20px 20px;
+	margin: 0px;
 }
 
 MetadataWidget HttpImageWidget#albumImage {
@@ -364,8 +357,11 @@ padding-top: 11px;
 font-size: 12pt;
 }
 
-MetadataWidget QFrame#artistTagsFrame,
 MetadataWidget QFrame#trackTagsFrame {
+	margin: 0px 25px 10px;
+}
+
+MetadataWidget QFrame#artistTagsFrame {
 	margin: 0px 5px 10px;
 }
 
@@ -440,6 +436,10 @@ color: #333;
 text-align: bottom left;
 font-size: 10px;
 background-origin: margin;
+min-width: 64px;
+max-width: 64px;
+max-height: 64px;
+max-height: 64px;
 }
 
 MetadataWidget PlayableItemWidget {
