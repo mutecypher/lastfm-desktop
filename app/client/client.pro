@@ -104,7 +104,6 @@ SOURCES += \
     Wizard/TourScrobblesPage.cpp \
     Wizard/TourLocationPage.cpp \
     Wizard/WizardPage.cpp \
-    CommandReciever/CommandReciever.mm \
     Widgets/ContextLabel.cpp \
     Widgets/SimilarArtistWidget.cpp
 
@@ -187,12 +186,12 @@ HEADERS += \
     Wizard/FirstRunWizard.h \
     Wizard/BootstrapPage.h \
     Wizard/WizardPage.h \
-    CommandReciever/CommandReciever.h \
     Widgets/ContextLabel.h \
     Widgets/SimilarArtistWidget.h
 
-
-mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
+mac:HEADERS += CommandReciever/CommandReciever.h
+mac:SOURCES += CommandReciever/CommandReciever.mm \
+                Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
 FORMS += \
     Widgets/TagFilterDialog.ui \

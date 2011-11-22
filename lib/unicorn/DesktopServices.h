@@ -13,7 +13,7 @@ class UNICORN_DLLEXPORT DesktopServices
 public:
     DesktopServices();
 
-    static bool openUrl( QUrl url );
+    static void openUrl( QUrl url );
 };
 
 }

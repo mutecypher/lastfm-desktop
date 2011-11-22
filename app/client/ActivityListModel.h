@@ -6,6 +6,7 @@
 #include <QPixmap>
 #include <QIcon>
 #include <QDebug>
+#include <QPointer>
 
 #include <lastfm/ws.h>
 #include <lastfm/Track.h>
@@ -77,6 +78,7 @@ private:
     QIcon m_shareIcon;
     QImage m_noArt;
     QModelIndex m_hoverIndex;
+    QPointer<QNetworkReply> m_recentTrackReply;
 };
 
 #endif //ACTIVITY_LIST_MODEL_H_

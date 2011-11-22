@@ -48,10 +48,9 @@
 #include "lib/unicorn/DesktopServices.h"
 #ifdef Q_OS_MAC
 #include "lib/unicorn/notify/Notify.h"
+#include "CommandReciever/CommandReciever.h"
 #endif
 
-
-#include "CommandReciever/CommandReciever.h"
 #include "MediaDevices/DeviceScrobbler.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"

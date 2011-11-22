@@ -176,8 +176,12 @@ ActivityListModel::onStopped()
 void
 ActivityListModel::refresh()
 {
-    connect( User().getRecentTracks( 30, 1 ), SIGNAL(finished()), SLOT(onGotRecentTracks()) );
-    emit refreshing( true );
+    if ( !m_recentTrackReply )
+    {
+        m_recentTrackReply = User().getRecentTracks( 30, 1 );
+        connect( m_recentTrackReply, SIGNAL(finished()), SLOT(onGotRecentTracks()) );
+        emit refreshing( true );
+    }
 }
 
 void
@@ -236,6 +240,8 @@ ActivityListModel::onGotRecentTracks()
     }
 
     emit refreshing( false );
+
+    m_recentTrackReply->deleteLater();
 }
 
 bool lessThan( const ImageTrack& left, const ImageTrack& right )
