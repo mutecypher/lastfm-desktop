@@ -178,7 +178,7 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
         p.drawText( rect().adjusted( fm.width( text() ) + 45, 0, 0, 0 ), m_description, to );
 
     }
-    else if ( QString("MetadataWidget").compare( parent()->parent()->parent()->parent()->parent()->metaObject()->className() ) == 0 )
+    else if ( QString("MetadataWidget").compare( parent()->parent()->parent()->parent()->parent()->parent()->parent()->metaObject()->className() ) == 0 )
     {
         QPainter p( this );
 

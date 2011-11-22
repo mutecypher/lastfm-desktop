@@ -69,13 +69,13 @@ private slots:
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
     void onScrobbleStatusChanged();
 
+    void checkFinished();
+
 signals:
     void lovedStateChanged(bool loved);
     void backClicked();
 
 private:
-    void checkFinished();
-
     void setTrackDetails( const Track& track );
 
     QString contextString( const Track& track );
@@ -93,6 +93,8 @@ private:
     int m_artistListeners;
 
     Album m_albumGuess;
+
+    int m_numCalls;
 };
 
 #endif // METADATAWIDGET_H

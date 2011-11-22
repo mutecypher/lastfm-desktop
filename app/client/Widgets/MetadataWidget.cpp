@@ -72,6 +72,8 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
 {
     ui->setupUi( this );
 
+    ui->loadingStack->setCurrentWidget( ui->spinner );
+
     ui->scrollArea->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->back->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->trackTagsFrame->setAttribute( Qt::WA_LayoutUsesWidgetRect );
@@ -107,7 +109,6 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
 
     // fetch Track info
     connect( m_track.signalProxy(), SIGNAL( gotInfo(QByteArray)), SLOT( onTrackGotInfo(QByteArray)));
-
     m_track.getInfo();
 
     if( !m_track.album().isNull() )
@@ -120,11 +121,22 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     connect( m_track.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
 
     connect( m_track.getBuyLinks( "united kingdom" /*aApp->currentSession()->userInfo().country()*/ ), SIGNAL(finished()), SLOT(onTrackGotBuyLinks()) );
+
+    m_numCalls = m_track.album().isNull() ? 6: 7;
 }
 
 MetadataWidget::~MetadataWidget()
 {
     delete ui;
+}
+
+void
+MetadataWidget::checkFinished()
+{
+    if ( --m_numCalls == 0 )
+    {
+        ui->loadingStack->setCurrentWidget( ui->content );
+    }
 }
 
 ScrobbleControls*
@@ -265,13 +277,21 @@ MetadataWidget::onArtistGotInfo()
         ui->artistBio->loadImage( url, HttpImageWidget::ScaleWidth );
         ui->artistBio->setImageHref( QUrl(lfm["artist"]["url"].text()));
         ui->artistBio->setOnTourVisible( false, QUrl(lfm["artist"]["url"].text()+"/+events"));
+
+        connect( ui->artistBio, SIGNAL(finished()), SLOT(checkFinished()) );
+        ++m_numCalls;
    }
    else
    {
        // TODO: what happens when we fail?
         qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
    }
+
+
+    checkFinished();
 }
+
+
 
 void
 MetadataWidget::onArtistGotYourTags()
@@ -306,6 +326,8 @@ MetadataWidget::onArtistGotYourTags()
        // TODO: what happens when we fail?
        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
+
+    checkFinished();
 }
 
 void
@@ -328,6 +350,8 @@ MetadataWidget::onArtistGotEvents()
        // TODO: what happens when we fail?
        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
    }
+
+   checkFinished();
 }
 
 void
@@ -348,6 +372,8 @@ MetadataWidget::onAlbumGotInfo()
        // TODO: what happens when we fail?
        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
+
+    checkFinished();
 }
 
 void
@@ -408,6 +434,8 @@ MetadataWidget::onTrackGotBuyLinks()
         // TODO: what happens when we fail?
         qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
+
+    checkFinished();
 }
 
 void
@@ -463,6 +491,8 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
                 {
                     m_albumGuess = lastfm::Album( m_track.artist().name(), albumTitle );
                     connect( m_albumGuess.getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
+                    ++m_numCalls;
+
                     setTrackDetails( m_track );
                 }
             }
@@ -473,6 +503,8 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
         // TODO: what happens when we fail?
         qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
+
+    checkFinished();
 }
 
 
@@ -507,6 +539,8 @@ MetadataWidget::onTrackGotYourTags()
         // TODO: what happens when we fail?
         qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
+
+    checkFinished();
 }
 
 
