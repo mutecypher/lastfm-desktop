@@ -23,6 +23,9 @@ public:
     
     void setOnTourVisible( bool, const QUrl& = QUrl());
 
+signals:
+    void finished();
+
 protected slots:
     void onBioChanged( const QSizeF& size );
     void onAnchorClicked( const QUrl& link );

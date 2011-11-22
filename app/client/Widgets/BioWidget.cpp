@@ -80,6 +80,8 @@ BioWidget::updateGeometryPlease()
 {
     // okay then
     updateGeometry();
+
+    emit finished();
 }
 
 void 
