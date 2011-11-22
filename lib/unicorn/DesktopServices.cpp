@@ -12,7 +12,7 @@ unicorn::DesktopServices::DesktopServices()
 }
 
 
-bool
+void
 unicorn::DesktopServices::openUrl( QUrl url )
 {
     if ( lastfm::UrlBuilder::isHost( url ) )

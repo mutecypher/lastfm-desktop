@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QToolTip>
 #include <QTimer>
+#include <QDebug>
 
 #include "lib/unicorn/widgets/BannerWidget.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
@@ -39,6 +40,8 @@ BioWidget::BioWidget( QWidget* p )
     connect( ui.image, SIGNAL(loaded()), SLOT(update()));
 
     connect( this, SIGNAL(highlighted(QString)), SLOT(onHighlighted(QString)) );
+
+    qDebug() << fontInfo().pixelSize();
 }
 
 void
@@ -59,10 +62,6 @@ BioWidget::onImageLoaded()
 {
     qDebug() << ui.image->pixmap()->width() << ui.image->pixmap()->height();
 
-    //ui.onTour->resize( 160, ui.image->pixmap()->height() );
-    //ui.image->resize( 160, ui.image->pixmap()->height() );
-    //m_widgetImageFormat.setHeight( ui.image->pixmap()->height() + 10 );
-
     insertWidget( ui.onTour );
     QTimer::singleShot( 20, this, SLOT(appendBioText()) );
 }
@@ -70,6 +69,7 @@ BioWidget::onImageLoaded()
 void
 BioWidget::appendBioText()
 {
+
     append( m_bioText );
 
     QTimer::singleShot( 20, this, SLOT(updateGeometryPlease()) );
@@ -200,7 +200,7 @@ BioWidget::onBioChanged( const QSizeF& size )
     qDebug() << size.toSize();
     qDebug() << document()->size();
 
-    //setFixedHeight( size.toSize().height() );
+    updateGeometry();
 
     QTimer::singleShot( 20, this, SLOT(onDocumentLayoutChanged()));
 }
