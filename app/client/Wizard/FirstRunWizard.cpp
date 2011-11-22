@@ -41,7 +41,7 @@
 #include "ui_FirstRunWizard.h"
 #include "FirstRunWizard.h"
 
-FirstRunWizard::FirstRunWizard( QWidget* parent )
+FirstRunWizard::FirstRunWizard( bool startFromTour, QWidget* parent )
     :QDialog( parent ),
       ui( new Ui::FirstRunWizard ),
       m_commitPage( false ),
@@ -67,7 +67,11 @@ FirstRunWizard::FirstRunWizard( QWidget* parent )
     connect( aApp, SIGNAL(bootstrapStarted(QString)), SLOT(onBootstrapStarted(QString)));
     connect( aApp, SIGNAL(bootstrapDone(int)), SLOT(onBootstrapDone(int)));
 
-    ui->stackedWidget->setCurrentWidget( ui->loginPage );
+    if ( startFromTour )
+        ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
+    else
+        ui->stackedWidget->setCurrentWidget( ui->loginPage );
+
     initializePage( ui->stackedWidget->currentWidget() );
 }
 
@@ -289,7 +293,7 @@ FirstRunWizard::onBootstrapStarted( const QString& pluginId )
 
     ui->importLabel->setText( tr( "Importing..." ) );
 
-    QMovie* movie = new QMovie( ":/graphic_import.gif", QByteArray(), this );
+    QMovie* movie = new QMovie( ":/graphic_import.gif", "gif", this );
     ui->importIcon->setMovie( movie );
     movie->start();
 

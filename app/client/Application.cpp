@@ -34,6 +34,7 @@
 #include <lastfm/UrlBuilder.h>
 #include <lastfm/InternetConnectionMonitor.h>
 #include <lastfm/XmlQuery.h>
+#include <lastfm/misc.h>
 
 #include "lib/listener/PlayerConnection.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
@@ -486,9 +487,14 @@ Application::onFaqTriggered()
 void
 Application::onForumsTriggered()
 {
-
-
     unicorn::DesktopServices::openUrl( lastfm::UrlBuilder( "forum" ).slash( "34905" ).url() );
+}
+
+void
+Application::onTourTriggered()
+{
+    FirstRunWizard w( true, m_mw );
+    w.exec();
 }
 
 void

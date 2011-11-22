@@ -41,7 +41,7 @@ public:
     };
 
 public:
-    FirstRunWizard( QWidget* parent = 0);
+    FirstRunWizard( bool startFromTour = false, QWidget* parent = 0 );
 
     void setTitle( const QString& title );
 

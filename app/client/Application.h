@@ -170,6 +170,7 @@ namespace audioscrobbler
         void onFaqTriggered();
         void onForumsTriggered();
         void onAboutTriggered();
+        void onTourTriggered();
 
         void showWindow();
         void toggleWindow();

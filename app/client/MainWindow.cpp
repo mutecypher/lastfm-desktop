@@ -227,6 +227,7 @@ MainWindow::setupMenuBar()
     helpMenu->addSeparator();
     QAction* faq = helpMenu->addAction( tr("FAQ"), aApp, SLOT(onFaqTriggered()) );
     QAction* forums = helpMenu->addAction( tr("Forums"), aApp, SLOT(onForumsTriggered()) );
+    QAction* tour = helpMenu->addAction( tr("Tour"), aApp, SLOT(onTourTriggered()) );
     //helpMenu->addSeparator();
     //QAction* diagnostics = helpMenu->addAction( tr("Diagnostics") );
 }
