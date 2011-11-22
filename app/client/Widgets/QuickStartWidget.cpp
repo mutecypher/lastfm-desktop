@@ -36,6 +36,7 @@
 #include "lib/unicorn/widgets/Label.h"
 
 #include "QuickStartWidget.h"
+#include "../Application.h"
 #include "../StationSearch.h"
 #include "../Services/RadioService/RadioService.h"
 
@@ -83,6 +84,18 @@ QuickStartWidget::QuickStartWidget( QWidget* parent )
     shortcut->setKey( Qt::CTRL + Qt::Key_D );
     shortcut->setContext( Qt::WidgetShortcut );
     connect( shortcut, SIGNAL(activated()), SLOT(setToCurrent()) );
+
+    connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)) );
+}
+
+void
+QuickStartWidget::onSessionChanged( unicorn::Session* session )
+{
+    m_tags.clear();
+    m_artists.clear();
+
+    connect( RadioStation::library( session->userInfo() ).getTagSuggestions( RESULT_LIMIT ), SIGNAL(finished()), SLOT(onGotTagSuggestions()) );
+    connect( session->userInfo().getTopArtists( "3month", RESULT_LIMIT ), SIGNAL(finished()), SLOT(onUserGotTopArtists()) );
 }
 
 void

@@ -27,6 +27,7 @@ class QComboBox;
 
 namespace unicorn { class Label; }
 using unicorn::Label;
+namespace unicorn { class Session; }
 
 class QuickStartWidget : public StylableWidget
 {
@@ -43,6 +44,8 @@ public:
     QuickStartWidget( QWidget* parent = 0 );
 
 private slots:
+    void onSessionChanged( unicorn::Session* session );
+
     void play();
     void playNext();
 
