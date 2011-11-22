@@ -29,7 +29,8 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget* parent)
     m_recentTrack.setExtra( "playerURL", user["scrobblesource"]["url"].text() );
 
     QDateTime timestamp = QDateTime::fromString( user["recenttrack"].attribute( "date" ), "d MMM yyyy, hh:mm" );
-    m_recentTrack.setTimeStamp( timestamp );
+    timestamp.setTimeSpec( Qt::UTC );
+    m_recentTrack.setTimeStamp( timestamp.toLocalTime() );
 
     QRegExp re( "/serve/(\\d*)s?/" );
     ui->avatar->loadUrl( user["image size=medium"].text().replace( re, "/serve/\\1s/" ), HttpImageWidget::ScaleNone );
@@ -55,7 +56,8 @@ FriendWidget::update( const lastfm::XmlQuery& user, unsigned int order )
     m_recentTrack.setExtra( "playerURL", user["scrobblesource"]["url"].text() );
 
     QDateTime timestamp = QDateTime::fromString( user["recenttrack"].attribute( "date" ), "d MMM yyyy, hh:mm" );
-    m_recentTrack.setTimeStamp( timestamp );
+    timestamp.setTimeSpec( Qt::UTC );
+    m_recentTrack.setTimeStamp( timestamp.toLocalTime() );
 
     setDetails();
 }
