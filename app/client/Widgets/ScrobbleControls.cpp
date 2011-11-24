@@ -126,7 +126,7 @@ ScrobbleControls::onLoveChanged( bool checked )
 void 
 ScrobbleControls::onShareLastFm()
 {
-    ShareDialog* sd = new ShareDialog( m_track, ShareDialog::ShareLastFm, window() );
+    ShareDialog* sd = new ShareDialog( m_track, window() );
     sd->raise();
     sd->show();
     sd->activateWindow();
@@ -135,19 +135,13 @@ ScrobbleControls::onShareLastFm()
 void
 ScrobbleControls::onShareTwitter()
 {
-    ShareDialog* sd = new ShareDialog( m_track, ShareDialog::ShareTwitter, window() );
-    sd->raise();
-    sd->show();
-    sd->activateWindow();
+    ShareDialog::shareTwitter( m_track );
 }
 
 void
 ScrobbleControls::onShareFacebook()
 {
-    ShareDialog* sd = new ShareDialog( m_track, ShareDialog::ShareFacebook, window() );
-    sd->raise();
-    sd->show();
-    sd->activateWindow();
+    ShareDialog::shareFacebook( m_track );
 }
 
 void

@@ -77,7 +77,7 @@ ActivityListWidget::onItemClicked( const QModelIndex& index )
 void
 ActivityListWidget::onShareLastFm()
 {
-    ShareDialog* sd = new ShareDialog( m_shareIndex.data(ActivityListModel::TrackRole).value<Track>(), ShareDialog::ShareLastFm, window() );
+    ShareDialog* sd = new ShareDialog( m_shareIndex.data(ActivityListModel::TrackRole).value<Track>(), window() );
     sd->raise();
     sd->show();
     sd->activateWindow();
@@ -86,19 +86,13 @@ ActivityListWidget::onShareLastFm()
 void
 ActivityListWidget::onShareTwitter()
 {
-    ShareDialog* sd = new ShareDialog( m_shareIndex.data(ActivityListModel::TrackRole).value<Track>(), ShareDialog::ShareTwitter, window() );
-    sd->raise();
-    sd->show();
-    sd->activateWindow();
+    ShareDialog::shareTwitter( m_shareIndex.data(ActivityListModel::TrackRole).value<Track>() );
 }
 
 void
 ActivityListWidget::onShareFacebook()
 {
-    ShareDialog* sd = new ShareDialog( m_shareIndex.data(ActivityListModel::TrackRole).value<Track>(), ShareDialog::ShareFacebook, window() );
-    sd->raise();
-    sd->show();
-    sd->activateWindow();
+    ShareDialog::shareFacebook( m_shareIndex.data(ActivityListModel::TrackRole).value<Track>() );
 }
 
 

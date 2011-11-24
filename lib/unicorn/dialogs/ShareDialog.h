@@ -32,19 +32,12 @@ class UNICORN_DLLEXPORT ShareDialog : public unicorn::Dialog
 {
     Q_OBJECT
 public:
-
-    enum Type
-    {
-        ShareLastFm,
-        ShareTwitter,
-        ShareFacebook
-    };
-
-    ShareDialog( const Track&, Type type = ShareLastFm, QWidget* parent = 0 );
+    ShareDialog( const Track& track, QWidget* parent = 0 );
 
     Track track() const { return m_track; }
 
-    void setupUi();
+    static void shareTwitter( const Track& track );
+    static void shareFacebook( const Track& track );
 
 private slots:
     void enableDisableOk();
@@ -53,19 +46,16 @@ private slots:
     void onShared();
     void updateCharacterLimit();
 
-    void onRadioButtonClicked();
-
 private:
     void setTabOrders();
 
-    QString shareText();
-    QUrl shareUrl();
+    static QString shareText( const Track& track );
+    static QUrl shareUrl( const Track& track );
     void setShareText();
 
 private:
     Track m_track;
     Ui::ShareDialog* ui;
-    Type m_type;
 };
 
 #endif
