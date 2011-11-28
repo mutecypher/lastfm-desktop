@@ -39,6 +39,7 @@ QAbstractButton* newButton( const QString& text, QWidget* parent = 0 )
     pushButton->setAutoExclusive( true );
     pushButton->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
     pushButton->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    pushButton->setAttribute( Qt::WA_MacNoClickThrough );
     return pushButton;
 }
 

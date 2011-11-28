@@ -43,32 +43,35 @@ ScrobbleControls::ScrobbleControls( QWidget* parent )
     ui.love->setObjectName("love");
     ui.love->setCheckable( true );
     ui.love->setToolTip( tr( "Love track" ) );
-    ui.love->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-
     connect( ui.love, SIGNAL( clicked(bool) ), SLOT( onLoveChanged( bool ) ) );
  
     layout->addWidget(ui.tag = new QPushButton(tr("tag")), 0, Qt::AlignCenter);
     ui.tag->setObjectName("tag");
     ui.tag->setToolTip( tr( "Add tags" ) );
-    ui.tag->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
     layout->addWidget(ui.share = new QPushButton(tr("share")), 0, Qt::AlignCenter);
     ui.share->setObjectName("share");
     ui.share->setToolTip( tr( "Share" ) );
-    ui.share->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
     QMenu* shareMenu = new QMenu( this );
     shareMenu->addAction( tr( "Share on Last.fm" ), this, SLOT(onShareLastFm()) );
     shareMenu->addAction( tr( "Share on Twitter" ), this, SLOT(onShareTwitter()) );
     shareMenu->addAction( tr( "Share on Facebook" ), this, SLOT(onShareFacebook()) );
-
     ui.share->setMenu( shareMenu );
 
     layout->addWidget(ui.buy = new QPushButton(tr("buy")), 0, Qt::AlignCenter);
     ui.buy->setObjectName("buy");
     ui.buy->setToolTip( tr( "Buy" ) );
-    ui.buy->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui.buy->setVisible( false );
+
+    ui.love->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui.tag->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui.share->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui.buy->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui.love->setAttribute( Qt::WA_MacNoClickThrough );
+    ui.tag->setAttribute( Qt::WA_MacNoClickThrough );
+    ui.share->setAttribute( Qt::WA_MacNoClickThrough );
+    ui.buy->setAttribute( Qt::WA_MacNoClickThrough );
 
     layout->addStretch( 1 );
 

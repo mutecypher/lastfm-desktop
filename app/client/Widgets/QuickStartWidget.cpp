@@ -76,6 +76,8 @@ QuickStartWidget::QuickStartWidget( QWidget* parent )
     ui.whyNotTry->setTextFormat( Qt::RichText );
     ui.whyNotTry->setWordWrap( true );
 
+    ui.button->setAttribute( Qt::WA_MacNoClickThrough );
+
     connect( RadioStation::library( User() ).getTagSuggestions( RESULT_LIMIT ), SIGNAL(finished()), SLOT(onGotTagSuggestions()) );
     connect( User().getTopArtists( "3month", RESULT_LIMIT ), SIGNAL(finished()), SLOT(onUserGotTopArtists()) );
 

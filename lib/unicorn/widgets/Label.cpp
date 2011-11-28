@@ -14,6 +14,8 @@ unicorn::Label::Label( QWidget* parent )
     :QLabel( parent ), m_linkColor( QRgb( 0x333333 ) )
 {
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    setAttribute( Qt::WA_MacNoClickThrough );
+
     setOpenExternalLinks( false );
 
     connect( this, SIGNAL(linkHovered(QString)), SLOT(onHovered(QString)));
@@ -26,6 +28,7 @@ unicorn::Label::Label( const QString& text, QWidget* parent )
 {
     setText( text );
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    setAttribute( Qt::WA_MacNoClickThrough );
     setOpenExternalLinks( false );
 
     connect( this, SIGNAL(linkHovered(QString)), SLOT(onHovered(QString)));

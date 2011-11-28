@@ -35,8 +35,9 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 
     connect( this, SIGNAL( clicked(QModelIndex) ), SLOT(onItemClicked(QModelIndex)));
-
     connect( m_model, SIGNAL(refreshing(bool)), SIGNAL(refreshing(bool)) );
+
+    setAttribute( Qt::WA_MacNoClickThrough );
 }
 
 

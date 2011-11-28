@@ -44,8 +44,10 @@ PlayableItemWidget::PlayableItemWidget( QWidget* parent )
       m_radio_right_rest( ":/meta_radio_RIGHT_REST.png" )
 {
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    setCursor( Qt::PointingHandCursor );
     setAttribute( Qt::WA_Hover );
+    setAttribute( Qt::WA_MacNoClickThrough );
+
+    setCursor( Qt::PointingHandCursor );
 }
 
 PlayableItemWidget::PlayableItemWidget( const RadioStation& rs, const QString& title, const QString& description, QWidget* parent )
@@ -54,9 +56,13 @@ PlayableItemWidget::PlayableItemWidget( const RadioStation& rs, const QString& t
     setStation( rs, title, description );
 
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    setCursor( Qt::PointingHandCursor );
     setAttribute( Qt::WA_Hover );
+    setAttribute( Qt::WA_MacNoClickThrough );
+
+    setCursor( Qt::PointingHandCursor );
 }
+
+
 
 bool
 PlayableItemWidget::event( QEvent* e )

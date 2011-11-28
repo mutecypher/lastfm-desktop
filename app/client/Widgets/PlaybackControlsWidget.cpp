@@ -22,6 +22,10 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     ui->ban->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->love->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->skip->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->play->setAttribute( Qt::WA_MacNoClickThrough );
+    ui->ban->setAttribute( Qt::WA_MacNoClickThrough );
+    ui->love->setAttribute( Qt::WA_MacNoClickThrough );
+    ui->skip->setAttribute( Qt::WA_MacNoClickThrough );
 
     // If the actions are triggered we should do something
     // love is dealt with by the application

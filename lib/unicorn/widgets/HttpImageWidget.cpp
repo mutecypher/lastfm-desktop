@@ -25,7 +25,8 @@
 HttpImageWidget::HttpImageWidget( QWidget* parent )
     :QLabel( parent ), m_mouseDown( false )
 {
-    setAttribute( Qt::WA_LayoutUsesWidgetRect, true );
+    setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    setAttribute( Qt::WA_MacNoClickThrough );
 }
 
 void 
