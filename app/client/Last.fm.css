@@ -565,7 +565,7 @@ border: none;
 FriendWidget AvatarWidget#avatar,
 ProfileWidget AvatarWidget#avatar,
 ProfileArtistWidget QLabel#artistImage,
-ShareDialog AvatarWidget#icon {
+ShareDialog HttpImageWidget#icon {
 padding: 2px;
 background-color: white;
 color: transparent;

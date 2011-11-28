@@ -14,7 +14,7 @@
    <string>Share with Friends</string>
   </property>
   <property name="modal">
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="spacing">
@@ -51,16 +51,22 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="unicorn::Label" name="shareSubject">
+         <widget class="unicorn::Label" name="title">
           <property name="text">
            <string>TextLabel</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::RichText</enum>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="unicorn::Label" name="shareSubject2">
+         <widget class="unicorn::Label" name="description">
           <property name="text">
            <string>TextLabel</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::RichText</enum>
           </property>
          </widget>
         </item>

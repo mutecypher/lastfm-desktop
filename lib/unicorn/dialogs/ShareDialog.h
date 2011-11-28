@@ -49,13 +49,10 @@ private slots:
 private:
     void setTabOrders();
 
-    static QString shareText( const Track& track );
-    static QUrl shareUrl( const Track& track );
-    void setShareText();
-
 private:
     Track m_track;
     Ui::ShareDialog* ui;
+    class TrackImageFetcher* m_imageFetcher;
 };
 
 #endif

@@ -38,6 +38,7 @@
 
 #include "lib/unicorn/widgets/TrackWidget.h"
 #include "lib/unicorn/DesktopServices.h"
+#include "lib/unicorn/TrackImageFetcher.h"
 
 #include "ShareDialog.h"
 
@@ -55,7 +56,8 @@ ShareDialog::ShareDialog( const Track& t, QWidget* parent )
     ui->setupUi( this );
 
     ui->recipients->setType( ItemSelectorWidget::User );
-    ui->icon->loadUrl( m_track.imageUrl( lastfm::Small, true ), HttpImageWidget::ScaleAuto );
+
+    ui->icon->setScaledContents( true );
 
     enableDisableOk();
 
@@ -63,25 +65,20 @@ ShareDialog::ShareDialog( const Track& t, QWidget* parent )
     connect( ui->message, SIGNAL(textChanged()), SLOT(enableDisableOk()));
     connect( ui->recipients, SIGNAL(changed()), SLOT(enableDisableOk()));
 
-    setWindowTitle( tr("Share") );
-}
+    ui->title->setText( unicorn::Label::anchor( t.www().toString(), t.title() ) );
 
-QString
-ShareDialog::shareText( const Track& track )
-{
-    return tr("%1 by %2").arg( track.title(), track.artist().name() );
-}
+    if ( t.album().isNull() )
+        ui->description->setText( tr( "A track by %1" ).arg( unicorn::Label::anchor( t.artist().www().toString(), t.artist().name() ) ) );
+    else
+        ui->description->setText( tr( "A track by %1 from the release %2" ).arg( unicorn::Label::anchor( t.artist().www().toString(), t.artist().name() ), unicorn::Label::anchor( t.album().www().toString(), t.album() ) ) );
 
-QUrl
-ShareDialog::shareUrl( const Track& track )
-{
-    return track.www();
-}
+    m_imageFetcher = new TrackImageFetcher( t );
+    connect( m_imageFetcher, SIGNAL(finished(QPixmap)), ui->icon, SLOT(setPixmap(QPixmap)) );
+    m_imageFetcher->startAlbum();
 
-void
-ShareDialog::setShareText()
-{
-    ui->message->setText( shareText( m_track ) );
+    setTabOrders();
+
+    setWindowTitle( tr("Share with friends") );
 }
 
 void
@@ -108,11 +105,10 @@ ShareDialog::updateCharacterLimit()
 void
 ShareDialog::setTabOrders()
 {
-//    setTabOrder( ui->track, ui->recipients );
-//    setTabOrder( ui->recipients, ui->message );
-//    setTabOrder( ui->message, ui->isPublic );
-//    setTabOrder( ui->isPublic, ui->buttons->button( QDialogButtonBox::Ok ) );
-//    setTabOrder( ui->buttons->button( QDialogButtonBox::Ok ), ui->buttons->button( QDialogButtonBox::Cancel ) );
+    setTabOrder( ui->recipients, ui->message );
+    setTabOrder( ui->message, ui->isPublic );
+    setTabOrder( ui->isPublic, ui->buttons->button( QDialogButtonBox::Ok ) );
+    setTabOrder( ui->buttons->button( QDialogButtonBox::Ok ), ui->buttons->button( QDialogButtonBox::Cancel ) );
 }
 
 void
@@ -138,10 +134,10 @@ void
 ShareDialog::shareTwitter( const Track& track )
 {
     QUrl twitterShareIntent( "http://twitter.com/intent/tweet" );
-    twitterShareIntent.addEncodedQueryItem( "text", QUrl::toPercentEncoding( shareText( track ) ) );
-    twitterShareIntent.addEncodedQueryItem( "url", QUrl::toPercentEncoding( shareUrl( track ).toEncoded() ) );
-    twitterShareIntent.addQueryItem( "related", "lastfm" );
-    twitterShareIntent.addQueryItem( "hashtags", "lastfm" );
+    twitterShareIntent.addEncodedQueryItem( "text", QUrl::toPercentEncoding( tr("Check out %1").arg( track.toString() ) ) );
+    twitterShareIntent.addEncodedQueryItem( "url", QUrl::toPercentEncoding( track.www().toEncoded() ) );
+    twitterShareIntent.addQueryItem( "via", "lastfm" );
+    twitterShareIntent.addQueryItem( "related", "lastfm,lastfmpresents" );
     unicorn::DesktopServices::openUrl( twitterShareIntent );
 
 }
@@ -150,8 +146,8 @@ void
 ShareDialog::shareFacebook( const Track& track )
 {
     QUrl facebookShareIntent( "http://www.facebook.com/sharer.php" );
-    facebookShareIntent.addEncodedQueryItem( "t", QUrl::toPercentEncoding( shareText( track ) ) );
-    facebookShareIntent.addEncodedQueryItem( "u", QUrl::toPercentEncoding( shareUrl( track ).toEncoded() ) );
+    facebookShareIntent.addEncodedQueryItem( "t", QUrl::toPercentEncoding( track.toString() ) );
+    facebookShareIntent.addEncodedQueryItem( "u", QUrl::toPercentEncoding( track.www().toEncoded() ) );
     unicorn::DesktopServices::openUrl( facebookShareIntent );
 }
 
