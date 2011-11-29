@@ -78,7 +78,14 @@ ShareDialog::ShareDialog( const Track& t, QWidget* parent )
 
     setTabOrders();
 
+    QPushButton* dummyDefault = ui->buttons->addButton( QDialogButtonBox::Help );
+    dummyDefault->setDefault( true );
+    dummyDefault->setAutoDefault( true );
+    dummyDefault->setVisible( false );
+
     setWindowTitle( tr("Share with friends") );
+
+    resize( 400, 400 );
 }
 
 void

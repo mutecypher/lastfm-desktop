@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>406</width>
-    <height>393</height>
+    <width>435</width>
+    <height>418</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,6 +58,9 @@
           <property name="textFormat">
            <enum>Qt::RichText</enum>
           </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -67,6 +70,9 @@
           </property>
           <property name="textFormat">
            <enum>Qt::RichText</enum>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
