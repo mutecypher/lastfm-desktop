@@ -35,7 +35,7 @@ TrackDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option, con
 
     QFont f;
     f.setBold( true );
-    f.setPointSize( 13 );
+    f.setPixelSize( 13 );
     painter->setPen( QColor(0x333333) );
     painter->setFont( f );
 
@@ -54,7 +54,7 @@ TrackDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option, con
 
     QString timestampString = isNowPlaying ? tr( "Now playing" ) : unicorn::Label::prettyTime( timestamp );
 
-    f.setPointSize( 11 );
+    f.setPixelSize( 11 );
     painter->setFont( f );
     painter->drawText( option.rect.left() + 94, option.rect.bottom() - 12, timestampString );
 }

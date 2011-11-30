@@ -192,7 +192,7 @@ TagIconView::paintEvent( QPaintEvent* e )
     p.setPen( Qt::lightGray );
 #ifndef WIN32
     QFont f = p.font();
-    f.setPointSize( 15 );
+    f.setPixelSize( 15 );
     p.setFont( f );
 #endif
     p.drawText( viewport()->rect(), Qt::AlignCenter, tr("Type a tag above,\nor choose from below") );

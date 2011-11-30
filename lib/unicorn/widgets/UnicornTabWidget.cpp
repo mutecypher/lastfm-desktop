@@ -32,7 +32,7 @@ unicorn::TabBar::TabBar()
 {
 #ifndef WIN32
     QFont f = font();
-    f.setPointSize( 10 );
+    f.setPixelSize( 10 );
     f.setBold( true );
     setFont( f );
 #endif

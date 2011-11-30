@@ -54,7 +54,7 @@ DiagnosticsDialog::DiagnosticsDialog( QWidget *parent )
     ui.fingerprints->setAttribute( Qt::WA_MacShowFocusRect, false );
     
     QFont f = ui.ipod_log->font();
-    f.setPointSize( 10 );
+    f.setPixelSize( 10 );
     ui.ipod_log->setFont( f );
 #endif
     
