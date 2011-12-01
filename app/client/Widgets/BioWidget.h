@@ -34,9 +34,8 @@ protected slots:
 
     void onImageLoaded();
 
-    void appendBioText();
-    void updateGeometryPlease();
     void onDocumentLayoutChanged();
+    void polish();
 
 protected:
     void insertWidget( QWidget* w );
@@ -45,6 +44,7 @@ protected:
     void mousePressEvent( QMouseEvent* event );
     void mouseReleaseEvent( QMouseEvent* event );
     void mouseMoveEvent( QMouseEvent* event );
+    void showEvent(QShowEvent *);
 
     bool sendMouseEvent( QMouseEvent* event );
 

@@ -63,26 +63,13 @@ BioWidget::onImageLoaded()
     qDebug() << ui.image->pixmap()->width() << ui.image->pixmap()->height();
 
     insertWidget( ui.onTour );
-    QTimer::singleShot( 20, this, SLOT(appendBioText()) );
-}
-
-void
-BioWidget::appendBioText()
-{
 
     append( m_bioText );
 
-    QTimer::singleShot( 20, this, SLOT(updateGeometryPlease()) );
-}
-
-void
-BioWidget::updateGeometryPlease()
-{
-    // okay then
     updateGeometry();
-
     emit finished();
 }
+
 
 void 
 BioWidget::insertWidget( QWidget* w ) 
@@ -181,6 +168,12 @@ BioWidget::sendMouseEvent( QMouseEvent* event )
     return true;
 }
 
+void
+BioWidget::showEvent( QShowEvent* event )
+{
+    QTimer::singleShot( 20, this, SLOT(polish()));
+}
+
 void 
 BioWidget::onAnchorClicked( const QUrl& link )
 {
@@ -204,7 +197,16 @@ BioWidget::onBioChanged( const QSizeF& size )
 
     updateGeometry();
 
-    QTimer::singleShot( 20, this, SLOT(onDocumentLayoutChanged()));
+    onDocumentLayoutChanged();
+}
+
+void
+BioWidget::polish()
+{
+    if ( isVisible() )
+        style()->polish( this );
+    else
+        QTimer::singleShot( 20, this, SLOT(polish()));
 }
 
 void
