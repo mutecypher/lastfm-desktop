@@ -46,9 +46,12 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>433</width>
-        <height>666</height>
+        <width>445</width>
+        <height>667</height>
        </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,1">
        <property name="spacing">
@@ -163,7 +166,7 @@
        <item>
         <widget class="QStackedWidget" name="loadingStack">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="content">
           <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -238,7 +241,7 @@
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_4">
+             <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,0,0,0,0,0,0">
               <property name="spacing">
                <number>0</number>
               </property>
@@ -504,25 +507,44 @@
                 </property>
                </widget>
               </item>
+              <item>
+               <spacer name="verticalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
              </layout>
             </widget>
            </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="spinner">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="margin">
+            <number>0</number>
+           </property>
            <item>
-            <spacer name="verticalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
+            <widget class="QLabel" name="spinnerLabel">
+             <property name="text">
+              <string>TextLabel</string>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
+             <property name="alignment">
+              <set>Qt::AlignHCenter|Qt::AlignTop</set>
              </property>
-            </spacer>
+            </widget>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="spinner"/>
         </widget>
        </item>
       </layout>

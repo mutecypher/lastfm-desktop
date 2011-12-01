@@ -34,6 +34,7 @@
 #include <QScrollBar>
 #include <QMenu>
 #include <QDebug>
+#include <QMovie>
 
 #include <lastfm/XmlQuery.h>
 #include <lastfm/ws.h>
@@ -71,6 +72,11 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     m_userArtistScrobbles( 0 )
 {
     ui->setupUi( this );
+
+    QMovie* movie = new QMovie( ":/loading_meta.gif", "GIF", this );
+
+    ui->spinnerLabel->setMovie (movie );
+    movie->start();
 
     ui->loadingStack->setCurrentWidget( ui->spinner );
 
@@ -136,6 +142,7 @@ MetadataWidget::checkFinished()
     if ( --m_numCalls == 0 )
     {
         ui->loadingStack->setCurrentWidget( ui->content );
+        style()->polish( ui->artistBio );
     }
 }
 

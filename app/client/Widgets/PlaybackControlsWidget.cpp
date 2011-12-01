@@ -1,6 +1,7 @@
 
 #include <QShortcut>
 #include <QMenu>
+#include <QMovie>
 
 #include "lib/unicorn/UnicornSettings.h"
 
@@ -252,7 +253,9 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
     ui->play->setChecked( true );
     aApp->playAction()->setChecked( true );
 
-    setIconForRadio( station );
+    QMovie* movie = new QMovie( ":/loading_radio.gif", "GIF", this );
+    ui->icon->setMovie( movie );
+    movie->start();
 
     ui->progressBar->setTrack( Track() );
 

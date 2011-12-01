@@ -1,6 +1,9 @@
 <RCC>
     <qresource prefix="/" >
-         <file alias="pointyarrow.png">wizard/arrow_even_bigger_than_dropbox.png</file>		<file alias="bg_clouds.png">wizard/bg_clouds.png</file>
+		<file>loading_meta.gif</file>
+		<file>loading_radio.gif</file>
+	
+        <file alias="pointyarrow.png">wizard/arrow_even_bigger_than_dropbox.png</file>		<file alias="bg_clouds.png">wizard/bg_clouds.png</file>
 		<file alias="button_grey_LEFT_HOVER.png">wizard/button_grey_LEFT_HOVER.png</file>
 		<file alias="button_grey_LEFT_REST.png">wizard/button_grey_LEFT_REST.png</file>
 		<file alias="button_grey_MIDDLE_HOVER.png">wizard/button_grey_MIDDLE_HOVER.png</file>
