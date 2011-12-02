@@ -59,16 +59,6 @@ private:
     QString m_description;
 
     bool m_hovered;
-
-    QPixmap m_radio_left_hover;
-    QPixmap m_radio_left_press;
-    QPixmap m_radio_left_rest;
-    QPixmap m_radio_middle_hover;
-    QPixmap m_radio_middle_press;
-    QPixmap m_radio_middle_rest;
-    QPixmap m_radio_right_hover;
-    QPixmap m_radio_right_press;
-    QPixmap m_radio_right_rest;
 };
 
 #endif

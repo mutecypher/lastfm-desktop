@@ -32,16 +32,7 @@
 
 PlayableItemWidget::PlayableItemWidget( QWidget* parent )
     : QPushButton( parent ),
-      m_hovered( false ),
-      m_radio_left_hover( ":/meta_radio_LEFT_HOVER.png" ),
-      m_radio_left_press( ":/meta_radio_LEFT_PRESS.png" ),
-      m_radio_left_rest( ":/meta_radio_LEFT_REST.png" ),
-      m_radio_middle_hover( ":/meta_radio_MIDDLE_HOVER.png" ),
-      m_radio_middle_press( ":/meta_radio_MIDDLE_PRESS.png" ),
-      m_radio_middle_rest( ":/meta_radio_MIDDLE_REST.png" ),
-      m_radio_right_hover( ":/meta_radio_RIGHT_HOVER.png" ),
-      m_radio_right_press( ":/meta_radio_RIGHT_PRESS.png" ),
-      m_radio_right_rest( ":/meta_radio_RIGHT_REST.png" )
+      m_hovered( false )
 {
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
     setAttribute( Qt::WA_Hover );
@@ -164,7 +155,17 @@ PlayableItemWidget::onRadioChanged()
 
 void
 PlayableItemWidget::paintEvent( QPaintEvent* event )
-{
+{   
+    static QPixmap m_radio_left_hover = QPixmap( ":/meta_radio_LEFT_HOVER.png" );
+    static QPixmap m_radio_left_press = QPixmap( ":/meta_radio_LEFT_PRESS.png" );
+    static QPixmap m_radio_left_rest = QPixmap( ":/meta_radio_LEFT_REST.png" );
+    static QPixmap m_radio_middle_hover = QPixmap( ":/meta_radio_MIDDLE_HOVER.png" );
+    static QPixmap m_radio_middle_press = QPixmap( ":/meta_radio_MIDDLE_PRESS.png" );
+    static QPixmap m_radio_middle_rest = QPixmap( ":/meta_radio_MIDDLE_REST.png" );
+    static QPixmap m_radio_right_hover = QPixmap( ":/meta_radio_RIGHT_HOVER.png" );
+    static QPixmap m_radio_right_press = QPixmap( ":/meta_radio_RIGHT_PRESS.png" );
+    static QPixmap m_radio_right_rest = QPixmap( ":/meta_radio_RIGHT_REST.png" );
+
     if ( QString("ProfileWidget").compare( parent()->parent()->parent()->metaObject()->className() ) == 0 )
     {
         QPushButton::paintEvent( event );

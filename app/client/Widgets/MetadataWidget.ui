@@ -46,12 +46,12 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>445</width>
-        <height>667</height>
+        <width>433</width>
+        <height>666</height>
        </rect>
       </property>
       <property name="autoFillBackground">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,1">
        <property name="spacing">
@@ -166,7 +166,7 @@
        <item>
         <widget class="QStackedWidget" name="loadingStack">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="content">
           <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -241,7 +241,7 @@
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,0,0,0,0,0,0">
+             <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,0,0,0,0,0,0,0">
               <property name="spacing">
                <number>0</number>
               </property>
@@ -271,6 +271,13 @@
                 </property>
                 <property name="openLinks">
                  <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="artistBioEdit">
+                <property name="text">
+                 <string>Edited</string>
                 </property>
                </widget>
               </item>

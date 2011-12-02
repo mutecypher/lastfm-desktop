@@ -284,6 +284,14 @@ MetadataWidget::onArtistGotInfo()
         ui->artistBio->setImageHref( QUrl(lfm["artist"]["url"].text()));
         ui->artistBio->setOnTourVisible( false, QUrl(lfm["artist"]["url"].text()+"/+events"));
 
+        // Sat, 11 Dec 2010 23:49:01 +0000
+
+        QDateTime published;
+        published.fromString( lfm["artist"]["bio"]["published"].text(), "" );
+
+
+        ui->artistBioEdit->setText( tr( "Edited on %1 | %2 Edit" ).arg( published.toString( "" ), QString::fromUtf8( "" ) ) );
+
         connect( ui->artistBio, SIGNAL(finished()), SLOT(checkFinished()) );
         ++m_numCalls;
    }
