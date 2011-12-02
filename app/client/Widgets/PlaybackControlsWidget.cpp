@@ -253,9 +253,11 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
     ui->play->setChecked( true );
     aApp->playAction()->setChecked( true );
 
-    QMovie* movie = new QMovie( ":/loading_radio.gif", "GIF", this );
-    ui->icon->setMovie( movie );
-    movie->start();
+    if ( !m_movie )
+        m_movie = new QMovie( ":/loading_radio.gif", "GIF", this );
+
+    ui->icon->setMovie( m_movie );
+    m_movie->start();
 
     ui->progressBar->setTrack( Track() );
 
@@ -273,6 +275,9 @@ void
 PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrack )
 {
     ui->progressBar->setTrack( track );
+
+    if ( m_movie )
+        m_movie->stop();
 
     if ( !track.isNull() )
     {

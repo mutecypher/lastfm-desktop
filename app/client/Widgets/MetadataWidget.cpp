@@ -73,10 +73,9 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
 {
     ui->setupUi( this );
 
-    QMovie* movie = new QMovie( ":/loading_meta.gif", "GIF", this );
-
-    ui->spinnerLabel->setMovie (movie );
-    movie->start();
+    m_movie = new QMovie( ":/loading_meta.gif", "GIF", this );
+    ui->spinnerLabel->setMovie (m_movie );
+    m_movie->start();
 
     ui->loadingStack->setCurrentWidget( ui->spinner );
 
@@ -142,7 +141,7 @@ MetadataWidget::checkFinished()
     if ( --m_numCalls == 0 )
     {
         ui->loadingStack->setCurrentWidget( ui->content );
-        style()->polish( ui->artistBio );
+        m_movie->stop();
     }
 }
 

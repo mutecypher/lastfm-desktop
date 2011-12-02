@@ -22,6 +22,7 @@
 #define METADATAWIDGET_H
 
 #include <QWidget>
+#include <QPointer>
 
 #include <lastfm/Album.h>
 #include <lastfm/Track.h>
@@ -36,6 +37,7 @@ class HttpImageWidget;
 class QLabel;
 class QGroupBox;
 class BioWidget;
+class QMovie;
 
 
 class MetadataWidget : public StylableWidget
@@ -95,6 +97,8 @@ private:
     Album m_albumGuess;
 
     int m_numCalls;
+
+    QPointer<QMovie> m_movie;
 };
 
 #endif // METADATAWIDGET_H

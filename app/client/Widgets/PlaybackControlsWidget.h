@@ -2,14 +2,15 @@
 #define PLAYBACKCONTROLS_H
 
 #include <QWidget>
+#include <QPointer>
 
 #include <lastfm/RadioStation.h>
 
 #include "lib/unicorn/StylableWidget.h"
 
-namespace Ui {
-    class PlaybackControlsWidget;
-}
+namespace Ui { class PlaybackControlsWidget; }
+
+class QMovie;
 
 class PlaybackControlsWidget : public StylableWidget
 {
@@ -52,6 +53,7 @@ private:
     Ui::PlaybackControlsWidget *ui;
 
     bool m_scrobbleTrack;
+    QPointer<QMovie> m_movie;
 };
 
 #endif // PLAYBACKCONTROLS_H
