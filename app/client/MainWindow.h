@@ -24,6 +24,7 @@ class FirstRunWizard;
 class MessageBar;
 class SlideOverLayout;
 class UserToolButton;
+class MediaKey;
 
 
 class MainWindow : public unicorn::MainWindow
@@ -92,6 +93,7 @@ private:
     void setCurrentWidget( QWidget* );
     void addWinThumbBarButtons( QList<QAction*>& );
     void setupMenuBar();
+    bool macEvent(EventHandlerCallRef, EventRef);
 
     //void resizeEvent( QResizeEvent* event ) { qDebug() << event->size(); }
 
@@ -103,6 +105,8 @@ private:
 
     QPointer<PreferencesDialog> m_preferences;
     QPointer<Updater> m_updater;
+
+    QPointer<MediaKey> m_mediaKey;
 };
 
 #endif //METADATA_WINDOW_H_

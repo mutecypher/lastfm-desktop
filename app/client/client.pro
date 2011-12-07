@@ -189,9 +189,18 @@ HEADERS += \
     Widgets/ContextLabel.h \
     Widgets/SimilarArtistWidget.h
 
-mac:HEADERS += CommandReciever/CommandReciever.h
+mac:HEADERS += CommandReciever/CommandReciever.h \
+                MediaKeys/MediaKey.h \
+                MediaKeys/SPMediaKeyTap.h \
+                MediaKeys/SPMediaKeyTapDelegate.h \
+                MediaKeys/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.h \
+
 mac:SOURCES += CommandReciever/CommandReciever.mm \
-                Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
+                Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp \
+                MediaKeys/MediaKey.mm \
+                MediaKeys/SPMediaKeyTap.mm \
+                MediaKeys/SPMediaKeyTapDelegate.mm \
+                MediaKeys/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.mm
 
 FORMS += \
     Widgets/TagFilterDialog.ui \

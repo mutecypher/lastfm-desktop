@@ -32,6 +32,7 @@
 
 #include "MainWindow.h"
 
+#include "MediaKeys/MediaKey.h"
 #include "Application.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
@@ -171,7 +172,16 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     QMenu* dockMenu = new QMenu( this );
     ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *dockMenu  );
     qt_mac_set_dock_menu( dockMenu );
+
+
+    m_mediaKey = new MediaKey( this );
 #endif
+}
+
+bool
+MainWindow::macEvent(EventHandlerCallRef ref, EventRef event )
+{
+    return m_mediaKey->macEventFilter( ref, event );
 }
 
 void
