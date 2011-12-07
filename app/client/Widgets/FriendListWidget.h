@@ -9,16 +9,11 @@ namespace unicorn { class Session; }
 namespace lastfm { class XmlQuery; }
 namespace lastfm { class User; }
 
+namespace Ui { class FriendListWidget; }
+
 class FriendListWidget : public QWidget
 {
     Q_OBJECT
-private:
-    struct
-    {
-        class QLineEdit* filter;
-        class QListWidget* friends;
-    } ui;
-
 public:
     explicit FriendListWidget( QWidget *parent = 0 );
 
@@ -38,9 +33,10 @@ private:
     void changeUser( const QString& newUsername );
 
 private:
-    QPointer<QWidget> m_main;
-
     QString m_currentUsername;
+
+    Ui::FriendListWidget* ui;
+    QPointer<QMovie> m_movie;
 };
 
 #endif // FRIENDLISTWIDGET_H

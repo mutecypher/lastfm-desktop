@@ -207,7 +207,8 @@ FORMS += \
     Settings/AdvancedSettingsWidget.ui \
     Wizard/FirstRunWizard.ui \
     Widgets/NothingPlayingWidget.ui \
-    Widgets/FriendWidget.ui
+    Widgets/FriendWidget.ui \
+    Widgets/FriendListWidget.ui
 
 linux*:HEADERS += MediaDevices/IpodDevice_linux.h
 linux*:SOURCES += MediaDevices/IpodDevice_linux.cpp

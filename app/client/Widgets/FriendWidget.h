@@ -25,6 +25,8 @@ public:
     QString name() const;
     QString realname() const;
 
+    void setListeningNow( bool listeningNow );
+
     bool operator<( const FriendWidget& that ) const;
 
 private:
@@ -36,6 +38,7 @@ private:
     lastfm::User m_user;
     lastfm::MutableTrack m_recentTrack;
     unsigned int m_order;
+    bool m_listeningNow;
 };
 
 #endif // FRIENDWIDGET_H

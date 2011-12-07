@@ -484,6 +484,10 @@ ScrobblesWidget QPushButton#refresh:disabled {
 background-color: #cccccc;
 }
 
+FriendListWidget QLabel#spinner {
+margin: 50px;
+}
+
 FriendListWidget QListWidget {
 background-color: #eeeeee;
 border: none;

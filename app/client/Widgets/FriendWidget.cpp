@@ -18,7 +18,8 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget* parent)
     :StylableWidget( parent ),
       ui( new Ui::FriendWidget ),
       m_user( user ),
-      m_order( 0 - 1 )
+      m_order( 0 - 1 ),
+      m_listeningNow( false )
 {   
     ui->setupUi( this );
 
@@ -28,9 +29,12 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget* parent)
     m_recentTrack.setExtra( "playerName", user["scrobblesource"]["name"].text() );
     m_recentTrack.setExtra( "playerURL", user["scrobblesource"]["url"].text() );
 
-    QDateTime timestamp = QDateTime::fromString( user["recenttrack"].attribute( "date" ), "d MMM yyyy, hh:mm" );
-    timestamp.setTimeSpec( Qt::UTC );
-    m_recentTrack.setTimeStamp( timestamp.toLocalTime() );
+    QString recentTrackDate = user["recenttrack"].attribute( "uts" );
+
+    m_listeningNow = recentTrackDate.isEmpty();
+
+    if ( !m_listeningNow )
+        m_recentTrack.setTimeStamp( QDateTime::fromTime_t( recentTrackDate.toUInt() ) );
 
     QRegExp re( "/serve/(\\d*)s?/" );
     ui->avatar->loadUrl( user["image size=medium"].text().replace( re, "/serve/\\1s/" ), HttpImageWidget::ScaleNone );
@@ -68,10 +72,25 @@ FriendWidget::setOrder( int order )
     m_order = order;
 }
 
+void
+FriendWidget::setListeningNow( bool listeningNow )
+{
+    m_listeningNow = listeningNow;
+}
+
 bool
 FriendWidget::operator<( const FriendWidget& that ) const
 {
     // sort by most recently listened and then by name
+
+    if ( this->m_listeningNow && !that.m_listeningNow )
+        return true;
+
+    if ( !this->m_listeningNow && that.m_listeningNow )
+        return false;
+
+    if ( this->m_listeningNow && that.m_listeningNow )
+        return this->name().toLower() < that.name().toLower();
 
     if ( !this->m_recentTrack.timestamp().isNull() && that.m_recentTrack.timestamp().isNull() )
         return true;
@@ -113,7 +132,11 @@ FriendWidget::setDetails()
 
     ui->name->setText( nameString );
     ui->lastTrack->setText( tr( "%1 on %2" ).arg( track, player ) );
-    ui->timestamp->setText( unicorn::Label::prettyTime( m_recentTrack.timestamp() )  );
+
+    if ( m_listeningNow )
+        ui->timestamp->setText( tr( "Listening now" ) );
+    else
+        ui->timestamp->setText( unicorn::Label::prettyTime( m_recentTrack.timestamp() )  );
 }
 
 QString
