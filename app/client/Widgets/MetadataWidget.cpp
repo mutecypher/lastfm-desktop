@@ -287,8 +287,7 @@ MetadataWidget::onArtistGotInfo()
         // Sat, 11 Dec 2010 23:49:01 +0000
 
         QDateTime published;
-        published.fromString( lfm["artist"]["bio"]["published"].text(), "" );
-
+        published.fromString( lfm["artist"]["bio"]["published"].text(), "ddd, d MMM yyyy HH:mm:ss" );
 
         ui->artistBioEdit->setText( tr( "Edited on %1 | %2 Edit" ).arg( published.toString( "" ), QString::fromUtf8( "" ) ) );
 
