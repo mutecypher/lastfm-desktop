@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>442</width>
-    <height>131</height>
+    <width>423</width>
+    <height>130</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,38 +28,86 @@
     </widget>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0">
      <property name="spacing">
       <number>0</number>
      </property>
      <item>
-      <widget class="unicorn::Label" name="name">
+      <widget class="unicorn::Label" name="username">
        <property name="text">
-        <string/>
+        <string>Username</string>
        </property>
        <property name="textFormat">
-        <enum>Qt::RichText</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="unicorn::Label" name="lastTrack">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="textFormat">
-        <enum>Qt::RichText</enum>
+        <enum>Qt::PlainText</enum>
        </property>
        <property name="wordWrap">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="unicorn::Label" name="timestamp">
+      <widget class="unicorn::Label" name="userDetails">
        <property name="text">
-        <string/>
+        <string>User details</string>
        </property>
+       <property name="textFormat">
+        <enum>Qt::PlainText</enum>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="trackFrame">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="unicorn::Label" name="lastTrack">
+          <property name="text">
+           <string>Artist - Title</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::PlainText</enum>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,1">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="equaliser">
+            <property name="text">
+             <string>e</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="unicorn::Label" name="timestamp">
+            <property name="text">
+             <string>Timestamp</string>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::PlainText</enum>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
      </item>
      <item>

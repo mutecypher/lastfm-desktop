@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPointer>
 
+class QNetworkReply;
 
 namespace unicorn { class Session; }
 namespace lastfm { class XmlQuery; }
@@ -27,6 +28,8 @@ private slots:
     void onGotFriendsListeningNow();
     void onTextChanged( const QString& text );
 
+    void onFindFriends();
+
     void refresh();
 
 private:
@@ -37,6 +40,8 @@ private:
 
     Ui::FriendListWidget* ui;
     QPointer<QMovie> m_movie;
+
+    QPointer<QNetworkReply> m_reply;
 };
 
 #endif // FRIENDLISTWIDGET_H

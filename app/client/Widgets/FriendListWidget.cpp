@@ -6,15 +6,19 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QMovie>
+#include <QNetworkReply>
 
 #include <lastfm/User.h>
 #include <lastfm/XmlQuery.h>
+#include <lastfm/UrlBuilder.h>
 
 #include "lib/unicorn/UnicornSession.h"
+#include "lib/unicorn/DesktopServices.h"
 
 #include "../Application.h"
 #include "FriendWidget.h"
 #include "FriendListWidget.h"
+#include "RefreshButton.h"
 #include "ui_FriendListWidget.h"
 
 
@@ -33,8 +37,14 @@ FriendWidgetItem::FriendWidgetItem( QListWidget* parent )
 bool
 FriendWidgetItem::operator<( const QListWidgetItem& that ) const
 {
-    return *static_cast<FriendWidget*>(listWidget()->itemWidget( const_cast<FriendWidgetItem*>(this) )) <
-            *static_cast<FriendWidget*>(listWidget()->itemWidget( const_cast<QListWidgetItem*>(&that) ));
+    if ( !qobject_cast<FriendWidget*>(listWidget()->itemWidget( const_cast<QListWidgetItem*>(&that) )) )
+        return false;
+
+    if ( !qobject_cast<FriendWidget*>(listWidget()->itemWidget( const_cast<FriendWidgetItem*>(this) )) )
+        return true;
+
+    return *qobject_cast<FriendWidget*>(listWidget()->itemWidget( const_cast<FriendWidgetItem*>(this) )) <
+            *qobject_cast<FriendWidget*>(listWidget()->itemWidget( const_cast<QListWidgetItem*>(&that) ));
 }
 
 FriendListWidget::FriendListWidget(QWidget *parent) :
@@ -43,13 +53,18 @@ FriendListWidget::FriendListWidget(QWidget *parent) :
 {
     ui->setupUi( this );
 
+    ui->noFriends->setText( tr( "<h3>You haven't made any friends on Last.fm yet.</h3>"
+                                "<p>Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.<p>" ) );
+
+    connect( ui->findFriends, SIGNAL(clicked()), SLOT(onFindFriends()) );
+
     ui->filter->setPlaceholderText( tr( "Search for a friend by username or real name" ) );
     ui->filter->setAttribute( Qt::WA_MacShowFocusRect, false );
 
     ui->friends->setObjectName( "friends" );
     ui->friends->setAttribute( Qt::WA_MacShowFocusRect, false );
     ui->friends->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
-    ui->friends->setUniformItemSizes( true );
+    //ui->friends->setUniformItemSizes( true );
 
     connect( ui->filter, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
 
@@ -83,15 +98,34 @@ FriendListWidget::changeUser( const QString& newUsername )
 {
     if ( !newUsername.isEmpty() && (newUsername != m_currentUsername) )
     {
+        if ( m_reply )
+            m_reply->abort();
+
         ui->friends->clear();
+
+        // add the refresh button
+        FriendWidgetItem* item = new FriendWidgetItem( ui->friends );
+        RefreshButton* refresh = new RefreshButton( this );
+        refresh->setText( tr( "Refresh Friends" ) );
+        ui->friends->setItemWidget( item, refresh );
+        item->setSizeHint( refresh->sizeHint() );
+
+        connect( refresh, SIGNAL(clicked()) , SLOT(refresh()));
 
         ui->stackedWidget->setCurrentWidget( ui->spinnerPage );
         m_movie->start();
 
         m_currentUsername = newUsername;
 
-        connect( User( newUsername ).getFriends( true, 50, 1 ), SIGNAL(finished()), SLOT(onGotFriends()));
+        m_reply = User( newUsername ).getFriends( true, 50, 1 );
+        connect( m_reply, SIGNAL(finished()), SLOT(onGotFriends()));
     }
+}
+
+void
+FriendListWidget::onFindFriends()
+{
+    unicorn::DesktopServices::openUrl( lastfm::UrlBuilder( "findfriends" ).url() );
 }
 
 void
@@ -104,14 +138,14 @@ FriendListWidget::onTextChanged( const QString& text )
     if ( text.isEmpty() )
     {
         // special case an empty string so it's a bit zippier
-        for ( int i = 0 ; i < ui->friends->count() ; ++i )
+        for ( int i = 1 ; i < ui->friends->count() ; ++i )
             ui->friends->item( i )->setHidden( false );
     }
     else
     {
         QRegExp re( QString( "^%1" ).arg( trimmedText ), Qt::CaseInsensitive );
 
-        for ( int i = 0 ; i < ui->friends->count() ; ++i )
+        for ( int i = 1 ; i < ui->friends->count() ; ++i )
         {
             FriendWidget* user = static_cast<FriendWidget*>( ui->friends->itemWidget( ui->friends->item( i ) ) );
 
@@ -128,15 +162,22 @@ FriendListWidget::onTextChanged( const QString& text )
 void FriendListWidget::onCurrentChanged( int index )
 {
     if ( index == 3 )
-    {
         refresh();
-    }
 }
 
 void
 FriendListWidget::refresh()
 {
-    connect( User().getFriendsListeningNow( 50, 1 ), SIGNAL(finished()), SLOT(onGotFriendsListeningNow()));
+    if ( !m_reply
+         || m_reply && m_reply->isFinished() )
+    {
+        RefreshButton* refresh = qobject_cast<RefreshButton*>(ui->friends->itemWidget( ui->friends->item( 0 ) ) );
+        refresh->setEnabled( false );
+        refresh->setText( tr( "Refreshing..." ) );
+
+        m_reply = User().getFriendsListeningNow( 50, 1 );
+        connect( m_reply, SIGNAL(finished()), SLOT(onGotFriendsListeningNow()));
+    }
 }
 
 void
@@ -162,18 +203,22 @@ FriendListWidget::onGotFriends()
 
         // Check if we need to fetch another page of users
         if ( page != totalPages )
-            connect( lastfm::User().getFriends( true, perPage, page + 1 ), SIGNAL(finished()), SLOT(onGotFriends()) );
+        {
+            m_reply = lastfm::User().getFriends( true, perPage, page + 1 );
+            connect( m_reply, SIGNAL(finished()), SLOT(onGotFriends()) );
+        }
         else
         {
             // we have fetched all the pages!
             onTextChanged( ui->filter->text() );
-            connect( User().getFriendsListeningNow( 50, 1 ), SIGNAL(finished()), SLOT(onGotFriendsListeningNow()));
+
+            m_reply = User().getFriendsListeningNow( 50, 1 );
+            connect( m_reply, SIGNAL(finished()), SLOT(onGotFriendsListeningNow()));
         }
     }
     else
     {
         // There was an error fetching friends so just show the list
-
         ui->friends->sortItems( Qt::AscendingOrder );
 
         if ( ui->friends->count() == 0 )
@@ -194,7 +239,7 @@ FriendListWidget::onGotFriendsListeningNow()
     if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
         // reset all the friends to have the same order of max unsigned int
-        for ( int i = 0 ; i < ui->friends->count() ; ++i )
+        for ( int i = 1 ; i < ui->friends->count() ; ++i )
             static_cast<FriendWidget*>( ui->friends->itemWidget( ui->friends->item( i ) ) )->setOrder( 0 - 1 );
 
         QList<XmlQuery> users = lfm["friendslisteningnow"].children( "user" );
@@ -203,7 +248,7 @@ FriendListWidget::onGotFriendsListeningNow()
         {
             XmlQuery& user = users[i];
 
-            for ( int j = 0 ; j < ui->friends->count() ; ++j )
+            for ( int j = 1 ; j < ui->friends->count() ; ++j )
             {
                 FriendWidget* friendWidget = static_cast<FriendWidget*>( ui->friends->itemWidget( ui->friends->item( j ) ) );
 
@@ -220,7 +265,10 @@ FriendListWidget::onGotFriendsListeningNow()
 
         // Check if we need to fetch another page of users
         if ( page != totalPages )
-            connect( lastfm::User().getFriends( true, perPage, page + 1 ), SIGNAL(finished()), SLOT(onGotFriends()) );
+        {
+            m_reply = lastfm::User().getFriends( true, perPage, page + 1 );
+            connect( m_reply, SIGNAL(finished()), SLOT(onGotFriends()) );
+        }
         else
         {
             // we have fetched all the pages!
@@ -234,6 +282,10 @@ FriendListWidget::onGotFriendsListeningNow()
                 ui->stackedWidget->setCurrentWidget( ui->friendsPage );
 
             m_movie->stop();
+
+            RefreshButton* refresh = qobject_cast<RefreshButton*>(ui->friends->itemWidget( ui->friends->item( 0 ) ) );
+            refresh->setEnabled( true );
+            refresh->setText( tr( "Refresh Friends" ) );
         }
     }
     else
@@ -246,6 +298,10 @@ FriendListWidget::onGotFriendsListeningNow()
             ui->stackedWidget->setCurrentWidget( ui->friendsPage );
 
         m_movie->stop();
+
+        RefreshButton* refresh = qobject_cast<RefreshButton*>(ui->friends->itemWidget( ui->friends->item( 0 ) ) );
+        refresh->setEnabled( true );
+        refresh->setText( tr( "Refresh Friends" ) );
     }
 
 }
