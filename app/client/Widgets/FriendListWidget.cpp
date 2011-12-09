@@ -218,15 +218,7 @@ FriendListWidget::onGotFriends()
     }
     else
     {
-        // There was an error fetching friends so just show the list
-        ui->friends->sortItems( Qt::AscendingOrder );
-
-        if ( ui->friends->count() == 0 )
-            ui->stackedWidget->setCurrentWidget( ui->noFriendsPage );
-        else
-            ui->stackedWidget->setCurrentWidget( ui->friendsPage );
-
-        m_movie->stop();
+        showList();
     }
 }
 
@@ -272,36 +264,32 @@ FriendListWidget::onGotFriendsListeningNow()
         else
         {
             // we have fetched all the pages!
-            onTextChanged( ui->filter->text() );
-
-            ui->friends->sortItems( Qt::AscendingOrder );
-
-            if ( ui->friends->count() == 0 )
-                ui->stackedWidget->setCurrentWidget( ui->noFriendsPage );
-            else
-                ui->stackedWidget->setCurrentWidget( ui->friendsPage );
-
-            m_movie->stop();
-
-            RefreshButton* refresh = qobject_cast<RefreshButton*>(ui->friends->itemWidget( ui->friends->item( 0 ) ) );
-            refresh->setEnabled( true );
-            refresh->setText( tr( "Refresh Friends" ) );
+            showList();
         }
     }
     else
     {
-        ui->friends->sortItems( Qt::AscendingOrder );
-
-        if ( ui->friends->count() == 0 )
-            ui->stackedWidget->setCurrentWidget( ui->noFriendsPage );
-        else
-            ui->stackedWidget->setCurrentWidget( ui->friendsPage );
-
-        m_movie->stop();
-
-        RefreshButton* refresh = qobject_cast<RefreshButton*>(ui->friends->itemWidget( ui->friends->item( 0 ) ) );
-        refresh->setEnabled( true );
-        refresh->setText( tr( "Refresh Friends" ) );
+        // there was an error downloading a page
+        showList();
     }
 
+}
+
+void
+FriendListWidget::showList()
+{
+    onTextChanged( ui->filter->text() );
+
+    ui->friends->sortItems( Qt::AscendingOrder );
+
+    if ( ui->friends->count() == 1 )
+        ui->stackedWidget->setCurrentWidget( ui->noFriendsPage );
+    else
+        ui->stackedWidget->setCurrentWidget( ui->friendsPage );
+
+    m_movie->stop();
+
+    RefreshButton* refresh = qobject_cast<RefreshButton*>(ui->friends->itemWidget( ui->friends->item( 0 ) ) );
+    refresh->setEnabled( true );
+    refresh->setText( tr( "Refresh Friends" ) );
 }

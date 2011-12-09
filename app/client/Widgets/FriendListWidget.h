@@ -35,6 +35,8 @@ private slots:
 private:
     void changeUser( const QString& newUsername );
 
+    void showList();
+
 private:
     QString m_currentUsername;
 
