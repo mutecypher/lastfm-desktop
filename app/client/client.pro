@@ -105,7 +105,8 @@ SOURCES += \
     Wizard/TourLocationPage.cpp \
     Wizard/WizardPage.cpp \
     Widgets/ContextLabel.cpp \
-    Widgets/SimilarArtistWidget.cpp
+    Widgets/SimilarArtistWidget.cpp \
+    Widgets/PushButton.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -187,7 +188,8 @@ HEADERS += \
     Wizard/BootstrapPage.h \
     Wizard/WizardPage.h \
     Widgets/ContextLabel.h \
-    Widgets/SimilarArtistWidget.h
+    Widgets/SimilarArtistWidget.h \
+    Widgets/PushButton.h
 
 mac:HEADERS += CommandReciever/CommandReciever.h
 mac:SOURCES += CommandReciever/CommandReciever.mm \

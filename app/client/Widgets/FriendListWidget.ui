@@ -23,7 +23,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="friendsPage">
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -66,13 +66,13 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="noFriendsPage">
+     <widget class="StylableWidget" name="noFriendsPage">
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <property name="margin">
         <number>0</number>
        </property>
        <item>
-        <widget class="QLabel" name="noFriends">
+        <widget class="unicorn::Label" name="noFriends">
          <property name="text">
           <string/>
          </property>
@@ -85,7 +85,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="findFriends">
+        <widget class="PushButton" name="findFriends">
          <property name="text">
           <string>Find your friends on Last.fm</string>
          </property>
@@ -120,7 +120,7 @@
           <string>Spinner</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignHCenter|Qt::AlignTop</set>
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
@@ -130,6 +130,24 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PushButton</class>
+   <extends>QPushButton</extends>
+   <header>../Widgets/PushButton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>unicorn::Label</class>
+   <extends>QLabel</extends>
+   <header>lib/unicorn/widgets/Label.h</header>
+  </customwidget>
+  <customwidget>
+   <class>StylableWidget</class>
+   <extends>QWidget</extends>
+   <header>lib/unicorn/StylableWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

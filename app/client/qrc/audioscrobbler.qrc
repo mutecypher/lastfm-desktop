@@ -37,6 +37,16 @@
 		<file alias="player_wmp_64.png">wizard/player_wmp_64.png</file>
 		<file alias="scrobbler_32.png">wizard/lastfm_icon_32.png</file>
 		<file alias="scrobbler_64.png">wizard/lastfm_icon_64.png</file>
+
+		<file>button_LEFT_HOVER.png</file>
+		<file>button_LEFT_PRESS.png</file>
+		<file>button_LEFT_REST.png</file>
+		<file>button_MIDDLE_HOVER.png</file>
+		<file>button_MIDDLE_PRESS.png</file>
+		<file>button_MIDDLE_REST.png</file>
+		<file>button_RIGHT_HOVER.png</file>
+		<file>button_RIGHT_PRESS.png</file>
+		<file>button_RIGHT_REST.png</file>
 		
          <file>message_close.png</file>
          <file>message_error.png</file>

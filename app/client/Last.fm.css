@@ -468,7 +468,7 @@ RefreshButton {
 background-position: center left;
 background-repeat: none;
 padding: 0px 10%;
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #eeeeee, stop:1 #e2e2e2);
 color: #777;
 border: none;
 border-bottom: 1px solid #a6a6a6;
@@ -476,16 +476,12 @@ height: 38px;
 }
 
 RefreshButton:hover {
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #f0f0f0, stop:1 #d6d6d6);
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fcfcfc, stop:1 #e5e5e5);
 }
 
 RefreshButton:pressed,
 RefreshButton:disabled {
-background-color: #cccccc;
-}
-
-FriendListWidget QLabel#spinner {
-margin: 50px;
+background-color: #d6d6d6;
 }
 
 FriendListWidget QListWidget {
@@ -642,8 +638,22 @@ font-size: 11px;
 color: #333;
 }
 
-FriendWidget QLabel#noFriends {
-	margin: 50px;
+FriendListWidget QLabel#noFriends {
+	color: #333;
+}
+
+FriendListWidget QWidget#noFriendsPage {
+	border: none;
+	margin: 20px;
+}
+
+FriendListWidget PushButton {
+color: #333;
+text-align: center center;
+font-weight: bold;
+background-color: transparent;
+min-height: 49px;
+max-height: 49px;
 }
 
 FriendWidget QLabel#equaliser {
