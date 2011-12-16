@@ -24,7 +24,7 @@
 #include <QProcess>
 #include <QDebug>
 
-#include "lib/unicorn/Updater/PluginList.h"
+#include "../Plugins/PluginList.h"
 
 #include "FirstRunWizard.h"
 #include "PluginsPage.h"
@@ -42,8 +42,8 @@ PluginsPage::PluginsPage()
 
     layout->addLayout( pluginsLayout );
 
-    PluginList list;
-    QList<IPluginInfo*> supportedPlugins = list.supportedList();
+
+    QList<IPluginInfo*> supportedPlugins = wizard()->pluginList()->supportedList();
     foreach( IPluginInfo* plugin, supportedPlugins )
     {
         if( !plugin->isAppInstalled() )
@@ -61,11 +61,6 @@ PluginsPage::PluginsPage()
             cb->setText( cb->text() + " " + tr( "(Plugin installed or not required)" ));
         }
     }
-
-//    pluginsLayout->addWidget( ui.iTunes = new QCheckBox( tr("iTunes"), this ) );
-//    pluginsLayout->addWidget( ui.iWMP = new QCheckBox( tr("Windows Media Player"), this ) );
-//    pluginsLayout->addWidget( ui.iWinAmp = new QCheckBox( tr("Winamp"), this ) );
-//    pluginsLayout->addWidget( ui.iFoo = new QCheckBox( tr("Foobar 2000"), this ) );
 
     layout->addWidget( ui.description = new QLabel( tr( "<p>Your media players need a special Last.fm plugin to be able to scrobble the music you listen to.</p>"
                                                        "<p>Please select the media players that you would like to scrobble your music from and click <strong>Install Plugins</strong></p>"), this ),
@@ -86,11 +81,14 @@ PluginsPage::validatePage()
 
     wizard()->setCommitPage( true );
 
-//    QProcess pluginInstaller;
-//    qDebug() << "Starting PluginInstaller";
-//    pluginInstaller.start( "PluginInstaller.exe" );
-//    pluginInstaller.waitForFinished( -1 );
-//    qDebug() << "PluginInstaller finished.";
+
+    // For all the plugins that have been selected install them to the correct loaction
+    // and write to the reistry which version we have installed
+
+
+    //pluginInstallPath
+
+
     return true;
 }
 

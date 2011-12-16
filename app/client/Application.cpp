@@ -44,7 +44,7 @@
 #include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/widgets/UserMenu.h"
-#include "lib/unicorn/Updater/PluginList.h"
+#include "Plugins/PluginList.h"
 #include "lib/unicorn/DesktopServices.h"
 #ifdef Q_OS_MAC
 #include "lib/unicorn/notify/Notify.h"

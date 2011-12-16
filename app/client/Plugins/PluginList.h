@@ -2,13 +2,12 @@
 #define PLUGIN_LIST_H_
 
 #include "gen_PluginList.h"
-#include "lib/DllExportMacro.h"
 
-class UNICORN_DLLEXPORT PluginList : public GenPluginList
+class PluginList : public GenPluginList
 {
+    Q_OBJECT
 public:
-    PluginList(){}
-    PluginList( const PluginList& that ) : GenPluginList( that ) {}
+    PluginList( QObject* parent = 0 ) : GenPluginList( parent ) {}
 
     QList<IPluginInfo*> availablePlugins() const;
     QList<IPluginInfo*> installedPlugins() const;

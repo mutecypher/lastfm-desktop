@@ -1,12 +1,14 @@
 #ifndef FOOBAR08_PLUGIN_INFO_H_
 #define FOOBAR08_PLUGIN_INFO_H_
 
-#include "../../lib/unicorn/Updater/IPluginInfo.h"
-#include "../../lib/DllExportMacro.h"
+#include "IPluginInfo.h"
 
-class UNICORN_DLLEXPORT FooBar08PluginInfo : public IPluginInfo
+class FooBar08PluginInfo : public IPluginInfo
 {
+    Q_OBJECT
 public:
+    FooBar08PluginInfo( QObject* parent = 0 ) : IPluginInfo( parent ) {}
+
     std::string name() const { return "Foobar 2000 0.9"; }
     Version minVersion() const { return Version( 0, 9 ); }
     Version maxVersion() const { return Version( 0, 9, 3, 9999 ); }
@@ -25,8 +27,6 @@ public:
         #endif
         return false;
     }
-
-    IPluginInfo* clone() const { return new FooBar08PluginInfo( *this ); }
 
     std::tstring pluginInstallPath() const
     {

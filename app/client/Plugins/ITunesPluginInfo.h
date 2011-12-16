@@ -1,12 +1,14 @@
 #ifndef ITUNES_PLUGIN_INFO_H_
 #define ITUNES_PLUGIN_INFO_H_
 
-#include "../../lib/unicorn/Updater/IPluginInfo.h"
-#include "../../lib/DllExportMacro.h"
+#include "IPluginInfo.h"
 
-class UNICORN_DLLEXPORT ITunesPluginInfo : public IPluginInfo
+class ITunesPluginInfo : public IPluginInfo
 {
+    Q_OBJECT
 public:
+    ITunesPluginInfo( QObject* parent = 0 ) : IPluginInfo( parent ) {}
+
     std::string name() const { return "iTunes"; }
     Version minVersion() const { return Version(); }
     Version maxVersion() const { return Version(); }
@@ -17,22 +19,20 @@ public:
 
     std::string id() const 
     { 
-        #ifdef WIN32    
-            return "itw"; 
-        #endif
+#ifdef WIN32
+        return "itw";
+#endif
         return "osx";
     }
     BootstrapType bootstrapType() const { return ClientBootstrap; }
 
     bool isPlatformSupported() const
     {
-        #if defined (WIN32) || defined (__APPLE__)
+#if defined (WIN32) || defined (__APPLE__)
             return true;
-        #endif
+#endif
         return false;
     }
-
-    IPluginInfo* clone() const { return new ITunesPluginInfo( *this ); }
 
 	std::tstring pluginInstallPath() const
     {

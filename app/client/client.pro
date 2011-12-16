@@ -191,6 +191,21 @@ HEADERS += \
     Widgets/SimilarArtistWidget.h \
     Widgets/PushButton.h
 
+
+win32:HEADERS += Plugins/FooBar08PluginInfo.h \
+                    Plugins/FooBar09PluginInfo.h \
+                    Plugins/ITunesPluginInfo.h \
+                    Plugins/WinampPluginInfo.h \
+                    Plugins/WmpPluginInfo.h \
+                    Plugins/PluginList.h \
+                    Plugins/KillProcess.h \
+                    Plugins/IPluginInfo.h \
+                    Plugins/gen_PluginList.h
+
+win32:SOURCES += Plugins/PluginList.cpp \
+                    Plugins/IPluginInfo.cpp
+
+
 mac:HEADERS += CommandReciever/CommandReciever.h
 mac:SOURCES += CommandReciever/CommandReciever.mm \
                 Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp

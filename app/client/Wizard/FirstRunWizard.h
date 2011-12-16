@@ -23,9 +23,11 @@
 #include <QDialog>
 #include <QAbstractButton>
 #include <QList>
+#include <QPointer>
+
+#include "../Plugins/PluginList.h"
 
 namespace Ui { class FirstRunWizard; }
-
 
 class FirstRunWizard : public QDialog
 {
@@ -42,6 +44,7 @@ public:
 
 public:
     FirstRunWizard( bool startFromTour = false, QWidget* parent = 0 );
+    ~FirstRunWizard();
 
     void setTitle( const QString& title );
 
@@ -51,6 +54,8 @@ public:
     bool canGoBack() const;
 
     void showWelcome();
+
+    class PluginList* pluginList() const { return m_plugins; }
 
 public slots:
     void next();
@@ -70,6 +75,7 @@ private:
 
 private:
     Ui::FirstRunWizard* ui;
+    QPointer<PluginList> m_plugins;
 
     QList<QWidget*> m_pages;
 

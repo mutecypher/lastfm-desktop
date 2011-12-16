@@ -72,7 +72,14 @@ FirstRunWizard::FirstRunWizard( bool startFromTour, QWidget* parent )
     else
         ui->stackedWidget->setCurrentWidget( ui->loginPage );
 
+     m_plugins = new PluginList;
+
     initializePage( ui->stackedWidget->currentWidget() );
+}
+
+FirstRunWizard::~FirstRunWizard()
+{
+    delete m_plugins;
 }
 
 void

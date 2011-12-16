@@ -1,12 +1,17 @@
 #ifndef WINAMP_PLUGIN_INFO_H_
 #define WINAMP_PLUGIN_INFO_H_
 
-#include "../../lib/unicorn/Updater/IPluginInfo.h"
-#include "../../lib/DllExportMacro.h"
+#include <QSettings>
+#include <QString>
 
-class UNICORN_DLLEXPORT WinampPluginInfo : public IPluginInfo
+#include "../Plugins/IPluginInfo.h"
+
+class WinampPluginInfo : public IPluginInfo
 {
+    Q_OBJECT
 public:
+    WinampPluginInfo( QObject* parent = 0 ) : IPluginInfo( parent ) {}
+
     std::string name() const { return "Winamp"; }
     Version minVersion() const { return Version(); }
     Version maxVersion() const { return Version(); }
@@ -25,18 +30,16 @@ public:
         return false;
     }
 
-    IPluginInfo* clone() const { return new WinampPluginInfo( *this ); }
-
-#ifdef QT_VERSION
     std::tstring pluginInstallPath() const
     {
-    #ifdef Q_OS_WIN
-	return programFilesX86().append(L"\\WA5\\Plugins");
-    #endif 
+#ifdef Q_OS_WIN32
+        QSettings settings( "HKEY_CURRENT_USER\\Software\\Winamp", QSettings::NativeFormat );
+        QString winampFolder = settings.value( ".", QString::fromStdWString( programFilesX86().append( L"\\Winamp" ) ) ).toString().append( "\\plugins" );
+        return winampFolder.toStdWString();
+#endif
         Q_ASSERT( !"There is no winamp on non-windows platforms!" );
         return std::tstring();
     }
-#endif
 
 };
 

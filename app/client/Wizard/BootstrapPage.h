@@ -28,7 +28,7 @@
 #include <QNetworkReply>
 #include <QPointer>
 
-#include "lib/unicorn/Updater/PluginList.h"
+#include "../Plugins/PluginList.h"
 #include "../Application.h"
 
 class BootstrapPage: public WizardPage

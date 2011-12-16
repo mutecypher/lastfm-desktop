@@ -5,11 +5,11 @@ QList<IPluginInfo*>
 PluginList::availablePlugins() const
 {
     QList<IPluginInfo*> ret;
-    foreach( IPluginInfo* plugin, *this ) {
+    foreach( IPluginInfo* plugin, m_plugins ) {
         if( plugin->isInstalled() ||
             !plugin->isPlatformSupported() ) continue;
         if( plugin->isAppInstalled() )
-            ret << plugin->clone();
+            ret << plugin;
     }
     return ret;
 }
@@ -18,9 +18,9 @@ QList<IPluginInfo*>
 PluginList::installedPlugins() const
 {
     QList<IPluginInfo*> ret;
-    foreach( IPluginInfo* plugin, *this ) {
+    foreach( IPluginInfo* plugin, m_plugins ) {
         if( plugin->isInstalled())
-            ret << plugin->clone();
+            ret << plugin;
     }
     return ret;
 }
@@ -31,7 +31,7 @@ PluginList::bootstrappablePlugins() const
     QList<IPluginInfo*> ret;
     foreach( IPluginInfo* plugin, installedPlugins() ) {
         if( plugin->canBootstrap()) {
-            ret << plugin->clone();
+            ret << plugin;
         }
     }
     return ret;
@@ -41,9 +41,9 @@ QList<IPluginInfo*>
 PluginList::supportedList() const
 {
     QList<IPluginInfo*> ret;
-    foreach( IPluginInfo* i, *this ) {
+    foreach( IPluginInfo* i, m_plugins ) {
         if( i->isPlatformSupported()) {
-            ret << i->clone();
+            ret << i;
         }
     }
     return ret;
@@ -70,10 +70,10 @@ PluginList::availableDescription() const
 IPluginInfo* 
 PluginList::pluginById( const QString& id ) const
 {
-    foreach( IPluginInfo* plugin, *this )
+    foreach( IPluginInfo* plugin, m_plugins )
     {
         if( !plugin->id().compare( id.toStdString()))
-            return plugin->clone();
+            return plugin;
     }
 
     return NULL;

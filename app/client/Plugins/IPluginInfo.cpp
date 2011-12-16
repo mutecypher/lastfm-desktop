@@ -4,11 +4,8 @@
 #include "IPluginInfo.h"
 #include "KillProcess.h"
 
-IPluginInfo::IPluginInfo()
-{
-}
-
-IPluginInfo::~IPluginInfo()
+IPluginInfo::IPluginInfo( QObject* parent )
+    :QObject( parent )
 {
 }
 

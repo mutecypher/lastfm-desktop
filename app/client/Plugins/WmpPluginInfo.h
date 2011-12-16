@@ -1,12 +1,14 @@
 #ifndef WMP_PLUGIN_INFO_H_
 #define WMP_PLUGIN_INFO_H_
 
-#include "../../lib/unicorn/Updater/IPluginInfo.h"
-#include "../../lib/DllExportMacro.h"
+#include "../Plugins/IPluginInfo.h"
 
-class UNICORN_DLLEXPORT WmpPluginInfo : public IPluginInfo
+class WmpPluginInfo : public IPluginInfo
 {
+    Q_OBJECT
 public:
+    WmpPluginInfo( QObject* parent = 0 ) : IPluginInfo( parent ) {}
+
     std::string name() const { return "Windows Media Player"; }
     Version minVersion() const { return Version( 9 ); }
     Version maxVersion() const { return Version(); }
@@ -25,13 +27,11 @@ public:
         return false;
     }
 
-    IPluginInfo* clone() const { return new WmpPluginInfo( *this ); }
-
     std::tstring pluginInstallPath() const
     {
-		#ifdef Q_OS_WIN
-			return programFilesX86() + L"\\Windows Media Player";
-		#endif 
+#ifdef Q_OS_WIN32
+        return programFilesX86() + L"\\Windows Media Player";
+#endif
 
         Q_ASSERT( !"There is no windows mediaplayer on non-windows platforms!" );
         return std::tstring();
