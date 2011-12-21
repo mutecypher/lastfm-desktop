@@ -7,35 +7,23 @@ class FooBar08PluginInfo : public IPluginInfo
 {
     Q_OBJECT
 public:
-    FooBar08PluginInfo( QObject* parent = 0 ) : IPluginInfo( parent ) {}
+    FooBar08PluginInfo( QObject* parent = 0 );
 
-    std::string name() const { return "Foobar 2000 0.9"; }
-    Version minVersion() const { return Version( 0, 9 ); }
-    Version maxVersion() const { return Version( 0, 9, 3, 9999 ); }
+    Version version() const;
+
+    QString name() const;
+    Version minVersion() const;
+    Version maxVersion() const;
     
-    std::string pluginPath() const { return std::string( "components" ); }
-    std::string displayName() const { return std::string( "foobar2000" ); }
-    std::string processName() const { return std::string( "foobar2000.exe" ); }
+    QString pluginPath() const;
+    QString displayName() const;
+    QString processName() const;
 
-    std::string id() const { return std::string( "foo2" ); }
-    BootstrapType bootstrapType() const { return NoBootstrap; }
+    QString id() const;
+    BootstrapType bootstrapType() const;
 
-    bool isPlatformSupported() const
-    {
-        #ifdef WIN32
-            return true;
-        #endif
-        return false;
-    }
-
-    std::tstring pluginInstallPath() const
-    {
-    #ifdef WIN32
-		return std::tstring();
-    #endif 
-        Q_ASSERT( !"There is no windows mediaplayer on non-windows platforms!" );
-        return std::tstring();
-    }
+    QString pluginInstallPath() const;
+    QString pluginInstaller() const;
 };
 
 #endif //FOOBAR08_PLUGIN_INFO_H_

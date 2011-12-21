@@ -113,7 +113,7 @@
             deviceType m_type;
 
             std::string m_mountPoint;
-            std::string m_displayName;
+            COMMON_STD_STRING m_displayName;
 
             #ifdef WIN32
                 static void tokenize( const std::wstring& str, 

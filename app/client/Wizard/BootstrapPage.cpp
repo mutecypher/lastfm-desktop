@@ -41,15 +41,15 @@ BootstrapPage::BootstrapPage()
 
     foreach ( IPluginInfo* plugin, plugins )
     {
-        pluginsLayout->addWidget( rb = new QRadioButton( QString::fromStdString( plugin->name())));
-        rb->setObjectName( QString::fromStdString( plugin->id() ) );
+        pluginsLayout->addWidget( rb = new QRadioButton( plugin->name()));
+        rb->setObjectName( plugin->id() );
 
         connect( rb, SIGNAL(clicked()), SLOT(playerSelected()));
 
         if ( first )
         {
             rb->setChecked( true );
-            m_playerId = QString::fromStdString( plugin->id() );
+            m_playerId = plugin->id();
         }
 
         first = false;

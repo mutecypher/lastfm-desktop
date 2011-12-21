@@ -2,13 +2,13 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [CustomMessages]
-Version=3.0.1.0
+Version=5.0.0.0
 
 [Setup]
-OutputBaseFilename=iTunesPluginWinSetup_3.0.1.0
+OutputBaseFilename=iTunesPluginWinSetup_5.0.0.0
 ; setup.exe version
-VersionInfoVersion=3.0.1
-VersionInfoTextVersion=3.0.1
+VersionInfoVersion=5.0.0
+VersionInfoTextVersion=5.0.0
 AppName=Last.fm iTunes Plugin
 AppVerName=Last.fm iTunes Plugin {cm:Version}
 VersionInfoDescription=Last.fm iTunes Plugin Installer
@@ -55,7 +55,6 @@ Type: files; Name: "{localappdata}\Last.fm\Client\iTunesPlugin.log"
 
 [Files]
 Source: "Release\itw_scrobbler.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\Updater.exe"; DestDir: "{code:ExtractFileDir|{reg:HKLM\Software\Last.fm\Client,Path|{sd}}}"; Flags: onlyifdestfileexists
 
 [Run]
 

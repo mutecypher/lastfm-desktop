@@ -47,6 +47,8 @@ FirstRunWizard::FirstRunWizard( bool startFromTour, QWidget* parent )
       m_commitPage( false ),
       m_showWelcome( false )
 {
+    m_plugins = new PluginList;
+
     ui->setupUi( this );
 
     ui->welcome->hide();
@@ -71,8 +73,6 @@ FirstRunWizard::FirstRunWizard( bool startFromTour, QWidget* parent )
         ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
     else
         ui->stackedWidget->setCurrentWidget( ui->loginPage );
-
-     m_plugins = new PluginList;
 
     initializePage( ui->stackedWidget->currentWidget() );
 }

@@ -7,35 +7,23 @@ class WmpPluginInfo : public IPluginInfo
 {
     Q_OBJECT
 public:
-    WmpPluginInfo( QObject* parent = 0 ) : IPluginInfo( parent ) {}
+    WmpPluginInfo( QObject* parent = 0 );
 
-    std::string name() const { return "Windows Media Player"; }
-    Version minVersion() const { return Version( 9 ); }
-    Version maxVersion() const { return Version(); }
+    Version version() const;
+
+    QString name() const;
+    Version minVersion() const;
+    Version maxVersion() const;
     
-    std::string pluginPath() const { return std::string( "Plugins" ); }
-    std::string displayName() const { return std::string( "MPlayer2" ); }
-    std::string processName() const { return std::string( "wmplayer.exe" ); }
+    QString pluginPath() const;
+    QString displayName() const;
+    QString processName() const;
 
-    std::string id() const { return "wmp"; }
-    BootstrapType bootstrapType() const { return PluginBootstrap; }
-    bool isPlatformSupported() const
-    {
-        #ifdef WIN32
-            return true;
-        #endif
-        return false;
-    }
+    QString id() const;
+    BootstrapType bootstrapType() const;
 
-    std::tstring pluginInstallPath() const
-    {
-#ifdef Q_OS_WIN32
-        return programFilesX86() + L"\\Windows Media Player";
-#endif
-
-        Q_ASSERT( !"There is no windows mediaplayer on non-windows platforms!" );
-        return std::tstring();
-    }
+    QString pluginInstallPath() const;
+    QString pluginInstaller() const;
 };
 
 #endif //WMP_PLUGIN_INFO_H_

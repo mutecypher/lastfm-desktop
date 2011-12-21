@@ -47,6 +47,7 @@
 #include "../Widgets/PlaybackControlsWidget.h"
 #include "../Widgets/RadioWidget.h"
 #include "../Widgets/NowPlayingWidget.h"
+#include "../Plugins/PluginList.h"
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/MessageBar.h"
 #include "lib/unicorn/widgets/GhostWidget.h"
@@ -59,6 +60,7 @@
 #include "lib/unicorn/widgets/SlidingStackedWidget.h"
 #include "lib/listener/PlayerConnection.h"
 #include "lib/unicorn/Updater/Updater.h"
+#include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/DesktopServices.h"
 
 #ifdef Q_OS_MAC
@@ -162,6 +164,13 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     show();
 
+#ifdef Q_OS_WIN32
+    m_pluginList = new PluginList( this );
+
+    QTimer::singleShot( 1000, this, SLOT(checkUpdatedPlugins()) );
+
+#endif
+
     setupMenuBar();
     m_menuBar->show();
 
@@ -175,10 +184,38 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 }
 
 void
+MainWindow::checkUpdatedPlugins()
+{
+    if ( m_pluginList->updatedList().count() > 0 )
+    {
+        // one of the plugins has been updated so ask if they want to install them
+
+        if ( QMessageBoxBuilder( this ).setText( tr( "There are updates to your media player plugins. Would you like to install them now?" ) )
+             .setTitle( "Updates to media player plugins" )
+             .setButtons( QMessageBox::Yes | QMessageBox::No )
+             .exec() == QMessageBox::Yes )
+        {
+            foreach ( IPluginInfo* info, m_pluginList->updatedList() )
+                info->doInstall();
+        }
+    }
+}
+
+void
 MainWindow::setupMenuBar()
 {
     /// File menu (should only show on non-mac)
     QMenu* fileMenu = appMenuBar()->addMenu( tr( "File" ) );
+
+#ifdef Q_OS_WIN32
+    QMenu* pluginMenu = fileMenu->addMenu( tr( "Install plugins" ) );
+
+    foreach ( IPluginInfo* info, m_pluginList->supportedList() )
+    {
+        pluginMenu->addAction( info->name(), info, SLOT(doInstall()));
+    }
+#endif
+
     QAction* quit = fileMenu->addAction( tr("&Quit"), qApp, SLOT(quit()) );
     quit->setMenuRole( QAction::QuitRole );
 #ifdef Q_OS_WIN
@@ -191,11 +228,11 @@ MainWindow::setupMenuBar()
     QMenu* viewMenu = appMenuBar()->addMenu( tr("View") );
     ui.sideBar->addToMenu( *viewMenu );
     viewMenu->addSeparator();
-    viewMenu->addAction( "My Last.fm Profile", this, SLOT(onVisitProfile()), Qt::CTRL + Qt::Key_P );
+    viewMenu->addAction( tr( "My Last.fm Profile" ), this, SLOT(onVisitProfile()), Qt::CTRL + Qt::Key_P );
 
     /// Scrobbles
     QMenu* scrobblesMenu = appMenuBar()->addMenu( tr("Scrobbles") );
-    scrobblesMenu->addAction( "Refresh", ui.recentTracks, SLOT(refresh()), Qt::CTRL + Qt::SHIFT + Qt::Key_R );
+    scrobblesMenu->addAction( tr( "Refresh" ), ui.recentTracks, SLOT(refresh()), Qt::CTRL + Qt::SHIFT + Qt::Key_R );
 
     /// Controls
     QMenu* controlsMenu = appMenuBar()->addMenu( tr("Controls") );

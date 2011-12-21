@@ -7,38 +7,23 @@ class ITunesPluginInfo : public IPluginInfo
 {
     Q_OBJECT
 public:
-    ITunesPluginInfo( QObject* parent = 0 ) : IPluginInfo( parent ) {}
+    ITunesPluginInfo( QObject* parent = 0 );
 
-    std::string name() const { return "iTunes"; }
-    Version minVersion() const { return Version(); }
-    Version maxVersion() const { return Version(); }
+    Version version() const;
+
+    QString name() const;
+    Version minVersion() const;
+    Version maxVersion() const;
     
-    std::string pluginPath() const { return std::string( "Plug-Ins" ); }
-    std::string displayName() const { return std::string( "iTunes" ); }
-    std::string processName() const { return std::string( "iTunes.exe" ); }
+    QString pluginPath() const;
+    QString displayName() const;
+    QString processName() const;
 
-    std::string id() const 
-    { 
-#ifdef WIN32
-        return "itw";
-#endif
-        return "osx";
-    }
-    BootstrapType bootstrapType() const { return ClientBootstrap; }
+    QString id() const;
+    BootstrapType bootstrapType() const;
 
-    bool isPlatformSupported() const
-    {
-#if defined (WIN32) || defined (__APPLE__)
-            return true;
-#endif
-        return false;
-    }
-
-	std::tstring pluginInstallPath() const
-    {
-		return std::tstring();
-    }
-
+    QString pluginInstallPath() const;
+    QString pluginInstaller() const;
 };
 
 #endif //ITUNES_PLUGIN_INFO_H_

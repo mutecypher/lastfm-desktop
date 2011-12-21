@@ -1,46 +1,29 @@
 #ifndef WINAMP_PLUGIN_INFO_H_
 #define WINAMP_PLUGIN_INFO_H_
 
-#include <QSettings>
-#include <QString>
-
 #include "../Plugins/IPluginInfo.h"
 
 class WinampPluginInfo : public IPluginInfo
 {
     Q_OBJECT
 public:
-    WinampPluginInfo( QObject* parent = 0 ) : IPluginInfo( parent ) {}
+    WinampPluginInfo( QObject* parent = 0 );
 
-    std::string name() const { return "Winamp"; }
-    Version minVersion() const { return Version(); }
-    Version maxVersion() const { return Version(); }
+    Version version() const;
+
+    QString name() const;
+    Version minVersion() const;
+    Version maxVersion() const;
     
-    std::string pluginPath() const { return std::string( "plugins" ); }
-    std::string displayName() const { return std::string( "MPlayer2" ); }
-    std::string processName() const { return std::string( "winamp.exe" ); }
+    QString pluginPath() const;
+    QString displayName() const;
+    QString processName() const;
 
-    std::string id() const { return "wa2"; }
-    BootstrapType bootstrapType() const { return PluginBootstrap; }
-    bool isPlatformSupported() const
-    {
-        #ifdef WIN32
-            return true;
-        #endif
-        return false;
-    }
+    QString id() const;
+    BootstrapType bootstrapType() const;
 
-    std::tstring pluginInstallPath() const
-    {
-#ifdef Q_OS_WIN32
-        QSettings settings( "HKEY_CURRENT_USER\\Software\\Winamp", QSettings::NativeFormat );
-        QString winampFolder = settings.value( ".", QString::fromStdWString( programFilesX86().append( L"\\Winamp" ) ) ).toString().append( "\\plugins" );
-        return winampFolder.toStdWString();
-#endif
-        Q_ASSERT( !"There is no winamp on non-windows platforms!" );
-        return std::tstring();
-    }
-
+    QString pluginInstallPath() const;
+    QString pluginInstaller() const;
 };
 
 #endif //WINAMP_PLUGIN_INFO_H_

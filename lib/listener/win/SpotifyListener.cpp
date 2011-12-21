@@ -64,30 +64,28 @@ SpotifyListenerWin::callback( HWND hWnd, LPARAM lParam )
     SpotifyListenerWin* self = reinterpret_cast<SpotifyListenerWin*>(lParam);
 
 ///    Getting the filename of the app would be more robust
-//    wchar_t filename[256];
-//    GetWindowModuleFileName( hWnd, filename, 256 );
+    //wchar_t filename[256];
+    //GetWindowModuleFileName( hWnd, filename, 256 );
 
-//    if ( QString::fromWCharArray( filename ).contains( "spotify" ) )
-//    {
-
-//    }
-
-    wchar_t title[256];
-    GetWindowText( hWnd, title, sizeof( title ) );
-
-    QString windowTitle = QString::fromWCharArray( title );
-
-    if ( windowTitle.startsWith( "Spotify" ) )
+    //if ( QString::fromWCharArray( filename ).contains( "spotify.exe" ) )
     {
-        QRegExp re( QString( "^Spotify - (.+) %1 (.+)").arg( QChar( 0x2013 )  ), Qt::CaseSensitive, QRegExp::RegExp2 );
+        wchar_t title[256];
+        GetWindowText( hWnd, title, 256 );
 
-        // A window that follows the Spotify track playing format takes priority
-        if ( re.indexIn( windowTitle ) == 0 )
-            self->m_windowTitle = windowTitle;
+        QString windowTitle = QString::fromWCharArray( title );
 
-        if ( self->m_windowTitle.isEmpty() )
-            self->m_windowTitle = windowTitle;
+        if ( windowTitle.startsWith( "Spotify" ) )
+        {
+            QRegExp re( QString( "^Spotify - (.+) %1 (.+)").arg( QChar( 0x2013 )  ), Qt::CaseSensitive, QRegExp::RegExp2 );
 
+            // A window that follows the Spotify track playing format takes priority
+            if ( re.indexIn( windowTitle ) == 0 )
+                self->m_windowTitle = windowTitle;
+
+            if ( self->m_windowTitle.isEmpty() )
+                self->m_windowTitle = windowTitle;
+
+        }
     }
 
     return TRUE;

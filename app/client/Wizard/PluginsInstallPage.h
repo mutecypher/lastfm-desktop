@@ -16,6 +16,9 @@ private:
 public:
     explicit PluginsInstallPage();
 
+private slots:
+    void install();
+
 private:
     void initializePage();
     void cleanupPage();

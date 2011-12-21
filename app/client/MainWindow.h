@@ -24,7 +24,7 @@ class FirstRunWizard;
 class MessageBar;
 class SlideOverLayout;
 class UserToolButton;
-
+class PluginList;
 
 class MainWindow : public unicorn::MainWindow
 {
@@ -82,6 +82,8 @@ private slots:
 
     void checkForUpdates();
 
+    void checkUpdatedPlugins();
+
     // iPod scrobbling things
     void onIPodDetected( const QString& iPodName );
     void onProcessingScrobbles( const QString& iPodName );
@@ -103,6 +105,7 @@ private:
 
     QPointer<PreferencesDialog> m_preferences;
     QPointer<Updater> m_updater;
+    QPointer<PluginList> m_pluginList;
 };
 
 #endif //METADATA_WINDOW_H_
