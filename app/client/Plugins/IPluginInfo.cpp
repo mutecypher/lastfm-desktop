@@ -42,7 +42,7 @@ IPluginInfo::IPluginInfo( QObject* parent )
 void
 IPluginInfo::doInstall()
 {
-    QString installer = QCoreApplication::applicationDirPath() + "/plugins/" + pluginInstaller();
+    QString installer = QString( "\"%1\"" ).arg( QCoreApplication::applicationDirPath() + "/plugins/" + pluginInstaller() );
     qDebug() << installer;
     QProcess* installerProcess = new QProcess( this );
     installerProcess->start( installer );
