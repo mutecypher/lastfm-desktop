@@ -37,6 +37,7 @@ private:
 
 private slots:
     void onUploadCompleted( int status );
+    void checkBootstrapped();
 
 };
 

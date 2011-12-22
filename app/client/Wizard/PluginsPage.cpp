@@ -59,8 +59,6 @@ PluginsPage::validatePage()
     // we're not going to use this anymore we should bundle the installers
     // and just run them ourselves
 
-    //wizard()->setCommitPage( true );
-
 
     // For all the plugins that have been selected install them to the correct loaction
     // and write to the reistry which version we have installed

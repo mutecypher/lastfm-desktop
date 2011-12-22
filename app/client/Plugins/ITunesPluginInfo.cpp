@@ -75,3 +75,4 @@ ITunesPluginInfo::pluginInstaller() const
 {
     return "iTunesPluginWinSetup_5.0.0.0.exe";
 }
+

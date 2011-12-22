@@ -45,7 +45,8 @@ public:
         Bootstrap_Ok = 0,
         Bootstrap_UploadError,
         Bootstrap_Denied,
-        Bootstrap_Spam /* eg. 1 billion plays for Bjork */
+        Bootstrap_Spam, /* eg. 1 billion plays for Bjork */
+        Bootstrap_Cancelled
     };
 
     AbstractBootstrapper( QObject* parent = NULL );

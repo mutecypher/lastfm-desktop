@@ -24,6 +24,11 @@ public:
 
     QString pluginInstallPath() const;
     QString pluginInstaller() const;
+
+#ifdef Q_OS_MAC
+    // the iTunes plugin is always installed on mac
+    bool isInstalled() const { return true; }
+#endif
 };
 
 #endif //ITUNES_PLUGIN_INFO_H_

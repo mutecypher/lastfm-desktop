@@ -61,8 +61,8 @@ private slots:
     void playerSelected();
     
 protected:
-    PluginList m_pluginList;
     QString m_playerId;
+    QLayout* m_pluginsLayout;
 };
 
 #endif //BOOTSTRAP_WIZARD_H
