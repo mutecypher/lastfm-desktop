@@ -25,7 +25,9 @@
 #include <QList>
 #include <QPointer>
 
+#ifdef Q_OS_WIN32
 #include "../Plugins/PluginList.h"
+#endif
 
 namespace Ui { class FirstRunWizard; }
 
@@ -55,7 +57,9 @@ public:
 
     void showWelcome();
 
+#ifdef Q_OS_WIN32
     class PluginList* pluginList() const { return m_plugins; }
+#endif
 
 public slots:
     void next();
@@ -75,7 +79,9 @@ private:
 
 private:
     Ui::FirstRunWizard* ui;
+#ifdef Q_OS_WIN32
     QPointer<PluginList> m_plugins;
+#endif
 
     QList<QWidget*> m_pages;
 

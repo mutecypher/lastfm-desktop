@@ -44,7 +44,6 @@
 #include "lib/unicorn/dialogs/TagDialog.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/widgets/UserMenu.h"
-#include "Plugins/PluginList.h"
 #include "lib/unicorn/DesktopServices.h"
 #ifdef Q_OS_MAC
 #include "lib/unicorn/notify/Notify.h"
@@ -434,7 +433,7 @@ Application::onTrackSpooled( const Track& track )
 
     strippedContextString.replace( re, "" );
 
-    QString ircMessage = QString( "#last.clientradio %1 %2" ).arg( track.toString(), strippedContextString );
+    QString ircMessage = QString( "#last.clientradio %1 (%2) %3" ).arg( track.toString(), Track::durationString( track.duration() ), strippedContextString );
 
     if ( track.context().values().count() == ( RadioService::instance().station().url().count( "," ) + 1 ) )
         ircMessage.append( " BINGO!" );
@@ -686,8 +685,7 @@ Application::quit()
     if( !unicorn::AppSettings().value( "quitDontAsk", false ).toBool())
       result =
           QMessageBoxBuilder( activeWindow()).setTitle( tr("%1 is about to quit.").arg(applicationName()))
-                                             .setText( tr("Tracks played in %1 will not be scrobbled if you continue." )
-                                             .arg( PluginList().availableDescription() ) )
+                                             .setText( tr("Tracks played will not be scrobbled if you continue." ) )
                                              .dontAskAgain()
                                              .setIcon( QMessageBox::Question )
                                              .setButtons( QMessageBox::Yes | QMessageBox::No )
@@ -697,7 +695,7 @@ Application::quit()
         unicorn::AppSettings().setValue( "quitDontAsk", dontAsk );
         QCoreApplication::quit();
     }
-    
+
 }
 
 void 

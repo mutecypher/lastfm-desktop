@@ -24,7 +24,9 @@
 #include <QProcess>
 #include <QDebug>
 
+#ifdef Q_OS_WIN32
 #include "../Plugins/PluginList.h"
+#endif
 
 #include "FirstRunWizard.h"
 #include "PluginsPage.h"
@@ -76,6 +78,7 @@ PluginsPage::cleanupPage()
 void
 PluginsPage::initializePage()
 {
+#ifdef Q_OS_WIN32
     QList<IPluginInfo*> supportedPlugins = wizard()->pluginList()->supportedList();
     foreach( IPluginInfo* plugin, supportedPlugins )
     {
@@ -103,6 +106,7 @@ PluginsPage::initializePage()
             }
         }
     }
+#endif
 
     setTitle( tr( "Next step, install the Last.fm plugins to be able to scrobble the music you listen to." ));
 

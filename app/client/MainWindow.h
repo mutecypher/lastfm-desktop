@@ -82,7 +82,9 @@ private slots:
 
     void checkForUpdates();
 
+#ifdef Q_OS_WIN32
     void checkUpdatedPlugins();
+#endif
 
     // iPod scrobbling things
     void onIPodDetected( const QString& iPodName );

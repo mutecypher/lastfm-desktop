@@ -33,6 +33,7 @@ BootstrapPage::BootstrapPage()
 
     layout->addLayout( pluginsLayout );
 
+#ifdef Q_OS_WIN32
     QList<IPluginInfo*> plugins = m_pluginList.bootstrappablePlugins();
 
     bool first = true;
@@ -54,6 +55,7 @@ BootstrapPage::BootstrapPage()
 
         first = false;
     }
+#endif
 
     layout->addWidget( ui.description = new QLabel( tr( "<p>For the best possible recommendations based on your music taste we advise that you import your listening history from your media player.</p>"
                                                         "<p>Please select your prefered media player and click <strong>Start Import</strong></p>" ) ),

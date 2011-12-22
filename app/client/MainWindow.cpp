@@ -47,7 +47,6 @@
 #include "../Widgets/PlaybackControlsWidget.h"
 #include "../Widgets/RadioWidget.h"
 #include "../Widgets/NowPlayingWidget.h"
-#include "../Plugins/PluginList.h"
 #include "lib/unicorn/widgets/DataBox.h"
 #include "lib/unicorn/widgets/MessageBar.h"
 #include "lib/unicorn/widgets/GhostWidget.h"
@@ -62,6 +61,10 @@
 #include "lib/unicorn/Updater/Updater.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/DesktopServices.h"
+
+#ifdef Q_OS_WIN32
+#include "../Plugins/PluginList.h"
+#endif
 
 #ifdef Q_OS_MAC
 void qt_mac_set_dock_menu(QMenu *menu);
@@ -183,6 +186,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 #endif
 }
 
+#ifdef Q_OS_WIN32
 void
 MainWindow::checkUpdatedPlugins()
 {
@@ -200,6 +204,7 @@ MainWindow::checkUpdatedPlugins()
         }
     }
 }
+#endif
 
 void
 MainWindow::setupMenuBar()

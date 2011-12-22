@@ -34,7 +34,7 @@ PluginsInstallPage::initializePage()
     if ( wizard()->canGoBack() )
         wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
 
-
+#ifdef Q_OS_WIN32
     if ( wizard()->pluginList()->installList().count() > 0 )
     {
         // get the install to happen a bit later so that
@@ -47,13 +47,16 @@ PluginsInstallPage::initializePage()
     {
         continueButton->click();
     }
+#endif
 }
 
 void
 PluginsInstallPage::install()
 {
+#ifdef Q_OS_WIN32
     foreach( IPluginInfo* plugin, wizard()->pluginList()->installList() )
         plugin->doInstall();
+#endif
 
     QAbstractButton* continueButton = wizard()->setButton( FirstRunWizard::NextButton, tr( "Continue" ) );
     continueButton->setEnabled( true );
