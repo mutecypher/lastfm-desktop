@@ -99,6 +99,10 @@ AccessPage::onGotUserInfo( const lastfm::User& user )
     wizard()->raise();
     wizard()->activateWindow();
 
+#ifdef Q_OS_WIN32
+    SetForegroundWindow( wizard()->winId() );
+#endif
+
     foreach ( unicorn::LoginProcess* loginProcess, m_loginProcesses )
         loginProcess->deleteLater();
 }

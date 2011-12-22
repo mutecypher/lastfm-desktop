@@ -33,7 +33,7 @@ PluginList::bootstrappablePlugins() const
     QList<IPluginInfo*> ret;
     foreach( IPluginInfo* plugin, installedPlugins() )
     {
-        if( plugin->canBootstrap())
+        if( plugin->isInstalled() && plugin->canBootstrap() )
             ret << plugin;
     }
     return ret;
