@@ -57,7 +57,6 @@ Type: files; Name: "{localappdata}\Last.fm\Client\WinampPlugin.log"
 
 [Files]
 Source: "Release\ml_wa2_scrobbler.dll"; DestDir: "{app}"; DestName: "{code:GetDestName}"; Flags: ignoreversion
-Source: "..\..\Updater.exe"; DestDir: "{code:ExtractFileDir|{reg:HKLM\Software\Last.fm\Client,Path|{sd}}}"; Flags: onlyifdestfileexists
 
 [Run]
 ; Nothing here. Now taken care of in CurStepChanged.

@@ -17,12 +17,18 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "PluginBootstrapper.h"
-#include "lib/unicorn/QMessageBoxBuilder.h"
-#include <lastfm/misc.h>
-#include <lastfm/ws.h>
+
 #include <QSettings>
 #include <QFile>
+#include <QProcess>
+#include <QTimer>
+#include <QFileDialog>
+
+#include <lastfm/misc.h>
+#include <lastfm/ws.h>
+
+#include "lib/unicorn/QMessageBoxBuilder.h"
+#include "PluginBootstrapper.h"
 
 
 PluginBootstrapper::PluginBootstrapper( QString pluginId, QObject* parent )
@@ -46,6 +52,63 @@ PluginBootstrapper::bootStrap()
     bootstrap.setValue( "Strings/progress_title",       tr("Last.fm Library Import") );
     bootstrap.setValue( "Strings/cancel_confirmation",  tr("Are you sure you want to cancel the import?") );
     bootstrap.setValue( "Strings/no_tracks_found",      tr("Last.fm couldn't find any played tracks in your media library.\n\n Click OK to continue.") );
+
+    // start the media player
+    QProcess* process = new QProcess( this );
+    QString mediaPlayer = "";
+
+    if ( m_pluginId == "wa2" )
+        mediaPlayer = QString( getenv( "ProgramFiles(x86)" ) ).append( "/Winamp/winamp.exe" );
+    else
+        mediaPlayer = QString( getenv( "ProgramFiles(x86)" ) ).append( "/Windows Media Player/wmplayer.exe" );
+
+    qDebug() << mediaPlayer;
+
+    if ( !QFile::exists( mediaPlayer ) )
+    {
+        mediaPlayer = QFileDialog::getOpenFileName( 0,
+                                               m_pluginId == "wa2" ? tr( "Where is Winamp?" ) : tr( "Where is Windows Media Player?" ),
+                                               QString( getenv( "ProgramFiles(x86)" ) ),
+                                               m_pluginId == "wa2" ? "winamp.exe" : "wmplayer.exe" );
+
+
+    }
+
+    qDebug() << mediaPlayer;
+
+    mediaPlayer = QString( "\"%1\"" ).arg( mediaPlayer );
+
+    if ( !process->startDetached( mediaPlayer ) )
+    {
+        qDebug() << process->error() << process->errorString();
+
+        emit done( Bootstrap_Cancelled );
+    }
+    else
+    {
+        // wait for it to do its stuff
+        QTimer::singleShot( 1000, this, SLOT(checkBootstrapped()) );
+    }
+}
+
+
+void
+PluginBootstrapper::checkBootstrapped()
+{
+    // check if the file exists
+
+    QString savePath = lastfm::dir::runtimeData().filePath( lastfm::ws::Username + "_" + m_pluginId + "_bootstrap.xml" );
+
+    if ( QFile::exists( savePath ) )
+    {
+        // make sure winamp doesn't create the bootstrap file again
+        QSettings bootstrap( QSettings::NativeFormat, QSettings::UserScope, "Last.fm", "Bootstrap", this );
+        bootstrap.remove( m_pluginId );
+
+        submitBootstrap();
+    }
+    else
+        QTimer::singleShot( 1000, this, SLOT(checkBootstrapped()) );
 }
 
 
@@ -68,8 +131,6 @@ PluginBootstrapper::onUploadCompleted( int status )
 
     if( status == Bootstrap_Ok  )
     {
-        QFile::remove( savePath );
-
         QMessageBoxBuilder( 0 )
                 .setIcon( QMessageBox::Information )
                 .setTitle( tr("Media Library Import Complete") )
@@ -84,6 +145,8 @@ PluginBootstrapper::onUploadCompleted( int status )
             .setText( tr( "Sorry, Last.fm was unable to import your listening history. "
                           "This is probably because you've already scrobbled too many tracks. "
                           "Listening history can only be imported to brand new profiles.") );
+
         QFile::remove( savePath );
+        QFile::remove( zipPath );
     }
 }

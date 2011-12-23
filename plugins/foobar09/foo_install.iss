@@ -46,7 +46,6 @@ Type: files; Name: "{app}\foo_audioscrobbler.dll"
 
 [Files]
 Source: "release\foo_audioscrobbler.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\Updater.exe"; DestDir: "{code:ExtractFileDir|{reg:HKLM\Software\Last.fm\Client,Path|{sd}}}"; Flags: onlyifdestfileexists
 
 [Run]
 

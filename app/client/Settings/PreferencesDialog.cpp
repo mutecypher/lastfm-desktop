@@ -16,6 +16,8 @@ PreferencesDialog::PreferencesDialog( QMenuBar* menuBar )
 
     m_toolBar = addToolBar( "tabs" );
     m_toolBar->addWidget( ui->tabFrame );
+    m_toolBar->setMovable( false );
+    m_toolBar->setFloatable( false );
 
     connect( this, SIGNAL( saveNeeded() ), ui->general, SLOT( saveSettings() ) );
     connect( this, SIGNAL( saveNeeded() ), ui->scrobbling, SLOT( saveSettings() ) );

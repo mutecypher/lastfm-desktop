@@ -27,33 +27,11 @@ BootstrapPage::BootstrapPage()
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 20 );
 
-    QVBoxLayout* pluginsLayout = new QVBoxLayout( this );
-    pluginsLayout->setContentsMargins( 0, 0, 0, 0 );
-    pluginsLayout->setSpacing( 0 );
+    m_pluginsLayout = new QVBoxLayout( this );
+    m_pluginsLayout->setContentsMargins( 0, 0, 0, 0 );
+    m_pluginsLayout->setSpacing( 0 );
 
-    layout->addLayout( pluginsLayout );
-
-    QList<IPluginInfo*> plugins = m_pluginList.bootstrappablePlugins();
-
-    bool first = true;
-
-    QRadioButton* rb;
-
-    foreach ( IPluginInfo* plugin, plugins )
-    {
-        pluginsLayout->addWidget( rb = new QRadioButton( QString::fromStdString( plugin->name())));
-        rb->setObjectName( QString::fromStdString( plugin->id() ) );
-
-        connect( rb, SIGNAL(clicked()), SLOT(playerSelected()));
-
-        if ( first )
-        {
-            rb->setChecked( true );
-            m_playerId = QString::fromStdString( plugin->id() );
-        }
-
-        first = false;
-    }
+    layout->addLayout( m_pluginsLayout );
 
     layout->addWidget( ui.description = new QLabel( tr( "<p>For the best possible recommendations based on your music taste we advise that you import your listening history from your media player.</p>"
                                                         "<p>Please select your prefered media player and click <strong>Start Import</strong></p>" ) ),
@@ -88,6 +66,30 @@ BootstrapPage::validatePage()
 void 
 BootstrapPage::initializePage()
 {
+#ifdef Q_OS_WIN
+    QList<IPluginInfo*> plugins = wizard()->pluginList()->bootstrappablePlugins();
+
+    bool first = true;
+
+    QRadioButton* rb;
+
+    foreach ( IPluginInfo* plugin, plugins )
+    {
+        m_pluginsLayout->addWidget( rb = new QRadioButton( plugin->name()));
+        rb->setObjectName( plugin->id() );
+
+        connect( rb, SIGNAL(clicked()), SLOT(playerSelected()));
+
+        if ( first )
+        {
+            rb->setChecked( true );
+            m_playerId = plugin->id();
+        }
+
+        first = false;
+    }
+#endif
+
     setTitle( tr( "Now let's import your listening history" ) );
 
     wizard()->setButton( FirstRunWizard::NextButton, tr( "Start Import" ) );

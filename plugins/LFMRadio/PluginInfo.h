@@ -26,8 +26,6 @@ public:
     bool isAppInstalled() const { return true; }
     bool isInstalled() const { return true; }
 
-    IPluginInfo* clone() const{ return new LFMRadioPluginInfo( *this ); }
-
     #ifdef QT_VERSION
     std::tstring pluginInstallPath() const
     {

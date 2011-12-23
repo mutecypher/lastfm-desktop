@@ -191,6 +191,25 @@ HEADERS += \
     Widgets/SimilarArtistWidget.h \
     Widgets/PushButton.h
 
+
+win32:HEADERS += Plugins/FooBar08PluginInfo.h \
+                    Plugins/FooBar09PluginInfo.h \
+                    Plugins/ITunesPluginInfo.h \
+                    Plugins/WinampPluginInfo.h \
+                    Plugins/WmpPluginInfo.h \
+                    Plugins/PluginList.h \
+                    Plugins/KillProcess.h \
+                    Plugins/IPluginInfo.h
+
+win32:SOURCES += Plugins/PluginList.cpp \
+                    Plugins/IPluginInfo.cpp \
+                    Plugins/FooBar08PluginInfo.cpp \
+                    Plugins/FooBar09PluginInfo.cpp \
+                    Plugins/ITunesPluginInfo.cpp \
+                    Plugins/WinampPluginInfo.cpp \
+                    Plugins/WmpPluginInfo.cpp
+
+
 mac:HEADERS += CommandReciever/CommandReciever.h
 mac:SOURCES += CommandReciever/CommandReciever.mm \
                 Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
@@ -217,88 +236,3 @@ linux*:SOURCES += MediaDevices/IpodDevice_linux.cpp
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
