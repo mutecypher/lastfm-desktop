@@ -754,8 +754,8 @@ ProfileWidget PlayableItemWidget {
 background-image: url(":/radio_play_small_REST.png");
 text-align: center left;
 font-size: 12px;
-height: 27px;
-padding: 0px 0px 0px 36px;
+height: 24px;
+padding: 0px 0px 0px 28px;
 margin: 2px 0px;
 }
 

@@ -154,7 +154,7 @@ Moose::launchAudioscrobbler( const std::vector<std::string>& vargs )
     
     LSApplicationParameters params;
     params.version = 0;
-    params.flags = kLSLaunchDontSwitch;
+    params.flags = kLSLaunchAndHide | kLSLaunchDontSwitch | kLSLaunchAsync;;
     params.application = &appRef;
     params.asyncLaunchRefCon = NULL;
     params.environment = NULL;
