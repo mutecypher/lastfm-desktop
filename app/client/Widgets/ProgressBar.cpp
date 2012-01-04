@@ -88,96 +88,104 @@ ProgressBar::paintEvent( QPaintEvent* e )
 
         if ( m_track.extra( "playerId" ) != "spt" )
         {
-            QString format( "m:ss" );
-
-            QTime duration( 0, 0 );
-            duration = duration.addMSecs( m_track.duration() * 1000 );
-            QTime progress( 0, 0 );
-            progress = progress.addMSecs( m_frame );
-
-            if ( duration.hour() > 0 )
-                format = "h:mm:ss";
-
-            QTextOption timeTextOption;
-            timeTextOption.setAlignment( Qt::AlignVCenter | Qt::AlignLeft );
-
-            QString timeText;
-
-            if ( m_track.source() == Track::LastFmRadio )
-                timeText = QString( "%1 / %2" ).arg( progress.toString( format ), duration.toString( format ) );
-            else
-                timeText = QString( "%1" ).arg( progress.toString( format ) );
-
-            p.setPen( QColor( 0x333333 ) );
-            p.drawText( rect().adjusted( 6, 0, 0, 0 ), timeText, timeTextOption );
-
-            QFontMetrics fm( font() );
-            int indent = fm.width( timeText ) + ( 2 * 6 ) + 2;
-
-            int width = this->width() - indent;
-
-            p.setPen( QColor( 0xbdbdbd ));
-            p.drawLine( QPoint( indent - 2, rect().top() ),
-                        QPoint( indent - 2, rect().bottom() - 1 ) );
-
-            p.setPen( QColor( 0xe6e6e6 ) );
-            p.drawLine( QPoint( indent - 1, rect().top() ),
-                        QPoint( indent - 1, rect().bottom() - 1 ) );
-
-
-            // draw the chunk
-            p.setPen( Qt::transparent );
-            p.setBrush( m_chunk );
-            p.drawRect( rect().adjusted( indent, 0, ((m_frame * width) / (m_track.duration() * 1000)) - width, -1) );
-
-
-            if ( ScrobbleService::instance().scrobblingOn() ||
-                 !ScrobbleService::instance().scrobblingOn() && m_track.scrobbleStatus() != Track::Null )
+            if ( m_track.duration() >= 30 )
             {
-                if ( !ScrobbleService::instance().scrobblingOn() && m_track.scrobbleStatus() != Track::Null )
+                QString format( "m:ss" );
+
+                QTime duration( 0, 0 );
+                duration = duration.addMSecs( m_track.duration() * 1000 );
+                QTime progress( 0, 0 );
+                progress = progress.addMSecs( m_frame );
+
+                if ( duration.hour() > 0 )
+                    format = "h:mm:ss";
+
+                QTextOption timeTextOption;
+                timeTextOption.setAlignment( Qt::AlignVCenter | Qt::AlignLeft );
+
+                QString timeText;
+
+                if ( m_track.source() == Track::LastFmRadio )
+                    timeText = QString( "%1 / %2" ).arg( progress.toString( format ), duration.toString( format ) );
+                else
+                    timeText = QString( "%1" ).arg( progress.toString( format ) );
+
+                p.setPen( QColor( 0x333333 ) );
+                p.drawText( rect().adjusted( 6, 0, 0, 0 ), timeText, timeTextOption );
+
+                QFontMetrics fm( font() );
+                int indent = fm.width( timeText ) + ( 2 * 6 ) + 2;
+
+                int width = this->width() - indent;
+
+                p.setPen( QColor( 0xbdbdbd ));
+                p.drawLine( QPoint( indent - 2, rect().top() ),
+                            QPoint( indent - 2, rect().bottom() - 1 ) );
+
+                p.setPen( QColor( 0xe6e6e6 ) );
+                p.drawLine( QPoint( indent - 1, rect().top() ),
+                            QPoint( indent - 1, rect().bottom() - 1 ) );
+
+
+                // draw the chunk
+                p.setPen( Qt::transparent );
+                p.setBrush( m_chunk );
+                p.drawRect( rect().adjusted( indent, 0, ((m_frame * width) / (m_track.duration() * 1000)) - width, -1) );
+
+                if ( ScrobbleService::instance().scrobblingOn() ||
+                     !ScrobbleService::instance().scrobblingOn() && m_track.scrobbleStatus() != Track::Null )
+                {
+                    if ( !ScrobbleService::instance().scrobblingOn() && m_track.scrobbleStatus() != Track::Null )
+                    {
+                        QTextOption textOption;
+                        textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
+                        p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr( "Scrobbling off" ), textOption );
+                    }
+
+                    uint scrobblePoint = sw->scrobblePoint() * 1000;
+
+                    int scrobbleMarker = indent + (scrobblePoint * width) / ( m_track.duration() * 1000 );
+
+                    p.setPen( QPen( QColor( 0xbdbdbd ), 1, Qt::DotLine) );
+                    p.drawLine( QPoint( scrobbleMarker - 1, rect().top() ),
+                                QPoint( scrobbleMarker - 1, rect().bottom() ) );
+
+                    p.setPen( QPen( QColor( 0xe6e6e6 ), 1, Qt::DotLine) );
+                    p.drawLine( QPoint( scrobbleMarker, rect().top() ),
+                                QPoint( scrobbleMarker, rect().bottom() ) );
+
+                    // Draw the 'as'!
+                    // if the scrobble marker is too close to the left draw the 'as' on the right hand side
+                    QPoint asPoint;
+                    QImage as( m_track.scrobbleStatus() != Track::Null ? m_scrobbleMarkerOn : m_scrobbleMarkerOff );
+
+                    if ( ( as.width() + 10 ) > scrobbleMarker - indent )
+                        asPoint = QPoint ( scrobbleMarker + 5 , (rect().height() / 2) - (as.height() / 2) );
+                    else
+                        asPoint = QPoint ( scrobbleMarker - as.width() - 5, (rect().height() / 2) - (as.height() / 2) );
+
+                    p.drawImage( asPoint, as );
+
+                }
+                else
                 {
                     QTextOption textOption;
                     textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
                     p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr( "Scrobbling off" ), textOption );
                 }
-
-                uint scrobblePoint = sw->scrobblePoint() * 1000;
-
-                int scrobbleMarker = indent + (scrobblePoint * width) / ( m_track.duration() * 1000 ) ;
-
-                p.setPen( QPen( QColor( 0xbdbdbd ), 1, Qt::DotLine) );
-                p.drawLine( QPoint( scrobbleMarker - 1, rect().top() ),
-                            QPoint( scrobbleMarker - 1, rect().bottom() ) );
-
-                p.setPen( QPen( QColor( 0xe6e6e6 ), 1, Qt::DotLine) );
-                p.drawLine( QPoint( scrobbleMarker, rect().top() ),
-                            QPoint( scrobbleMarker, rect().bottom() ) );
-
-                // Draw the 'as'!
-                // if the scrobble marker is too close to the left draw the 'as' on the right hand side
-                QPoint asPoint;
-                QImage as( m_track.scrobbleStatus() != Track::Null ? m_scrobbleMarkerOn : m_scrobbleMarkerOff );
-
-                if ( ( as.width() + 10 ) > scrobbleMarker - indent )
-                    asPoint = QPoint ( scrobbleMarker + 5 , (rect().height() / 2) - (as.height() / 2) );
-                else
-                    asPoint = QPoint ( scrobbleMarker - as.width() - 5, (rect().height() / 2) - (as.height() / 2) );
-
-                p.drawImage( asPoint, as );
-
             }
             else
             {
                 QTextOption textOption;
                 textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
-                p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr( "Scrobbling off" ), textOption );
+                p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr( "Track too short" ), textOption );
             }
         }
         else
         {
             QTextOption textOption;
             textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
-            p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr("You can enable scrobbling in Spotify's preferences!"), textOption );
+            p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr("Enable scrobbling in Spotify's preferences!"), textOption );
         }
     }
 }
