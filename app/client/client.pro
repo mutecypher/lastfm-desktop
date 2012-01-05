@@ -210,8 +210,12 @@ win32:SOURCES += Plugins/PluginList.cpp \
                     Plugins/WmpPluginInfo.cpp
 
 
-mac:HEADERS += CommandReciever/CommandReciever.h
+mac:HEADERS += CommandReciever/CommandReciever.h \
+                MediaKeysApplication.h
+
+
 mac:SOURCES += CommandReciever/CommandReciever.mm \
+                MediaKeysApplication.mm \
                 Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
 FORMS += \
