@@ -25,6 +25,7 @@
 #include "State.h"
 #include <lastfm/Track.h>
 #include <QTimer>
+#include <QPointer>
 
 
 /** delete yourself when the player closes/quits */
@@ -32,7 +33,7 @@ class LISTENER_DLLEXPORT PlayerConnection : public QObject
 {
     Q_OBJECT
 protected:
-    QTimer* m_stoppedTimer;
+    QPointer<QTimer> m_stoppedTimer;
     QString const m_id;
     QString const m_name;   
     uint m_elapsed;

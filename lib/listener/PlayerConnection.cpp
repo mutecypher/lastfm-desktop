@@ -49,8 +49,6 @@ struct FatalError : public Error
 PlayerConnection::PlayerConnection()
     : m_elapsed( 0 ), m_state( Stopped )
 {
-    m_stoppedTimer = new QTimer( this );
-    connect( m_stoppedTimer, SIGNAL(timeout()), SLOT(onStopped()) );
 }
 
 PlayerConnection::PlayerConnection( const QString& id, const QString& name, QObject* parent )
@@ -61,11 +59,6 @@ PlayerConnection::PlayerConnection( const QString& id, const QString& name, QObj
     , m_state( Stopped )
 {
     Q_ASSERT( id.size() );
-
-    m_stoppedTimer = new QTimer( this );
-    m_stoppedTimer->setSingleShot( true );
-
-    connect( m_stoppedTimer, SIGNAL(timeout()), SLOT(onStopped()) );
 }
 
 
@@ -91,7 +84,7 @@ PlayerConnection::handleCommand( PlayerCommand command, Track t )
             case CommandStart:
                 if (t.isNull()) throw FatalError("Can't start a null track");
                 m_state = Playing;
-                m_stoppedTimer->stop();
+                if ( m_stoppedTimer ) m_stoppedTimer->stop();
                 if (t == m_track)
                 {
                     emit resumed();
@@ -120,8 +113,16 @@ PlayerConnection::handleCommand( PlayerCommand command, Track t )
             case CommandInit:
             case CommandStop:
                 // don't process the stop straight away because we could be skipping
-                // track so wait a second to make sure we don't get a start comman
-                m_stoppedTimer->start( 1000 );
+                // track so wait a second to make sure we don't get a start command
+                if ( !m_stoppedTimer )
+                {
+                    m_stoppedTimer = new QTimer( this );
+                    m_stoppedTimer->setSingleShot( true );
+                    m_stoppedTimer->setInterval( 1000 );
+                    connect( m_stoppedTimer, SIGNAL(timeout()), this, SLOT(onStopped()) );
+                }
+
+                m_stoppedTimer->start();
                 break;
                 
             case CommandBootstrap:
