@@ -458,6 +458,7 @@ color: white;
 background-color: transparent;
 min-height: 49px;
 max-height: 49px;
+qproperty-style: ThreePart;
 }
 
 ActivityListWidget {
