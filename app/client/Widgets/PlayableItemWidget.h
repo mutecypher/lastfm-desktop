@@ -37,7 +37,7 @@ public:
         ThreePart
     };
 
-    Q_ENUMS(Style)
+    Q_ENUMS( Style )
     Q_PROPERTY( Style style READ style WRITE setStyle )
 
 public:
