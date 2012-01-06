@@ -32,6 +32,10 @@
 #include <QStringList>
 #include <QRegExp>
 
+#ifdef Q_OS_MAC
+#include "MediaKeysApplication.h"
+#endif
+
 #include "Application.h"
 #include "ScrobSocket.h"
 #include "lib/unicorn/UnicornApplication.h"
@@ -78,9 +82,11 @@ int main( int argc, char** argv )
 
         qAddPostRoutine(cleanup);
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
         AEEventHandlerUPP h = NewAEEventHandlerUPP( appleEventHandler );
         AEInstallEventHandler( 'GURL', 'GURL', h, 0, false );
+
+        MediaKeysApplication::sharedApplication();
 #endif
 
         app.init();
