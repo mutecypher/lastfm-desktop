@@ -442,6 +442,9 @@
                    <property name="text">
                     <string>Artist</string>
                    </property>
+                   <property name="scaledContents">
+                    <bool>true</bool>
+                   </property>
                   </widget>
                  </item>
                  <item>
@@ -461,6 +464,9 @@
                   <widget class="SimilarArtistWidget" name="artist2">
                    <property name="text">
                     <string>Artist</string>
+                   </property>
+                   <property name="scaledContents">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
@@ -482,6 +488,9 @@
                    <property name="text">
                     <string>Artist</string>
                    </property>
+                   <property name="scaledContents">
+                    <bool>true</bool>
+                   </property>
                   </widget>
                  </item>
                  <item>
@@ -501,6 +510,9 @@
                   <widget class="SimilarArtistWidget" name="artist4">
                    <property name="text">
                     <string>Artist</string>
+                   </property>
+                   <property name="scaledContents">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
@@ -562,6 +574,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>StylableWidget</class>
+   <extends>QWidget</extends>
+   <header>lib/unicorn/StylableWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>HttpImageWidget</class>
    <extends>QLabel</extends>
    <header>lib/unicorn/widgets/HttpImageWidget.h</header>
@@ -570,12 +588,6 @@
    <class>unicorn::Label</class>
    <extends>QLabel</extends>
    <header>lib/unicorn/widgets/Label.h</header>
-  </customwidget>
-  <customwidget>
-   <class>StylableWidget</class>
-   <extends>QWidget</extends>
-   <header>lib/unicorn/StylableWidget.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>ScrobbleControls</class>
