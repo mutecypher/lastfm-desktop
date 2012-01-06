@@ -32,8 +32,6 @@ private slots:
 
 private:
     Ui::PreferencesDialog *ui;
-
-    class QToolBar* m_toolBar;
 };
 
 #endif // PREFERENCESDIALOG_H

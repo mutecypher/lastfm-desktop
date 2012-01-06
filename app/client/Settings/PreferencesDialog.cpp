@@ -1,5 +1,6 @@
 
 #include <QToolBar>
+#include <QToolButton>
 
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
@@ -12,12 +13,17 @@ PreferencesDialog::PreferencesDialog( QMenuBar* menuBar )
 
     setAttribute( Qt::WA_DeleteOnClose, true );
 
-    setUnifiedTitleAndToolBarOnMac( true );
+    static_cast<QAbstractButton*>( ui->toolBar->widgetForAction( ui->actionGeneral ) )->setAutoExclusive( true );
+    static_cast<QAbstractButton*>( ui->toolBar->widgetForAction( ui->actionScrobbling ) )->setAutoExclusive( true );
+    static_cast<QAbstractButton*>( ui->toolBar->widgetForAction( ui->actionDevices ) )->setAutoExclusive( true );
+    static_cast<QAbstractButton*>( ui->toolBar->widgetForAction( ui->actionAccounts ) )->setAutoExclusive( true );
+    static_cast<QAbstractButton*>( ui->toolBar->widgetForAction( ui->actionAdvanced ) )->setAutoExclusive( true );
 
-    m_toolBar = addToolBar( "tabs" );
-    m_toolBar->addWidget( ui->tabFrame );
-    m_toolBar->setMovable( false );
-    m_toolBar->setFloatable( false );
+    connect( ui->toolBar->widgetForAction( ui->actionGeneral ), SIGNAL(toggled(bool)), ui->actionGeneral, SLOT(setChecked(bool)) );
+    connect( ui->toolBar->widgetForAction( ui->actionScrobbling ), SIGNAL(toggled(bool)), ui->actionScrobbling, SLOT(setChecked(bool)) );
+    connect( ui->toolBar->widgetForAction( ui->actionDevices ), SIGNAL(toggled(bool)), ui->actionDevices, SLOT(setChecked(bool)) );
+    connect( ui->toolBar->widgetForAction( ui->actionAccounts ), SIGNAL(toggled(bool)), ui->actionAccounts, SLOT(setChecked(bool)) );
+    connect( ui->toolBar->widgetForAction( ui->actionAdvanced ), SIGNAL(toggled(bool)), ui->actionAdvanced, SLOT(setChecked(bool)) );
 
     connect( this, SIGNAL( saveNeeded() ), ui->general, SLOT( saveSettings() ) );
     connect( this, SIGNAL( saveNeeded() ), ui->scrobbling, SLOT( saveSettings() ) );
@@ -31,17 +37,19 @@ PreferencesDialog::PreferencesDialog( QMenuBar* menuBar )
     connect( ui->accounts, SIGNAL( settingsChanged() ), SLOT( onSettingsChanged() ) );
     connect( ui->advanced, SIGNAL( settingsChanged() ), SLOT( onSettingsChanged() ) );
 
-    connect( ui->generalButton, SIGNAL(clicked()), SLOT(onTabButtonClicked()));
-    connect( ui->scrobblingButton, SIGNAL(clicked()), SLOT(onTabButtonClicked()));
-    connect( ui->ipodButton, SIGNAL(clicked()), SLOT(onTabButtonClicked()));
-    connect( ui->accountsButton, SIGNAL(clicked()), SLOT(onTabButtonClicked()));
-    connect( ui->advancedButton, SIGNAL(clicked()), SLOT(onTabButtonClicked()));
+    connect( ui->actionGeneral, SIGNAL(triggered()), SLOT(onTabButtonClicked()));
+    connect( ui->actionScrobbling, SIGNAL(triggered()), SLOT(onTabButtonClicked()));
+    connect( ui->actionDevices, SIGNAL(triggered()), SLOT(onTabButtonClicked()));
+    connect( ui->actionAccounts, SIGNAL(triggered()), SLOT(onTabButtonClicked()));
+    connect( ui->actionAdvanced, SIGNAL(triggered()), SLOT(onTabButtonClicked()));
 
+#ifndef Q_OS_MAC
 //    connect( ui.buttons, SIGNAL( accepted() ), this, SLOT( onAccepted() ) );
 //    connect( ui.buttons, SIGNAL( rejected() ), this, SLOT( reject() ) );
 //    connect( ui.buttons->button( QDialogButtonBox::Apply ), SIGNAL( clicked() ), SLOT( onApplyButtonClicked() ) );
+#endif
 
-    ui->generalButton->click();
+    ui->actionGeneral->trigger();
 }
 
 PreferencesDialog::~PreferencesDialog()
@@ -59,22 +67,22 @@ PreferencesDialog::closeEvent( QCloseEvent* )
 void
 PreferencesDialog::onTabButtonClicked()
 {
-    QPushButton* clickedButton = qobject_cast<QPushButton*>(sender());
+    QAction* clickedButton = qobject_cast<QAction*>(sender());
 
     setWindowTitle( clickedButton->text() );
 
-    if ( clickedButton == ui->generalButton )
+    if ( clickedButton == ui->actionGeneral )
         ui->stackedWidget->setCurrentWidget( ui->general );
-    else if ( clickedButton == ui->accountsButton )
+    else if ( clickedButton == ui->actionAccounts )
         ui->stackedWidget->setCurrentWidget( ui->accounts );
-    else if ( clickedButton == ui->ipodButton )
+    else if ( clickedButton == ui->actionDevices )
         ui->stackedWidget->setCurrentWidget( ui->ipod );
-    else if ( clickedButton == ui->advancedButton )
+    else if ( clickedButton == ui->actionAdvanced )
         ui->stackedWidget->setCurrentWidget( ui->advanced );
-    else if ( clickedButton == ui->scrobblingButton )
+    else if ( clickedButton == ui->actionScrobbling )
         ui->stackedWidget->setCurrentWidget( ui->scrobbling );
 
-    resize( QSize( width(), ui->stackedWidget->currentWidget()->sizeHint().height() + m_toolBar->height() ) );
+    resize( QSize( width(), ui->stackedWidget->currentWidget()->sizeHint().height() + ui->toolBar->height() ) );
 }
 
 void
@@ -87,12 +95,16 @@ PreferencesDialog::onAccepted()
 void
 PreferencesDialog::onSettingsChanged()
 {
+#ifndef Q_OS_MAC
     //ui->buttons->button( QDialogButtonBox::Apply )->setEnabled( true );
+#endif
 }
 
 void
 PreferencesDialog::onApplyButtonClicked()
 {
+#ifndef Q_OS_MAC
     emit saveNeeded();
     //ui->buttons->button( QDialogButtonBox::Apply )->setEnabled( false );
+#endif
 }
