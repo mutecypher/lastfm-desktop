@@ -190,13 +190,13 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 #endif
 }
 
-<<<<<<< HEAD
+
 bool
 MainWindow::macEvent(EventHandlerCallRef ref, EventRef event )
 {
     return m_mediaKey->macEventFilter( ref, event );
 }
-=======
+
 #ifdef Q_OS_WIN32
 void
 MainWindow::checkUpdatedPlugins()
@@ -216,7 +216,7 @@ MainWindow::checkUpdatedPlugins()
     }
 }
 #endif
->>>>>>> master
+
 
 void
 MainWindow::setupMenuBar()
