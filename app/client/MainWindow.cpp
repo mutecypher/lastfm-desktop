@@ -153,6 +153,9 @@ MainWindow::MainWindow( QMenuBar* menuBar )
         connect( deviceScrobbler, SIGNAL( noScrobblesFound(QString)),SLOT( onNoScrobblesFound(QString)));
     }
 
+
+    new QShortcut( Qt::Key_Space, this, SLOT(onSpace()) );
+
     //for some reason some of the stylesheet is not being applied properly unless reloaded
     //here. StyleSheets see very flaky to me. :s
     aApp->refreshStyleSheet();
@@ -272,6 +275,12 @@ MainWindow::setupMenuBar()
     QAction* tour = helpMenu->addAction( tr("Tour"), aApp, SLOT(onTourTriggered()) );
     //helpMenu->addSeparator();
     //QAction* diagnostics = helpMenu->addAction( tr("Diagnostics") );
+}
+
+void
+MainWindow::onSpace()
+{
+    aApp->playAction()->trigger();
 }
 
 void

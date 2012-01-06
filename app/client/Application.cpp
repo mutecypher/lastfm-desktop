@@ -261,7 +261,6 @@ Application::init()
      AudioscrobblerSettings settings;
      setRaiseHotKey( settings.raiseShortcutModifiers(), settings.raiseShortcutKey() );
 #endif
-    m_play_action->setShortcut( Qt::Key_Space );
     m_skip_action->setShortcut( Qt::CTRL + Qt::Key_Right );
     m_tag_action->setShortcut( Qt::CTRL + Qt::Key_T );
     m_share_action->setShortcut( Qt::CTRL + Qt::Key_S );
@@ -672,7 +671,7 @@ Application::parseArguments( const QStringList& args )
 void 
 Application::quit()
 {
-    if( activeWindow())
+    if( activeWindow() )
         activeWindow()->raise();
 
     if( unicorn::AppSettings().value( "quitDontAsk", false ).toBool()) {

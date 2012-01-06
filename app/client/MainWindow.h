@@ -82,6 +82,8 @@ private slots:
 
     void checkForUpdates();
 
+    void onSpace();
+
 #ifdef Q_OS_WIN32
     void checkUpdatedPlugins();
 #endif
