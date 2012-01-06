@@ -2,6 +2,7 @@
 #define FRIENDWIDGET_H
 
 #include <QWidget>
+#include <QPointer>
 
 #include <lastfm/XmlQuery.h>
 #include <lastfm/User.h>
@@ -25,10 +26,17 @@ public:
     QString name() const;
     QString realname() const;
 
+    void setListeningNow( bool listeningNow );
+
     bool operator<( const FriendWidget& that ) const;
+
+signals:
+    void sizeChanged( const QSize& size );
 
 private:
     void setDetails();
+
+    void resizeEvent(QResizeEvent *);
 
 private:
     Ui::FriendWidget* ui;
@@ -36,6 +44,9 @@ private:
     lastfm::User m_user;
     lastfm::MutableTrack m_recentTrack;
     unsigned int m_order;
+    bool m_listeningNow;
+
+    QPointer<QMovie> m_movie;
 };
 
 #endif // FRIENDWIDGET_H

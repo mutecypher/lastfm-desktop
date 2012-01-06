@@ -24,7 +24,9 @@
 #include <QProcess>
 #include <QDebug>
 
-#include "lib/unicorn/Updater/PluginList.h"
+#ifdef Q_OS_WIN32
+#include "../Plugins/PluginList.h"
+#endif
 
 #include "FirstRunWizard.h"
 #include "PluginsPage.h"
@@ -36,36 +38,11 @@ PluginsPage::PluginsPage()
     layout->setSpacing( 20 );
 
     // add the radio buttons
-    QVBoxLayout* pluginsLayout = new QVBoxLayout( this );
-    pluginsLayout->setContentsMargins( 0, 0, 0, 0 );
-    pluginsLayout->setSpacing( 0 );
+    m_pluginsLayout = new QVBoxLayout( this );
+    m_pluginsLayout->setContentsMargins( 0, 0, 0, 0 );
+    m_pluginsLayout->setSpacing( 0 );
 
-    layout->addLayout( pluginsLayout );
-
-    PluginList list;
-    QList<IPluginInfo*> supportedPlugins = list.supportedList();
-    foreach( IPluginInfo* plugin, supportedPlugins )
-    {
-        if( !plugin->isAppInstalled() )
-            continue;
-
-        QCheckBox* cb;
-        pluginsLayout->addWidget( cb = new QCheckBox( QString::fromStdString( plugin->name() ), this ));
-        cb->setObjectName( QString::fromStdString( plugin->id() ) );
-        cb->setChecked( true );
-
-        if ( plugin->isInstalled() )
-        {
-            cb->setChecked( true );
-            cb->setDisabled( true );
-            cb->setText( cb->text() + " " + tr( "(Plugin installed or not required)" ));
-        }
-    }
-
-//    pluginsLayout->addWidget( ui.iTunes = new QCheckBox( tr("iTunes"), this ) );
-//    pluginsLayout->addWidget( ui.iWMP = new QCheckBox( tr("Windows Media Player"), this ) );
-//    pluginsLayout->addWidget( ui.iWinAmp = new QCheckBox( tr("Winamp"), this ) );
-//    pluginsLayout->addWidget( ui.iFoo = new QCheckBox( tr("Foobar 2000"), this ) );
+    layout->addLayout( m_pluginsLayout );
 
     layout->addWidget( ui.description = new QLabel( tr( "<p>Your media players need a special Last.fm plugin to be able to scrobble the music you listen to.</p>"
                                                        "<p>Please select the media players that you would like to scrobble your music from and click <strong>Install Plugins</strong></p>"), this ),
@@ -84,13 +61,10 @@ PluginsPage::validatePage()
     // we're not going to use this anymore we should bundle the installers
     // and just run them ourselves
 
-    wizard()->setCommitPage( true );
 
-//    QProcess pluginInstaller;
-//    qDebug() << "Starting PluginInstaller";
-//    pluginInstaller.start( "PluginInstaller.exe" );
-//    pluginInstaller.waitForFinished( -1 );
-//    qDebug() << "PluginInstaller finished.";
+    // For all the plugins that have been selected install them to the correct loaction
+    // and write to the reistry which version we have installed
+
     return true;
 }
 
@@ -102,6 +76,36 @@ PluginsPage::cleanupPage()
 void
 PluginsPage::initializePage()
 {
+#ifdef Q_OS_WIN32
+    QList<IPluginInfo*> supportedPlugins = wizard()->pluginList()->supportedList();
+    foreach( IPluginInfo* plugin, supportedPlugins )
+    {
+        if( !plugin->isAppInstalled() )
+            continue;
+
+        QCheckBox* cb;
+        m_pluginsLayout->addWidget( cb = new QCheckBox( plugin->name(), this ));
+        connect( cb, SIGNAL(toggled(bool)), plugin, SLOT(install(bool)));
+
+        cb->setObjectName( plugin->id() );
+        cb->setChecked( true );
+
+        if ( plugin->isInstalled() )
+        {
+            if ( plugin->version() > plugin->installedVersion() )
+            {
+                cb->setChecked( true );
+                cb->setText( cb->text() + " " + tr( "(newer version)" ));
+            }
+            else
+            {
+                cb->setChecked( false );
+                cb->setText( cb->text() + " " + tr( "(Plugin installed tick to reinstall)" ));
+            }
+        }
+    }
+#endif
+
     setTitle( tr( "Next step, install the Last.fm plugins to be able to scrobble the music you listen to." ));
 
     wizard()->setButton( FirstRunWizard::NextButton, tr( "Install Plugins" ) );

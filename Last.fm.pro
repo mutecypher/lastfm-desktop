@@ -18,4 +18,3 @@ CONFIG( tests ) {
         lib/lastfm/scrobble/tests/test_libscrobble.pro \
         lib/listener/tests/test_liblistener.pro
 }
-

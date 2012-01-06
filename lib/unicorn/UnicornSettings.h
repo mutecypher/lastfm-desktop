@@ -22,6 +22,7 @@
 
 #include <QSettings>
 #include <QString>
+#include <QCoreApplication>
 
 #include <lastfm/User.h>
 
@@ -45,7 +46,7 @@ namespace unicorn
     class UNICORN_DLLEXPORT AppSettings : public QSettings
     {
     public:
-        AppSettings( QString appname = "" );
+        AppSettings( QString appname = QCoreApplication::applicationName() );
     };
 
 

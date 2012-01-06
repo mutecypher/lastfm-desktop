@@ -43,6 +43,9 @@ private:
     bool validatePage();
     void cleanupPage();
     void initializePage();
+
+private:
+    QLayout* m_pluginsLayout;
 };
 
 #endif //PLUGINS_PAGE_H

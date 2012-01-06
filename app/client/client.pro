@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = "Last.fm"
-VERSION = 2.0.5
+VERSION = 2.0.7
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql phonon
 CONFIG += lastfm unicorn listener
@@ -105,7 +105,8 @@ SOURCES += \
     Wizard/TourLocationPage.cpp \
     Wizard/WizardPage.cpp \
     Widgets/ContextLabel.cpp \
-    Widgets/SimilarArtistWidget.cpp
+    Widgets/SimilarArtistWidget.cpp \
+    Widgets/PushButton.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -187,7 +188,27 @@ HEADERS += \
     Wizard/BootstrapPage.h \
     Wizard/WizardPage.h \
     Widgets/ContextLabel.h \
-    Widgets/SimilarArtistWidget.h
+    Widgets/SimilarArtistWidget.h \
+    Widgets/PushButton.h
+
+
+win32:HEADERS += Plugins/FooBar08PluginInfo.h \
+                    Plugins/FooBar09PluginInfo.h \
+                    Plugins/ITunesPluginInfo.h \
+                    Plugins/WinampPluginInfo.h \
+                    Plugins/WmpPluginInfo.h \
+                    Plugins/PluginList.h \
+                    Plugins/KillProcess.h \
+                    Plugins/IPluginInfo.h
+
+win32:SOURCES += Plugins/PluginList.cpp \
+                    Plugins/IPluginInfo.cpp \
+                    Plugins/FooBar08PluginInfo.cpp \
+                    Plugins/FooBar09PluginInfo.cpp \
+                    Plugins/ITunesPluginInfo.cpp \
+                    Plugins/WinampPluginInfo.cpp \
+                    Plugins/WmpPluginInfo.cpp
+
 
 mac:HEADERS += CommandReciever/CommandReciever.h \
                 MediaKeys/MediaKey.h \
@@ -216,95 +237,11 @@ FORMS += \
     Settings/AdvancedSettingsWidget.ui \
     Wizard/FirstRunWizard.ui \
     Widgets/NothingPlayingWidget.ui \
-    Widgets/FriendWidget.ui
+    Widgets/FriendWidget.ui \
+    Widgets/FriendListWidget.ui
 
 linux*:HEADERS += MediaDevices/IpodDevice_linux.h
 linux*:SOURCES += MediaDevices/IpodDevice_linux.cpp
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

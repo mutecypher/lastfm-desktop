@@ -47,6 +47,10 @@ FirstRunWizard::FirstRunWizard( bool startFromTour, QWidget* parent )
       m_commitPage( false ),
       m_showWelcome( false )
 {
+#ifdef Q_OS_WIN32
+    m_plugins = new PluginList;
+#endif
+
     ui->setupUi( this );
 
     ui->welcome->hide();
@@ -73,6 +77,13 @@ FirstRunWizard::FirstRunWizard( bool startFromTour, QWidget* parent )
         ui->stackedWidget->setCurrentWidget( ui->loginPage );
 
     initializePage( ui->stackedWidget->currentWidget() );
+}
+
+FirstRunWizard::~FirstRunWizard()
+{
+#ifdef Q_OS_WIN32
+    delete m_plugins;
+#endif
 }
 
 void

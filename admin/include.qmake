@@ -28,13 +28,16 @@ macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
         }
     }
 
-	## copy the public key for updates
-	QMAKE_POST_LINK += echo Copying dsa_pub.pem file..; cp \"$$ROOT_DIR/admin/dist/mac/dsa_pub.pem\" \"$$BUNDLE_DIR/Contents/Resources\";
+    QMAKE_POST_LINK += echo Touching a file in the client project.; touch \"$$ROOT_DIR/app/client/main.cpp\";
+
+
+    ## copy the public key for updates
+    QMAKE_POST_LINK += echo Copying dsa_pub.pem file..; cp \"$$ROOT_DIR/admin/dist/mac/dsa_pub.pem\" \"$$BUNDLE_DIR/Contents/Resources\";
     
-	## copy the growl registration file
+    ## copy the growl registration file
     QMAKE_POST_LINK += echo Copying growl registration file..; cp \"$$ROOT_DIR/admin/dist/mac/Growl Registration Ticket.growlRegDict\" \"$$BUNDLE_DIR/Contents/Resources\";
 
-        ## copy the apple script suite definition
+    ## copy the apple script suite definition
     QMAKE_POST_LINK += echo Copying apple script suite definition file..; cp \"$$ROOT_DIR/admin/dist/mac/AppleScriptSuite.sdef\" \"$$BUNDLE_DIR/Contents/Resources\";
 
     QMAKE_POST_LINK += echo Copying airfoil remote file..; cp \"$$ROOT_DIR/admin/dist/mac/dacp.fm.last.Last.fm.scpt\" \"$$BUNDLE_DIR/Contents/Resources\";

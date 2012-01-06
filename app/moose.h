@@ -88,7 +88,7 @@ namespace moose
 
         LSApplicationParameters params;
         params.version = 0;
-        params.flags = kLSLaunchAndHide;
+        params.flags = kLSLaunchAndHide | kLSLaunchDontSwitch | kLSLaunchAsync;
         params.application = &appRef;
         params.asyncLaunchRefCon = NULL;
         params.environment = NULL;

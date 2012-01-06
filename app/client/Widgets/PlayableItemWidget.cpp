@@ -32,7 +32,8 @@
 
 PlayableItemWidget::PlayableItemWidget( QWidget* parent )
     : QPushButton( parent ),
-      m_hovered( false )
+      m_hovered( false ),
+      m_style( DescriptionBottom )
 {
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
     setAttribute( Qt::WA_Hover );
@@ -42,7 +43,11 @@ PlayableItemWidget::PlayableItemWidget( QWidget* parent )
 }
 
 PlayableItemWidget::PlayableItemWidget( const RadioStation& rs, const QString& title, const QString& description, QWidget* parent )
-    : QPushButton( parent ), m_rs(rs), m_description( description ), m_hovered( false )
+    : QPushButton( parent ),
+      m_rs(rs),
+      m_description( description ),
+      m_hovered( false ),
+      m_style( DescriptionBottom )
 {
     setStation( rs, title, description );
 
@@ -51,9 +56,10 @@ PlayableItemWidget::PlayableItemWidget( const RadioStation& rs, const QString& t
     setAttribute( Qt::WA_MacNoClickThrough );
 
     setCursor( Qt::PointingHandCursor );
+
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
+    connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
 }
-
-
 
 bool
 PlayableItemWidget::event( QEvent* e )
@@ -150,7 +156,14 @@ void
 PlayableItemWidget::onRadioChanged()
 {
     if ( RadioService::instance().station() == m_rs )
+    {
+        // This is the current radio station
         setText( RadioService::instance().station().title() );
+    }
+    else
+    {
+        // this is not the current radio station
+    }
 }
 
 void
@@ -166,7 +179,7 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
     static QPixmap m_radio_right_press = QPixmap( ":/meta_radio_RIGHT_PRESS.png" );
     static QPixmap m_radio_right_rest = QPixmap( ":/meta_radio_RIGHT_REST.png" );
 
-    if ( QString("ProfileWidget").compare( parent()->parent()->parent()->metaObject()->className() ) == 0 )
+    if ( m_style == DescriptionRight )
     {
         QPushButton::paintEvent( event );
 
@@ -185,7 +198,28 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
         p.drawText( rect().adjusted( fm.width( text() ) + 45, 0, 0, 0 ), m_description, to );
 
     }
-    else if ( QString("MetadataWidget").compare( parent()->parent()->parent()->parent()->parent()->parent()->parent()->metaObject()->className() ) == 0 )
+    else if ( m_style == DescriptionBottom )
+    {
+        QPushButton::paintEvent( event );
+
+        QPainter p( this );
+
+        p.setPen( QColor( 0x898989 ) );
+
+        QFont font = p.font();
+        font.setPixelSize( 12 );
+        p.setFont( font );
+
+        QTextOption to;
+        to.setAlignment( Qt::AlignBottom );
+
+        QFontMetrics fm( font );
+
+        QRect rect = contentsRect();
+        rect.adjust( 54, 0, 0, -14 );
+        p.drawText( rect, fm.elidedText( m_description, Qt::ElideRight, rect.width() ), to );
+    }
+    else if ( m_style == ThreePart )
     {
         QPainter p( this );
 
@@ -224,28 +258,6 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
         QRect descRect = rect().adjusted( 40, 28, -20, 0 );
         p.drawText( descRect, fmDesc.elidedText( m_description, Qt::ElideRight, descRect.width() ) );
     }
-    else
-    {
-        QPushButton::paintEvent( event );
-
-        QPainter p( this );
-
-        p.setPen( QColor( 0x898989 ) );
-
-        QFont font = p.font();
-        font.setPixelSize( 12 );
-        p.setFont( font );
-
-        QTextOption to;
-        to.setAlignment( Qt::AlignBottom );
-
-        QFontMetrics fm( font );
-
-        QRect rect = contentsRect();
-        rect.adjust( 54, 0, 0, -14 );
-        p.drawText( rect, fm.elidedText( m_description, Qt::ElideRight, rect.width() ), to );
-    }
-
 }
 
 void

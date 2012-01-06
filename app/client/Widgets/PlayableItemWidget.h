@@ -27,7 +27,18 @@ class QMouseEvent;
 
 class PlayableItemWidget : public QPushButton
 {
-    Q_OBJECT;
+    Q_OBJECT
+
+public:
+    enum Style
+    {
+        DescriptionRight,
+        DescriptionBottom,
+        ThreePart
+    };
+
+    Q_ENUMS( Style )
+    Q_PROPERTY( Style style READ style WRITE setStyle )
 
 public:
     PlayableItemWidget( QWidget* parent = 0 );
@@ -37,6 +48,9 @@ public:
     void setDescription( const QString& description );
 
     const RadioStation& station() const { return m_rs; }
+
+    Style style() const { return m_style; }
+    void setStyle( Style style ) { m_style = style; }
 
 public slots:
     void onRadioChanged();
@@ -59,6 +73,8 @@ private:
     QString m_description;
 
     bool m_hovered;
+
+    Style m_style;
 };
 
 #endif

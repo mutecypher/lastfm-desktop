@@ -36,8 +36,6 @@ SOURCES += \
     widgets/DataListWidget.cpp \
     widgets/BannerWidget.cpp \
     widgets/ActionButton.cpp \
-    Updater/PluginList.cpp \
-    Updater/IPluginInfo.cpp \
     UpdateInfoFetcher.cpp \
     UnicornSettings.cpp \
     UnicornSession.cpp \
@@ -93,10 +91,6 @@ HEADERS += \
     widgets/DataBox.h \
     widgets/BannerWidget.h \
     widgets/ActionButton.h \
-    Updater/PluginList.h \
-    Updater/KillProcess.h \
-    Updater/IPluginInfo.h \
-    Updater/gen_PluginList.h \
     UpdateInfoFetcher.h \
     UnicornSettings.h \
     UnicornSession.h \
@@ -118,7 +112,6 @@ HEADERS += \
     layouts/SlideOverLayout.h \
     layouts/SideBySideLayout.h \
     layouts/AnimatedListLayout.h \
-    dialogs/WelcomeDialog.h \
     dialogs/UserManagerDialog.h \
     dialogs/UpdateDialog.h \
     dialogs/UnicornDialog.h \

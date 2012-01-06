@@ -89,7 +89,6 @@ NothingPlayingWidget::oniTunesClicked()
     params.asyncLaunchRefCon = NULL;
     params.environment = NULL;
 
-
     AEAddressDesc target;
     AECreateDesc( typeApplicationBundleID, CFSTR( ITUNES_BUNDLEID ), 16, &target);
 

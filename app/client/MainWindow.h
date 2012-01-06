@@ -25,7 +25,7 @@ class MessageBar;
 class SlideOverLayout;
 class UserToolButton;
 class MediaKey;
-
+class PluginList;
 
 class MainWindow : public unicorn::MainWindow
 {
@@ -83,6 +83,10 @@ private slots:
 
     void checkForUpdates();
 
+#ifdef Q_OS_WIN32
+    void checkUpdatedPlugins();
+#endif
+
     // iPod scrobbling things
     void onIPodDetected( const QString& iPodName );
     void onProcessingScrobbles( const QString& iPodName );
@@ -107,6 +111,7 @@ private:
     QPointer<Updater> m_updater;
 
     QPointer<MediaKey> m_mediaKey;
+    QPointer<PluginList> m_pluginList;
 };
 
 #endif //METADATA_WINDOW_H_

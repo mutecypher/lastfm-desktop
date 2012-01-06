@@ -2,7 +2,6 @@
 
 #include "lib/unicorn/dialogs/LoginContinueDialog.h"
 #include "lib/unicorn/dialogs/LoginDialog.h"
-#include "lib/unicorn/dialogs/WelcomeDialog.h"
 #include "lib/unicorn/LoginProcess.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/UnicornApplication.h"
@@ -289,8 +288,6 @@ UserManagerWidget::onUserAdded()
         if( ui.groupBox->layout()->count() <= 1 ) urb->click();
 
         setTabOrders();
-
-        WelcomeDialog( user ).exec();
     }
     else
     {

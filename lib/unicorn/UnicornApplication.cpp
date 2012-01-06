@@ -34,7 +34,6 @@
 #include "dialogs/LoginContinueDialog.h"
 #include "dialogs/LoginDialog.h"
 #include "dialogs/UserManagerDialog.h"
-#include "dialogs/WelcomeDialog.h"
 #include "LoginProcess.h"
 #include "QMessageBoxBuilder.h"
 #include "SignalBlocker.h"

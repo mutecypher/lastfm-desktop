@@ -4,21 +4,17 @@
 #include <QWidget>
 #include <QPointer>
 
+class QNetworkReply;
 
 namespace unicorn { class Session; }
 namespace lastfm { class XmlQuery; }
 namespace lastfm { class User; }
 
+namespace Ui { class FriendListWidget; }
+
 class FriendListWidget : public QWidget
 {
     Q_OBJECT
-private:
-    struct
-    {
-        class QLineEdit* filter;
-        class QListWidget* friends;
-    } ui;
-
 public:
     explicit FriendListWidget( QWidget *parent = 0 );
 
@@ -32,15 +28,22 @@ private slots:
     void onGotFriendsListeningNow();
     void onTextChanged( const QString& text );
 
+    void onFindFriends();
+
     void refresh();
 
 private:
     void changeUser( const QString& newUsername );
 
-private:
-    QPointer<QWidget> m_main;
+    void showList();
 
+private:
     QString m_currentUsername;
+
+    Ui::FriendListWidget* ui;
+    QPointer<QMovie> m_movie;
+
+    QPointer<QNetworkReply> m_reply;
 };
 
 #endif // FRIENDLISTWIDGET_H

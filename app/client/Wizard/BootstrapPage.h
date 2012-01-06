@@ -28,7 +28,9 @@
 #include <QNetworkReply>
 #include <QPointer>
 
-#include "lib/unicorn/Updater/PluginList.h"
+#ifdef Q_OS_WIN32
+#include "../Plugins/PluginList.h"
+#endif
 #include "../Application.h"
 
 class BootstrapPage: public WizardPage
@@ -61,8 +63,8 @@ private slots:
     void playerSelected();
     
 protected:
-    PluginList m_pluginList;
     QString m_playerId;
+    QLayout* m_pluginsLayout;
 };
 
 #endif //BOOTSTRAP_WIZARD_H

@@ -458,30 +458,31 @@ color: white;
 background-color: transparent;
 min-height: 49px;
 max-height: 49px;
+qproperty-style: ThreePart;
 }
 
 ActivityListWidget {
 border: none;
 }
 
-ScrobblesWidget QPushButton#refresh {
+RefreshButton {
 background-position: center left;
 background-repeat: none;
 padding: 0px 10%;
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #eeeeee, stop:1 #e2e2e2);
 color: #777;
 border: none;
 border-bottom: 1px solid #a6a6a6;
 height: 38px;
 }
 
-ScrobblesWidget QPushButton#refresh:hover {
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #f0f0f0, stop:1 #d6d6d6);
+RefreshButton:hover {
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fcfcfc, stop:1 #e5e5e5);
 }
 
-ScrobblesWidget QPushButton#refresh:pressed,
-ScrobblesWidget QPushButton#refresh:disabled {
-background-color: #cccccc;
+RefreshButton:pressed,
+RefreshButton:disabled {
+background-color: #d6d6d6;
 }
 
 FriendListWidget QListWidget {
@@ -491,8 +492,6 @@ border: none;
 
 FriendListWidget QListWidget::item {
 border: none;
-border-top: 1px solid white;
-border-bottom: 1px solid #cdcdcd;
 }
 
 FriendListWidget QListWidget::item:first {
@@ -571,6 +570,33 @@ FriendWidget {
 margin: 0px 20px;
 padding: 10px 0px;
 border: none;
+border-top: 1px solid white;
+border-bottom: 1px solid #cdcdcd;
+}
+
+FriendWidget QFrame#username,
+FriendWidget QFrame#userDetails {
+	margin: 0px 0px 4px;
+}
+
+FriendWidget QFrame#nowListening,
+FriendWidget QFrame#groupBox {
+	border: 1px solid lightgray;
+	border-radius: 5px;
+	padding: 6px 10px;
+	margin: 4px 0px;
+}
+
+FriendWidget QFrame QLabel {
+	margin: 2px 0px;
+}
+
+FriendWidget QFrame#nowListening {
+	background-color: #fffcca;
+}
+
+FriendWidget QFrame#groupBox {
+	background-color: #dedede;
 }
 
 FriendWidget AvatarWidget#avatar,
@@ -588,27 +614,51 @@ max-height: 64px;
 margin: 0px 20px 8px 0px;
 }
 
-FriendWidget QLabel#name,
+FriendWidget QLabel#lastTrack {
+	font-weight: bold;
+	font-size: 12px;
+	color: #333;
+}
+
+FriendWidget QLabel#username,
 ProfileWidget QLabel#name {
 font-weight: bold;
 font-size: 14px;
 color: #333;
 }
 
-ProfileWidget QLabel#scrobbleCount {
+ProfileWidget QLabel#scrobbleCount,
+FriendWidget QLabel#userDetails {
 font-size: 11px;
 color: #898989;
 }
 
-FriendWidget QLabel#lastTrack,
-ProfileWidget QLabel#scrobbles {
+ProfileWidget QLabel#scrobbles,
+FriendWidget QLabel#timestamp {
 font-size: 11px;
 color: #333;
 }
 
-FriendWidget QLabel#timestamp {
-font-size: 11px;
+FriendListWidget QLabel#noFriends {
+	color: #333;
+}
+
+FriendListWidget QWidget#noFriendsPage {
+	border: none;
+	margin: 20px;
+}
+
+FriendListWidget PushButton {
 color: #333;
+text-align: center center;
+font-weight: bold;
+background-color: transparent;
+min-height: 49px;
+max-height: 49px;
+}
+
+FriendWidget QLabel#equaliser {
+margin-right: 5px;
 }
 
 RadioWidget {
@@ -705,8 +755,8 @@ ProfileWidget PlayableItemWidget {
 background-image: url(":/radio_play_small_REST.png");
 text-align: center left;
 font-size: 12px;
-height: 27px;
-padding: 0px 0px 0px 36px;
+height: 24px;
+padding: 0px 0px 0px 28px;
 margin: 2px 0px;
 }
 

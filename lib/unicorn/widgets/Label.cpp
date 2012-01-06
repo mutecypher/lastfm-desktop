@@ -91,7 +91,6 @@ unicorn::Label::anchor( const QString& url, const QString& text )
 QString
 unicorn::Label::prettyTime( const QDateTime& timestamp )
 {
-    QString dateFormat( "d MMM h:mmap" );
     QDateTime now = QDateTime::currentDateTime();
     int secondsAgo = timestamp.secsTo( now );
 
@@ -107,9 +106,16 @@ unicorn::Label::prettyTime( const QDateTime& timestamp )
         int hoursAgo = ( timestamp.secsTo( now ) / (60 * 60) );
         return (hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) );
     }
+    else if ( secondsAgo < (60 * 60 * 24 * 365) || now.date() == timestamp.date() )
+    {
+        // less than a year ago
+        return timestamp.toString( "d MMM h:mmap" );
+        // We don't need to set the timer because this date will never change (well, it might in a year's time)
+    }
     else
     {
-        return timestamp.toString( dateFormat );
+        // less than a year ago
+        return timestamp.toString( "d MMM h:mmap yyyy" );
         // We don't need to set the timer because this date will never change
     }
 }
