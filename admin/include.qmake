@@ -1,4 +1,3 @@
-include( qmake/breakpad.pro.inc )
 include( qmake/debug.pro.inc )
 include( qmake/QtOverride.pro.inc )
 include( qmake/3rdparty.pro.inc )
@@ -28,8 +27,9 @@ macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
         }
     }
 
-    QMAKE_POST_LINK += echo Touching a file in the client project.; touch \"$$ROOT_DIR/app/client/main.cpp\";
+    QMAKE_POST_LINK += echo Breakpad dump sys \"$${DESTDIR}/$${TARGET}.app/Contents/MacOS/$${TARGET}\".; \"$$ROOT_DIR/admin/dist/mac/dump_syms\" -a x86_64 \"$${DESTDIR}/$${TARGET}.app/Contents/MacOS/$${TARGET}\" > \"$${TARGET} x86_64.breakpad\";
 
+    QMAKE_POST_LINK += echo Touching a file in the client project.; touch \"$$ROOT_DIR/app/client/main.cpp\";
 
     ## copy the public key for updates
     QMAKE_POST_LINK += echo Copying dsa_pub.pem file..; cp \"$$ROOT_DIR/admin/dist/mac/dsa_pub.pem\" \"$$BUNDLE_DIR/Contents/Resources\";

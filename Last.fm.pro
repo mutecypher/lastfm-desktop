@@ -6,10 +6,7 @@ SUBDIRS = lib/unicorn \
           app/twiddly
           #app/boffin
 
-#mac:SUBDIRS += app/mac-bundle
-
 linux*:SUBDIRS -= app/twiddly
-#mac:SUBDIRS += app/audioscrobbler/PrefPane
 
 CONFIG( tests ) {
     SUBDIRS += \

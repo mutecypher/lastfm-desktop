@@ -30,8 +30,6 @@
 #include <iostream>
 #include "common/c++/Logger.h"
 
-// until breakpad can be installed more easily
-#undef NDEBUG
 
 void writeXml( const QDomDocument&, const QString& path );
 void logException( QString );
@@ -44,14 +42,6 @@ void logException( QString );
 int
 main( int argc, char** argv )
 {
-#ifdef NDEBUG
-    google_breakpad::ExceptionHandler( CoreDir::save().path().toStdString(),
-                                       0,
-                                       breakPadExecUploader,
-                                       this,
-                                       HANDLER_ALL );
-#endif
-
     // Make sure the logger exists in this binary
 #ifdef Q_OS_WIN
     QString bytes = TwiddlyApplication::log( TwiddlyApplication::applicationName() ).absoluteFilePath();

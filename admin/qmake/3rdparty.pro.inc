@@ -29,6 +29,14 @@ CONFIG( boost ) {
     }
 }
 
+CONFIG( break ) {
+    win32{
+    }
+    else:mac{
+        LIBS += -framework Breakpad
+    }
+}
+
 CONFIG( fftw3f ) {
     win32{
 		LIBS += -L$$COMMON_LIBS_DIR/libfftw -lfftw3f

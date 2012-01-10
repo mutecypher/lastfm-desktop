@@ -32,5 +32,15 @@
 	<string>AppleScriptSuite.sdef</string>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
+	<key>BreakpadProduct</key>
+	<string>@EXECUTABLE@</string>
+	<key>BreakpadVendor</key>
+	<string>@EXECUTABLE@</string>
+	<key>BreakpadURL</key>
+	<string>http://oops.last.fm/report/add</string>
+	<key>BreakpadReportInterval</key>
+	<string>30</string>
+	<key>BreakpadRequestComments</key>
+	<string>YES</string>
 </dict>
 </plist>

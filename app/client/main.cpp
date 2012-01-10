@@ -41,6 +41,8 @@
 #include "Services/RadioService.h"
 #include "app/moose.h"
 
+#include "lib/unicorn/CrashReporter/CrashReporter.h"
+
 void cleanup();
 
 
@@ -51,6 +53,8 @@ namespace lastfm
 
 int main( int argc, char** argv )
 {
+    unicorn::CrashReporter* crashReporter = new unicorn::CrashReporter;
+
     QtSingleCoreApplication::setApplicationName( "Last.fm" );
     QtSingleCoreApplication::setOrganizationName( "Last.fm" );
     QtSingleCoreApplication::setApplicationVersion( APP_VERSION );
@@ -96,6 +100,8 @@ int main( int argc, char** argv )
         // user wouldn't log in
         return 0;
     }
+
+    delete crashReporter;
 }
 
 #ifdef Q_OS_MAC
