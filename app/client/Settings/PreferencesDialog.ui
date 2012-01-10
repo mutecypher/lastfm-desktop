@@ -72,7 +72,7 @@
    </property>
    <property name="icon">
     <iconset resource="../qrc/audioscrobbler.qrc">
-     <normaloff>:/control_bar_scrobble_itunes.png</normaloff>:/control_bar_scrobble_itunes.png</iconset>
+     <normaloff>:/preferences_general.png</normaloff>:/preferences_general.png</iconset>
    </property>
    <property name="text">
     <string>General</string>
@@ -84,7 +84,7 @@
    </property>
    <property name="icon">
     <iconset resource="../qrc/audioscrobbler.qrc">
-     <normaloff>:/control_bar_scrobble_spotify.png</normaloff>:/control_bar_scrobble_spotify.png</iconset>
+     <normaloff>:/preferences_accounts.png</normaloff>:/preferences_accounts.png</iconset>
    </property>
    <property name="text">
     <string>Accounts</string>
@@ -108,7 +108,7 @@
    </property>
    <property name="icon">
     <iconset resource="../qrc/audioscrobbler.qrc">
-     <normaloff>:/control_bar_scrobble_foobar.png</normaloff>:/control_bar_scrobble_foobar.png</iconset>
+     <normaloff>:/preferences_devices.png</normaloff>:/preferences_devices.png</iconset>
    </property>
    <property name="text">
     <string>Devices</string>
@@ -120,7 +120,7 @@
    </property>
    <property name="icon">
     <iconset resource="../qrc/audioscrobbler.qrc">
-     <normaloff>:/control_bar_scrobble_winamp.png</normaloff>:/control_bar_scrobble_winamp.png</iconset>
+     <normaloff>:/preferences_advanced.png</normaloff>:/preferences_advanced.png</iconset>
    </property>
    <property name="text">
     <string>Advanced</string>

@@ -1,243 +1,208 @@
 <RCC>
-    <qresource prefix="/" >
-		<file>loading_meta.gif</file>
-		<file>loading_radio.gif</file>
-		<file>icon_eq.gif</file>
-		<file>radio_eq_small.gif</file>
-	
-        <file alias="pointyarrow.png">wizard/arrow_even_bigger_than_dropbox.png</file>		<file alias="bg_clouds.png">wizard/bg_clouds.png</file>
-		<file alias="button_grey_LEFT_HOVER.png">wizard/button_grey_LEFT_HOVER.png</file>
-		<file alias="button_grey_LEFT_REST.png">wizard/button_grey_LEFT_REST.png</file>
-		<file alias="button_grey_MIDDLE_HOVER.png">wizard/button_grey_MIDDLE_HOVER.png</file>
-		<file alias="button_grey_MIDDLE_REST.png">wizard/button_grey_MIDDLE_REST.png</file>
-		<file alias="button_grey_RIGHT_HOVER.png">wizard/button_grey_RIGHT_HOVER.png</file>
-		<file alias="button_grey_RIGHT_REST.png">wizard/button_grey_RIGHT_REST.png</file>
-		<file alias="button_red_LEFT_HOVER.png">wizard/button_red_LEFT_HOVER.png</file>
-		<file alias="button_red_LEFT_REST.png">wizard/button_red_LEFT_REST.png</file>
-		<file alias="button_red_MIDDLE_HOVER.png">wizard/button_red_MIDDLE_HOVER.png</file>
-		<file alias="button_red_MIDDLE_REST.png">wizard/button_red_MIDDLE_REST.png</file>
-		<file alias="button_red_RIGHT_HOVER.png">wizard/button_red_RIGHT_HOVER.png</file>
-		<file alias="button_red_RIGHT_REST.png">wizard/button_red_RIGHT_REST.png</file>
-		<file alias="graphic_access.png">wizard/graphic_access.png</file>
-		<file alias="graphic_connect.png">wizard/graphic_connect.png</file>
-		<file alias="graphic_finish.png">wizard/graphic_finish.png</file>
-		<file alias="graphic_import_foobar.png">wizard/graphic_import_foobar.png</file>
-		<file alias="graphic_import_itunes.png">wizard/graphic_import_itunes.png</file>
-		<file alias="graphic_import_winamp.png">wizard/graphic_import_winamp.png</file>
-		<file alias="graphic_import_wmp.png">wizard/graphic_import_wmp.png</file>
-		<file alias="graphic_importing.png">wizard/graphic_importing.gif</file>
-		<file alias="graphic_location_MAC.png">wizard/graphic_location_MAC.png</file>
-		<file alias="graphic_location_WIN.png">wizard/graphic_location_WIN.png</file>
-		<file alias="graphic_metadata.png">wizard/graphic_metadata.png</file>
-		<file alias="graphic_plugins.png">wizard/graphic_plugins.png</file>
-		<file alias="graphic_radio.png">wizard/graphic_radio.png</file>
-		<file alias="graphic_scrobbles.png">wizard/graphic_scrobbles.png</file>
-		<file alias="player_foobar_64.png">wizard/player_foobar_64.png</file>
-		<file alias="player_itunes_64.png">wizard/player_itunes_64.png</file>
-		<file alias="player_winamp_64.png">wizard/player_winamp_64.png</file>
-		<file alias="player_wmp_64.png">wizard/player_wmp_64.png</file>
-		<file alias="scrobbler_32.png">wizard/lastfm_icon_32.png</file>
-		<file alias="scrobbler_64.png">wizard/lastfm_icon_64.png</file>
-
-		<file>button_LEFT_HOVER.png</file>
-		<file>button_LEFT_PRESS.png</file>
-		<file>button_LEFT_REST.png</file>
-		<file>button_MIDDLE_HOVER.png</file>
-		<file>button_MIDDLE_PRESS.png</file>
-		<file>button_MIDDLE_REST.png</file>
-		<file>button_RIGHT_HOVER.png</file>
-		<file>button_RIGHT_PRESS.png</file>
-		<file>button_RIGHT_REST.png</file>
-		
-         <file>message_close.png</file>
-         <file>message_error.png</file>
-         <file>message_info.png</file>
-
-		<file>start_bg.png</file>
-	
-     	<file>user_default.png</file>
-		<file>meta_album_no_art.png</file>
-		<file>meta_artist_no_photo.png</file>
-		
-		<file>scrobbles_buy_HOVER.png</file>
-		<file>scrobbles_buy_PRESS.png</file>
-		<file>scrobbles_buy_REST.png</file>
-		<file>scrobbles_love_OFF_HOVER.png</file>
-		<file>scrobbles_love_OFF_PRESS.png</file>
-		<file>scrobbles_love_OFF_REST.png</file>
-		<file>scrobbles_refresh.png</file>
-		<file>scrobbles_share_HOVER.png</file>
-		<file>scrobbles_share_PRESS.png</file>
-		<file>scrobbles_share_REST.png</file>
-		<file>scrobbles_tag_HOVER.png</file>
-		<file>scrobbles_tag_PRESS.png</file>
-		<file>scrobbles_tag_REST.png</file>
-		
-		<file>tab_now_playing_REST.png</file>
-		<file>tab_now_playing_HOVER.png</file>
-		<file>tab_now_playing_ACTIVE.png</file>
-		
-		<file>tab_scrobbles_REST.png</file>
-		<file>tab_scrobbles_HOVER.png</file>
-		<file>tab_scrobbles_ACTIVE.png</file>
-		
-		<file>tab_profile_REST.png</file>
-		<file>tab_profile_HOVER.png</file>
-		<file>tab_profile_ACTIVE.png</file>
-		
-		<file>tab_friends_REST.png</file>
-		<file>tab_friends_HOVER.png</file>
-		<file>tab_friends_ACTIVE.png</file>
-		
-		<file>tab_radio_REST.png</file>
-		<file>tab_radio_HOVER.png</file>
-		<file>tab_radio_ACTIVE.png</file>
-		
-		<file>radio_play_small_REST.png</file>
-		<file>radio_play_small_HOVER.png</file>
-		<file>radio_play_small_PRESS.png</file>
-		
-		<file>radio_play_large_REST.png</file>
-		<file>radio_play_large_HOVER.png</file>
-		<file>radio_play_large_PRESS.png</file>
-		
-		<file>radio_library_REST.png</file>
-		<file>radio_library_HOVER.png</file>
-		<file>radio_library_PRESS.png</file>
-		
-		<file>radio_mix_REST.png</file>
-		<file>radio_mix_HOVER.png</file>
-		<file>radio_mix_PRESS.png</file>
-		
-		<file>radio_rec_REST.png</file>
-		<file>radio_rec_HOVER.png</file>
-		<file>radio_rec_PRESS.png</file>
-		
-		<file>radio_friends_REST.png</file>
-		<file>radio_friends_HOVER.png</file>
-		<file>radio_friends_PRESS.png</file>
-		
-		<file>control_bar_back.png</file>
-		<file>control_bar_radio_artist.png</file>
-		<file>control_bar_radio_friends.png</file>
-		<file>control_bar_radio_library.png</file>
-		<file>control_bar_radio_mix.png</file>
-		<file>control_bar_radio_rec.png</file>
-		<file>control_bar_radio_tag.png</file>
-		<file>control_bar_scrobble_foobar.png</file>
-		<file>control_bar_scrobble_itunes.png</file>
-		<file>control_bar_scrobble_winamp.png</file>
-		<file>control_bar_scrobble_wmp.png</file>
-		<file>control_bar_scrobble_spotify.png</file>
-		
-		<file>controls_love_OFF_REST.png</file>
-		<file>controls_love_OFF_HOVER.png</file>
-		<file>controls_love_OFF_PRESS.png</file>
-		<file>controls_love_ON_REST.png</file>
-		<file>controls_love_ON_HOVER.png</file>
-		<file>controls_love_ON_PRESS.png</file>
-		
-		<file>scrobble_marker_OFF.png</file>
-		<file>scrobble_marker_ON.png</file>
-		
-		<file>controls_ban_REST.png</file>
-		<file>controls_ban_HOVER.png</file>
-		<file>controls_ban_PRESS.png</file>
-		
-		<file>controls_play_REST.png</file>
-		<file>controls_play_HOVER.png</file>
-		<file>controls_play_PRESS.png</file>
-		<file>controls_pause_REST.png</file>
-		<file>controls_pause_HOVER.png</file>
-		<file>controls_pause_PRESS.png</file>
-		
-		<file>controls_skip_REST.png</file>
-		<file>controls_skip_HOVER.png</file>
-		<file>controls_skip_PRESS.png</file>
-
+    <qresource prefix="/">
+        <file>loading_meta.gif</file>
+        <file>loading_radio.gif</file>
+        <file>icon_eq.gif</file>
+        <file>radio_eq_small.gif</file>
+        <file alias="pointyarrow.png">wizard/arrow_even_bigger_than_dropbox.png</file>
+        <file alias="bg_clouds.png">wizard/bg_clouds.png</file>
+        <file alias="button_grey_LEFT_HOVER.png">wizard/button_grey_LEFT_HOVER.png</file>
+        <file alias="button_grey_LEFT_REST.png">wizard/button_grey_LEFT_REST.png</file>
+        <file alias="button_grey_MIDDLE_HOVER.png">wizard/button_grey_MIDDLE_HOVER.png</file>
+        <file alias="button_grey_MIDDLE_REST.png">wizard/button_grey_MIDDLE_REST.png</file>
+        <file alias="button_grey_RIGHT_HOVER.png">wizard/button_grey_RIGHT_HOVER.png</file>
+        <file alias="button_grey_RIGHT_REST.png">wizard/button_grey_RIGHT_REST.png</file>
+        <file alias="button_red_LEFT_HOVER.png">wizard/button_red_LEFT_HOVER.png</file>
+        <file alias="button_red_LEFT_REST.png">wizard/button_red_LEFT_REST.png</file>
+        <file alias="button_red_MIDDLE_HOVER.png">wizard/button_red_MIDDLE_HOVER.png</file>
+        <file alias="button_red_MIDDLE_REST.png">wizard/button_red_MIDDLE_REST.png</file>
+        <file alias="button_red_RIGHT_HOVER.png">wizard/button_red_RIGHT_HOVER.png</file>
+        <file alias="button_red_RIGHT_REST.png">wizard/button_red_RIGHT_REST.png</file>
+        <file alias="graphic_access.png">wizard/graphic_access.png</file>
+        <file alias="graphic_connect.png">wizard/graphic_connect.png</file>
+        <file alias="graphic_finish.png">wizard/graphic_finish.png</file>
+        <file alias="graphic_import_foobar.png">wizard/graphic_import_foobar.png</file>
+        <file alias="graphic_import_itunes.png">wizard/graphic_import_itunes.png</file>
+        <file alias="graphic_import_winamp.png">wizard/graphic_import_winamp.png</file>
+        <file alias="graphic_import_wmp.png">wizard/graphic_import_wmp.png</file>
+        <file alias="graphic_importing.png">wizard/graphic_importing.gif</file>
+        <file alias="graphic_location_MAC.png">wizard/graphic_location_MAC.png</file>
+        <file alias="graphic_location_WIN.png">wizard/graphic_location_WIN.png</file>
+        <file alias="graphic_metadata.png">wizard/graphic_metadata.png</file>
+        <file alias="graphic_plugins.png">wizard/graphic_plugins.png</file>
+        <file alias="graphic_radio.png">wizard/graphic_radio.png</file>
+        <file alias="graphic_scrobbles.png">wizard/graphic_scrobbles.png</file>
+        <file alias="player_foobar_64.png">wizard/player_foobar_64.png</file>
+        <file alias="player_itunes_64.png">wizard/player_itunes_64.png</file>
+        <file alias="player_winamp_64.png">wizard/player_winamp_64.png</file>
+        <file alias="player_wmp_64.png">wizard/player_wmp_64.png</file>
+        <file alias="scrobbler_32.png">wizard/lastfm_icon_32.png</file>
+        <file alias="scrobbler_64.png">wizard/lastfm_icon_64.png</file>
+        <file>button_LEFT_HOVER.png</file>
+        <file>button_LEFT_PRESS.png</file>
+        <file>button_LEFT_REST.png</file>
+        <file>button_MIDDLE_HOVER.png</file>
+        <file>button_MIDDLE_PRESS.png</file>
+        <file>button_MIDDLE_REST.png</file>
+        <file>button_RIGHT_HOVER.png</file>
+        <file>button_RIGHT_PRESS.png</file>
+        <file>button_RIGHT_REST.png</file>
+        <file>message_close.png</file>
+        <file>message_error.png</file>
+        <file>message_info.png</file>
+        <file>start_bg.png</file>
+        <file>user_default.png</file>
+        <file>meta_album_no_art.png</file>
+        <file>meta_artist_no_photo.png</file>
+        <file>scrobbles_buy_HOVER.png</file>
+        <file>scrobbles_buy_PRESS.png</file>
+        <file>scrobbles_buy_REST.png</file>
+        <file>scrobbles_love_OFF_HOVER.png</file>
+        <file>scrobbles_love_OFF_PRESS.png</file>
+        <file>scrobbles_love_OFF_REST.png</file>
+        <file>scrobbles_refresh.png</file>
+        <file>scrobbles_share_HOVER.png</file>
+        <file>scrobbles_share_PRESS.png</file>
+        <file>scrobbles_share_REST.png</file>
+        <file>scrobbles_tag_HOVER.png</file>
+        <file>scrobbles_tag_PRESS.png</file>
+        <file>scrobbles_tag_REST.png</file>
+        <file>tab_now_playing_REST.png</file>
+        <file>tab_now_playing_HOVER.png</file>
+        <file>tab_now_playing_ACTIVE.png</file>
+        <file>tab_scrobbles_REST.png</file>
+        <file>tab_scrobbles_HOVER.png</file>
+        <file>tab_scrobbles_ACTIVE.png</file>
+        <file>tab_profile_REST.png</file>
+        <file>tab_profile_HOVER.png</file>
+        <file>tab_profile_ACTIVE.png</file>
+        <file>tab_friends_REST.png</file>
+        <file>tab_friends_HOVER.png</file>
+        <file>tab_friends_ACTIVE.png</file>
+        <file>tab_radio_REST.png</file>
+        <file>tab_radio_HOVER.png</file>
+        <file>tab_radio_ACTIVE.png</file>
+        <file>radio_play_small_REST.png</file>
+        <file>radio_play_small_HOVER.png</file>
+        <file>radio_play_small_PRESS.png</file>
+        <file>radio_play_large_REST.png</file>
+        <file>radio_play_large_HOVER.png</file>
+        <file>radio_play_large_PRESS.png</file>
+        <file>radio_library_REST.png</file>
+        <file>radio_library_HOVER.png</file>
+        <file>radio_library_PRESS.png</file>
+        <file>radio_mix_REST.png</file>
+        <file>radio_mix_HOVER.png</file>
+        <file>radio_mix_PRESS.png</file>
+        <file>radio_rec_REST.png</file>
+        <file>radio_rec_HOVER.png</file>
+        <file>radio_rec_PRESS.png</file>
+        <file>radio_friends_REST.png</file>
+        <file>radio_friends_HOVER.png</file>
+        <file>radio_friends_PRESS.png</file>
+        <file>control_bar_back.png</file>
+        <file>control_bar_radio_artist.png</file>
+        <file>control_bar_radio_friends.png</file>
+        <file>control_bar_radio_library.png</file>
+        <file>control_bar_radio_mix.png</file>
+        <file>control_bar_radio_rec.png</file>
+        <file>control_bar_radio_tag.png</file>
+        <file>control_bar_scrobble_foobar.png</file>
+        <file>control_bar_scrobble_itunes.png</file>
+        <file>control_bar_scrobble_winamp.png</file>
+        <file>control_bar_scrobble_wmp.png</file>
+        <file>control_bar_scrobble_spotify.png</file>
+        <file>controls_love_OFF_REST.png</file>
+        <file>controls_love_OFF_HOVER.png</file>
+        <file>controls_love_OFF_PRESS.png</file>
+        <file>controls_love_ON_REST.png</file>
+        <file>controls_love_ON_HOVER.png</file>
+        <file>controls_love_ON_PRESS.png</file>
+        <file>scrobble_marker_OFF.png</file>
+        <file>scrobble_marker_ON.png</file>
+        <file>controls_ban_REST.png</file>
+        <file>controls_ban_HOVER.png</file>
+        <file>controls_ban_PRESS.png</file>
+        <file>controls_play_REST.png</file>
+        <file>controls_play_HOVER.png</file>
+        <file>controls_play_PRESS.png</file>
+        <file>controls_pause_REST.png</file>
+        <file>controls_pause_HOVER.png</file>
+        <file>controls_pause_PRESS.png</file>
+        <file>controls_skip_REST.png</file>
+        <file>controls_skip_HOVER.png</file>
+        <file>controls_skip_PRESS.png</file>
         <file>meta_context_arrow.png</file>
-
         <file>meta_buy_HOVER.png</file>
         <file>meta_buy_PRESS.png</file>
         <file>meta_buy_REST.png</file>
-
         <file>meta_love_OFF_HOVER.png</file>
         <file>meta_love_OFF_PRESS.png</file>
         <file>meta_love_OFF_REST.png</file>
-
         <file>meta_love_ON_HOVER.png</file>
         <file>meta_love_ON_PRESS.png</file>
         <file>meta_love_ON_REST.png</file>
-
         <file>meta_share_HOVER.png</file>
         <file>meta_share_PRESS.png</file>
         <file>meta_share_REST.png</file>
-
         <file>meta_tag_HOVER.png</file>
         <file>meta_tag_PRESS.png</file>
         <file>meta_tag_REST.png</file>
-
-		<file>meta_tag_LEFT_HOVER.png</file>
-		<file>meta_tag_LEFT_REST.png</file>
-		<file>meta_tag_MIDDLE_HOVER.png</file>
-		<file>meta_tag_MIDDLE_REST.png</file>
-		<file>meta_tag_RIGHT_HOVER.png</file>
-		<file>meta_tag_RIGHT_REST.png</file>
-		
-		<file>meta_radio_LEFT_HOVER.png</file>
-		<file>meta_radio_LEFT_PRESS.png</file>
-		<file>meta_radio_LEFT_REST.png</file>
-		<file>meta_radio_MIDDLE_HOVER.png</file>
-		<file>meta_radio_MIDDLE_PRESS.png</file>
-		<file>meta_radio_MIDDLE_REST.png</file>
-		<file>meta_radio_RIGHT_HOVER.png</file>
-		<file>meta_radio_RIGHT_PRESS.png</file>
-		<file>meta_radio_RIGHT_REST.png</file>
-
+        <file>meta_tag_LEFT_HOVER.png</file>
+        <file>meta_tag_LEFT_REST.png</file>
+        <file>meta_tag_MIDDLE_HOVER.png</file>
+        <file>meta_tag_MIDDLE_REST.png</file>
+        <file>meta_tag_RIGHT_HOVER.png</file>
+        <file>meta_tag_RIGHT_REST.png</file>
+        <file>meta_radio_LEFT_HOVER.png</file>
+        <file>meta_radio_LEFT_PRESS.png</file>
+        <file>meta_radio_LEFT_REST.png</file>
+        <file>meta_radio_MIDDLE_HOVER.png</file>
+        <file>meta_radio_MIDDLE_PRESS.png</file>
+        <file>meta_radio_MIDDLE_REST.png</file>
+        <file>meta_radio_RIGHT_HOVER.png</file>
+        <file>meta_radio_RIGHT_PRESS.png</file>
+        <file>meta_radio_RIGHT_REST.png</file>
         <file>16x16.png</file>
         <file>22x22.png</file>
         <file>22x22_transparent.png</file>
         <file>systray_icon_rest_mac.png</file>
         <file>systray_icon_pressed_mac.png</file>
-
         <file alias="tag-rest.png">tag_29x29_rest.png</file>
         <file alias="tag-onhover.png">tag_29x29_hover.png</file>
         <file alias="tag-onpress.png">tag_29x29_pressed.png</file>
-		<file alias="tag-disabled.png">tag_29x29_disabled.png</file>
+        <file alias="tag-disabled.png">tag_29x29_disabled.png</file>
         <file alias="share-rest.png">share_29x29_rest.png</file>
         <file alias="share-onhover.png">share_29x29_hover.png</file>
         <file alias="share-onpress.png">share_29x29_pressed.png</file>
-		<file alias="share-disabled.png">share_29x29_disabled.png</file>
-		<file alias="delete.png">delete.png</file>
-
-		<file>asterisk_small.png</file>
-
-		<file>as.png</file>
+        <file alias="share-disabled.png">share_29x29_disabled.png</file>
+        <file alias="delete.png">delete.png</file>
+        <file>asterisk_small.png</file>
+        <file>as.png</file>
         <file>highlight.png</file>
         <file>titlebar_highlight.png</file>
         <file>slider_nubbin.png</file>
-
-		<file>settings_HOVER.png</file>
-		<file>settings_PRESS.png</file>
-		<file>settings_REST.png</file>
-		
-		<file>volume_knob_REST.png</file>
-		<file>volume_knob_PRESS.png</file>
-		<file>volume_slot_OFF.png</file>
-		<file>volume_max.png</file>
-		<file>volume_min.png</file>
-		
-		<file alias="on-tour.png" >on_tour.png</file>
-		
-		<file alias="now-playing.png" >now-playing-REST.png</file>
-		<file alias="now-playing-onpress.png" >now-playing-PRESS.png</file>
-		
-		<file alias="taskbar-love.png" >taskbar-love-OFF-16x16.png</file>
-		<file alias="taskbar-love-on.png" >taskbar-love-ON-16x16.png</file>
-		<file alias="taskbar-ban.png" >taskbar-ban-16x16.png</file>
-		<file alias="taskbar-info.png" >taskbar-info-16x16.png</file>
-		<file alias="taskbar-play.png" >taskbar-play-16x16.png</file>
-		<file alias="taskbar-skip.png" >taskbar-skip-16x16.png</file>
-		
+        <file>settings_HOVER.png</file>
+        <file>settings_PRESS.png</file>
+        <file>settings_REST.png</file>
+        <file>volume_knob_REST.png</file>
+        <file>volume_knob_PRESS.png</file>
+        <file>volume_slot_OFF.png</file>
+        <file>volume_max.png</file>
+        <file>volume_min.png</file>
+        <file alias="on-tour.png">on_tour.png</file>
+        <file alias="now-playing.png">now-playing-REST.png</file>
+        <file alias="now-playing-onpress.png">now-playing-PRESS.png</file>
+        <file alias="taskbar-love.png">taskbar-love-OFF-16x16.png</file>
+        <file alias="taskbar-love-on.png">taskbar-love-ON-16x16.png</file>
+        <file alias="taskbar-ban.png">taskbar-ban-16x16.png</file>
+        <file alias="taskbar-info.png">taskbar-info-16x16.png</file>
+        <file alias="taskbar-play.png">taskbar-play-16x16.png</file>
+        <file alias="taskbar-skip.png">taskbar-skip-16x16.png</file>
+        <file>preferences_devices.png</file>
+        <file>preferences_advanced.png</file>
+        <file>preferences_general.png</file>
+        <file>preferences_scrobbling.png</file>
+        <file>preferences_accounts.png</file>
     </qresource>
 </RCC>

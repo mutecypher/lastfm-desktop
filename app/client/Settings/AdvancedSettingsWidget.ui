@@ -34,9 +34,12 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="proxy">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
-      <string>GroupBox</string>
+      <string>Proxy:</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
