@@ -36,63 +36,19 @@ static inline QLabel* label( const QString& text, Qt::WidgetAttribute size = Qt:
 AboutDialog::AboutDialog( QWidget* parent )
            : QDialog( parent )
 {
-    QLabel* lauthors;
-    QLabel* lalumni;
-
     Q_ASSERT( qApp->applicationVersion().size() );
 
-    QStringList authors, raw_authors;
-    raw_authors << "Michael Coffey" << "eartle" << "michaelc@last.fm";
-
-
-    QStringListIterator i( raw_authors );
-    while(i.hasNext()) {
-        QString name = i.next();
-        QString twit = i.next();
-        QString mail = i.next();
-        authors << "&lt;<a href='mailto:" + mail + "'>" + mail + "</a>&gt; " 
-                 + name + ' '
-                 + "<a href='http://twitter.com/" + twit + "'>@" + twit + "</a>";
-    }
-
-    QStringList alumni, raw_alumni;
-    raw_alumni  << "Jono Cole" << "jonocole"
-                << "Doug Mansell" << "dougma"
-                << "Hannah Donovan" << "han"
-                << "Matt Brown" << "irvinebrown"
-                << "Max Howell" << "mxcl"
-                << "William Viana Soares" << "vianasw";
-
-
-
-    QStringListIterator j( raw_alumni );
-    while(j.hasNext()) {
-        QString name = j.next();
-        QString twit = j.next();
-        alumni << name + ' '
-                 + "<a href='http://twitter.com/" + twit + "'>@" + twit + "</a>";
-    }
-    
     QVBoxLayout* v = new QVBoxLayout( this );
     v->addWidget( new QLabel( "<b>" + qApp->applicationName() ) );
-    v->addWidget( label( qApp->applicationVersion() ) );
+    v->addWidget( label( tr( "%1 (built on Qt %2)"  ).arg( qApp->applicationVersion(), qVersion() ) ) );
     v->addSpacing( 10 );
     v->addWidget( label( "<a href='http://www.last.fm'>www.last.fm</a>" ) );
     v->addWidget( label( "<a href='irc://irc.audioscrobbler.com#audioscrobbler'>irc.audioscrobbler.com</a>" ) );
     v->addSpacing( 10 );
-    v->addWidget( label( QString::fromUtf8("Copyright © 2005-2010 Last.fm Ltd.") ) );
-    v->addSpacing( 10 );
-    v->addWidget( new QLabel( "<b>Staff" ) );
-    v->addWidget( lauthors = label( authors.join( "<br>" ), Qt::WA_MacMiniSize ) );
-    v->addSpacing( 10 );
-    v->addWidget( new QLabel( "<b>Alumni" ) );
-    v->addWidget( lalumni = label( alumni.join( "<br>" ), Qt::WA_MacMiniSize ) );
+    v->addWidget( label( QString::fromUtf8("Copyright © 2005-2012 Last.fm Ltd.") ) );
 
     v->setSizeConstraint( QLayout::SetFixedSize );
     v->setSpacing( 2 );
-
-    lauthors->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse );
-    lalumni->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse );
 
 #ifdef Q_WS_MAC
     foreach (QLabel* l, findChildren<QLabel*>())
