@@ -31,6 +31,9 @@ CONFIG( boost ) {
 
 CONFIG( break ) {
     win32{
+        CONFIG += link_pkgconfig
+        PKGCONFIG += breakpad
+        LIBS += wininet.lib
     }
     else:mac{
         LIBS += -framework Breakpad

@@ -14,11 +14,6 @@ class UNICORN_DLLEXPORT CrashReporter : public QObject
 public:
     explicit CrashReporter(QObject *parent = 0);
     ~CrashReporter();
-    
-signals:
-    
-public slots:
-    
 };
 
 }

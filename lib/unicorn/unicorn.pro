@@ -63,8 +63,7 @@ SOURCES += \
     dialogs/AboutDialog.cpp \
     dialogs/ScrobbleConfirmationDialog.cpp \
     AnimatedStatusBar.cpp \
-    DesktopServices.cpp \
-    CrashReporter/CrashReporter.mm
+    DesktopServices.cpp
 
 HEADERS += \
     widgets/UserToolButton.h \
@@ -132,13 +131,15 @@ HEADERS += \
     CrashReporter/CrashReporter.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp \
-               Updater/Updater.cpp
+               Updater/Updater.cpp \
+                    CrashReporter/CrashReporter.cpp
 	
 
 macx:SOURCES += mac/AppleScript.cpp \
                UnicornApplication_mac.mm \
                Updater/Updater.mm \
-               notify/Notify.mm
+               notify/Notify.mm \
+                CrashReporter/CrashReporter.mm
 
 macx:HEADERS += mac/AppleScript.h \
                 notify/Notify.h
@@ -149,4 +150,3 @@ FORMS += \
 
 RESOURCES += \
 	qrc/unicorn.qrc
-
