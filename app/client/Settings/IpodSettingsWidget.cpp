@@ -61,8 +61,6 @@ IpodSettingsWidget::IpodSettingsWidget( QWidget* parent )
 
     connect( ui->clearAssociations, SIGNAL( clicked() ), this, SLOT( clearIpodAssociations() ) );
     connect( ui->removeAssociation, SIGNAL( clicked() ), this, SLOT( removeIpodAssociation() ) );
-    connect( ui->iPodAssociations, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), SLOT( onItemActivated() ) );
-    connect( ui->iPodAssociations, SIGNAL( itemChanged(QTreeWidgetItem*,int)), SLOT( onSettingsChanged() ) );
 
     ui->iPodAssociations->header()->setResizeMode( QHeaderView::ResizeToContents );
 
@@ -74,6 +72,10 @@ IpodSettingsWidget::IpodSettingsWidget( QWidget* parent )
     ui->iPodAssociations->setHeaderLabels( headerLabels );
 
     populateIpodAssociations();
+
+    // do these after populating so we don't corrupt the associations
+    connect( ui->iPodAssociations, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), SLOT( onItemActivated() ) );
+    connect( ui->iPodAssociations, SIGNAL( itemChanged(QTreeWidgetItem*,int)), SLOT( onSettingsChanged() ) );
 }
 
 void
@@ -179,34 +181,9 @@ void
 IpodSettingsWidget::removeIpodAssociation()
 {
     QTreeWidgetItem* association = ui->iPodAssociations->currentItem();
-    QString deviceId = association->data( IpodColumnDeviceName, Qt::UserRole ).toString();
-    QString username = static_cast<QComboBox*>( ui->iPodAssociations->itemWidget( association, IpodColumnUser ) )->currentText();
-    doRemoveIpodAssociation( deviceId, username );
     ui->iPodAssociations->takeTopLevelItem( ui->iPodAssociations->indexOfTopLevelItem( association ) );
     ui->removeAssociation->setEnabled( false );
-}
 
-void
-IpodSettingsWidget::doRemoveIpodAssociation( const QString deviceId, const QString username )
-{
-    unicorn::UserSettings us( username );
-    int count = us.beginReadArray( "associatedDevices" );
-    for ( int i = 0; i < count; i++ )
-    {
-        us.setArrayIndex( i );
-        if ( deviceId == us.value( "deviceId" ).toString() )
-        {
-            us.remove( "deviceId" );
-            us.remove( "mountPath" );
-            us.remove( "deviceName" );
-            us.remove( "alwaysAsk" );
-            us.remove( "scrobble" );
-#ifdef Q_WS_X11
-            IpodDeviceLinux::deleteDeviceHistory( username, deviceId );
-#endif
-            break;
-        }
-    }
-    us.endArray();
-    us.setValue( "associatedDevices/size", count - 1 );
+    // This will delete all the users associations and only restore the remaining ones
+    onSettingsChanged();
 }
