@@ -53,7 +53,7 @@ namespace lastfm
 
 int main( int argc, char** argv )
 {
-    unicorn::CrashReporter* crashReporter = new unicorn::CrashReporter;
+    //unicorn::CrashReporter* crashReporter = new unicorn::CrashReporter;
 
     QtSingleCoreApplication::setApplicationName( "Last.fm" );
     QtSingleCoreApplication::setOrganizationName( "Last.fm" );
@@ -101,7 +101,7 @@ int main( int argc, char** argv )
         return 0;
     }
 
-    delete crashReporter;
+    //delete crashReporter;
 }
 
 #ifdef Q_OS_MAC
