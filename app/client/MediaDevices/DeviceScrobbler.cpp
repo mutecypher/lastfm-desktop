@@ -143,12 +143,10 @@ DeviceScrobbler::twiddled( QStringList arguments )
 
             if ( result == QMessageBox::Yes )
             {
-                unicorn::Settings s;
                 // Switch accounts!
-                s.beginGroup( associatedUser.name() );
-                QString sessionKey = s.value( "SessionKey", "" ).toString();
+                unicorn::UserSettings us( associatedUser.name() );
+                QString sessionKey = us.value( "SessionKey", "" ).toString();
                 aApp->changeSession( associatedUser.name(), sessionKey );
-                s.endGroup();
             }
         }
 

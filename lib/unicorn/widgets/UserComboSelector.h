@@ -30,10 +30,9 @@ public:
 protected:
     void changeUser( const QString& username )
     {
-        unicorn::Settings s;
+        unicorn::UserSettings us( username );
 
-        s.beginGroup( username );
-        QString sessionKey = s.value( "sessionKey", "" ).toString();
+        QString sessionKey = us.value( "sessionKey", "" ).toString();
         QMetaObject::invokeMethod( qApp, "changeSession",
                                          Q_ARG( const QString, username ),
                                          Q_ARG( const QString, sessionKey ) );

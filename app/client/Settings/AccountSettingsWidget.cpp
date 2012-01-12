@@ -54,14 +54,16 @@ AccountSettingsWidget::saveSettings()
     qDebug() << "has unsaved changes?" << hasUnsavedChanges();
     if ( hasUnsavedChanges() )
     {
-        unicorn::Settings s;
+        unicorn::UserSettings s;
+
+
         UserRadioButton* urb = qobject_cast<UserRadioButton*>( ui->users->checkedButton() );
         if ( urb && urb->user() != User().name() )
         {
             s.setValue( "Username", urb->user() );
-            s.beginGroup( urb->user() );
-            QString sessionKey = s.value( "SessionKey", "" ).toString();
-            s.endGroup();
+
+            unicorn::UserSettings us( urb->user() );
+            QString sessionKey = us.value( "SessionKey", "" ).toString();
             qobject_cast<unicorn::Application *>( qApp )->changeSession( urb->user(), sessionKey, true );
         }
 
