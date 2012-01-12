@@ -70,7 +70,6 @@ CONFIG( samplerate ) {
 
 CONFIG( sparkle ) {
     win32{
-        LIBS += -L$$COMMON_LIBS_DIR/WinSparkle -lWinSparkle
         CONFIG += link_pkgconfig
         PKGCONFIG += sparkle
     }
