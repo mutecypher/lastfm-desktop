@@ -52,7 +52,7 @@ namespace unicorn
 
     /** Clearly no use until a username() has been assigned. But this is
       * automatic if you use unicorn::Application anyway. */
-    class UNICORN_DLLEXPORT UserSettings : public QSettings
+    class UNICORN_DLLEXPORT UserSettings : public Settings
     {
     public:
         UserSettings( QString userName = User() );

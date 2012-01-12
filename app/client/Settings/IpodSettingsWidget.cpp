@@ -85,17 +85,19 @@ IpodSettingsWidget::saveSettings()
         qDebug() << "Saving settings...";
 
         // remove all associations and add them again with the current settings
+        QList<lastfm::User> roster = unicorn::Settings().userRoster();
+
+        foreach( lastfm::User user, roster )
+        {
+            unicorn::UserSettings us( user.name() );
+            us.remove( "associatedDevices" );
+        }
 
         for ( int i = 0 ; i < ui->iPodAssociations->topLevelItemCount() ; ++i )
         {
             QTreeWidgetItem* item = ui->iPodAssociations->topLevelItem( i );
             QString deviceName = item->text( IpodColumnDeviceName );
             QString deviceId = item->data( IpodColumnDeviceName, Qt::UserRole ).toString();
-
-            lastfm::User associatedUser = IpodDevice::associatedUser( deviceId );
-
-            doRemoveIpodAssociation( deviceId, associatedUser.name() );
-
             IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
 
             ipod->associateDevice( static_cast<QComboBox*>( ui->iPodAssociations->itemWidget( item, IpodColumnUser ) )->currentText() );
@@ -111,12 +113,13 @@ void
 IpodSettingsWidget::populateIpodAssociations()
 {
     QList<lastfm::User> roster = unicorn::Settings().userRoster();
+
     foreach( lastfm::User user, roster )
     {
         unicorn::UserSettings us( user.name() );
         int count = us.beginReadArray( "associatedDevices" );
 
-        for ( int i = 0; i < count; i++ )
+        for ( int i = 0 ; i < count ; i++ )
         {
             us.setArrayIndex( i );
             QTreeWidgetItem* item = new QTreeWidgetItem( ui->iPodAssociations );
@@ -139,6 +142,7 @@ IpodSettingsWidget::populateIpodAssociations()
             item->setCheckState( IpodColumnAlwaysAsk, us.value( "alwaysAsk" ).toBool() ? Qt::Checked : Qt::Unchecked );
 
         }
+
         us.endArray();
     }
 
@@ -195,6 +199,8 @@ IpodSettingsWidget::doRemoveIpodAssociation( const QString deviceId, const QStri
             us.remove( "deviceId" );
             us.remove( "mountPath" );
             us.remove( "deviceName" );
+            us.remove( "alwaysAsk" );
+            us.remove( "scrobble" );
 #ifdef Q_WS_X11
             IpodDeviceLinux::deleteDeviceHistory( username, deviceId );
 #endif

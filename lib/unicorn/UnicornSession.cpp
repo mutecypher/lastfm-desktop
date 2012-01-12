@@ -18,25 +18,12 @@ Session::lastSessionData()
     //use the Username setting or the first username if there have been any logged in previously
     QString username = s.value( "Username", QString() ).toString();
 
-    QStringList groups = s.childGroups();
-    if( (username.isEmpty()
-         || ( !groups.contains(username, Qt::CaseInsensitive )) && !groups.isEmpty() ) )
-    {
-        foreach( QString child, s.childGroups())
-        {
-            if( child == "com" || !s.contains( child + "/SessionKey") )
-                continue;
-            username = child;
-            break;
-        }
-    }
-
     if( !username.isEmpty() )
     {
-        s.beginGroup( username );
+        UserSettings us( username );
 
         sessionData[ "username" ] = username;
-        const QString sk = s.value( "SessionKey", "" ).toString();
+        const QString sk = us.value( "SessionKey", "" ).toString();
 
         if( !sk.isEmpty() )
             sessionData[ "sessionKey" ] = sk;
@@ -79,8 +66,7 @@ Session::init( const QString& username, const QString& sessionKey )
 {
     m_sessionKey = sessionKey;
 
-    Settings s;
-    s.beginGroup( username );
+    UserSettings s( username );
     m_userInfo.setName( username );
     m_userInfo.setScrobbleCount( s.value( "ScrobbleCount", 0 ).toInt() );
     m_userInfo.setDateRegistered( s.value( "DateRegistered", QDateTime() ).toDateTime() );
@@ -100,9 +86,10 @@ Session::init( const QString& username, const QString& sessionKey )
 
     m_userInfo.setImages( imageUrls );
 
-    s.setValue( "SessionKey", sessionKey );
-
-    s.endGroup();
+    if ( sessionKey.isEmpty() )
+        Q_ASSERT( false );
+    else
+        s.setValue( "SessionKey", sessionKey );
 
     fetchUserInfo();
 
@@ -149,8 +136,8 @@ void
 Session::cacheUserInfo( const lastfm::User& userInfo )
 {
     const char* key = UserSettings::subscriptionKey();
-    Settings s;
-    s.beginGroup( userInfo.name() );
+
+    UserSettings s( userInfo.name() );
     s.setValue( key, userInfo.isSubscriber() );
     s.setValue( "ScrobbleCount", userInfo.scrobbleCount() );
     s.setValue( "DateRegistered", userInfo.dateRegistered() );
@@ -166,7 +153,6 @@ Session::cacheUserInfo( const lastfm::User& userInfo )
         s.setValue( "Url", userInfo.imageUrl( sizes[ i ] ) );
     }
     s.endArray();
-    s.endGroup();
 
 }
 
