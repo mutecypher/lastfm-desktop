@@ -525,15 +525,43 @@ ScrobSubmitter::SendToASThread()
         char responseBuffer[RESPONSE_BUFFER_SIZE];
         DWORD bytesRead;
 
-        BOOL success = CallNamedPipeA(
-            mPipeName.data(), 
-            (LPVOID) sCmd.data(), (DWORD) sCmd.size(),
-            responseBuffer, RESPONSE_BUFFER_SIZE, 
-            &bytesRead,
-            PIPE_TIMEOUT);
+		HANDLE hPipe = CreateFile(
+			mPipeName.data(),
+			GENERIC_WRITE | GENERIC_READ,
+			0,
+			NULL,
+			OPEN_EXISTING,
+			0,
+			NULL);
+
+		DWORD cbWritten;
+
+		BOOL success = WriteFile(
+				hPipe,
+				(LPVOID) sCmd.data(),
+				(DWORD) sCmd.size(),
+				&cbWritten,
+				NULL);
 
         if (success)
         {
+		do 
+		   { 
+		   // Read from the pipe. 
+		 
+			  success = ReadFile( 
+				 hPipe,    // pipe handle 
+				 responseBuffer,    // buffer to receive reply 
+				 RESPONSE_BUFFER_SIZE,  // size of buffer 
+				 &bytesRead,  // number of bytes read 
+				 NULL);    // not overlapped 
+		 
+			  if ( ! success && GetLastError() != ERROR_MORE_DATA )
+				 break; 
+		 
+			  //_tprintf( TEXT("\"%s\"\n"), responseBuffer ); 
+		   } while ( ! success);  // repeat loop if ERROR_MORE_DATA 
+
             std::string sResponse(responseBuffer, bytesRead);
             bool error = sResponse.substr(0, 2) != "OK";
             ReportStatus(nId, error, sResponse);
@@ -549,6 +577,8 @@ ScrobSubmitter::SendToASThread()
                 break;
             }
         }
+
+		CloseHandle(hPipe); 
 
     } // end while
 

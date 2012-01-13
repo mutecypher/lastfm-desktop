@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Bootstrap.h"
+#include "..\ScrobSub\Bootstrap.h"
 
 class WinampBootStrap :
     public BootStrap

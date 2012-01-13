@@ -225,36 +225,16 @@ static void deleteTwiddlyDatabases()
 OSStatus RegisterVisualPlugin( PluginMessageInfo * messageInfo )
 {
     std::cout << "Registering Visual Plugin!!!!" << std::endl;
+
 	PlayerMessageInfo	playerMessageInfo;
 	OSStatus			status;
-    
-#if TARGET_OS_WIN32
-    ClearMemory( &playerMessageInfo.u.registerVisualPluginMessage, 
-                sizeof( playerMessageInfo.u.registerVisualPluginMessage ) );
-#else
-    memset( &playerMessageInfo.u.registerVisualPluginMessage, 
-           0,
-           sizeof( playerMessageInfo.u.registerVisualPluginMessage ) );
-#endif
-    
-#if TARGET_OS_MAC
+		
+	memset( &playerMessageInfo.u.registerVisualPluginMessage, 0, sizeof(playerMessageInfo.u.registerVisualPluginMessage) );
+
 	GetVisualName( playerMessageInfo.u.registerVisualPluginMessage.name );
-#else
-    // copy in name length byte first
-    playerMessageInfo.u.registerVisualPluginMessage.name[0] = lstrlenA( kTVisualPluginName );
-    
-    // now copy in actual name
-    memcpy( &playerMessageInfo.u.registerVisualPluginMessage.name[1],
-           kTVisualPluginName,
-           lstrlenA(kTVisualPluginName));
-#endif
 
-
-    
 	SetNumVersion( &playerMessageInfo.u.registerVisualPluginMessage.pluginVersion, kTVisualPluginMajorVersion, kTVisualPluginMinorVersion, kTVisualPluginReleaseStage, kTVisualPluginNonFinalRelease );
-    
-    LOG( 3, "Giving iTunes version number: " + GetVersionString() );
-    
+
 	playerMessageInfo.u.registerVisualPluginMessage.options					= GetVisualOptions();
 	playerMessageInfo.u.registerVisualPluginMessage.handler					= (VisualPluginProcPtr)VisualPluginHandler;
 	playerMessageInfo.u.registerVisualPluginMessage.registerRefCon			= 0;
@@ -270,7 +250,7 @@ OSStatus RegisterVisualPlugin( PluginMessageInfo * messageInfo )
 	playerMessageInfo.u.registerVisualPluginMessage.maxHeight				= 0;	// no max height limit
 	
 	status = PlayerRegisterVisualPlugin( messageInfo->u.initMessage.appCookie, messageInfo->u.initMessage.appProc, &playerMessageInfo );
-    
+		
 	return status;
 }
 

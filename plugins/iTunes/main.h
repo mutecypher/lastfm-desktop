@@ -33,7 +33,7 @@
 #endif // TARGET_OS_WIN32
 
 #if TARGET_OS_WIN32
-#define kTVisualPluginName     "Last.fm AudioScrobbler"
+#define kTVisualPluginName     L"Last.fm AudioScrobbler"
 #else
 #define kTVisualPluginName     CFSTR("Last.fm AudioScrobbler")
 #endif

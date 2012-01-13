@@ -588,7 +588,7 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
         /** Sent when the visual plugin is registered.  The plugin should do 
           * minimal memory allocations here.  The resource fork of the plugin is 
           * still available. */
-        case _(kVisualPluginInitMessage)
+	case kVisualPluginInitMessage:
         {
             visualPluginData = (VisualPluginData *)malloc(sizeof(VisualPluginData));
             if (visualPluginData == nil)
@@ -608,7 +608,7 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
         break;
 
         /** Sent when the visual plugin is unloaded */
-        case _(kVisualPluginCleanupMessage)
+	case kVisualPluginCleanupMessage:
         {
             ASStop();
 
@@ -620,10 +620,10 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
         /** Sent when the visual plugin is enabled.  iTunes currently enables
           * all loaded visual plugins.  The plugin should not do anything here.
           */
-        case _(kVisualPluginEnableMessage)
+	case kVisualPluginEnableMessage:
             break;
 
-        case _(kVisualPluginDisableMessage)
+	case kVisualPluginDisableMessage:
             ASStop();
             break;
 
@@ -645,7 +645,7 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
         /** Sent if the plugin requests the ability for the user to configure 
           * it.  Do this by setting the kVisualWantsConfigure option in the 
           * PlayerRegisterVisualPluginMessage.options field. */
-        case _(kVisualPluginConfigureMessage)
+		case kVisualPluginConfigureMessage:
             break;
 
         /** Sent when iTunes is going to show the visual plugin in a port.  At
@@ -662,7 +662,7 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
         break;
 
         /** Sent when iTunes is no longer displayed. */
-        case _(kVisualPluginDeactivateMessage)
+		case kVisualPluginDeactivateMessage:
         {
             status = DeactivateVisual( visualPluginData );
         }
@@ -675,7 +675,7 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
             break;
 
         /** Sent when the playback starts */
-        case _(kVisualPluginPlayMessage)
+		case kVisualPluginPlayMessage:
 			HandleTrack( messageInfo->u.playMessage.trackInfo );
             visualPluginData->playing = true;
             break;
@@ -684,12 +684,12 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
          * used when the information about a track changes, or when the CD moves
          * onto the next track. The visual plugin should update any displayed
          * information about the currently playing song. */
-        case _(kVisualPluginChangeTrackMessage)
+		case kVisualPluginChangeTrackMessage:
             HandleTrack( messageInfo->u.changeTrackMessage.trackInfo );
             break;
 
         /** Sent when the player stops. */
-        case _(kVisualPluginStopMessage)
+		case kVisualPluginStopMessage:
         {
             if ( gASState == AS_PLAYING )
             {
@@ -705,7 +705,7 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
         break;
 
         /** Sent when the player changes the track position. */
-        case _(kVisualPluginSetPositionMessage)
+		case kVisualPluginSetPositionMessage:
             break;
 
         default:
@@ -716,4 +716,10 @@ VisualPluginHandler( OSType message, VisualPluginMessageInfo* messageInfo, void*
     #undef _ //logging helper macro
 
     return status;
+}
+
+void GetVisualName( ITUniStr255 name )
+{	
+	name[0] = (UniChar)wcslen( kTVisualPluginName );
+	wcscpy_s( (wchar_t *)&name[1], 255, kTVisualPluginName );
 }
