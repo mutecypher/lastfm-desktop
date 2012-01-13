@@ -96,7 +96,7 @@
    </property>
    <property name="icon">
     <iconset resource="../qrc/audioscrobbler.qrc">
-     <normaloff>:/as.png</normaloff>:/as.png</iconset>
+     <normaloff>:/preferences_scrobbling.png</normaloff>:/preferences_scrobbling.png</iconset>
    </property>
    <property name="text">
     <string>Scrobbling</string>
