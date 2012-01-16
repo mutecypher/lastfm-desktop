@@ -2,13 +2,13 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [CustomMessages]
-Version=2.0.8.0
+Version=2.0.9.0
 
 
 [Setup]
 OutputBaseFilename=Last.fm-0.0.0.0
-VersionInfoVersion=2.0.8
-VersionInfoTextVersion=2.0.8
+VersionInfoVersion=2.0.9
+VersionInfoTextVersion=2.0.9
 AppName=Last.fm
 AppVerName=Last.fm {cm:Version}
 VersionInfoDescription=Last.fm Installer
