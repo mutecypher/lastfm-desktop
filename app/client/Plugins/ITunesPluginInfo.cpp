@@ -73,6 +73,6 @@ QString ITunesPluginInfo::pluginInstallPath() const
 QString
 ITunesPluginInfo::pluginInstaller() const
 {
-    return "iTunesPluginWinSetup_5.0.0.0.exe";
+    return "iTunesPluginWinSetup_5.0.1.0.exe";
 }
 
