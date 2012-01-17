@@ -14,7 +14,7 @@ class PreferencesDialog : public unicorn::MainWindow
     Q_OBJECT
 
 public:
-    explicit PreferencesDialog( QMenuBar* menuBar );
+    explicit PreferencesDialog( QMenuBar* menuBar, QWidget* parent = 0 );
     ~PreferencesDialog();
 
 signals:

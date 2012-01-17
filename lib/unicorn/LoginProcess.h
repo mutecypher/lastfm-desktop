@@ -68,6 +68,7 @@ public:
 
 public slots:
     void authenticate();
+    void getToken();
     void getSession( QString token );
     void cancel();
 
@@ -75,8 +76,8 @@ signals:
     void gotSession( unicorn::Session* s );
 
 private slots:
+    void onGotToken();
     void onGotSession();
-    void onGotDesktopToken();
 
 private: 
     QPointer<TinyWebServer> m_webServer;

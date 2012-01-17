@@ -101,6 +101,8 @@ Application::Application(int& argc, char** argv)
 void
 Application::initiateLogin( bool forceWizard ) throw( StubbornUserException )
 {
+    closeAllWindows();
+
     if( forceWizard || !unicorn::Settings().value( SETTING_FIRST_RUN_WIZARD_COMPLETED, false ).toBool() )
     {
         setWizardRunning( true );

@@ -39,7 +39,7 @@
 #include "SignalBlocker.h"
 #include "UnicornCoreApplication.h"
 #include "UnicornSettings.h"
-
+#include "DesktopServices.h"
 #include <lastfm/misc.h>
 #include <lastfm/User.h>
 #include <lastfm/InternetConnectionMonitor.h>
@@ -56,6 +56,7 @@
 #include <QStyle>
 #include <QTimer>
 #include <QTranslator>
+#include <QAction>
 
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
@@ -121,7 +122,7 @@ unicorn::Application::loadStyleSheet( QFile& file )
 }
 
 void
-unicorn::Application::initiateLogin() throw( StubbornUserException )
+unicorn::Application::initiateLogin( bool ) throw( StubbornUserException )
 {
     Session* newSession = 0;
 
@@ -227,7 +228,6 @@ unicorn::Application::~Application()
     }*/
 }
 
-
 void
 unicorn::Application::onUserGotInfo()
 {
@@ -297,9 +297,6 @@ unicorn::Application::changeSession( const QString& username, const QString& ses
 unicorn::Session*
 unicorn::Application::changeSession( Session* newSession, bool announce )
 {
-    if ( m_currentSession && newSession->userInfo().name() == m_currentSession->userInfo().name() )
-        return m_currentSession;
-
     if( m_currentSession && !m_wizardRunning &&  Settings().value( "changeSessionConfirmation", true ).toBool() )
     {
         bool dontAskAgain = false;

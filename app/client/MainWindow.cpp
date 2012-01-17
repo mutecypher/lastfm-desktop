@@ -290,10 +290,24 @@ MainWindow::onVisitProfile()
 }
 
 void
+MainWindow::showEvent(QShowEvent *)
+{
+    if ( m_preferences )
+        m_preferences->show();
+}
+
+void
+MainWindow::hideEvent(QHideEvent *)
+{
+    if ( m_preferences )
+        m_preferences->hide();
+}
+
+void
 MainWindow::onPrefsTriggered()
 {
     if ( !m_preferences )
-        m_preferences = new PreferencesDialog( m_menuBar );
+        m_preferences = new PreferencesDialog( 0 );
 
     m_preferences->show();
 }

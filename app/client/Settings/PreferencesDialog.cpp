@@ -1,12 +1,13 @@
 
 #include <QToolBar>
 #include <QToolButton>
+#include <QShortcut>
 
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
 
-PreferencesDialog::PreferencesDialog( QMenuBar* menuBar )
-    :unicorn::MainWindow( menuBar ),
+PreferencesDialog::PreferencesDialog( QMenuBar* menuBar, QWidget* parent )
+    :unicorn::MainWindow( menuBar, parent ),
     ui( new Ui::PreferencesDialog )
 {
     ui->setupUi( this );
@@ -81,8 +82,6 @@ PreferencesDialog::onTabButtonClicked()
         ui->stackedWidget->setCurrentWidget( ui->advanced );
     else if ( clickedButton == ui->actionScrobbling )
         ui->stackedWidget->setCurrentWidget( ui->scrobbling );
-
-    resize( QSize( width(), ui->stackedWidget->currentWidget()->sizeHint().height() + ui->toolBar->height() ) );
 }
 
 void

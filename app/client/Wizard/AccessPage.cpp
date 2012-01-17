@@ -33,6 +33,7 @@
 #include "AccessPage.h"
 
 AccessPage::AccessPage()
+    :m_valid( false )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
@@ -44,6 +45,7 @@ AccessPage::AccessPage()
     layout->addWidget( ui.description = new QLabel( tr( "<p>Please click the <strong>Yes, Allow Access</strong> button in your web browser to connect your Last.fm account to the Last.fm Desktop App.</p>"
                                                         "<p>If you haven't connected because you closed the browser window or you clicked cancel, please try again.<p/>" )),
                        0, Qt::AlignTop);
+
     ui.description->setObjectName( "description" );
     ui.description->setWordWrap( true );
 }
@@ -91,6 +93,8 @@ AccessPage::onAuthenticated( unicorn::Session* session )
 void
 AccessPage::onGotUserInfo( const lastfm::User& user )
 {
+    m_valid = true;
+
     // make sure the wizard is shown again after they allow access on the website.
     wizard()->showWelcome();
     wizard()->next();
@@ -116,7 +120,7 @@ AccessPage::cleanupPage()
 bool
 AccessPage::validatePage()
 {
-    if ( aApp->currentSession() )
+    if ( m_valid )
         return true;
 
     // There is no session so try to fetch it
@@ -124,7 +128,7 @@ AccessPage::validatePage()
     // just try with the most recent one
     unicorn::LoginProcess* loginProcess = m_loginProcesses[ m_loginProcesses.count() - 1 ];
 
-    loginProcess->getSession( loginProcess->token() );
+    loginProcess->getToken();
     return false;
 }
 

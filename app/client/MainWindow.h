@@ -99,6 +99,9 @@ private:
     void addWinThumbBarButtons( QList<QAction*>& );
     void setupMenuBar();
 
+    void showEvent(QShowEvent *);
+    void hideEvent(QHideEvent *);
+
     //void resizeEvent( QResizeEvent* event ) { qDebug() << event->size(); }
 
 private:

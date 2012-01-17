@@ -20,6 +20,7 @@ PointyArrow::PointyArrow()
 
 PointyArrow::~PointyArrow()
 {
+    disconnect( m_timeline, 0, this, 0 );
     delete m_timeline;
 }
 

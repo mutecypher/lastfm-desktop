@@ -211,7 +211,7 @@ namespace unicorn
         /**
          * Reimplement this function if you want to control the initial login process.
          */
-        virtual void initiateLogin() throw( StubbornUserException );
+        virtual void initiateLogin( bool forceWizard = false ) throw( StubbornUserException );
 
         void setWizardRunning( bool running );
 

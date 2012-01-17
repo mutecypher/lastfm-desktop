@@ -135,12 +135,13 @@ UserRadioButton::removeMe()
     if( result != QMessageBox::Yes ) return;
 
     unicorn::Settings us;
+    us.beginGroup( "Users" );
     us.remove( m_name->text() );
+    us.endGroup();
 
     if ( us.userRoster().count() == 0 )
     {
         us.setValue( SETTING_FIRST_RUN_WIZARD_COMPLETED, false );
-        qApp->closeAllWindows();
         qobject_cast<unicorn::Application*>( qApp )->restart();
     }
 

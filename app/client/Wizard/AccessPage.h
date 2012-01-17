@@ -54,6 +54,7 @@ private slots:
 
 protected:
     QList<unicorn::LoginProcess*> m_loginProcesses;
+    bool m_valid;
 };
 
 #endif //AUTH_IN_PROGRESS_PAGE_H

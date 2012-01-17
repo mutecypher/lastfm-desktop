@@ -139,6 +139,37 @@ LoginProcess::authUrl() const
 }
 
 void
+LoginProcess::getToken()
+{
+    connect( unicorn::Session::getToken(), SIGNAL( finished() ), SLOT( onGotToken() ) );
+}
+
+void
+LoginProcess::onGotToken()
+{
+    lastfm::XmlQuery lfm;
+
+    if ( lfm.parse( static_cast<QNetworkReply*>( sender() )->readAll() ) )
+    {
+        getSession( lfm["token"].text() );
+    }
+    else
+    {
+        qWarning() << lfm.parseError().message() << lfm.parseError().enumValue();
+
+        m_lastError = lfm.parseError();
+
+        if ( m_lastError.enumValue() == lastfm::ws::UnknownError )
+        {
+           m_lastNetworkError = static_cast<QNetworkReply*>( sender() )->error();
+        }
+
+        emit gotSession( 0 );
+    }
+}
+
+
+void
 LoginProcess::getSession( QString token )
 {
     m_token = token;
@@ -170,6 +201,8 @@ LoginProcess::onGotSession()
         {
            m_lastNetworkError = static_cast<QNetworkReply*>( sender() )->error();
         }
+
+        emit gotSession( 0 );
     }
 }
 
@@ -237,15 +270,6 @@ LoginProcess::showError() const
 #endif
             break;
     }
-}
-
-
-void
-LoginProcess::onGotDesktopToken()
-{
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>( sender());
-    QString tokenData = reply->readAll();
-    qDebug() << "Got Desktop Token: " << tokenData;
 }
 
 
