@@ -97,11 +97,11 @@ Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\imageformats";
 Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\phonon_backend"; Flags: ignoreversion
 
 ;media player plugin installers
-Source: "FooPlugin0.9.4Setup_2.3.1.2.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
-Source: "FooPlugin0.9Setup_2.1.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
-Source: "iTunesPluginWinSetup_5.0.0.0.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
-Source: "WinampPluginSetup_2.1.0.9.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
-Source: "WmpPluginSetup_2.1.0.6.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\FooPlugin0.9.4Setup_2.3.1.2.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\FooPlugin0.9Setup_2.1.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\iTunesPluginWinSetup_5.0.1.0.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\WinampPluginSetup_2.1.0.9.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\WmpPluginSetup_2.1.0.6.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
 
 ;3rd party
 Source: "..\..\..\_bin\WinSparkle.dll"; DestDir: "{app}"; Flags: ignoreversion
