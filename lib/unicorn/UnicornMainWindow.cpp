@@ -39,8 +39,8 @@
 #define SETTINGS_POSITION_KEY "MainWindowPosition"
 
 
-unicorn::MainWindow::MainWindow( QMenuBar* menuBar )
-    :QMainWindow(), m_menuBar( menuBar )
+unicorn::MainWindow::MainWindow( QMenuBar* menuBar, QWidget* parent )
+    :QMainWindow( parent ), m_menuBar( menuBar )
 {
     new QShortcut( QKeySequence(Qt::CTRL+Qt::Key_W), this, SLOT(close()) );
     new QShortcut( QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_L), this, SLOT(openLog()) );
