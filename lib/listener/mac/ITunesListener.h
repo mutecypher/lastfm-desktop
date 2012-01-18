@@ -23,6 +23,7 @@
 #include <QThread>
 #include <CoreFoundation/CoreFoundation.h>
 
+#include "lib/unicorn/mac/AppleScript.h"
 
 /** @author Max Howell <max@last.fm> */
 class ITunesListener : public QThread
@@ -41,8 +42,7 @@ signals:
     
 private:
     static bool iTunesIsPlaying();
-    /** @returns true if the currently playing track is music, ie. not a podcast */
-    static bool isMusic();
+
     /** iTunes notification center callback */
     static void callback( CFNotificationCenterRef, 
                           void*, 
@@ -56,6 +56,8 @@ private:
     State m_state;
     QString m_previousPid;
     class ITunesConnection* m_connection;
+
+    AppleScript m_currentTrackScript;
 };
 
 #endif
