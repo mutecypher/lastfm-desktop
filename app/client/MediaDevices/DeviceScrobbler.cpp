@@ -214,10 +214,19 @@ DeviceScrobbler::scrobbleIpodFiles( QStringList iPodScrobbleFiles, const IpodDev
             {
                 lastfm::Track track( tracks.at(i).toElement() );
 
-                int playcount = track.extra("playCount").toInt();
+                // don't add tracks to the list if they don't have an artist
+                // don't add podcasts to the list id podcast scrobbling is off
+                // don't add videos to the list (well, videos that aren't "music video")
 
-                for ( int j(0) ; j < playcount ; ++j )
-                    scrobbles << track;
+                if ( !track.artist().isNull()
+                     && ( unicorn::UserSettings().value( "podcasts", true ).toBool() || !track.isPodcast() )
+                     && !track.isVideo() )
+                {
+                    int playcount = track.extra("playCount").toInt();
+
+                    for ( int j(0) ; j < playcount ; ++j )
+                        scrobbles << track;
+                }
             }
         }
 

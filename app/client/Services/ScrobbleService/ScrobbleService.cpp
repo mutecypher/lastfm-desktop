@@ -39,7 +39,6 @@
 #endif
 
 ScrobbleService::ScrobbleService()
-    :m_scrobblingOn( true )
 {
 /// mediator
     m_mediator = new PlayerMediator(this);
@@ -80,23 +79,32 @@ ScrobbleService::ScrobbleService()
     resetScrobbler();
 }
 
+
+bool
+ScrobbleService::scrobblableTrack( const lastfm::Track& track ) const
+{
+    return unicorn::UserSettings().value( "scrobblingOn", true ).toBool()
+            && track.extra( "playerId" ) != "spt"
+            && !track.artist().isNull()
+            && ( unicorn::UserSettings().value( "podcasts", true ).toBool() || !track.isPodcast() );
+}
+
 bool
 ScrobbleService::scrobblingOn() const
 {
-    return m_scrobblingOn;
+    return scrobblableTrack( m_trackToScrobble );
 }
 
 void
-ScrobbleService::setScrobblingOn( bool scrobblingOn )
+ScrobbleService::scrobbleSettingsChanged()
 {
-    m_scrobblingOn = scrobblingOn;
+    bool scrobblingOn = scrobblableTrack( m_trackToScrobble );
 
-    if( m_as
-            && m_watch
-            && m_watch->scrobbled()
-            && m_currentTrack.scrobbleStatus() == Track::Null
-            && m_scrobblingOn
-            && m_trackToScrobble.extra( "playerId" ) != "spt" )
+    if ( m_as
+         && m_watch
+         && m_watch->scrobbled()
+         && m_trackToScrobble.scrobbleStatus() == Track::Null
+         && scrobblingOn )
         m_as->cache( m_trackToScrobble );
 
     emit scrobblingOnChanged( scrobblingOn );
@@ -105,10 +113,7 @@ ScrobbleService::setScrobblingOn( bool scrobblingOn )
 void
 ScrobbleService::submitCache()
 {
-    if ( m_as )
-    {
-        m_as->submit();
-    }
+    if ( m_as ) m_as->submit();
 }
 
 void 
@@ -224,7 +229,7 @@ ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
     {
         m_as->submit();
 
-        if ( m_scrobblingOn && t.extra( "playerId" ) != "spt" )
+        if ( scrobblableTrack( t ) )
         {
             qDebug() << "************** Now Playing..";
             m_as->nowPlaying( t );
@@ -295,8 +300,8 @@ ScrobbleService::onScrobble()
 {
     Q_ASSERT(m_connection);
 
-    if( m_as && m_scrobblingOn && m_trackToScrobble.extra( "playerId" ) != "spt" )
-            m_as->cache( m_trackToScrobble );
+    if( m_as && scrobblableTrack( m_trackToScrobble ) )
+        m_as->cache( m_trackToScrobble );
 }
 
 void 

@@ -132,10 +132,13 @@ ProgressBar::paintEvent( QPaintEvent* e )
                 p.setBrush( m_chunk );
                 p.drawRect( rect().adjusted( indent, 0, ((m_frame * width) / (m_track.duration() * 1000)) - width, -1) );
 
-                if ( ScrobbleService::instance().scrobblingOn() ||
-                     !ScrobbleService::instance().scrobblingOn() && m_track.scrobbleStatus() != Track::Null )
+                //bool scrobblingOn = unicorn::UserSettings().value( "scrobblingOn", true ).toBool();
+                bool scrobblingOn = ScrobbleService::instance().scrobblableTrack( m_track );
+
+                if ( scrobblingOn ||
+                     !scrobblingOn && m_track.scrobbleStatus() != Track::Null )
                 {
-                    if ( !ScrobbleService::instance().scrobblingOn() && m_track.scrobbleStatus() != Track::Null )
+                    if ( !scrobblingOn && m_track.scrobbleStatus() != Track::Null )
                     {
                         QTextOption textOption;
                         textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
@@ -169,9 +172,16 @@ ProgressBar::paintEvent( QPaintEvent* e )
                 }
                 else
                 {
+                    QString offMessage = tr( "Scrobbling off" );
+
+                    if ( unicorn::UserSettings().value( "scrobblingOn", true ).toBool()
+                         && !unicorn::UserSettings().value( "podcasts", true ).toBool() )
+                        offMessage = tr( "Track is a podcast" );
+
+                    p.setPen( QColor( 0x333333 ) );
                     QTextOption textOption;
                     textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
-                    p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr( "Scrobbling off" ), textOption );
+                    p.drawText( rect().adjusted( 0, 0, -6, 0 ), offMessage, textOption );
                 }
             }
             else

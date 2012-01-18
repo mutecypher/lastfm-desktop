@@ -39,8 +39,8 @@ public:
     ScrobbleService();
     ~ScrobbleService();
 
-    bool scrobblingOn() const;
-    void setScrobblingOn( bool scrobblingOn );
+    void scrobbleSettingsChanged();
+    bool scrobblableTrack( const lastfm::Track& track ) const;
 
     Track currentTrack() const { return m_currentTrack; }
     QPointer<DeviceScrobbler> deviceScrobbler() { return m_deviceScrobbler; }
@@ -93,6 +93,7 @@ protected slots:
 
 private:
     void resetScrobbler();
+    bool scrobblingOn() const;
 
 protected:
     State state;
@@ -104,7 +105,6 @@ protected:
     QPointer <DeviceScrobbler> m_deviceScrobbler;
     Track m_currentTrack;
     Track m_trackToScrobble;
-    bool m_scrobblingOn;
 };
 
 

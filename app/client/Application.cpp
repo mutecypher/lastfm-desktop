@@ -237,7 +237,7 @@ Application::init()
     m_submit_scrobbles_toggle->setCheckable( true );
     bool scrobblingOn = unicorn::UserSettings().value( "scrobblingOn", true ).toBool();
     m_submit_scrobbles_toggle->setChecked( scrobblingOn );
-    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
+    ScrobbleService::instance().scrobbleSettingsChanged();
 
     connect( m_submit_scrobbles_toggle, SIGNAL(toggled(bool)), SLOT(onScrobbleToggled(bool)) );
 
@@ -403,7 +403,7 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
     {
         m_currentTrack = track;
 
-        if ( track.extra( "playerId" ) != "spt" )
+        if ( ScrobbleService::instance().scrobblableTrack( m_currentTrack ) )
         {
 #ifdef Q_OS_MAC
             m_notify->newTrack( track );
@@ -519,7 +519,7 @@ void
 Application::onScrobbleToggled( bool scrobblingOn )
 {
     unicorn::UserSettings().setValue( "scrobblingOn", scrobblingOn );
-    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
+    ScrobbleService::instance().scrobbleSettingsChanged();
     m_submit_scrobbles_toggle->setChecked( scrobblingOn );
 }
 
@@ -565,7 +565,8 @@ Application::onWsError( lastfm::ws::Error e )
     switch (e)
     {
         case lastfm::ws::InvalidSessionKey:
-            quit();
+            //quit();
+            // ask the current user to reauthenticate!
             break;
         default:
             break;
