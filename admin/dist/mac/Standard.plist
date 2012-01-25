@@ -42,5 +42,7 @@
 	<string>30</string>
 	<key>BreakpadRequestComments</key>
 	<string>YES</string>
+	<key>CFBundleName</key>
+	<string>Last.fm</string>
 </dict>
 </plist>
