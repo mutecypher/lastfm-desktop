@@ -47,14 +47,16 @@ win32 {
     system( chmod a+r ITunesEventInterface.h )
 
     SOURCES += ITunesLibrary_win.cpp \
-			   ITunesTrack.cpp \
+               ITunesTrack.cpp \
                ITunesComWrapper.cpp \
                $$ROOT_DIR/plugins/scrobsub/EncodingUtils.cpp \
                $$ROOT_DIR/lib/3rdparty/iTunesCOMAPI/iTunesCOMInterface_i.c
 
     HEADERS += ITunesTrack.h \
                ITunesComWrapper.h \
-               $$ROOT_DIR/plugins/scrobsub/EncodingUtils.h \
+               ITunesEventInterface.h \
+               ITunesExceptions.h \
+               $$ROOT_DIR/plugins/scrobsub/EncodingUtils.h
 
     LIBS += -lcomsuppw
 
