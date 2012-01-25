@@ -75,6 +75,7 @@ Source: "..\..\..\_bin\iPodScrobbler.exe"; DestDir: "{app}"; Flags: ignoreversio
 Source: "..\..\..\_bin\lastfm.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\unicorn.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\listener.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\logger.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ;Visual Studio redistributable packages
 Source: "%VSDIR%\VC\redist\x86\Microsoft.VC90.CRT\*"; DestDir: "{app}"; Flags: ignoreversion
