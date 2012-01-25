@@ -1,6 +1,7 @@
 TEMPLATE = subdirs
 CONFIG += ordered
-SUBDIRS = lib/unicorn \
+SUBDIRS = lib/logger \
+          lib/unicorn \
           lib/listener \
           app/client \
           app/twiddly

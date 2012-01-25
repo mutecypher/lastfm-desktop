@@ -23,19 +23,25 @@
 /** Exports symbols when compiled as part of the lib
   * Imports when included from some other target */
 #if defined(_WIN32) || defined(WIN32)
-	#ifdef _UNICORN_DLLEXPORT
-	    #define UNICORN_DLLEXPORT __declspec(dllexport)
-	#else
-	    #define UNICORN_DLLEXPORT __declspec(dllimport)
-	#endif
-	#ifdef _LISTENER_DLLEXPORT
-	    #define LISTENER_DLLEXPORT __declspec(dllexport)
-	#else
-	    #define LISTENER_DLLEXPORT __declspec(dllimport)
-	#endif
+    #ifdef _UNICORN_DLLEXPORT
+        #define UNICORN_DLLEXPORT __declspec(dllexport)
+    #else
+        #define UNICORN_DLLEXPORT __declspec(dllimport)
+    #endif
+    #ifdef _LISTENER_DLLEXPORT
+        #define LISTENER_DLLEXPORT __declspec(dllexport)
+    #else
+        #define LISTENER_DLLEXPORT __declspec(dllimport)
+    #endif
+    #ifdef _LOGGER_DLLEXPORT
+        #define LOGGER_DLLEXPORT __declspec(dllexport)
+    #else
+        #define LOGGER_DLLEXPORT __declspec(dllimport)
+    #endif
 #else
     #define UNICORN_DLLEXPORT
     #define LISTENER_DLLEXPORT
+    #define LOGGER_DLLEXPORT
 #endif
 
 #endif

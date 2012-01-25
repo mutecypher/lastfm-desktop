@@ -28,7 +28,7 @@
     #include <pthread.h>
 #endif
 
-Logger* Logger::instance = 0;
+Logger* instance = 0;
 
 Logger::Logger( const COMMON_CHAR* path, Severity severity ) 
       : mLevel( severity )

@@ -21,6 +21,8 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#include "lib/DllExportMacro.h"
+
 #include "common/c++/string.h"
 #include <fstream>
 #include <sstream>
@@ -29,10 +31,8 @@
 #endif
 
 
-class Logger
+class LOGGER_DLLEXPORT Logger
 {
-    static Logger* instance;
-
 public:
     enum Severity
     {
@@ -77,6 +77,6 @@ private:
 #define LOGW( level, msg ) { \
 	std::wostringstream ss; \
 	ss << msg; \
-	Logger::the().log( (Logger::Severity) level, ss.str(), __FUNCTION__, __LINE__ ); }
+        Logger::the().log( (Logger::Severity) level, ss.str(), __FUNCTION__, __LINE__ ); }
 #define LOGWL LOGW
 #endif

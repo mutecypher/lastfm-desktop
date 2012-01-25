@@ -11,6 +11,10 @@ CONFIG( fingerprint ) {
     LIBS += -llastfm_fingerprint
     CONFIG += lastfm
 }
+CONFIG( logger ) {
+    LIBS += -llogger
+    CONFIG += lastfm
+}
 CONFIG( lastfm ) {
     QT += core network xml
     LIBS += -llastfm
