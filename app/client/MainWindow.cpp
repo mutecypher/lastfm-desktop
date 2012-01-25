@@ -168,8 +168,6 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     resize( 565, 710 );
 
-    show();
-
 #ifdef Q_OS_WIN32
     m_pluginList = new PluginList( this );
 

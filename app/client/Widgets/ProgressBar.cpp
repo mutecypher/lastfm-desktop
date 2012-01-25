@@ -174,9 +174,13 @@ ProgressBar::paintEvent( QPaintEvent* e )
                 {
                     QString offMessage = tr( "Scrobbling off" );
 
-                    if ( unicorn::UserSettings().value( "scrobblingOn", true ).toBool()
-                         && !unicorn::UserSettings().value( "podcasts", true ).toBool() )
-                        offMessage = tr( "Track is a podcast" );
+                    if ( unicorn::UserSettings().value( "scrobblingOn", true ).toBool() )
+                    {
+                        if ( m_track.isVideo() )
+                            offMessage = tr( "Not a music video" );
+                        if ( !unicorn::UserSettings().value( "podcasts", true ).toBool() )
+                            offMessage = tr( "Podcast scrobbling disabled" );
+                    }
 
                     p.setPen( QColor( 0x333333 ) );
                     QTextOption textOption;
@@ -188,7 +192,7 @@ ProgressBar::paintEvent( QPaintEvent* e )
             {
                 QTextOption textOption;
                 textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
-                p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr( "Track too short" ), textOption );
+                p.drawText( rect().adjusted( 0, 0, -6, 0 ), tr( "Too short" ), textOption );
             }
         }
         else

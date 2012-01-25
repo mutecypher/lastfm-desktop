@@ -17,9 +17,17 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "PlayerCommandParser.h"
+
 #include <QStringList>
 #include <QUrl>
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
+
+#include "plugins/iTunes/ITunesComWrapper.h"
+
+#include "PlayerCommandParser.h"
+
 using std::invalid_argument;
 
 PlayerCommandParser::PlayerCommandParser( QString line ) throw( std::invalid_argument )
@@ -171,7 +179,7 @@ PlayerCommandParser::requiredArgs( PlayerCommand c )
 Track
 PlayerCommandParser::extractTrack( const QMap<QChar, QString>& args )
 {
-    MutableTrack track;
+    lastfm::MutableTrack track;
     track.setArtist( args['a'] );
     track.setTitle( args['t'] );
     track.setAlbum( args['b'] );
@@ -181,6 +189,30 @@ PlayerCommandParser::extractTrack( const QMap<QChar, QString>& args )
     track.setSource( Track::Player );
     track.setExtra( "playerId", args['c'] );
     track.setExtra( "playerName", playerName() );
+
+#ifdef Q_OS_WIN
+
+    if ( args['c'] == "itw" )
+    {
+        ITunesComWrapper* com = new ITunesComWrapper;
+        ITunesTrack comTrack = com->currentTrack();
+        bool podcast = comTrack.podcast();
+        bool video = comTrack.video();
+        QString path = QString::fromStdWString( comTrack.path() );
+
+        qDebug() << QString::fromStdWString( comTrack.artist() )
+                 << QString::fromStdWString( comTrack.track() )
+                 << podcast
+                 << video
+                 << path;
+
+        track.setUrl( path );
+        track.setPodcast( podcast );
+        track.setVideo( video );
+        delete com;
+    }
+
+#endif
 
     //TODO should be done earlier, NOTE don't get the plugin to send a stamp 
     // time as this is prolly unecessary, and I bet you get new bugs!

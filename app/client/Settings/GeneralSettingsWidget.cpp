@@ -82,7 +82,10 @@ GeneralSettingsWidget::saveSettings()
         unicorn::Settings().setValue( SETTING_SHOW_AS, ui->showAs->isChecked() );
         aApp->showAs( ui->showAs->isChecked() );
 
-        unicorn::Settings().setValue( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() );
+        // setting is for the 'Client' aplication for compatibility with old media player plugins
+        unicorn::AppSettings( "Client" ).setValue( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() );
+
+        //
         unicorn::Settings().setValue( SETTING_NOTIFICATIONS, ui->notifications->isChecked() );
         unicorn::Settings().setValue( SETTING_LAST_RADIO, ui->lastRadio->isChecked() );
         unicorn::Settings().setValue( SETTING_SEND_CRASH_REPORTS, ui->sendCrashReports->isChecked() );

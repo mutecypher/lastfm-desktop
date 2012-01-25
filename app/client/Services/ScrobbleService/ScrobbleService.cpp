@@ -86,7 +86,8 @@ ScrobbleService::scrobblableTrack( const lastfm::Track& track ) const
     return unicorn::UserSettings().value( "scrobblingOn", true ).toBool()
             && track.extra( "playerId" ) != "spt"
             && !track.artist().isNull()
-            && ( unicorn::UserSettings().value( "podcasts", true ).toBool() || !track.isPodcast() );
+            && ( unicorn::UserSettings().value( "podcasts", true ).toBool() || !track.isPodcast() )
+            && !track.isVideo();
 }
 
 bool
@@ -247,7 +248,7 @@ ScrobbleService::onPaused()
 
     state = Paused;
 
-    m_currentTrack.removeNowPlaying();
+    //m_currentTrack.removeNowPlaying();
 
     Q_ASSERT(m_connection);
     Q_ASSERT(m_watch);
@@ -287,7 +288,7 @@ ScrobbleService::onResumed()
     Q_ASSERT(m_watch);
     Q_ASSERT(m_connection);
 
-    m_currentTrack.updateNowPlaying( m_currentTrack.duration() - (m_watch->elapsed()/1000) );
+    //m_currentTrack.updateNowPlaying( m_currentTrack.duration() - (m_watch->elapsed()/1000) );
 
     if (m_watch)
         m_watch->resume();

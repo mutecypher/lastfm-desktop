@@ -7,7 +7,7 @@ macx:CONFIG( app_bundle ) {
     QMAKE_POST_LINK += $$ROOT_DIR/admin/dist/mac/bundleFrameworks.sh \"$$DESTDIR/$$TARGET\"
 }
 
-CONFIG += lastfm
+CONFIG += lastfm logger
 CONFIG -= app_bundle
 
 include( $$ROOT_DIR/admin/include.qmake )
@@ -16,13 +16,11 @@ DEFINES += LASTFM_COLLAPSE_NAMESPACE
 SOURCES = main.cpp \
           TwiddlyApplication.cpp \
           PlayCountsDatabase.cpp \
-          IPod.cpp \
-          $$ROOT_DIR/common/c++/Logger.cpp
+          IPod.cpp
 
 HEADERS = TwiddlyApplication.h \
           PlayCountsDatabase.h \
-          IPod.h \
-          $$ROOT_DIR/common/c++/Logger.h
+          IPod.h
 
 mac {
     SOURCES += ITunesLibrary_mac.cpp
@@ -49,14 +47,16 @@ win32 {
     system( chmod a+r ITunesEventInterface.h )
 
     SOURCES += ITunesLibrary_win.cpp \
-			   ITunesTrack.cpp \
+               ITunesTrack.cpp \
                ITunesComWrapper.cpp \
                $$ROOT_DIR/plugins/scrobsub/EncodingUtils.cpp \
                $$ROOT_DIR/lib/3rdparty/iTunesCOMAPI/iTunesCOMInterface_i.c
 
     HEADERS += ITunesTrack.h \
                ITunesComWrapper.h \
-               $$ROOT_DIR/plugins/scrobsub/EncodingUtils.h \
+               ITunesEventInterface.h \
+               ITunesExceptions.h \
+               $$ROOT_DIR/plugins/scrobsub/EncodingUtils.h
 
     LIBS += -lcomsuppw
 

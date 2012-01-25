@@ -1,7 +1,7 @@
 TARGET = listener
 TEMPLATE = lib
 QT = core xml network
-CONFIG += unicorn
+CONFIG += unicorn logger
 
 # basically not easy to support on other platforms, but feel free to fork
 linux*:QT += dbus
@@ -17,7 +17,7 @@ SOURCES += \
 	PlayerListener.cpp \
 	PlayerConnection.cpp \
 	PlayerCommandParser.cpp \
-    legacy/LegacyPlayerListener.cpp \
+        legacy/LegacyPlayerListener.cpp \
 	DBusListener.cpp
 
 HEADERS += \
@@ -35,7 +35,22 @@ mac:SOURCES += mac/ITunesListener.cpp \
 
 mac:HEADERS += mac/ITunesListener.h \
                 mac/SpotifyListener.h
-				
-win32:SOURCES += win/SpotifyListener.cpp
 
-win32:HEADERS += win/SpotifyListener.h
+win32 {
+    SOURCES += win/SpotifyListener.cpp \
+               ../../plugins/iTunes/ITunesTrack.cpp \
+               ../../plugins/iTunes/ITunesComWrapper.cpp \
+               $$ROOT_DIR/plugins/scrobsub/EncodingUtils.cpp \
+               $$ROOT_DIR/lib/3rdparty/iTunesCOMAPI/iTunesCOMInterface_i.c
+
+    HEADERS += win/SpotifyListener.h \
+               ../../plugins/iTunes/ITunesTrack.h \
+               ../../plugins/iTunes/ITunesComWrapper.h \
+               ../../plugins/iTunes/ITunesEventInterface.h \
+               ../../plugins/iTunes/ITunesExceptions.h \
+               $$ROOT_DIR/plugins/scrobsub/EncodingUtils.h
+
+    LIBS += -lcomsuppw
+
+    DEFINES += _WIN32_DCOM
+}

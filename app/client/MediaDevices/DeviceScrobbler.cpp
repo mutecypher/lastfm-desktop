@@ -215,7 +215,7 @@ DeviceScrobbler::scrobbleIpodFiles( QStringList iPodScrobbleFiles, const IpodDev
                 lastfm::Track track( tracks.at(i).toElement() );
 
                 // don't add tracks to the list if they don't have an artist
-                // don't add podcasts to the list id podcast scrobbling is off
+                // don't add podcasts to the list if podcast scrobbling is off
                 // don't add videos to the list (well, videos that aren't "music video")
 
                 if ( !track.artist().isNull()
