@@ -24,7 +24,7 @@
 #include "ITunesExceptions.h"
 
 #ifdef WIN32
-    // Disable gay warning about exception specifications
+    // Disable warning about exception specifications
     #pragma warning( disable : 4290 )
 
 	struct IITTrack;
@@ -76,6 +76,10 @@ public:
     /** These two fields are always populated when an iTunes track is created */
     std::wstring persistentId() const { return m_id; }
     std::wstring path() const { return m_path; }
+
+    /** podcasts have the option of not scrobbling and videos are never scrobbled */
+    bool podcast();
+    bool video();
 
   #else
       

@@ -139,86 +139,6 @@ TryMemory( wchar_t* ptr )
     return true;
 }
 
-
-static wchar_t*
-SearchForPathDirectional( wchar_t*      pStart,
-                          std::wstring& fileName,
-                          int           increment,
-                          int           bytesToSearch )
-{
-    int count = increment;
-
-    while ( abs( count ) < bytesToSearch )
-    {
-        // We have to check that it's OK to access the memory or we might crash
-        // iTunes.
-        wchar_t current;
-        wchar_t next;
-        if ( TryMemory( pStart + count ) && TryMemory( pStart + count + 1 ) )
-        {
-            current = pStart[count];
-            next = pStart[count + 1];
-        }
-        else
-        {
-            // We've triggered an invalid memory access. Stop.
-            LOGL( 1, "Bad memory access stopped path search" );
-            return NULL;
-        }
-
-        if( current == L':' && next == '\\' ||
-            current == L'\\' && next == '\\' )
-        {
-            std::ostringstream os;
-            os << "Path candidate found at offset " << count;
-            LOGL( 3, os.str() );
-
-            // Do an extra check here by searching for the filename
-            // within MAX_PATH chars of this.
-            std::wstring sPath(&pStart[count], MAX_PATH);
-            if (sPath.find(fileName, 0) != std::wstring::npos)
-            {
-                LOGL( 3, "Candidate matched filename");
-                if ( pStart[count] == L':' )
-                {
-                    // Drive letter is one step before our current pos
-                    --count;
-                }
-                return &pStart[count];
-            }
-        }
-
-        count += increment;
-    }
-
-    LOGL( 3, "No path found");
-    return NULL;
-}
-
-
-static wchar_t*
-SearchForPath( wchar_t* pStart, std::wstring& fileName )
-{
-    // This is a startlingly bad way to find the filename.
-    // It's in memory somewhere around the current
-    // play message, so we just saunter up there and get it :-)
-
-    // Reason this is done is that pTrack->fileName
-    // doesn't include the full path.
-
-    // In iTunes < 7, the path seems to be ahead of this location,
-    // in later versions it seems to be 289 bytes before it, so
-    // let's try the version 7 method first.
-
-    wchar_t* path = SearchForPathDirectional( pStart, fileName, -1, 1000 );
-
-    if ( path == NULL )
-        path =  SearchForPathDirectional( pStart, fileName, 1, 10000 );
-
-    return path;
-}
-
-
 void
 LogTrack()
 {
@@ -418,8 +338,7 @@ HandleTrack( ITTrackInfo* pTrack )
 
             if ( fileName.size() > 0 )
             {
-                wchar_t* pPath = SearchForPath((wchar_t*)pTrack->name, fileName);
-                gPath = pPath == NULL ? fileName : pPath;
+                gPath = fileName;
             }
             else
             {
