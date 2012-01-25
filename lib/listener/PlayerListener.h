@@ -49,12 +49,17 @@ public:
 signals:
     void newConnection( class PlayerConnection* );
     void bootstrapCompleted( const QString& playerId );
+#ifdef Q_OS_WIN
     void pipeConnected();
+#endif
 
 private slots:
     void onNewConnection();
     void onDataReady();
+
+#ifdef Q_OS_WIN
     void onPipeConnected();
+#endif
 
 private:
     QString processLine( const QString& line );

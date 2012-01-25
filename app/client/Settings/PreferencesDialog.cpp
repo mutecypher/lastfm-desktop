@@ -46,7 +46,7 @@ PreferencesDialog::PreferencesDialog( QMenuBar* menuBar, QWidget* parent )
     connect( ui->actionAdvanced, SIGNAL(triggered()), SLOT(onTabButtonClicked()));
 
 #ifdef Q_OS_MAC
-    ui.buttons->hide();
+    ui->buttonBox->hide();
 #endif
     connect( ui->buttonBox, SIGNAL( accepted() ), SLOT( onAccepted() ) );
     connect( ui->buttonBox, SIGNAL( rejected() ), SLOT( reject() ) );
