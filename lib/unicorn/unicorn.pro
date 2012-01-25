@@ -131,18 +131,19 @@ HEADERS += \
     CrashReporter/CrashReporter.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp \
-               Updater/Updater.cpp \
+                    Updater/Updater.cpp \
                     CrashReporter/CrashReporter.cpp
 	
 
 macx:SOURCES += mac/AppleScript.cpp \
-               UnicornApplication_mac.mm \
-               Updater/Updater.mm \
-               notify/Notify.mm \
-                CrashReporter/CrashReporter.mm
 
 macx:HEADERS += mac/AppleScript.h \
                 notify/Notify.h
+
+macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
+                           Updater/Updater.mm \
+                           notify/Notify.mm \
+                           CrashReporter/CrashReporter.mm
 
 FORMS += \
 	dialogs/ShareDialog.ui \
