@@ -254,7 +254,10 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
     aApp->playAction()->setChecked( true );
 
     if ( !m_movie )
+    {
         m_movie = new QMovie( ":/loading_radio.gif", "GIF", this );
+        m_movie->setCacheMode( QMovie::CacheAll );
+    }
 
     ui->icon->setMovie( m_movie );
     m_movie->start();

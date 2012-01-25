@@ -304,7 +304,8 @@ FirstRunWizard::onBootstrapStarted( const QString& pluginId )
 
     ui->importLabel->setText( tr( "Importing..." ) );
 
-    QMovie* movie = new QMovie( ":/graphic_import.gif", "gif", this );
+    QMovie* movie = new QMovie( ":/graphic_import.gif", "GIF", this );
+    movie->setCacheMode( QMovie::CacheAll );
     ui->importIcon->setMovie( movie );
     movie->start();
 
