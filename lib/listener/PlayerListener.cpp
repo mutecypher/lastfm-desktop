@@ -25,7 +25,7 @@
 #include <QFile>
 #include <QThread>
 
-#ifdef WIN32
+#ifdef Q_OS_WIN
 #include "common/c++/win/scrobSubPipeName.cpp"
 #include <tchar.h>
 #include <strsafe.h>
@@ -42,7 +42,7 @@ PlayerListener::PlayerListener( QObject* parent ) throw( std::runtime_error )
     // User-unique so that different logged-on users 
     // can run their own scrobbler instances.
 
-#ifdef WIN32   
+#ifdef Q_OS_WIN
     connect( this, SIGNAL(pipeConnected()), this, SLOT(onPipeConnected()));
 
     m_connectEvent = CreateEvent( NULL, TRUE, FALSE, NULL );
@@ -72,6 +72,7 @@ PlayerListener::PlayerListener( QObject* parent ) throw( std::runtime_error )
 #endif
 }
 
+#ifdef Q_OS_WIN
 bool PlayerListener::addListener()
 {
     // The object must not change its address once the
@@ -128,8 +129,6 @@ bool PlayerListener::addListener()
     }
     return true;
 }
-
-#ifdef WIN32
 
 VOID
 PlayerListener::onConnectedNamedPipe( PVOID lpParameter, BOOLEAN TimerOrWaitFired )

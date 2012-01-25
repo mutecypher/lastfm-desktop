@@ -20,8 +20,10 @@
 
 #include <QStringList>
 #include <QUrl>
-
+#ifdef Q_OS_WIN
 #include <windows.h>
+#endif
+
 #include "plugins/iTunes/ITunesComWrapper.h"
 
 #include "PlayerCommandParser.h"
@@ -188,7 +190,7 @@ PlayerCommandParser::extractTrack( const QMap<QChar, QString>& args )
     track.setExtra( "playerId", args['c'] );
     track.setExtra( "playerName", playerName() );
 
-#ifdef WIN32
+#ifdef Q_OS_WIN
 
     if ( args['c'] == "itw" )
     {
