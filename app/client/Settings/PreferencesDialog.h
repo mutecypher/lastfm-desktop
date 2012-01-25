@@ -20,9 +20,6 @@ public:
 signals:
     void saveNeeded();
 
-private:
-    void closeEvent(QCloseEvent *);
-
 private slots:
     void onTabButtonClicked();
 

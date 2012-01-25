@@ -47,7 +47,7 @@
    <item row="2" column="1">
     <widget class="QCheckBox" name="launch">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="text">
       <string>Launch application with media players</string>
@@ -60,7 +60,7 @@
    <item row="3" column="1">
     <widget class="QCheckBox" name="notifications">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="text">
       <string>Show desktop notifications</string>
@@ -97,6 +97,9 @@
      </property>
      <property name="text">
       <string>Check for updates automatically</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

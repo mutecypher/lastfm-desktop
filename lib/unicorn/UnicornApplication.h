@@ -35,7 +35,7 @@
 #endif
 
 #define SETTING_SHOW_AS "showAS"
-#define SETTING_LAUNCH_ITUNES "launchItunes"
+#define SETTING_LAUNCH_ITUNES "LaunchWithMediaPlayer"
 #define SETTING_NOTIFICATIONS "notifications"
 #define SETTING_LAST_RADIO "lastRadio"
 #define SETTING_SEND_CRASH_REPORTS "sendCrashReports"

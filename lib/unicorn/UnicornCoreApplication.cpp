@@ -41,10 +41,6 @@ unicorn::CoreApplication::CoreApplication( int& argc, char** argv )
                       : QtSingleCoreApplication( argc, argv )
 {
     init();
-    
-//  AppSettings s;
-//  lastfm::ws::Username = s.value( "Username" ).toString();
-//  lastfm::ws::SessionKey = s.value( "SessionKey" ).toString();
 }
 
 void //static

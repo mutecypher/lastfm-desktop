@@ -403,7 +403,8 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
     {
         m_currentTrack = track;
 
-        if ( ScrobbleService::instance().scrobblableTrack( m_currentTrack ) )
+        if ( ScrobbleService::instance().scrobblableTrack( m_currentTrack )
+             && unicorn::Settings().value( SETTING_NOTIFICATIONS, true ).toBool() )
         {
 #ifdef Q_OS_MAC
             m_notify->newTrack( track );
@@ -519,8 +520,8 @@ void
 Application::onScrobbleToggled( bool scrobblingOn )
 {
     unicorn::UserSettings().setValue( "scrobblingOn", scrobblingOn );
-    ScrobbleService::instance().scrobbleSettingsChanged();
     m_submit_scrobbles_toggle->setChecked( scrobblingOn );
+    ScrobbleService::instance().scrobbleSettingsChanged();
 }
 
 void

@@ -1,6 +1,7 @@
 
 #include <QToolBar>
 #include <QToolButton>
+#include <QPushButton>
 #include <QShortcut>
 
 #include "PreferencesDialog.h"
@@ -44,11 +45,12 @@ PreferencesDialog::PreferencesDialog( QMenuBar* menuBar, QWidget* parent )
     connect( ui->actionAccounts, SIGNAL(triggered()), SLOT(onTabButtonClicked()));
     connect( ui->actionAdvanced, SIGNAL(triggered()), SLOT(onTabButtonClicked()));
 
-#ifndef Q_OS_MAC
-//    connect( ui.buttons, SIGNAL( accepted() ), this, SLOT( onAccepted() ) );
-//    connect( ui.buttons, SIGNAL( rejected() ), this, SLOT( reject() ) );
-//    connect( ui.buttons->button( QDialogButtonBox::Apply ), SIGNAL( clicked() ), SLOT( onApplyButtonClicked() ) );
+#ifdef Q_OS_MAC
+    ui.buttons->hide();
 #endif
+    connect( ui->buttonBox, SIGNAL( accepted() ), SLOT( onAccepted() ) );
+    connect( ui->buttonBox, SIGNAL( rejected() ), SLOT( reject() ) );
+    connect( ui->buttonBox->button( QDialogButtonBox::Apply ), SIGNAL( clicked() ), SLOT( onApplyButtonClicked() ) );
 
     ui->actionGeneral->trigger();
 }
@@ -56,13 +58,6 @@ PreferencesDialog::PreferencesDialog( QMenuBar* menuBar, QWidget* parent )
 PreferencesDialog::~PreferencesDialog()
 {
     delete ui;
-}
-
-
-void
-PreferencesDialog::closeEvent( QCloseEvent* )
-{
-    emit saveNeeded();
 }
 
 void
@@ -94,16 +89,12 @@ PreferencesDialog::onAccepted()
 void
 PreferencesDialog::onSettingsChanged()
 {
-#ifndef Q_OS_MAC
-    //ui->buttons->button( QDialogButtonBox::Apply )->setEnabled( true );
-#endif
+    ui->buttonBox->button( QDialogButtonBox::Apply )->setEnabled( true );
 }
 
 void
 PreferencesDialog::onApplyButtonClicked()
 {
-#ifndef Q_OS_MAC
     emit saveNeeded();
-    //ui->buttons->button( QDialogButtonBox::Apply )->setEnabled( false );
-#endif
+    ui->buttonBox->button( QDialogButtonBox::Apply )->setEnabled( false );
 }
