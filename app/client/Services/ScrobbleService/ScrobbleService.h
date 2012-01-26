@@ -39,7 +39,7 @@ public:
     ScrobbleService();
     ~ScrobbleService();
 
-    void scrobbleSettingsChanged();
+
     bool scrobblableTrack( const lastfm::Track& track ) const;
 
     Track currentTrack() const { return m_currentTrack; }
@@ -63,6 +63,7 @@ public:
 public slots:
     void onSessionChanged( unicorn::Session* );
     void onScrobble();
+    void scrobbleSettingsChanged();
 
 signals:
     void trackStarted( Track, Track );
