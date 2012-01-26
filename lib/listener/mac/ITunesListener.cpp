@@ -218,7 +218,7 @@ ITunesListener::callback( CFDictionaryRef info )
                 m_connection->resume();
             //else the user changed some metadata or the track's rating etc.
         }
-        else if ( !artist.isEmpty() && !video )
+        else
         {
             MutableTrack t;
             t.setArtist( artist );
@@ -271,15 +271,12 @@ ITunesListener::setupCurrentTrack()
 
     m_previousPid = persistentID;
         
-    if ( !artist.isEmpty() && !video )
-    {
-        MutableTrack t;
-        t.setArtist( artist );
-        t.setTitle( track );
-        t.setAlbum( album );
-        t.setDuration( duration.toInt() );
-        t.setUrl( QUrl::fromLocalFile( path ) );
-        t.setPodcast( podcast );
-        m_connection->start( t );
-    }
+    MutableTrack t;
+    t.setArtist( artist );
+    t.setTitle( track );
+    t.setAlbum( album );
+    t.setDuration( duration.toInt() );
+    t.setUrl( QUrl::fromLocalFile( path ) );
+    t.setPodcast( podcast );
+    m_connection->start( t );
 }
