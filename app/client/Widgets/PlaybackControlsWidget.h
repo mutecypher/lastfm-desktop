@@ -1,6 +1,7 @@
 #ifndef PLAYBACKCONTROLS_H
 #define PLAYBACKCONTROLS_H
 
+#include <QAction>
 #include <QWidget>
 #include <QPointer>
 
@@ -51,6 +52,8 @@ private:
 
 private:
     Ui::PlaybackControlsWidget *ui;
+
+    QPointer<QAction> m_playAction;
 
     bool m_scrobbleTrack;
     QPointer<QMovie> m_movie;
