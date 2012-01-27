@@ -141,6 +141,8 @@ namespace audioscrobbler
         void bootstrapStarted( const QString& pluginId );
         void bootstrapDone( int status );
 
+        void scrobbleToggled( bool on );
+
     public slots:
         void quit();
         void actuallyQuit();
@@ -152,6 +154,8 @@ namespace audioscrobbler
         void parseArguments( const QStringList& args );
 
         void onPrefsTriggered();
+
+        void onScrobbleToggled( bool scrobblingOn );
 
     protected:
         virtual void initiateLogin( bool forceWizard ) throw( StubbornUserException );
@@ -174,8 +178,6 @@ namespace audioscrobbler
 
         void showWindow();
         void toggleWindow();
-
-        void onScrobbleToggled( bool scrobblingOn );
 
         void onTrackStarted( const Track&, const Track& );
         void onTrackPaused( bool );

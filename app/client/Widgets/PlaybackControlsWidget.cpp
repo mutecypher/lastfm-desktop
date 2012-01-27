@@ -34,6 +34,10 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     connect( aApp->playAction(), SIGNAL(triggered(bool)), SLOT(onPlayClicked(bool)) );
     connect( aApp->skipAction(), SIGNAL(triggered(bool)), SLOT(onSkipClicked()) );
 
+    m_playAction = new QAction( tr( "Play" ), aApp );
+    connect( m_playAction, SIGNAL(triggered(bool)), aApp->playAction(), SLOT(trigger()) );
+    connect( aApp->playAction(), SIGNAL(toggled(bool)), m_playAction, SLOT(setChecked(bool)) );
+
     // make sure this widget updates if the actions are changed elsewhere
     connect( aApp->loveAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
     connect( aApp->banAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
@@ -59,7 +63,7 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
 void
 PlaybackControlsWidget::addToMenu( QMenu& menu )
 {
-    menu.addAction( aApp->playAction() );
+    menu.addAction( m_playAction );
 
     menu.addSeparator();
 
@@ -106,6 +110,8 @@ PlaybackControlsWidget::onActionsChanged()
    ui->ban->setChecked( aApp->banAction()->isChecked() );
    ui->play->setChecked( aApp->playAction()->isChecked() );
    ui->skip->setChecked( aApp->skipAction()->isChecked() );
+
+   m_playAction->setText( aApp->playAction()->isChecked() ? tr( "Pause" ) : RadioService::instance().state() == Stopped ? tr( "Play" ) : tr( "Resume" ) );
 
    ui->love->setEnabled( aApp->loveAction()->isEnabled() );
    ui->ban->setEnabled( aApp->banAction()->isEnabled() );

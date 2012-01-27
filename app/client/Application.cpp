@@ -233,13 +233,14 @@ Application::init()
 
     menu->addSeparator();
 
-    m_submit_scrobbles_toggle = menu->addAction( tr("Submit Scrobbles") );
+    m_submit_scrobbles_toggle = menu->addAction( tr("Enable Scrobbling") );
     m_submit_scrobbles_toggle->setCheckable( true );
     bool scrobblingOn = unicorn::UserSettings().value( "scrobblingOn", true ).toBool();
     m_submit_scrobbles_toggle->setChecked( scrobblingOn );
     ScrobbleService::instance().scrobbleSettingsChanged();
 
     connect( m_submit_scrobbles_toggle, SIGNAL(toggled(bool)), SLOT(onScrobbleToggled(bool)) );
+    connect( this, SIGNAL(scrobbleToggled(bool)), &ScrobbleService::instance(), SLOT(scrobbleSettingsChanged()) );
 
     menu->addSeparator();
 
@@ -521,7 +522,7 @@ Application::onScrobbleToggled( bool scrobblingOn )
 {
     unicorn::UserSettings().setValue( "scrobblingOn", scrobblingOn );
     m_submit_scrobbles_toggle->setChecked( scrobblingOn );
-    ScrobbleService::instance().scrobbleSettingsChanged();
+    emit scrobbleToggled( scrobblingOn );
 }
 
 void
