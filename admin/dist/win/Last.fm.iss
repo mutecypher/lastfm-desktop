@@ -97,6 +97,9 @@ Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\imageformats";
 ;phonon backend plugin
 Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\phonon_backend"; Flags: ignoreversion
 
+;phonon backend plugin
+Source: "%QTDIR%\plugins\phonon_backend\qsqlite4.dll"; DestDir: "{app}\spldrivers"; Flags: ignoreversion
+
 ;media player plugin installers
 Source: "..\..\..\_bin\plugins\FooPlugin0.9.4Setup_2.3.1.2.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
 Source: "..\..\..\_bin\plugins\FooPlugin0.9Setup_2.1.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
@@ -116,8 +119,11 @@ Source: "UninsHs.exe"; DestDir: "{app}"; Flags: onlyifdoesntexist
 ;Text files?
 
 [Registry]
-Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Version"; ValueData: "{cm:Version}"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\Last.fm.exe"; Flags: uninsdeletekey
+; The Path is looked for in both places by plugins
+Root: HKCU; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Version"; ValueData: "{cm:Version}"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\Last.fm.exe"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Last.fm\Last.fm"; ValueType: string; ValueName: "Version"; ValueData: "{cm:Version}"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Last.fm\Last.fm"; ValueType: string; ValueName: "Path"; ValueData: "{app}\Last.fm.exe"; Flags: uninsdeletekey
 
 ; Register last.fm protocol only if it isn't already
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: ""; ValueData: "URL:lastfm"; Flags: uninsdeletekey
