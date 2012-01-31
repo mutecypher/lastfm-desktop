@@ -217,15 +217,6 @@ unicorn::Application::translate()
 
 unicorn::Application::~Application()
 {
-    // we do this here, rather than when the setting is changed because if we 
-    // did it then the user would be unable to change their mind
-    /*
-    if (Settings().logOutOnExit() || m_logoutAtQuit)
-    {
-        AppSettings s;
-        s.remove( "SessionKey" );
-        s.remove( "Password" );
-    }*/
 }
 
 void
