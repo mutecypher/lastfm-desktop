@@ -69,7 +69,8 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     m_track( track ),
     m_globalTrackScrobbles( 0 ),
     m_userTrackScrobbles( 0 ),
-    m_userArtistScrobbles( 0 )
+    m_userArtistScrobbles( 0 ),
+    m_fetchedTrackInfo( false )
 {
     ui->setupUi( this );
 
@@ -114,22 +115,7 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
 
     connect( ui->back, SIGNAL(clicked()), SIGNAL(backClicked()));
 
-    // fetch Track info
-    connect( m_track.signalProxy(), SIGNAL( gotInfo(QByteArray)), SLOT( onTrackGotInfo(QByteArray)));
-    m_track.getInfo();
-
-    if( !m_track.album().isNull() )
-        connect( m_track.album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
-
-    connect( m_track.artist().getInfo(), SIGNAL(finished()), SLOT(onArtistGotInfo()));
-
-    connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
-    connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
-    connect( m_track.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
-
-    connect( m_track.getBuyLinks( "united kingdom" /*aApp->currentSession()->userInfo().country()*/ ), SIGNAL(finished()), SLOT(onTrackGotBuyLinks()) );
-
-    m_numCalls = m_track.album().isNull() ? 6: 7;
+    fetchTrackInfo();
 }
 
 MetadataWidget::~MetadataWidget()
@@ -138,8 +124,42 @@ MetadataWidget::~MetadataWidget()
 }
 
 void
+MetadataWidget::fetchTrackInfo()
+{
+    if ( isVisible() && !m_fetchedTrackInfo )
+    {
+        m_fetchedTrackInfo = true;
+
+        m_numCalls = m_track.album().isNull() ? 6: 7;
+
+        // fetch Track info
+        connect( m_track.signalProxy(), SIGNAL( gotInfo(QByteArray)), SLOT( onTrackGotInfo(QByteArray)));
+        m_track.getInfo();
+
+        if( !m_track.album().isNull() )
+            connect( m_track.album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
+
+        connect( m_track.artist().getInfo(), SIGNAL(finished()), SLOT(onArtistGotInfo()));
+
+        connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
+        connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
+        connect( m_track.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
+
+        connect( m_track.getBuyLinks( "united kingdom" /*aApp->currentSession()->userInfo().country()*/ ), SIGNAL(finished()), SLOT(onTrackGotBuyLinks()) );
+    }
+}
+
+void
+MetadataWidget::showEvent( QShowEvent *e )
+{
+    fetchTrackInfo();
+}
+
+void
 MetadataWidget::checkFinished()
 {
+    Q_ASSERT( m_numCalls > 0 );
+
     if ( --m_numCalls == 0 )
     {
         ui->loadingStack->setCurrentWidget( ui->content );

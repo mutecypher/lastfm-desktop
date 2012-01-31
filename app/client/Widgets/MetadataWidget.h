@@ -83,6 +83,10 @@ private:
     QString contextString( const Track& track );
     QString scrobbleString( const Track& track );
 
+    void fetchTrackInfo();
+
+    void showEvent( QShowEvent *e );
+
 private:
     Ui::MetadataWidget *ui;
 
@@ -97,6 +101,7 @@ private:
     Album m_albumGuess;
 
     int m_numCalls;
+    bool m_fetchedTrackInfo;
 
     QPointer<QMovie> m_movie;
 };
