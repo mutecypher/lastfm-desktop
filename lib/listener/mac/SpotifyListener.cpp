@@ -87,7 +87,21 @@ SpotifyListenerMac::loop()
             t.setDuration( durationScript.exec().toInt() );
 
             if ( t != m_lastTrack )
-                m_connection->start( t );
+            {
+                if ( t.album().title().startsWith( "http://" )
+                     || t.album().title().startsWith( "https://" )
+                     || t.album().title().startsWith( "spotify:" ) )
+                {
+                    // this is an advert so don't try to display metadata
+                    // and stop any currently playing track
+                    if ( m_lastPlayerState == "playing" || m_lastPlayerState == "paused" )
+                        m_connection->stop();
+                }
+                else
+                {
+                    m_connection->start( t );
+                }
+            }
 
             m_lastTrack = t;
         }
