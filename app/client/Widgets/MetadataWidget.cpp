@@ -422,9 +422,9 @@ MetadataWidget::onTrackGotBuyLinks()
 
         QMenu* menu = new QMenu( this );
 
-        menu->addAction( tr("Physical") )->setEnabled( false );
+        menu->addAction( tr("Downloads") )->setEnabled( false );
 
-        foreach ( const XmlQuery& affiliation, lfm["affiliations"]["physicals"].children( "affiliation" ) )
+        foreach ( const XmlQuery& affiliation, lfm["affiliations"]["downloads"].children( "affiliation" ) )
         {
             bool isSearch = affiliation["isSearch"].text() == "1";
 
@@ -441,9 +441,9 @@ MetadataWidget::onTrackGotBuyLinks()
         }
 
         menu->addSeparator();
-        menu->addAction( tr("Downloads") )->setEnabled( false );
+        menu->addAction( tr("Physical") )->setEnabled( false );
 
-        foreach ( const XmlQuery& affiliation, lfm["affiliations"]["downloads"].children( "affiliation" ) )
+        foreach ( const XmlQuery& affiliation, lfm["affiliations"]["physicals"].children( "affiliation" ) )
         {
             bool isSearch = affiliation["isSearch"].text() == "1";
 
