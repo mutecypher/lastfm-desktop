@@ -88,19 +88,7 @@ NothingPlayingWidget::oniTunesClicked()
     params.application = &appRef;
     params.asyncLaunchRefCon = NULL;
     params.environment = NULL;
-
-    AEAddressDesc target;
-    AECreateDesc( typeApplicationBundleID, CFSTR( ITUNES_BUNDLEID ), 16, &target);
-
-    AppleEvent event;
-    AECreateAppleEvent ( kCoreEventClass,
-            kAEReopenApplication ,
-            &target,
-            kAutoGenerateReturnID,
-            kAnyTransactionID,
-            &event );
-
-    params.initialEvent = &event;
+    params.initialEvent = NULL;
 
     LSOpenApplication( &params, NULL );
 #endif
