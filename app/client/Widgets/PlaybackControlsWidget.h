@@ -22,7 +22,7 @@ public:
     ~PlaybackControlsWidget();
 
 public:
-    Q_PROPERTY( bool scrobbleTrack READ scrobbleTrack WRITE setScrobbleTrack );
+    Q_PROPERTY( bool scrobbleTrack READ scrobbleTrack WRITE setScrobbleTrack )
 
     bool scrobbleTrack() { return m_scrobbleTrack; }
     void setScrobbleTrack( bool scrobbleTrack );
@@ -33,7 +33,6 @@ private slots:
     void onActionsChanged();
     void onSpace();
     void onPlayClicked( bool checked );
-    void onPlayTriggered( bool checked );
     void onSkipClicked();
     void onLoveClicked( bool loved );
     void onLoveTriggered( bool loved );

@@ -155,20 +155,6 @@ PlaybackControlsWidget::onPlayClicked( bool checked )
     }
 }
 
-
-void
-PlaybackControlsWidget::onPlayTriggered( bool checked )
-{
-    if ( checked )
-    {
-        if ( RadioService::instance().state() != Stopped )
-            setWindowTitle( QString( "Last.fm Radio - %1 - %2" ).arg( RadioService::instance().station().title(), RadioService::instance().currentTrack().toString() ) );
-    }
-    else
-        setWindowTitle( QString( "Last.fm Radio - %1" ).arg( RadioService::instance().station().title() ) );
-}
-
-
 void
 PlaybackControlsWidget::onSkipClicked()
 {

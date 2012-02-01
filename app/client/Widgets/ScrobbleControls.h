@@ -26,8 +26,8 @@
 #include <lastfm/Track.h>
 #include <lastfm/XmlQuery.h>
 
-namespace unicorn{ class Session; };
-namespace lastfm{ class User; };
+namespace unicorn{ class Session; }
+namespace lastfm{ class User; }
 
 class QPushButton;
 
