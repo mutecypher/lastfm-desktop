@@ -520,7 +520,7 @@ unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long 
             char data[size + 1];
             data[ size ] = 0;
             ret = AEGetDescData( &desc, data, size );
-            QString dataString( data );
+            QString dataString = QString::fromUtf8( data );
 
             qDebug() << dataString;
             args << dataString;
