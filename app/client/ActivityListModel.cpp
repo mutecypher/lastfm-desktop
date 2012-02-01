@@ -109,9 +109,23 @@ ActivityListModel::read()
 }
 
 void
-ActivityListModel::write() const
+ActivityListModel::write()
+{
+    if ( !m_writeTimer )
+    {
+        m_writeTimer = new QTimer( this );
+        connect( m_writeTimer, SIGNAL(timeout()), this, SLOT(doWrite()) );
+        m_writeTimer->setSingleShot( true );
+    }
+
+    m_writeTimer->start( 500 );
+}
+
+void
+ActivityListModel::doWrite()
 {
     qDebug() << "Writing recent_tracks";
+
     if ( m_tracks.count() == 0 )
         QFile::remove( m_path );
     else
