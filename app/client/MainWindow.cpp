@@ -132,7 +132,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     ui.statusBar->setSizeGripEnabled( false );
 
-    setWindowTitle( aApp->applicationName() );
+    setWindowTitle( applicationName() );
     setUnifiedTitleAndToolBarOnMac( true );
 
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
@@ -181,10 +181,20 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     m_updater = new Updater( this );
 
 #ifdef Q_OS_MAC
-    QMenu* dockMenu = new QMenu( this );
-    ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *dockMenu  );
+    QMenu* dockMenu = new QMenu();
+    //ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *dockMenu  );
+
+    QAction* action = dockMenu->addAction( tr("Play") );
+    connect( action, SIGNAL(triggered()), aApp->playAction(), SLOT(trigger()) );
+
     qt_mac_set_dock_menu( dockMenu );
 #endif
+}
+
+QString
+MainWindow::applicationName()
+{
+    return QCoreApplication::applicationName() + " Beta";
 }
 
 #ifdef Q_OS_WIN32
@@ -311,6 +321,15 @@ MainWindow::onPrefsTriggered()
 }
 
 void
+MainWindow::onBetaTriggered()
+{
+    if ( !m_beta )
+        m_beta = new BetaDialog( this );
+
+    m_beta->show();
+}
+
+void
 MainWindow::checkForUpdates()
 {
     m_updater->checkForUpdates();
@@ -329,9 +348,9 @@ MainWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )
     m_currentTrack = t;
 
     if ( m_currentTrack.source() == Track::LastFmRadio )
-        setWindowTitle( tr( "%1 - %2 - %3" ).arg( QApplication::applicationName(), RadioService::instance().station().title(), t.toString() ) );
+        setWindowTitle( tr( "%1 - %2 - %3" ).arg( applicationName(), RadioService::instance().station().title(), t.toString() ) );
     else
-        setWindowTitle( tr( "%1 - %2" ).arg( QApplication::applicationName(), t.toString() ) );
+        setWindowTitle( tr( "%1 - %2" ).arg( applicationName(), t.toString() ) );
 }
 
 
@@ -340,7 +359,7 @@ MainWindow::onStopped()
 {
     m_currentTrack = Track();
 
-    setWindowTitle( QApplication::applicationName() );
+    setWindowTitle( applicationName() );
 }
 
 
@@ -348,9 +367,9 @@ void
 MainWindow::onResumed()
 {
     if ( m_currentTrack.source() == Track::LastFmRadio )
-        setWindowTitle( tr( "%1 - %2 - %3" ).arg( QApplication::applicationName(), RadioService::instance().station().title(), m_currentTrack.toString() ) );
+        setWindowTitle( tr( "%1 - %2 - %3" ).arg( applicationName(), RadioService::instance().station().title(), m_currentTrack.toString() ) );
     else
-        setWindowTitle( tr( "%1 - %2" ).arg( QApplication::applicationName(), m_currentTrack.toString() ) );
+        setWindowTitle( tr( "%1 - %2" ).arg( applicationName(), m_currentTrack.toString() ) );
 }
 
 
@@ -358,9 +377,9 @@ void
 MainWindow::onPaused()
 {
     if ( m_currentTrack.source() == Track::LastFmRadio )
-        setWindowTitle( tr( "%1 - %2 - Paused - %3" ).arg( QApplication::applicationName(), RadioService::instance().station().title(), m_currentTrack.toString() ) );
+        setWindowTitle( tr( "%1 - %2 - Paused" ).arg( applicationName(), RadioService::instance().station().title() ) );
     else
-        setWindowTitle( tr( "%1 - Paused - %2" ).arg( QApplication::applicationName(), m_currentTrack.toString() ) );
+        setWindowTitle( tr( "%1 - Paused" ).arg( applicationName() ) );
 }
 
 

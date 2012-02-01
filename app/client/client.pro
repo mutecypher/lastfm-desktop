@@ -106,7 +106,8 @@ SOURCES += \
     Wizard/WizardPage.cpp \
     Widgets/ContextLabel.cpp \
     Widgets/SimilarArtistWidget.cpp \
-    Widgets/PushButton.cpp
+    Widgets/PushButton.cpp \
+    Dialogs/BetaDialog.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -189,7 +190,8 @@ HEADERS += \
     Wizard/WizardPage.h \
     Widgets/ContextLabel.h \
     Widgets/SimilarArtistWidget.h \
-    Widgets/PushButton.h
+    Widgets/PushButton.h \
+    Dialogs/BetaDialog.h
 
 
 win32:HEADERS += Plugins/FooBar08PluginInfo.h \
@@ -229,7 +231,8 @@ FORMS += \
     Wizard/FirstRunWizard.ui \
     Widgets/NothingPlayingWidget.ui \
     Widgets/FriendWidget.ui \
-    Widgets/FriendListWidget.ui
+    Widgets/FriendListWidget.ui \
+    Dialogs/BetaDialog.ui
 
 linux*:HEADERS += MediaDevices/IpodDevice_linux.h
 linux*:SOURCES += MediaDevices/IpodDevice_linux.cpp

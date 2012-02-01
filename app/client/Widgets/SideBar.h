@@ -39,6 +39,7 @@ private:
         class QAbstractButton* profile;
         class QAbstractButton* friends;
         class QAbstractButton* radio;
+        class QAbstractButton* sash;
     } ui;
 
 public:

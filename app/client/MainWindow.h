@@ -10,6 +10,7 @@
 #include "lib/unicorn/StylableWidget.h"
 
 #include "Settings/PreferencesDialog.h"
+#include "Dialogs/BetaDialog.h"
 
 namespace unicorn { class Updater; }
 using unicorn::Updater;
@@ -68,6 +69,7 @@ signals:
 
 public slots:
     void onPrefsTriggered();
+    void onBetaTriggered();
 
 private slots:
     void onVisitProfile();
@@ -102,6 +104,8 @@ private:
     void showEvent(QShowEvent *);
     void hideEvent(QHideEvent *);
 
+    static QString applicationName();
+
     //void resizeEvent( QResizeEvent* event ) { qDebug() << event->size(); }
 
 private:
@@ -111,6 +115,7 @@ private:
     QList<QAction*> m_buttons;
 
     QPointer<PreferencesDialog> m_preferences;
+    QPointer<BetaDialog> m_beta;
     QPointer<Updater> m_updater;
     QPointer<PluginList> m_pluginList;
 };

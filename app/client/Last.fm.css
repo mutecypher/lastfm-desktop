@@ -130,7 +130,7 @@ SideBar QAbstractButton {
 	color: #888888;
 	border: none;
 	height: 67px;
-	width: 80px;
+	width: 70px;
 	padding-bottom: 13px;
 	/* the height and bottom-padding should add up to 80px */
 }
@@ -188,6 +188,14 @@ background-image: url(":/tab_radio_HOVER.png");
 }
 SideBar QAbstractButton#radio:checked {
 background-image: url(":/tab_radio_ACTIVE.png");
+}
+
+SideBar QAbstractButton#sash {
+color: transparent;
+background-position: left bottom;
+background-image: url(":/beta_sash.png");
+padding: 0px;
+margin: 0px;
 }
 
 QFrame#splitter1,
