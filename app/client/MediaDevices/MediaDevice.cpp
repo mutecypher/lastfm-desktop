@@ -42,10 +42,24 @@ MediaDevice::associateDevice( QString username )
 
     unicorn::UserSettings us( username );
     int count = us.beginReadArray( "associatedDevices" );
+    int index = count;
+
+    QString devId;
+    for ( int i = 0; i < count; i++ )
+    {
+        us.setArrayIndex( i );
+        devId = us.value( "deviceId", "" ).toString();
+        if ( devId == deviceId() )
+        {
+            index = i;
+            break;
+        }
+    }
+
     us.endArray();
 
     us.beginWriteArray( "associatedDevices" );
-    us.setArrayIndex( count );
+    us.setArrayIndex( index );
     us.setValue( "deviceId", deviceId() );
     us.setValue( "deviceName", deviceName() );
 

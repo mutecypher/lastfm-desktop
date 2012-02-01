@@ -154,6 +154,7 @@ namespace audioscrobbler
         void parseArguments( const QStringList& args );
 
         void onPrefsTriggered();
+        void onBetaTriggered();
 
         void onScrobbleToggled( bool scrobblingOn );
 

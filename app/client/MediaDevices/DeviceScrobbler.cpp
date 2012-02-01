@@ -168,8 +168,7 @@ DeviceScrobbler::onScrobbleSetupClicked( bool scrobble, bool alwaysAsk, QString 
     // We need to store the result so we can check it next time
     IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
 
-    if ( !ipod->isDeviceKnown() )
-        ipod->associateDevice( username );
+    ipod->associateDevice( username );
 
     if ( username == User().name() )
     {

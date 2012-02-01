@@ -7,6 +7,7 @@
 #include <QIcon>
 #include <QDebug>
 #include <QPointer>
+#include <QTimer>
 
 #include <lastfm/ws.h>
 #include <lastfm/Track.h>
@@ -52,7 +53,8 @@ public slots:
     void refresh();
 
 private slots:
-    void write() const;
+    void write();
+    void doWrite();
 
     void onTrackStarted( const Track&, const Track& );
     void onResumed();
@@ -79,6 +81,7 @@ private:
     QImage m_noArt;
     QModelIndex m_hoverIndex;
     QPointer<QNetworkReply> m_recentTrackReply;
+    QPointer<QTimer > m_writeTimer;
 };
 
 #endif //ACTIVITY_LIST_MODEL_H_

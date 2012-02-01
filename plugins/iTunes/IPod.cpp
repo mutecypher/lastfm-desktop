@@ -27,6 +27,19 @@
     #include <dirent.h>
 #endif
 
+std::string escape(std::string const &s)
+{
+    std::size_t n = s.length();
+    std::string escaped;
+    escaped.reserve(n * 2);        // pessimistic preallocation
+    
+    for (std::size_t i = 0; i < n; ++i) {
+        if (s[i] == '\\' || s[i] == '\'')
+            escaped += '\\';
+        escaped += s[i];
+    }
+    return escaped;
+}
 
 const COMMON_STD_STRING 
 IPod::twiddlyFlags() const
@@ -51,7 +64,7 @@ IPod::twiddlyFlags() const
     ss << " --pid " << m_pid;
     ss << " --vid " << m_vid;
     ss << " --serial " << m_serial;
-    ss << " --name " << m_displayName;
+    ss << " --name " << escape( m_displayName );
     
     if( m_manualMode )
         ss << " --manual";

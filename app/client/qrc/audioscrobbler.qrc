@@ -204,5 +204,6 @@
         <file>preferences_general.png</file>
         <file>preferences_scrobbling.png</file>
         <file>preferences_accounts.png</file>
+        <file>beta_sash.png</file>
     </qresource>
 </RCC>

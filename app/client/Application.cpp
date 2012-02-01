@@ -594,6 +594,12 @@ Application::onPrefsTriggered()
 {
     m_mw->onPrefsTriggered();
 }
+
+void
+Application::onBetaTriggered()
+{
+    m_mw->onBetaTriggered();
+}
     
 void
 Application::onMessageReceived( const QStringList& message )
