@@ -45,7 +45,7 @@ void
 unicorn::Notify::newTrack( const lastfm::Track& track )
 {
     delete m_trackImageFetcher;
-    m_trackImageFetcher = new TrackImageFetcher( track );
+    m_trackImageFetcher = new TrackImageFetcher( track, lastfm::Large );
     connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), SLOT(onFinished(QPixmap)) );
     m_trackImageFetcher->startAlbum();
 }

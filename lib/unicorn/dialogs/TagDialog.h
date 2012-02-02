@@ -26,11 +26,7 @@
 
 #include "lib/DllExportMacro.h"
 
-namespace unicorn
-{
-    class TabWidget;
-}
-
+namespace Ui { class TagDialog; }
 
 class UNICORN_DLLEXPORT TagDialog : public unicorn::Dialog
 {
@@ -41,37 +37,17 @@ public:
 
 	Track track() const { return m_track; }
 
-private:
-    void setupUi();
-    void setTabOrders();
-
 private slots:
-    void onUserGotTopTags();
-    void onTrackGotTopTags();
-    void onTagBoxToggled(bool);
-
     void onAddTagFinished();
 
     void onAccepted();
 
+    void enableDisableOk();
+
 private:
-    struct Ui
-    {
-        class TrackWidget* track;
-        class ItemSelectorWidget* tagsWidget;
-        class QGroupBox* popularTagsBox;
-        class DataListWidget* popularTags;
-        class QGroupBox* yourTagsBox;
-        class DataListWidget* yourTags;
-        class QDialogButtonBox* buttons;
-        
-        void setupUi( QWidget* parent );
-    } ui;
-    
+    Ui::TagDialog* ui;
     Track m_track;
-    QStringList m_originalTags;
-    QStringList m_publicTags;
-    QStringList m_userTags;
+    class TrackImageFetcher* m_imageFetcher;
 };
 
 #endif
