@@ -135,7 +135,6 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     setWindowTitle( applicationName() );
     setUnifiedTitleAndToolBarOnMac( true );
 
-    connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
     connect( &ScrobbleService::instance(), SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
     connect( &ScrobbleService::instance(), SIGNAL( paused() ), SLOT( onPaused() ) );
     connect( &ScrobbleService::instance(), SIGNAL( resumed() ), SLOT( onResumed() ) );

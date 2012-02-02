@@ -14,13 +14,15 @@ BetaDialog::BetaDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->setAttribute( Qt::WA_DeleteOnClose );
+    setWindowTitle( tr( "Beta" ) );
+
+    setAttribute( Qt::WA_DeleteOnClose );
 
     ui->description->setText( "This is a beta version of the new Last.fm Desktop App. Please be gentle!" );
 
     if ( aApp->currentSession()->userInfo().type() == lastfm::User::TypeStaff )
     {
-        ui->feedback->setText( "If you notice and problems, create a Jira issue and we'll fix them immediately. Thanks!" );
+        ui->feedback->setText( "If you've' noticed a problem, create a Jira issue and we'll fix it immediately. Thanks!" );
 
     }
     else
