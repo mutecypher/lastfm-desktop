@@ -47,9 +47,6 @@ private slots:
     void updateCharacterLimit();
 
 private:
-    void setTabOrders();
-
-private:
     Track m_track;
     Ui::ShareDialog* ui;
     class TrackImageFetcher* m_imageFetcher;

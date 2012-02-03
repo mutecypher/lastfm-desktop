@@ -25,6 +25,12 @@
 #include <QStringList>
 
 
+TrackImageFetcher::TrackImageFetcher( const Track& track, lastfm::ImageSize size )
+    :m_track( track ),
+     m_size( size )
+{
+}
+
 void
 TrackImageFetcher::startAlbum()
 {
@@ -109,7 +115,24 @@ TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node
 
     if ( lfm.parse( reply->readAll() ) )
     {
-        foreach (QString size, QStringList() << "mega" << "extralarge" << "large")
+        QStringList sizes;
+
+        switch ( m_size )
+        {
+        default:
+        case lastfm::Mega:
+            sizes << "mega";
+        case lastfm::ExtraLarge:
+            sizes << "extralarge";
+        case lastfm::Large:
+            sizes << "large";
+        case lastfm::Medium:
+            sizes << "medium";
+        case lastfm::Small:
+            sizes << "small";
+        }
+
+        foreach ( QString size, sizes )
         {
             QUrl const url = lfm[root_node]["image size="+size].text();
 

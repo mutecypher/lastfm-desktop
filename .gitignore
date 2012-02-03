@@ -12,3 +12,4 @@ admin/dist/mac/dsa_priv.pem
 *.sln
 *.suo
 .DS_Store
+lib/unicorn/ApiKey.h

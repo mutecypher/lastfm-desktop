@@ -1,6 +1,6 @@
 /*
-   Copyright 2005-2009 Last.fm Ltd. 
-      - Primarily authored by Max Howell, Jono Cole and Doug Mansell
+   Copyright 2005-2012 Last.fm Ltd.
+      - Primarily authored by Michael Coffey
 
    This file is part of the Last.fm Desktop Application Suite.
 
@@ -17,37 +17,12 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef TAG_DIALOG_H
-#define TAG_DIALOG_H
 
-#include <lastfm/Track.h>
-#include <QModelIndex>
-#include "UnicornDialog.h"
+#ifndef APIKEY_H
+#define APIKEY_H
 
-#include "lib/DllExportMacro.h"
+#error Change these values to your details from www.last.fm/api
+#define API_SECRET  ""
+#define API_KEY ""
 
-namespace Ui { class TagDialog; }
-
-class UNICORN_DLLEXPORT TagDialog : public unicorn::Dialog
-{
-    Q_OBJECT
-
-public:
-    TagDialog( const Track&, QWidget* parent );
-
-	Track track() const { return m_track; }
-
-private slots:
-    void onAddTagFinished();
-
-    void onAccepted();
-
-    void enableDisableOk();
-
-private:
-    Ui::TagDialog* ui;
-    Track m_track;
-    class TrackImageFetcher* m_imageFetcher;
-};
-
-#endif
+#endif // APIKEY_H

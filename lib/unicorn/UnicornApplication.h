@@ -41,7 +41,7 @@
 #define SETTING_SEND_CRASH_REPORTS "sendCrashReports"
 #define SETTING_CHECK_UPDATES "checkUpdates"
 
-#define SETTING_FIRST_RUN_WIZARD_COMPLETED "FirstRunWizardCompletedAlpha"
+#define SETTING_FIRST_RUN_WIZARD_COMPLETED "FirstRunWizardCompletedBeta"
 
 namespace lastfm{
     class User;

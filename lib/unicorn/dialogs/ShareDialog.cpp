@@ -1,8 +1,8 @@
 /*
-   Copyright 2005-2009 Last.fm Ltd. 
+   Copyright 2005-2009 Lasm_track.fm Ltd.
       - Primarily authored by Max Howell, Jono Cole and Doug Mansell
 
-   This file is part of the Last.fm Desktop Application Suite.
+   This file is part of the Lasm_track.fm Desktop Application Suite.
 
    lastfm-desktop is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -48,16 +48,17 @@
 
 const int kMaxMessage(1000);
 
-ShareDialog::ShareDialog( const Track& t, QWidget* parent )
+ShareDialog::ShareDialog( const Track& track, QWidget* parent )
     : unicorn::Dialog( parent, Qt::Tool ),
       ui( new Ui::ShareDialog ),
-      m_track( t )
+      m_track( track )
 {
     ui->setupUi( this );
 
     ui->recipients->setType( ItemSelectorWidget::User );
 
     ui->icon->setScaledContents( true );
+    ui->icon->setHref( m_track.www() );
 
     enableDisableOk();
 
@@ -65,18 +66,16 @@ ShareDialog::ShareDialog( const Track& t, QWidget* parent )
     connect( ui->message, SIGNAL(textChanged()), SLOT(enableDisableOk()));
     connect( ui->recipients, SIGNAL(changed()), SLOT(enableDisableOk()));
 
-    ui->title->setText( unicorn::Label::anchor( t.www().toString(), t.title() ) );
+    ui->title->setText( unicorn::Label::anchor( m_track.www().toString(), m_track.title() ) );
 
-    if ( t.album().isNull() )
-        ui->description->setText( tr( "A track by %1" ).arg( unicorn::Label::anchor( t.artist().www().toString(), t.artist().name() ) ) );
+    if ( m_track.album().isNull() )
+        ui->description->setText( tr( "A track by %1" ).arg( unicorn::Label::anchor( m_track.artist().www().toString(), m_track.artist().name() ) ) );
     else
-        ui->description->setText( tr( "A track by %1 from the release %2" ).arg( unicorn::Label::anchor( t.artist().www().toString(), t.artist().name() ), unicorn::Label::anchor( t.album().www().toString(), t.album() ) ) );
+        ui->description->setText( tr( "A track by %1 from the release %2" ).arg( unicorn::Label::anchor( m_track.artist().www().toString(), m_track.artist().name() ), unicorn::Label::anchor( m_track.album().www().toString(), m_track.album() ) ) );
 
-    m_imageFetcher = new TrackImageFetcher( t );
+    m_imageFetcher = new TrackImageFetcher( m_track, lastfm::Medium );
     connect( m_imageFetcher, SIGNAL(finished(QPixmap)), ui->icon, SLOT(setPixmap(QPixmap)) );
     m_imageFetcher->startAlbum();
-
-    setTabOrders();
 
     QPushButton* dummyDefault = ui->buttons->addButton( QDialogButtonBox::Help );
     dummyDefault->setDefault( true );
@@ -84,8 +83,6 @@ ShareDialog::ShareDialog( const Track& t, QWidget* parent )
     dummyDefault->setVisible( false );
 
     setWindowTitle( tr("Share with friends") );
-
-    resize( 400, 400 );
 }
 
 void
@@ -110,15 +107,6 @@ ShareDialog::updateCharacterLimit()
 }
 
 void
-ShareDialog::setTabOrders()
-{
-    setTabOrder( ui->recipients, ui->message );
-    setTabOrder( ui->message, ui->isPublic );
-    setTabOrder( ui->isPublic, ui->buttons->button( QDialogButtonBox::Ok ) );
-    setTabOrder( ui->buttons->button( QDialogButtonBox::Ok ), ui->buttons->button( QDialogButtonBox::Cancel ) );
-}
-
-void
 ShareDialog::onMessageChanged()
 {
     // update the character message
@@ -132,7 +120,7 @@ ShareDialog::accept()
     QString const message = ui->message->toPlainText();
     bool isPublic = ui->isPublic->isChecked();
 
-    // disable the dialog until we get a response from Last.fm
+    // disable the dialog until we get a response from Lasm_track.fm
     setEnabled( false );
     connect( m_track.share( recipients, message, isPublic ), SIGNAL(finished()), SLOT(onShared()) );
 }

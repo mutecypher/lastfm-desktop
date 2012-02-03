@@ -127,7 +127,8 @@ HEADERS += \
     widgets/SlidingStackedWidget.h \
     Updater/Updater.h \
     DesktopServices.h \
-    CrashReporter/CrashReporter.h
+    CrashReporter/CrashReporter.h \
+    ApiKey.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp \
                     Updater/Updater.cpp \
@@ -146,7 +147,8 @@ macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
 
 FORMS += \
 	dialogs/ShareDialog.ui \
-	dialogs/LoginDialog.ui
+	dialogs/LoginDialog.ui \
+    dialogs/TagDialog.ui
 
 RESOURCES += \
 	qrc/unicorn.qrc

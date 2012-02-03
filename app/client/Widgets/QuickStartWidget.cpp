@@ -51,7 +51,7 @@ QuickStartWidget::QuickStartWidget( QWidget* parent )
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
-    QHBoxLayout* h = new QHBoxLayout( this );
+    QHBoxLayout* h = new QHBoxLayout();
     h->setContentsMargins( 0, 0, 0, 0 );
     h->setSpacing( 0 );
 

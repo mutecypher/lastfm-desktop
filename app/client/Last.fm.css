@@ -610,7 +610,8 @@ FriendWidget QFrame#groupBox {
 FriendWidget AvatarWidget#avatar,
 ProfileWidget AvatarWidget#avatar,
 ProfileArtistWidget QLabel#artistImage,
-ShareDialog HttpImageWidget#icon {
+ShareDialog HttpImageWidget#icon,
+TagDialog HttpImageWidget#icon {
 padding: 2px;
 background-color: white;
 color: transparent;
@@ -1001,7 +1002,8 @@ color: white;
 font-size: 11px;
 }
 
-ShareDialog QFrame#what {
+ShareDialog QFrame#what,
+TagDialog QFrame#what {
 border: 1px solid #DBDBDB;
 border-radius: 5px;
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ABABAB, stop:0.04 #E6E6E6, stop:1 #E6E6E6);
@@ -1016,7 +1018,10 @@ font-weight: bold;
 
 ShareDialog > QLabel,
 ShareDialog > QCheckBox,
-ShareDialog > QRadioButton {
+ShareDialog > QRadioButton,
+TagDialog > QLabel,
+TagDialog > QCheckBox,
+TagDialog > QRadioButton {
 font-size: 12px;
 font-weight: bold;
 }
@@ -1031,23 +1036,16 @@ margin-top: 16px;
 margin-bottom: 10px;
 }
 
-ShareDialog QFrame#what QLabel#shareSubject,
-ShareDialog QFrame#what QLabel#shareSubject2 {
-font-size: 12px;
-font-weight: bold;
-margin: 4px 0px 4px 0px;
-}
-
-ShareDialog ItemSelectorWidget {
+ItemSelectorWidget {
 background-color: white;
 }
 
-ShareDialog ItemSelectorWidget QLineEdit {
+ItemSelectorWidget QLineEdit {
 padding: 1px 2px 2px 3px;
 margin: 2px;
 }
 
-ShareDialog ItemSelectorWidget QLabel {
+ItemSelectorWidget QLabel {
 padding: 2px 3px;
 margin: 2px 0px 2px 2px;
 background-color: #DAE7F9;

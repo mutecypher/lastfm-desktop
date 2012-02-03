@@ -254,7 +254,7 @@ FirstRunWizard::skip()
         ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
 #endif
     else if ( currentPage == ui->bootstrapPage )
-        ui->stackedWidget->setCurrentWidget( ui->bootstrapProgressPage );
+        ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
     else if ( currentPage == ui->bootstrapProgressPage )
         ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
     else if ( currentPage == ui->tourScrobblesPage
