@@ -648,10 +648,8 @@ Application::parseArguments( const QStringList& args )
 {
     qDebug() << args;
 
-    if (args.size() <= 1)
-        return;
-
-    foreach (QString const arg, args.mid( 1 ))
+    foreach ( QString const arg, args )
+    {
         switch (argument( arg ))
         {
         case LastFmUrl:
@@ -677,6 +675,7 @@ Application::parseArguments( const QStringList& args )
             qDebug() << "Unknown argument:" << arg;
             break;
         }
+    }
 }
 
 void 

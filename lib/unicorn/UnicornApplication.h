@@ -194,8 +194,12 @@ namespace unicorn
         QString m_cssFileName;
 
 #ifdef __APPLE__
-        void installCocoaEventHandler() const;
+        void setOpenApplicationEventHandler();
+        void setGetURLEventHandler();
+    public:
         void appleEventReceived( const QStringList& messages );
+
+    private:
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
 
 #ifdef Q_OS_MAC64
