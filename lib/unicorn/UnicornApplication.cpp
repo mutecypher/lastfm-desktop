@@ -81,9 +81,13 @@ unicorn::Application::init()
     setupHotKeys();
 
 #ifdef __APPLE__
-    installCocoaEventHandler();
-    AEEventHandlerUPP h = NewAEEventHandlerUPP( appleEventHandler );
-    AEInstallEventHandler( kCoreEventClass, kAEReopenApplication, h, 0, false );
+    setGetURLEventHandler();
+    AEEventHandlerUPP urlHandler = NewAEEventHandlerUPP( appleEventHandler );
+    AEInstallEventHandler( kInternetEventClass, kAEGetURL, urlHandler, 0, false );
+
+    setOpenApplicationEventHandler();
+    AEEventHandlerUPP openHandler = NewAEEventHandlerUPP( appleEventHandler );
+    AEInstallEventHandler( kCoreEventClass, kAEReopenApplication, openHandler, 0, false );
 #endif
 
 #ifdef Q_WS_MAC
@@ -492,44 +496,71 @@ unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long 
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );
  
-    switch (id)
+    if ( id  == kAEQuitApplication )
     {
-        case kAEQuitApplication:
-            qApp->quit();
-            return noErr;
-
-        default:
-            break;
+        qApp->quit();
+        return noErr;
     }
+    else if  ( id  == kAEOpenApplication )
+    {
+        AEAddressDesc descList;
 
-    AEAddressDesc descList;
+        OSErr ret;
+        ret = AEGetParamDesc( e, keyAEPropData, typeAEList, &descList );
+        long count = 0;
+        ret = AECountItems( &descList, &count );
+        if( ret != noErr )
+            count = 0;
 
-    OSErr ret;
-    ret = AEGetParamDesc( e, keyAEPropData, typeAEList, &descList );
-    long count = 0;
-    ret = AECountItems( &descList, &count );
-    if( ret != noErr )
-        count = 0;
+        QStringList args;
+        for( int i = 1; i <= count; ++i ) {
+            AEAddressDesc desc;
+            AEGetNthDesc( &descList, i, typeChar, NULL, &desc );
+            if( ret == noErr ) {
+                unsigned int size = AEGetDescDataSize( &desc );
+                char data[size + 1];
+                data[ size ] = 0;
+                ret = AEGetDescData( &desc, data, size );
+                QString dataString = QString::fromUtf8( data );
 
-    QStringList args;
-    for( int i = 1; i <= count; ++i ) {
-        AEAddressDesc desc;
-        AEGetNthDesc( &descList, i, typeChar, NULL, &desc );
-        if( ret == noErr ) {
-            unsigned int size = AEGetDescDataSize( &desc );
-            char data[size + 1];
-            data[ size ] = 0;
-            ret = AEGetDescData( &desc, data, size );
-            QString dataString = QString::fromUtf8( data );
-
-            qDebug() << dataString;
-            args << dataString;
+                qDebug() << dataString;
+                args << dataString;
+            }
         }
+
+        qobject_cast<unicorn::Application*>(qApp)->appleEventReceived( args );
+        return unimpErr;
+    }
+    else if ( id == kAEGetURL )
+    {
+        OSErr err = noErr;
+        Size actualSize = 0;
+        DescType descType = typeChar;
+
+        if ( (err = AESizeOfParam( e, keyDirectObject, &descType, &actualSize)) == noErr )
+        {
+            if ( 0 != actualSize )
+            {
+                // make a buffer (Qt style)
+                QByteArray bUrl;
+                bUrl.resize(actualSize);
+
+                err = AEGetParamPtr(e,
+                                    keyDirectObject,
+                                    typeChar,
+                                    0,
+                                    bUrl.data(),
+                                    actualSize,
+                                    &actualSize);
+
+                qobject_cast<unicorn::Application*>(qApp)->appleEventReceived( QStringList() << bUrl );
+            }
+        }
+
+        return noErr;
     }
 
-    qobject_cast<unicorn::Application*>(qApp)->appleEventReceived( args );
-    return unimpErr;
-
+    return noErr;
 }
 #endif
 
