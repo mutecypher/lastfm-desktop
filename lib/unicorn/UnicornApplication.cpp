@@ -501,6 +501,36 @@ unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long 
         qApp->quit();
         return noErr;
     }
+    else if  ( id  == kAEOpenApplication )
+    {
+        AEAddressDesc descList;
+
+        OSErr ret;
+        ret = AEGetParamDesc( e, keyAEPropData, typeAEList, &descList );
+        long count = 0;
+        ret = AECountItems( &descList, &count );
+        if( ret != noErr )
+            count = 0;
+
+        QStringList args;
+        for( int i = 1; i <= count; ++i ) {
+            AEAddressDesc desc;
+            AEGetNthDesc( &descList, i, typeChar, NULL, &desc );
+            if( ret == noErr ) {
+                unsigned int size = AEGetDescDataSize( &desc );
+                char data[size + 1];
+                data[ size ] = 0;
+                ret = AEGetDescData( &desc, data, size );
+                QString dataString = QString::fromUtf8( data );
+
+                qDebug() << dataString;
+                args << dataString;
+            }
+        }
+
+        qobject_cast<unicorn::Application*>(qApp)->appleEventReceived( args );
+        return unimpErr;
+    }
     else if ( id == kAEGetURL )
     {
         OSErr err = noErr;
@@ -529,38 +559,8 @@ unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long 
 
         return noErr;
     }
-    else
-    {
-        AEAddressDesc descList;
 
-        OSErr ret;
-        ret = AEGetParamDesc( e, keyAEPropData, typeAEList, &descList );
-        long count = 0;
-        ret = AECountItems( &descList, &count );
-        if( ret != noErr )
-            count = 0;
-
-        QStringList args;
-        for( int i = 1; i <= count; ++i ) {
-            AEAddressDesc desc;
-            AEGetNthDesc( &descList, i, typeChar, NULL, &desc );
-            if( ret == noErr ) {
-                unsigned int size = AEGetDescDataSize( &desc );
-                char data[size + 1];
-                data[ size ] = 0;
-                ret = AEGetDescData( &desc, data, size );
-                QString dataString = QString::fromUtf8( data );
-
-                qDebug() << dataString;
-                args << dataString;
-            }
-        }
-
-        qobject_cast<unicorn::Application*>(qApp)->appleEventReceived( args );
-        return noErr;
-    }
-
-    return unimpErr;
+    return noErr;
 }
 #endif
 
