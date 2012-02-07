@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       -= gui
-
+CONFIG += dll
 include( $$ROOT_DIR/admin/include.qmake )
 DEFINES += _LOGGER_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
