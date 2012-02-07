@@ -214,7 +214,6 @@ win32:SOURCES += Plugins/PluginList.cpp \
 
 mac:HEADERS += CommandReciever/CommandReciever.h
 
-mac:HEADERS += CommandReciever/CommandReciever.h
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
 mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm
