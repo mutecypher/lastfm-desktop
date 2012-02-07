@@ -529,7 +529,7 @@ unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long 
         }
 
         qobject_cast<unicorn::Application*>(qApp)->appleEventReceived( args );
-        return unimpErr;
+        return noErr;
     }
     else if ( id == kAEGetURL )
     {
@@ -560,7 +560,7 @@ unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long 
         return noErr;
     }
 
-    return noErr;
+    return unimpErr;
 }
 #endif
 
