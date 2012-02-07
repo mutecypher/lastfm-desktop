@@ -211,15 +211,10 @@ win32:SOURCES += Plugins/PluginList.cpp \
                     Plugins/WinampPluginInfo.cpp \
                     Plugins/WmpPluginInfo.cpp
 
-
-mac:HEADERS += CommandReciever/CommandReciever.h \
-    Services/ITunesPluginInstaller.h \
-    Services/ITunesPluginInstaller/ITunesPluginInstaller.h
-
+mac:HEADERS += CommandReciever/CommandReciever.h
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
-mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
-                        Dialogs/CloseAppsDialog_mac.mm
+mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm
 
 FORMS += \
     Widgets/TagFilterDialog.ui \

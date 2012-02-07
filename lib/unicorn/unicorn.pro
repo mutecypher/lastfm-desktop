@@ -138,6 +138,11 @@ macx:HEADERS += notify/Notify.h
 
 macx:SOURCES += mac/AppleScript.cpp
 
+macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
+                          Updater/Updater.mm \
+                          notify/Notify.mm \
+                          CrashReporter/CrashReporter.mm
+
 macx:HEADERS += mac/AppleScript.h \
                 notify/Notify.h
 
