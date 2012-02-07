@@ -32,6 +32,10 @@ private slots:
 
     void refresh();
 
+#ifdef Q_OS_MAC
+    void scroll();
+#endif
+
 private:
     void changeUser( const QString& newUsername );
 

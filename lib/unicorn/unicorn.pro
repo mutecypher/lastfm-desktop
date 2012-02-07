@@ -135,11 +135,12 @@ win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp \
                     CrashReporter/CrashReporter.cpp
 	
 
-macx:SOURCES += mac/AppleScript.cpp \
-               UnicornApplication_mac.mm \
-               Updater/Updater.mm \
-               notify/Notify.mm \
-                CrashReporter/CrashReporter.mm
+macx:SOURCES += mac/AppleScript.cpp
+
+macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
+                          Updater/Updater.mm \
+                          notify/Notify.mm \
+                          CrashReporter/CrashReporter.mm
 
 macx:HEADERS += mac/AppleScript.h \
                 notify/Notify.h
