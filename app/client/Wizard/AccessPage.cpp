@@ -93,22 +93,30 @@ AccessPage::onAuthenticated( unicorn::Session* session )
 void
 AccessPage::onGotUserInfo( const lastfm::User& user )
 {
-    m_valid = true;
+    qDebug() << user.name();
 
-    // make sure the wizard is shown again after they allow access on the website.
-    wizard()->showWelcome();
-    wizard()->next();
-    wizard()->showNormal();
-    wizard()->setFocus();
-    wizard()->raise();
-    wizard()->activateWindow();
+    if ( wizard()->user().name() != user.name() )
+    {
+        wizard()->setUser( user );
+        m_valid = true;
+
+        // make sure the wizard is shown again after they allow access on the website.
+        wizard()->showWelcome();
+        wizard()->next();
+        wizard()->showNormal();
+        wizard()->setFocus();
+        wizard()->raise();
+        wizard()->activateWindow();
 
 #ifdef Q_OS_WIN32
-    SetForegroundWindow( wizard()->winId() );
+        SetForegroundWindow( wizard()->winId() );
 #endif
 
-    foreach ( unicorn::LoginProcess* loginProcess, m_loginProcesses )
-        loginProcess->deleteLater();
+        foreach ( unicorn::LoginProcess* loginProcess, m_loginProcesses )
+            loginProcess->deleteLater();
+
+        m_loginProcesses.clear();
+    }
 }
 
 void

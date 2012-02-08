@@ -45,7 +45,7 @@ private:
     void initializePage();
 
 private:
-    QLayout* m_pluginsLayout;
+    class QVBoxLayout* m_pluginsLayout;
 };
 
 #endif //PLUGINS_PAGE_H
