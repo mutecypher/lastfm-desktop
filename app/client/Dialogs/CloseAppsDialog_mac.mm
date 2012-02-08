@@ -21,13 +21,12 @@ CloseAppsDialog::runningApps()
     // make sure iTunes isn't running
     NSArray* runningApps = [[NSWorkspace sharedWorkspace] runningApplications];
 
-    for ( unsigned int i = 0 ; i < [runningApps count] ; ++i )
+    for ( int i = 0 ; i <  [runningApps count] ; ++i )
     {
         if ( [[[runningApps objectAtIndex:i] bundleIdentifier] isEqualToString:@"com.apple.iTunes"] )
         {
             NSString* appName = [[runningApps objectAtIndex:i] localizedName];
             apps << qt_mac_NSStringToQString( appName );
-            break;
         }
     }
 
