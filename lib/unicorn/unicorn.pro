@@ -134,6 +134,7 @@ win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp \
                     Updater/Updater.cpp \
                     CrashReporter/CrashReporter.cpp
 	
+macx:HEADERS += notify/Notify.h
 
 macx:SOURCES += mac/AppleScript.cpp
 
