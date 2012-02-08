@@ -181,11 +181,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
 #ifdef Q_OS_MAC
     QMenu* dockMenu = new QMenu();
-    //ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *dockMenu  );
-
-    QAction* action = dockMenu->addAction( tr("Play") );
-    connect( action, SIGNAL(triggered()), aApp->playAction(), SLOT(trigger()) );
-
+    ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *dockMenu  );
     qt_mac_set_dock_menu( dockMenu );
 #endif
 }
