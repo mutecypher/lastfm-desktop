@@ -501,7 +501,35 @@ unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long 
         qApp->quit();
         return noErr;
     }
-    else if  ( id  == kAEOpenApplication )
+    else if ( id == kAEGetURL )
+    {
+        OSErr err = noErr;
+        Size actualSize = 0;
+        DescType descType = typeChar;
+
+        if ( (err = AESizeOfParam( e, keyDirectObject, &descType, &actualSize)) == noErr )
+        {
+            if ( 0 != actualSize )
+            {
+                // make a buffer (Qt style)
+                QByteArray bUrl;
+                bUrl.resize(actualSize);
+
+                err = AEGetParamPtr(e,
+                                    keyDirectObject,
+                                    typeChar,
+                                    0,
+                                    bUrl.data(),
+                                    actualSize,
+                                    &actualSize);
+
+                qobject_cast<unicorn::Application*>(qApp)->appleEventReceived( QStringList() << bUrl );
+            }
+        }
+
+        return noErr;
+    }
+    else
     {
         AEAddressDesc descList;
 
@@ -529,34 +557,6 @@ unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long 
         }
 
         qobject_cast<unicorn::Application*>(qApp)->appleEventReceived( args );
-        return noErr;
-    }
-    else if ( id == kAEGetURL )
-    {
-        OSErr err = noErr;
-        Size actualSize = 0;
-        DescType descType = typeChar;
-
-        if ( (err = AESizeOfParam( e, keyDirectObject, &descType, &actualSize)) == noErr )
-        {
-            if ( 0 != actualSize )
-            {
-                // make a buffer (Qt style)
-                QByteArray bUrl;
-                bUrl.resize(actualSize);
-
-                err = AEGetParamPtr(e,
-                                    keyDirectObject,
-                                    typeChar,
-                                    0,
-                                    bUrl.data(),
-                                    actualSize,
-                                    &actualSize);
-
-                qobject_cast<unicorn::Application*>(qApp)->appleEventReceived( QStringList() << bUrl );
-            }
-        }
-
         return noErr;
     }
 
