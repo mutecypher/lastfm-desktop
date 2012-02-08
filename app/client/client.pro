@@ -107,7 +107,8 @@ SOURCES += \
     Widgets/ContextLabel.cpp \
     Widgets/SimilarArtistWidget.cpp \
     Widgets/PushButton.cpp \
-    Dialogs/BetaDialog.cpp
+    Dialogs/BetaDialog.cpp \
+    Dialogs/CloseAppsDialog.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -124,8 +125,6 @@ HEADERS += \
     Services/ScrobbleService/ScrobbleService.h \
     Services/RadioService.h \
     Services/RadioService/RadioService.h \
-    Services/ITunesPluginInstaller.h \
-    Services/ITunesPluginInstaller/ITunesPluginInstaller.h \
     MediaDevices/MediaDevice.h \
     MediaDevices/IpodDevice.h \
     MediaDevices/DeviceScrobbler.h \
@@ -191,7 +190,8 @@ HEADERS += \
     Widgets/ContextLabel.h \
     Widgets/SimilarArtistWidget.h \
     Widgets/PushButton.h \
-    Dialogs/BetaDialog.h
+    Dialogs/BetaDialog.h \
+    Dialogs/CloseAppsDialog.h
 
 
 win32:HEADERS += Plugins/FooBar08PluginInfo.h \
@@ -212,11 +212,14 @@ win32:SOURCES += Plugins/PluginList.cpp \
                     Plugins/WmpPluginInfo.cpp
 
 
-mac:HEADERS += CommandReciever/CommandReciever.h
+mac:HEADERS += CommandReciever/CommandReciever.h \
+    Services/ITunesPluginInstaller.h \
+    Services/ITunesPluginInstaller/ITunesPluginInstaller.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
-mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm
+mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
+                        Dialogs/CloseAppsDialog_mac.mm
 
 FORMS += \
     Widgets/TagFilterDialog.ui \
@@ -234,7 +237,8 @@ FORMS += \
     Widgets/NothingPlayingWidget.ui \
     Widgets/FriendWidget.ui \
     Widgets/FriendListWidget.ui \
-    Dialogs/BetaDialog.ui
+    Dialogs/BetaDialog.ui \
+    Dialogs/CloseAppsDialog.ui
 
 linux*:HEADERS += MediaDevices/IpodDevice_linux.h
 linux*:SOURCES += MediaDevices/IpodDevice_linux.cpp

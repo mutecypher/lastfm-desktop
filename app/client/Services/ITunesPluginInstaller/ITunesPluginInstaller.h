@@ -24,21 +24,19 @@
 #include <QString>
 
 
-/** @author Christian Muehlhaeuser <chris@last.fm>
-  * @contributor Max Howell <max@last.fm>
-  */
-class ITunesPluginInstaller
+class ITunesPluginInstaller : public QObject
 {
-    Q_DECLARE_TR_FUNCTIONS( ITunesPluginInstaller )
-
+    Q_OBJECT
 public:
-    ITunesPluginInstaller();
+    ITunesPluginInstaller( QObject* parent = 0 );
     
-    void install();
     void uninstall();
 
     // NOTE this is only valid after calling install()
     bool needsTwiddlyBootstrap() const { return m_needsTwiddlyBootstrap; }
+
+public slots:
+    void install();
 
 private:
     bool isPluginInstalled();

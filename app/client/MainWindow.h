@@ -9,6 +9,10 @@
 #include "lib/unicorn/UnicornMainWindow.h"
 #include "lib/unicorn/StylableWidget.h"
 
+#ifdef  Q_OS_MAC
+#include "Services/ITunesPluginInstaller/ITunesPluginInstaller.h"
+#endif
+
 #include "Settings/PreferencesDialog.h"
 #include "Dialogs/BetaDialog.h"
 
@@ -118,6 +122,10 @@ private:
     QPointer<BetaDialog> m_beta;
     QPointer<Updater> m_updater;
     QPointer<PluginList> m_pluginList;
+
+#ifdef Q_WS_MAC
+    QPointer<ITunesPluginInstaller> m_installer;
+#endif
 };
 
 #endif //METADATA_WINDOW_H_

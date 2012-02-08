@@ -18,22 +18,25 @@
  *   51 Franklin Steet, Fifth Floor, Boston, MA  02110-1301, USA.          *
  ***************************************************************************/
 
-#include "ITunesPluginInstaller.h"
-#include <CoreFoundation/CoreFoundation.h>
-
 #include <QDir>
 #include <QProcess>
 #include <QDebug>
 
+#include <CoreFoundation/CoreFoundation.h>
+
+#include "../Dialogs/CloseAppsDialog.h"
+
+#include "ITunesPluginInstaller.h"
 
 static const char* kBundleName = "AudioScrobbler.bundle";
 static const char* kPListFile = "Contents/Info.plist";
 
 
-ITunesPluginInstaller::ITunesPluginInstaller()
-        : k_shippedPluginDir( qApp->applicationDirPath() + "/" + kBundleName + "/" ),
-          k_iTunesPluginDir( QDir::homePath() + "/Library/iTunes/iTunes Plug-ins/" + kBundleName + "/" ),
-          m_needsTwiddlyBootstrap( false )
+ITunesPluginInstaller::ITunesPluginInstaller( QObject* parent )
+    :QObject( parent ),
+      k_shippedPluginDir( qApp->applicationDirPath() + "/" + kBundleName + "/" ),
+      k_iTunesPluginDir( QDir::homePath() + "/Library/iTunes/iTunes Plug-ins/" + kBundleName + "/" ),
+      m_needsTwiddlyBootstrap( false )
 {
     qDebug() << " shippedPluginDir: " << k_shippedPluginDir;
 }
@@ -70,6 +73,14 @@ ITunesPluginInstaller::install()
         if ( installedVersion != shippedVersion )
         {
             qDebug() << "Installing shipped iTunes plugin...";
+
+
+            if ( CloseAppsDialog::runningApps().count() != 0 )
+            {
+                CloseAppsDialog* closeApps = new CloseAppsDialog();
+                closeApps->exec();
+                delete closeApps;
+            }
 
             if ( !removeInstalledPlugin() )
             {

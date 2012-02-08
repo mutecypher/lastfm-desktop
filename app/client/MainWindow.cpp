@@ -301,6 +301,14 @@ MainWindow::showEvent(QShowEvent *)
 {
     if ( m_preferences )
         m_preferences->show();
+
+#ifdef Q_OS_MAC
+    if ( !m_installer )
+    {
+        m_installer = new ITunesPluginInstaller( this );
+        QTimer::singleShot( 1000, m_installer, SLOT(install()) );
+    }
+#endif
 }
 
 void
