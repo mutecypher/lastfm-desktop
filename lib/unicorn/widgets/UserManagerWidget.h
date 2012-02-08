@@ -33,7 +33,6 @@ public:
 
 protected slots:
     void onUserFetched();
-    void onImageLoaded();
     void removeMe();
 
 protected:
@@ -44,7 +43,7 @@ protected:
     QLabel* m_name;
     QLabel* m_realName;
     QLabel* m_loggedIn;
-    QLabel* m_image;
+    class AvatarWidget* m_image;
     QFrame* m_f;
 };
 

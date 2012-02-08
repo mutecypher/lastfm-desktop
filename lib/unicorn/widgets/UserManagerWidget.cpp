@@ -1,5 +1,6 @@
 #include "UserManagerWidget.h"
 
+#include "lib/unicorn/widgets/AvatarWidget.h"
 #include "lib/unicorn/dialogs/LoginContinueDialog.h"
 #include "lib/unicorn/dialogs/LoginDialog.h"
 #include "lib/unicorn/LoginProcess.h"
@@ -24,34 +25,36 @@
 
 using lastfm::User;
 UserRadioButton::UserRadioButton( const User& user )
-                :m_userName( user.name() )
+    :m_userName( user.name() )
 {
-    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
-
-    if( user == User()) setChecked( true );
+    if( user == User() )
+        setChecked( true );
 
     QHBoxLayout* l = new QHBoxLayout();
-    l->setContentsMargins( 20, 0, 0, 0 );
-    l->addWidget( m_image = new QLabel(), 0, Qt::AlignTop);
-    m_image->setFrameShape( QFrame::Box );
-    m_image->setFrameShadow( QFrame::Plain );
-    unsigned int framewidth = m_image->lineWidth() * 2;
-    m_image->setMinimumSize( QSize( 35+framewidth, 35+ framewidth ));
-    m_image->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::MinimumExpanding );
+    l->setContentsMargins( 0, 0, 0, 0 );
+
+
+    l->addWidget( m_image = new AvatarWidget( this ) );
+    m_image->setObjectName( "image" );
     
     installEventFilter( this );
-    if( user.imageUrl( lastfm::Medium ).isEmpty()) {
+
+    if( user.imageUrl( lastfm::Medium ).isEmpty())
+    {
         QNetworkReply* reply = User::getInfo( user.name() );
         connect( reply, SIGNAL(finished()), SLOT( onUserFetched()));
-    } else {
+    }
+    else
+    {
         QNetworkReply* reply = lastfm::nam()->get( QNetworkRequest( user.imageUrl(lastfm::Medium)));
         connect( reply, SIGNAL(finished()), SLOT( onImageLoaded()));
     }
+
     QGridLayout* gl = new QGridLayout();
     gl->setSpacing( 0 );
-    gl->addWidget( m_name = new QLabel(user.name()), 0, 0, Qt::AlignTop );
-    gl->addWidget( m_realName = new QLabel(), 0, 1, Qt::AlignTop );
-    gl->addWidget( m_loggedIn = new QLabel(), 1, 0, 1, 2, Qt::AlignTop );
+    gl->addWidget( m_name = new QLabel(user.name()), 0, 0 );
+    gl->addWidget( m_realName = new QLabel(), 0, 1 );
+    gl->addWidget( m_loggedIn = new QLabel(), 1, 0, 1, 2 );
     m_realName->setObjectName( "realname" );
     l->addLayout( gl );
     l->addStretch();
@@ -74,15 +77,16 @@ UserRadioButton::onUserFetched()
     {
         User user( lfm["user"] );
 
-        m_name->setText( user.name());
-        if( !user.realName().isEmpty())
-            m_realName->setText( QString( " (%1)" ).arg(user.realName()));
+        m_name->setText( user.name() );
 
-        if( user == User())
+        if( !user.realName().isEmpty() )
+            m_realName->setText( QString( " (%1)" ).arg( user.realName() ) );
+
+        if( user == User() )
             m_loggedIn->setText( "(" + tr( "currently logged in" ) + ")" );
 
-        reply = lastfm::nam()->get( QNetworkRequest( user.imageUrl(lastfm::Medium)));
-        connect( reply, SIGNAL(finished()), SLOT( onImageLoaded()));
+        m_image->loadUrl( user.imageUrl( lastfm::Medium ) );
+        m_image->setHref( user.www() );
 
         m_userName = user.name();
     }
@@ -90,17 +94,6 @@ UserRadioButton::onUserFetched()
     {
         qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
-}
-
-void 
-UserRadioButton::onImageLoaded()
-{
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    if( !reply ) return;
-
-    QPixmap pm;
-    pm.loadFromData( reply->readAll());
-    m_image->setPixmap( pm.scaledToWidth( 35, Qt::SmoothTransformation ));
 }
 
 bool 
@@ -132,7 +125,9 @@ UserRadioButton::removeMe()
                                   .setIcon( QMessageBox::Question )
                                   .setButtons( QMessageBox::Yes | QMessageBox::No )
                                   .exec();
-    if( result != QMessageBox::Yes ) return;
+
+    if( result != QMessageBox::Yes )
+        return;
 
     unicorn::Settings us;
     us.beginGroup( "Users" );
@@ -145,13 +140,15 @@ UserRadioButton::removeMe()
         qobject_cast<unicorn::Application*>( qApp )->restart();
     }
 
-    if( isChecked()) {
-        foreach (UserRadioButton* b, parentWidget()->findChildren<UserRadioButton*>()) {
-            if( b->user() == User().name()) {
+    if( isChecked() )
+    {
+        foreach ( UserRadioButton* b, parentWidget()->findChildren<UserRadioButton*>() )
+        {
+            if( b->user() == User().name() )
                 b->click();
-            }
         }
     }
+
     deleteLater();
 }
 
@@ -164,10 +161,10 @@ UserRadioButton::user() const
 
 
 UserManagerWidget::UserManagerWidget( QWidget* parent )
-            :QWidget( parent )
-            , m_buttonGroup( new QButtonGroup( this ) )
-            , m_loginProcess( 0 )
-            , m_lcd( 0 )
+    :QWidget( parent )
+    ,m_buttonGroup( new QButtonGroup( this ) )
+    ,m_loginProcess( 0 )
+    ,m_lcd( 0 )
 {
     m_lcd = new LoginContinueDialog( this );
     connect( m_lcd, SIGNAL( accepted()), SLOT( onUserAdded()));
@@ -191,11 +188,10 @@ UserManagerWidget::UserManagerWidget( QWidget* parent )
 
     layout->addLayout( buttonLayout );
 
-    layout->addStretch();
-
     QList<lastfm::User> roster = unicorn::Settings().userRoster();
 
-    foreach( lastfm::User u, roster ) {
+    foreach( lastfm::User u, roster )
+    {
         UserRadioButton* b = new UserRadioButton( u );
         add( b, false );
     }
@@ -307,7 +303,7 @@ UserManagerWidget::add( UserRadioButton* urb, bool announce )
     ui.usersLayout->insertWidget( ui.usersLayout->count() - 2, urb );
     m_buttonGroup->addButton( urb );
 
-    if( announce )
+    if ( announce )
         emit rosterUpdated();
 
     connect( urb, SIGNAL( destroyed(QObject*)), SIGNAL( rosterUpdated()));
