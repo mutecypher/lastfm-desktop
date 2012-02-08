@@ -23,7 +23,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="friendsPage">
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -55,6 +55,9 @@
          </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::NoSelection</enum>
+         </property>
+         <property name="verticalScrollMode">
+          <enum>QAbstractItemView::ScrollPerPixel</enum>
          </property>
          <property name="uniformItemSizes">
           <bool>false</bool>
@@ -132,14 +135,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PushButton</class>
-   <extends>QPushButton</extends>
-   <header>../Widgets/PushButton.h</header>
-  </customwidget>
-  <customwidget>
    <class>unicorn::Label</class>
    <extends>QLabel</extends>
    <header>lib/unicorn/widgets/Label.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PushButton</class>
+   <extends>QPushButton</extends>
+   <header>../Widgets/PushButton.h</header>
   </customwidget>
   <customwidget>
    <class>StylableWidget</class>
