@@ -77,7 +77,6 @@ using audioscrobbler::Application;
 #elif defined( Q_WS_WIN )
     #define AS_TRAY_ICON ":22x22.png"
 #elif defined( Q_WS_MAC )
-    #include "Services/ITunesPluginInstaller/ITunesPluginInstaller.h"
     #define AS_TRAY_ICON ":systray_icon_rest_mac.png"
 #endif
 
@@ -134,13 +133,6 @@ Application::initiateLogin( bool forceWizard ) throw( StubbornUserException )
 void
 Application::init()
 {
-#ifdef Q_WS_MAC
-    // The mac plugin needs to be installed before we
-    // run the wizard for possible bootstrapping
-    ITunesPluginInstaller installer;
-    installer.install();
-#endif
-
     // Initialise the unicorn base class first!
     unicorn::Application::init();
 
