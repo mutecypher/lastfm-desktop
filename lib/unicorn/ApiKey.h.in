@@ -21,8 +21,7 @@
 #ifndef APIKEY_H
 #define APIKEY_H
 
-#error Change these values to your details from www.last.fm/api
-#define API_SECRET  ""
 #define API_KEY ""
+#define API_SECRET  ""
 
 #endif // APIKEY_H
