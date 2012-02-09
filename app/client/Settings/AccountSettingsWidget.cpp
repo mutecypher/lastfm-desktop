@@ -52,14 +52,14 @@ void
 AccountSettingsWidget::saveSettings()
 {
     qDebug() << "has unsaved changes?" << hasUnsavedChanges();
+
     if ( hasUnsavedChanges() )
     {
-        unicorn::UserSettings s;
-
-
         UserRadioButton* urb = qobject_cast<UserRadioButton*>( ui->users->checkedButton() );
+
         if ( urb && urb->user() != User().name() )
         {
+            unicorn::Settings s;
             s.setValue( "Username", urb->user() );
 
             unicorn::UserSettings us( urb->user() );

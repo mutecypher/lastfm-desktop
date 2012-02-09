@@ -77,7 +77,6 @@ UserMenu::refresh()
 {
     clear();
 
-    addAction( tr( "Manage Accounts" ), this, SLOT(manageUsers()));
     m_subscribe = addAction( tr( "Subscribe" ), this, SLOT(subscribe()));
 
     addSeparator();

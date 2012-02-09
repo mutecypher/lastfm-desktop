@@ -25,45 +25,70 @@
 
 using lastfm::User;
 UserRadioButton::UserRadioButton( const User& user )
-    :m_userName( user.name() )
 {
-    if( user == User() )
-        setChecked( true );
+    addWidget( ui.button = new QRadioButton() );
+    ui.button->setObjectName( "button" );
 
-    QHBoxLayout* l = new QHBoxLayout();
-    l->setContentsMargins( 0, 0, 0, 0 );
+    addWidget( ui.image = new AvatarWidget() );
+    ui.image->setObjectName( "image" );
 
+    addWidget( ui.username = new QLabel( user.name() ) );
+    addWidget( ui.realName = new QLabel() );
+    addWidget( ui.loggedIn = new QLabel() );
+    ui.realName->setObjectName( "realname" );
 
-    l->addWidget( m_image = new AvatarWidget( this ) );
-    m_image->setObjectName( "image" );
-    
-    installEventFilter( this );
+    addStretch();
 
-    if( user.imageUrl( lastfm::Medium ).isEmpty())
+    addWidget( ui.remove = new QPushButton( tr("Remove") ));
+
+    if( user.imageUrl( lastfm::Medium ).isEmpty() )
     {
         QNetworkReply* reply = User::getInfo( user.name() );
         connect( reply, SIGNAL(finished()), SLOT( onUserFetched()));
     }
     else
-    {
-        QNetworkReply* reply = lastfm::nam()->get( QNetworkRequest( user.imageUrl(lastfm::Medium)));
-        connect( reply, SIGNAL(finished()), SLOT( onImageLoaded()));
-    }
+        setUser( user );
 
-    QGridLayout* gl = new QGridLayout();
-    gl->setSpacing( 0 );
-    gl->addWidget( m_name = new QLabel(user.name()), 0, 0 );
-    gl->addWidget( m_realName = new QLabel(), 0, 1 );
-    gl->addWidget( m_loggedIn = new QLabel(), 1, 0, 1, 2 );
-    m_realName->setObjectName( "realname" );
-    l->addLayout( gl );
-    l->addStretch();
-    QPushButton* remove;
-    l->addWidget( remove = new QPushButton( tr("Remove") ));
-    connect( remove, SIGNAL(clicked()), SLOT(removeMe()));
-    QVBoxLayout* vl = new QVBoxLayout(this);
-    vl->addLayout( l );
-    remove->setFocusPolicy( Qt::NoFocus );
+    connect( ui.button, SIGNAL(clicked()), this, SIGNAL(clicked()) );
+    connect( ui.remove, SIGNAL(clicked()), this, SIGNAL(remove()) );
+
+    connect( qApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)) );
+}
+
+void
+UserRadioButton::onSessionChanged( unicorn::Session* session )
+{
+    if( ui.username->text() == session->userInfo().name() )
+        ui.loggedIn->setText( tr( "(currently logged in)" ) );
+    else
+        ui.loggedIn->clear();
+}
+
+void
+UserRadioButton::click()
+{
+    ui.button->click();
+}
+
+bool
+UserRadioButton::isChecked() const
+{
+    return ui.button->isChecked();
+}
+
+void
+UserRadioButton::setUser( const lastfm::User& user )
+{
+    ui.username->setText( user.name() );
+
+    if( !user.realName().isEmpty() )
+        ui.realName->setText( QString( " (%1)" ).arg( user.realName() ) );
+
+    if( user == User() )
+        ui.loggedIn->setText( tr( "(currently logged in)" ) );
+
+    ui.image->loadUrl( user.imageUrl( lastfm::Medium ) );
+    ui.image->setHref( user.www() );
 }
 
 void 
@@ -76,19 +101,7 @@ UserRadioButton::onUserFetched()
     if ( lfm.parse( reply->readAll() ) )
     {
         User user( lfm["user"] );
-
-        m_name->setText( user.name() );
-
-        if( !user.realName().isEmpty() )
-            m_realName->setText( QString( " (%1)" ).arg( user.realName() ) );
-
-        if( user == User() )
-            m_loggedIn->setText( "(" + tr( "currently logged in" ) + ")" );
-
-        m_image->loadUrl( user.imageUrl( lastfm::Medium ) );
-        m_image->setHref( user.www() );
-
-        m_userName = user.name();
+        setUser( user );
     }
     else
     {
@@ -96,75 +109,16 @@ UserRadioButton::onUserFetched()
     }
 }
 
-bool 
-UserRadioButton::eventFilter( QObject* /*obj*/, QEvent* event )
-{
-    QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>( event );
-    if( !mouseEvent ) return false;
-
-    int l,t,r,b;
-    getContentsMargins( &l, &t, &r, &b );
-    QMouseEvent mEvent( mouseEvent->type(), QPoint( l, height()/2 ), mouseEvent->button(), mouseEvent->buttons(), mouseEvent->modifiers());
-    
-    // Remove the event filter so that the fake mouse event can actually
-    // be passed to the radio button and then set the eventFilter again.
-    removeEventFilter( this );
-    if( this )
-        QCoreApplication::sendEvent( this, &mEvent );
-    installEventFilter( this );
-
-    return true;
-}
-
-void
-UserRadioButton::removeMe()
-{
-    int result =
-        QMessageBoxBuilder( this ).setTitle( tr( "Removing %1" ).arg( m_name->text() ) )
-                                  .setText( tr( "Are you sure you want to remove this user? All user settings will be lost and you will need to re authenticate in order to scrobble in the future." ))
-                                  .setIcon( QMessageBox::Question )
-                                  .setButtons( QMessageBox::Yes | QMessageBox::No )
-                                  .exec();
-
-    if( result != QMessageBox::Yes )
-        return;
-
-    unicorn::Settings us;
-    us.beginGroup( "Users" );
-    us.remove( m_name->text() );
-    us.endGroup();
-
-    if ( us.userRoster().count() == 0 )
-    {
-        us.setValue( SETTING_FIRST_RUN_WIZARD_COMPLETED, false );
-        qobject_cast<unicorn::Application*>( qApp )->restart();
-    }
-
-    if( isChecked() )
-    {
-        foreach ( UserRadioButton* b, parentWidget()->findChildren<UserRadioButton*>() )
-        {
-            if( b->user() == User().name() )
-                b->click();
-        }
-    }
-
-    deleteLater();
-}
-
 
 const QString 
 UserRadioButton::user() const
 {
-    return m_userName;
+    return ui.username->text();
 }
 
 
 UserManagerWidget::UserManagerWidget( QWidget* parent )
     :QWidget( parent )
-    ,m_buttonGroup( new QButtonGroup( this ) )
-    ,m_loginProcess( 0 )
-    ,m_lcd( 0 )
 {
     m_lcd = new LoginContinueDialog( this );
     connect( m_lcd, SIGNAL( accepted()), SLOT( onUserAdded()));
@@ -177,7 +131,6 @@ UserManagerWidget::UserManagerWidget( QWidget* parent )
     ui.usersLayout = new QVBoxLayout( ui.groupBox );
 
     ui.groupBox->setTitle( tr( "Connected User Accounts:" ));
-    ui.groupBox->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
 
     QHBoxLayout* buttonLayout = new QHBoxLayout();
 
@@ -188,6 +141,8 @@ UserManagerWidget::UserManagerWidget( QWidget* parent )
 
     layout->addLayout( buttonLayout );
 
+    layout->addStretch();
+
     QList<lastfm::User> roster = unicorn::Settings().userRoster();
 
     foreach( lastfm::User u, roster )
@@ -197,9 +152,6 @@ UserManagerWidget::UserManagerWidget( QWidget* parent )
     }
 
     connect( ui.addUserButton, SIGNAL( clicked() ), SLOT( onAddUserClicked() ) );
-    connect( m_buttonGroup, SIGNAL( buttonClicked( int ) ), this, SIGNAL( userChanged() ) );
-
-    setTabOrders();
 }
 
 
@@ -213,7 +165,7 @@ UserManagerWidget::onAddUserClicked()
     LoginDialog* ld = new LoginDialog( this );
     ld->setWindowFlags( Qt::Sheet );
     ld->open();
-    connect( ld, SIGNAL( accepted()), SLOT( onLoginDialogAccepted()));
+    connect( ld, SIGNAL( accepted()), SLOT( onLoginDialogAccepted()) );
 }
 
 
@@ -234,8 +186,7 @@ UserManagerWidget::onLoginDialogAccepted()
     ld->deleteLater();
 
 
-    connect( m_loginProcess, SIGNAL( gotSession( unicorn::Session& ) ),
-             this, SLOT( onGotSession( unicorn::Session& ) ) );
+    connect( m_loginProcess, SIGNAL(gotSession(unicorn::Session*)), SLOT( onGotSession( unicorn::Session* ) ) );
 
     m_loginProcess->authenticate();
 
@@ -246,7 +197,7 @@ UserManagerWidget::onLoginDialogAccepted()
 
 
 void
-UserManagerWidget::onGotSession( unicorn::Session& s )
+UserManagerWidget::onGotSession( unicorn::Session* s )
 {
     Q_UNUSED( s )
     m_lcd->accept();
@@ -282,9 +233,8 @@ UserManagerWidget::onUserAdded()
         UserRadioButton* urb = new UserRadioButton( user );
 
         add( urb );
-        if( ui.groupBox->layout()->count() <= 1 ) urb->click();
-
-        setTabOrders();
+        if( ui.groupBox->layout()->count() <= 1 )
+            urb->click();
     }
     else
     {
@@ -297,11 +247,79 @@ UserManagerWidget::onUserAdded()
     }
 }
 
+void
+UserManagerWidget::onUserRemoved()
+{
+    UserRadioButton* urb = qobject_cast<UserRadioButton*>(sender());
+
+    int result =
+        QMessageBoxBuilder( parentWidget() ).setTitle( tr( "Removing %1" ).arg( urb->user() ) )
+                                  .setText( tr( "Are you sure you want to remove this user? All user settings will be lost and you will need to re authenticate in order to scrobble in the future." ))
+                                  .setIcon( QMessageBox::Question )
+                                  .setButtons( QMessageBox::Yes | QMessageBox::No )
+                                  .exec();
+
+    if( result != QMessageBox::Yes )
+        return;
+
+    unicorn::Settings us;
+    us.beginGroup( "Users" );
+    us.remove( urb->user() );
+    us.endGroup();
+
+    if ( us.userRoster().count() == 0 )
+    {
+        us.setValue( SETTING_FIRST_RUN_WIZARD_COMPLETED, false );
+        qobject_cast<unicorn::Application*>( qApp )->restart();
+    }
+
+    // if this is the currently logged in user we will have to choose someone else
+    if( urb->ui.button->isChecked() )
+    {
+        for ( int i = 0 ; i < ui.usersLayout->count() ; ++i )
+        {
+            UserRadioButton* button = qobject_cast<UserRadioButton*>(ui.usersLayout->itemAt( i )->layout());
+
+            if ( button->user() != urb->user() )
+            {
+                // This is the first user in the list that are not deleting!
+
+                button->click();
+
+                unicorn::Settings s;
+                s.setValue( "Username", button->user() );
+
+                unicorn::UserSettings us( button->user() );
+                QString sessionKey = us.value( "SessionKey", "" ).toString();
+                qobject_cast<unicorn::Application *>( qApp )->changeSession( button->user(), sessionKey, true );
+
+                break;
+            }
+        }
+    }
+
+    // delete all the widgets, that this layout has
+    QLayoutItem* item;
+    while ( (item = urb->takeAt( 0 )) != 0  )
+    {
+        QWidget* widget = item->widget();
+        if ( widget )
+            widget->deleteLater();
+    }
+
+    urb->deleteLater();
+}
+
 void 
 UserManagerWidget::add( UserRadioButton* urb, bool announce )
 {
-    ui.usersLayout->insertWidget( ui.usersLayout->count() - 2, urb );
-    m_buttonGroup->addButton( urb );
+    ui.usersLayout->addLayout( urb );
+
+    if ( urb->user() == User().name() )
+        urb->click();
+
+    connect( urb, SIGNAL(remove()), SLOT(onUserRemoved()));
+    connect( urb, SIGNAL( clicked() ), this, SIGNAL( userChanged() ) );
 
     if ( announce )
         emit rosterUpdated();
@@ -309,21 +327,19 @@ UserManagerWidget::add( UserRadioButton* urb, bool announce )
     connect( urb, SIGNAL( destroyed(QObject*)), SIGNAL( rosterUpdated()));
 }
 
-void
-UserManagerWidget::setTabOrders()
-{
-    if( m_buttonGroup->buttons().count() )
-    {
-        if( m_buttonGroup->checkedButton() )
-        {
-            qDebug() << "button: " << qobject_cast<UserRadioButton *>( m_buttonGroup->checkedButton() )->user();
-            setTabOrder( m_buttonGroup->checkedButton(), ui.addUserButton );
-        }
-    }
- }
 
-QAbstractButton*
+UserRadioButton*
 UserManagerWidget::checkedButton() const
 {
-    return m_buttonGroup->checkedButton();
+    for ( int i = 0 ; i < ui.usersLayout->count() ; ++i )
+    {
+        UserRadioButton* button = qobject_cast<UserRadioButton*>(ui.usersLayout->itemAt( i )->layout());
+
+        if ( button && button->isChecked() )
+        {
+            return button;
+        }
+    }
+
+    return 0;
 }
