@@ -41,13 +41,14 @@ UserRadioButton::UserRadioButton( const User& user )
 
     addWidget( ui.remove = new QPushButton( tr("Remove") ));
 
+    setUser( user );
+
     if( user.imageUrl( lastfm::Medium ).isEmpty() )
     {
         QNetworkReply* reply = User::getInfo( user.name() );
         connect( reply, SIGNAL(finished()), SLOT( onUserFetched()));
     }
-    else
-        setUser( user );
+
 
     connect( ui.button, SIGNAL(clicked()), this, SIGNAL(clicked()) );
     connect( ui.remove, SIGNAL(clicked()), this, SIGNAL(remove()) );
@@ -87,7 +88,9 @@ UserRadioButton::setUser( const lastfm::User& user )
     if( user == User() )
         ui.loggedIn->setText( tr( "(currently logged in)" ) );
 
-    ui.image->loadUrl( user.imageUrl( lastfm::Medium ) );
+    if ( !user.imageUrl( lastfm::Medium ).isEmpty() )
+            ui.image->loadUrl( user.imageUrl( lastfm::Medium ) );
+
     ui.image->setHref( user.www() );
 }
 
