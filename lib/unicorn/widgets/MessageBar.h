@@ -20,43 +20,34 @@
 #ifndef MESSAGE_BAR_H
 #define MESSAGE_BAR_H
 
-#include <QWidget>
-
 #include <lastfm/Track.h>
 
+#include "lib/unicorn/StylableWidget.h"
 #include "lib/DllExportMacro.h"
 
-class UNICORN_DLLEXPORT MessageBar : public QWidget
+class UNICORN_DLLEXPORT MessageBar : public StylableWidget
 {
-    Q_OBJECT
-
+    Q_OBJECT 
+private:
     struct
     {
-        QWidget* papyrus;
+        class QLabel* icon;
+        class QLabel* message;
+        class QPushButton* close;
     } ui;
-    
-    void doLayout();
-    
+
 public:
-    MessageBar( QWidget* parent );
+    explicit MessageBar( QWidget* parent );
 
     void setTracks( const QList<lastfm::Track>& tracks );
     
 public slots:
-    void show( const QString&, const QString& id = QString() );
+    void show( const QString& message, const QString& id = QString() );
 
-private:
-    void removeAll();
-    void show( QWidget*, bool animate );
-    
 private slots:
-    void animate( int );
-    void onLabelDestroyed();
     void onLinkActivated( const QString& link );
 
 private:
-    class QTimeLine* m_timeline;
-
     QList<lastfm::Track> m_tracks;
 };
 

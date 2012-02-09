@@ -17,28 +17,34 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "MessageBar.h"
-#include "common/qt/reverse.cpp"
+
 #include <QtGui>
 #include <QLabel>
 
 #include "lib/unicorn/dialogs/ScrobbleConfirmationDialog.h"
 
+#include "MessageBar.h"
 
 MessageBar::MessageBar( QWidget* parent )
-           :QWidget( parent )
+    :StylableWidget( parent )
 {
-    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
-    updateGeometry();
+    QHBoxLayout* layout = new QHBoxLayout( this );
 
-    setFixedHeight( 0 );
+    layout->addWidget( ui.icon = new QLabel() );
+    ui.icon->setObjectName( "icon" );
 
-    ui.papyrus = new QWidget( this );
-    
-    m_timeline = new QTimeLine( 500, this );
-    m_timeline->setUpdateInterval( 10 );
+    layout->addWidget( ui.message = new QLabel() );
+    ui.message->setObjectName( "message" );
 
-    connect( m_timeline, SIGNAL(frameChanged( int )), SLOT(animate( int )) );
+    layout->addStretch();
+
+    layout->addWidget( ui.close = new QPushButton() );
+    ui.close->setObjectName( "close" );
+
+    connect( ui.message, SIGNAL(linkActivated(QString)), SLOT(onLinkActivated(QString)));
+    connect( ui.close, SIGNAL(clicked()), SLOT(hide()));
+
+    hide();
 }
 
 void
@@ -50,24 +56,13 @@ MessageBar::setTracks( const QList<lastfm::Track>& tracks )
 void
 MessageBar::show( const QString& message, const QString& id )
 {
-    bool animate = findChildren<QLabel*>().count() != 0;
+    setObjectName( id );
+    ui.message->setText( message );
 
-    removeAll();
+    style()->polish( this );
+    style()->polish( ui.icon );
 
-    QLabel* label = new QLabel( message, ui.papyrus );
-    label->setBackgroundRole( QPalette::Base );
-    label->setMargin( 8 );
-    label->setIndent( 4 );
-    label->setTextFormat( Qt::RichText );
-    label->setOpenExternalLinks( false );
-    label->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse );
-    label->setObjectName( id );
-
-    label->adjustSize();
-
-    connect( label, SIGNAL(linkActivated(QString)), SLOT(onLinkActivated(QString)));
-
-    show( label, animate );
+    QWidget::show();
 }
 
 void
@@ -77,74 +72,5 @@ MessageBar::onLinkActivated( const QString& link )
     ScrobbleConfirmationDialog confirmDialog( m_tracks );
     confirmDialog.setReadOnly();
     confirmDialog.exec();
-}
-
-void 
-MessageBar::show( QWidget* w, bool animate )
-{
-    QPushButton* close = new QPushButton( "x" );
-    close->setObjectName( "close" );
-    QHBoxLayout* h = new QHBoxLayout( w );
-    h->addStretch();
-
-    h->addWidget( close );
-    h->setMargin( 4 );
-    
-    ui.papyrus->move( 0, -w->height() );
-
-    w->setFixedWidth( width() );
-    w->setParent( this );
-    w->show();
-
-    doLayout();
-    
-    connect( close, SIGNAL(clicked()), w, SLOT(deleteLater()) );    
-    connect( w, SIGNAL(destroyed()), SLOT(onLabelDestroyed()), Qt::QueuedConnection );
-        
-    if ( animate )
-    {
-        m_timeline->setFrameRange( height(), ui.papyrus->height() );
-        m_timeline->start();
-    }
-    else if ( m_timeline->state() != QTimeLine::Running )
-    {
-        setFixedHeight( ui.papyrus->height() );
-    }
-}
-
-
-void
-MessageBar::animate( int i )
-{
-    setFixedHeight( i );
-    ui.papyrus->move( 0, i - ui.papyrus->height() );
-}
-
-
-void
-MessageBar::doLayout()
-{
-    int y = 0;
-    foreach (QLabel* l, Qt::reverse<QLabel*>( findChildren<QLabel*>() ))
-    {        
-        l->move( 0, y );
-        y += l->height();
-    }
-    ui.papyrus->setFixedSize( width(), y );
-}
-
-
-void
-MessageBar::onLabelDestroyed()
-{
-    doLayout();
-    setFixedHeight( ui.papyrus->height() );
-}
-
-void
-MessageBar::removeAll()
-{
-    foreach ( QLabel* label, findChildren<QLabel*>() )
-        delete label;
 }
 
