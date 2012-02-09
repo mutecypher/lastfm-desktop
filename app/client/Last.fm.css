@@ -97,7 +97,6 @@ TourFinishPage QLabel#image { qproperty-pixmap: url(":/graphic_finish.png"); }
 
 MessageBar {
 	border: none;
-	max-height: 34px;
 }
 
 MessageBar#ipod {
