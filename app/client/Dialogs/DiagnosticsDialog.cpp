@@ -18,8 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "DiagnosticsDialog.h"
-//TODO #include "DiagnosticsDialog/SendLogsDialog.h"
-#include "app/twiddly.h"
+
 #include "lib/unicorn/UnicornCoreApplication.h"
 #include <lastfm/Audioscrobbler.h>
 #include <lastfm/misc.h>
@@ -166,51 +165,51 @@ DiagnosticsDialog::poll()
 void
 DiagnosticsDialog::onScrobbleIPodClicked()
 {
-#ifndef Q_WS_X11    
-    if (m_twiddly) { qWarning() << "m_twiddly already running. Early out."; return; }
+//#ifndef Q_WS_X11
+//    if (m_twiddly) { qWarning() << "m_twiddly already running. Early out."; return; }
     
-    QStringList args = (QStringList() 
-                    << "--device" << "diagnostic" 
-                    << "--vid" << "0000" 
-                    << "--pid" << "0000" 
-                    << "--serial" << "UNKNOWN");
+//    QStringList args = (QStringList()
+//                    << "--device" << "diagnostic"
+//                    << "--vid" << "0000"
+//                    << "--pid" << "0000"
+//                    << "--serial" << "UNKNOWN");
 
-    bool const isManual = ( ui.ipod_type->currentIndex() == 1 );
-    if (isManual)
-        args += "--manual";
+//    bool const isManual = ( ui.ipod_type->currentIndex() == 1 );
+//    if (isManual)
+//        args += "--manual";
 
-    QString path = unicorn::CoreApplication::log( twiddly::applicationName() ).absoluteFilePath();
-#ifndef NDEBUG
-    path = path.remove( ".debug" ); //because we run the release twiddly always
-#endif    
+//    QString path = unicorn::CoreApplication::log( twiddly::applicationName() ).absoluteFilePath();
+//#ifndef NDEBUG
+//    path = path.remove( ".debug" ); //because we run the release twiddly always
+//#endif
 
-    // we seek to the end below, but then twiddly's logger pretruncates the file
-    // which then means our seeked position is beyond the file's end, and we
-    // thus don't show any log output
-#ifdef WIN32
-    Logger::truncate( (wchar_t*) path.utf16() );
-#else
-    QByteArray const cpath = QFile::encodeName( path );
-    Logger::truncate( cpath.data() );
-#endif
+//    // we seek to the end below, but then twiddly's logger pretruncates the file
+//    // which then means our seeked position is beyond the file's end, and we
+//    // thus don't show any log output
+//#ifdef WIN32
+//    Logger::truncate( (wchar_t*) path.utf16() );
+//#else
+//    QByteArray const cpath = QFile::encodeName( path );
+//    Logger::truncate( cpath.data() );
+//#endif
 
-    m_ipod_log = new QFile( path );
-    m_ipod_log->open( QIODevice::ReadOnly );
-    m_ipod_log->seek( m_ipod_log->size() );
-    ui.ipod_log->clear();    
+//    m_ipod_log = new QFile( path );
+//    m_ipod_log->open( QIODevice::ReadOnly );
+//    m_ipod_log->seek( m_ipod_log->size() );
+//    ui.ipod_log->clear();
     
-    m_twiddly = new QProcess( this );
-    connect( m_twiddly, SIGNAL(finished( int, QProcess::ExitStatus )), SLOT(onTwiddlyFinished( int, QProcess::ExitStatus )) );
-    connect( m_twiddly, SIGNAL(error( QProcess::ProcessError )), SLOT(onTwiddlyError( QProcess::ProcessError )) );
-    m_twiddly->start( twiddly::path(), args );
+//    m_twiddly = new QProcess( this );
+//    connect( m_twiddly, SIGNAL(finished( int, QProcess::ExitStatus )), SLOT(onTwiddlyFinished( int, QProcess::ExitStatus )) );
+//    connect( m_twiddly, SIGNAL(error( QProcess::ProcessError )), SLOT(onTwiddlyError( QProcess::ProcessError )) );
+//    m_twiddly->start( twiddly::path(), args );
     
-    m_ipod_log->setParent( m_twiddly );    
+//    m_ipod_log->setParent( m_twiddly );
     
-    QTimer* timer = new QTimer( m_twiddly );
-    timer->setInterval( 10 );
-    connect( timer, SIGNAL(timeout()), SLOT(poll()) );
-    timer->start();
-#endif
+//    QTimer* timer = new QTimer( m_twiddly );
+//    timer->setInterval( 10 );
+//    connect( timer, SIGNAL(timeout()), SLOT(poll()) );
+//    timer->start();
+//#endif
 }
 
 
