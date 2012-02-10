@@ -98,7 +98,7 @@ Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\imageformats";
 Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\phonon_backend"; Flags: ignoreversion
 
 ;phonon backend plugin
-Source: "%QTDIR%\plugins\phonon_backend\qsqlite4.dll"; DestDir: "{app}\spldrivers"; Flags: ignoreversion
+Source: "%QTDIR%\plugins\sqldrivers\qsqlite4.dll"; DestDir: "{app}\spldrivers"; Flags: ignoreversion
 
 ;media player plugin installers
 Source: "..\..\..\_bin\plugins\FooPlugin0.9.4Setup_2.3.1.2.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
