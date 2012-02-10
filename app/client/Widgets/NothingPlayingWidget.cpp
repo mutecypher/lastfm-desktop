@@ -12,14 +12,6 @@
 #include "NothingPlayingWidget.h"
 #include "ui_NothingPlayingWidget.h"
 
-#ifdef Q_OS_MAC
-#define ITUNES_BUNDLEID "com.apple.iTunes"
-#include <ApplicationServices/ApplicationServices.h>
-
-//This macro clashes with Qt headers
-#undef check
-#endif
-
 NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
     :StylableWidget( parent ),
       ui( new Ui::NothingPlayingWidget )
@@ -74,23 +66,9 @@ NothingPlayingWidget::setUser( const lastfm::User& user )
         ui->top->setText( tr(  "Hello, %1!" ).arg( user.name() ) );
 }
 
+#ifndef Q_OS_MAC
 void
 NothingPlayingWidget::oniTunesClicked()
 {
-#ifdef Q_OS_MAC
-    // launch iTunes!
-    FSRef appRef;
-    LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( ITUNES_BUNDLEID ), NULL, &appRef, NULL );
-
-    LSApplicationParameters params;
-    params.version = 0;
-    params.flags = kLSLaunchDefaults;
-    params.application = &appRef;
-    params.asyncLaunchRefCon = NULL;
-    params.environment = NULL;
-    params.initialEvent = NULL;
-
-    LSOpenApplication( &params, NULL );
-#endif
 }
-
+#endif

@@ -218,7 +218,8 @@ mac:HEADERS += CommandReciever/CommandReciever.h \
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
 mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
-                        Dialogs/CloseAppsDialog_mac.mm
+                        Dialogs/CloseAppsDialog_mac.mm \
+                        Widgets/NothingPlayingWidget_mac.mm
 
 FORMS += \
     Widgets/TagFilterDialog.ui \
