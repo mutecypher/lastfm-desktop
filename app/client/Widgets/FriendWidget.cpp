@@ -27,6 +27,7 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget* parent)
     layout()->setAlignment( ui->avatar, Qt::AlignTop );
 
     m_movie = new QMovie( ":/icon_eq.gif", "GIF", this );
+    m_movie->setCacheMode( QMovie::CacheAll );
     ui->equaliser->setMovie( m_movie );
     ui->equaliser->hide();
 

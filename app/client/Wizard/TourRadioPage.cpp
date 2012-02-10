@@ -30,7 +30,7 @@ TourRadioPage::TourRadioPage()
 void
 TourRadioPage::initializePage()
 {
-    if ( aApp->currentSession() && aApp->currentSession()->userInfo().isSubscriber() )
+    if ( wizard()->user().isSubscriber() )
     {
         setTitle( tr( "Listen to non-stop, personalised radio." ) );
         ui.description->setText( "<p>Use the Last.fm Desktop App to listen to non-stop personalised radio based on the music you want to hear.</p>"

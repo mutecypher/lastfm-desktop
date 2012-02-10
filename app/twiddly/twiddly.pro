@@ -16,14 +16,17 @@ DEFINES += LASTFM_COLLAPSE_NAMESPACE
 SOURCES = main.cpp \
           TwiddlyApplication.cpp \
           PlayCountsDatabase.cpp \
-          IPod.cpp
+          IPod.cpp \
+          Utils.cpp
 
 HEADERS = TwiddlyApplication.h \
           PlayCountsDatabase.h \
-          IPod.h
+          IPod.h \
+          Utils.h
 
 mac {
     SOURCES += ITunesLibrary_mac.cpp
+    OBJECTIVE_SOURCES += Utils_mac.mm
 }
 
 win32 {

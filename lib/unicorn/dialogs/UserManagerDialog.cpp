@@ -45,8 +45,10 @@ void
 UserManagerDialog::onAccept()
 {
     unicorn::Settings s;
-    UserRadioButton* urb = qobject_cast<UserRadioButton*>( m_users->checkedButton() );
-    if( !urb || urb->user() == User().name()) return QDialog::reject();
+    UserRadioButton* urb = m_users->checkedButton();
+
+    if( !urb || urb->user() == User().name())
+        return QDialog::reject();
 
     s.setValue( "Username", urb->user());
     QDialog::accept();

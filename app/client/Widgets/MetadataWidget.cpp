@@ -77,6 +77,7 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     ui->artistBioEdit->hide();
 
     m_movie = new QMovie( ":/loading_meta.gif", "GIF", this );
+    m_movie->setCacheMode( QMovie::CacheAll );
     ui->spinnerLabel->setMovie (m_movie );
     m_movie->start();
 

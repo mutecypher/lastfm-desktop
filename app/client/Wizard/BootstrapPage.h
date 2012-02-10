@@ -64,7 +64,7 @@ private slots:
     
 protected:
     QString m_playerId;
-    QLayout* m_pluginsLayout;
+    QVBoxLayout* m_pluginsLayout;
 };
 
 #endif //BOOTSTRAP_WIZARD_H

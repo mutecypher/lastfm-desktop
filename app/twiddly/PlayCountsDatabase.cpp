@@ -255,23 +255,6 @@ AutomaticIPod::PlayCountsDatabase::isBootstrapNeeded() const
     return true;
 }
 
-
-static QString
-pluginPath()
-{
-  #ifdef Q_OS_MAC
-    QString path = std::getenv( "HOME" );
-    path += "/Library/iTunes/iTunes Plug-ins/AudioScrobbler.bundle/Contents/MacOS/AudioScrobbler";
-    return path;
-  #else
-	QString path = Plugin::Settings().value( "itw/Path" ).toString();
-    if (path.isEmpty())
-        throw "Unknown iTunes plugin path";
-    return path;
-  #endif
-}
-
-
 void
 AutomaticIPod::PlayCountsDatabase::bootstrap()
 {
@@ -341,9 +324,6 @@ AutomaticIPod::PlayCountsDatabase::bootstrap()
     query.exec( "CREATE TABLE metadata (key VARCHAR( 32 ), value VARCHAR( 32 ))" );
     query.exec( "INSERT INTO metadata (key, value) VALUES ('bootstrap_complete', 'true')" );
     
-    QString const t = QString::number( common::fileCreationTime( pluginPath() ) );
-    query.exec( "INSERT INTO metadata (key, value) VALUES ('plugin_ctime', '"+t+"')" );
-
     endTransaction();
 
     static_cast<TwiddlyApplication*>(qApp)->sendBusMessage( "container://Notification/Twiddly/Bootstrap/Finished" );

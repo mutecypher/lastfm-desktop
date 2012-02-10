@@ -39,6 +39,14 @@ CloseAppsDialog::checkApps()
     ui->listWidget->setUpdatesEnabled( true );
 }
 
+#ifndef Q_OS_MAC
+QStringList
+CloseAppsDialog::runningApps()
+{
+    return QStringList();
+}
+
+#endif
 
 CloseAppsDialog::~CloseAppsDialog()
 {

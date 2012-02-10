@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = "Last.fm"
-VERSION = 2.0.12
+VERSION = 2.0.13
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql phonon
 CONFIG += lastfm unicorn listener
@@ -211,7 +211,6 @@ win32:SOURCES += Plugins/PluginList.cpp \
                     Plugins/WinampPluginInfo.cpp \
                     Plugins/WmpPluginInfo.cpp
 
-
 mac:HEADERS += CommandReciever/CommandReciever.h \
     Services/ITunesPluginInstaller.h \
     Services/ITunesPluginInstaller/ITunesPluginInstaller.h
@@ -219,7 +218,8 @@ mac:HEADERS += CommandReciever/CommandReciever.h \
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
 mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
-                        Dialogs/CloseAppsDialog_mac.mm
+                        Dialogs/CloseAppsDialog_mac.mm \
+                        Widgets/NothingPlayingWidget_mac.mm
 
 FORMS += \
     Widgets/TagFilterDialog.ui \

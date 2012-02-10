@@ -95,23 +95,47 @@ TourRadioPage QLabel#image { qproperty-pixmap: url(":/graphic_radio.png"); }
 TourLocationPage QLabel#image { qproperty-pixmap: url(":/graphic_access.png"); }
 TourFinishPage QLabel#image { qproperty-pixmap: url(":/graphic_finish.png"); }
 
-MessageBar QLabel#ipod {
+MessageBar {
+	border: none;
+}
+
+MessageBar#ipod {
   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #E4F1FF, stop:1 #C3CEDA);
   border-bottom: 1px solid #3A3D41;
 }
 
-MessageBar QLabel#radio {
+MessageBar#radio {
   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FFF7CA, stop:1 #DAD3AD);  
   border-bottom: 1px solid #413F33;
+}
+
+MessageBar QLabel#icon {
+  background-repeat: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: transparent;
+  min-width: 19px;
+  min-height: 19px;
+}
+
+MessageBar#ipod QLabel#icon {
+  background-image: url(":/message_info.png");
+}
+
+MessageBar#radio QLabel#icon {
+  background-image: url(":/message_error.png");
 }
 
 MessageBar QPushButton#close {
   background-repeat: none;
   background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
   color: transparent;
   background-image: url(":/message_close.png");
-  max-width: 17px;
-  max-height: 17px;
+  min-width: 17px;
+  min-height: 17px;
 }
 
 SideBar {
@@ -611,7 +635,8 @@ FriendWidget AvatarWidget#avatar,
 ProfileWidget AvatarWidget#avatar,
 ProfileArtistWidget QLabel#artistImage,
 ShareDialog HttpImageWidget#icon,
-TagDialog HttpImageWidget#icon {
+TagDialog HttpImageWidget#icon,
+UserManagerWidget AvatarWidget#image {
 padding: 2px;
 background-color: white;
 color: transparent;

@@ -27,7 +27,7 @@ BootstrapPage::BootstrapPage()
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 20 );
 
-    m_pluginsLayout = new QVBoxLayout( this );
+    m_pluginsLayout = new QVBoxLayout();
     m_pluginsLayout->setContentsMargins( 0, 0, 0, 0 );
     m_pluginsLayout->setSpacing( 0 );
 
@@ -66,12 +66,11 @@ BootstrapPage::validatePage()
 void 
 BootstrapPage::initializePage()
 {
+    QRadioButton* rb;
 #ifdef Q_OS_WIN
     QList<IPluginInfo*> plugins = wizard()->pluginList()->bootstrappablePlugins();
 
     bool first = true;
-
-    QRadioButton* rb;
 
     foreach ( IPluginInfo* plugin, plugins )
     {
@@ -88,7 +87,13 @@ BootstrapPage::initializePage()
 
         first = false;
     }
+#else
+    m_pluginsLayout->addWidget( rb = new QRadioButton( tr( "iTunes" ) ) );
+    rb->setChecked( true );
+    m_playerId = "osx";
 #endif
+
+    m_pluginsLayout->addStretch();
 
     setTitle( tr( "Now let's import your listening history" ) );
 
@@ -101,6 +106,8 @@ BootstrapPage::initializePage()
 void
 BootstrapPage::cleanupPage()
 {
+    while ( m_pluginsLayout->count() > 0 )
+        m_pluginsLayout->takeAt( 0 )->widget()->deleteLater();
 }
 
 

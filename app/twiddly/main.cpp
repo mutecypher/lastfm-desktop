@@ -19,9 +19,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "IPod.h"
-#include "app/twiddly.h"
 #include "TwiddlyApplication.h"
-#include "Settings.h"
 #include "lib/unicorn/UnicornCoreApplication.h"
 #include "plugins/iTunes/ITunesExceptions.h"
 #include <lastfm/misc.h>
@@ -29,7 +27,7 @@
 #include <QtXml>
 #include <iostream>
 #include "common/c++/Logger.h"
-
+#include "Utils.h"
 
 void writeXml( const QDomDocument&, const QString& path );
 void logException( QString );
@@ -52,7 +50,7 @@ main( int argc, char** argv )
 #endif
     new Logger( path );
 
-    TwiddlyApplication::setApplicationName( twiddly::applicationName() );
+    TwiddlyApplication::setApplicationName( "iPodScrobbler" );
     TwiddlyApplication::setApplicationVersion( "2" );
 
     TwiddlyApplication app( argc, argv );
@@ -79,7 +77,7 @@ main( int argc, char** argv )
                 args << "--tray";
                 args << "--twiddly";
                 args << "starting";
-                moose::startAudioscrobbler( args );
+                Utils::startAudioscrobbler( args );
             }
 
             app.sendBusMessage( "--twiddling" );
@@ -136,7 +134,7 @@ main( int argc, char** argv )
                 args << "--deviceName";
                 args << ipod->name;
 
-                moose::startAudioscrobbler( args );
+                Utils::startAudioscrobbler( args );
             }
             else
             {
@@ -149,7 +147,7 @@ main( int argc, char** argv )
                 args << "--deviceName";
                 args << ipod->name;
 
-                moose::startAudioscrobbler( args );
+                Utils::startAudioscrobbler( args );
             }
 
             // do last so we don't record a sync if we threw and thus it "didn't" happen

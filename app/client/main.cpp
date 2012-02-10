@@ -39,7 +39,6 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include "Services/ScrobbleService.h"
 #include "Services/RadioService.h"
-#include "app/moose.h"
 
 #include "lib/unicorn/CrashReporter/CrashReporter.h"
 

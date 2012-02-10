@@ -18,11 +18,32 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef APIKEY_H
-#define APIKEY_H
 
-#error Change these values to your details from www.last.fm/api
-#define API_SECRET  ""
-#define API_KEY ""
 
-#endif // APIKEY_H
+#include <QProcess>
+#include <QSettings>
+
+#include "lib/unicorn/UnicornSettings.h"
+#include <lastfm/misc.h>
+
+#include "Utils.h"
+
+#ifndef Q_OS_MAC
+void
+Utils::startAudioscrobbler( QStringList& vargs )
+{
+    QString path = unicorn::Settings().value( "Path" ).toString();
+    if ( path.size() == 0 )
+    {
+        path = QSettings("HKEY_LOCAL_MACHINE\\Software\\Last.fm\\Client", QSettings::NativeFormat ).value( "Path" ).toString();
+
+        if ( path.size() == 0 )
+        {
+            path = lastfm::dir::programFiles().filePath( "Last.fm/Last.fm.exe" );
+        }
+    }
+
+    QProcess::startDetached( path, vargs );
+}
+
+#endif // Q_OS_MAC

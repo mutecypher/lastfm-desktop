@@ -75,6 +75,7 @@ FriendListWidget::FriendListWidget(QWidget *parent) :
     connect( aApp, SIGNAL(gotUserInfo(lastfm::User)), SLOT(onGotUserInfo(lastfm::User)) );
 
     m_movie = new QMovie( ":/loading_meta.gif", "GIF", this );
+    m_movie->setCacheMode( QMovie::CacheAll );
     ui->spinner->setMovie( m_movie );
 
     ui->stackedWidget->setCurrentWidget( ui->spinnerPage );

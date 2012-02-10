@@ -2,13 +2,13 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [CustomMessages]
-Version=2.0.12.0
+Version=2.0.13.0
 
 
 [Setup]
 OutputBaseFilename=Last.fm-0.0.0.0
-VersionInfoVersion=2.0.12
-VersionInfoTextVersion=2.0.12
+VersionInfoVersion=2.0.13
+VersionInfoTextVersion=2.0.13
 AppName=Last.fm
 AppVerName=Last.fm {cm:Version}
 VersionInfoDescription=Last.fm Installer
@@ -98,12 +98,12 @@ Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\imageformats";
 Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\phonon_backend"; Flags: ignoreversion
 
 ;phonon backend plugin
-Source: "%QTDIR%\plugins\phonon_backend\qsqlite4.dll"; DestDir: "{app}\spldrivers"; Flags: ignoreversion
+Source: "%QTDIR%\plugins\sqldrivers\qsqlite4.dll"; DestDir: "{app}\spldrivers"; Flags: ignoreversion
 
 ;media player plugin installers
 Source: "..\..\..\_bin\plugins\FooPlugin0.9.4Setup_2.3.1.2.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
 Source: "..\..\..\_bin\plugins\FooPlugin0.9Setup_2.1.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
-Source: "..\..\..\_bin\plugins\iTunesPluginWinSetup_5.0.2.0.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\iTunesPluginWinSetup_5.0.3.0.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
 Source: "..\..\..\_bin\plugins\WinampPluginSetup_2.1.0.9.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
 Source: "..\..\..\_bin\plugins\WmpPluginSetup_2.1.0.6.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
 
