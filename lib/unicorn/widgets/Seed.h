@@ -22,7 +22,6 @@
 
 #include <lastfm/global.h>
 #include <QListWidgetItem>
-#include "app/moose.h"
 
 class Seed : public QObject
 {
