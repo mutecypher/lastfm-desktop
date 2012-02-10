@@ -22,7 +22,6 @@
 
 #include <lastfm/ScrobblePoint.h>
 #include "lib/unicorn/UnicornSettings.h"
-#include "app/moose.h"
 
 
 namespace moose

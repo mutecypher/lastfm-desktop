@@ -19,9 +19,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "IPod.h"
-#include "app/twiddly.h"
 #include "TwiddlyApplication.h"
-#include "Settings.h"
 #include "lib/unicorn/UnicornCoreApplication.h"
 #include "plugins/iTunes/ITunesExceptions.h"
 #include <lastfm/misc.h>
@@ -52,7 +50,7 @@ main( int argc, char** argv )
 #endif
     new Logger( path );
 
-    TwiddlyApplication::setApplicationName( twiddly::applicationName() );
+    TwiddlyApplication::setApplicationName( "iPodScrobbler" );
     TwiddlyApplication::setApplicationVersion( "2" );
 
     TwiddlyApplication app( argc, argv );
