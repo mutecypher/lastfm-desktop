@@ -4,13 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       -= gui
+QT -= gui
+TEMPLATE = lib
 CONFIG += dll
 include( $$ROOT_DIR/admin/include.qmake )
 DEFINES += _LOGGER_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 TARGET = logger
-TEMPLATE = lib
+
 
 SOURCES += $$ROOT_DIR/common/c++/Logger.cpp
 
