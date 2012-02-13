@@ -146,7 +146,17 @@ MetadataWidget::fetchTrackInfo()
         connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
         connect( m_track.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
 
-        connect( m_track.getBuyLinks( "united kingdom" /*aApp->currentSession()->userInfo().country()*/ ), SIGNAL(finished()), SLOT(onTrackGotBuyLinks()) );
+        QString country = aApp->currentSession()->userInfo().country();
+        qDebug() << country;
+
+        if ( country.compare( "us", Qt::CaseInsensitive ) == 0 )
+            country = "united states";
+        else if ( country.compare( "de", Qt::CaseInsensitive ) == 0 )
+            country = "germany";
+        else
+            country = "united kingdom";
+
+        connect( m_track.getBuyLinks( country ), SIGNAL(finished()), SLOT(onTrackGotBuyLinks()) );
     }
 }
 
@@ -412,6 +422,23 @@ MetadataWidget::onAlbumGotInfo()
     checkFinished();
 }
 
+QString
+price( const QString& price, const QString& currency )
+{
+    QString returnPrice;
+
+    if ( currency.compare( "eur", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "€%1" ).arg( price );
+    else if ( currency.compare( "usd", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "$%1" ).arg( price );
+    else if ( currency.compare( "gbp", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "£%1" ).arg( price );
+    else
+        returnPrice = QString( "%1 %2" ).arg( price, currency );
+
+    return returnPrice;
+}
+
 void
 MetadataWidget::onTrackGotBuyLinks()
 {
@@ -425,6 +452,8 @@ MetadataWidget::onTrackGotBuyLinks()
 
         menu->addAction( tr("Downloads") )->setEnabled( false );
 
+        // USD EUR GBP
+
         foreach ( const XmlQuery& affiliation, lfm["affiliations"]["downloads"].children( "affiliation" ) )
         {
             bool isSearch = affiliation["isSearch"].text() == "1";
@@ -434,7 +463,7 @@ MetadataWidget::onTrackGotBuyLinks()
             if ( isSearch )
                 buyAction = menu->addAction( tr("Search on %1").arg( affiliation["supplierName"].text() ) );
             else
-                buyAction = menu->addAction( tr("Buy on %1 %2 %3").arg( affiliation["supplierName"].text(), affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) );
+                buyAction = menu->addAction( tr("Buy on %1 %2").arg( affiliation["supplierName"].text(), price( affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) ) );
 
             buyAction->setData( affiliation["buyLink"].text() );
 
@@ -453,7 +482,7 @@ MetadataWidget::onTrackGotBuyLinks()
             if ( isSearch )
                 buyAction = menu->addAction( tr("Search on %1").arg( affiliation["supplierName"].text() ) );
             else
-                buyAction = menu->addAction( tr("Buy on %1 %2 %3").arg( affiliation["supplierName"].text(), affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) );
+                buyAction = menu->addAction( tr("Buy on %1 %2").arg( affiliation["supplierName"].text(), price( affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) ) );
 
             buyAction->setData( affiliation["buyLink"].text() );
 
