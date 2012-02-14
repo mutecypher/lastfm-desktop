@@ -264,7 +264,7 @@ pluginPath()
     return path;
   #else
     QSettings settings( "HKEY_LOCAL_MACHINE\\SOFTWARE\\Last.fm\\Client\\Plugins\\", QSettings::NativeFormat );
-    QString path = settings().value( "itw/Path" ).toString();
+    QString path = settings.value( "itw/Path" ).toString();
     if (path.isEmpty())
         throw "Unknown iTunes plugin path";
     return path;

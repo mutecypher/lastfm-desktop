@@ -16,8 +16,6 @@ use File::Find;
 
 ########################################################################
 
-my $VERSION = getVersion();
-
 # copy the input file to a temp location and use that instead
 copy('Last.fm.iss', 'Last.fm.tmp.iss') or die;
 my $ISSFILE = 'Last.fm.tmp.iss';
@@ -43,8 +41,6 @@ header( "Substituting strings in various files" );
 	#find( \&findVersionFiles, "." );
 	
 	push( @versionFiles, $ISSFILE );
-	
-    updateVersion( @versionFiles );
 
     system( 'perl -pi".bak" -e "s/\%QTDIR\%/' . $QTDIR . '/g" ' . $ISSFILE );
     system( 'perl -pi".bak" -e "s/\%VSDIR\%/' . $VSDIR . '/g" ' . $ISSFILE );
@@ -83,46 +79,6 @@ header( "done!" );
 sub header
 {
     print "\n==> $_[0]\n";
-}
-
-sub getVersion
-{
-    my $revision = getGitRevision();
-
-    # Due to a MS quirk, no part of the version number can be bigger than 16 bits, so we mod it
-    $revision = $revision % 0xFFFF;
-
-	my $newver = "2.0.0." . $revision;
-
-	return $newver;
-}
-
-sub getGitRevision
-{
-    @output = `git log -n 1 --oneline`;
-
-    foreach my $line (@output)
-    {
-      if ( $line =~ m/^([\da-fA-F]+)\s.*$/ )
-      {
-          return $1;
-      }
-    }
-
-    die;
-}
-
-sub updateVersion
-{
-    my @list = @_;
-    foreach $file ( @list )
-    {
-        system( "perl -pi\".bak\" -e \"s/0\\.0\\.0\\.0/$VERSION/g\" $file" );
-        my $versionCommas = $VERSION;
-        $versionCommas =~ s/\./,/g;
-        system( "perl -pi\".bak\" -e \"s/0,0,0,0/$versionCommas/g\" $file" );
-        print $file . "\n";
-    }
 }
 
 sub run
