@@ -1,6 +1,6 @@
 Build Instructions
 ==================
-./configure && make
+qmake && make
 
 Apps are styled using stylesheets which are found in the source directory
 of the app. To apply the style execute the application in the following manner:
@@ -15,7 +15,7 @@ If building didn't work it's because:-
 
 Build Dependencies
 ==================
-* Qt >= 4.4 (built with Phonon if you want sound :P)
+* Qt >= 4.8 (built with Phonon if you want sound :P)
 * Ruby
 * Perl
 * liblastfm
@@ -49,16 +49,14 @@ sudo apt-get install libsqlite3-dev libqt4-sql-sqlite
 
 Mac OS X
 --------
-We suggest you grab the Qt 4.4 dmg installer from the Qt website. Then, the
+We suggest you install Qt 4.8 from the Qt SDK from the Qt website. Then, the
 easiest way to install the additional dependencies is with MacPorts:-
 
 	sudo port install taglib libsamplerate fftw-3 libmad
 
 Windows
 -------
-We only build via cygwin. You will also need the latest Windows SDK. We tend
-to build using Visual Studio. But in theory MinGW and its alternatives should
-work fine. Good luck with building on Windows. It's hard!
+We only build via cygwin. You will also need the latest Windows SDK. We build using Visual Studio 2008. Good luck with building on Windows. It's hard!
 
 
 Build Support
@@ -77,5 +75,5 @@ Bugs
 ====
 If you find a bug in the software, please let us know about it.
 
-Jono Cole<jono@last.fm>
-Clientside Lead Developer, Last.fm
+Michael Coffey<michaelc@last.fm>
+Desktop App Lead Developer, Last.fm
