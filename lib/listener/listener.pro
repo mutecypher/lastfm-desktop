@@ -18,7 +18,7 @@ SOURCES += \
 	PlayerConnection.cpp \
 	PlayerCommandParser.cpp \
         legacy/LegacyPlayerListener.cpp \
-	DBusListener.cpp
+        DBusListener.cpp
 
 HEADERS += \
 	State.h \
@@ -30,11 +30,14 @@ HEADERS += \
 	legacy/LegacyPlayerListener.h \
 	DBusListener.h
 
-mac:SOURCES += mac/ITunesListener.cpp \
-                mac/SpotifyListener.cpp
+mac:SOURCES += mac/ITunesListener.cpp
+
+mac:OBJECTIVE_SOURCES += mac/SpotifyListener.mm
 
 mac:HEADERS += mac/ITunesListener.h \
                 mac/SpotifyListener.h
+
+mac:LIBS += -framework AppKit
 
 win32 {
     SOURCES += win/SpotifyListener.cpp \

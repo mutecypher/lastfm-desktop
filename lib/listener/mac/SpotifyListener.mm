@@ -18,6 +18,8 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <AppKit/NSWorkspace.h>
+
 #include <lastfm/Track.h>
 #include <lastfm/misc.h>
 
@@ -26,7 +28,7 @@
 #include "../PlayerConnection.h"
 #include "SpotifyListener.h"
 
-struct SpotifyConnection : PlayerConnection
+struct SpotifyConnection : public PlayerConnection
 {
     SpotifyConnection() : PlayerConnection( "spt", "Spotify" )
     {}
@@ -35,7 +37,7 @@ struct SpotifyConnection : PlayerConnection
     {
         MutableTrack mt( t );
         mt.setSource( Track::Player );
-        mt.setExtra( "playerId", id() );
+        mt.setExtra( "playerId", this->id() );
         mt.setExtra( "playerName", name() );
         mt.stamp();
         handleCommand( CommandStart, t );
@@ -50,9 +52,12 @@ struct SpotifyConnection : PlayerConnection
 SpotifyListenerMac::SpotifyListenerMac( QObject* parent )
     :QObject( parent )
 {
-    QTimer* timer = new QTimer( this );
-    timer->start( 1000 );
-    connect( timer, SIGNAL(timeout()), SLOT(loop()));
+    if ( [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:@"com.spotify.client"] != nil )
+    {
+        QTimer* timer = new QTimer( this );
+        timer->start( 1000 );
+        connect( timer, SIGNAL(timeout()), SLOT(loop()));
+    }
 }
 
 SpotifyListenerMac::~SpotifyListenerMac()
@@ -63,7 +68,7 @@ SpotifyListenerMac::~SpotifyListenerMac()
 void
 SpotifyListenerMac::loop()
 {
-    static AppleScript playerStateScript( "tell application \"Spotify\" to if running then return player state" );
+    static AppleScript playerStateScript( "tell application id \"com.spotify.client\" to if running then return player state" );
     QString playerState = playerStateScript.exec();
 
     if ( playerState == "playing"
@@ -73,10 +78,10 @@ SpotifyListenerMac::loop()
         if ( !m_connection )
             emit newConnection( m_connection = new SpotifyConnection );
 
-        static AppleScript titleScript( "tell application \"Spotify\" to return name of current track" );
-        static AppleScript albumScript( "tell application \"Spotify\" to return album of current track" );
-        static AppleScript artistScript( "tell application \"Spotify\" to return artist of current track" );
-        static AppleScript durationScript( "tell application \"Spotify\" to return duration of current track" );
+        static AppleScript titleScript( "tell application id \"com.spotify.client\" to return name of current track" );
+        static AppleScript albumScript( "tell application id \"com.spotify.client\" to return album of current track" );
+        static AppleScript artistScript( "tell application id \"com.spotify.client\" to return artist of current track" );
+        static AppleScript durationScript( "tell application id \"com.spotify.client\" to return duration of current track" );
 
         if ( playerState == "playing" )
         {
