@@ -321,6 +321,7 @@ MainWindow::onPrefsTriggered()
         m_preferences = new PreferencesDialog( 0 );
 
     m_preferences->show();
+    m_preferences->activateWindow();
 }
 
 void
@@ -330,6 +331,7 @@ MainWindow::onBetaTriggered()
         m_beta = new BetaDialog( this );
 
     m_beta->show();
+    m_beta->activateWindow();
 }
 
 void
