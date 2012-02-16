@@ -29,7 +29,7 @@
 
 #include "CrashReporter.h"
 
-
+#ifdef Q_OS_WIN32
 bool
 FilterCallback(void* context, EXCEPTION_POINTERS* exinfo, MDRawAssertionInfo* assertion)
 {
@@ -50,16 +50,18 @@ MinidumpCallback(const wchar_t* dump_path, const wchar_t* minidump_id, void* con
 
     return true;
 }
-
+#endif
 
 unicorn::CrashReporter::CrashReporter(QObject *parent) :
     QObject(parent)
 {
+#ifdef Q_OS_WIN32
     google_breakpad::ExceptionHandler* handler = new google_breakpad::ExceptionHandler( lastfm::dir::logs().absolutePath().toStdWString(),
                                                                                        FilterCallback,
                                                                                        MinidumpCallback,
                                                                                        this,
                                                                                        google_breakpad::ExceptionHandler::HANDLER_ALL);
+#endif
 }
 
 

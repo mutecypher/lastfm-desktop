@@ -62,7 +62,9 @@ SOURCES += \
     dialogs/AboutDialog.cpp \
     dialogs/ScrobbleConfirmationDialog.cpp \
     AnimatedStatusBar.cpp \
-    DesktopServices.cpp
+    DesktopServices.cpp \
+    Updater/Updater.cpp \
+    CrashReporter/CrashReporter.cpp
 
 HEADERS += \
     widgets/UserToolButton.h \
@@ -130,9 +132,7 @@ HEADERS += \
     CrashReporter/CrashReporter.h \
     ApiKey.h
 	
-win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp \
-                    Updater/Updater.cpp \
-                    CrashReporter/CrashReporter.cpp
+win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	
 macx:HEADERS += notify/Notify.h
 

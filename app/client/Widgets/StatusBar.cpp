@@ -24,7 +24,7 @@
 #include <QLabel>
 #include <QSizeGrip>
 
-#include <Phonon/VolumeSlider>
+#include <phonon/VolumeSlider>
 
 #include "lib/unicorn/widgets/Label.h"
 #include "lib/unicorn/StylableWidget.h"
