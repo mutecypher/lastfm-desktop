@@ -192,7 +192,9 @@ RadioWidget::onTuningIn( const RadioStation& station )
         {
             if ( station.url() == qobject_cast<PlayableItemWidget*>(ui.recentStations->layout()->itemAt( i )->widget())->station().url() )
             {
-                QWidget* taken = ui.recentStations->layout()->takeAt( i )->widget();
+                QLayoutItem* item = ui.recentStations->layout()->takeAt( i );
+                QWidget* taken = item->widget();
+                delete item;
                 taken->deleteLater();
                 removed = true;
                 break;
@@ -201,7 +203,9 @@ RadioWidget::onTuningIn( const RadioStation& station )
 
         if ( !removed && ui.recentStations->layout()->count() > MAX_RECENT_STATIONS )
         {
-            QWidget* taken = ui.recentStations->layout()->takeAt( ui.recentStations->layout()->count() - 1 )->widget();
+            QLayoutItem* item = ui.recentStations->layout()->takeAt( ui.recentStations->layout()->count() - 1 );
+            QWidget* taken = item->widget();
+            delete item;
             taken->deleteLater();
         }
     }
