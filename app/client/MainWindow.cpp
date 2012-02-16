@@ -175,7 +175,6 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 #endif
 
     setupMenuBar();
-    m_menuBar->show();
 
     m_updater = new Updater( this );
 
@@ -297,6 +296,8 @@ MainWindow::showEvent(QShowEvent *)
 {
     if ( m_preferences )
         m_preferences->show();
+
+    m_menuBar->show();
 
 #ifdef Q_OS_MAC
     if ( !m_installer )
