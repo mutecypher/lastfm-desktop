@@ -7,7 +7,7 @@
 QT -= gui
 TEMPLATE = lib
 CONFIG += dll
-include( $$ROOT_DIR/admin/include.qmake )
+include( ../../admin/include.qmake )
 DEFINES += _LOGGER_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 TARGET = logger

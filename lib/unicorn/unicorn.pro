@@ -2,7 +2,7 @@ TARGET = unicorn
 TEMPLATE = lib
 CONFIG += dll lastfm sparkle growl break logger
 QT = core gui xml network
-include( $$ROOT_DIR/admin/include.qmake )
+include( ../../admin/include.qmake )
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 # UniqueApplication

@@ -6,7 +6,7 @@ CONFIG += unicorn logger
 # basically not easy to support on other platforms, but feel free to fork
 linux*:QT += dbus
 
-include( $$ROOT_DIR/admin/include.qmake )
+include( ../../admin/include.qmake )
 
 DEFINES += _LISTENER_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 

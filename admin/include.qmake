@@ -1,3 +1,28 @@
+
+ROOT_DIR = ../..
+macx-xcode {
+    BUILD_DIR = build
+} else {
+    # With Xcode we generatea bundle
+    BUILD_DIR = build
+    DESTDIR = $$ROOT_DIR/bin
+    LIBS += -L$$DESTDIR
+}
+OBJECTS_DIR = $$BUILD_DIR
+MOC_DIR = $$BUILD_DIR
+UI_DIR = $$BUILD_DIR
+RCC_DIR = $$BUILD_DIR
+INCLUDEPATH = $$ROOT_DIR
+
+win32:DEFINES += _CRT_SECURE_NO_WARNINGS WIN32_LEAN_AND_MEAN
+
+unix:QMAKE_CXXFLAGS += -fno-operator-names
+
+macx* {
+    QMAKE_PKGINFO_TYPEINFO = last
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.5
+}
+
 include( qmake/debug.pro.inc )
 include( qmake/QtOverride.pro.inc )
 include( qmake/3rdparty.pro.inc )

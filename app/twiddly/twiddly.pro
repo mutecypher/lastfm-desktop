@@ -2,15 +2,15 @@ TARGET = iPodScrobbler
 LIBS += -lunicorn -llastfm
 QT = core xml sql
 
-macx:CONFIG( app_bundle ) {
-    DESTDIR = "$$DESTDIR/Last.fm.app/Contents/MacOS"
-    QMAKE_POST_LINK += $$ROOT_DIR/admin/dist/mac/bundleFrameworks.sh \"$$DESTDIR/$$TARGET\"
-}
-
 CONFIG += lastfm logger
 CONFIG -= app_bundle
 
-include( $$ROOT_DIR/admin/include.qmake )
+include( ../../admin/include.qmake )
+
+macx:CONFIG( app_bundle ) {
+    DESTDIR = "$$DESTDIR/Last.fm.app/Contents/MacOS"
+    QMAKE_POST_LINK += ../../admin/dist/mac/bundleFrameworks.sh \"$$DESTDIR/$$TARGET\"
+}
 
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 SOURCES = main.cpp \

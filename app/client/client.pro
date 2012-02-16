@@ -12,8 +12,8 @@ win32:release {
         LIBS += -lAdvAPI32
 }
 
-include( $$ROOT_DIR/admin/include.qmake )
-CONFIG -= silent
+include( ../../admin/include.qmake )
+
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 SOURCES -= LegacyTuner.cpp
 HEADERS -= LegacyTuner.h
