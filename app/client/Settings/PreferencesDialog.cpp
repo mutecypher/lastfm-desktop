@@ -49,8 +49,11 @@ PreferencesDialog::PreferencesDialog( QMenuBar* menuBar, QWidget* parent )
     ui->buttonBox->hide();
 #endif
     connect( ui->buttonBox, SIGNAL( accepted() ), SLOT( onAccepted() ) );
-    connect( ui->buttonBox, SIGNAL( rejected() ), SLOT( reject() ) );
-    connect( ui->buttonBox->button( QDialogButtonBox::Apply ), SIGNAL( clicked() ), SLOT( onApplyButtonClicked() ) );
+    connect( ui->buttonBox, SIGNAL( rejected() ), SLOT( onRejected() ) );
+
+    QAbstractButton* applyButton = ui->buttonBox->button( QDialogButtonBox::Apply );
+    applyButton->setEnabled( false );
+    connect( applyButton, SIGNAL( clicked() ), SLOT( onApplyButtonClicked() ) );
 
     ui->actionGeneral->trigger();
 }
@@ -83,6 +86,12 @@ void
 PreferencesDialog::onAccepted()
 {
     emit saveNeeded();
+    close();
+}
+
+void
+PreferencesDialog::onRejected()
+{
     close();
 }
 

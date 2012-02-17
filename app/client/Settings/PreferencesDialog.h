@@ -24,6 +24,8 @@ private slots:
     void onTabButtonClicked();
 
     void onAccepted();
+    void onRejected();
+
     void onSettingsChanged();
     void onApplyButtonClicked();
 
