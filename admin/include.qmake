@@ -4,9 +4,9 @@ ROOT_DIR = ../..
 macx-xcode {
     BUILD_DIR = build
 } else {
-    # With Xcode we generatea bundle
+    # With Xcode we generate a bundle
     BUILD_DIR = build
-    DESTDIR = $$ROOT_DIR/bin
+    DESTDIR = $$ROOT_DIR/_bin
     LIBS += -L$$DESTDIR
 }
 OBJECTS_DIR = $$BUILD_DIR
