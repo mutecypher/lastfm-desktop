@@ -4,7 +4,7 @@ QT = core xml network
 CONFIG += unicorn logger
 
 # basically not easy to support on other platforms, but feel free to fork
-linux*:QT += dbus
+unix:!mac:QT += dbus
 
 include( ../../admin/include.qmake )
 

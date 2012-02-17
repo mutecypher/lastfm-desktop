@@ -157,11 +157,7 @@ RadioService::skip()
     if (q.size())
     {
         Phonon::MediaSource source = q.takeFirst();
-#ifdef Q_WS_X11
-        m_mediaObject->clearQueue();
-#else
         m_mediaObject->setQueue( q );
-#endif
         m_mediaObject->setCurrentSource( source );
         //if the error returns a 403 permission denied error, the mediaObject is uninitialised
         if( m_mediaObject )
@@ -363,14 +359,13 @@ RadioService::phononEnqueue()
         Phonon::MediaSource ms( t.url() );
 
         // if we are playing a track now, enqueue, otherwise start now!
-        if (m_mediaObject->currentSource().url().isValid()) {
-            //on Linux we should wait to track finish so we're not gonna enqueue
-            #ifdef Q_WS_X11
-            return;
-            #endif
+        if (m_mediaObject->currentSource().url().isValid())
+        {
             qDebug() << "enqueuing " << t;
             m_mediaObject->enqueue( ms );
-        } else {
+        }
+        else
+        {
             qDebug() << "starting " << t;
             try
             {
@@ -546,9 +541,7 @@ RadioService::initRadio()
     connect( mediaObject, SIGNAL(stateChanged( Phonon::State, Phonon::State )), SLOT(onPhononStateChanged( Phonon::State, Phonon::State )) );
     connect( mediaObject, SIGNAL(bufferStatus(int)), SLOT(onBuffering(int)));
     connect( mediaObject, SIGNAL(currentSourceChanged( Phonon::MediaSource )), SLOT(onPhononCurrentSourceChanged( Phonon::MediaSource )) );
-#ifndef Q_WS_X11
     connect( mediaObject, SIGNAL(aboutToFinish()), SLOT(phononEnqueue()) ); // this fires when the whole queue is about to finish
-#endif
     connect( mediaObject, SIGNAL(finished()), SLOT(onFinished()));
     connect( mediaObject, SIGNAL(tick(qint64)), SIGNAL(tick(qint64)));
     connect( audioOutput, SIGNAL(mutedChanged(bool)), SLOT(onMutedChanged(bool)));

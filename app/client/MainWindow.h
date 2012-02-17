@@ -16,8 +16,10 @@
 #include "Settings/PreferencesDialog.h"
 #include "Dialogs/BetaDialog.h"
 
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
 namespace unicorn { class Updater; }
 using unicorn::Updater;
+#endif
 
 using lastfm::XmlQuery;
 
@@ -120,7 +122,9 @@ private:
 
     QPointer<PreferencesDialog> m_preferences;
     QPointer<BetaDialog> m_beta;
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     QPointer<Updater> m_updater;
+#endif
     QPointer<PluginList> m_pluginList;
 
 #ifdef Q_WS_MAC

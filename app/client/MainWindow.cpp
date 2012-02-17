@@ -58,7 +58,9 @@
 #include "lib/unicorn/layouts/SlideOverLayout.h"
 #include "lib/unicorn/widgets/SlidingStackedWidget.h"
 #include "lib/listener/PlayerConnection.h"
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
 #include "lib/unicorn/Updater/Updater.h"
+#endif
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/DesktopServices.h"
 
@@ -176,7 +178,9 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     setupMenuBar();
 
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     m_updater = new Updater( this );
+#endif
 
 #ifdef Q_OS_MAC
     QMenu* dockMenu = new QMenu();
@@ -338,7 +342,9 @@ MainWindow::onBetaTriggered()
 void
 MainWindow::checkForUpdates()
 {
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     m_updater->checkForUpdates();
+#endif
 }
 
 void

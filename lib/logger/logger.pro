@@ -1,16 +1,11 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2012-01-20T11:05:56
-#
-#-------------------------------------------------
-
-QT -= gui
-TEMPLATE = lib
-CONFIG += dll
-include( ../../admin/include.qmake )
-DEFINES += _LOGGER_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
-
 TARGET = logger
+TEMPLATE = lib
+QT -= gui
+CONFIG += dll
+
+include( ../../admin/include.qmake )
+
+DEFINES += _LOGGER_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
 SOURCES += $$ROOT_DIR/common/c++/Logger.cpp
 

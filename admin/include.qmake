@@ -1,5 +1,6 @@
 
 ROOT_DIR = ../..
+
 macx-xcode {
     BUILD_DIR = build
 } else {
