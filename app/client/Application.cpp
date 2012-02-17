@@ -346,10 +346,8 @@ Application::showAs( bool showAs )
     m_tray->setVisible( showAs  );
 #ifdef Q_OS_MAC
     setQuitOnLastWindowClosed( false );
-#elif defined(Q_OS_WIN)
-    setQuitOnLastWindowClosed( !showAs );
 #else
-    setQuitOnLastWindowClosed( true );
+    setQuitOnLastWindowClosed( !showAs && !QSystemTrayIcon::isSystemTrayAvailable() );
 #endif
 }
 
