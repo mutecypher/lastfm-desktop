@@ -20,7 +20,9 @@
 
 #include <QCoreApplication>
 
-#ifdef Q_OS_WIN32
+#ifndef Q_OS_MAC
+
+#ifdef Q_OS_WIN
 #include <client/windows/handler/exception_handler.h>
 #include <client/windows/sender/crash_report_sender.h>
 #endif
@@ -69,3 +71,5 @@ unicorn::CrashReporter::~CrashReporter()
 {
 
 }
+
+#endif

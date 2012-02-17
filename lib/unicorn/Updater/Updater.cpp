@@ -1,6 +1,8 @@
 
 #include "Updater.h"
 
+#ifndef Q_OS_MAC
+
 #ifdef Q_OS_WIN
 #include <winsparkle.h>
 #endif
@@ -27,3 +29,5 @@ unicorn::Updater::~Updater()
     win_sparkle_cleanup();
 #endif
 }
+
+#endif // Q_OS_MAC

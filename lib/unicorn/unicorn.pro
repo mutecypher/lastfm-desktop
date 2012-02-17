@@ -139,17 +139,13 @@ macx:HEADERS += notify/Notify.h
 macx:SOURCES += mac/AppleScript.cpp
 
 macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
-                          Updater/Updater.mm \
                           notify/Notify.mm \
-                          CrashReporter/CrashReporter.mm
+                          Updater/Updater_mac.mm \
+                          CrashReporter/CrashReporter_mac.mm
 
 macx:HEADERS += mac/AppleScript.h \
                 notify/Notify.h
 
-macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
-                          Updater/Updater.mm \
-                          notify/Notify.mm \
-                          CrashReporter/CrashReporter.mm
                           
 FORMS += \
 	dialogs/ShareDialog.ui \
