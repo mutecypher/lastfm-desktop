@@ -19,7 +19,7 @@ SOURCES -= LegacyTuner.cpp
 HEADERS -= LegacyTuner.h
 
 macx:ICON = ./audioscrobbler.icns
-macx:LIBS += -lz
+!win32:LIBS += -lz
 win32:LIBS += shell32.lib User32.lib
 
 RC_FILE = audioscrobbler.rc
