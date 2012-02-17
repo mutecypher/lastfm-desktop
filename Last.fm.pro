@@ -7,7 +7,7 @@ SUBDIRS = lib/logger \
           app/twiddly
           #app/boffin
 
-linux*:SUBDIRS -= app/twiddly
+unix:!mac:SUBDIRS -= app/twiddly
 
 CONFIG( tests ) {
     SUBDIRS += \

@@ -23,7 +23,7 @@ macx:ICON = ./audioscrobbler.icns
 win32:LIBS += shell32.lib User32.lib
 
 RC_FILE = audioscrobbler.rc
-linux* {
+unix:!mac {
         CONFIG += link_pkgconfig
         PKGCONFIG += libgpod-1.0
 }
@@ -240,8 +240,8 @@ FORMS += \
     Dialogs/BetaDialog.ui \
     Dialogs/CloseAppsDialog.ui
 
-linux*:HEADERS += MediaDevices/IpodDevice_linux.h
-linux*:SOURCES += MediaDevices/IpodDevice_linux.cpp
+unix:!mac:HEADERS += MediaDevices/IpodDevice_linux.h
+unix:!mac:SOURCES += MediaDevices/IpodDevice_linux.cpp
 
 RESOURCES += \
     qrc/audioscrobbler.qrc
