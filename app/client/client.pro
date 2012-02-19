@@ -36,7 +36,6 @@ SOURCES += \
     ActivityListModel.cpp \
     ImageTrack.cpp \
     StationSearch.cpp \
-    SkipListener.cpp \
     ScrobSocket.cpp \
     MediaDevices/MediaDevice.cpp \
     MediaDevices/IpodDevice.cpp \
@@ -118,7 +117,6 @@ HEADERS += \
     ActivityListModel.h \
     MainWindow.h \
     StationSearch.h \
-    SkipListener.h \
     Services/RadioService/RadioConnection.h \
     Services/ScrobbleService.h \
     Services/ScrobbleService/StopWatch.h \
