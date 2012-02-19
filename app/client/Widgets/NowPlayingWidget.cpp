@@ -92,7 +92,7 @@ NowPlayingWidget::onStopped()
     if ( m_metadata )
     {
         layout()->removeWidget( m_metadata );
-        delete m_metadata;
+        m_metadata->deleteLater();
         qobject_cast<QVBoxLayout*>(layout())->addStretch( 1 );
     }
 
