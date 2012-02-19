@@ -37,7 +37,8 @@
 #include "../Application.h"
 
 StatusBar::StatusBar( QWidget* parent )
-    :QStatusBar( parent )
+    :QStatusBar( parent ),
+      m_online( false )
 {
     addWidget( ui.widget = new StylableWidget( this) );
     QHBoxLayout* widgetLayout = new QHBoxLayout( ui.widget );
