@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QStringList>
 
+namespace lastfm { class RadioStation; }
+
 class SkipListener : public QObject
 {
     Q_OBJECT
@@ -15,6 +17,9 @@ signals:
 private slots:
     void onTrackSpooled();
     void onNewConnection();
+
+private:
+    QStringList users( const lastfm::RadioStation& rs );
 
 private:
     class QTcpServer* m_server;

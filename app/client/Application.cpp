@@ -428,7 +428,7 @@ Application::onTrackSpooled( const Track& track )
 
     strippedContextString.replace( re, "" );
 
-    QString ircMessage = QString( "#last.clientradio %1 (%2) %3" ).arg( track.toString(), Track::durationString( track.duration() ), strippedContextString );
+    QString ircMessage = QString( "#last.clientroomradio %1 (%2) %3" ).arg( track.toString(), Track::durationString( track.duration() ), strippedContextString );
 
     if ( track.context().values().count() == ( RadioService::instance().station().url().count( "," ) + 1 ) )
         ircMessage.append( " BINGO!" );
