@@ -1,10 +1,13 @@
-#include "UnicornSession.h"
-#include "UnicornSettings.h"
-
-#include <lastfm/User.h>
 
 #include <QApplication>
 #include <QDebug>
+
+#include <lastfm/User.h>
+#include <lastfm/Auth.h>
+#include <lastfm/XmlQuery.h>
+
+#include "UnicornSession.h"
+#include "UnicornSettings.h"
 
 namespace unicorn {
 
@@ -103,6 +106,7 @@ Session::fetchUserInfo()
     lastfm::ws::Username = m_userInfo.name();
     lastfm::ws::SessionKey = m_sessionKey;
     connect( lastfm::User::getInfo(), SIGNAL( finished() ), SLOT( onUserGotInfo() ) );
+    connect( lastfm::Auth::getSessionInfo(), SIGNAL(finished()), SLOT(onAuthGotSessionInfo()) );
 }
 
 void
@@ -129,6 +133,53 @@ Session::onUserGotInfo()
     else
     {
         qDebug() << "error getting user info: " << reply->errorString();
+    }
+}
+
+void
+Session::onAuthGotSessionInfo()
+{
+    XmlQuery lfm;
+
+    /*
+    <lfm status="ok">
+        <application>
+          <session>
+            <name>eartle</name>
+            <key>5be299e899764d175ebff77beb40d54b</key>
+            <subscriber>1</subscriber>
+          </session>
+          <country>GB</country>
+          <radioPermission>
+            <user type="you">
+              <radio>0</radio>
+              <freetrial>0</freetrial>
+            </user>
+            <user type="registered">
+              <radio>1</radio>
+              <freetrial>0</freetrial>
+            </user>
+            <user type="subscriber">
+              <radio>1</radio>
+              <freetrial>0</freetrial>
+            </user>
+          </radioPermission>
+        </application>
+      </lfm>
+
+     */
+
+    if ( lfm.parse( static_cast<QNetworkReply*>( sender() )->readAll() ) )
+    {
+        qDebug() << lfm;
+
+        bool radio = lfm["application"]["radioPermission"]["user type=you"]["radio"].text() != "0";
+        bool canUpgrade = lfm["application"]["radioPermission"]["user type=subscriber"]["radio"].text() != "0";
+        bool freeTrial = lfm["application"]["radioPermission"]["user type=you"]["freeTrial"].text() != "0";
+    }
+    else
+    {
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 

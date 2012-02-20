@@ -76,6 +76,7 @@ private:
 private slots:
     void fetchUserInfo();
     void onUserGotInfo();
+    void onAuthGotSessionInfo();
 
 private:
     QString m_prevUsername;

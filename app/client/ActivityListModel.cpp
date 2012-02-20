@@ -153,13 +153,20 @@ ActivityListModel::doWrite()
 void
 ActivityListModel::onTrackStarted( const Track& track, const Track& )
 {
-    m_nowScrobblingTrack = track;
-    m_nowScrobblingTrack.getInfo();
-    m_nowScrobblingTrack.fetchImage();
+    // Don't display Spotify here as we don't know if the current user is the one scrobbling
+    // If it is the current user it will be fetch by user.getRecentTracks
+    if ( track.extra( "playerId" ) != "spt" )
+    {
+        m_nowScrobblingTrack = track;
+        m_nowScrobblingTrack.getInfo();
+        m_nowScrobblingTrack.fetchImage();
 
-    connect( &m_nowScrobblingTrack, SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
-    connect( m_nowScrobblingTrack.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
-    connect( m_nowScrobblingTrack.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
+        connect( &m_nowScrobblingTrack, SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
+        connect( m_nowScrobblingTrack.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
+        connect( m_nowScrobblingTrack.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
+    }
+    else
+        m_nowScrobblingTrack = Track();
 
     m_paused = false;
 
@@ -316,10 +323,20 @@ ActivityListModel::onTrackLoveToggled()
     reset();
 }
 
+bool
+ActivityListModel::isNowPlaying() const
+{
+    // if the top track in the list is the now playing track then just use the list
+    if ( m_tracks.count() > 0 && m_tracks[0].timestamp() == m_nowScrobblingTrack.timestamp() )
+        return false;
+
+    return !m_nowPlayingTrack.isNull() || (!m_nowScrobblingTrack.isNull() && !m_paused);
+}
+
 QModelIndex
 ActivityListModel::adjustedIndex( const QModelIndex& a_index ) const
 {
-    if ( !m_nowPlayingTrack.isNull() || (!m_nowScrobblingTrack.isNull() && !m_paused) )
+    if ( isNowPlaying() )
         return createIndex( a_index.row() - 1, a_index.column() );
 
     return a_index;
@@ -329,10 +346,16 @@ ActivityListModel::adjustedIndex( const QModelIndex& a_index ) const
 const ImageTrack&
 ActivityListModel::indexedTrack( const QModelIndex& index, const QModelIndex& adjustedIndex ) const
 {
-    if ( !m_nowScrobblingTrack.isNull() && !m_paused && index.row() == 0 )
-        return m_nowScrobblingTrack;
+    if ( isNowPlaying() && index.row() == 0 )
+    {
+        // prefer the now scrobbling track if it is there
+        if ( !m_nowScrobblingTrack.isNull() )
+            return m_nowScrobblingTrack;
+        else
+            return m_nowPlayingTrack;
+    }
 
-    return !m_nowPlayingTrack.isNull() && index.row() == 0 ? m_nowPlayingTrack : m_tracks[adjustedIndex.row()];
+    return isNowPlaying() && index.row() == 0 ? m_nowPlayingTrack : m_tracks[adjustedIndex.row()];
 }
 
 
@@ -453,7 +476,7 @@ ActivityListModel::parent( const QModelIndex& index ) const
 int
 ActivityListModel::rowCount( const QModelIndex& parent ) const
 {
-    return parent.isValid() ? 0 : !m_nowPlayingTrack.isNull() || (!m_nowScrobblingTrack.isNull() && !m_paused) ? m_tracks.length() + 1 : m_tracks.length();
+    return parent.isValid() ? 0 : isNowPlaying() ? m_tracks.length() + 1 : m_tracks.length();
 }
 
 int
