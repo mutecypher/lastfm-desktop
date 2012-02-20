@@ -87,7 +87,7 @@ StatusBar::StatusBar( QWidget* parent )
 
 
 void
-StatusBar::onSessionChanged( unicorn::Session* session )
+StatusBar::onSessionChanged( unicorn::Session* /*session*/ )
 {
     setStatus();
 }

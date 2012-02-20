@@ -187,6 +187,11 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *dockMenu  );
     qt_mac_set_dock_menu( dockMenu );
 #endif
+
+    if (aApp->tray())
+    {
+        ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *aApp->tray()->contextMenu() );
+    }
 }
 
 QString
@@ -264,21 +269,21 @@ MainWindow::setupMenuBar()
 
     /// Window
     QMenu* windowMenu = appMenuBar()->addMenu( tr("Window") );
-    QAction* minimize = windowMenu->addAction( tr( "Minimize" ) );
-    QAction* zoom = windowMenu->addAction( tr( "Zoom" ) );
+    windowMenu->addAction( tr( "Minimize" ) );
+    windowMenu->addAction( tr( "Zoom" ) );
     windowMenu->addSeparator();
-    QAction* lastfm = windowMenu->addAction( tr( "Last.fm" ) );
+    windowMenu->addAction( tr( "Last.fm" ) );
     windowMenu->addSeparator();
-    QAction* toFront = windowMenu->addAction( tr( "Bring All to Front" ) );
+    windowMenu->addAction( tr( "Bring All to Front" ) );
 
     /// Help
     QMenu* helpMenu = appMenuBar()->addMenu( tr("Help") );
     QAction* about = helpMenu->addAction( tr("About"), aApp, SLOT(onAboutTriggered()) );
     about->setMenuRole( QAction::AboutRole );
     helpMenu->addSeparator();
-    QAction* faq = helpMenu->addAction( tr("FAQ"), aApp, SLOT(onFaqTriggered()) );
-    QAction* forums = helpMenu->addAction( tr("Forums"), aApp, SLOT(onForumsTriggered()) );
-    QAction* tour = helpMenu->addAction( tr("Tour"), aApp, SLOT(onTourTriggered()) );
+    helpMenu->addAction( tr("FAQ"), aApp, SLOT(onFaqTriggered()) );
+    helpMenu->addAction( tr("Forums"), aApp, SLOT(onForumsTriggered()) );
+    helpMenu->addAction( tr("Tour"), aApp, SLOT(onTourTriggered()) );
     //helpMenu->addSeparator();
     //QAction* diagnostics = helpMenu->addAction( tr("Diagnostics") );
 }
@@ -409,7 +414,7 @@ MainWindow::onIPodDetected( const QString& iPod )
 }
 
 void
-MainWindow::onProcessingScrobbles( const QString& iPodName )
+MainWindow::onProcessingScrobbles( const QString& /*iPodName*/ )
 {
     ui.messageBar->show( tr("Processing iPod Scrobbles...") , "ipod");
 }

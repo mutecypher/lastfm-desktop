@@ -157,6 +157,8 @@ Application::init()
 
     /// tray menu
     QMenu* menu = new QMenu;
+    m_tray->setContextMenu(menu);
+
     menu->addMenu( new UserMenu() )->setText( "Accounts" );
 
     m_show_window_action = menu->addAction( tr("Show Scrobbler"));
@@ -164,7 +166,8 @@ Application::init()
     menu->addSeparator();
 
     {
-        m_love_action = menu->addAction( tr("Love") );
+        m_love_action = new QAction( tr("Love"), this );
+        m_love_action->setIconVisibleInMenu( false );
         m_love_action->setCheckable( true );
         QIcon loveIcon;
         loveIcon.addFile( ":/meta_love_OFF_REST.png", QSize( 16, 16 ), QIcon::Normal, QIcon::Off );
@@ -175,28 +178,8 @@ Application::init()
         connect( m_love_action, SIGNAL(triggered(bool)), SLOT(changeLovedState(bool)));
     }
     {
-        m_tag_action = menu->addAction(tr("Tag")+ELLIPSIS);
-        m_tag_action->setIcon( QIcon( ":/meta_tag_REST.png" ) );
-        m_tag_action->setEnabled( false );
-        connect( m_tag_action, SIGNAL(triggered()), SLOT(onTagTriggered()));
-    }
-
-    {
-        m_share_action = menu->addAction(tr("Share")+ELLIPSIS);
-        m_share_action->setIcon( QIcon( ":/meta_share_REST.png" ) );
-        m_share_action->setEnabled( false );
-        connect( m_share_action, SIGNAL(triggered()), SLOT(onShareTriggered()));
-    }
-
-    {
-        m_ban_action = new QAction( tr( "Ban" ), this );
-        QIcon banIcon;
-        banIcon.addFile( ":/controls_ban_REST.png" );
-        m_ban_action->setIcon( banIcon );
-        m_ban_action->setEnabled( false );
-    }
-    {
         m_play_action = new QAction( tr( "Play" ), this );
+        m_play_action->setIconVisibleInMenu( false );
         m_play_action->setCheckable( true );
         QIcon playIcon;
         playIcon.addFile( ":/controls_pause_REST.png", QSize(), QIcon::Normal, QIcon::On );
@@ -205,11 +188,39 @@ Application::init()
     }
     {
         m_skip_action = new QAction( tr( "Skip" ), this );
+        m_skip_action->setIconVisibleInMenu( false );
         QIcon skipIcon;
         skipIcon.addFile( ":/controls_skip_REST.png" );
         m_skip_action->setIcon( skipIcon );
         m_skip_action->setEnabled( false );
     }
+    {
+        m_tag_action = new QAction( tr( "Tag" ) + ELLIPSIS, this );
+        m_tag_action->setIconVisibleInMenu( false );
+        m_tag_action->setIcon( QIcon( ":/meta_tag_REST.png" ) );
+        m_tag_action->setEnabled( false );
+        connect( m_tag_action, SIGNAL(triggered()), SLOT(onTagTriggered()));
+    }
+    {
+        m_share_action = new QAction( tr( "Share" ) + ELLIPSIS, this );
+        m_share_action->setIconVisibleInMenu( false );
+        m_share_action->setIcon( QIcon( ":/meta_share_REST.png" ) );
+        m_share_action->setEnabled( false );
+        connect( m_share_action, SIGNAL(triggered()), SLOT(onShareTriggered()));
+    }
+    {
+        m_ban_action = new QAction( tr( "Ban" ), this );
+        m_ban_action->setIconVisibleInMenu( false );
+        QIcon banIcon;
+        banIcon.addFile( ":/controls_ban_REST.png" );
+        m_ban_action->setIcon( banIcon );
+        m_ban_action->setEnabled( false );
+    }
+    {
+        m_mute_action = new QAction( tr( "Mute" ), this );
+        m_mute_action->setEnabled( true );
+    }
+
 
 #ifdef Q_WS_X11
     menu->addSeparator();
@@ -236,12 +247,9 @@ Application::init()
     menu->addSeparator();
 
     QAction* quit = menu->addAction(tr("Quit %1").arg( applicationName()));
-
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
 
-
-    m_tray->setContextMenu(menu);
-
+    m_menuBar = new QMenuBar( 0 );
 
 /// MainWindow
     m_mw = new MainWindow( m_menuBar );
@@ -260,6 +268,7 @@ Application::init()
     m_share_action->setShortcut( Qt::CTRL + Qt::Key_S );
     m_love_action->setShortcut( Qt::CTRL + Qt::Key_L );
     m_ban_action->setShortcut( Qt::CTRL + Qt::Key_B );
+    m_mute_action->setShortcut( Qt::CTRL + Qt::ALT + Qt::Key_Down );
 
     // make the love buttons sychronised
     connect(this, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));

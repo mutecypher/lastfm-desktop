@@ -52,7 +52,7 @@ TagWidget::event( QEvent* e )
 }
 
 void
-TagWidget::paintEvent( QPaintEvent* event )
+TagWidget::paintEvent( QPaintEvent* /*event*/ )
 {
     QPainter p( this );
 

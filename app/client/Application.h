@@ -101,6 +101,7 @@ namespace audioscrobbler
         QAction* m_toggle_window_action;
         QAction* m_scrobble_ipod_action;
         QAction* m_visit_profile_action;
+        QAction* m_mute_action;
         
     public:
         Application(int& argc, char** argv);
@@ -113,8 +114,9 @@ namespace audioscrobbler
         QAction* banAction() const { return m_ban_action; }
         QAction* playAction() const { return m_play_action; }
         QAction* skipAction() const { return m_skip_action; }
+        QAction* muteAction() const { return m_mute_action; }
         QAction* scrobbleToggleAction() const { return m_submit_scrobbles_toggle; }
-        QSystemTrayIcon* tray() ;
+        QSystemTrayIcon* tray();
 
         void setRaiseHotKey( Qt::KeyboardModifiers mods, int key );
 

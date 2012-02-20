@@ -161,7 +161,7 @@ MetadataWidget::fetchTrackInfo()
 }
 
 void
-MetadataWidget::showEvent( QShowEvent *e )
+MetadataWidget::showEvent( QShowEvent* /*e*/ )
 {
     fetchTrackInfo();
 }
@@ -517,7 +517,7 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
     if ( lfm.parse( data ) )
     {
         m_globalTrackScrobbles = lfm["track"]["playcount"].text().toInt();
-        int listeners = lfm["track"]["listeners"].text().toInt();
+        //int listeners = lfm["track"]["listeners"].text().toInt();
         m_userTrackScrobbles = lfm["track"]["userplaycount"].text().toInt();
 
         // Update the context now that we have the user track listens
@@ -697,6 +697,9 @@ MetadataWidget::getContextString( const Track& track )
                case 5: contextString = tr( "From %2, %3, %4, %5, and %6%1s libraries." ).arg( QChar( 0x2019 ), userLibrary( context.values().at(0), track.artist().name() ), userLibrary( context.values().at(1), track.artist().name() ), userLibrary( context.values().at(2), track.artist().name() ), userLibrary( context.values().at(3), track.artist().name() ), userLibrary( context.values().at(4), track.artist().name() ) ); break;
                }
            }
+           break;
+       default:
+           // when there is no context they will just get scrobble counts
            break;
        }
    }

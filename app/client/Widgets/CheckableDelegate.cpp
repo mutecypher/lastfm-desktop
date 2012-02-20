@@ -20,7 +20,7 @@ CheckableDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option,
     QDateTime timestamp = index.data( ActivityListModel::TimeStampRole ).toDateTime();
     bool isNowPlaying = timestamp.toTime_t() == 0 || track.sameObject( ScrobbleService::instance().currentTrack() );
 
-    const QImage& image = index.data( Qt::DecorationRole ).value<QImage>();
+    //const QImage& image = index.data( Qt::DecorationRole ).value<QImage>();
     QLinearGradient g( option.rect.topLeft(), option.rect.bottomLeft());
     g.setColorAt( 0, isNowPlaying ? QColor( 0xFFFCCA ) : QColor( 0xeeeeee ) );
     g.setColorAt( 1, isNowPlaying ? QColor( 0xeeebb9 ) : QColor( 0xdddddd ) );

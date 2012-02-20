@@ -237,7 +237,10 @@ QuickStartWidget::play()
         if ( RadioService::instance().state() != Playing )
             RadioService::instance().play( RadioStation() );
         else
-            ;
+        {
+            // They are already playing something. Maybe we
+            // should switch to the now playing view
+        }
     }
 }
 

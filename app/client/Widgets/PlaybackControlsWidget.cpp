@@ -81,9 +81,9 @@ PlaybackControlsWidget::addToMenu( QMenu& menu )
 
     menu.addSeparator();
 
-    menu.addAction( tr( "Volume Up" ), &RadioService::instance(), SLOT(volumeUp()), QKeySequence( Qt::CTRL + Qt::Key_Up ));
-    menu.addAction( tr( "Volume Down" ), &RadioService::instance(), SLOT(volumeDown()), QKeySequence( Qt::CTRL + Qt::Key_Down ));
-    menu.addAction( tr( "Mute" ), &RadioService::instance(), SLOT(mute()), QKeySequence( Qt::CTRL + Qt::ALT + Qt::Key_Down ));
+    //menu.addAction( tr( "Volume Up" ), &RadioService::instance(), SLOT(volumeUp()), QKeySequence( Qt::CTRL + Qt::Key_Up ));
+    //menu.addAction( tr( "Volume Down" ), &RadioService::instance(), SLOT(volumeDown()), QKeySequence( Qt::CTRL + Qt::Key_Down ));
+    menu.addAction( aApp->muteAction() );
 }
 
 
@@ -267,7 +267,7 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
 }
 
 void
-PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrack )
+PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
 {
     ui->progressBar->setTrack( track );
 
@@ -349,7 +349,7 @@ PlaybackControlsWidget::onTick( qint64 tick )
 }
 
 void
-PlaybackControlsWidget::onError( int error, const QVariant& errorText )
+PlaybackControlsWidget::onError( int /*error*/, const QVariant& /*errorText*/ )
 {
 }
 

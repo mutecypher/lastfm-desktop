@@ -25,7 +25,7 @@ PointyArrow::~PointyArrow()
 }
 
 void 
-PointyArrow::paintEvent( QPaintEvent* event )
+PointyArrow::paintEvent( QPaintEvent* /*event*/ )
 {
     QPainter p( this );
     p.drawPixmap( QPoint( 0, 0 ), m_pm );
