@@ -65,6 +65,7 @@ private:
     void read();
     void limit( int limit );
     void onSessionChanged( const QString& username );
+    bool isNowPlaying() const;
 
     QModelIndex adjustedIndex( const QModelIndex& a_index ) const;
     const ImageTrack& indexedTrack( const QModelIndex& index, const QModelIndex& adjustedIndex ) const;
