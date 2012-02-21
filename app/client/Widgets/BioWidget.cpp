@@ -191,17 +191,12 @@ BioWidget::onAnchorClicked( const QUrl& link )
 void
 BioWidget::onDocumentLayoutChanged()
 {
-    qDebug() << document()->size();
-
     setFixedHeight( document()->size().height() );
 }
 
 void 
 BioWidget::onBioChanged( const QSizeF& size )
 {
-    qDebug() << size.toSize();
-    qDebug() << document()->size();
-
     updateGeometry();
 
     onDocumentLayoutChanged();
