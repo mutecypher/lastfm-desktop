@@ -43,19 +43,8 @@ ActivityListModel::ActivityListModel()
 }
 
 void
-ActivityListModel::onFoundIPodScrobbles( const QList<lastfm::Track>& tracks )
+ActivityListModel::onFoundIPodScrobbles( const QList<lastfm::Track>& /*tracks*/ )
 {
-    // Add a TrackItem that displays info about the iPod scrobble
-    /*ActivityListItem* item = new IPodScrobbleItem( tracks );
-    item->setObjectName("iPodScrobble");
-    item->setOdd( m_rowNum++ % 2);
-
-    connect( item, SIGNAL(clicked(ActivityListItem*)), SIGNAL(itemClicked(ActivityListItem*)));
-    connect( item, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
-
-    m_listLayout->addWidget( item );
-
-    write();*/
 }
 
 void 
@@ -215,7 +204,7 @@ ActivityListModel::onGotRecentTracks()
 {
     XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) );
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
         qDebug() << lfm;
 
@@ -469,13 +458,13 @@ ActivityListModel::setData( const QModelIndex& a_index, const QVariant& value, i
 }
 
 QModelIndex
-ActivityListModel::index( int row, int column, const QModelIndex& parent ) const
+ActivityListModel::index( int row, int column, const QModelIndex& /*parent*/ ) const
 {
     return createIndex( row, column );
 }
 
 QModelIndex
-ActivityListModel::parent( const QModelIndex& index ) const
+ActivityListModel::parent( const QModelIndex& /*index*/ ) const
 {
     return QModelIndex();
 }
