@@ -38,22 +38,22 @@ StationSearch::startSearch(const QString& name)
 void
 StationSearch::onFinished()
 {
-    lastfm::XmlQuery x;
+    lastfm::XmlQuery lfm;
 
-    if ( x.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
-        lastfm::XmlQuery station = x["stations"]["station"];
-        RadioStation rs(QUrl::fromPercentEncoding( station["url"].text().toUtf8()));
+        lastfm::XmlQuery station = lfm["stations"]["station"];
+        RadioStation rs( QUrl::fromPercentEncoding( station["url"].text().toAscii() ) );
 
         if (rs.url().length())
         {
-            rs.setTitle(station["name"].text());
+            rs.setTitle( station["name"].text() );
             emit searchResult(rs);
             return;
         }
     }
     else
-        qDebug() << "exception";
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
 
     // no artist or tag result
     // maybe the user wanted to hear a friend's library?
