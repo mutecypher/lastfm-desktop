@@ -245,6 +245,9 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
     ui->play->setChecked( true );
     aApp->playAction()->setChecked( true );
 
+    ui->play->setChecked( false );
+    aApp->playAction()->setChecked( false );
+
     if ( !m_movie )
     {
         m_movie = new QMovie( ":/loading_radio.gif", "GIF", this );
