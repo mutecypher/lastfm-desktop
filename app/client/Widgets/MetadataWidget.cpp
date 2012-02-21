@@ -135,12 +135,12 @@ MetadataWidget::fetchTrackInfo()
 
         // fetch Track info
         connect( m_track.signalProxy(), SIGNAL( gotInfo(QByteArray)), SLOT( onTrackGotInfo(QByteArray)));
-        m_track.getInfo();
+        m_track.getInfo( User().name() );
 
         if( !m_track.album().isNull() )
-            connect( m_track.album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
+            connect( m_track.album().getInfo( User().name() ), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
 
-        connect( m_track.artist().getInfo(), SIGNAL(finished()), SLOT(onArtistGotInfo()));
+        connect( m_track.artist().getInfo( User().name() ), SIGNAL(finished()), SLOT(onArtistGotInfo()));
 
         connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
         connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
@@ -555,7 +555,7 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
                 if ( !albumTitle.isEmpty() )
                 {
                     m_albumGuess = lastfm::Album( m_track.artist().name(), albumTitle );
-                    connect( m_albumGuess.getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
+                    connect( m_albumGuess.getInfo( User().name() ), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
                     ++m_numCalls;
 
                     setTrackDetails( m_track );
