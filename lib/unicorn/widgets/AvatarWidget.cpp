@@ -40,6 +40,8 @@ AvatarWidget::paintEvent( QPaintEvent* paintEvent )
             text = m_user.gender().female() ? tr( "Alumna" ) : tr( "Alumnus" );
             brush = QColor( 0x5336BD );
             break;
+        default:
+            break;
         }
 
         QFont font = p.font();
