@@ -14,7 +14,8 @@ ActivityListModel::ActivityListModel()
     :m_noArt( ":/meta_album_no_art.png" ),
      m_nowPlayingTrack( Track() ),
      m_nowScrobblingTrack( Track() ),
-     m_paused( false )
+     m_paused( false ),
+     m_reading( false)
 {
     m_loveIcon.addFile( ":/scrobbles_love_OFF_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
     m_loveIcon.addFile( ":/meta_love_ON_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::On );
@@ -84,6 +85,8 @@ ActivityListModel::onSessionChanged( const QString& username )
 void
 ActivityListModel::read()
 {
+    m_reading = true;
+
     qDebug() << m_path;
 
     m_tracks.clear();
@@ -104,6 +107,8 @@ ActivityListModel::read()
     addTracks( tracks );
 
     limit( 30 );
+
+    m_reading = false;
 
     reset();
 }
@@ -282,7 +287,9 @@ ActivityListModel::addTracks( const QList<lastfm::Track>& tracks )
             QList<ImageTrack>::iterator insert = qLowerBound( m_tracks.begin(), m_tracks.end(), track, lessThan );
             QList<ImageTrack>::iterator inserted = m_tracks.insert( insert, track );
 
-            inserted->getInfo();
+            // don't get info when reading the file at startup
+            if (!m_reading)
+                inserted->getInfo();
             inserted->fetchImage();
 
             connect( &(*inserted), SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
