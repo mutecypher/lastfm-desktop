@@ -34,7 +34,8 @@ public:
     void startSearch(const QString& name);
 
 signals:
-    void searchResult(RadioStation);
+    void searchResult( const RadioStation& station );
+    void error( const QString& message, const QString& id );
 
 private slots:
     void onFinished();

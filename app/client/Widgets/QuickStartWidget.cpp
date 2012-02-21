@@ -225,9 +225,12 @@ QuickStartWidget::play()
             RadioService::instance().play( RadioStation( trimmedText ) );
         else if ( ui.edit->text().length() )
         {
-            StationSearch* s = new StationSearch();
-            connect(s, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)));
-            s->startSearch( ui.edit->text() );
+            StationSearch* search = new StationSearch();
+
+            connect( search, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)));
+            connect( search, SIGNAL(error(QString,QString)), aApp, SIGNAL(showMessage(QString,QString)));
+
+            search->startSearch( ui.edit->text() );
         }
 
         ui.edit->clear();

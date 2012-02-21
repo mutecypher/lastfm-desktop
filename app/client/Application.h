@@ -139,6 +139,7 @@ namespace audioscrobbler
 		
         void error( const QString& message );
         void status( const QString& message, const QString& id );
+        void showMessage( const QString& message, const QString& id );
 
         void bootstrapStarted( const QString& pluginId );
         void bootstrapDone( int status );
