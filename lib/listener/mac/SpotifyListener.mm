@@ -107,6 +107,8 @@ SpotifyListenerMac::loop()
                     m_connection->start( t );
                 }
             }
+            else if ( m_lastPlayerState == "paused" )
+                m_connection->resume();
 
             m_lastTrack = t;
         }
@@ -119,21 +121,6 @@ SpotifyListenerMac::loop()
             }
             else if ( playerState == "paused" )
                 m_connection->pause();
-            else if ( playerState == "playing" )
-            {
-                lastfm::MutableTrack t;
-                t.setTitle( titleScript.exec() );
-                t.setAlbum( albumScript.exec() );
-                t.setArtist( artistScript.exec() );
-                t.setDuration( durationScript.exec().toInt() );
-
-                if ( m_lastPlayerState == "paused" && t == m_lastTrack )
-                    m_connection->resume();
-                else
-                    m_connection->start( t );
-
-                m_lastTrack = t;
-            }
         }
     }
     else
