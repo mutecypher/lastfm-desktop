@@ -91,6 +91,8 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     layout->addWidget( ui.messageBar = new MessageBar( this ) );
 
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), ui.messageBar, SLOT(hide()) );
+
     QHBoxLayout* h = new QHBoxLayout();
     h->setContentsMargins( 0, 0, 0, 0 );
     h->setSpacing( 0 );
