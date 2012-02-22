@@ -150,8 +150,6 @@ Application::init()
 //    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
 //    lastfm::nam()->setCache( diskCache );
 
-    m_menuBar = new QMenuBar( 0 );
-
 /// tray
     tray(); // this will initialise m_tray if it doesn't already exist
 
