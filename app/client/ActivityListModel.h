@@ -80,6 +80,7 @@ private:
     QIcon m_loveIcon;
     QIcon m_tagIcon;
     QIcon m_shareIcon;
+    QIcon m_buyIcon;
     QModelIndex m_hoverIndex;
     QPointer<QNetworkReply> m_recentTrackReply;
     QPointer<QTimer > m_writeTimer;

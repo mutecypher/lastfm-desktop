@@ -28,6 +28,9 @@ ActivityListModel::ActivityListModel()
     m_shareIcon.addFile( ":/scrobbles_share_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
     m_shareIcon.addFile( ":/scrobbles_share_HOVER.png", QSize( 21, 18 ), QIcon::Selected, QIcon::Off );
 
+    m_buyIcon.addFile( ":/scrobbles_buy_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
+    m_buyIcon.addFile( ":/scrobbles_buy_HOVER.png", QSize( 21, 18 ), QIcon::Selected, QIcon::Off );
+
     m_noArt = m_noArt.scaled( 64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation );
 
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* )), SLOT(onSessionChanged( unicorn::Session* )));
@@ -403,6 +406,17 @@ ActivityListModel::data( const QModelIndex& a_index, int role ) const
             return m_shareIcon.actualSize( QSize( 21, 18 ));
         else if( role == Qt::DisplayRole )
             return "Share";
+        else
+            return QVariant();
+    }
+
+    if( index.column() == 4 ) {
+        if( role == Qt::DecorationRole )
+            return m_buyIcon;
+        else if( role == Qt::SizeHintRole )
+            return m_buyIcon.actualSize( QSize( 21, 18 ));
+        else if( role == Qt::DisplayRole )
+            return "Buy";
         else
             return QVariant();
     }
