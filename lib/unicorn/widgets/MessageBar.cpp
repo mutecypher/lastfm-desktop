@@ -22,6 +22,7 @@
 #include <QLabel>
 
 #include "lib/unicorn/dialogs/ScrobbleConfirmationDialog.h"
+#include "lib/unicorn/widgets/Label.h"
 
 #include "MessageBar.h"
 
@@ -59,7 +60,7 @@ void
 MessageBar::show( const QString& message, const QString& id )
 {
     setObjectName( id );
-    ui.message->setText( message );
+    ui.message->setText( unicorn::Label::boldLinkStyle( message, Qt::black ) );
 
     style()->polish( this );
     style()->polish( ui.icon );
@@ -68,7 +69,7 @@ MessageBar::show( const QString& message, const QString& id )
 }
 
 void
-MessageBar::onLinkActivated( const QString& link )
+MessageBar::onLinkActivated( const QString& /*link*/ )
 {
     // Show a dialog with the tracks
     ScrobbleConfirmationDialog confirmDialog( m_tracks );
