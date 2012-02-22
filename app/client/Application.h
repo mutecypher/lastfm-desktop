@@ -158,6 +158,7 @@ namespace audioscrobbler
 
         void onPrefsTriggered();
         void onBetaTriggered();
+        void onDiagnosticsTriggered();
 
         void onScrobbleToggled( bool scrobblingOn );
 

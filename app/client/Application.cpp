@@ -577,6 +577,12 @@ Application::onBetaTriggered()
 {
     m_mw->onBetaTriggered();
 }
+
+void
+Application::onDiagnosticsTriggered()
+{
+    m_mw->onDiagnosticsTriggered();
+}
     
 void
 Application::onMessageReceived( const QStringList& message )

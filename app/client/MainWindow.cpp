@@ -286,6 +286,7 @@ MainWindow::setupMenuBar()
     helpMenu->addAction( tr("FAQ"), aApp, SLOT(onFaqTriggered()) );
     helpMenu->addAction( tr("Forums"), aApp, SLOT(onForumsTriggered()) );
     helpMenu->addAction( tr("Tour"), aApp, SLOT(onTourTriggered()) );
+    helpMenu->addAction( tr("Diagnostics"), aApp, SLOT(onDiagnosticsTriggered()) );
     //helpMenu->addSeparator();
     //QAction* diagnostics = helpMenu->addAction( tr("Diagnostics") );
 }
@@ -344,6 +345,16 @@ MainWindow::onBetaTriggered()
 
     m_beta->show();
     m_beta->activateWindow();
+}
+
+void
+MainWindow::onDiagnosticsTriggered()
+{
+    if ( !m_diagnostics )
+        m_diagnostics = new DiagnosticsDialog( this );
+
+    m_diagnostics->show();
+    m_diagnostics->activateWindow();
 }
 
 void
