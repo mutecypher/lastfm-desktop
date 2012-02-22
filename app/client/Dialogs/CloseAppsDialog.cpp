@@ -12,7 +12,7 @@ CloseAppsDialog::CloseAppsDialog(QWidget *parent) :
 
     setWindowTitle( tr( "Close Apps" ) );
 
-    ui->text->setText( tr( "We are trying to install new media plugins. The following apps need to be closed before you can continue." ) );
+    ui->text->setText( tr( "We are trying to install new media player plugins. The following apps need to be closed before you can continue." ) );
 
     checkApps();
 
