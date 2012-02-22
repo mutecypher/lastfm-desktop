@@ -192,7 +192,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     if (aApp->tray())
     {
-        ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *aApp->tray()->contextMenu() );
+        ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *aApp->tray()->contextMenu(), aApp->tray()->contextMenu()->actions()[3] );
     }
 }
 
@@ -310,6 +310,7 @@ MainWindow::showEvent(QShowEvent *)
         m_preferences->show();
 
     m_menuBar->show();
+    m_menuBar->activateWindow();
 
 #ifdef Q_OS_MAC
     if ( !m_installer )

@@ -27,7 +27,7 @@ public:
     bool scrobbleTrack() { return m_scrobbleTrack; }
     void setScrobbleTrack( bool scrobbleTrack );
 
-    void addToMenu( class QMenu& menu );
+    void addToMenu( class QMenu& menu, QAction* before = 0 );
 
 private slots:
     void onActionsChanged();
