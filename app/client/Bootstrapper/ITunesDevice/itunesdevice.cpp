@@ -146,9 +146,9 @@ ITunesDevice::LibraryPath()
 }
 
 ITunesDevice::ITunesDevice() :
+      m_totalSize( 0 ),
       m_file( 0 ),
       m_handler( 0 ),
-      m_totalSize( 0 ),
       m_xmlReader( 0 ),
       m_xmlInput( 0 )
 {
