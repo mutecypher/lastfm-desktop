@@ -7,8 +7,9 @@ CONFIG -= app_bundle
 
 include( ../../admin/include.qmake )
 
-macx:CONFIG( app_bundle ) {
-    DESTDIR = "$$DESTDIR/Last.fm.app/Contents/MacOS"
+# TODO: FIX THIS: I think this means that we can only build bundles
+mac {
+    DESTDIR = "../../_bin/Last.fm.app/Contents/Helpers"
     QMAKE_POST_LINK += ../../admin/dist/mac/bundleFrameworks.sh \"$$DESTDIR/$$TARGET\"
 }
 
