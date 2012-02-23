@@ -270,12 +270,14 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
 }
 
 void
-PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
+PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrack )
 {
     ui->progressBar->setTrack( track );
 
     if ( m_movie )
         m_movie->stop();
+
+    disconnect( oldTrack.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool)));
 
     if ( !track.isNull() )
     {

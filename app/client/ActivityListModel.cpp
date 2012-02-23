@@ -209,8 +209,6 @@ ActivityListModel::onGotRecentTracks()
 
     if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
-        qDebug() << lfm;
-
         m_nowPlayingTrack = Track();
 
         QList<lastfm::Track> tracks;
