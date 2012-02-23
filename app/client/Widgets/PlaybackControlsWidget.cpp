@@ -61,29 +61,29 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
 }
 
 void
-PlaybackControlsWidget::addToMenu( QMenu& menu )
+PlaybackControlsWidget::addToMenu( QMenu& menu, QAction* before )
 {
-    menu.addAction( m_playAction );
+    menu.insertAction( before, m_playAction );
 
-    menu.addSeparator();
+    menu.insertSeparator( before );
 
-    menu.addAction( aApp->skipAction() );
+    menu.insertAction( before, aApp->skipAction() );
 
-    menu.addSeparator();
+    menu.insertSeparator( before );
 
-    menu.addAction( aApp->loveAction() );
-    menu.addAction( aApp->banAction() );
+    menu.insertAction( before, aApp->loveAction() );
+    menu.insertAction( before, aApp->banAction() );
 
-    menu.addSeparator();
+    menu.insertSeparator( before );
 
-    menu.addAction( aApp->tagAction() );
-    menu.addAction( aApp->shareAction() );
+    menu.insertAction( before, aApp->tagAction() );
+    menu.insertAction( before, aApp->shareAction() );
 
-    menu.addSeparator();
+    menu.insertSeparator( before );
 
     //menu.addAction( tr( "Volume Up" ), &RadioService::instance(), SLOT(volumeUp()), QKeySequence( Qt::CTRL + Qt::Key_Up ));
     //menu.addAction( tr( "Volume Down" ), &RadioService::instance(), SLOT(volumeDown()), QKeySequence( Qt::CTRL + Qt::Key_Down ));
-    menu.addAction( aApp->muteAction() );
+    menu.insertAction( before, aApp->muteAction() );
 }
 
 

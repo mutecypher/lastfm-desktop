@@ -761,7 +761,7 @@ MetadataWidget::scrobbleString( const Track& track )
         if ( m_userArtistScrobbles != 0 )
             scrobbleString = tr( "You've listened to %1 %2, but not this track." ).arg( artistString, userArtistScrobblesString );
         else
-            scrobbleString = tr( "You've never listened to %1." ).arg( artistString );
+            scrobbleString = tr( "This is the first time you've listened to %1." ).arg( artistString );
     }
 
     return scrobbleString;

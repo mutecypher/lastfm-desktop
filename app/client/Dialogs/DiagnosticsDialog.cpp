@@ -41,6 +41,8 @@ DiagnosticsDialog::DiagnosticsDialog( QWidget *parent )
 {    
     ui->setupUi( this );
 
+    setAttribute( Qt::WA_DeleteOnClose );
+
     ui->cached->header()->setResizeMode( QHeaderView::Stretch );
     ui->fingerprints->header()->setResizeMode( QHeaderView::Stretch );
     
