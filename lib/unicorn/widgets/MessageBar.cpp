@@ -22,6 +22,7 @@
 #include <QLabel>
 
 #include "lib/unicorn/dialogs/ScrobbleConfirmationDialog.h"
+#include "lib/unicorn/widgets/Label.h"
 
 #include "MessageBar.h"
 
@@ -44,6 +45,8 @@ MessageBar::MessageBar( QWidget* parent )
     connect( ui.message, SIGNAL(linkActivated(QString)), SLOT(onLinkActivated(QString)));
     connect( ui.close, SIGNAL(clicked()), SLOT(hide()));
 
+    connect( qApp, SIGNAL(showMessage(QString,QString)), SLOT(show(QString,QString)));
+
     hide();
 }
 
@@ -57,7 +60,7 @@ void
 MessageBar::show( const QString& message, const QString& id )
 {
     setObjectName( id );
-    ui.message->setText( message );
+    ui.message->setText( unicorn::Label::boldLinkStyle( message, Qt::black ) );
 
     style()->polish( this );
     style()->polish( ui.icon );
@@ -66,7 +69,7 @@ MessageBar::show( const QString& message, const QString& id )
 }
 
 void
-MessageBar::onLinkActivated( const QString& link )
+MessageBar::onLinkActivated( const QString& /*link*/ )
 {
     // Show a dialog with the tracks
     ScrobbleConfirmationDialog confirmDialog( m_tracks );

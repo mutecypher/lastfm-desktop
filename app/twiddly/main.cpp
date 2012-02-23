@@ -54,7 +54,13 @@ main( int argc, char** argv )
     TwiddlyApplication::setApplicationVersion( "2" );
 
     TwiddlyApplication app( argc, argv );
-    
+
+#ifdef Q_OS_MAC
+    // We need to tell twiddly where to load the plugins because it
+    // loads system ones when not in the /Contents/MacOS directory
+    TwiddlyApplication::addLibraryPath( QDir( TwiddlyApplication::applicationDirPath() ).absoluteFilePath( "../plugins" ) );
+#endif
+
     try
     {
         if ( app.arguments().contains( "--bootstrap-needed?" ) )

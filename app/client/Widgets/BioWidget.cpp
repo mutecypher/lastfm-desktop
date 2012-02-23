@@ -169,7 +169,7 @@ BioWidget::sendMouseEvent( QMouseEvent* event )
 }
 
 void
-BioWidget::showEvent( QShowEvent* event )
+BioWidget::showEvent( QShowEvent* /*event*/ )
 {
     // HACK: onBioChanged reports the wrong size for the document
     // and id we polish it a bit later it gets set correctly.
@@ -191,17 +191,12 @@ BioWidget::onAnchorClicked( const QUrl& link )
 void
 BioWidget::onDocumentLayoutChanged()
 {
-    qDebug() << document()->size();
-
     setFixedHeight( document()->size().height() );
 }
 
 void 
-BioWidget::onBioChanged( const QSizeF& size )
+BioWidget::onBioChanged( const QSizeF& /*size*/ )
 {
-    qDebug() << size.toSize();
-    qDebug() << document()->size();
-
     updateGeometry();
 
     onDocumentLayoutChanged();

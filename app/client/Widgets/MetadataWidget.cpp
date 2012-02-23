@@ -135,12 +135,12 @@ MetadataWidget::fetchTrackInfo()
 
         // fetch Track info
         connect( m_track.signalProxy(), SIGNAL( gotInfo(QByteArray)), SLOT( onTrackGotInfo(QByteArray)));
-        m_track.getInfo();
+        m_track.getInfo( User().name() );
 
         if( !m_track.album().isNull() )
-            connect( m_track.album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
+            connect( m_track.album().getInfo( User().name() ), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
 
-        connect( m_track.artist().getInfo(), SIGNAL(finished()), SLOT(onArtistGotInfo()));
+        connect( m_track.artist().getInfo( User().name() ), SIGNAL(finished()), SLOT(onArtistGotInfo()));
 
         connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
         connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
@@ -161,7 +161,7 @@ MetadataWidget::fetchTrackInfo()
 }
 
 void
-MetadataWidget::showEvent( QShowEvent *e )
+MetadataWidget::showEvent( QShowEvent* /*e*/ )
 {
     fetchTrackInfo();
 }
@@ -517,7 +517,7 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
     if ( lfm.parse( data ) )
     {
         m_globalTrackScrobbles = lfm["track"]["playcount"].text().toInt();
-        int listeners = lfm["track"]["listeners"].text().toInt();
+        //int listeners = lfm["track"]["listeners"].text().toInt();
         m_userTrackScrobbles = lfm["track"]["userplaycount"].text().toInt();
 
         // Update the context now that we have the user track listens
@@ -555,7 +555,7 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
                 if ( !albumTitle.isEmpty() )
                 {
                     m_albumGuess = lastfm::Album( m_track.artist().name(), albumTitle );
-                    connect( m_albumGuess.getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
+                    connect( m_albumGuess.getInfo( User().name() ), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
                     ++m_numCalls;
 
                     setTrackDetails( m_track );
@@ -698,6 +698,9 @@ MetadataWidget::getContextString( const Track& track )
                }
            }
            break;
+       default:
+           // when there is no context they will just get scrobble counts
+           break;
        }
    }
    else
@@ -758,7 +761,7 @@ MetadataWidget::scrobbleString( const Track& track )
         if ( m_userArtistScrobbles != 0 )
             scrobbleString = tr( "You've listened to %1 %2, but not this track." ).arg( artistString, userArtistScrobblesString );
         else
-            scrobbleString = tr( "You've never listened to %1." ).arg( artistString );
+            scrobbleString = tr( "This is the first time you've listened to %1." ).arg( artistString );
     }
 
     return scrobbleString;

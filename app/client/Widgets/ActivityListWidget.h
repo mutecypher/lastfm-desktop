@@ -3,6 +3,8 @@
 
 #include <QTreeView>
 #include <QMouseEvent>
+#include <QPoint>
+
 namespace lastfm{ class Track; }
 using lastfm::Track;
 
@@ -25,10 +27,18 @@ private slots:
     void onShareTwitter();
     void onShareFacebook();
 
+    void onGotBuyLinks();
+    void onBuyActionTriggered( QAction* buyAction );
+
+private:
+    QString price( const QString& price, const QString& currency ) const;
+
 private:
     class ActivityListModel* m_model;
 
     QModelIndex m_shareIndex;
+
+    QPoint m_buyCursor;
 };
 
 

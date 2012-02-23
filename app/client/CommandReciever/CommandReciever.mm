@@ -29,7 +29,7 @@
 
 - (AppleScriptDelegate*) init:(CommandReciever*)observer
 {
-    if ( self = [super init] )
+    if ( (self = [super init]) )
     {
         self->m_observer = observer;
     }
@@ -41,6 +41,7 @@
 
 - (BOOL)application:(NSApplication*)sender delegateHandlesKey:(NSString*)key
 {
+    Q_UNUSED(sender);
     return [[NSSet setWithObjects: @"trackTitle", @"artist", @"album", @"duration", @"artwork", @"loved", nil] containsObject:key];
 }
 

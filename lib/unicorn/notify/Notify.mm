@@ -19,7 +19,7 @@
 @implementation Delegate
 - (Delegate*) init:(unicorn::Notify*)observer
 {
-    if ( self = [super init] )
+    if ( (self = [super init]) )
     {
         self->observer = observer;
     }
@@ -29,6 +29,7 @@
 
 - (void) growlNotificationWasClicked:(id)clickContext
 {
+    Q_UNUSED(clickContext)
     self->observer->growlNotificationWasClicked();
 }
 @end

@@ -71,6 +71,7 @@ private:
     const ImageTrack& indexedTrack( const QModelIndex& index, const QModelIndex& adjustedIndex ) const;
 
 private:
+    QImage m_noArt;
     ImageTrack m_nowPlayingTrack;
     ImageTrack m_nowScrobblingTrack;
     bool m_paused;
@@ -79,10 +80,11 @@ private:
     QIcon m_loveIcon;
     QIcon m_tagIcon;
     QIcon m_shareIcon;
-    QImage m_noArt;
+    QIcon m_buyIcon;
     QModelIndex m_hoverIndex;
     QPointer<QNetworkReply> m_recentTrackReply;
     QPointer<QTimer > m_writeTimer;
+    bool m_reading;
 };
 
 #endif //ACTIVITY_LIST_MODEL_H_

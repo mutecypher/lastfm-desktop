@@ -278,5 +278,6 @@ ITunesListener::setupCurrentTrack()
     t.setDuration( duration.toInt() );
     t.setUrl( QUrl::fromLocalFile( path ) );
     t.setPodcast( podcast );
+    t.setVideo( video );
     m_connection->start( t );
 }

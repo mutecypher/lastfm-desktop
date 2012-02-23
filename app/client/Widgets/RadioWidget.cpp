@@ -118,7 +118,7 @@ RadioWidget::changeUser( const QString& newUsername )
             networkLayout->setSpacing( 0 );
             networkLayout->addWidget( ui.friends = new PlayableItemWidget( RadioStation::friends( User( newUsername ) ), tr( "My Friends' Radio" ), tr( "Music your friends like" ) ) );
             ui.friends->setObjectName( "friends" );
-            networkLayout->addWidget( ui.neighbours = new PlayableItemWidget( RadioStation::neighbourhood( User( newUsername ) ), tr( "My Neighbours' Radio" ), tr ( "Music from listeners you like" ) ) );
+            networkLayout->addWidget( ui.neighbours = new PlayableItemWidget( RadioStation::neighbourhood( User( newUsername ) ), tr( "My Neighbours' Radio" ), tr ( "Music from listeners like you" ) ) );
             ui.neighbours->setObjectName( "neighbours" );
         }
 

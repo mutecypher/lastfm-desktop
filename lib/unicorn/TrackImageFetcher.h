@@ -40,7 +40,9 @@ public:
     Track track() const { return m_track; }
 
 private:
-    Track m_track;
+    lastfm::Track m_track;
+
+    QUrl url( const QString& root_node );
 
     void artistGetInfo();
     void fail();

@@ -30,11 +30,12 @@ PluginsInstallPage::initializePage()
 
     wizard()->setCommitPage( true );
 
+#ifdef Q_OS_WIN32
     QAbstractButton* continueButton = wizard()->setButton( FirstRunWizard::NextButton, tr( "Continue" ) );
     if ( wizard()->canGoBack() )
         wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
 
-#ifdef Q_OS_WIN32
+
     if ( wizard()->pluginList()->installList().count() > 0 )
     {
         // get the install to happen a bit later so that

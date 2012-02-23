@@ -14,7 +14,8 @@ ActivityListModel::ActivityListModel()
     :m_noArt( ":/meta_album_no_art.png" ),
      m_nowPlayingTrack( Track() ),
      m_nowScrobblingTrack( Track() ),
-     m_paused( false )
+     m_paused( false ),
+     m_reading( false)
 {
     m_loveIcon.addFile( ":/scrobbles_love_OFF_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
     m_loveIcon.addFile( ":/meta_love_ON_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::On );
@@ -26,6 +27,9 @@ ActivityListModel::ActivityListModel()
 
     m_shareIcon.addFile( ":/scrobbles_share_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
     m_shareIcon.addFile( ":/scrobbles_share_HOVER.png", QSize( 21, 18 ), QIcon::Selected, QIcon::Off );
+
+    m_buyIcon.addFile( ":/scrobbles_buy_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
+    m_buyIcon.addFile( ":/scrobbles_buy_HOVER.png", QSize( 21, 18 ), QIcon::Selected, QIcon::Off );
 
     m_noArt = m_noArt.scaled( 64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation );
 
@@ -42,19 +46,8 @@ ActivityListModel::ActivityListModel()
 }
 
 void
-ActivityListModel::onFoundIPodScrobbles( const QList<lastfm::Track>& tracks )
+ActivityListModel::onFoundIPodScrobbles( const QList<lastfm::Track>& /*tracks*/ )
 {
-    // Add a TrackItem that displays info about the iPod scrobble
-    /*ActivityListItem* item = new IPodScrobbleItem( tracks );
-    item->setObjectName("iPodScrobble");
-    item->setOdd( m_rowNum++ % 2);
-
-    connect( item, SIGNAL(clicked(ActivityListItem*)), SIGNAL(itemClicked(ActivityListItem*)));
-    connect( item, SIGNAL(clicked(ActivityListItem*)), SLOT(onItemClicked(ActivityListItem*)));
-
-    m_listLayout->addWidget( item );
-
-    write();*/
 }
 
 void 
@@ -84,6 +77,8 @@ ActivityListModel::onSessionChanged( const QString& username )
 void
 ActivityListModel::read()
 {
+    m_reading = true;
+
     qDebug() << m_path;
 
     m_tracks.clear();
@@ -104,6 +99,8 @@ ActivityListModel::read()
     addTracks( tracks );
 
     limit( 30 );
+
+    m_reading = false;
 
     reset();
 }
@@ -210,7 +207,7 @@ ActivityListModel::onGotRecentTracks()
 {
     XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) );
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
         qDebug() << lfm;
 
@@ -282,7 +279,9 @@ ActivityListModel::addTracks( const QList<lastfm::Track>& tracks )
             QList<ImageTrack>::iterator insert = qLowerBound( m_tracks.begin(), m_tracks.end(), track, lessThan );
             QList<ImageTrack>::iterator inserted = m_tracks.insert( insert, track );
 
-            inserted->getInfo();
+            // don't get info when reading the file at startup
+            if (!m_reading)
+                inserted->getInfo();
             inserted->fetchImage();
 
             connect( &(*inserted), SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
@@ -411,6 +410,17 @@ ActivityListModel::data( const QModelIndex& a_index, int role ) const
             return QVariant();
     }
 
+    if( index.column() == 4 ) {
+        if( role == Qt::DecorationRole )
+            return m_buyIcon;
+        else if( role == Qt::SizeHintRole )
+            return m_buyIcon.actualSize( QSize( 21, 18 ));
+        else if( role == Qt::DisplayRole )
+            return "Buy";
+        else
+            return QVariant();
+    }
+
     if( index.column() != 0 ) return QVariant();
 
     switch( role ) {
@@ -462,13 +472,13 @@ ActivityListModel::setData( const QModelIndex& a_index, const QVariant& value, i
 }
 
 QModelIndex
-ActivityListModel::index( int row, int column, const QModelIndex& parent ) const
+ActivityListModel::index( int row, int column, const QModelIndex& /*parent*/ ) const
 {
     return createIndex( row, column );
 }
 
 QModelIndex
-ActivityListModel::parent( const QModelIndex& index ) const
+ActivityListModel::parent( const QModelIndex& /*index*/ ) const
 {
     return QModelIndex();
 }

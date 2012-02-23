@@ -61,29 +61,29 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
 }
 
 void
-PlaybackControlsWidget::addToMenu( QMenu& menu )
+PlaybackControlsWidget::addToMenu( QMenu& menu, QAction* before )
 {
-    menu.addAction( m_playAction );
+    menu.insertAction( before, m_playAction );
 
-    menu.addSeparator();
+    menu.insertSeparator( before );
 
-    menu.addAction( aApp->skipAction() );
+    menu.insertAction( before, aApp->skipAction() );
 
-    menu.addSeparator();
+    menu.insertSeparator( before );
 
-    menu.addAction( aApp->loveAction() );
-    menu.addAction( aApp->banAction() );
+    menu.insertAction( before, aApp->loveAction() );
+    menu.insertAction( before, aApp->banAction() );
 
-    menu.addSeparator();
+    menu.insertSeparator( before );
 
-    menu.addAction( aApp->tagAction() );
-    menu.addAction( aApp->shareAction() );
+    menu.insertAction( before, aApp->tagAction() );
+    menu.insertAction( before, aApp->shareAction() );
 
-    menu.addSeparator();
+    menu.insertSeparator( before );
 
-    menu.addAction( tr( "Volume Up" ), &RadioService::instance(), SLOT(volumeUp()), QKeySequence( Qt::CTRL + Qt::Key_Up ));
-    menu.addAction( tr( "Volume Down" ), &RadioService::instance(), SLOT(volumeDown()), QKeySequence( Qt::CTRL + Qt::Key_Down ));
-    menu.addAction( tr( "Mute" ), &RadioService::instance(), SLOT(mute()), QKeySequence( Qt::CTRL + Qt::ALT + Qt::Key_Down ));
+    //menu.addAction( tr( "Volume Up" ), &RadioService::instance(), SLOT(volumeUp()), QKeySequence( Qt::CTRL + Qt::Key_Up ));
+    //menu.addAction( tr( "Volume Down" ), &RadioService::instance(), SLOT(volumeDown()), QKeySequence( Qt::CTRL + Qt::Key_Down ));
+    menu.insertAction( before, aApp->muteAction() );
 }
 
 
@@ -245,6 +245,9 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
     ui->play->setChecked( true );
     aApp->playAction()->setChecked( true );
 
+    ui->play->setChecked( false );
+    aApp->playAction()->setChecked( false );
+
     if ( !m_movie )
     {
         m_movie = new QMovie( ":/loading_radio.gif", "GIF", this );
@@ -267,7 +270,7 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
 }
 
 void
-PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrack )
+PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
 {
     ui->progressBar->setTrack( track );
 
@@ -349,7 +352,7 @@ PlaybackControlsWidget::onTick( qint64 tick )
 }
 
 void
-PlaybackControlsWidget::onError( int error, const QVariant& errorText )
+PlaybackControlsWidget::onError( int /*error*/, const QVariant& /*errorText*/ )
 {
 }
 

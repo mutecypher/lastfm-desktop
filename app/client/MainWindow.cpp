@@ -91,6 +91,8 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     layout->addWidget( ui.messageBar = new MessageBar( this ) );
 
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), ui.messageBar, SLOT(hide()) );
+
     QHBoxLayout* h = new QHBoxLayout();
     h->setContentsMargins( 0, 0, 0, 0 );
     h->setSpacing( 0 );
@@ -187,6 +189,11 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *dockMenu  );
     qt_mac_set_dock_menu( dockMenu );
 #endif
+
+    if (aApp->tray())
+    {
+        ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *aApp->tray()->contextMenu(), aApp->tray()->contextMenu()->actions()[3] );
+    }
 }
 
 QString
@@ -264,21 +271,22 @@ MainWindow::setupMenuBar()
 
     /// Window
     QMenu* windowMenu = appMenuBar()->addMenu( tr("Window") );
-    QAction* minimize = windowMenu->addAction( tr( "Minimize" ) );
-    QAction* zoom = windowMenu->addAction( tr( "Zoom" ) );
+    windowMenu->addAction( tr( "Minimize" ) );
+    windowMenu->addAction( tr( "Zoom" ) );
     windowMenu->addSeparator();
-    QAction* lastfm = windowMenu->addAction( tr( "Last.fm" ) );
+    windowMenu->addAction( tr( "Last.fm" ) );
     windowMenu->addSeparator();
-    QAction* toFront = windowMenu->addAction( tr( "Bring All to Front" ) );
+    windowMenu->addAction( tr( "Bring All to Front" ) );
 
     /// Help
     QMenu* helpMenu = appMenuBar()->addMenu( tr("Help") );
     QAction* about = helpMenu->addAction( tr("About"), aApp, SLOT(onAboutTriggered()) );
     about->setMenuRole( QAction::AboutRole );
     helpMenu->addSeparator();
-    QAction* faq = helpMenu->addAction( tr("FAQ"), aApp, SLOT(onFaqTriggered()) );
-    QAction* forums = helpMenu->addAction( tr("Forums"), aApp, SLOT(onForumsTriggered()) );
-    QAction* tour = helpMenu->addAction( tr("Tour"), aApp, SLOT(onTourTriggered()) );
+    helpMenu->addAction( tr("FAQ"), aApp, SLOT(onFaqTriggered()) );
+    helpMenu->addAction( tr("Forums"), aApp, SLOT(onForumsTriggered()) );
+    helpMenu->addAction( tr("Tour"), aApp, SLOT(onTourTriggered()) );
+    helpMenu->addAction( tr("Diagnostics"), aApp, SLOT(onDiagnosticsTriggered()) );
     //helpMenu->addSeparator();
     //QAction* diagnostics = helpMenu->addAction( tr("Diagnostics") );
 }
@@ -302,6 +310,7 @@ MainWindow::showEvent(QShowEvent *)
         m_preferences->show();
 
     m_menuBar->show();
+    m_menuBar->activateWindow();
 
 #ifdef Q_OS_MAC
     if ( !m_installer )
@@ -337,6 +346,16 @@ MainWindow::onBetaTriggered()
 
     m_beta->show();
     m_beta->activateWindow();
+}
+
+void
+MainWindow::onDiagnosticsTriggered()
+{
+    if ( !m_diagnostics )
+        m_diagnostics = new DiagnosticsDialog( this );
+
+    m_diagnostics->show();
+    m_diagnostics->activateWindow();
 }
 
 void
@@ -409,7 +428,7 @@ MainWindow::onIPodDetected( const QString& iPod )
 }
 
 void
-MainWindow::onProcessingScrobbles( const QString& iPodName )
+MainWindow::onProcessingScrobbles( const QString& /*iPodName*/ )
 {
     ui.messageBar->show( tr("Processing iPod Scrobbles...") , "ipod");
 }
