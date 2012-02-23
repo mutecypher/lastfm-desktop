@@ -129,7 +129,9 @@ static void launchClient()
 #if TARGET_OS_MAC
     if ( Moose::launchWithMediaPlayer() )
     {
-        Moose::exec( Moose::applicationFolder() + "Last.fm", "--tray" );
+        std::vector<std::string> args;
+        args.push_back( "--tray" );
+        Moose::launchAudioscrobbler( args );
     }
 #endif
 }
