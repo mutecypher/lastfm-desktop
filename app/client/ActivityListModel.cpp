@@ -35,7 +35,7 @@ ActivityListModel::ActivityListModel()
 
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* )), SLOT(onSessionChanged( unicorn::Session* )));
 
-    connect( &ScrobbleService::instance(), SIGNAL(scrobblesSubmitted(QList<lastfm::Track>)), SLOT(addTracks(QList<lastfm::Track>) ) );
+    connect( &ScrobbleService::instance(), SIGNAL(scrobblesSubmitted(QList<lastfm::Track>)), SLOT(onScrobblesSubmitted(QList<lastfm::Track>) ) );
 
     connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)));
     connect( &ScrobbleService::instance(), SIGNAL(paused()), SLOT(onPaused()));
@@ -97,6 +97,11 @@ ActivityListModel::read()
         tracks << Track( n.toElement() );
 
     addTracks( tracks );
+
+    // Make sure we fetch info for any tracks with unkown loved status
+    foreach ( const lastfm::Track& track, tracks )
+        if ( track.loveStatus() == lastfm::Unknown )
+            track.getInfo( User().name() );
 
     limit( 30 );
 
@@ -252,7 +257,13 @@ ActivityListModel::onGotRecentTracks()
             }
         }
 
-        addTracks( tracks );
+        QList<lastfm::Track> addedTracks = addTracks( tracks );
+
+        // This was a track fetched from user.getRecentTracks so we need to find
+        // out if it was loved. We can remove this when loved is included there.
+        foreach ( const lastfm::Track& addedTrack, addedTracks )
+            addedTrack.getInfo( User().name() );
+
     }
 
     emit refreshing( false );
@@ -260,26 +271,44 @@ ActivityListModel::onGotRecentTracks()
     m_recentTrackReply->deleteLater();
 }
 
-bool lessThan( const ImageTrack& left, const ImageTrack& right )
+bool
+lessThan( const ImageTrack& left, const ImageTrack& right )
 {
     return left.timestamp().toTime_t() > right.timestamp().toTime_t();
 }
 
 void
+ActivityListModel::onScrobblesSubmitted( const QList<lastfm::Track>& tracks )
+{
+    // We need to find out if info has already been fetched for this track or not.
+    // If the now playing view wasn't visible it won't have been.
+    // Also, should also only fetch if the scrobbles list is visible too
+
+    QList<lastfm::Track> addedTracks = addTracks( tracks );
+
+    // Make sure we fetch info for any tracks with unkown loved status
+    foreach ( const lastfm::Track& addedTrack, addedTracks )
+        if ( addedTrack.loveStatus() == lastfm::Unknown )
+            addedTrack.getInfo( User().name() );
+}
+
+
+QList<lastfm::Track>
 ActivityListModel::addTracks( const QList<lastfm::Track>& tracks )
 {
     beginResetModel();
+
+    QList<lastfm::Track> addedTracks;
 
     foreach ( const lastfm::Track& track, tracks )
     {
         if ( qBinaryFind( m_tracks.begin(), m_tracks.end(), track, lessThan ) == m_tracks.end() )
         {
+            addedTracks << track;
+
             QList<ImageTrack>::iterator insert = qLowerBound( m_tracks.begin(), m_tracks.end(), track, lessThan );
             QList<ImageTrack>::iterator inserted = m_tracks.insert( insert, track );
 
-            // don't get info when reading the file at startup
-            if (!m_reading)
-                inserted->getInfo();
             inserted->fetchImage();
 
             connect( &(*inserted), SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
@@ -293,6 +322,8 @@ ActivityListModel::addTracks( const QList<lastfm::Track>& tracks )
     write();
 
     limit( 30 );
+
+    return addedTracks;
 }
 
 

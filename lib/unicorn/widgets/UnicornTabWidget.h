@@ -55,7 +55,7 @@ namespace unicorn
     private:
         QPoint m_mouseDownPos;
         bool m_tearable;
-        static const uint k_startTearDistance;
+        static const int k_startTearDistance;
     };
     
     

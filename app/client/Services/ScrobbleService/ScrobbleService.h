@@ -22,6 +22,9 @@
 
 #include <QObject>
 #include <QPointer>
+
+#include "lib/listener/State.h"
+
 #include <lastfm/Track.h>
 
 namespace unicorn { class Session; }
@@ -49,14 +52,6 @@ public:
 
     void handleTwiddlyMessage( const QStringList& message );
     void handleIPodDetectedMessage( const QStringList& message );
-
-    enum State
-    {
-        Unknown,
-        Stopped,
-        Paused,
-        Playing
-    };
     
     static ScrobbleService& instance() { static ScrobbleService s; return s; }
 

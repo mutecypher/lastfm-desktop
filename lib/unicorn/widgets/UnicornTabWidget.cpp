@@ -26,7 +26,7 @@
 
 #include "UnicornTabWidget.h"
 
-const uint unicorn::TabBar::k_startTearDistance = 30;
+const int unicorn::TabBar::k_startTearDistance = 30;
 
 unicorn::TabBar::TabBar()
         :m_spacing( 0 ),

@@ -46,7 +46,7 @@ signals:
 
 public slots:
     void onFoundIPodScrobbles( const QList<lastfm::Track>& tracks );
-    void addTracks( const QList<lastfm::Track>& tracks );
+    void onScrobblesSubmitted( const QList<lastfm::Track>& tracks );
     void onSessionChanged( unicorn::Session* session );
     void onTrackLoveToggled();
     void onGotRecentTracks();
@@ -69,6 +69,8 @@ private:
 
     QModelIndex adjustedIndex( const QModelIndex& a_index ) const;
     const ImageTrack& indexedTrack( const QModelIndex& index, const QModelIndex& adjustedIndex ) const;
+
+    QList<lastfm::Track> addTracks( const QList<lastfm::Track>& tracks );
 
 private:
     QImage m_noArt;
