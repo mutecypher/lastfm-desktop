@@ -30,12 +30,13 @@
 
 #ifdef WIN32
 #include <windows.h>
+// ignore the warning about the exception specification
+#pragma warning( disable : 4290 )
 #endif
 
 #define BUFSIZE 4096
 
-// ignore the warning about the exception specification
-#pragma warning( disable : 4290 )
+
 
 /** listens to external clients via a TcpSocket and notifies a receiver to their
   * commands */

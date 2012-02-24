@@ -36,6 +36,7 @@
 #include <lastfm/XmlQuery.h>
 #include <lastfm/misc.h>
 
+#include "lib/listener/State.h"
 #include "lib/listener/PlayerConnection.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/dialogs/AboutDialog.h"

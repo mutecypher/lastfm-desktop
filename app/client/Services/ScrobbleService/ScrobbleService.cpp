@@ -186,9 +186,6 @@ ScrobbleService::onTrackStarted( const Track& track )
 void
 ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
 {
-    // This stops the loving of tracks in the recent tracks list affecting the current track
-#pragma message ( "check this list //disconnect( m_currentTrack.signalProxy(), SIGNAL(loveToggled(bool)), this, SIGNAL(lovedStateChanged(bool)) );" )
-
     state = Playing;
 
     Q_ASSERT(m_connection);
