@@ -411,24 +411,25 @@ RadioService::changeState( State const newstate )
     
     switch (newstate)
 	{
-        case TuningIn:
-            qDebug() << "Tuning to:" << m_station;
-            emit tuningIn( m_station );
-            break;
-            
-        case Buffering:
-            break;
-        case Playing:
-            emit resumed();
-            break;
+    case TuningIn:
+        qDebug() << "Tuning to:" << m_station;
+        emit tuningIn( m_station );
+        break;
 
-        case Stopped:
-            emit stopped();
-            break;
+    default:
+    case Buffering:
+        break;
+    case Playing:
+        emit resumed();
+        break;
 
-        case Paused:
-            emit paused();
-            break;
+    case Stopped:
+        emit stopped();
+        break;
+
+    case Paused:
+        emit paused();
+        break;
 	}
 }
 
