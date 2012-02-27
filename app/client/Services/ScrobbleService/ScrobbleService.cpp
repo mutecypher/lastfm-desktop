@@ -161,7 +161,7 @@ ScrobbleService::setConnection(PlayerConnection*c)
     connect(c, SIGNAL(resumed()), SLOT(onResumed()));
     connect(c, SIGNAL(stopped()), SLOT(onStopped()));
 
-    connect(c, SIGNAL(trackStarted(Track, Track)), SIGNAL(trackStarted(Track, Track)));
+    //connect(c, SIGNAL(trackStarted(Track, Track)), SIGNAL(trackStarted(Track, Track)));
     connect(c, SIGNAL(resumed()), SIGNAL(resumed()));
     connect(c, SIGNAL(paused()), SIGNAL(paused()));
     connect(c, SIGNAL(stopped()), SIGNAL(stopped()));
@@ -177,18 +177,13 @@ ScrobbleService::setConnection(PlayerConnection*c)
 }
 
 void
-ScrobbleService::onTrackStarted( const Track& track )
+ScrobbleService::onTrackStarted( const Track& t, const Track& ot )
 {
-    onTrackStarted( track, m_currentTrack );
-    emit trackStarted( track, m_currentTrack );
-}
+    Q_ASSERT(m_connection);
 
-void
-ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
-{
     state = Playing;
 
-    Q_ASSERT(m_connection);
+    Track oldtrack = ot.isNull() ? m_currentTrack : ot;
 
     //TODO move to playerconnection
     if(t.isNull())
@@ -234,6 +229,7 @@ ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
         }
     }
 
+    emit trackStarted( t, oldtrack );
 }
 
 void

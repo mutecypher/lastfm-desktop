@@ -81,7 +81,6 @@ public slots:
 
 protected slots:
     void setConnection( PlayerConnection* );
-    void onTrackStarted( const Track& );
     void onTrackStarted( const Track&, const Track& );
     void onPaused();
     void onResumed(); 

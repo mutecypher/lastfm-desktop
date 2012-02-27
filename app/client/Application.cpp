@@ -393,8 +393,10 @@ Application::onCorrected(QString /*correction*/)
 
 
 void
-Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
+Application::onTrackStarted( const Track& track, const Track& oldTrack )
 {
+    disconnect( oldTrack.signalProxy(), 0, this, 0 );
+
     if ( track != m_currentTrack )
     {
         m_currentTrack = track;
