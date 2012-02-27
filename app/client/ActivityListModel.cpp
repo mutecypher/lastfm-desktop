@@ -14,8 +14,7 @@ ActivityListModel::ActivityListModel()
     :m_noArt( ":/meta_album_no_art.png" ),
      m_nowPlayingTrack( Track() ),
      m_nowScrobblingTrack( Track() ),
-     m_paused( false ),
-     m_reading( false)
+     m_paused( false )
 {
     m_loveIcon.addFile( ":/scrobbles_love_OFF_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
     m_loveIcon.addFile( ":/meta_love_ON_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::On );
@@ -77,8 +76,6 @@ ActivityListModel::onSessionChanged( const QString& username )
 void
 ActivityListModel::read()
 {
-    m_reading = true;
-
     qDebug() << m_path;
 
     m_tracks.clear();
@@ -104,8 +101,6 @@ ActivityListModel::read()
             track.getInfo( User().name() );
 
     limit( 30 );
-
-    m_reading = false;
 
     reset();
 }
@@ -235,10 +230,12 @@ ActivityListModel::onGotRecentTracks()
 
                 m_nowPlayingTrack = track;
                 m_nowPlayingTrack.fetchImage();
+
                 connect( &m_nowPlayingTrack, SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
                 connect( m_nowPlayingTrack.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
                 connect( m_nowPlayingTrack.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
 
+                track.getInfo( User().name() );
             }
             else
             {

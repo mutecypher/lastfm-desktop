@@ -86,7 +86,6 @@ private:
     QModelIndex m_hoverIndex;
     QPointer<QNetworkReply> m_recentTrackReply;
     QPointer<QTimer > m_writeTimer;
-    bool m_reading;
 };
 
 #endif //ACTIVITY_LIST_MODEL_H_
