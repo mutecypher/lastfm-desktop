@@ -22,7 +22,9 @@
 #include <lastfm/Audioscrobbler.h>
 #include <lastfm/ws.h>
 
+#ifdef QT_DBUS_LIB
 #include "lib/listener/DBusListener.h"
+#endif
 #include "lib/listener/legacy/LegacyPlayerListener.h"
 #include "lib/listener/PlayerConnection.h"
 #include "lib/listener/PlayerListener.h"

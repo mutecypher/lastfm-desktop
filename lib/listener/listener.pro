@@ -4,7 +4,11 @@ QT = core xml network
 CONFIG += unicorn logger
 
 # basically not easy to support on other platforms, but feel free to fork
-unix:!mac:QT += dbus
+unix:!mac {
+    QT += dbus
+    SOURCES += DBusListener.cpp
+    HEADERS += DBusListener.h
+}
 
 include( ../../admin/include.qmake )
 
@@ -17,8 +21,7 @@ SOURCES += \
 	PlayerListener.cpp \
 	PlayerConnection.cpp \
 	PlayerCommandParser.cpp \
-        legacy/LegacyPlayerListener.cpp \
-        DBusListener.cpp
+        legacy/LegacyPlayerListener.cpp
 
 HEADERS += \
 	State.h \
@@ -27,17 +30,18 @@ HEADERS += \
 	PlayerConnection.h \
 	PlayerCommandParser.h \
 	PlayerCommand.h \
-	legacy/LegacyPlayerListener.h \
-	DBusListener.h
+        legacy/LegacyPlayerListener.h
 
-mac:SOURCES += mac/ITunesListener.cpp
+mac {
+    SOURCES += mac/ITunesListener.cpp
 
-mac:OBJECTIVE_SOURCES += mac/SpotifyListener.mm
+    OBJECTIVE_SOURCES += mac/SpotifyListener.mm
 
-mac:HEADERS += mac/ITunesListener.h \
-                mac/SpotifyListener.h
+    HEADERS += mac/ITunesListener.h \
+                    mac/SpotifyListener.h
 
-mac:LIBS += -framework AppKit
+    LIBS += -framework AppKit
+}
 
 win32 {
     SOURCES += win/SpotifyListener.cpp \

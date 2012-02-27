@@ -134,8 +134,6 @@ HEADERS += \
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	
-macx:HEADERS += notify/Notify.h
-
 macx:SOURCES += mac/AppleScript.cpp
 
 macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
