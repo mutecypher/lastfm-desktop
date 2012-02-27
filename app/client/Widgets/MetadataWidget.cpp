@@ -133,14 +133,17 @@ MetadataWidget::fetchTrackInfo()
 
         m_numCalls = m_track.album().isNull() ? 6: 7;
 
+        QString username = User().name();
+
+        qWarning() << username;
+
         // fetch Track info
-        connect( m_track.signalProxy(), SIGNAL( gotInfo(QByteArray)), SLOT( onTrackGotInfo(QByteArray)));
-        m_track.getInfo( User().name() );
+        m_track.getInfo( this, "onTrackGotInfo", username );
 
         if( !m_track.album().isNull() )
-            connect( m_track.album().getInfo( User().name() ), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
+            connect( m_track.album().getInfo( username ), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
 
-        connect( m_track.artist().getInfo( User().name() ), SIGNAL(finished()), SLOT(onArtistGotInfo()));
+        connect( m_track.artist().getInfo( username ), SIGNAL(finished()), SLOT(onArtistGotInfo()));
 
         connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
         connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
@@ -518,7 +521,8 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
     {
         m_globalTrackScrobbles = lfm["track"]["playcount"].text().toInt();
         //int listeners = lfm["track"]["listeners"].text().toInt();
-        m_userTrackScrobbles = lfm["track"]["userplaycount"].text().toInt();
+        if ( lfm["track"]["userplaycount"].text().length() > 0 )
+            m_userTrackScrobbles = lfm["track"]["userplaycount"].text().toInt();
 
         // Update the context now that we have the user track listens
         ui->context->setText( contextString( m_track ) );
@@ -526,7 +530,8 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
         //ui->albumImage->loadUrl( lfm["track"]["album"]["image size=medium"].text() );
         ui->albumImage->setHref( lfm["track"]["url"].text());
 
-        ui->scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
+        if ( lfm["track"]["userloved"].text().length() > 0 )
+            ui->scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
 
         // get the popular tags
         QList<XmlQuery> tags = lfm["track"]["toptags"].children("tag").mid( 0, 5 );
@@ -753,6 +758,8 @@ MetadataWidget::scrobbleString( const Track& track )
     QString userTrackScrobblesString = numberOfTimes( m_userTrackScrobbles );
 
     QString scrobbleString;
+
+    qDebug() << m_userTrackScrobbles << m_userArtistScrobbles;
 
     if ( m_userTrackScrobbles != 0 )
         scrobbleString = tr( "You've listened to %1 %2 and %3 %4." ).arg( artistString, userArtistScrobblesString, trackString, userTrackScrobblesString );

@@ -98,7 +98,7 @@ ActivityListModel::read()
     // Make sure we fetch info for any tracks with unkown loved status
     foreach ( const lastfm::Track& track, tracks )
         if ( track.loveStatus() == lastfm::Unknown )
-            track.getInfo( User().name() );
+            track.getInfo( this, SLOT(), User().name() );
 
     limit( 30 );
 
@@ -155,12 +155,11 @@ ActivityListModel::onTrackStarted( const Track& track, const Track& )
     if ( track.extra( "playerId" ) != "spt" )
     {
         m_nowScrobblingTrack = track;
-        m_nowScrobblingTrack.getInfo();
+        m_nowScrobblingTrack.getInfo( this, "write", User().name() );
         m_nowScrobblingTrack.fetchImage();
 
         connect( &m_nowScrobblingTrack, SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
         connect( m_nowScrobblingTrack.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
-        connect( m_nowScrobblingTrack.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
     }
     else
         m_nowScrobblingTrack = Track();
@@ -233,9 +232,8 @@ ActivityListModel::onGotRecentTracks()
 
                 connect( &m_nowPlayingTrack, SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
                 connect( m_nowPlayingTrack.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
-                connect( m_nowPlayingTrack.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
 
-                track.getInfo( User().name() );
+                track.getInfo( this, "write", User().name() );
             }
             else
             {
@@ -259,7 +257,7 @@ ActivityListModel::onGotRecentTracks()
         // This was a track fetched from user.getRecentTracks so we need to find
         // out if it was loved. We can remove this when loved is included there.
         foreach ( const lastfm::Track& addedTrack, addedTracks )
-            addedTrack.getInfo( User().name() );
+            addedTrack.getInfo(  this, "write", User().name() );
 
     }
 
@@ -286,7 +284,7 @@ ActivityListModel::onScrobblesSubmitted( const QList<lastfm::Track>& tracks )
     // Make sure we fetch info for any tracks with unkown loved status
     foreach ( const lastfm::Track& addedTrack, addedTracks )
         if ( addedTrack.loveStatus() == lastfm::Unknown )
-            addedTrack.getInfo( User().name() );
+            addedTrack.getInfo(  this, "write", User().name() );
 }
 
 
@@ -310,7 +308,6 @@ ActivityListModel::addTracks( const QList<lastfm::Track>& tracks )
 
             connect( &(*inserted), SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
             connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
-            connect( track.signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(write()));
         }
     }
 
