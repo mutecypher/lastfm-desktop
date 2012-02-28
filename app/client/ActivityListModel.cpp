@@ -9,6 +9,7 @@
 #include "Services/ScrobbleService/ScrobbleService.h"
 #include "ActivityListModel.h"
 
+#define kScrobbleLimit 30
 
 ActivityListModel::ActivityListModel()
     :m_noArt( ":/meta_album_no_art.png" ),
@@ -95,12 +96,12 @@ ActivityListModel::read()
 
     addTracks( tracks );
 
-    // Make sure we fetch info for any tracks with unkown loved status
+    // Make sure we fetch info for any tracks with unknown loved status
     foreach ( const lastfm::Track& track, tracks )
         if ( track.loveStatus() == lastfm::Unknown )
-            track.getInfo( this, SLOT(), User().name() );
+            track.getInfo( this, "write", User().name() );
 
-    limit( 30 );
+    limit( kScrobbleLimit );
 
     reset();
 }
@@ -195,7 +196,7 @@ ActivityListModel::refresh()
 {
     if ( !m_recentTrackReply )
     {
-        m_recentTrackReply = User().getRecentTracks( 30, 1 );
+        m_recentTrackReply = User().getRecentTracks( kScrobbleLimit, 1 );
         connect( m_recentTrackReply, SIGNAL(finished()), SLOT(onGotRecentTracks()) );
         emit refreshing( true );
     }
@@ -256,7 +257,7 @@ ActivityListModel::onGotRecentTracks()
 
         // This was a track fetched from user.getRecentTracks so we need to find
         // out if it was loved. We can remove this when loved is included there.
-        foreach ( const lastfm::Track& addedTrack, addedTracks )
+        foreach ( const lastfm::Track& addedTrack, tracks )
             addedTrack.getInfo(  this, "write", User().name() );
 
     }
@@ -315,7 +316,7 @@ ActivityListModel::addTracks( const QList<lastfm::Track>& tracks )
 
     write();
 
-    limit( 30 );
+    limit( kScrobbleLimit );
 
     return addedTracks;
 }
