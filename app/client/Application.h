@@ -72,6 +72,7 @@ namespace audioscrobbler
             Pause, //toggles pause
             Skip,
             Exit,
+            Stop,
             ArgUnknown
         };
 

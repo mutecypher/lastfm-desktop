@@ -559,6 +559,7 @@ Application::Argument Application::argument( const QString& arg )
     if (arg == "--pause") return Pause;
     if (arg == "--skip") return Skip;
     if (arg == "--exit") return Exit;
+    if (arg == "--stop") return Stop;
 
     QUrl url( arg );
     //TODO show error if invalid schema and that
@@ -646,6 +647,10 @@ Application::parseArguments( const QStringList& args )
 
         case Skip:
             RadioService::instance().skip();
+            break;
+
+        case Stop:
+            RadioService::instance().stop();
             break;
 
         case Pause:
