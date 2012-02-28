@@ -54,12 +54,19 @@ NowPlayingWidget::playbackControls() const
 void
 NowPlayingWidget::onTuningIn( const RadioStation& )
 {   
+    setUpdatesEnabled( false );
+
     if ( m_metadata )
     {
         layout()->removeWidget( m_metadata );
         m_metadata->deleteLater();
-        qobject_cast<QVBoxLayout*>(layout())->addStretch( 1 );
+
+        if ( layout()->count() == 1 )
+            qobject_cast<QVBoxLayout*>(layout())->addStretch( 1 );
     }
+
+    setUpdatesEnabled( true );
+
 }
 
 void
@@ -75,7 +82,7 @@ NowPlayingWidget::onTrackStarted( const Track& track, const Track& )
     else
     {
         // remove the stretch
-        layout()->removeItem( layout()->itemAt( 1 ) );
+        layout()->takeAt( 1 );
     }
 
     qobject_cast<QVBoxLayout*>(layout())->insertWidget( 1, m_metadata = new MetadataWidget( track, this ), 1 );
@@ -93,7 +100,9 @@ NowPlayingWidget::onStopped()
     {
         layout()->removeWidget( m_metadata );
         m_metadata->deleteLater();
-        qobject_cast<QVBoxLayout*>(layout())->addStretch( 1 );
+
+        if ( layout()->count() == 1 )
+            qobject_cast<QVBoxLayout*>(layout())->addStretch( 1 );
     }
 
     setUpdatesEnabled( true );
