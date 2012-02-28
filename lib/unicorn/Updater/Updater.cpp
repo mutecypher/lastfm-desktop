@@ -4,6 +4,8 @@
 #ifndef Q_OS_MAC
 
 #ifdef Q_OS_WIN
+#include <QCoreApplication>
+#include <QStringList>
 #include <winsparkle.h>
 #endif
 

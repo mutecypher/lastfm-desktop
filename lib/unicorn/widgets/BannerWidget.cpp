@@ -42,7 +42,7 @@ BannerWidget::setHref( const QUrl& url )
     //On OSX Percent encoding seems to get applied to the url again.
     m_href = QUrl::fromPercentEncoding( url.toString().toUtf8() );
 #else
-    m_href = url;
+    m_href = url.toString();
 #endif
 
     if( url.isValid())
