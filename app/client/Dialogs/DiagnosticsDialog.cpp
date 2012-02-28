@@ -217,8 +217,11 @@ DiagnosticsDialog::onScrobbleIPodClicked()
     m_twiddly = new QProcess( this );
     connect( m_twiddly, SIGNAL(finished( int, QProcess::ExitStatus )), SLOT(onTwiddlyFinished( int, QProcess::ExitStatus )) );
     connect( m_twiddly, SIGNAL(error( QProcess::ProcessError )), SLOT(onTwiddlyError( QProcess::ProcessError )) );
+#ifdef Q_OS_WIN
+    m_twiddly->start( QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "iPodScrobbler.exe" ), args );
+#else
     m_twiddly->start( QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "../Helpers/iPodScrobbler" ), args );
-    
+#endif
     m_ipod_log->setParent( m_twiddly );
     
     QTimer* timer = new QTimer( m_twiddly );
