@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>loading_meta.gif</file>
-        <file>loading_radio.gif</file>
         <file>icon_eq.gif</file>
         <file>radio_eq_small.gif</file>
         <file alias="pointyarrow.png">wizard/arrow_even_bigger_than_dropbox.png</file>
@@ -101,12 +100,6 @@
         <file>radio_friends_HOVER.png</file>
         <file>radio_friends_PRESS.png</file>
         <file>control_bar_back.png</file>
-        <file>control_bar_radio_artist.png</file>
-        <file>control_bar_radio_friends.png</file>
-        <file>control_bar_radio_library.png</file>
-        <file>control_bar_radio_mix.png</file>
-        <file>control_bar_radio_rec.png</file>
-        <file>control_bar_radio_tag.png</file>
         <file>control_bar_scrobble_foobar.png</file>
         <file>control_bar_scrobble_itunes.png</file>
         <file>control_bar_scrobble_winamp.png</file>

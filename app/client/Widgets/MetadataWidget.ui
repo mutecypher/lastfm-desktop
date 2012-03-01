@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>445</width>
-    <height>690</height>
+    <height>590</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -47,7 +47,7 @@
         <x>0</x>
         <y>0</y>
         <width>433</width>
-        <height>666</height>
+        <height>566</height>
        </rect>
       </property>
       <property name="autoFillBackground">
@@ -558,7 +558,7 @@
               <string>TextLabel</string>
              </property>
              <property name="alignment">
-              <set>Qt::AlignHCenter|Qt::AlignTop</set>
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>

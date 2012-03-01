@@ -327,10 +327,6 @@ MetadataWidget {
 border: none;
 }
 
-MetadataWidget QLabel#spinnerLabel {
-margin: 50px;
-}
-
 MetadataWidget  QFrame#scrollAreaWidgetContents {
 border: none;
 }

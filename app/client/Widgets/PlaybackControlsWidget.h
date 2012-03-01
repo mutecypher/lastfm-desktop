@@ -55,7 +55,6 @@ private:
     QPointer<QAction> m_playAction;
 
     bool m_scrobbleTrack;
-    QPointer<QMovie> m_movie;
 };
 
 #endif // PLAYBACKCONTROLS_H
