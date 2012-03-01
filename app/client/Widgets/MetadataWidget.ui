@@ -164,7 +164,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QStackedWidget" name="loadingStack">
+        <widget class="unicorn::StackedWidget" name="loadingStack">
          <property name="currentIndex">
           <number>0</number>
          </property>
@@ -619,6 +619,12 @@
    <class>SimilarArtistWidget</class>
    <extends>QLabel</extends>
    <header>../Widgets/SimilarArtistWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>unicorn::StackedWidget</class>
+   <extends>QStackedWidget</extends>
+   <header>lib/unicorn/widgets/StackedWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

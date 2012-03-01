@@ -56,6 +56,8 @@ PreferencesDialog::PreferencesDialog( QMenuBar* menuBar, QWidget* parent )
     connect( applyButton, SIGNAL( clicked() ), SLOT( onApplyButtonClicked() ) );
 
     ui->actionGeneral->trigger();
+
+    setFixedWidth( 550 );
 }
 
 PreferencesDialog::~PreferencesDialog()
@@ -80,6 +82,8 @@ PreferencesDialog::onTabButtonClicked()
         ui->stackedWidget->setCurrentWidget( ui->advanced );
     else if ( clickedButton == ui->actionScrobbling )
         ui->stackedWidget->setCurrentWidget( ui->scrobbling );
+
+    adjustSize();
 }
 
 void
