@@ -164,6 +164,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     aApp->refreshStyleSheet();
 
     setMinimumWidth( 540 );
+    setMaximumWidth( 800 );
 
     setStatusBar( ui.statusBar );
 
