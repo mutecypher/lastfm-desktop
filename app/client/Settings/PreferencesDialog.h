@@ -29,6 +29,8 @@ private slots:
     void onSettingsChanged();
     void onApplyButtonClicked();
 
+    void onStackCurrentChanged( int index );
+
 private:
     Ui::PreferencesDialog *ui;
 };

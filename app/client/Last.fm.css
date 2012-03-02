@@ -234,11 +234,14 @@ QFrame#splitter4 {
 	margin: 0px 20px;
 }
 
-QFrame#splitter {
+QFrame#splitter,
+QFrame#hsplitter1,
+QFrame#hsplitter2 {
 	border: none;
 	border-bottom: 1px solid white;
 	border-top: 1px solid #cdcdcd;
 	min-height: 0px;
+	max-height: 0px;
 	margin: 10px 0px;
 }
 
