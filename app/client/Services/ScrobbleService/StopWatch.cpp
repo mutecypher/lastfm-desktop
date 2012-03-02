@@ -35,7 +35,7 @@ StopWatch::StopWatch( uint duration, ScrobblePoint timeout )
 
 void StopWatch::onFrameChanged( int frame )
 {
-    if ( !m_scrobbled && frame >= (m_point * 1000) )
+    if ( !m_scrobbled && static_cast<uint>(frame) >= (m_point * 1000) )
     {
         emit scrobble();
         m_scrobbled = true;

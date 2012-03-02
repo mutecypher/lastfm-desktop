@@ -1,49 +1,50 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>DiagnosticsDialog</class>
- <widget class="QDialog" name="DiagnosticsDialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="DiagnosticsDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>498</width>
+    <width>500</width>
     <height>485</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Diagnostics</string>
   </property>
-  <layout class="QVBoxLayout" >
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QTabWidget" name="tabs" >
-     <property name="minimumSize" >
+    <widget class="QTabWidget" name="tabs">
+     <property name="minimumSize">
       <size>
        <width>0</width>
        <height>0</height>
       </size>
      </property>
-     <property name="autoFillBackground" >
+     <property name="autoFillBackground">
       <bool>false</bool>
      </property>
-     <property name="currentIndex" >
-      <number>0</number>
+     <property name="currentIndex">
+      <number>2</number>
      </property>
-     <widget class="QWidget" name="subs_tab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="subs_tab">
+      <attribute name="title">
        <string>Scrobbling</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout" >
-       <property name="spacing" >
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
         <number>5</number>
        </property>
        <item>
-        <layout class="QHBoxLayout" >
-         <property name="spacing" >
+        <layout class="QHBoxLayout">
+         <property name="spacing">
           <number>-1</number>
          </property>
          <item>
-          <widget class="StatusLight" native="1" name="subs_light" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Maximum" hsizetype="Maximum" >
+          <widget class="StatusLight" name="subs_light" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -51,21 +52,21 @@
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="subs_status" >
-           <property name="toolTip" >
+          <widget class="QLabel" name="subs_status">
+           <property name="toolTip">
             <string>This is an easter egg!</string>
            </property>
-           <property name="text" >
+           <property name="text">
             <string/>
            </property>
           </widget>
          </item>
          <item>
           <spacer>
-           <property name="orientation" >
+           <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <property name="sizeHint" stdset="0" >
+           <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
              <height>2</height>
@@ -74,11 +75,11 @@
           </spacer>
          </item>
          <item>
-          <widget class="QLabel" name="subs_cache_count" >
-           <property name="enabled" >
+          <widget class="QLabel" name="subs_cache_count">
+           <property name="enabled">
             <bool>false</bool>
            </property>
-           <property name="text" >
+           <property name="text">
             <string/>
            </property>
           </widget>
@@ -86,40 +87,40 @@
         </layout>
        </item>
        <item>
-        <widget class="QTreeWidget" name="cached" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+        <widget class="QTreeWidget" name="cached">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="rootIsDecorated" >
+         <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
-         <property name="uniformRowHeights" >
+         <property name="uniformRowHeights">
           <bool>true</bool>
          </property>
-         <property name="itemsExpandable" >
+         <property name="itemsExpandable">
           <bool>false</bool>
          </property>
-         <property name="allColumnsShowFocus" >
+         <property name="allColumnsShowFocus">
           <bool>true</bool>
          </property>
-         <property name="columnCount" >
+         <property name="columnCount">
           <number>3</number>
          </property>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Artist</string>
           </property>
          </column>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Track</string>
           </property>
          </column>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Album</string>
           </property>
          </column>
@@ -127,59 +128,59 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="fingerprintingTab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="fingerprintingTab">
+      <attribute name="title">
        <string>Fingerprinting</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2" >
+      <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QLabel" name="fingerprints_title" >
-         <property name="font" >
+        <widget class="QLabel" name="fingerprints_title">
+         <property name="font">
           <font>
            <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Recently Fingerprinted Tracks</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QTreeWidget" name="fingerprints" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+        <widget class="QTreeWidget" name="fingerprints">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="rootIsDecorated" >
+         <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
-         <property name="uniformRowHeights" >
+         <property name="uniformRowHeights">
           <bool>true</bool>
          </property>
-         <property name="itemsExpandable" >
+         <property name="itemsExpandable">
           <bool>false</bool>
          </property>
-         <property name="allColumnsShowFocus" >
+         <property name="allColumnsShowFocus">
           <bool>true</bool>
          </property>
-         <property name="columnCount" >
+         <property name="columnCount">
           <number>3</number>
          </property>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Artist</string>
           </property>
          </column>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Track</string>
           </property>
          </column>
          <column>
-          <property name="text" >
+          <property name="text">
            <string>Album</string>
           </property>
          </column>
@@ -187,39 +188,39 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="iPodTab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="iPodTab">
+      <attribute name="title">
        <string>iPod Scrobbling</string>
       </attribute>
-      <layout class="QVBoxLayout" >
+      <layout class="QVBoxLayout">
        <item>
-        <layout class="QHBoxLayout" >
+        <layout class="QHBoxLayout">
          <item>
-          <widget class="QComboBox" name="ipod_type" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <widget class="QComboBox" name="ipod_type">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <item>
-            <property name="text" >
+            <property name="text">
              <string>iTunes automatically manages my iPod</string>
             </property>
            </item>
            <item>
-            <property name="text" >
+            <property name="text">
              <string>I manually manage my iPod</string>
             </property>
            </item>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="ipod_scrobble_button" >
-           <property name="text" >
+          <widget class="QPushButton" name="ipod_scrobble_button">
+           <property name="text">
             <string>Scrobble iPod</string>
            </property>
-           <property name="autoRepeatDelay" >
+           <property name="autoRepeatDelay">
             <number>300</number>
            </property>
           </widget>
@@ -227,16 +228,16 @@
         </layout>
        </item>
        <item>
-        <widget class="QPlainTextEdit" name="ipod_log" >
-         <property name="font" >
+        <widget class="QPlainTextEdit" name="ipod_log">
+         <property name="font">
           <font>
            <family>Courier New</family>
           </font>
          </property>
-         <property name="readOnly" >
+         <property name="readOnly">
           <bool>true</bool>
          </property>
-         <property name="maximumBlockCount" >
+         <property name="maximumBlockCount">
           <number>0</number>
          </property>
         </widget>
@@ -246,39 +247,39 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" >
+    <layout class="QHBoxLayout">
      <item>
-      <widget class="QPushButton" name="logs_button" >
-       <property name="text" >
+      <widget class="QPushButton" name="logs_button">
+       <property name="text">
         <string>Logs</string>
        </property>
-       <property name="autoDefault" >
+       <property name="autoDefault">
         <bool>false</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label" >
-       <property name="text" >
-        <string>&lt;a href='http://status.last.fm'>http://status.last.fm&lt;/a></string>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>&lt;a href='http://status.last.fm'&gt;http://status.last.fm&lt;/a&gt;</string>
        </property>
-       <property name="textFormat" >
+       <property name="textFormat">
         <enum>Qt::RichText</enum>
        </property>
-       <property name="openExternalLinks" >
+       <property name="openExternalLinks">
         <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
       <spacer>
-       <property name="orientation" >
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeType" >
+       <property name="sizeType">
         <enum>QSizePolicy::Expanding</enum>
        </property>
-       <property name="sizeHint" stdset="0" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>0</width>
          <height>0</height>
@@ -287,11 +288,11 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="close_button" >
-       <property name="text" >
+      <widget class="QPushButton" name="close_button">
+       <property name="text">
         <string>&amp;Close</string>
        </property>
-       <property name="default" >
+       <property name="default">
         <bool>true</bool>
        </property>
       </widget>
@@ -316,11 +317,11 @@
    <receiver>DiagnosticsDialog</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>471</x>
      <y>476</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>502</x>
      <y>336</y>
     </hint>

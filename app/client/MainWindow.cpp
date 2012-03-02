@@ -164,6 +164,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     aApp->refreshStyleSheet();
 
     setMinimumWidth( 540 );
+    setMaximumWidth( 800 );
 
     setStatusBar( ui.statusBar );
 
@@ -286,9 +287,9 @@ MainWindow::setupMenuBar()
     helpMenu->addAction( tr("FAQ"), aApp, SLOT(onFaqTriggered()) );
     helpMenu->addAction( tr("Forums"), aApp, SLOT(onForumsTriggered()) );
     helpMenu->addAction( tr("Tour"), aApp, SLOT(onTourTriggered()) );
+#ifndef Q_WS_X11 // it's only the scrobble log tab at the moment so no use on linux
     helpMenu->addAction( tr("Diagnostics"), aApp, SLOT(onDiagnosticsTriggered()) );
-    //helpMenu->addSeparator();
-    //QAction* diagnostics = helpMenu->addAction( tr("Diagnostics") );
+#endif
 }
 
 void

@@ -10,7 +10,7 @@
 
 
 @interface Delegate : NSObject <GrowlApplicationBridgeDelegate> {
-    unicorn::Notify* observer;
+    unicorn::Notify* m_observer;
 }
     - (Delegate*) init:(unicorn::Notify*)observer;
     - (void) growlNotificationWasClicked:(id)clickContext;
@@ -21,7 +21,7 @@
 {
     if ( (self = [super init]) )
     {
-        self->observer = observer;
+        self->m_observer = observer;
     }
 
     return self;
@@ -30,7 +30,7 @@
 - (void) growlNotificationWasClicked:(id)clickContext
 {
     Q_UNUSED(clickContext)
-    self->observer->growlNotificationWasClicked();
+    self->m_observer->growlNotificationWasClicked();
 }
 @end
 

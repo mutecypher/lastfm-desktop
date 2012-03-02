@@ -47,9 +47,12 @@ DiagnosticsDialog::DiagnosticsDialog( QWidget *parent )
     ui->fingerprints->header()->setResizeMode( QHeaderView::Stretch );
     
     m_delay = new DelayedLabelText( ui->subs_status );
-    
+
+    ui->tabs->removeTab( 0 );
+    ui->tabs->removeTab( 0 );
+
 #ifdef Q_WS_X11
-    ui->tabs->removeTab( 3 );
+    ui->tabs->removeTab( 0 );
 #endif
 
 #ifdef Q_OS_MAC
@@ -77,11 +80,11 @@ DiagnosticsDialog::~DiagnosticsDialog()
 {
     delete ui;
 }
-
-static QString scrobblerStatusText( int const /*i*/ )
+    /*
+static QString scrobblerStatusText( int const i )
 {
     using lastfm::Audioscrobbler;
-    /*
+
     #define tr QObject::tr
     switch (i)
     {
@@ -99,10 +102,10 @@ static QString scrobblerStatusText( int const /*i*/ )
             return tr( "Ready" );
     }
     #undef tr
-	*/
+
     return "";
 }
-
+*/
 
 void
 DiagnosticsDialog::scrobbleActivity( int /*msg*/ )
@@ -214,8 +217,11 @@ DiagnosticsDialog::onScrobbleIPodClicked()
     m_twiddly = new QProcess( this );
     connect( m_twiddly, SIGNAL(finished( int, QProcess::ExitStatus )), SLOT(onTwiddlyFinished( int, QProcess::ExitStatus )) );
     connect( m_twiddly, SIGNAL(error( QProcess::ProcessError )), SLOT(onTwiddlyError( QProcess::ProcessError )) );
+#ifdef Q_OS_WIN
+    m_twiddly->start( QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "iPodScrobbler.exe" ), args );
+#else
     m_twiddly->start( QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "../Helpers/iPodScrobbler" ), args );
-    
+#endif
     m_ipod_log->setParent( m_twiddly );
     
     QTimer* timer = new QTimer( m_twiddly );

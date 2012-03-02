@@ -29,9 +29,9 @@
 ScrobbleSetupDialog::ScrobbleSetupDialog( QString deviceId, QString deviceName, QStringList iPodFiles, QWidget* parent )
     :unicorn::Dialog( parent ),
     ui( new Ui::ScrobbleSetupDialog ),
+    m_iPodFiles( iPodFiles ),
     m_deviceId( deviceId ),
     m_deviceName( deviceName ),
-    m_iPodFiles( iPodFiles ),
     m_more( false )
 {
     ui->setupUi( this );

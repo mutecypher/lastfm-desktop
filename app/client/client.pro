@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = "Last.fm"
-VERSION = 2.1.14
+VERSION = 2.1.15
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql phonon
 CONFIG += lastfm unicorn listener logger

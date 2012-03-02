@@ -19,7 +19,8 @@
 */
 
 #include <QVBoxLayout>
-#include <QTimer>
+#include <QStackedWidget>
+#include <QMovie>
 
 #include "NowPlayingWidget.h"
 #include "PlaybackControlsWidget.h"
@@ -36,8 +37,17 @@ NowPlayingWidget::NowPlayingWidget(QWidget *parent)
     layout->setSpacing( 0 );
 
     layout->addWidget( ui.playbackControls = new PlaybackControlsWidget( this ) );
+    layout->addWidget( ui.stack = new QStackedWidget( this ) );
 
-    layout->addStretch( 1 );
+    ui.stack->addWidget( ui.spinner = new QLabel() );
+    ui.spinner->setObjectName( "spinner" );
+    ui.spinner->setAlignment( Qt::AlignCenter );
+
+    m_movie = new QMovie( ":/loading_meta.gif", "GIF", this );
+    m_movie->setCacheMode( QMovie::CacheAll );
+    ui.spinner->setMovie ( m_movie );
+
+    ui.metadata = 0;
 
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)) );
 
@@ -54,12 +64,8 @@ NowPlayingWidget::playbackControls() const
 void
 NowPlayingWidget::onTuningIn( const RadioStation& )
 {   
-    if ( m_metadata )
-    {
-        layout()->removeWidget( m_metadata );
-        m_metadata->deleteLater();
-        qobject_cast<QVBoxLayout*>(layout())->addStretch( 1 );
-    }
+    ui.stack->setCurrentWidget( ui.spinner );
+    m_movie->start();
 }
 
 void
@@ -67,19 +73,17 @@ NowPlayingWidget::onTrackStarted( const Track& track, const Track& )
 {
     setUpdatesEnabled( false );
 
-    if ( m_metadata )
+    if ( ui.metadata )
     {
-        layout()->removeWidget( m_metadata );
-        m_metadata->deleteLater();
-    }
-    else
-    {
-        // remove the stretch
-        layout()->removeItem( layout()->itemAt( 1 ) );
+        ui.stack->removeWidget( ui.metadata );
+        ui.metadata->deleteLater();
     }
 
-    qobject_cast<QVBoxLayout*>(layout())->insertWidget( 1, m_metadata = new MetadataWidget( track, this ), 1 );
-    m_metadata->setBackButtonVisible( false );
+    ui.stack->addWidget( ui.metadata = new MetadataWidget( track, this ) );
+    ui.metadata->setBackButtonVisible( false );
+
+    ui.stack->setCurrentWidget( ui.metadata );
+    m_movie->start();
 
     setUpdatesEnabled( true );
 }
@@ -87,14 +91,6 @@ NowPlayingWidget::onTrackStarted( const Track& track, const Track& )
 void
 NowPlayingWidget::onStopped()
 {
-    setUpdatesEnabled( false );
-
-    if ( m_metadata )
-    {
-        layout()->removeWidget( m_metadata );
-        m_metadata->deleteLater();
-        qobject_cast<QVBoxLayout*>(layout())->addStretch( 1 );
-    }
-
-    setUpdatesEnabled( true );
+    ui.stack->setCurrentWidget( ui.spinner );
+    m_movie->stop();
 }

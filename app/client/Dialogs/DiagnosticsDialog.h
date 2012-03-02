@@ -49,9 +49,6 @@ private:
 	void scrobbleIPod( bool isManual = false );
 	QString diagnosticInformation();
 
-    QPointer<QProcess> m_twiddly;
-    QFile* m_ipod_log;
-
 private slots:
 	void onScrobbleIPodClicked();
 	void onSendLogsClicked();
@@ -62,6 +59,8 @@ private slots:
 private:
     Ui::DiagnosticsDialog* ui;
     class DelayedLabelText* m_delay;
+    QPointer<QProcess> m_twiddly;
+    QFile* m_ipod_log;
 
 };
 

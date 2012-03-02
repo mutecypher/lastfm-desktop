@@ -52,7 +52,7 @@ ScrobSocket::transmit( const QString& data )
 {
     m_msgQueue.enqueue( data );
     qDebug() << "Connection state == " << state();
-    if( state() == QAbstractSocket::UnconnectedState ) {
+    if( state() == QLocalSocket::UnconnectedState ) {
         doConnect();
     }
 }

@@ -45,8 +45,7 @@ ImageTrack::fetchImage()
             connect( album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
         else
         {
-            getInfo();
-            connect( signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(onTrackGotInfo()) );
+            getInfo( this, "onTrackGotInfo" );
         }
     }
     else
@@ -85,10 +84,8 @@ ImageTrack::onAlbumGotInfo()
         {
             // We were unable to get the album image from album.getInfo
             // so let Last.fm guess with track.getInfo
-            getInfo();
-            connect( signalProxy(), SIGNAL(gotInfo(QByteArray)), SLOT(onTrackGotInfo()) );
+            getInfo( this, "onTrackGotInfo" );
         }
-
     }
 }
 

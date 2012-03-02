@@ -61,8 +61,8 @@
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
-                      m_wizardRunning( true ),
                       m_currentSession( 0 ),
+                      m_wizardRunning( true ),
                       m_icm( 0 )
 {
 }
@@ -461,7 +461,7 @@ unicorn::Application::findMainWindow()
 {
     QMainWindow* ret = 0;
     foreach (QWidget* w, qApp->topLevelWidgets())
-        if (ret = qobject_cast<QMainWindow*>(w))
+        if ( (ret = qobject_cast<QMainWindow*>(w)) )
             break;
 
     return ret;

@@ -7,7 +7,7 @@ of the app. To apply the style execute the application in the following manner:
 
 ./audioscrobbler -stylesheet path/to/audioscrobbler.css
 
-(by default the exectuable path is checked for the css file on Windows and on OSX 
+(by default the executable path is checked for the css file on Windows and on OSX 
  the bundle Resource directory is checked)
 
 If building didn't work it's because:-

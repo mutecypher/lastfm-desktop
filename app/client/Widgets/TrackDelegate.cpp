@@ -19,7 +19,7 @@ void
 TrackDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
     Track track = index.data( ActivityListModel::TrackRole ).value<Track>();
-    QDateTime timestamp = index.data( ActivityListModel::TimeStampRole ).toDateTime();
+    QDateTime timestamp = track.timestamp();
     bool isNowPlaying = timestamp.toTime_t() == 0 || track.sameObject( ScrobbleService::instance().currentTrack() );
 
     const QImage& image = index.data( Qt::DecorationRole ).value<QImage>();
