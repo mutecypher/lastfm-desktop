@@ -206,38 +206,42 @@ PlaybackControlsWidget::onBanFinished()
 }
 
 void
-PlaybackControlsWidget::setIconForRadio( const RadioStation& station )
+PlaybackControlsWidget::setIconForRadio( const RadioStation& /*station*/ )
 {
-    QString url = station.url();
+//    QString url = station.url();
 
-    if ( url.startsWith("lastfm://user") )
-    {
-        if ( url.contains( "/friends" )
-            || url.contains( "/neighbours" )
-            || url.startsWith( "lastfm://users") )
-            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_friends.png" ) );
-        if ( url.contains( "/library" )
-             || url.contains( "/personal") )
-            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_library.png" ) );
-        else if ( url.contains( "/mix" ) )
-            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_mix.png" ) );
-        else if ( url.contains( "/recommended" ) )
-            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_rec.png" ) );
+//    if ( url.startsWith("lastfm://user") )
+//    {
+//        if ( url.contains( "/friends" )
+//            || url.contains( "/neighbours" )
+//            || url.startsWith( "lastfm://users") )
+//            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_friends.png" ) );
+//        if ( url.contains( "/library" )
+//             || url.contains( "/personal") )
+//            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_library.png" ) );
+//        else if ( url.contains( "/mix" ) )
+//            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_mix.png" ) );
+//        else if ( url.contains( "/recommended" ) )
+//            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_rec.png" ) );
 
-    }
-    else if ( url.startsWith("lastfm://artist") )
-        ui->icon->setPixmap( QPixmap( ":/control_bar_radio_artist.png" ) );
-    else if ( url.startsWith("lastfm://tag")
-                || url.startsWith( "lastfm://globaltags" ) )
-        ui->icon->setPixmap( QPixmap( ":/control_bar_radio_tag.png" ) );
-    else
-        ui->icon->setPixmap( QPixmap( ":/control_bar_radio_library.png" ) );
+//    }
+//    else if ( url.startsWith("lastfm://artist") )
+//        ui->icon->setPixmap( QPixmap( ":/control_bar_radio_artist.png" ) );
+//    else if ( url.startsWith("lastfm://tag")
+//                || url.startsWith( "lastfm://globaltags" ) )
+//        ui->icon->setPixmap( QPixmap( ":/control_bar_radio_tag.png" ) );
+//    else
+//        ui->icon->setPixmap( QPixmap( ":/control_bar_radio_library.png" ) );
+
+    ui->icon->setPixmap( QPixmap( ":/as.png" ).scaledToHeight( 44, Qt::SmoothTransformation) );
 }
 
 void
 PlaybackControlsWidget::onTuningIn( const RadioStation& station )
 {
     setScrobbleTrack( false );
+
+    setIconForRadio( station );
 
     ui->status->setText( tr("Tuning...") );
     ui->device->setText( station.title() );
@@ -247,15 +251,6 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
 
     ui->play->setChecked( false );
     aApp->playAction()->setChecked( false );
-
-    if ( !m_movie )
-    {
-        m_movie = new QMovie( ":/loading_radio.gif", "GIF", this );
-        m_movie->setCacheMode( QMovie::CacheAll );
-    }
-
-    ui->icon->setMovie( m_movie );
-    m_movie->start();
 
     ui->progressBar->setTrack( Track() );
 
@@ -273,9 +268,6 @@ void
 PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrack )
 {
     ui->progressBar->setTrack( track );
-
-    if ( m_movie )
-        m_movie->stop();
 
     disconnect( oldTrack.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool)));
 

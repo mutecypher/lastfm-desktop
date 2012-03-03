@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>445</width>
-    <height>690</height>
+    <height>590</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -47,7 +47,7 @@
         <x>0</x>
         <y>0</y>
         <width>433</width>
-        <height>666</height>
+        <height>566</height>
        </rect>
       </property>
       <property name="autoFillBackground">
@@ -164,7 +164,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QStackedWidget" name="loadingStack">
+        <widget class="unicorn::StackedWidget" name="loadingStack">
          <property name="currentIndex">
           <number>0</number>
          </property>
@@ -558,7 +558,7 @@
               <string>TextLabel</string>
              </property>
              <property name="alignment">
-              <set>Qt::AlignHCenter|Qt::AlignTop</set>
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
@@ -619,6 +619,12 @@
    <class>SimilarArtistWidget</class>
    <extends>QLabel</extends>
    <header>../Widgets/SimilarArtistWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>unicorn::StackedWidget</class>
+   <extends>QStackedWidget</extends>
+   <header>lib/unicorn/widgets/StackedWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

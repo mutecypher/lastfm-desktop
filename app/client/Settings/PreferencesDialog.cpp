@@ -45,6 +45,8 @@ PreferencesDialog::PreferencesDialog( QMenuBar* menuBar, QWidget* parent )
     connect( ui->actionAccounts, SIGNAL(triggered()), SLOT(onTabButtonClicked()));
     connect( ui->actionAdvanced, SIGNAL(triggered()), SLOT(onTabButtonClicked()));
 
+    connect( ui->stackedWidget, SIGNAL(currentChanged(int)), this, SLOT(onStackCurrentChanged(int)), Qt::QueuedConnection );
+
 #ifdef Q_OS_MAC
     ui->buttonBox->hide();
 #endif
@@ -54,6 +56,8 @@ PreferencesDialog::PreferencesDialog( QMenuBar* menuBar, QWidget* parent )
     QAbstractButton* applyButton = ui->buttonBox->button( QDialogButtonBox::Apply );
     applyButton->setEnabled( false );
     connect( applyButton, SIGNAL( clicked() ), SLOT( onApplyButtonClicked() ) );
+
+    setFixedWidth( 550 );
 
     ui->actionGeneral->trigger();
 }
@@ -80,6 +84,12 @@ PreferencesDialog::onTabButtonClicked()
         ui->stackedWidget->setCurrentWidget( ui->advanced );
     else if ( clickedButton == ui->actionScrobbling )
         ui->stackedWidget->setCurrentWidget( ui->scrobbling );
+}
+
+void
+PreferencesDialog::onStackCurrentChanged( int /*index*/ )
+{
+    adjustSize();
 }
 
 void

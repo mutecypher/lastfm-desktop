@@ -82,7 +82,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="line">
+    <widget class="QFrame" name="splitter">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>

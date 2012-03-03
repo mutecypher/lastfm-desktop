@@ -64,7 +64,8 @@ SOURCES += \
     AnimatedStatusBar.cpp \
     DesktopServices.cpp \
     Updater/Updater.cpp \
-    CrashReporter/CrashReporter.cpp
+    CrashReporter/CrashReporter.cpp \
+    widgets/StackedWidget.cpp
 
 HEADERS += \
     widgets/UserToolButton.h \
@@ -130,7 +131,8 @@ HEADERS += \
     Updater/Updater.h \
     DesktopServices.h \
     CrashReporter/CrashReporter.h \
-    ApiKey.h
+    ApiKey.h \
+    widgets/StackedWidget.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	
