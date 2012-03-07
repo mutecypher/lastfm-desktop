@@ -31,14 +31,15 @@ end
 
 def copy_plugin
 	## copy the iTunes plugin into the bundle
-	# 
+	system 'cp -R _bin/Audioscrobbler.bundle _bin/Last.fm.app/Contents/MacOS/'
 end
 
 def create_zip
 	## create a zip file
 	Dir.chdir("_bin")
+	system "rm -rf #{$version}"
 	system "mkdir #{$version}"
-	system "tar cjvf #{$version}/Last.fm-#{$version}.tar.bz2 Last.fm.app"
+	system "tar cjf #{$version}/Last.fm-#{$version}.tar.bz2 Last.fm.app"
 	Dir.chdir("..")
 end
 
@@ -47,12 +48,12 @@ def create_deltas
 	Dir.chdir("_bin")
 
 	# unzip the new app
-	system "tar xvjf #{$version}/Last.fm-#{$version}.tar.bz2 -C #{$version}"
+	system "tar xjf #{$version}/Last.fm-#{$version}.tar.bz2 -C #{$version}"
 
 	$deltas.each do |delta|
 		# unzip the old version (try both compression formats)
-		#system 'tar -xvjf Last.fm-#{delta}.tar.bz2 -C #{delta}'
-		system "unzip #{delta}/Last.fm-#{delta}.zip -d #{delta}"
+		#system 'tar -xjf Last.fm-#{delta}.tar.bz2 -C #{delta}'
+		system "unzip -q #{delta}/Last.fm-#{delta}.zip -d #{delta}"
 		# create the delta
 		system "./BinaryDelta create #{delta}/Last.fm.app #{$version}/Last.fm.app #{$version}/Last.fm-#{$version}-#{delta}.delta"
 		# check that it worked
@@ -69,17 +70,17 @@ end
 
 def generate_appcast_xml
 	## sign the zip file and deltas
-	version_sig = `ruby admin/dist/mac/sing_update.rb _bin/#{$version}/Last.fm-#{$version}.tar.bz2 admin/dist/mac/dsa_priv.sig`
-	version_size = `du _bin/#{$version}/Last.fm-#{$version}.tar.bz2`
+	puts version_sig = `ruby admin/dist/mac/sign_update.rb _bin/#{$version}/Last.fm-#{$version}.tar.bz2 admin/dist/mac/dsa_priv.pem`
+	puts version_size = `du _bin/#{$version}/Last.fm-#{$version}.tar.bz2`
 
 	$deltas.each do |delta|
-		delta_sig = `ruby admin/dist/mac/sing_update.rb _bin/#{$version}/Last.fm-#{$version}-#{delta}.delta admin/dist/mac/dsa_priv.sig`
-		delta_du = `du _bin/#{$version}/Last.fm-#{$version}-#{delta}.delta`
+		puts delta_sig = `ruby admin/dist/mac/sign_update.rb _bin/#{$version}/Last.fm-#{$version}-#{delta}.delta admin/dist/mac/dsa_priv.pem`
+		puts delta_du = `du _bin/#{$version}/Last.fm-#{$version}-#{delta}.delta`
 	end
 end
 
 # run all the things
-clean
+#clean
 build
 copy_plugin
 create_zip
