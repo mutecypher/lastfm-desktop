@@ -1,4 +1,3 @@
-
 ### Usage build-release.rb <version> --deltas <version> <version>
 # the deltas should be in a zip in the filder under bin with the expected filename format
 # example /_bin/<version>/Last.fm-<version>
@@ -6,7 +5,10 @@
 # find the current version from the plist.info?
 #version = ARGV[0]
 
+# TODO: find out the app version from the app's plist.info
 $version = '2.1.16'
+
+# TODO: get the version numbers from the argument list
 $deltas = ['2.1.14', '2.1.15']
 
 ## Check that we are running from the root of the lastfm-desktop project
@@ -48,10 +50,12 @@ def create_deltas
 	Dir.chdir("_bin")
 
 	# unzip the new app
+	puts "unzipping #{$version}"
 	system "tar xjf #{$version}/Last.fm-#{$version}.tar.bz2 -C #{$version}"
 
 	$deltas.each do |delta|
 		# unzip the old version (try both compression formats)
+		puts "unzipping #{delta}"
 		#system 'tar -xjf Last.fm-#{delta}.tar.bz2 -C #{delta}'
 		system "unzip -q #{delta}/Last.fm-#{delta}.zip -d #{delta}"
 		# create the delta
@@ -70,19 +74,40 @@ end
 
 def generate_appcast_xml
 	## sign the zip file and deltas
-	puts version_sig = `ruby admin/dist/mac/sign_update.rb _bin/#{$version}/Last.fm-#{$version}.tar.bz2 admin/dist/mac/dsa_priv.pem`
-	puts version_size = `du _bin/#{$version}/Last.fm-#{$version}.tar.bz2`
+	item = "<item>\n"
+	item << "\t<title>#{$version}</title>\n"
+	item << "\t<pubDate></pubDate>\n"
+
+	version_sig = `ruby admin/dist/mac/sign_update.rb _bin/#{$version}/Last.fm-#{$version}.tar.bz2 admin/dist/mac/dsa_priv.pem`
+	version_size = `du _bin/#{$version}/Last.fm-#{$version}.tar.bz2`.split[0]
+
+	item << "\t<enclosure sparkle:version=\"#{$version}\" url=\"http://cdn.last.fm/client/Mac/Last.fm-#{$version}.zip\" length=\"#{version_size}\" type=\"application/octet-stream\" sparkle:dsaSignature=\"#{version_sig}\"/>\n"
+	item << "\t<sparkle:deltas>\n"
 
 	$deltas.each do |delta|
-		puts delta_sig = `ruby admin/dist/mac/sign_update.rb _bin/#{$version}/Last.fm-#{$version}-#{delta}.delta admin/dist/mac/dsa_priv.pem`
-		puts delta_du = `du _bin/#{$version}/Last.fm-#{$version}-#{delta}.delta`
+		delta_sig = `ruby admin/dist/mac/sign_update.rb _bin/#{$version}/Last.fm-#{$version}-#{delta}.delta admin/dist/mac/dsa_priv.pem`
+		delta_du = `du _bin/#{$version}/Last.fm-#{$version}-#{delta}.delta`.split[0]
+		item << "\t<enclosure url=\"http://cdn.last.fm/client/Mac/Last.fm-#{$version}-#{delta}.delta\" sparkle:version=\"#{$version}\" sparkle:deltaFrom=\"#{delta}\" length=\"#{delta_du}\" type=\"application/octet-stream\" sparkle:dsaSignature=\"#{delta_sig}\"/>\n"
 	end
+
+	item << "\t</sparkle:deltas>\n"
+	item << "\t<description></description>\n"
+	item << "</item>\n"
+
+	puts item
+end
+
+def upload_files
+	# scp the main zip file
+	# scp all the deltas
+	# put them in my userhome if we are doing a test update
 end
 
 # run all the things
-#clean
+clean
 build
 copy_plugin
 create_zip
 create_deltas
 generate_appcast_xml
+upload_files
