@@ -69,6 +69,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="hideDock">
+     <property name="text">
+      <string>Hide dock icon</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QFrame" name="hsplitter2">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>

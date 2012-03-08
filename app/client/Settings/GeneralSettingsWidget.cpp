@@ -20,19 +20,21 @@ GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
 
     connect( ui->languages, SIGNAL( currentIndexChanged( int ) ), SLOT( onSettingsChanged() ) );
 
-    connect( ui->showAs, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
-    connect( ui->launch, SIGNAL(stateChanged(int) ), SLOT( onSettingsChanged() ) );
-    connect( ui->notifications, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
-    connect( ui->lastRadio, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
-    connect( ui->sendCrashReports, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
-    connect( ui->updates, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
-
     ui->showAs->setChecked( unicorn::Settings().value( SETTING_SHOW_AS, ui->showAs->isChecked() ).toBool() );
     ui->launch->setChecked( unicorn::Settings().value( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() ).toBool() );
     ui->notifications->setChecked( unicorn::Settings().value( SETTING_NOTIFICATIONS, ui->notifications->isChecked() ).toBool() );
     ui->lastRadio->setChecked( unicorn::Settings().value( SETTING_LAST_RADIO, ui->lastRadio->isChecked() ).toBool() );
     ui->sendCrashReports->setChecked( unicorn::Settings().value( SETTING_SEND_CRASH_REPORTS, ui->sendCrashReports->isChecked() ).toBool() );
     ui->updates->setChecked( unicorn::Settings().value( SETTING_CHECK_UPDATES, ui->updates->isChecked() ).toBool() );
+    ui->hideDock->setChecked( unicorn::Settings().value( SETTING_HIDE_DOCK, ui->hideDock->isChecked() ).toBool() );
+
+    connect( ui->showAs, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+    connect( ui->launch, SIGNAL(stateChanged(int) ), SLOT( onSettingsChanged() ) );
+    connect( ui->notifications, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+    connect( ui->lastRadio, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+    connect( ui->sendCrashReports, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+    connect( ui->updates, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+    connect( ui->hideDock, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
 }
 
 void
@@ -90,6 +92,9 @@ GeneralSettingsWidget::saveSettings()
         unicorn::Settings().setValue( SETTING_LAST_RADIO, ui->lastRadio->isChecked() );
         unicorn::Settings().setValue( SETTING_SEND_CRASH_REPORTS, ui->sendCrashReports->isChecked() );
         unicorn::Settings().setValue( SETTING_CHECK_UPDATES, ui->updates->isChecked() );
+        unicorn::Settings().setValue( SETTING_HIDE_DOCK, ui->hideDock->isChecked() );
+
+        aApp->hideDockIcon( ui->hideDock->isChecked() );
 
         onSettingsSaved();
     }

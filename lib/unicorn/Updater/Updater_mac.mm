@@ -1,6 +1,8 @@
 
-#include <QCoreApplication>
 #include <QStringList>
+
+#include <../UnicornApplication.h>
+#include <../UnicornSettings.h>
 
 #include "Updater.h"
 
@@ -9,11 +11,41 @@
 #include <Foundation/NSURL.h>
 
 #include <Sparkle/Sparkle.h>
+#include <Sparkle/SUUpdater.h>
+
+@interface UpdaterDelegate : NSObject {
+}
+- (void)updater:(SUUpdater *)updater willInstallUpdate:(SUAppcastItem *)update;
+- (void)updaterWillRelaunchApplication:(SUUpdater *)updater;
+@end
+
+@implementation UpdaterDelegate
+
+- (void)updater:(SUUpdater *)updater willInstallUpdate:(SUAppcastItem *)update
+{
+    Q_UNUSED(updater)
+    Q_UNUSED(update)
+
+    static_cast<unicorn::Application*>(qApp)->hideDockIcon( false );
+}
+
+- (void) updaterWillRelaunchApplication:(SUUpdater *)updater
+{
+    Q_UNUSED(updater)
+
+    static_cast<unicorn::Application*>(qApp)->hideDockIcon( unicorn::Settings().value( SETTING_HIDE_DOCK, false ).toBool() );
+}
+
+@end
+
+UpdaterDelegate* g_Delegate;
 
 unicorn::Updater::Updater(QObject *parent) :
     QObject(parent)
 {
     SUUpdater* updater = [SUUpdater sharedUpdater];
+    g_Delegate = [UpdaterDelegate alloc];
+    [updater setDelegate:g_Delegate];
 
     if ( qApp->arguments().contains( "--debug" ) )
         [updater setFeedURL:[NSURL URLWithString:@"http://users.last.fm/~michael/updates_mac.xml"]];

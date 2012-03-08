@@ -40,6 +40,7 @@
 #define SETTING_LAST_RADIO "lastRadio"
 #define SETTING_SEND_CRASH_REPORTS "sendCrashReports"
 #define SETTING_CHECK_UPDATES "checkUpdates"
+#define SETTING_HIDE_DOCK "hideDock"
 
 #define SETTING_FIRST_RUN_WIZARD_COMPLETED "FirstRunWizardCompletedBeta"
 
@@ -170,6 +171,10 @@ namespace unicorn
         void* installHotKey( Qt::KeyboardModifiers, quint32, QObject* receiver, const char* slot );
         void unInstallHotKey( void* id );
         bool isInternetConnectionUp() const;
+
+#ifdef Q_OS_MAC
+        void hideDockIcon( bool hideDockIcon );
+#endif
 
     public slots:
         void manageUsers();

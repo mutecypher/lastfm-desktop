@@ -50,6 +50,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QTemporaryFile>
 #include <QFileInfo>
 #include <QLocale>
 #include <QRegExp>
@@ -591,3 +592,45 @@ unicorn::Application::isInternetConnectionUp() const
 {
     return m_icm->isUp();
 }
+
+#ifdef Q_OS_MAC
+void
+unicorn::Application::hideDockIcon( bool hideDockIcon )
+{
+    QFile f( QDir( applicationDirPath() ).absoluteFilePath( "../Info.plist" ) );
+
+    if ( f.open( QIODevice::ReadOnly ) )
+    {
+        QTemporaryFile newFile;
+
+        if ( newFile.open() )
+        {
+            while ( !f.atEnd() )
+            {
+                QByteArray line = f.readLine();
+                newFile.write( line );
+
+                if ( line.contains( "<key>LSUIElement</key>" ) && !f.atEnd() )
+                {
+                    // read the next line from the source and throw it away
+                    QString boolLine = f.readLine();
+
+                    // replace <true> or <false> with the correct thing
+                    QRegExp rx("(<true/>|<false/>)");      // match ampersands but not &amp;
+                    boolLine.replace( rx, hideDockIcon ? "<true/>" : "<false/>" );
+
+                    newFile.write( boolLine.toAscii() );
+                }
+            }
+
+            newFile.close();
+        }
+
+        f.close();
+
+        f.remove();
+        newFile.copy( f.fileName() );
+    }
+}
+#endif
+
