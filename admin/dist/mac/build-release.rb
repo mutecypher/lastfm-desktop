@@ -11,6 +11,9 @@ $version = '2.1.16'
 # TODO: get the version numbers from the argument list
 $deltas = ['2.1.14', '2.1.15']
 
+$upload_folder = '/userhome/michael/www/client/Mac/'
+$download_folder = 'http://users.last.fm/~michael/client/Mac/'
+
 ## Check that we are running from the root of the lastfm-desktop project
 # ?
 
@@ -72,6 +75,17 @@ def create_deltas
 	Dir.chdir("..")
 end
 
+def upload_files
+	# scp the main zip file
+	# scp all the deltas
+	# put them in my userhome if we are doing a test update
+	system "scp _bin/#{$version}/Last.fm-#{$version}.tar.bz2 badger:#{$upload_folder}"
+
+	$deltas.each do |delta|
+		system "scp _bin/#{$version}/Last.fm-#{$version}-#{delta}.delta badger:#{$upload_folder}"
+	end
+end
+
 def generate_appcast_xml
 	## sign the zip file and deltas
 	item = "<item>\n"
@@ -81,13 +95,13 @@ def generate_appcast_xml
 	version_sig = `ruby admin/dist/mac/sign_update.rb _bin/#{$version}/Last.fm-#{$version}.tar.bz2 admin/dist/mac/dsa_priv.pem`
 	version_size = `du _bin/#{$version}/Last.fm-#{$version}.tar.bz2`.split[0]
 
-	item << "\t<enclosure sparkle:version=\"#{$version}\" url=\"http://cdn.last.fm/client/Mac/Last.fm-#{$version}.zip\" length=\"#{version_size}\" type=\"application/octet-stream\" sparkle:dsaSignature=\"#{version_sig}\"/>\n"
+	item << "\t<enclosure sparkle:version=\"#{$version}\" url=\"#{$download_folder}/Last.fm-#{$version}.zip\" length=\"#{version_size}\" type=\"application/octet-stream\" sparkle:dsaSignature=\"#{version_sig}\"/>\n"
 	item << "\t<sparkle:deltas>\n"
 
 	$deltas.each do |delta|
 		delta_sig = `ruby admin/dist/mac/sign_update.rb _bin/#{$version}/Last.fm-#{$version}-#{delta}.delta admin/dist/mac/dsa_priv.pem`
 		delta_du = `du _bin/#{$version}/Last.fm-#{$version}-#{delta}.delta`.split[0]
-		item << "\t<enclosure url=\"http://cdn.last.fm/client/Mac/Last.fm-#{$version}-#{delta}.delta\" sparkle:version=\"#{$version}\" sparkle:deltaFrom=\"#{delta}\" length=\"#{delta_du}\" type=\"application/octet-stream\" sparkle:dsaSignature=\"#{delta_sig}\"/>\n"
+		item << "\t<enclosure url=\"#{$download_folder}/Last.fm-#{$version}-#{delta}.delta\" sparkle:version=\"#{$version}\" sparkle:deltaFrom=\"#{delta}\" length=\"#{delta_du}\" type=\"application/octet-stream\" sparkle:dsaSignature=\"#{delta_sig}\"/>\n"
 	end
 
 	item << "\t</sparkle:deltas>\n"
@@ -97,11 +111,6 @@ def generate_appcast_xml
 	puts item
 end
 
-def upload_files
-	# scp the main zip file
-	# scp all the deltas
-	# put them in my userhome if we are doing a test update
-end
 
 # run all the things
 clean
@@ -109,5 +118,6 @@ build
 copy_plugin
 create_zip
 create_deltas
-generate_appcast_xml
 upload_files
+generate_appcast_xml
+
