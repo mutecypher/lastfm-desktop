@@ -62,16 +62,6 @@ StatusBar::StatusBar( QWidget* parent )
     permanentWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
     permanentWidgetLayout->setSpacing( 0 );
 
-    permanentWidgetLayout->addStretch( 1 );
-    permanentWidgetLayout->addWidget( ui.volMin = new QLabel( this ) );
-    ui.volMin->setObjectName( "volMin" );
-    ui.volMin->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    permanentWidgetLayout->addWidget( ui.volumeSlider = new Phonon::VolumeSlider( RadioService::instance().audioOutput(), this ) );
-    ui.volumeSlider->setOrientation( Qt::Horizontal );
-    permanentWidgetLayout->addWidget( ui.volMax = new QLabel( this ) );
-    ui.volMax->setObjectName( "volMax" );
-    ui.volMax->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-
     aApp->isInternetConnectionUp() ? onConnectionUp() : onConnectionDown();
 
     connect( aApp, SIGNAL( internetConnectionDown() ), SLOT( onConnectionDown() ) );

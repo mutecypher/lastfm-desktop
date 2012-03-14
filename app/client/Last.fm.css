@@ -839,17 +839,21 @@ font-size: 14px;
 }
 
 PlaybackControlsWidget[scrobbleTrack="false"] QFrame#details {
+	max-height: 64px;
+	min-height: 64px;
+}
+
+PlaybackControlsWidget[scrobbleTrack="false"] QFrame#details {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #3B3B3B, stop:0 #545454);
 border: none;
 border-bottom: 1px solid #272727;
-min-height: 64px;
+
 }
 
 PlaybackControlsWidget[scrobbleTrack="true"] QFrame#details {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #c1c1c1, stop:0 #dbdbdb);
 border: none;
 border-bottom: 1px solid #9f9f9f;
-min-height: 64px;
 }
 
 PlaybackControlsWidget[scrobbleTrack="true"] QFrame#statusFrame QLabel {
@@ -866,7 +870,11 @@ margin: 0px 3px;
 }
 
 PlaybackControlsWidget QFrame#controls {
-margin: 0px 10px 0px 0px;
+margin: 0px 12px 0px 0px;
+}
+
+PlaybackControlsWidget QFrame#buttons {
+margin: 8px 0px -2px 0px;
 }
 
 PlaybackControlsWidget QPushButton#love {
@@ -1122,39 +1130,47 @@ StatusBar QPushButton#cog:pressed {
 background-image: url(":/settings_PRESS.png");
 }
 
-StatusBar QLabel#volMin,
-StatusBar QLabel#volMax {
+PlaybackControlsWidget QFrame#volume {
+border: none;
+margin: 0px 0px 4px 4px;
+}
+
+PlaybackControlsWidget QLabel#volMin,
+PlaybackControlsWidget QLabel#volMax {
 border: none;
 background-repeat: no-repeat;
 background-position: center;
 min-width: 16px;
+max-width: 16px;
 height: 16px;
+margin: 0px 0px 0px 0px;
 background-image: url(":/volume_min.png");
 }
 
-StatusBar QLabel#volMin {
+PlaybackControlsWidget QLabel#volMin {
 min-width: 8px;
 max-width: 8px;
 }
 
-StatusBar QLabel#volMax {
+PlaybackControlsWidget QLabel#volMax {
 background-image: url(":/volume_max.png");
 }
 
-StatusBar Phonon--VolumeSlider {
-qproperty-muteVisible: false;
+PlaybackControlsWidget Phonon--VolumeSlider {
 min-width: 104px;
+max-width: 112px;
+margin: 0px -3px 0px -3px;
 }
 
-StatusBar QSlider::groove:horizontal {
+PlaybackControlsWidget QSlider::groove:horizontal {
 background-repeat: no-repeat;
 background-position: center;
-width: 104px;
+width: 112px;
 height: 16px;
 background-image: url(":/volume_slot_OFF.png");
 }
 
-StatusBar QSlider::handle:horizontal {
+PlaybackControlsWidget QSlider::handle:horizontal {
 background-repeat: no-repeat;
 background-position: center;
 width: 16px;
@@ -1162,7 +1178,7 @@ height: 16px;
 background-image: url(":/volume_knob_REST.png");
 }
 
-StatusBar QSlider::handle:horizontal:pressed {
+PlaybackControlsWidget QSlider::handle:horizontal:pressed {
 background-image: url(":/volume_knob_PRESS.png");
 }
 

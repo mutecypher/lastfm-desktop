@@ -54,9 +54,6 @@ class StatusBar : public QStatusBar
             unicorn::Label* message;
 
             class StylableWidget* permanentWidget;
-            class QLabel* volMin;
-            Phonon::VolumeSlider* volumeSlider;
-            class QLabel* volMax;
         } ui;
 
         bool m_online;

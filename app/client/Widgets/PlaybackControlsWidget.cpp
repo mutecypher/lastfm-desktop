@@ -19,10 +19,17 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->volumeSlider->setAudioOutput( RadioService::instance().audioOutput() );
+
     ui->play->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->ban->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->love->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->skip->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->volume->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->volMax->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->volMin->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->volumeSlider->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
     ui->play->setAttribute( Qt::WA_MacNoClickThrough );
     ui->ban->setAttribute( Qt::WA_MacNoClickThrough );
     ui->love->setAttribute( Qt::WA_MacNoClickThrough );

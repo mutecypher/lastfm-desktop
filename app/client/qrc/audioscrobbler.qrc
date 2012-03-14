@@ -198,5 +198,6 @@
         <file>preferences_scrobbling.png</file>
         <file>preferences_accounts.png</file>
         <file>beta_sash.png</file>
+        <file>control_bar_radio_as.png</file>
     </qresource>
 </RCC>
