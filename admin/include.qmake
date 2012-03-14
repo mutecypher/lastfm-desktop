@@ -47,12 +47,11 @@ macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
     ## copy any css file if it exists
     CSS_PATH=$$_PRO_FILE_PWD_/$$TARGET$$quote(.css)
     exists( $$CSS_PATH ) {
-        debug {
-            # if we are in debug mode just symlink it so that we can edit in place and refresh the stylesheet
-            QMAKE_POST_LINK += echo Copying css file..; ln -s \"$$CSS_PATH\" \"$$BUNDLE_DIR/Contents/Resources\";
-        }
-        else {
-            QMAKE_POST_LINK += echo Copying css file..; cp \"$$CSS_PATH\" \"$$BUNDLE_DIR/Contents/Resources\";
+        # if we are in debug mode just symlink it so that we can edit in place and refresh the stylesheet
+        CONFIG( debug, debug|release ) {
+            QMAKE_POST_LINK += echo Symlinking css file..; ln -s \"$$CSS_PATH\" \"$$BUNDLE_DIR/Contents/Resources\";
+        } else {
+            QMAKE_POST_LINK += echo Copying css file..; rm \"$$BUNDLE_DIR/Contents/Resources/$$TARGET$$quote(.css)\"; cp -f \"$$CSS_PATH\" \"$$BUNDLE_DIR/Contents/Resources\";
         }
     }
 
@@ -76,11 +75,7 @@ macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
 
     QMAKE_POST_LINK += find \'$$BUNDLE_DIR\' -iname \\*Headers -print0| xargs -0 rm -rf; find \'$$BUNDLE_DIR\' -iname \\*_debug -print0|xargs -0 rm
     
-    CONFIG( no_dock_icon ) {
-        QMAKE_INFO_PLIST = $$DISTDIR/NoDockIcon.plist
-    } else {
-        QMAKE_INFO_PLIST = $$DISTDIR/Standard.plist
-    }
+    QMAKE_INFO_PLIST = $$DISTDIR/Standard.plist
 }
 
 defineTest( generateBuildParameters ) {
