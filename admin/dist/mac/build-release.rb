@@ -11,8 +11,14 @@ $version = '2.1.16'
 # TODO: get the version numbers from the argument list
 $deltas = ['2.1.14', '2.1.15']
 
-$upload_folder = '/userhome/michael/www/client/Mac/'
-$download_folder = 'http://users.last.fm/~michael/client/Mac/'
+if ( ARGV.include?( "--release" ) )
+	$upload_folder = '/web/site/static.last.fm/client/Mac'
+	$download_folder = 'http://cdn.last.fm/client/Mac'
+else
+	$upload_folder = '/userhome/michael/www/client/Mac'
+	$download_folder = 'http://users.last.fm/~michael/client/Mac'
+end
+
 
 ## Check that we are running from the root of the lastfm-desktop project
 # ?
@@ -95,7 +101,7 @@ def generate_appcast_xml
 	version_sig = `ruby admin/dist/mac/sign_update.rb _bin/#{$version}/Last.fm-#{$version}.tar.bz2 admin/dist/mac/dsa_priv.pem`
 	version_size = `du _bin/#{$version}/Last.fm-#{$version}.tar.bz2`.split[0]
 
-	item << "\t<enclosure sparkle:version=\"#{$version}\" url=\"#{$download_folder}/Last.fm-#{$version}.zip\" length=\"#{version_size}\" type=\"application/octet-stream\" sparkle:dsaSignature=\"#{version_sig}\"/>\n"
+	item << "\t<enclosure sparkle:version=\"#{$version}\" url=\"#{$download_folder}/Last.fm-#{$version}.tar.bz2\" length=\"#{version_size}\" type=\"application/octet-stream\" sparkle:dsaSignature=\"#{version_sig}\"/>\n"
 	item << "\t<sparkle:deltas>\n"
 
 	$deltas.each do |delta|
@@ -113,7 +119,7 @@ end
 
 
 # run all the things
-clean
+#clean
 build
 copy_plugin
 create_zip
