@@ -119,7 +119,7 @@ end
 
 
 # run all the things
-#clean
+clean
 build
 copy_plugin
 create_zip
