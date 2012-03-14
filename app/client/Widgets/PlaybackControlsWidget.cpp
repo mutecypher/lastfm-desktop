@@ -240,7 +240,7 @@ PlaybackControlsWidget::setIconForRadio( const RadioStation& /*station*/ )
 //    else
 //        ui->icon->setPixmap( QPixmap( ":/control_bar_radio_library.png" ) );
 
-    ui->icon->setPixmap( QPixmap( ":/as.png" ).scaledToHeight( 44, Qt::SmoothTransformation) );
+    ui->icon->setPixmap( QPixmap( ":/control_bar_radio_as.png" ) );
 }
 
 void
