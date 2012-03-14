@@ -47,9 +47,12 @@ macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
     ## copy any css file if it exists
     CSS_PATH=$$_PRO_FILE_PWD_/$$TARGET$$quote(.css)
     exists( $$CSS_PATH ) {
-        QMAKE_POST_LINK += echo Copying css file..; cp \"$$CSS_PATH\" \"$$BUNDLE_DIR/Contents/Resources\";
-        unicorn {
-            QMAKE_POST_LINK += echo Copying unicorn.css; cp \"$$ROOT_DIR/lib/unicorn/unicorn.css\" \"$$BUNDLE_DIR/Contents/Resources\";
+        debug {
+            # if we are in debug mode just symlink it so that we can edit in place and refresh the stylesheet
+            QMAKE_POST_LINK += echo Copying css file..; ln -s \"$$CSS_PATH\" \"$$BUNDLE_DIR/Contents/Resources\";
+        }
+        else {
+            QMAKE_POST_LINK += echo Copying css file..; cp \"$$CSS_PATH\" \"$$BUNDLE_DIR/Contents/Resources\";
         }
     }
 
