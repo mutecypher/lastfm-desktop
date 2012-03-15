@@ -26,7 +26,6 @@ GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
     ui->lastRadio->setChecked( unicorn::Settings().value( SETTING_LAST_RADIO, ui->lastRadio->isChecked() ).toBool() );
     ui->sendCrashReports->setChecked( unicorn::Settings().value( SETTING_SEND_CRASH_REPORTS, ui->sendCrashReports->isChecked() ).toBool() );
     ui->updates->setChecked( unicorn::Settings().value( SETTING_CHECK_UPDATES, ui->updates->isChecked() ).toBool() );
-    ui->hideDock->setChecked( unicorn::Settings().value( SETTING_HIDE_DOCK, ui->hideDock->isChecked() ).toBool() );
 
     connect( ui->showAs, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
     connect( ui->launch, SIGNAL(stateChanged(int) ), SLOT( onSettingsChanged() ) );
@@ -34,7 +33,13 @@ GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
     connect( ui->lastRadio, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
     connect( ui->sendCrashReports, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
     connect( ui->updates, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+
+#ifdef Q_OS_MAC
+    ui->hideDock->setChecked( unicorn::Settings().value( SETTING_HIDE_DOCK, ui->hideDock->isChecked() ).toBool() );
     connect( ui->hideDock, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+#else
+    ui->hideDock->hide();
+#endif
 }
 
 void
@@ -92,9 +97,10 @@ GeneralSettingsWidget::saveSettings()
         unicorn::Settings().setValue( SETTING_LAST_RADIO, ui->lastRadio->isChecked() );
         unicorn::Settings().setValue( SETTING_SEND_CRASH_REPORTS, ui->sendCrashReports->isChecked() );
         unicorn::Settings().setValue( SETTING_CHECK_UPDATES, ui->updates->isChecked() );
+#ifdef Q_OS_MAC
         unicorn::Settings().setValue( SETTING_HIDE_DOCK, ui->hideDock->isChecked() );
-
         aApp->hideDockIcon( ui->hideDock->isChecked() );
+#endif
 
         onSettingsSaved();
     }
