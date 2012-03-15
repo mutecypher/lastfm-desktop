@@ -256,8 +256,10 @@ font-size: 12px;
 
 NothingPlayingWidget QFrame#contents {
 	border: none;
-	padding: 0px;
-	margin: 20px;
+	background-image: url(":/start_bg.png");
+	background-repeat: none;
+	padding: 20px;
+	margin: 0px;
 }
 
 NothingPlayingWidget QLabel#start {
@@ -267,12 +269,12 @@ NothingPlayingWidget QLabel#start {
 
 NothingPlayingWidget QLabel#top {
 	color: #333;
-	font-size: 16px;
+	font-size: 12px;
 	font-weight: bold;
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
 	border: none;
 	border-bottom: 1px solid #989898;
-	min-height: 65px;
+	min-height: 38px;
 	margin: 0px;
 	padding-left: 20px;
 }
