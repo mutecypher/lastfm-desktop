@@ -8,7 +8,7 @@
 
 #include "../Services/RadioService/RadioService.h"
 
-namespace unicorn { class Session; };
+namespace unicorn { class Session; }
 
 class RadioWidget : public StylableWidget
 {
@@ -16,10 +16,14 @@ class RadioWidget : public StylableWidget
 private:
     struct
     {
+        class QLabel* nowPlaying;
+
         class StylableWidget* personal;
         class StylableWidget* network;
         class StylableWidget* topArtists;
         class StylableWidget* recentStations;
+
+        class PlayableItemWidget* lastStation;
 
         class PlayableItemWidget* library;
         class PlayableItemWidget* mix;

@@ -8,6 +8,7 @@
 #include <lastfm/XmlQuery.h>
 
 #include "lib/unicorn/StylableWidget.h"
+#include "lib/unicorn/UnicornSettings.h"
 
 #include "../Application.h"
 
@@ -16,7 +17,7 @@
 
 #include "RadioWidget.h"
 
-#define MAX_RECENT_STATIONS 5
+#define MAX_RECENT_STATIONS 50
 
 RadioWidget::RadioWidget(QWidget *parent)
     :StylableWidget( parent )
@@ -72,16 +73,25 @@ RadioWidget::changeUser( const QString& newUsername )
             layout->addWidget( splitter );
             splitter->setObjectName( "splitter" );
 
-            QLabel* title = new QLabel( tr("Recent Stations"), this ) ;
-            layout->addWidget( title );
-            title->setObjectName( "title" );
-            layout->addWidget( ui.recentStations = new StylableWidget( this ) );
-            ui.recentStations->setObjectName( "section" );
+            layout->addWidget( ui.nowPlaying = new QLabel( tr("Last Station"), this ) );
+            ui.nowPlaying->setObjectName( "title" );
+            layout->addWidget( ui.personal = new StylableWidget( this ) );
+            ui.personal->setObjectName( "section" );
+            QVBoxLayout* personalLayout = new QVBoxLayout( ui.personal );
+            personalLayout->setContentsMargins( 0, 0, 0, 0 );
+            personalLayout->setSpacing( 0 );
 
-            QVBoxLayout* layout = new QVBoxLayout( ui.recentStations );
-            layout->setContentsMargins( 0, 0, 0, 0 );
-            layout->setSpacing( 0 );
+            unicorn::UserSettings us;
+            QString stationUrl = us.value( "lastStationUrl", "" ).toString();
+            QString stationTitle = us.value( "lastStationTitle", "" ).toString();
+
+            RadioStation lastStation( stationUrl );
+            lastStation.setTitle( stationTitle );
+
+            personalLayout->addWidget( ui.lastStation = new PlayableItemWidget( lastStation, stationTitle ) );
+            ui.lastStation->setObjectName( "station" );
         }
+
         {
             QFrame* splitter = new QFrame( this );
             layout->addWidget( splitter );
@@ -122,6 +132,22 @@ RadioWidget::changeUser( const QString& newUsername )
             ui.neighbours->setObjectName( "neighbours" );
         }
 
+        {
+            QFrame* splitter = new QFrame( this );
+            layout->addWidget( splitter );
+            splitter->setObjectName( "splitter" );
+
+            QLabel* title = new QLabel( tr("Recent Stations"), this ) ;
+            layout->addWidget( title );
+            title->setObjectName( "title" );
+            layout->addWidget( ui.recentStations = new StylableWidget( this ) );
+            ui.recentStations->setObjectName( "section" );
+
+            QVBoxLayout* layout = new QVBoxLayout( ui.recentStations );
+            layout->setContentsMargins( 0, 0, 0, 0 );
+            layout->setSpacing( 0 );
+        }
+
         // fetch recent stations
         connect( User( newUsername ).getRecentStations( MAX_RECENT_STATIONS ), SIGNAL(finished()), SLOT(onGotRecentStations()));
 
@@ -154,6 +180,7 @@ RadioWidget::onGotTopArtists()
     }
 }
 
+
 void
 RadioWidget::onGotRecentStations()
 {
@@ -163,9 +190,14 @@ RadioWidget::onGotRecentStations()
     {
         foreach ( const lastfm::XmlQuery& station, lfm["recentstations"].children("station") )
         {
-            PlayableItemWidget* item = new PlayableItemWidget( RadioStation( station["url"].text() ), station["name"].text() );
-            item->setObjectName( "station" );
-            ui.recentStations->layout()->addWidget( item );
+            QString stationUrl = station["url"].text();
+
+            if ( !stationUrl.startsWith( "lastfm://user/" ) )
+            {
+                PlayableItemWidget* item = new PlayableItemWidget( RadioStation( stationUrl ), station["name"].text() );
+                item->setObjectName( "station" );
+                ui.recentStations->layout()->addWidget( item );
+            }
         }
     }
     else
@@ -177,9 +209,18 @@ RadioWidget::onGotRecentStations()
 void
 RadioWidget::onTuningIn( const RadioStation& station )
 {
+    // Save this as the last station played
+    unicorn::UserSettings us;
+    us.setValue( "lastStationUrl", station.url() );
+    us.setValue( "lastStationTitle", station.title() );
+
+    ui.lastStation->setStation( station.url(), station.title() );
+
     // insert at the front of the list
 
-    if ( ui.recentStations && ui.recentStations->layout() && !station.url().isEmpty() )
+    if ( ui.recentStations && ui.recentStations->layout()
+         && !station.url().isEmpty()
+         && !station.url().startsWith( "lastfm://user/" ) )
     {
         PlayableItemWidget* item = new PlayableItemWidget( station, station.title() );
         item->setObjectName( "station" );
