@@ -192,14 +192,16 @@ unicorn::Application::manageUsers()
 void
 unicorn::Application::translate()
 {
-#ifdef NDEBUG
     //Try to load the language set by the user and
     //if there wasn't any, then use the system language
-    QString const iso639 = AppSettings().value( "language", "" ).toString();
+    QString iso639 = AppSettings().value( "language", "" ).toString();
     if ( iso639.isEmpty() )
     {
-        QString const iso639 = QLocale().name().left( 2 );
+        iso639 = QLocale().name().left( 2 );
     }
+
+    // set the default locale for the app which will be used by web services
+    QLocale::setDefault( QLocale( iso639 ) );
 
 #ifdef Q_WS_MAC
     QDir const d = lastfm::dir::bundle().filePath( "Contents/Resources/qm" );
@@ -216,7 +218,6 @@ unicorn::Application::translate()
 
     installTranslator( t1 );
     installTranslator( t2 );
-#endif
 }
 
 

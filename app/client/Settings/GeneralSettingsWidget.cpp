@@ -47,17 +47,17 @@ GeneralSettingsWidget::populateLanguages()
 {
     ui->languages->addItem( tr( "System Language" ), "" );
     ui->languages->addItem( "English", QLocale( QLocale::English ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "FranÃ§ais" ), QLocale( QLocale::French ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "français" ), QLocale( QLocale::French ).name().left( 2 ) );
     ui->languages->addItem( "Italiano", QLocale( QLocale::Italian ).name().left( 2 )  );
     ui->languages->addItem( "Deutsch", QLocale( QLocale::German ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "EspaÃ±ol" ), QLocale( QLocale::Spanish ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "PortuguÃ©s" ), QLocale( QLocale::Portuguese ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "Español" ), QLocale( QLocale::Spanish ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "Português" ), QLocale( QLocale::Portuguese ).name().left( 2 ) );
     ui->languages->addItem( "Polski", QLocale( QLocale::Polish ).name().left( 2 ) );
     ui->languages->addItem( "Svenska", QLocale( QLocale::Swedish ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "TÃ¼kÃ§e" ), QLocale( QLocale::Turkish ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "Ð ÑÑÑÐºÐ¸Ð¹" ), QLocale( QLocale::Russian ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "ä¸­æ" ), QLocale( QLocale::Chinese ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "æ¥æ¬èª" ), QLocale( QLocale::Japanese ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "Türkçe" ), QLocale( QLocale::Turkish ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "Руccкий" ), QLocale( QLocale::Russian ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "简体中文" ), QLocale( QLocale::Chinese ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "日本語" ), QLocale( QLocale::Japanese ).name().left( 2 ) );
 
     QString currLanguage = unicorn::AppSettings().value( "language", "" ).toString();
     int index = ui->languages->findData( currLanguage );
@@ -78,12 +78,14 @@ GeneralSettingsWidget::saveSettings()
 
         if ( unicorn::AppSettings().value( "language", "" ) != currLanguage )
         {
+            QLocale::setDefault( QLocale( currLanguage ) );
+
             unicorn::AppSettings().setValue( "language", currLanguage );
-            QMessageBoxBuilder( 0 )
-                .setIcon( QMessageBox::Information )
-                .setTitle( tr( "Restart needed" ) )
-                .setText( tr( "You need to restart the application for the language change to take effect." ) )
-                .exec();
+//            QMessageBoxBuilder( 0 )
+//                .setIcon( QMessageBox::Information )
+//                .setTitle( tr( "Restart needed" ) )
+//                .setText( tr( "You need to restart the application for the language change to take effect." ) )
+//                .exec();
         }
 
         unicorn::Settings().setValue( SETTING_SHOW_AS, ui->showAs->isChecked() );
