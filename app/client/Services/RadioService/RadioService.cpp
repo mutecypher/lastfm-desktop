@@ -56,13 +56,15 @@ RadioService::onLastFmUrl( const QUrl& url )
 void
 RadioService::play( const RadioStation& station )
 {
-    if( m_state == Paused && station.url() == "" )
+    if( m_state == Paused
+            && (station.url() == "" || station.url() == m_station.url() ) )
     {
         m_mediaObject->play();
         return;
     }
 
-    if( m_state != Stopped && station.url() == "" )
+    if( m_state != Stopped
+            && ( station.url() == "" || station.url() == m_station.url() ) )
     {
         // do nothing
         return;
