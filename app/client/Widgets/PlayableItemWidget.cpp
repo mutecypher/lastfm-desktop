@@ -90,6 +90,7 @@ PlayableItemWidget::setStation(const RadioStation& rs, const QString& title, con
     m_rs = rs;
     m_rs.setTitle( title );
     setText( title );
+    setToolTip( tr( "Play %1 Radio" ).arg( title ) );
 
     m_description = description;
 
@@ -179,7 +180,10 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
     static QPixmap m_radio_right_press = QPixmap( ":/meta_radio_RIGHT_PRESS.png" );
     static QPixmap m_radio_right_rest = QPixmap( ":/meta_radio_RIGHT_REST.png" );
 
-    if ( m_style == DescriptionRight )
+    if ( m_style == DescriptionNone )
+    {      
+    }
+    else if ( m_style == DescriptionRight )
     {
         QPushButton::paintEvent( event );
 

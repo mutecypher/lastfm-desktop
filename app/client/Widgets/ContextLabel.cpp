@@ -19,7 +19,18 @@ ContextLabel::paintEvent( QPaintEvent* event )
     p.begin( this );
 
     static QPixmap arrow( ":/meta_context_arrow.png" );
-    QPoint arrowPoint = QPoint( 20 + (( 128 + 10 - arrow.size().width() )  / 2), 21 - arrow.size().height() );
+
+    // these values match the ones in the stylesheet
+    int topMargin = 20;
+    int leftMargin = 20;
+
+    if ( this->objectName() == "userBlurb" )
+    {
+        topMargin = 12;
+        leftMargin = 0;
+    }
+
+    QPoint arrowPoint = QPoint( leftMargin + (( 126 + 10 - arrow.size().width() )  / 2 ), topMargin + 1 - arrow.size().height() );
     p.drawPixmap( arrowPoint, arrow );
 
     p.end();

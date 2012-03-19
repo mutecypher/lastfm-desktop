@@ -7,6 +7,7 @@
 
 #include "PlayableItemWidget.h"
 #include "ProfileArtistWidget.h"
+#include "ContextLabel.h"
 
 #include "../Services/ScrobbleService/ScrobbleService.h"
 #include "../Application.h"
@@ -42,7 +43,7 @@ ProfileWidget::onGotUserInfo( const lastfm::User& userDetails )
 
     m_scrobbleCount = userDetails.scrobbleCount();
     ui.avatar->setUser( userDetails );
-    ui.avatar->loadUrl( userDetails.imageUrl( lastfm::Medium, true ), HttpImageWidget::ScaleNone );
+    ui.avatar->loadUrl( userDetails.imageUrl( lastfm::Large, true ), HttpImageWidget::ScaleNone );
     ui.avatar->setHref( userDetails.www() );
 
     setScrobbleCount();
@@ -86,26 +87,23 @@ ProfileWidget::changeUser( const QString& newUsername )
         vl->addWidget( ui.name = new QLabel( newUsername, this) );
         ui.name->setObjectName( "name" );
 
-        QGridLayout* grid = new QGridLayout;
-
-        vl->addLayout( grid );
-
-        grid->addWidget( ui.scrobbleCount = new QLabel( "0" ), 0, 0 );
+        vl->addWidget( ui.scrobbleCount = new QLabel( "0" ) );
         ui.scrobbleCount->setObjectName( "scrobbleCount" );
 
-        grid->addWidget( ui.scrobbles = new QLabel( tr( "Scrobbles" ) ), 1, 0 );
+        vl->addWidget( ui.scrobbles = new QLabel( tr( "Scrobbles" ) ) );
         ui.scrobbleCount->setObjectName( "scrobbles" );
 
-        QFrame* splitter = new QFrame;
-        splitter->setObjectName( "splitter" );
-        splitter->setFrameStyle( QFrame::VLine );
-        grid->addWidget( splitter, 0, 1, 2, 1, Qt::AlignLeft );
-
-        grid->addWidget( ui.lovedCount = new QLabel( "0" ), 0, 2 );
+        vl->addWidget( ui.lovedCount = new QLabel( "0" ) );
         ui.lovedCount->setObjectName( "lovedCount" );
 
-        grid->addWidget( ui.loved = new QLabel( tr( "Loved tracks" ) ), 1, 2 );
+        vl->addWidget( ui.loved = new QLabel( tr( "Loved tracks" ) ) );
         ui.loved->setObjectName( "loved" );
+
+        layout->addWidget( ui.context = new ContextLabel( this ) );
+        ui.context->setObjectName( "userBlurb" );
+        ui.context->setTextFormat( Qt::RichText );
+        ui.context->setWordWrap( true );
+        ui.context->setText( tr( "You have %1 artists in you library and on average listen to %2 track per day." ) );
 
         {
             QFrame* splitter = new QFrame( this );
@@ -130,8 +128,6 @@ ProfileWidget::changeUser( const QString& newUsername )
             layout->addWidget( ui.topOverallArtists = new StylableWidget( this ) );
             ui.topOverallArtists->setObjectName( "section" );
         }
-
-        layout->addStretch( 1 );
 
         lastfm::User user = lastfm::User( newUsername );
 

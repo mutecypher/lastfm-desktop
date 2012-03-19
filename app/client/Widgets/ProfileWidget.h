@@ -21,6 +21,8 @@ private:
         class QLabel* lovedCount;
         class QLabel* loved;
 
+        class ContextLabel* context;
+
         class StylableWidget* topWeeklyArtists;
         class StylableWidget* topOverallArtists;
     } ui;

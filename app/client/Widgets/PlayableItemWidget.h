@@ -34,7 +34,8 @@ public:
     {
         DescriptionRight,
         DescriptionBottom,
-        ThreePart
+        ThreePart,
+        DescriptionNone
     };
 
     Q_ENUMS( Style )

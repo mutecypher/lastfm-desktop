@@ -49,10 +49,15 @@ AvatarWidget::paintEvent( QPaintEvent* paintEvent )
         font.setWeight( QFont::Bold );
         p.setFont( font );
 
+        // the 8 and the 20 are from the stylesheet
+        // (horrible, but there's no way to find those values out and this works)
+        int totalHeight = rect().height() - 8;
+        int totalWidth = rect().width() - 20;
+
         QFontMetrics fm( font );
         int width = fm.width( text ) + 4;
         int height = fm.height() + 4;
-        QRect rect( (70 / 2) - (width / 2), 70 - (height / 2), width, height ) ;
+        QRect rect( (totalWidth / 2) - (width / 2), totalHeight - (height / 2), width, height ) ;
 
         p.setBrush( brush );
         p.drawRoundedRect( rect, 4, 4 );

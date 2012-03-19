@@ -30,12 +30,17 @@ private:
         p.begin( this );
 
         QFontMetrics fm( font() );
+
+        p.setPen( QColor( 0xa6a6a6 ) );
+        p.setBrush( QColor( 0xdedede ) );
+        p.drawRoundedRect( rect().adjusted( 0, 0, -1, -1 ), 4, 4 );
+
         int indent = fm.width( tr( "%L1 plays" ).arg( 999999 ) );
         int chunk = ( (width() - indent ) * m_plays ) / m_maxPlays;
         int adjust = indent + chunk - width();
         p.setPen( QColor( 0x2a8bad ) );
         p.setBrush( QColor( 0x34bae8 ) );
-        p.drawRoundedRect( rect().adjusted( 0, 0, adjust, 0 ), 4, 4 );
+        p.drawRoundedRect( rect().adjusted( 0, 0, adjust - 1, -1 ), 4, 4 );
 
         p.end();
 
@@ -69,17 +74,25 @@ ProfileArtistWidget::ProfileArtistWidget( const lastfm::XmlQuery& artist, int ma
     vl->setSpacing( 0 );
     layout->addLayout( vl, 1 );
 
-    QLabel* artistName = new QLabel( artist["name"].text(), this );
-    vl->addWidget( artistName );
+    QHBoxLayout * hl = new QHBoxLayout();
+    hl->setContentsMargins( 0, 0, 0, 0 );
+    hl->setSpacing( 0 );
+
+    unicorn::Label* artistName = new unicorn::Label( this );
+    artistName->setTextFormat( Qt::RichText );
+    artistName->setText( unicorn::Label::boldLinkStyle( unicorn::Label::anchor( artist["url"].text(), artist["name"].text() ), Qt::black ) );
+    hl->addWidget( artistName, 1 );
     artistName->setObjectName( "artistName" );
+
+    PlayableItemWidget* radio = new PlayableItemWidget( RadioStation::similar( Artist( artist["name"].text() ) ), artist["name"].text() );
+    hl->addWidget( radio );
+    radio->setObjectName( "radio" );
+
+    vl->addLayout( hl );
 
     int playcount = artist["playcount"].text().toInt();
     PlaysLabel* plays = new PlaysLabel( tr( playcount == 1 ? "%L1 play" : "%L1 plays" ).arg( playcount ), playcount, maxPlays, this );
     vl->addWidget( plays );
     plays->setObjectName( "plays" );
-
-    PlayableItemWidget* radio = new PlayableItemWidget( RadioStation::similar( Artist( artist["name"].text() ) ), tr( "%1 Radio" ).arg( artist["name"].text() ) );
-    vl->addWidget( radio );
-    radio->setObjectName( "radio" );
 }
 

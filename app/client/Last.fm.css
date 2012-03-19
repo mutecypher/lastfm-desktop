@@ -323,6 +323,15 @@ border-radius: 5px;
 font-size: 12px;
 }
 
+ProfileWidget QLabel#userBlurb {
+margin: 12px 0px;
+padding: 15px 15px;
+background-color: #ffffff;
+border: 1px solid #cdcdcd;
+border-radius: 5px;
+font-size: 12px;
+}
+
 QuickStartWidget {
 border: none;
 margin: 14px 0px 10px 0px;
@@ -360,10 +369,10 @@ color: transparent;
 background-color: white;
 qproperty-scaledContents: true;
 border: 1px solid #aaaaaa;
-min-width: 128px;
-min-height: 128px;
-max-width: 128px;
-max-height: 128px;
+min-width: 126px;
+min-height: 126px;
+max-width: 126px;
+max-height: 126px;
 padding: 4px;
 margin-right: 20px;
 }
@@ -649,6 +658,19 @@ max-height: 64px;
 margin: 0px 20px 8px 0px;
 }
 
+ProfileWidget AvatarWidget#avatar {
+	padding: 4px;
+	min-width: 126px;
+	min-height: 126px;
+	max-width: 126px;
+	max-height: 126px;
+}
+
+ProfileArtistWidget QLabel#artistImage {
+	max-height: 52px;
+	min-height: 52px;
+}
+
 FriendWidget QLabel#lastTrack {
 	font-weight: bold;
 	font-size: 12px;
@@ -715,6 +737,13 @@ height: 40px;
 padding: 3px 0px 3px 54px;
 margin: 5px 0px;
 }
+
+ProfileWidget PlayableItemWidget {
+	qproperty-style: DescriptionNone;
+	max-width: 24px;
+	max-height: 24px;
+}
+
 
 ProfileArtistWidget {
   border: none;
