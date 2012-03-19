@@ -55,12 +55,13 @@ void HttpImageWidget::setHref( const QUrl& url )
 
     setToolTip( m_href.toString() );
 
-    if( m_href.isValid()) {
+    unsetCursor();
+    disconnect( this, SIGNAL( clicked()), this, SLOT(onClick()));
+
+    if( m_href.isValid())
+    {
         setCursor( Qt::PointingHandCursor );
         connect( this, SIGNAL(clicked()), SLOT(onClick()));
-    } else {
-        unsetCursor();
-        disconnect( this, SIGNAL( clicked()), this, SLOT(onClick()));
     }
 }
 
