@@ -87,7 +87,7 @@ RadioWidget::changeUser( const QString& newUsername )
             personalLayout->setContentsMargins( 0, 0, 0, 0 );
             personalLayout->setSpacing( 0 );
 
-            unicorn::UserSettings us;
+            unicorn::UserSettings us( newUsername );
             QString stationUrl = us.value( "lastStationUrl", "" ).toString();
             QString stationTitle = us.value( "lastStationTitle", "" ).toString();
 
