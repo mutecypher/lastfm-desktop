@@ -28,22 +28,33 @@
     </widget>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0">
      <property name="spacing">
       <number>0</number>
      </property>
      <item>
-      <widget class="unicorn::Label" name="username">
-       <property name="text">
-        <string>Username</string>
-       </property>
-       <property name="textFormat">
-        <enum>Qt::PlainText</enum>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,0">
+       <item>
+        <widget class="unicorn::Label" name="username">
+         <property name="text">
+          <string>Username</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::RichText</enum>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="PlayableItemWidget" name="radio">
+         <property name="text">
+          <string>PushButton</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <widget class="unicorn::Label" name="userDetails">
@@ -108,13 +119,6 @@
          </layout>
         </item>
        </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="PlayableItemWidget" name="radio">
-       <property name="text">
-        <string>PushButton</string>
-       </property>
       </widget>
      </item>
     </layout>

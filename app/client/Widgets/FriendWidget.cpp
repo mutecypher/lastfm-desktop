@@ -37,7 +37,7 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget* parent)
     ui->avatar->loadUrl( user["image size=medium"].text().replace( re, "/serve/\\1s/" ), HttpImageWidget::ScaleNone );
     ui->avatar->setHref( user["url"].text() );
 
-    ui->radio->setStation( RadioStation::library( User( user["name"].text() ) ), tr( "%2%1s Library Radio" ).arg( QChar( 0x2019 ), user["name"].text() ) );
+    ui->radio->setStation( RadioStation::library( User( user["name"].text() ) ), "", "" );
 
     ui->avatar->setUser( m_user );
 }
@@ -126,7 +126,7 @@ void
 FriendWidget::setDetails()
 {
     ui->userDetails->setText( m_user.getInfoString() );
-    ui->username->setText( name() );
+    ui->username->setText( Label::boldLinkStyle( Label::anchor( m_user.www().toString(), name() ), Qt::black ) );
     ui->lastTrack->setText( m_recentTrack.toString() );
 
     if ( m_listeningNow )
