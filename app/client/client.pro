@@ -104,7 +104,8 @@ SOURCES += \
     Widgets/SimilarArtistWidget.cpp \
     Widgets/PushButton.cpp \
     Dialogs/BetaDialog.cpp \
-    Dialogs/CloseAppsDialog.cpp
+    Dialogs/CloseAppsDialog.cpp \
+    Widgets/TrackWidget.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -183,7 +184,8 @@ HEADERS += \
     Widgets/SimilarArtistWidget.h \
     Widgets/PushButton.h \
     Dialogs/BetaDialog.h \
-    Dialogs/CloseAppsDialog.h
+    Dialogs/CloseAppsDialog.h \
+    Widgets/TrackWidget.h
 
 
 win32:HEADERS += Plugins/FooBar08PluginInfo.h \
@@ -230,7 +232,8 @@ FORMS += \
     Widgets/FriendWidget.ui \
     Widgets/FriendListWidget.ui \
     Dialogs/BetaDialog.ui \
-    Dialogs/CloseAppsDialog.ui
+    Dialogs/CloseAppsDialog.ui \
+    Widgets/TrackWidget.ui
 
 unix:!mac:HEADERS += MediaDevices/IpodDevice_linux.h
 unix:!mac:SOURCES += MediaDevices/IpodDevice_linux.cpp

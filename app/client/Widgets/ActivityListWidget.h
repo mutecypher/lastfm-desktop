@@ -4,9 +4,14 @@
 #include <QListWidget>
 #include <QMouseEvent>
 #include <QPoint>
+#include <QPointer>
 
-namespace lastfm{ class Track; }
+namespace lastfm { class Track; }
 using lastfm::Track;
+
+namespace unicorn { class Session; }
+
+class QNetworkReply;
 
 class ActivityListWidget : public QListWidget
 {
@@ -24,22 +29,40 @@ public slots:
 private slots: 
     void onItemClicked( const QModelIndex& index );
 
-    void onShareLastFm();
-    void onShareTwitter();
-    void onShareFacebook();
+    void onTrackStarted( const Track& track, const Track& );
 
-    void onGotBuyLinks();
-    void onBuyActionTriggered( QAction* buyAction );
+    void onSessionChanged( unicorn::Session* session );
+    void onSessionChanged( const QString& username );
+
+    void onResumed();
+    void onPaused();
+    void onStopped();
+
+    void onGotRecentTracks();
+
+    void onScrobblesSubmitted( const QList<lastfm::Track>& tracks );
 
 private:
     QString price( const QString& price, const QString& currency ) const;
 
+    void read();
+    void write();
+    void doWrite();
+
+    QList<lastfm::Track> addTracks( const QList<lastfm::Track>& tracks );
+    void limit( int limit );
+
 private:
     class ActivityListModel* m_model;
+
+    QString m_path;
 
     QModelIndex m_shareIndex;
 
     QPoint m_buyCursor;
+
+    QPointer<QTimer> m_writeTimer;
+    QPointer<QNetworkReply> m_recentTrackReply;
 };
 
 
