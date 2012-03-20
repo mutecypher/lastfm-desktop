@@ -380,9 +380,9 @@ MainWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )
     m_currentTrack = t;
 
     if ( m_currentTrack.source() == Track::LastFmRadio )
-        setWindowTitle( tr( "%1 - %2 - %3" ).arg( applicationName(), RadioService::instance().station().title(), t.toString() ) );
+        setWindowTitle( tr( "%1 - %2 - %3" ).arg( t.toString(), RadioService::instance().station().title(), applicationName() ) );
     else
-        setWindowTitle( tr( "%1 - %2" ).arg( applicationName(), t.toString() ) );
+        setWindowTitle( tr( "%1 - %2" ).arg( t.toString(), applicationName() ) );
 }
 
 
@@ -399,9 +399,9 @@ void
 MainWindow::onResumed()
 {
     if ( m_currentTrack.source() == Track::LastFmRadio )
-        setWindowTitle( tr( "%1 - %2 - %3" ).arg( applicationName(), RadioService::instance().station().title(), m_currentTrack.toString() ) );
+        setWindowTitle( tr( "%1 - %2 - %3" ).arg( m_currentTrack.toString(), RadioService::instance().station().title(), applicationName() ) );
     else
-        setWindowTitle( tr( "%1 - %2" ).arg( applicationName(), m_currentTrack.toString() ) );
+        setWindowTitle( tr( "%1 - %2" ).arg( m_currentTrack.toString(), applicationName() ) );
 }
 
 
@@ -409,9 +409,9 @@ void
 MainWindow::onPaused()
 {
     if ( m_currentTrack.source() == Track::LastFmRadio )
-        setWindowTitle( tr( "%1 - %2 - Paused" ).arg( applicationName(), RadioService::instance().station().title() ) );
+        setWindowTitle( tr( "%1 - %2" ).arg( RadioService::instance().station().title(), applicationName() ) );
     else
-        setWindowTitle( tr( "%1 - Paused" ).arg( applicationName() ) );
+        setWindowTitle( tr( "%1" ).arg( applicationName() ) );
 }
 
 
