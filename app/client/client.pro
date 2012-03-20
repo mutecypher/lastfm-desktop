@@ -33,7 +33,6 @@ SUBDIRS=PrefPane
 SOURCES += \
     AudioscrobblerSettings.cpp \
     Application.cpp \
-    ActivityListModel.cpp \
     ImageTrack.cpp \
     StationSearch.cpp \
     ScrobSocket.cpp \
@@ -75,8 +74,6 @@ SOURCES += \
     Widgets/BioWidget.cpp \
     Widgets/MetadataWidget.cpp \
     Widgets/TagWidget.cpp \
-    Widgets/CheckableDelegate.cpp \
-    Widgets/TrackDelegate.cpp \
     Widgets/ShortcutEdit.cpp \
     Widgets/ProfileArtistWidget.cpp \
     Widgets/ScrobbleControls.cpp \
@@ -114,7 +111,6 @@ HEADERS += \
     ImageTrack.h \
     AudioscrobblerSettings.h \
     Application.h \
-    ActivityListModel.h \
     MainWindow.h \
     StationSearch.h \
     Services/RadioService/RadioConnection.h \
@@ -165,8 +161,6 @@ HEADERS += \
     Widgets/BioWidget.h \
     Widgets/MetadataWidget.h \
     Widgets/TagWidget.h \
-    Widgets/CheckableDelegate.h \
-    Widgets/TrackDelegate.h \
     Widgets/ProfileArtistWidget.h \
     Widgets/ScrobblesWidget.h \
     Widgets/RefreshButton.h \

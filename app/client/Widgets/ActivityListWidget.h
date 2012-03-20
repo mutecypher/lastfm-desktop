@@ -1,14 +1,15 @@
 #ifndef ACTIVITY_LIST_WIDGET_H
 #define ACTIVITY_LIST_WIDGET_H
 
-#include <QTreeView>
+#include <QListWidget>
 #include <QMouseEvent>
 #include <QPoint>
 
 namespace lastfm{ class Track; }
 using lastfm::Track;
 
-class ActivityListWidget : public QTreeView {
+class ActivityListWidget : public QListWidget
+{
     Q_OBJECT
 public:
     ActivityListWidget( QWidget* parent = 0 );
