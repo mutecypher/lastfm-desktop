@@ -6,10 +6,13 @@
 
 #include <lastfm/RadioStation.h>
 #include <lastfm/XmlQuery.h>
+#include <lastfm/Track.h>
 
 #include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/UnicornSettings.h"
 
+#include "../Services/RadioService/RadioService.h"
+#include "../Services/ScrobbleService/ScrobbleService.h"
 #include "../Application.h"
 
 #include "PlayableItemWidget.h"
@@ -26,7 +29,10 @@ RadioWidget::RadioWidget(QWidget *parent)
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
+    // need to know when we are playing the radio so we can switch between now playing and last playing
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation) ) );
+    connect( &RadioService::instance(), SIGNAL(stopped()), SLOT(onRadioStopped()));
+    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)) );
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*) ) );
     connect( aApp, SIGNAL(gotUserInfo(lastfm::User)), SLOT(onGotUserInfo(lastfm::User)) );
@@ -214,6 +220,7 @@ RadioWidget::onTuningIn( const RadioStation& station )
     us.setValue( "lastStationUrl", station.url() );
     us.setValue( "lastStationTitle", station.title() );
 
+    ui.nowPlaying->setText( tr( "Now Playing" ) );
     ui.lastStation->setStation( station.url(), station.title() );
 
     // insert at the front of the list
@@ -249,5 +256,25 @@ RadioWidget::onTuningIn( const RadioStation& station )
             delete item;
             taken->deleteLater();
         }
+    }
+}
+
+void
+RadioWidget::onRadioStopped()
+{
+    ui.nowPlaying->setText( tr( "Last Station" ) );
+}
+
+void
+RadioWidget::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
+{
+    // if a track starts and it's not a radio track, we are no longer listening to the radio
+    if ( track.source() == Track::LastFmRadio )
+    {
+        ui.nowPlaying->setText( tr( "Now Playing" ) );
+    }
+    else
+    {
+        ui.nowPlaying->setText( tr( "Last Station" ) );
     }
 }

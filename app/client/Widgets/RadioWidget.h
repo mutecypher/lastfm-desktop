@@ -6,7 +6,11 @@
 
 #include "lib/unicorn/StylableWidget.h"
 
-#include "../Services/RadioService/RadioService.h"
+namespace lastfm { class User; }
+namespace lastfm { class RadioStation; }
+namespace lastfm { class Track; }
+using lastfm::RadioStation;
+using lastfm::Track;
 
 namespace unicorn { class Session; }
 
@@ -40,6 +44,9 @@ private slots:
     void onGotUserInfo( const lastfm::User& userDetails );
 
     void onTuningIn( const RadioStation& station );
+    void onRadioStopped();
+    void onTrackStarted( const Track& track , const Track& oldTrack );
+
 
     void onGotTopArtists();
     void onGotRecentStations();
