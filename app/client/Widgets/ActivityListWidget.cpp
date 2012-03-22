@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QHeaderView>
+#include <QScrollBar>
 
 #include <lastfm/Track.h>
 
@@ -41,28 +42,17 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
 
     connect( this, SIGNAL( clicked(QModelIndex) ), SLOT(onItemClicked(QModelIndex)));
 
+#ifdef Q_OS_MAC
+    connect( verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(scroll()) );
+#endif
+
     setAttribute( Qt::WA_MacNoClickThrough );
+    setAttribute( Qt::WA_MacShowFocusRect, false );
 
     setUniformItemSizes( false );
     setSortingEnabled( false );
     setSelectionMode( QAbstractItemView::NoSelection );
-
-
-//    m_loveIcon.addFile( ":/scrobbles_love_OFF_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
-//    m_loveIcon.addFile( ":/meta_love_ON_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::On );
-//    m_loveIcon.addFile( ":/scrobbles_love_OFF_HOVER.png", QSize( 21, 18 ), QIcon::Selected, QIcon::Off );
-//    m_loveIcon.addFile( ":/meta_love_ON_HOVER.png", QSize( 21, 18), QIcon::Selected, QIcon::On );
-
-//    m_tagIcon.addFile( ":/scrobbles_tag_REST.png", QSize( 18, 18 ), QIcon::Normal, QIcon::Off );
-//    m_tagIcon.addFile( ":/scrobbles_tag_HOVER.png", QSize( 18, 18 ), QIcon::Selected, QIcon::Off );
-
-//    m_shareIcon.addFile( ":/scrobbles_share_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
-//    m_shareIcon.addFile( ":/scrobbles_share_HOVER.png", QSize( 21, 18 ), QIcon::Selected, QIcon::Off );
-
-//    m_buyIcon.addFile( ":/scrobbles_buy_REST.png", QSize( 21, 18 ), QIcon::Normal, QIcon::Off );
-//    m_buyIcon.addFile( ":/scrobbles_buy_HOVER.png", QSize( 21, 18 ), QIcon::Selected, QIcon::Off );
-
-//    m_noArt = m_noArt.scaled( 64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation );
+    setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
     connect( qApp, SIGNAL( sessionChanged( unicorn::Session* )), SLOT(onSessionChanged( unicorn::Session* )));
 
@@ -76,10 +66,19 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     onSessionChanged( lastfm::ws::Username );
 }
 
+#ifdef Q_OS_MAC
+void
+ActivityListWidget::scroll()
+{
+    // KLUDGE: The friend list widgets don't move unless we do this
+    sortItems( Qt::AscendingOrder );
+}
+#endif
+
 void 
 ActivityListWidget::onItemClicked( const QModelIndex& index ) 
 {
-    //emit trackClicked( index.data(ActivityListModel::TrackRole).value<Track>() );
+    emit trackClicked( static_cast<TrackWidget*>( itemWidget( item( index.row() ) ) )->track() );
 }
 
 void
@@ -134,8 +133,6 @@ ActivityListWidget::read()
             track.getInfo( this, "write", User().name() );
 
     limit( kScrobbleLimit );
-
-    sortItems();
 }
 
 void
@@ -284,9 +281,10 @@ ActivityListWidget::onGotRecentTracks()
 
         // This was a track fetched from user.getRecentTracks so we need to find
         // out if it was loved. We can remove this when loved is included there.
-        foreach ( const lastfm::Track& addedTrack, tracks )
+        foreach ( const lastfm::Track& addedTrack, addedTracks )
             addedTrack.getInfo(  this, "write", User().name() );
 
+        write();
     }
 
     emit refreshing( false );
@@ -318,16 +316,36 @@ ActivityListWidget::addTracks( const QList<lastfm::Track>& tracks )
 
     for ( int i = 0 ; i < tracks.count() ; ++i )
     {
-        ActivityListWidgetItem* item = new ActivityListWidgetItem( this );
-        Track track = tracks[i];
-        TrackWidget* trackWidget = new TrackWidget( track, this );
-        setItemWidget( item, trackWidget );
-        item->setSizeHint( trackWidget->sizeHint() );
+        int pos = -1;
+
+        for ( int j = 0 ; j < count() ; ++j )
+        {
+            if ( tracks[i].timestamp().toTime_t() == static_cast<TrackWidget*>( itemWidget( item( j ) ) )->track().timestamp().toTime_t() )
+            {
+                pos = j;
+                break;
+            }
+        }
+
+        if ( pos == -1 )
+        {
+            // the track was not in the list
+            ActivityListWidgetItem* item = new ActivityListWidgetItem( this );
+            Track track = tracks[i];
+            TrackWidget* trackWidget = new TrackWidget( track, this );
+            setItemWidget( item, trackWidget );
+            item->setSizeHint( trackWidget->sizeHint() );
+
+            connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(write()));
+            connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(write()));
+        }
+        else
+        {
+            // update the track in the list with the new infos!
+        }
     }
 
     limit( kScrobbleLimit );
-
-    sortItems();
 
     write();
 
@@ -338,10 +356,16 @@ ActivityListWidget::addTracks( const QList<lastfm::Track>& tracks )
 void
 ActivityListWidget::limit( int limit )
 {
+    sortItems();
+
     if ( count() > limit )
     {
-//        while ( count() > limit )
-//            removeLast();
+        while ( count() > limit )
+        {
+            QListWidgetItem* item = takeItem( count() - 1 );
+            itemWidget( item )->deleteLater();
+            delete item;
+        }
 
         write();
     }

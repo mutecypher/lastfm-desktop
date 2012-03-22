@@ -9,10 +9,32 @@
 #include "ui_TrackWidget.h"
 
 TrackWidget::TrackWidget( Track& track, QWidget *parent )
-    :QWidget(parent),
+    :StylableWidget(parent),
     ui( new Ui::TrackWidget )
 {
     ui->setupUi(this);
+
+    layout()->setAlignment( ui->love, Qt::AlignTop );
+    layout()->setAlignment( ui->tag, Qt::AlignTop );
+    layout()->setAlignment( ui->share, Qt::AlignTop );
+    layout()->setAlignment( ui->buy, Qt::AlignTop );
+
+    ui->albumArt->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->love->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->tag->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->share->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+    ui->buy->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
+    ui->albumArt->setAttribute( Qt::WA_MacNoClickThrough );
+    ui->love->setAttribute( Qt::WA_MacNoClickThrough );
+    ui->tag->setAttribute( Qt::WA_MacNoClickThrough );
+    ui->share->setAttribute( Qt::WA_MacNoClickThrough );
+    ui->buy->setAttribute( Qt::WA_MacNoClickThrough );
+
+    connect( ui->love, SIGNAL(clicked(bool)), SLOT(onLoveClicked(bool)));
+    connect( ui->tag, SIGNAL(clicked()), SLOT(onTagClicked()));
+    connect( ui->share, SIGNAL(clicked()), SLOT(onShareClicked()));
+    connect( ui->buy, SIGNAL(clicked()), SLOT(onBuyClicked()));
 
     setTrack( track );
 }
@@ -25,14 +47,61 @@ TrackWidget::~TrackWidget()
 void
 TrackWidget::setTrack( lastfm::Track& track )
 {
+    disconnect( m_track.signalProxy(), 0, this, 0 );
+
     m_track = track;
 
-    ui->trackTitle->setText( m_track.title() );
-    ui->artist->setText( m_track.artist().name() );
+    connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onLoveToggled(bool)) );
+    connect( m_track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
+    connect( m_track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
+
+    ui->equaliser->hide();
+    ui->asterisk->hide();
+
+    setTrackDetails();
+
     ui->timestamp->setText( prettyTime( m_track.timestamp() ) );
 
-    //ui->albumArt
+    ui->love->setChecked( m_track.isLoved() );
+
+    //ui->albumArt->setPlaceholder( QPixmap( ":/meta_album_no_art.png" ) );
+    ui->albumArt->setHref( track.www() );
+    ui->albumArt->loadUrl( m_track.imageUrl( lastfm::Medium, true ) );
 }
+
+void
+TrackWidget::setTrackDetails()
+{
+    ui->trackTitle->setText( m_track.title( lastfm::Track::Corrected ) );
+    ui->artist->setText( m_track.artist( lastfm::Track::Corrected ).name() );
+
+    if ( m_track.title( lastfm::Track::Corrected ) != m_track.title( lastfm::Track::Original )
+         || m_track.title( lastfm::Track::Corrected ) != m_track.title( lastfm::Track::Original ) )
+    {
+         ui->asterisk->show();
+         ui->asterisk->setToolTip( tr( "Corrected from: %1" ).arg( m_track.toString( lastfm::Track::Original ) ) );
+    }
+}
+
+void
+TrackWidget::onLoveToggled( bool loved )
+{
+    ui->love->setChecked( loved );
+}
+
+void
+TrackWidget::onScrobbleStatusChanged()
+{
+
+}
+
+void
+TrackWidget::onCorrected( QString /*correction*/ )
+{
+    setTrackDetails();
+}
+
+
 
 lastfm::Track
 TrackWidget::track() const
@@ -41,9 +110,12 @@ TrackWidget::track() const
 }
 
 void
-TrackWidget::onLoveClicked()
+TrackWidget::onLoveClicked( bool loved )
 {
-
+    if ( loved )
+        MutableTrack( m_track ).love();
+    else
+        MutableTrack( m_track ).unlove();
 }
 
 void
@@ -70,20 +142,21 @@ TrackWidget::onShareClicked()
 void
 TrackWidget::onBuyClicked()
 {
-    // show the buy links please!
-    QString country = aApp->currentSession()->userInfo().country();
-    qDebug() << country;
+    if ( !ui->buy->menu() )
+    {
+        // show the buy links please!
+        QString country = aApp->currentSession()->userInfo().country();
+        qDebug() << country;
 
-    if ( country.compare( "us", Qt::CaseInsensitive ) == 0 )
-        country = "united states";
-    else if ( country.compare( "de", Qt::CaseInsensitive ) == 0 )
-        country = "germany";
-    else
-        country = "united kingdom";
+        if ( country.compare( "us", Qt::CaseInsensitive ) == 0 )
+            country = "united states";
+        else if ( country.compare( "de", Qt::CaseInsensitive ) == 0 )
+            country = "germany";
+        else
+            country = "united kingdom";
 
-    connect( m_track.getBuyLinks( country ), SIGNAL(finished()), SLOT(onGotBuyLinks()));
-
-    m_buyCursor = cursor().pos();
+        connect( m_track.getBuyLinks( country ), SIGNAL(finished()), SLOT(onGotBuyLinks()));
+    }
 }
 
 QString
@@ -133,61 +206,67 @@ TrackWidget::prettyTime( const QDateTime& timestamp ) const
 void
 TrackWidget::onGotBuyLinks()
 {
-    XmlQuery lfm;
-
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( !ui->buy->menu() )
     {
-        bool thingsToBuy = false;
+        // make sure we don't process this again if the button was clicked twice
 
-        QMenu* menu = new QMenu( this );
+        XmlQuery lfm;
 
-        menu->addAction( tr("Downloads") )->setEnabled( false );
-
-        // USD EUR GBP
-
-        foreach ( const XmlQuery& affiliation, lfm["affiliations"]["downloads"].children( "affiliation" ) )
+        if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
         {
-            bool isSearch = affiliation["isSearch"].text() == "1";
+            bool thingsToBuy = false;
 
-            QAction* buyAction = 0;
+            QMenu* menu = new QMenu( this );
 
-            if ( isSearch )
-                buyAction = menu->addAction( tr("Search on %1").arg( affiliation["supplierName"].text() ) );
-            else
-                buyAction = menu->addAction( tr("Buy on %1 %2").arg( affiliation["supplierName"].text(), price( affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) ) );
+            menu->addAction( tr("Downloads") )->setEnabled( false );
 
-            buyAction->setData( affiliation["buyLink"].text() );
+            // USD EUR GBP
 
-            thingsToBuy = true;
+            foreach ( const XmlQuery& affiliation, lfm["affiliations"]["downloads"].children( "affiliation" ) )
+            {
+                bool isSearch = affiliation["isSearch"].text() == "1";
+
+                QAction* buyAction = 0;
+
+                if ( isSearch )
+                    buyAction = menu->addAction( tr("Search on %1").arg( affiliation["supplierName"].text() ) );
+                else
+                    buyAction = menu->addAction( tr("Buy on %1 %2").arg( affiliation["supplierName"].text(), price( affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) ) );
+
+                buyAction->setData( affiliation["buyLink"].text() );
+
+                thingsToBuy = true;
+            }
+
+            menu->addSeparator();
+            menu->addAction( tr("Physical") )->setEnabled( false );
+
+            foreach ( const XmlQuery& affiliation, lfm["affiliations"]["physicals"].children( "affiliation" ) )
+            {
+                bool isSearch = affiliation["isSearch"].text() == "1";
+
+                QAction* buyAction = 0;
+
+                if ( isSearch )
+                    buyAction = menu->addAction( tr("Search on %1").arg( affiliation["supplierName"].text() ) );
+                else
+                    buyAction = menu->addAction( tr("Buy on %1 %2").arg( affiliation["supplierName"].text(), price( affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) ) );
+
+                buyAction->setData( affiliation["buyLink"].text() );
+
+                thingsToBuy = true;
+            }
+
+            ui->buy->setMenu( menu );
+            connect( menu, SIGNAL(triggered(QAction*)), SLOT(onBuyActionTriggered(QAction*)) );
+
+            ui->buy->click();
         }
-
-        menu->addSeparator();
-        menu->addAction( tr("Physical") )->setEnabled( false );
-
-        foreach ( const XmlQuery& affiliation, lfm["affiliations"]["physicals"].children( "affiliation" ) )
+        else
         {
-            bool isSearch = affiliation["isSearch"].text() == "1";
-
-            QAction* buyAction = 0;
-
-            if ( isSearch )
-                buyAction = menu->addAction( tr("Search on %1").arg( affiliation["supplierName"].text() ) );
-            else
-                buyAction = menu->addAction( tr("Buy on %1 %2").arg( affiliation["supplierName"].text(), price( affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) ) );
-
-            buyAction->setData( affiliation["buyLink"].text() );
-
-            thingsToBuy = true;
+            // TODO: what happens when we fail?
+            qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
         }
-
-        connect( menu, SIGNAL(triggered(QAction*)), SLOT(onBuyActionTriggered(QAction*)) );
-
-        menu->exec( m_buyCursor );
-    }
-    else
-    {
-        // TODO: what happens when we fail?
-        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 }
 

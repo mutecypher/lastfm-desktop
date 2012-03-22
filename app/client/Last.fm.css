@@ -527,6 +527,79 @@ RefreshButton:disabled {
 background-color: #d6d6d6;
 }
 
+TrackWidget {
+	border: none;
+	border-bottom: 1px solid #aaa;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #eeeeee, stop:1 #dddddd);
+	padding: 10px;
+}
+
+TrackWidget QLabel#trackTitle {
+	font-size: 13px;
+}
+
+TrackWidget QLabel#artist {
+	font-size: 13px;
+}
+
+TrackWidget QLabel#timestamp {
+	font-size: 11px;
+}
+
+TrackWidget QPushButton {
+	color: transparent;
+	border: none;
+	background-repeat: no-repeat;
+	background-color: transparent;
+	margin: 0px 0px 0px 5px;
+}
+
+TrackWidget QPushButton#love {
+	background-image: url(":/meta_love_OFF_REST.png");
+	width: 21px;
+	height: 18px;
+}
+TrackWidget QPushButton#love:hover { background-image: url(":/meta_love_OFF_HOVER.png"); }
+TrackWidget QPushButton#love:pressed { background-image: url(":/meta_love_OFF_PRESS.png"); }
+TrackWidget QPushButton#love:checked { background-image: url(":/meta_love_ON_REST.png"); }
+TrackWidget QPushButton#love:checked:hover { background-image: url(":/meta_love_ON_HOVER.png"); }
+TrackWidget QPushButton#love:checked:pressed { background-image: url(":/meta_love_ON_PRESS.png"); }
+
+TrackWidget QPushButton#tag {
+	background-image: url(":/meta_tag_REST.png");
+	width: 18px;
+	height: 18px;
+}
+TrackWidget QPushButton#tag:hover { background-image: url(":/meta_tag_HOVER.png"); }
+TrackWidget QPushButton#tag:pressed { background-image: url(":/meta_tag_PRESS.png"); }
+
+TrackWidget QPushButton#share {
+	background-image: url(":/meta_share_REST.png");
+	width: 21px;
+	height: 18px;
+}
+TrackWidget QPushButton#share:hover { background-image: url(":/meta_share_HOVER.png"); }
+TrackWidget QPushButton#share:pressed { background-image: url(":/meta_share_PRESS.png"); }
+
+TrackWidget QPushButton#buy {
+	background-image: url(":/meta_buy_REST.png");
+	width: 21px;
+	height: 18px;
+}
+TrackWidget QPushButton#buy:hover { background-image: url(":/meta_buy_HOVER.png"); }
+TrackWidget QPushButton#buy:pressed { background-image: url(":/meta_buy_PRESS.png"); }
+TrackWidget QPushButton#buy::menu-indicator { image: none; }
+
+TrackWidget QLabel#asterisk {
+	background-color: #eeeeee;
+	color: transparent;
+	background-image: url(":/asterisk_small.png");
+	width: 12px;
+	height: 11px;
+	margin: 0px 0px 0px 5px;
+}
+
+
 FriendListWidget QListWidget {
 background-color: #eeeeee;
 border: none;
@@ -646,7 +719,8 @@ ProfileWidget AvatarWidget#avatar,
 ProfileArtistWidget QLabel#artistImage,
 ShareDialog HttpImageWidget#icon,
 TagDialog HttpImageWidget#icon,
-UserManagerWidget AvatarWidget#image {
+UserManagerWidget AvatarWidget#image,
+TrackWidget HttpImageWidget#albumArt{
 padding: 2px;
 background-color: white;
 color: transparent;
@@ -656,6 +730,10 @@ min-height: 64px;
 max-width: 64px;
 max-height: 64px;
 margin: 0px 20px 8px 0px;
+}
+
+TrackWidget HttpImageWidget#albumArt {
+margin: 0px 10px 0px 0px;
 }
 
 ProfileWidget AvatarWidget#avatar {

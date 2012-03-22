@@ -42,12 +42,17 @@ private slots:
 
     void onScrobblesSubmitted( const QList<lastfm::Track>& tracks );
 
+    void write();
+    void doWrite();
+
+#ifdef Q_OS_MAC
+    void scroll();
+#endif
+
 private:
     QString price( const QString& price, const QString& currency ) const;
 
     void read();
-    void write();
-    void doWrite();
 
     QList<lastfm::Track> addTracks( const QList<lastfm::Track>& tracks );
     void limit( int limit );

@@ -5,9 +5,11 @@
 
 #include <lastfm/Track.h>
 
+#include <lib/unicorn/StylableWidget.h>
+
 namespace Ui { class TrackWidget; }
 
-class TrackWidget : public QWidget
+class TrackWidget : public StylableWidget
 {
     Q_OBJECT
     
@@ -19,7 +21,7 @@ public:
     lastfm::Track track() const;
 
 private slots:
-    void onLoveClicked();
+    void onLoveClicked( bool loved );
     void onTagClicked();
     void onShareClicked();
     void onBuyClicked();
@@ -32,16 +34,23 @@ private slots:
     void onShareTwitter();
     void onShareFacebook();
 
+    // signals from the track
+    void onLoveToggled( bool loved );
+    void onScrobbleStatusChanged();
+    void onCorrected( QString correction );
+
 private:
     QString price( const QString& price, const QString& currency ) const;
     QString prettyTime( const QDateTime& timestamp ) const;
+
+    void setTrackDetails();
 
 private:
     Ui::TrackWidget *ui;
 
     lastfm::Track m_track;
 
-    QPoint m_buyCursor;
+    QPointer<QMovie> m_movie;
 };
 
 #endif // TRACKWIDGET_H
