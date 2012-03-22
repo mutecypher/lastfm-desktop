@@ -30,13 +30,8 @@ public:
 
     bool operator<( const FriendWidget& that ) const;
 
-signals:
-    void sizeChanged( const QSize& size );
-
 private:
     void setDetails();
-
-    void resizeEvent(QResizeEvent *);
 
 private:
     Ui::FriendWidget* ui;

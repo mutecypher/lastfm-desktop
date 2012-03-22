@@ -43,12 +43,6 @@ FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget* parent)
 }
 
 void
-FriendWidget::resizeEvent( QResizeEvent* event )
-{
-    emit sizeChanged( event->size() );
-}
-
-void
 FriendWidget::update( const lastfm::XmlQuery& user, unsigned int order )
 {
     m_order = order;
