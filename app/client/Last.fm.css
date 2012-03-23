@@ -592,11 +592,13 @@ TrackWidget QPushButton#buy::menu-indicator { image: none; }
 
 TrackWidget QLabel#asterisk {
 	background-color: #eeeeee;
+	background-repeat: no-repeat;
+	background-position: center;
 	color: transparent;
 	background-image: url(":/asterisk_small.png");
-	width: 12px;
-	height: 11px;
-	margin: 0px 0px 0px 5px;
+	max-width: 12px;
+	max-height: 11px;
+	margin: 0px 0px 0px 3px;
 }
 
 

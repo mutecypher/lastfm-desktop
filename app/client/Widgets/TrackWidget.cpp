@@ -18,6 +18,7 @@ TrackWidget::TrackWidget( Track& track, QWidget *parent )
     layout()->setAlignment( ui->tag, Qt::AlignTop );
     layout()->setAlignment( ui->share, Qt::AlignTop );
     layout()->setAlignment( ui->buy, Qt::AlignTop );
+    ui->trackTitleLayout->setAlignment( ui->asterisk, Qt::AlignTop );
 
     ui->albumArt->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->love->setAttribute( Qt::WA_LayoutUsesWidgetRect );
@@ -25,6 +26,7 @@ TrackWidget::TrackWidget( Track& track, QWidget *parent )
     ui->share->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->buy->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
+    setAttribute( Qt::WA_MacNoClickThrough );
     ui->albumArt->setAttribute( Qt::WA_MacNoClickThrough );
     ui->love->setAttribute( Qt::WA_MacNoClickThrough );
     ui->tag->setAttribute( Qt::WA_MacNoClickThrough );
@@ -79,7 +81,7 @@ TrackWidget::setTrackDetails()
          || m_track.title( lastfm::Track::Corrected ) != m_track.title( lastfm::Track::Original ) )
     {
          ui->asterisk->show();
-         ui->asterisk->setToolTip( tr( "Corrected from: %1" ).arg( m_track.toString( lastfm::Track::Original ) ) );
+         ui->asterisk->setToolTip( tr( "Auto-corrected from: %1" ).arg( m_track.toString( lastfm::Track::Original ) ) );
     }
 }
 
@@ -92,7 +94,7 @@ TrackWidget::onLoveToggled( bool loved )
 void
 TrackWidget::onScrobbleStatusChanged()
 {
-
+    setTrackDetails();
 }
 
 void

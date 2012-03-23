@@ -120,6 +120,17 @@ unicorn::Label::prettyTime( const QDateTime& timestamp )
     }
 }
 
+QSize
+unicorn::Label::sizeHint() const
+{
+    QSize sizeHint = QLabel::sizeHint();
+
+    if ( textFormat() != Qt::RichText )
+        sizeHint.setWidth( qMin ( sizeHint.width(), fontMetrics().width( m_text ) + 1 ) );
+
+    return sizeHint;
+}
+
 void
 unicorn::Label::paintEvent( QPaintEvent* event )
 {

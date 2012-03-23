@@ -26,6 +26,8 @@ public:
 private:
     void paintEvent( QPaintEvent* event );
 
+    QSize sizeHint() const;
+
     QString boldLinkStyle( const QString& text );
 
 private slots:
