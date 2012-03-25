@@ -203,13 +203,13 @@ void
 ProfileWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
     foreach ( lastfm::Track track, tracks )
-        connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
+        connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged( short )), SLOT(onScrobbleStatusChanged( short )));
 }
 
 void
-ProfileWidget::onScrobbleStatusChanged()
+ProfileWidget::onScrobbleStatusChanged( short scrobbleStatus )
 {
-    if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
+    if (scrobbleStatus == lastfm::Track::Submitted)
     {
         ++m_scrobbleCount;
         setScrobbleCount();

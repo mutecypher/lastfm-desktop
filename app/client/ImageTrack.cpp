@@ -20,7 +20,7 @@ ImageTrack::ImageTrack( const ImageTrack& t )
 ImageTrack&
 ImageTrack::operator=( const ImageTrack& t )
 {
-    d = t.d;
+    Track::operator=(t);
     m_image = t.image();
     return *this;
 }
