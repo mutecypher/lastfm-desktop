@@ -73,10 +73,6 @@ TrackWidget::setTrack( lastfm::Track& track )
 
     setTrackDetails();
 
-    ui->timestamp->setText( prettyTime( m_track.timestamp() ) );
-
-    ui->love->setChecked( m_track.isLoved() );
-
     //ui->albumArt->setPlaceholder( QPixmap( ":/meta_album_no_art.png" ) );
     ui->albumArt->setHref( track.www() );
     ui->albumArt->loadUrl( m_track.imageUrl( lastfm::Medium, true ) );
@@ -94,6 +90,15 @@ TrackWidget::setTrackDetails()
          ui->asterisk->show();
          ui->asterisk->setToolTip( tr( "Auto-corrected from: %1" ).arg( m_track.toString( lastfm::Track::Original ) ) );
     }
+
+    if ( m_track.scrobbleStatus() == lastfm::Track::Cached )
+        ui->timestamp->setText( tr( "Cached" ) );
+    else if ( m_track.scrobbleStatus() == lastfm::Track::Error )
+        ui->timestamp->setText( tr( "Error: %1" ).arg( m_track.scrobbleErrorText() ) );
+    else
+        ui->timestamp->setText( unicorn::Label::prettyTime( m_track.timestamp() ) );
+
+    ui->love->setChecked( m_track.isLoved() );
 }
 
 void
@@ -188,33 +193,6 @@ TrackWidget::price( const QString& price, const QString& currency ) const
 
     return returnPrice;
 }
-
-QString
-TrackWidget::prettyTime( const QDateTime& timestamp ) const
-{
-    QString dateFormat( "d MMM h:mmap" );
-    QDateTime now = QDateTime::currentDateTime();
-    int secondsAgo = timestamp.secsTo( now );
-
-    if ( secondsAgo < (60 * 60) )
-    {
-        // Less than an hour ago
-        int minutesAgo = ( timestamp.secsTo( now ) / 60 );
-        return (minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) );
-    }
-    else if ( secondsAgo < (60 * 60 * 6) || now.date() == timestamp.date() )
-    {
-        // Less than 6 hours ago or on the same date
-        int hoursAgo = ( timestamp.secsTo( now ) / (60 * 60) );
-        return (hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) );
-    }
-    else
-    {
-        return timestamp.toString( dateFormat );
-        // We don't need to set the timer because this date will never change
-    }
-}
-
 
 void
 TrackWidget::onGotBuyLinks()

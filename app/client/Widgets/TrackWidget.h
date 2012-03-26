@@ -41,7 +41,6 @@ private slots:
 
 private:
     QString price( const QString& price, const QString& currency ) const;
-    QString prettyTime( const QDateTime& timestamp ) const;
 
     void setTrackDetails();
 
