@@ -63,6 +63,12 @@ unicorn::Label::boldLinkStyle( const QString& text )
     return boldLinkStyle( text, m_linkColor );
 }
 
+QString
+unicorn::Label::text() const
+{
+    return m_text;
+}
+
 void
 unicorn::Label::setText( const QString& text )
 {

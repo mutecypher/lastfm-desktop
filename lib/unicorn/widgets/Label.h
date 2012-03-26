@@ -15,6 +15,7 @@ public:
     explicit Label( QWidget* parent = 0 );
     explicit Label( const QString& text, QWidget* parent = 0 );
 
+    QString text() const;
     void setText( const QString& text );
     void setLinkColor( QColor linkColor );
 

@@ -47,6 +47,17 @@ TrackWidget::~TrackWidget()
 }
 
 void
+TrackWidget::resizeEvent(QResizeEvent *)
+{
+    int width = qMin( ui->trackTitleFrame->width(), ui->trackTitle->fontMetrics().width( ui->trackTitle->text() ) + 1 );
+
+    if ( ui->asterisk->isVisible() )
+        width = qMin( width, ui->trackTitleFrame->width() - (ui->asterisk->width() + 3) );
+
+    ui->trackTitle->setFixedWidth( width );
+}
+
+void
 TrackWidget::setTrack( lastfm::Track& track )
 {
     disconnect( m_track.signalProxy(), 0, this, 0 );

@@ -45,6 +45,8 @@ private:
 
     void setTrackDetails();
 
+    void resizeEvent(QResizeEvent *);
+
 private:
     Ui::TrackWidget *ui;
 
