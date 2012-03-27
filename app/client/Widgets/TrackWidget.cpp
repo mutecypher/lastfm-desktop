@@ -73,7 +73,7 @@ TrackWidget::setTrack( lastfm::Track& track )
 
     setTrackDetails();
 
-    //ui->albumArt->setPlaceholder( QPixmap( ":/meta_album_no_art.png" ) );
+    ui->albumArt->setPixmap( QPixmap( ":/meta_album_no_art.png" ) );
     ui->albumArt->setHref( track.www() );
     ui->albumArt->loadUrl( m_track.imageUrl( lastfm::Medium, true ) );
 }

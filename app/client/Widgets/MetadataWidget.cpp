@@ -99,10 +99,10 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     ui->artistYourTags->setLinkColor( QRgb( 0x008AC7 ) );
     ui->artistPopTags->setLinkColor( QRgb( 0x008AC7 ) );
 
-    ui->artist1->setPlaceholder( QPixmap( ":/meta_artist_no_photo.png" ) );
-    ui->artist2->setPlaceholder( QPixmap( ":/meta_artist_no_photo.png" ) );
-    ui->artist3->setPlaceholder( QPixmap( ":/meta_artist_no_photo.png" ) );
-    ui->artist4->setPlaceholder( QPixmap( ":/meta_artist_no_photo.png" ) );
+    ui->artist1->setPixmap( QPixmap( ":/meta_artist_no_photo.png" ) );
+    ui->artist2->setPixmap( QPixmap( ":/meta_artist_no_photo.png" ) );
+    ui->artist3->setPixmap( QPixmap( ":/meta_artist_no_photo.png" ) );
+    ui->artist4->setPixmap( QPixmap( ":/meta_artist_no_photo.png" ) );
 
     ui->scrobbleControls->setTrack( track );
 

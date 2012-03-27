@@ -37,6 +37,8 @@ private slots:
     void onGotTopWeeklyArtists();
     void onGotTopOverallArtists();
 
+    void onGotLibraryArtists();
+
     void onGotLovedTracks();
 
     void onScrobblesCached( const QList<lastfm::Track>& tracks );

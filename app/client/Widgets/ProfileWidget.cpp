@@ -2,6 +2,9 @@
 #include <QBoxLayout>
 #include <QLabel>
 
+#include <lastfm/Library.h>
+#include <lastfm/XmlQuery.h>
+
 #include "lib/unicorn/widgets/AvatarWidget.h"
 #include "lib/unicorn/StylableWidget.h"
 
@@ -46,9 +49,29 @@ ProfileWidget::onGotUserInfo( const lastfm::User& userDetails )
     ui.avatar->loadUrl( userDetails.imageUrl( lastfm::Large, true ), HttpImageWidget::ScaleNone );
     ui.avatar->setHref( userDetails.www() );
 
+    connect( lastfm::Library::getArtists( userDetails.name(), 1 ), SIGNAL(finished()), SLOT(onGotLibraryArtists()));
+
     setScrobbleCount();
 }
 
+void
+ProfileWidget::onGotLibraryArtists()
+{
+    lastfm::XmlQuery lfm;
+
+    if ( lfm.parse( static_cast<QNetworkReply*>(sender())->readAll() ) )
+    {
+        int scrobblesPerDay = aApp->currentSession()->userInfo().scrobbleCount() / aApp->currentSession()->userInfo().dateRegistered().daysTo( QDateTime::currentDateTime() );
+        int totalArtists = lfm["artists"].attribute( "total" ).toInt();
+
+        ui.context->setText( tr( "You have %L1 artists in you library and on average listen to %L2 tracks per day." ).arg( totalArtists ).arg( scrobblesPerDay ) );
+        ui.context->show();
+    }
+    else
+    {
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
+    }
+}
 
 void
 ProfileWidget::changeUser( const QString& newUsername )
@@ -103,7 +126,7 @@ ProfileWidget::changeUser( const QString& newUsername )
         ui.context->setObjectName( "userBlurb" );
         ui.context->setTextFormat( Qt::RichText );
         ui.context->setWordWrap( true );
-        ui.context->setText( tr( "You have %1 artists in you library and on average listen to %2 track per day." ) );
+        ui.context->hide();
 
         {
             QFrame* splitter = new QFrame( this );
