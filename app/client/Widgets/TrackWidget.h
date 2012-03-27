@@ -39,6 +39,8 @@ private slots:
     void onScrobbleStatusChanged();
     void onCorrected( QString correction );
 
+    void updateTimestamp();
+
 private:
     QString price( const QString& price, const QString& currency ) const;
 

@@ -120,7 +120,7 @@ unicorn::Label::prettyTime( const QDateTime& timestamp )
     }
     else
     {
-        // less than a year ago
+        // more than a year ago
         return timestamp.toString( "d MMM h:mmap yyyy" );
         // We don't need to set the timer because this date will never change
     }

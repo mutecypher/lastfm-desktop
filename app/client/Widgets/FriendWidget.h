@@ -33,11 +33,14 @@ public:
 private:
     void setDetails();
 
+private slots:
+    void updateTimestamp();
+
 private:
     Ui::FriendWidget* ui;
 
     lastfm::User m_user;
-    lastfm::MutableTrack m_recentTrack;
+    lastfm::MutableTrack m_track;
     unsigned int m_order;
     bool m_listeningNow;
 

@@ -47,21 +47,21 @@ FriendWidget::update( const lastfm::XmlQuery& user, unsigned int order )
 {
     m_order = order;
 
-    m_recentTrack.setTitle( user["recenttrack"]["name"].text() );
-    m_recentTrack.setAlbum( user["recenttrack"]["album"]["name"].text() );
-    m_recentTrack.setArtist( user["recenttrack"]["artist"]["name"].text() );
-    m_recentTrack.setExtra( "playerName", user["scrobblesource"]["name"].text() );
-    m_recentTrack.setExtra( "playerURL", user["scrobblesource"]["url"].text() );
+    m_track.setTitle( user["recenttrack"]["name"].text() );
+    m_track.setAlbum( user["recenttrack"]["album"]["name"].text() );
+    m_track.setArtist( user["recenttrack"]["artist"]["name"].text() );
+    m_track.setExtra( "playerName", user["scrobblesource"]["name"].text() );
+    m_track.setExtra( "playerURL", user["scrobblesource"]["url"].text() );
 
     QString recentTrackDate = user["recenttrack"].attribute( "uts" );
 
-    bool hasListened = m_recentTrack != lastfm::Track();
+    bool hasListened = m_track != lastfm::Track();
     ui->trackFrame->setVisible( hasListened );
 
     m_listeningNow = recentTrackDate.isEmpty() && hasListened;
 
     if ( !recentTrackDate.isEmpty() )
-        m_recentTrack.setTimeStamp( QDateTime::fromTime_t( recentTrackDate.toUInt() ) );
+        m_track.setTimeStamp( QDateTime::fromTime_t( recentTrackDate.toUInt() ) );
 
     setDetails();
 }
@@ -92,18 +92,18 @@ FriendWidget::operator<( const FriendWidget& that ) const
     if ( this->m_listeningNow && that.m_listeningNow )
         return this->name().toLower() < that.name().toLower();
 
-    if ( !this->m_recentTrack.timestamp().isNull() && that.m_recentTrack.timestamp().isNull() )
+    if ( !this->m_track.timestamp().isNull() && that.m_track.timestamp().isNull() )
         return true;
 
-    if ( this->m_recentTrack.timestamp().isNull() && !that.m_recentTrack.timestamp().isNull() )
+    if ( this->m_track.timestamp().isNull() && !that.m_track.timestamp().isNull() )
         return false;
 
-    if ( this->m_recentTrack.timestamp().isNull() && that.m_recentTrack.timestamp().isNull() )
+    if ( this->m_track.timestamp().isNull() && that.m_track.timestamp().isNull() )
         return this->name().toLower() < that.name().toLower();
 
     // both timestamps are valid!
 
-    if ( this->m_recentTrack.timestamp() == that.m_recentTrack.timestamp() )
+    if ( this->m_track.timestamp() == that.m_track.timestamp() )
     {
         if ( this->m_order == that.m_order )
             return this->name().toLower() < that.name().toLower();
@@ -112,7 +112,7 @@ FriendWidget::operator<( const FriendWidget& that ) const
     }
 
     // this is the other way around because a higher time means it's lower in the list
-    return this->m_recentTrack.timestamp() > that.m_recentTrack.timestamp();
+    return this->m_track.timestamp() > that.m_track.timestamp();
 }
 
 
@@ -121,7 +121,7 @@ FriendWidget::setDetails()
 {
     ui->userDetails->setText( m_user.getInfoString() );
     ui->username->setText( Label::boldLinkStyle( Label::anchor( m_user.www().toString(), name() ), Qt::black ) );
-    ui->lastTrack->setText( m_recentTrack.toString() );
+    ui->lastTrack->setText( m_track.toString() );
 
     if ( m_listeningNow )
     {
@@ -132,8 +132,8 @@ FriendWidget::setDetails()
         ui->trackFrame->setObjectName( "nowListening" );
         style()->polish( ui->trackFrame );
 
-        if ( !m_recentTrack.extra( "playerName" ).isEmpty() )
-            ui->timestamp->setText( tr( "Scrobbling now from %1" ).arg( m_recentTrack.extra( "playerName" ) ) );
+        if ( !m_track.extra( "playerName" ).isEmpty() )
+            ui->timestamp->setText( tr( "Scrobbling now from %1" ).arg( m_track.extra( "playerName" ) ) );
         else
             ui->timestamp->setText( tr( "Scrobbling now" ) );
     }
@@ -145,7 +145,46 @@ FriendWidget::setDetails()
         ui->trackFrame->setObjectName( "groupBox" );
         style()->polish( ui->trackFrame );
 
-        ui->timestamp->setText( unicorn::Label::prettyTime( m_recentTrack.timestamp() )  );
+        updateTimestamp();
+    }
+}
+
+void
+FriendWidget::updateTimestamp()
+{
+    QDateTime timestamp = m_track.timestamp();
+    QDateTime now = QDateTime::currentDateTime();
+
+    // Full time in the tool tip
+    QString dateFormat( "d MMM h:mmap" );
+    ui->timestamp->setToolTip( timestamp.toString( dateFormat ) );
+
+    int secondsAgo = timestamp.secsTo( now );
+
+    if ( secondsAgo < (60 * 60) )
+    {
+        // Less than an hour ago
+        int minutesAgo = ( m_track.timestamp().secsTo( now ) / 60 );
+        ui->timestamp->setText( QString( minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) ) );
+        QTimer::singleShot( now.secsTo( timestamp.addSecs(((minutesAgo + 1 ) * 60 ) + 1 ) ) * 1000, this, SLOT(updateTimestamp()) );
+    }
+    else if ( secondsAgo < (60 * 60 * 6) || now.date() == timestamp.date() )
+    {
+        // Less than 6 hours ago or on the same date
+        int hoursAgo = ( timestamp.secsTo( now ) / (60 * 60) );
+        ui->timestamp->setText( QString( hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) ) );
+        QTimer::singleShot( now.secsTo( timestamp.addSecs( ( (hoursAgo + 1) * 60 * 60 ) + 1 ) ) * 1000, this, SLOT(updateTimestamp()) );
+    }
+    else if ( secondsAgo < (60 * 60 * 24 * 365) || now.date() == timestamp.date() )
+    {
+        // less than a year ago
+        ui->timestamp->setText( timestamp.toString( dateFormat ) );
+        // We don't need to set the timer because this date will never change (well, it might in a year's time)
+    }
+    else
+    {
+        ui->timestamp->setText( timestamp.toString( "d MMM h:mmap yyyy" ) );
+        // We don't need to set the timer because this date will never change
     }
 }
 
