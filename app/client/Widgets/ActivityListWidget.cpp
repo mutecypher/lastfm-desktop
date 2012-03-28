@@ -21,16 +21,48 @@ class ActivityListWidgetItem : public QListWidgetItem
 public:
     ActivityListWidgetItem( QListWidget* parent );
     bool operator<( const QListWidgetItem& that ) const;
+
+    bool isNowPlaying() const;
+    void setNowPlaying( bool nowPlaying );
+
+    void setTrack( lastfm::Track& track );
+
+private:
+    bool m_nowPlaying;
 };
 
 ActivityListWidgetItem::ActivityListWidgetItem( QListWidget* parent )
-    :QListWidgetItem( parent )
+    :QListWidgetItem( parent ), m_nowPlaying( false )
 {
+}
+
+bool
+ActivityListWidgetItem::isNowPlaying() const
+{
+    return m_nowPlaying;
+}
+
+void
+ActivityListWidgetItem::setNowPlaying( bool nowPlaying )
+{
+    m_nowPlaying = nowPlaying;
+    static_cast<TrackWidget*>( listWidget()->itemWidget( this ) )->setNowPlaying( true );
+}
+
+void
+ActivityListWidgetItem::setTrack( lastfm::Track& track )
+{
+    static_cast<TrackWidget*>( listWidget()->itemWidget( this ) )->setTrack( track );
 }
 
 bool
 ActivityListWidgetItem::operator<( const QListWidgetItem& that ) const
 {
+    if ( m_nowPlaying )
+        return true;
+    else if ( static_cast<const ActivityListWidgetItem*>(&that)->m_nowPlaying )
+        return false;
+
     return static_cast<TrackWidget*>( listWidget()->itemWidget( const_cast<ActivityListWidgetItem*>( this ) ) )->track().timestamp().toTime_t()
             > static_cast<TrackWidget*>( listWidget()->itemWidget( const_cast<QListWidgetItem*>( &that ) ) )->track().timestamp().toTime_t();
 }
@@ -65,6 +97,15 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
 
     onSessionChanged( lastfm::ws::Username );
+
+    // always have a now playing item in the list
+    m_nowPlayingTrackItem = new ActivityListWidgetItem( this );
+    TrackWidget* trackWidget = new TrackWidget( m_track, this );
+    trackWidget->setObjectName( "nowPlaying" );
+    setItemWidget( m_nowPlayingTrackItem, trackWidget );
+    m_nowPlayingTrackItem->setSizeHint( trackWidget->sizeHint() );
+    m_nowPlayingTrackItem->setHidden( true );
+    m_nowPlayingTrackItem->setNowPlaying( true );
 }
 
 #ifdef Q_OS_MAC
@@ -164,7 +205,10 @@ ActivityListWidget::doWrite()
         e.setAttribute( "version", "2" );
 
         for ( int i = 0 ; i < count() ; ++i )
-            e.appendChild( static_cast<TrackWidget*>( itemWidget( item( i ) ) )->track().toDomElement( xml ) );
+        {
+            if ( !static_cast<ActivityListWidgetItem*>( item( i ) )->isNowPlaying() )
+                e.appendChild( static_cast<TrackWidget*>( itemWidget( item( i ) ) )->track().toDomElement( xml ) );
+        }
 
         xml.appendChild( e );
 
@@ -183,37 +227,54 @@ ActivityListWidget::onTrackStarted( const Track& track, const Track& )
 {
     // Don't display Spotify here as we don't know if the current user is the one scrobbling
     // If it is the current user it will be fetch by user.getRecentTracks
-//    if ( track.extra( "playerId" ) != "spt" )
-//    {
-//        m_nowScrobblingTrack = track;
-//        m_nowScrobblingTrack.getInfo( this, "write", User().name() );
-//        m_nowScrobblingTrack.fetchImage();
+    if ( track.extra( "playerId" ) != "spt" )
+    {
+        m_track = track;
+        m_nowPlayingTrackItem->setTrack( m_track );
+        m_nowPlayingTrackItem->setHidden( false );
 
-//        connect( &m_nowScrobblingTrack, SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
-//        connect( m_nowScrobblingTrack.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
-//    }
-//    else
-//        m_nowScrobblingTrack = Track();
+        connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(write()));
 
-//    m_paused = false;
+        m_track.getInfo( this, "write", User().name() );
+    }
+
+    hideScrobbledNowPlaying();
 }
 
 void
 ActivityListWidget::onResumed()
 {
-    //m_paused = false;
+    m_nowPlayingTrackItem->setHidden( false );
+
+    hideScrobbledNowPlaying();
 }
 
 void
 ActivityListWidget::onPaused()
 {
-    //m_paused = true;
+    m_nowPlayingTrackItem->setHidden( true );
+
+    hideScrobbledNowPlaying();
 }
 
 void
 ActivityListWidget::onStopped()
 {
-    //m_nowScrobblingTrack = Track();
+    m_nowPlayingTrackItem->setHidden( true );
+
+    hideScrobbledNowPlaying();
+}
+
+void
+ActivityListWidget::hideScrobbledNowPlaying()
+{
+    for ( int i = 0 ; i < count() ; ++i )
+    {
+        TrackWidget* trackWidget = static_cast<TrackWidget*>( itemWidget( item( i ) ) );
+
+        trackWidget->setHidden( !m_nowPlayingTrackItem->isHidden()
+                                && m_track.timestamp().toTime_t() == trackWidget->track().timestamp().toTime_t() );
+    }
 }
 
 void
@@ -234,7 +295,7 @@ ActivityListWidget::onGotRecentTracks()
 
     if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
-        //m_nowPlayingTrack = Track();
+        m_nowPlayingTrackItem->setHidden( true );
 
         QList<lastfm::Track> tracks;
 
@@ -242,24 +303,31 @@ ActivityListWidget::onGotRecentTracks()
         {
             if ( trackXml.attribute( "nowplaying" ) == "true" )
             {
-//                MutableTrack track;
-//                track.setTitle( trackXml["name"].text() );
-//                track.setArtist( trackXml["artist"].text() );
-//                track.setAlbum( trackXml["album"].text() );
-//                track.setTimeStamp( QDateTime::fromTime_t( trackXml["date"].attribute("uts").toUInt() ) );
+                MutableTrack track;
+                track.setTitle( trackXml["name"].text() );
+                track.setArtist( trackXml["artist"].text() );
+                track.setAlbum( trackXml["album"].text() );
 
-//                track.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
-//                track.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
-//                track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
-//                track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
+                if ( track != m_track )
+                {
+                    // it's not the same as the current now playing track so update it
 
-//                m_nowPlayingTrack = track;
-//                m_nowPlayingTrack.fetchImage();
+                    track.setTimeStamp( QDateTime::fromTime_t( trackXml["date"].attribute("uts").toUInt() ) );
 
-//                connect( &m_nowPlayingTrack, SIGNAL(imageUpdated()), SLOT(onTrackLoveToggled()));
-//                connect( m_nowPlayingTrack.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onTrackLoveToggled()));
+                    track.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
+                    track.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
+                    track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
+                    track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
 
-//                track.getInfo( this, "write", User().name() );
+                    m_track = track;
+                    m_nowPlayingTrackItem->setTrack( m_track );
+
+                    connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(write()));
+
+                    m_track.getInfo( this, "write", User().name() );
+                }
+
+                m_nowPlayingTrackItem->setHidden( false );
             }
             else
             {
@@ -291,6 +359,8 @@ ActivityListWidget::onGotRecentTracks()
     emit refreshing( false );
 
     m_recentTrackReply->deleteLater();
+
+    hideScrobbledNowPlaying();
 }
 
 
@@ -319,9 +389,11 @@ ActivityListWidget::addTracks( const QList<lastfm::Track>& tracks )
     {
         int pos = -1;
 
+        // start from 1 because 0 is the now playing track
         for ( int j = 0 ; j < count() ; ++j )
         {
-            if ( tracks[i].timestamp().toTime_t() == static_cast<TrackWidget*>( itemWidget( item( j ) ) )->track().timestamp().toTime_t() )
+            if ( !static_cast<ActivityListWidgetItem*>( item( j ) )->isNowPlaying()
+                    && tracks[i].timestamp().toTime_t() == static_cast<TrackWidget*>( itemWidget( item( j ) ) )->track().timestamp().toTime_t() )
             {
                 pos = j;
                 break;

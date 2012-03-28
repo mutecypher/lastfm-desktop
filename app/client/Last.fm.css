@@ -534,6 +534,10 @@ TrackWidget {
 	padding: 10px;
 }
 
+TrackWidget#nowPlaying {
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fffcca, stop:1 #eeebb9);
+}
+
 TrackWidget QLabel#trackTitle {
 	font-size: 13px;
 }
@@ -794,7 +798,8 @@ min-height: 49px;
 max-height: 49px;
 }
 
-FriendWidget QLabel#equaliser {
+FriendWidget QLabel#equaliser,
+TrackWidget QLabel#equaliser {
 margin-right: 5px;
 }
 

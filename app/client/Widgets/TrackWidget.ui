@@ -118,9 +118,9 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="unicorn::Label" name="equaliser">
+        <widget class="QLabel" name="equaliser">
          <property name="text">
-          <string notr="true">TextLabel</string>
+          <string notr="true">e</string>
          </property>
         </widget>
        </item>
@@ -170,14 +170,14 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>unicorn::Label</class>
+   <extends>QLabel</extends>
+   <header>lib/unicorn/widgets/Label.h</header>
+  </customwidget>
+  <customwidget>
    <class>HttpImageWidget</class>
    <extends>QLabel</extends>
    <header location="global">lib/unicorn/widgets/HttpImageWidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>unicorn::Label</class>
-   <extends>QLabel</extends>
-   <header location="global">lib/unicorn/widgets/Label.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

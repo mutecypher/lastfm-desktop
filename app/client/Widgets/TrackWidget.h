@@ -9,6 +9,8 @@
 
 namespace Ui { class TrackWidget; }
 
+class TrackImageFetcher;
+
 class TrackWidget : public StylableWidget
 {
     Q_OBJECT
@@ -19,6 +21,8 @@ public:
 
     void setTrack( lastfm::Track& track );
     lastfm::Track track() const;
+
+    void setNowPlaying( bool nowPlaying );
 
 private slots:
     void onLoveClicked( bool loved );
@@ -55,6 +59,9 @@ private:
 
     QPointer<QMovie> m_movie;
     QPointer<QTimer> m_timestampTimer;
+    QPointer<TrackImageFetcher> m_trackImageFetcher;
+
+    bool m_nowPlaying;
 };
 
 #endif // TRACKWIDGET_H

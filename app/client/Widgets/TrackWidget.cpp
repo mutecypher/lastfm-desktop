@@ -1,18 +1,27 @@
 
+#include <QMovie>
+
 #include <lib/unicorn/dialogs/ShareDialog.h>
 #include <lib/unicorn/dialogs/TagDialog.h>
 #include <lib/unicorn/DesktopServices.h>
+#include <lib/unicorn/TrackImageFetcher.h>
 
 #include "../Application.h"
+#include "../Services/ScrobbleService/ScrobbleService.h"
 
 #include "TrackWidget.h"
 #include "ui_TrackWidget.h"
 
 TrackWidget::TrackWidget( Track& track, QWidget *parent )
     :StylableWidget(parent),
-    ui( new Ui::TrackWidget )
+    ui( new Ui::TrackWidget ),
+    m_nowPlaying( false )
 {
     ui->setupUi(this);
+
+    m_movie = new QMovie( ":/icon_eq.gif", "GIF", this );
+    m_movie->setCacheMode( QMovie::CacheAll );
+    ui->equaliser->setMovie( m_movie );
 
     layout()->setAlignment( ui->love, Qt::AlignTop );
     layout()->setAlignment( ui->tag, Qt::AlignTop );
@@ -75,7 +84,18 @@ TrackWidget::setTrack( lastfm::Track& track )
 
     ui->albumArt->setPixmap( QPixmap( ":/meta_album_no_art.png" ) );
     ui->albumArt->setHref( track.www() );
-    ui->albumArt->loadUrl( m_track.imageUrl( lastfm::Medium, true ) );
+
+    QString imageUrl = m_track.imageUrl( lastfm::Medium, true ).toString();
+
+    if ( imageUrl.isEmpty() )
+    {
+        delete m_trackImageFetcher;
+        m_trackImageFetcher = new TrackImageFetcher( track, lastfm::Medium );
+        connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), ui->albumArt, SLOT(setPixmap(QPixmap)) );
+        m_trackImageFetcher->startAlbum();
+    }
+    else
+        ui->albumArt->loadUrl( imageUrl );
 }
 
 void
@@ -197,6 +217,14 @@ TrackWidget::price( const QString& price, const QString& currency ) const
 }
 
 void
+TrackWidget::setNowPlaying( bool nowPlaying )
+{
+    m_nowPlaying = nowPlaying;
+
+    updateTimestamp();
+}
+
+void
 TrackWidget::updateTimestamp()
 {
     if ( !m_timestampTimer )
@@ -206,7 +234,21 @@ TrackWidget::updateTimestamp()
         connect( m_timestampTimer, SIGNAL(timeout()), SLOT(updateTimestamp()));
     }
 
-    unicorn::Label::prettyTime( *ui->timestamp, m_track.timestamp(), m_timestampTimer );
+    if ( m_nowPlaying )
+    {
+        m_movie->start();
+        ui->equaliser->show();
+
+        ui->timestamp->setText( tr( "Now listening" ) );
+        ui->timestamp->setToolTip( tr( "" ) );
+    }
+    else
+    {        
+        m_movie->stop();
+        ui->equaliser->hide();
+
+        unicorn::Label::prettyTime( *ui->timestamp, m_track.timestamp(), m_timestampTimer );
+    }
 }
 
 void

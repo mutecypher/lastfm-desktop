@@ -6,6 +6,8 @@
 #include <QPoint>
 #include <QPointer>
 
+#include <lastfm/Track.h>
+
 namespace lastfm { class Track; }
 using lastfm::Track;
 
@@ -57,6 +59,8 @@ private:
     QList<lastfm::Track> addTracks( const QList<lastfm::Track>& tracks );
     void limit( int limit );
 
+    void hideScrobbledNowPlaying();
+
 private:
     class ActivityListModel* m_model;
 
@@ -68,6 +72,9 @@ private:
 
     QPointer<QTimer> m_writeTimer;
     QPointer<QNetworkReply> m_recentTrackReply;
+
+    class ActivityListWidgetItem* m_nowPlayingTrackItem;
+    lastfm::Track m_track;
 };
 
 
