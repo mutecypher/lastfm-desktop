@@ -91,6 +91,8 @@ TrackWidget::setTrackDetails()
          ui->asterisk->setToolTip( tr( "Auto-corrected from: %1" ).arg( m_track.toString( lastfm::Track::Original ) ) );
     }
 
+    if ( m_timestampTimer ) m_timestampTimer->stop();
+
     if ( m_track.scrobbleStatus() == lastfm::Track::Cached )
         ui->timestamp->setText( tr( "Cached" ) );
     else if ( m_track.scrobbleStatus() == lastfm::Track::Error )
@@ -197,40 +199,14 @@ TrackWidget::price( const QString& price, const QString& currency ) const
 void
 TrackWidget::updateTimestamp()
 {
-    QDateTime timestamp = m_track.timestamp();
-    QDateTime now = QDateTime::currentDateTime();
+    if ( !m_timestampTimer )
+    {
+        m_timestampTimer = new QTimer( this );
+        m_timestampTimer->setSingleShot( true );
+        connect( m_timestampTimer, SIGNAL(timeout()), SLOT(updateTimestamp()));
+    }
 
-    // Full time in the tool tip
-    QString dateFormat( "d MMM h:mmap" );
-    ui->timestamp->setToolTip( timestamp.toString( dateFormat ) );
-
-    int secondsAgo = timestamp.secsTo( now );
-
-    if ( secondsAgo < (60 * 60) )
-    {
-        // Less than an hour ago
-        int minutesAgo = ( m_track.timestamp().secsTo( now ) / 60 );
-        ui->timestamp->setText( QString( minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) ) );
-        QTimer::singleShot( now.secsTo( timestamp.addSecs(((minutesAgo + 1 ) * 60 ) + 1 ) ) * 1000, this, SLOT(updateTimestamp()) );
-    }
-    else if ( secondsAgo < (60 * 60 * 6) || now.date() == timestamp.date() )
-    {
-        // Less than 6 hours ago or on the same date
-        int hoursAgo = ( timestamp.secsTo( now ) / (60 * 60) );
-        ui->timestamp->setText( QString( hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) ) );
-        QTimer::singleShot( now.secsTo( timestamp.addSecs( ( (hoursAgo + 1) * 60 * 60 ) + 1 ) ) * 1000, this, SLOT(updateTimestamp()) );
-    }
-    else if ( secondsAgo < (60 * 60 * 24 * 365) || now.date() == timestamp.date() )
-    {
-        // less than a year ago
-        ui->timestamp->setText( timestamp.toString( dateFormat ) );
-        // We don't need to set the timer because this date will never change (well, it might in a year's time)
-    }
-    else
-    {
-        ui->timestamp->setText( timestamp.toString( "d MMM h:mmap yyyy" ) );
-        // We don't need to set the timer because this date will never change
-    }
+    unicorn::Label::prettyTime( *ui->timestamp, m_track.timestamp(), m_timestampTimer );
 }
 
 void

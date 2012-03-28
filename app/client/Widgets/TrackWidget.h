@@ -54,6 +54,7 @@ private:
     lastfm::Track m_track;
 
     QPointer<QMovie> m_movie;
+    QPointer<QTimer> m_timestampTimer;
 };
 
 #endif // TRACKWIDGET_H

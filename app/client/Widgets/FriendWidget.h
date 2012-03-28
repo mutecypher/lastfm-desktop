@@ -45,6 +45,7 @@ private:
     bool m_listeningNow;
 
     QPointer<QMovie> m_movie;
+    QPointer<QTimer> m_timestampTimer;
 };
 
 #endif // FRIENDWIDGET_H

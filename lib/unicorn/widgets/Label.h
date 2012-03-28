@@ -22,7 +22,8 @@ public:
     static QString anchor( const QString& url, const QString& text );
     static QString boldLinkStyle( const QString& text, QColor linkColor );
 
-    static QString prettyTime( const class QDateTime& timestamp );
+    // Gives you a pretty time string and will call your slot when it's time to change it again
+    static void prettyTime( Label& timestampLabel, const class QDateTime& timestamp, QTimer* callback = 0 );
 
 private:
     void paintEvent( QPaintEvent* event );
