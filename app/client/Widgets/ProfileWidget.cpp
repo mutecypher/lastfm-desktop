@@ -129,6 +129,8 @@ ProfileWidget::changeUser( const QString& newUsername )
             ui.topOverallArtists->setObjectName( "section" );
         }
 
+        layout->addStretch();
+
         lastfm::User user = lastfm::User( newUsername );
 
         connect( user.getLovedTracks( 1 ), SIGNAL(finished()), SLOT(onGotLovedTracks()) );
