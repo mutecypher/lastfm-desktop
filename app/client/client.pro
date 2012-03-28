@@ -33,7 +33,6 @@ SUBDIRS=PrefPane
 SOURCES += \
     AudioscrobblerSettings.cpp \
     Application.cpp \
-    ImageTrack.cpp \
     StationSearch.cpp \
     ScrobSocket.cpp \
     MediaDevices/MediaDevice.cpp \
@@ -109,7 +108,6 @@ SOURCES += \
 
 HEADERS += \
     ScrobSocket.h \
-    ImageTrack.h \
     AudioscrobblerSettings.h \
     Application.h \
     MainWindow.h \
