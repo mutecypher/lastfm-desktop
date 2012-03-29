@@ -349,14 +349,17 @@ MetadataWidget QPushButton#back {
 background-image: url(":/control_bar_back.png");
 background-repeat: none;
 background-position: center left;
+background-origin: padding;
 color: #333;
 font-size: 12px;
-text-align: top left;
+text-align: center left;
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #dbdbdb, stop:1 #c1c1c1);
 border: none;
 border-bottom: 1px solid #989898;
-height: 49px;
-padding: 15px 0px 0px 50px;
+border-left: 20px solid transparent;
+min-height: 38px;
+max-height: 38px;
+padding: 0px 0px 0px 25px;
 }
 
 MetadataWidget QFrame#trackDetails {

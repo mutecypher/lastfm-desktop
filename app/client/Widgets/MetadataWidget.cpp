@@ -217,8 +217,6 @@ MetadataWidget::setTrackDetails( const Track& track )
 
    ui->radio->setStation( RadioStation::similar( Artist( track.artist().name() ) ), tr( "Play %1 Radio" ).arg( track.artist().name() ) );
 
-   ui->back->setDescription( tr( "%1 by %2" ).arg( track.title(), track.artist().name() ) );
-
    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->scrobbleControls, SLOT(setLoveChecked(bool)));
 
    // Add the green astrix to the title, if it has been corrected

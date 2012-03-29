@@ -84,7 +84,6 @@ SOURCES += \
     Widgets/NowPlayingWidget.cpp \
     Widgets/ScrobblesWidget.cpp \
     Widgets/RefreshButton.cpp \
-    Widgets/BackButton.cpp \
     Widgets/WidgetTextObject.cpp \
     Wizard/LoginPage.cpp \
     Wizard/BootstrapPage.cpp \
@@ -163,7 +162,6 @@ HEADERS += \
     Widgets/ProfileArtistWidget.h \
     Widgets/ScrobblesWidget.h \
     Widgets/RefreshButton.h \
-    Widgets/BackButton.h \
     Widgets/WidgetTextObject.h \
     Wizard/AccessPage.h \
     Wizard/TourMetadataPage.h \
