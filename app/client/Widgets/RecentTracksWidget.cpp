@@ -30,10 +30,9 @@ void
 RecentTracksWidget::onCurrentChanged( int index )
 {
     if ( index == 1 )
-    {
-        // this tab was clicked on
-        m_scrobbles->refresh();
-    }
+        m_scrobbles->refresh(); // this tab was clicked on
+    else
+        m_layout->moveToWidget( m_scrobbles );
 }
 
 void
