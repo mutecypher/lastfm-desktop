@@ -68,7 +68,7 @@ ActivityListWidgetItem::operator<( const QListWidgetItem& that ) const
 }
 
 ActivityListWidget::ActivityListWidget( QWidget* parent )
-    :QListWidget( parent )
+    :QListWidget( parent ), m_trackItem( 0 )
 {
     setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 
@@ -97,15 +97,6 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
     connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
 
     onSessionChanged( lastfm::ws::Username );
-
-    // always have a now playing item in the list
-    m_nowPlayingTrackItem = new ActivityListWidgetItem( this );
-    TrackWidget* trackWidget = new TrackWidget( m_track, this );
-    trackWidget->setObjectName( "nowPlaying" );
-    setItemWidget( m_nowPlayingTrackItem, trackWidget );
-    m_nowPlayingTrackItem->setSizeHint( trackWidget->sizeHint() );
-    m_nowPlayingTrackItem->setHidden( true );
-    m_nowPlayingTrackItem->setNowPlaying( true );
 }
 
 #ifdef Q_OS_MAC
@@ -153,6 +144,15 @@ ActivityListWidget::read()
     qDebug() << m_path;
 
     clear();
+
+    // always have a now playing item in the list
+    m_trackItem = new ActivityListWidgetItem( this );
+    TrackWidget* trackWidget = new TrackWidget( m_track, this );
+    trackWidget->setObjectName( "nowPlaying" );
+    setItemWidget( m_trackItem, trackWidget );
+    m_trackItem->setSizeHint( trackWidget->sizeHint() );
+    m_trackItem->setHidden( true );
+    m_trackItem->setNowPlaying( true );
 
     QFile file( m_path );
     file.open( QFile::Text | QFile::ReadOnly );
@@ -230,8 +230,8 @@ ActivityListWidget::onTrackStarted( const Track& track, const Track& )
     if ( track.extra( "playerId" ) != "spt" )
     {
         m_track = track;
-        m_nowPlayingTrackItem->setTrack( m_track );
-        m_nowPlayingTrackItem->setHidden( false );
+        m_trackItem->setTrack( m_track );
+        m_trackItem->setHidden( false );
 
         connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(write()));
 
@@ -244,7 +244,7 @@ ActivityListWidget::onTrackStarted( const Track& track, const Track& )
 void
 ActivityListWidget::onResumed()
 {
-    m_nowPlayingTrackItem->setHidden( false );
+    m_trackItem->setHidden( false );
 
     hideScrobbledNowPlaying();
 }
@@ -252,7 +252,7 @@ ActivityListWidget::onResumed()
 void
 ActivityListWidget::onPaused()
 {
-    m_nowPlayingTrackItem->setHidden( true );
+    m_trackItem->setHidden( true );
 
     hideScrobbledNowPlaying();
 }
@@ -260,7 +260,7 @@ ActivityListWidget::onPaused()
 void
 ActivityListWidget::onStopped()
 {
-    m_nowPlayingTrackItem->setHidden( true );
+    m_trackItem->setHidden( true );
 
     hideScrobbledNowPlaying();
 }
@@ -270,10 +270,14 @@ ActivityListWidget::hideScrobbledNowPlaying()
 {
     for ( int i = 0 ; i < count() ; ++i )
     {
-        TrackWidget* trackWidget = static_cast<TrackWidget*>( itemWidget( item( i ) ) );
+        if ( item( i ) != m_trackItem )
+        {
+            TrackWidget* trackWidget = static_cast<TrackWidget*>( itemWidget( item( i ) ) );
 
-        trackWidget->setHidden( !m_nowPlayingTrackItem->isHidden()
-                                && m_track.timestamp().toTime_t() == trackWidget->track().timestamp().toTime_t() );
+            item( i )->setHidden( !m_trackItem->isHidden()
+                                    && ( trackWidget->track().timestamp().toTime_t() == m_track.timestamp().toTime_t()
+                                    || trackWidget->track().timestamp().toTime_t() == ScrobbleService::instance().currentTrack().timestamp().toTime_t() ) );
+        }
     }
 }
 
@@ -295,7 +299,7 @@ ActivityListWidget::onGotRecentTracks()
 
     if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
-        m_nowPlayingTrackItem->setHidden( true );
+        m_trackItem->setHidden( true );
 
         QList<lastfm::Track> tracks;
 
@@ -310,8 +314,7 @@ ActivityListWidget::onGotRecentTracks()
 
                 if ( track != m_track )
                 {
-                    // it's not the same as the current now playing track so update it
-
+                    // This is a different track so change to it
                     track.setTimeStamp( QDateTime::fromTime_t( trackXml["date"].attribute("uts").toUInt() ) );
 
                     track.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
@@ -320,14 +323,14 @@ ActivityListWidget::onGotRecentTracks()
                     track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
 
                     m_track = track;
-                    m_nowPlayingTrackItem->setTrack( m_track );
+                    m_trackItem->setTrack( m_track );
 
                     connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(write()));
 
                     m_track.getInfo( this, "write", User().name() );
                 }
 
-                m_nowPlayingTrackItem->setHidden( false );
+                m_trackItem->setHidden( false );
             }
             else
             {
@@ -421,6 +424,8 @@ ActivityListWidget::addTracks( const QList<lastfm::Track>& tracks )
     limit( kScrobbleLimit );
 
     write();
+
+    hideScrobbledNowPlaying();
 
     return addedTracks;
 }

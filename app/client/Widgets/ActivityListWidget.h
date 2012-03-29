@@ -73,7 +73,7 @@ private:
     QPointer<QTimer> m_writeTimer;
     QPointer<QNetworkReply> m_recentTrackReply;
 
-    class ActivityListWidgetItem* m_nowPlayingTrackItem;
+    class ActivityListWidgetItem* m_trackItem;
     lastfm::Track m_track;
 };
 

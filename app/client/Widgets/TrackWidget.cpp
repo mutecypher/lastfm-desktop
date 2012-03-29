@@ -58,6 +58,12 @@ TrackWidget::~TrackWidget()
 void
 TrackWidget::resizeEvent(QResizeEvent *)
 {
+    setTrackTitleWidth();
+}
+
+void
+TrackWidget::setTrackTitleWidth()
+{
     int width = qMin( ui->trackTitleFrame->width(), ui->trackTitle->fontMetrics().width( ui->trackTitle->text() ) + 1 );
 
     if ( ui->asterisk->isVisible() )
@@ -121,6 +127,8 @@ TrackWidget::setTrackDetails()
         updateTimestamp();
 
     ui->love->setChecked( m_track.isLoved() );
+
+    setTrackTitleWidth();
 }
 
 void
@@ -240,7 +248,7 @@ TrackWidget::updateTimestamp()
         ui->equaliser->show();
 
         ui->timestamp->setText( tr( "Now listening" ) );
-        ui->timestamp->setToolTip( tr( "" ) );
+        ui->timestamp->setToolTip( m_track.timestamp().toString( "d MMM h:mmap yyyy" ) );
     }
     else
     {        
