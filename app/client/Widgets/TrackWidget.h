@@ -24,13 +24,19 @@ public:
 
     void setNowPlaying( bool nowPlaying );
 
+signals:
+    void removed();
+
 private slots:
     void onLoveClicked( bool loved );
     void onTagClicked();
     void onShareClicked();
-    void onBuyClicked();
 
+    void onBuyClicked();
     void onGotBuyLinks();
+
+    void onRemoveClicked();
+    void onRemovedScrobble();
 
     void onBuyActionTriggered( QAction* buyAction );
 

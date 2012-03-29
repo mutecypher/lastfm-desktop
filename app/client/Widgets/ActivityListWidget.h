@@ -44,6 +44,8 @@ private slots:
 
     void onScrobblesSubmitted( const QList<lastfm::Track>& tracks );
 
+    void onTrackWidgetRemoved();
+
     void write();
     void doWrite();
 

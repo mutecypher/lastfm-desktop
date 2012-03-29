@@ -597,6 +597,16 @@ TrackWidget QPushButton#buy:hover { background-image: url(":/meta_buy_HOVER.png"
 TrackWidget QPushButton#buy:pressed { background-image: url(":/meta_buy_PRESS.png"); }
 TrackWidget QPushButton#buy::menu-indicator { image: none; }
 
+TrackWidget QPushButton#remove {
+	background-image: url(":/message_close.png");
+	width: 17px;
+	height: 17px;
+}
+
+TrackWidget QPushButton#remove:disabled {
+	background-image: none;
+}
+
 TrackWidget QLabel#asterisk {
 	background-color: #eeeeee;
 	background-repeat: no-repeat;

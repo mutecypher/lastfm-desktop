@@ -382,6 +382,19 @@ ActivityListWidget::onScrobblesSubmitted( const QList<lastfm::Track>& tracks )
             addedTrack.getInfo(  this, "write", User().name() );
 }
 
+void
+ActivityListWidget::onTrackWidgetRemoved()
+{
+    for ( int i = 0 ; i < count() ; ++i )
+    {
+        if ( itemWidget( item( i ) ) == sender() )
+        {
+            itemWidget( takeItem( i ) )->deleteLater();
+            refresh();
+            break;
+        }
+    }
+}
 
 QList<lastfm::Track>
 ActivityListWidget::addTracks( const QList<lastfm::Track>& tracks )
@@ -411,6 +424,8 @@ ActivityListWidget::addTracks( const QList<lastfm::Track>& tracks )
             TrackWidget* trackWidget = new TrackWidget( track, this );
             setItemWidget( item, trackWidget );
             item->setSizeHint( trackWidget->sizeHint() );
+
+            connect( trackWidget, SIGNAL(removed()), SLOT(onTrackWidgetRemoved()));
 
             connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(write()));
             connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(write()));

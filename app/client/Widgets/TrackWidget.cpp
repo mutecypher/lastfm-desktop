@@ -1,6 +1,8 @@
 
 #include <QMovie>
 
+#include <lastfm/Library.h>
+
 #include <lib/unicorn/dialogs/ShareDialog.h>
 #include <lib/unicorn/dialogs/TagDialog.h>
 #include <lib/unicorn/DesktopServices.h>
@@ -46,6 +48,7 @@ TrackWidget::TrackWidget( Track& track, QWidget *parent )
     connect( ui->tag, SIGNAL(clicked()), SLOT(onTagClicked()));
     connect( ui->share, SIGNAL(clicked()), SLOT(onShareClicked()));
     connect( ui->buy, SIGNAL(clicked()), SLOT(onBuyClicked()));
+    connect( ui->remove, SIGNAL(clicked()), SLOT(onRemoveClicked()));
 
     setTrack( track );
 }
@@ -225,9 +228,36 @@ TrackWidget::price( const QString& price, const QString& currency ) const
 }
 
 void
+TrackWidget::onRemoveClicked()
+{
+    connect( lastfm::Library::removeScrobble( m_track ), SIGNAL(finished()), SLOT(onRemovedScrobble()));
+}
+
+void
+TrackWidget::onRemovedScrobble()
+{
+   lastfm::XmlQuery lfm;
+
+   if ( lfm.parse( static_cast<QNetworkReply*>( sender() )->readAll() ) )
+   {
+       qDebug() << lfm;
+
+       emit removed();
+   }
+   else
+   {
+       qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
+   }
+
+
+}
+
+void
 TrackWidget::setNowPlaying( bool nowPlaying )
 {
     m_nowPlaying = nowPlaying;
+
+    ui->remove->setEnabled( !nowPlaying );
 
     updateTimestamp();
 }
