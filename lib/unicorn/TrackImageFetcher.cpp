@@ -206,5 +206,5 @@ TrackImageFetcher::url( const QString& root_node )
 void
 TrackImageFetcher::fail()
 {
-    emit finished( QPixmap() );
+    //emit finished( QPixmap() );
 }
