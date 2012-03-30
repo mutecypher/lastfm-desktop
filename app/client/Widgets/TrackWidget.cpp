@@ -83,7 +83,7 @@ TrackWidget::setTrack( lastfm::Track& track )
     m_track = track;
 
     connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(onLoveToggled(bool)) );
-    connect( m_track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
+    connect( m_track.signalProxy(), SIGNAL(scrobbleStatusChanged(short)), SLOT(onScrobbleStatusChanged()));
     connect( m_track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
 
     ui->equaliser->hide();

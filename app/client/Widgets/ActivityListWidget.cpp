@@ -428,7 +428,7 @@ ActivityListWidget::addTracks( const QList<lastfm::Track>& tracks )
             connect( trackWidget, SIGNAL(removed()), SLOT(onTrackWidgetRemoved()));
 
             connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(write()));
-            connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(write()));
+            connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged(short)), SLOT(write()));
         }
         else
         {
