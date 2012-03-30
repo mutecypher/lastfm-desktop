@@ -28,8 +28,6 @@ HttpImageWidget::HttpImageWidget( QWidget* parent )
 {
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
     setAttribute( Qt::WA_MacNoClickThrough );
-
-    setScaledContents( true );
 }
 
 void
