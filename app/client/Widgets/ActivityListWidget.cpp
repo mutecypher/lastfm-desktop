@@ -302,27 +302,29 @@ ActivityListWidget::onGotRecentTracks()
         m_trackItem->setHidden( true );
 
         QList<lastfm::Track> tracks;
+        lastfm::MutableTrack nowPlayingTrack;
+
+        bool checkedFirstScrobble( false );
 
         foreach ( const XmlQuery& trackXml, lfm["recenttracks"].children("track") )
         {
             if ( trackXml.attribute( "nowplaying" ) == "true" )
             {
-                MutableTrack track;
-                track.setTitle( trackXml["name"].text() );
-                track.setArtist( trackXml["artist"].text() );
-                track.setAlbum( trackXml["album"].text() );
+                nowPlayingTrack.setTitle( trackXml["name"].text() );
+                nowPlayingTrack.setArtist( trackXml["artist"].text() );
+                nowPlayingTrack.setAlbum( trackXml["album"].text() );
 
-                if ( track != m_track )
+                if ( nowPlayingTrack != m_track )
                 {
                     // This is a different track so change to it
-                    track.setTimeStamp( QDateTime::fromTime_t( trackXml["date"].attribute("uts").toUInt() ) );
+                    nowPlayingTrack.setTimeStamp( QDateTime::fromTime_t( trackXml["date"].attribute("uts").toUInt() ) );
 
-                    track.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
-                    track.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
-                    track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
-                    track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
+                    nowPlayingTrack.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
+                    nowPlayingTrack.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
+                    nowPlayingTrack.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
+                    nowPlayingTrack.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
 
-                    m_track = track;
+                    m_track = nowPlayingTrack;
                     m_trackItem->setTrack( m_track );
 
                     connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(write()));
@@ -338,14 +340,32 @@ ActivityListWidget::onGotRecentTracks()
                 track.setTitle( trackXml["name"].text() );
                 track.setArtist( trackXml["artist"].text() );
                 track.setAlbum( trackXml["album"].text() );
+
                 track.setTimeStamp( QDateTime::fromTime_t( trackXml["date"].attribute("uts").toUInt() ) );
 
-                track.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
-                track.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
-                track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
-                track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
+                if ( !checkedFirstScrobble )
+                {
+                    if ( track != nowPlayingTrack && track.timestamp().secsTo( QDateTime::currentDateTime() ) < 10 * 60 )
+                    {
+                        track.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
+                        track.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
+                        track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
+                        track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
 
-                tracks << track;
+                        tracks << track;
+                    }
+                }
+                else
+                {
+                    track.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
+                    track.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
+                    track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
+                    track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
+
+                    tracks << track;
+                }
+
+                checkedFirstScrobble = true;
             }
         }
 
