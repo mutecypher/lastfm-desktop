@@ -518,7 +518,8 @@ background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #eeeeee, stop:1
 color: #777;
 border: none;
 border-bottom: 1px solid #a6a6a6;
-height: 38px;
+min-height: 38px;
+max-height: 38px;
 }
 
 RefreshButton:hover {
@@ -532,9 +533,10 @@ background-color: #d6d6d6;
 
 TrackWidget {
 	border: none;
+	border-top: 1px solid white;
 	border-bottom: 1px solid #aaa;
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #eeeeee, stop:1 #dddddd);
-	padding: 10px;
+	padding: 3px 10px;
 }
 
 TrackWidget#nowPlaying {
@@ -558,7 +560,7 @@ TrackWidget QPushButton {
 	border: none;
 	background-repeat: no-repeat;
 	background-color: transparent;
-	margin: 0px 0px 0px 5px;
+	margin: 1px 0px 0px 5px;
 }
 
 TrackWidget QPushButton#love {
@@ -601,6 +603,7 @@ TrackWidget QPushButton#remove {
 	background-image: url(":/message_close.png");
 	width: 17px;
 	height: 17px;
+	margin: 0px;
 }
 
 TrackWidget QPushButton#remove:disabled {
