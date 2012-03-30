@@ -69,7 +69,7 @@ private slots:
     void listItemClicked( const QModelIndex& );
 
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
-    void onScrobbleStatusChanged();
+    void onScrobbleStatusChanged( short scrobbleStatus );
 
     void checkFinished();
 

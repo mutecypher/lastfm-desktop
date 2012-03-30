@@ -42,7 +42,7 @@ private slots:
     void onGotLovedTracks();
 
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
-    void onScrobbleStatusChanged();
+    void onScrobbleStatusChanged( short scrobbleStatus );
     void setScrobbleCount();
 
 private:
