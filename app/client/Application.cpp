@@ -246,7 +246,7 @@ Application::init()
     m_mw->addWinThumbBarButton( m_skip_action );
 
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
-#ifndef Q_OS_LINUX
+#ifndef Q_WS_X11
      AudioscrobblerSettings settings;
      setRaiseHotKey( settings.raiseShortcutModifiers(), settings.raiseShortcutKey() );
 #endif
