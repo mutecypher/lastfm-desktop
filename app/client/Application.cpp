@@ -295,7 +295,12 @@ Application::init()
     // make sure cached scrobbles get submitted when the connection comes back online
     connect( m_icm, SIGNAL(up(QString)), &ScrobbleService::instance(), SLOT(submitCache()) );
 
-    emit messageReceived( arguments() );
+#ifdef Q_OS_WIN32
+    QStringList args = arguments();
+#else
+    QStringList args = arguments().mid( 1 );
+#endif
+    emit messageReceived( args );
 
 #ifdef Q_OS_MAC
     m_notify = new Notify( this );
