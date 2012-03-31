@@ -73,9 +73,9 @@ using audioscrobbler::Application;
 #define APPLE_KEY_CHAR QString::fromUtf8("⌘")
 
 #ifdef Q_WS_X11
-    #define AS_TRAY_ICON ":16x16.png"
-#elif defined( Q_WS_WIN )
     #define AS_TRAY_ICON ":22x22.png"
+#elif defined( Q_WS_WIN )
+    #define AS_TRAY_ICON ":16x16.png"
 #elif defined( Q_WS_MAC )
     #define AS_TRAY_ICON ":systray_icon_rest_mac.png"
 #endif
