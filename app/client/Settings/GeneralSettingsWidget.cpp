@@ -27,24 +27,30 @@ GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
     connect( ui->languages, SIGNAL( currentIndexChanged( int ) ), SLOT( onSettingsChanged() ) );
 
     ui->showAs->setChecked( unicorn::Settings().value( SETTING_SHOW_AS, ui->showAs->isChecked() ).toBool() );
-    ui->launch->setChecked( unicorn::AppSettings( APP_LAUNCH ).value( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() ).toBool() );
     ui->notifications->setChecked( unicorn::Settings().value( SETTING_NOTIFICATIONS, ui->notifications->isChecked() ).toBool() );
     ui->lastRadio->setChecked( unicorn::Settings().value( SETTING_LAST_RADIO, ui->lastRadio->isChecked() ).toBool() );
     ui->sendCrashReports->setChecked( unicorn::Settings().value( SETTING_SEND_CRASH_REPORTS, ui->sendCrashReports->isChecked() ).toBool() );
-    ui->updates->setChecked( unicorn::Settings().value( SETTING_CHECK_UPDATES, ui->updates->isChecked() ).toBool() );
 
     connect( ui->showAs, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
-    connect( ui->launch, SIGNAL(stateChanged(int) ), SLOT( onSettingsChanged() ) );
     connect( ui->notifications, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
     connect( ui->lastRadio, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
     connect( ui->sendCrashReports, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
-    connect( ui->updates, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
 
 #ifdef Q_OS_MAC
     ui->hideDock->setChecked( unicorn::Settings().value( SETTING_HIDE_DOCK, ui->hideDock->isChecked() ).toBool() );
     connect( ui->hideDock, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
 #else
     ui->hideDock->hide();
+#endif
+
+#ifndef Q_WS_X11
+    ui->launch->setChecked( unicorn::AppSettings( APP_LAUNCH ).value( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() ).toBool() );
+    ui->updates->setChecked( unicorn::Settings().value( SETTING_CHECK_UPDATES, ui->updates->isChecked() ).toBool() );
+    connect( ui->launch, SIGNAL(stateChanged(int) ), SLOT( onSettingsChanged() ) );
+    connect( ui->updates, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+#else
+    ui->launch->hide();
+    ui->updates->hide();
 #endif
 }
 
