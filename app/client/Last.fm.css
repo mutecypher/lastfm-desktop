@@ -611,7 +611,6 @@ TrackWidget QPushButton#remove:disabled {
 }
 
 TrackWidget QLabel#asterisk {
-	background-color: #eeeeee;
 	background-repeat: no-repeat;
 	background-position: center;
 	color: transparent;
