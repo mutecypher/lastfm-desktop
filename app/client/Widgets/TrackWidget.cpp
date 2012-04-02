@@ -278,7 +278,7 @@ TrackWidget::updateTimestamp()
         ui->equaliser->show();
 
         ui->timestamp->setText( tr( "Now listening" ) );
-        ui->timestamp->setToolTip( m_track.timestamp().toString( "d MMM h:mmap yyyy" ) );
+        ui->timestamp->setToolTip( "" );
     }
     else
     {        
