@@ -24,7 +24,6 @@ private:
 
         class StylableWidget* personal;
         class StylableWidget* network;
-        class StylableWidget* topArtists;
         class StylableWidget* recentStations;
 
         class PlayableItemWidget* lastStation;
@@ -47,8 +46,6 @@ private slots:
     void onRadioStopped();
     void onTrackStarted( const Track& track , const Track& oldTrack );
 
-
-    void onGotTopArtists();
     void onGotRecentStations();
 
 private:

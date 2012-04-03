@@ -71,7 +71,7 @@ ProfileArtistWidget::ProfileArtistWidget( const lastfm::XmlQuery& artist, int ma
 
     QVBoxLayout* vl = new QVBoxLayout();
     vl->setContentsMargins( 0, 0, 0, 0 );
-    vl->setSpacing( 0 );
+    vl->setSpacing( 6 );
     layout->addLayout( vl, 1 );
 
     QHBoxLayout * hl = new QHBoxLayout();
@@ -84,7 +84,7 @@ ProfileArtistWidget::ProfileArtistWidget( const lastfm::XmlQuery& artist, int ma
     hl->addWidget( artistName, 1 );
     artistName->setObjectName( "artistName" );
 
-    PlayableItemWidget* radio = new PlayableItemWidget( RadioStation::similar( Artist( artist["name"].text() ) ), artist["name"].text() );
+    PlayableItemWidget* radio = new PlayableItemWidget( RadioStation::similar( Artist( artist["name"].text() ) ), tr( "%1 Radio" ).arg( artist["name"].text() ) );
     hl->addWidget( radio );
     radio->setObjectName( "radio" );
 
@@ -94,5 +94,7 @@ ProfileArtistWidget::ProfileArtistWidget( const lastfm::XmlQuery& artist, int ma
     PlaysLabel* plays = new PlaysLabel( tr( playcount == 1 ? "%L1 play" : "%L1 plays" ).arg( playcount ), playcount, maxPlays, this );
     vl->addWidget( plays );
     plays->setObjectName( "plays" );
+
+    vl->addStretch();
 }
 

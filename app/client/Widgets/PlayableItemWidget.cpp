@@ -90,7 +90,7 @@ PlayableItemWidget::setStation(const RadioStation& rs, const QString& title, con
     m_rs = rs;
     m_rs.setTitle( title );
     setText( title );
-    setToolTip( tr( "Play %1 Radio" ).arg( title ) );
+    setToolTip( tr( "Play %1" ).arg( title ) );
 
     m_description = description;
 
@@ -181,7 +181,8 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
     static QPixmap m_radio_right_rest = QPixmap( ":/meta_radio_RIGHT_REST.png" );
 
     if ( m_style == DescriptionNone )
-    {      
+    {
+        QPushButton::paintEvent( event );
     }
     else if ( m_style == DescriptionRight )
     {
@@ -269,21 +270,25 @@ PlayableItemWidget::contextMenuEvent( QContextMenuEvent* event )
 {
     QMenu* contextMenu = new QMenu( this );
 
-    contextMenu->addAction( tr( "Play" ), this, SLOT(play()));
+    contextMenu->addAction( tr( "Play %1" ).arg( m_rs.title() ), this, SLOT(play()));
 
     if ( RadioService::instance().state() == Playing )
-        contextMenu->addAction( tr( "Play next" ), this, SLOT(playNext()));
+        contextMenu->addAction( tr( "Cue %1" ).arg( m_rs.title() ), this, SLOT(playNext()));
 
     if ( m_rs.url().startsWith( "lastfm://user/" )
          &&  ( m_rs.url().endsWith( "/library" ) || m_rs.url().endsWith( "/personal" ) )
          && m_rs.url() != RadioStation::library( User() ).url() )
     {
+        int endPos = m_rs.url().indexOf( "/", 14 );
+        if ( endPos == -1 )
+            endPos = m_rs.url().length();
+
         // if it's a user station that isn't yours we should
         // let them start a multi-station with yours
         contextMenu->addSeparator();
-        contextMenu->addAction( tr( "Play with your library" ), this, SLOT(playMulti()));
+        contextMenu->addAction( tr( "Play %1 and %2 Library Radio" ).arg( m_rs.url().mid( 14, endPos - 14 ), User().name() ), this, SLOT(playMulti()));
         if ( RadioService::instance().state() == Playing )
-            contextMenu->addAction( tr( "Play with your library next" ), this, SLOT(playMultiNext()));
+            contextMenu->addAction( tr( "Cue %1 and %2 Library Radio" ).arg( m_rs.url().mid( 14, endPos - 14 ), User().name() ), this, SLOT(playMultiNext()));
     }
 
     if ( contextMenu->actions().count() )

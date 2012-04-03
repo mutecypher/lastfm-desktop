@@ -7,6 +7,8 @@
 #include "lib/unicorn/UnicornSession.h"
 #include "lib/unicorn/StylableWidget.h"
 
+namespace unicorn { class Label; }
+
 class ProfileWidget : public StylableWidget
 {
     Q_OBJECT
@@ -15,7 +17,8 @@ private:
     {
         class StylableWidget* user;
         class AvatarWidget* avatar;
-        class QLabel* name;
+        unicorn::Label* name;
+        class QLabel* infoString;
         class QLabel* scrobbleCount;
         class QLabel* scrobbles;
         class QLabel* lovedCount;

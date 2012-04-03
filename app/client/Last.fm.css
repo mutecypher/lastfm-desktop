@@ -710,21 +710,11 @@ border-top: 1px solid white;
 border-bottom: 1px solid #cdcdcd;
 }
 
-FriendWidget QFrame#username,
-FriendWidget QFrame#userDetails {
-	margin: 0px 0px 4px;
-}
-
 FriendWidget QFrame#nowListening,
 FriendWidget QFrame#groupBox {
 	border: 1px solid lightgray;
 	border-radius: 5px;
 	padding: 6px 10px;
-	margin: 4px 0px;
-}
-
-FriendWidget QFrame QLabel {
-	margin: 2px 0px;
 }
 
 FriendWidget QFrame#nowListening {
@@ -776,20 +766,37 @@ FriendWidget QLabel#lastTrack {
 	color: #333;
 }
 
-FriendWidget QLabel#username,
 ProfileWidget QLabel#name {
+	font-size: 16px;
+	color: #333;
+}
+
+
+ProfileWidget QLabel#scrobbleCount,
+ProfileWidget QLabel#lovedCount {
+	font-size: 14px;
+	color: #333;
+}
+
+ProfileWidget QLabel#scrobbles,
+ProfileWidget QLabel#loved,
+ProfileWidget QLabel#infoString {
+	font-size: 11px;
+	color: #898989;
+}
+
+
+FriendWidget QLabel#username {
 font-weight: bold;
 font-size: 14px;
 color: #333;
 }
 
-ProfileWidget QLabel#scrobbleCount,
 FriendWidget QLabel#userDetails {
 font-size: 11px;
 color: #898989;
 }
 
-ProfileWidget QLabel#scrobbles,
 FriendWidget QLabel#timestamp {
 font-size: 11px;
 color: #333;
@@ -838,27 +845,19 @@ padding: 3px 0px 3px 54px;
 margin: 5px 0px;
 }
 
-ProfileWidget PlayableItemWidget {
-	qproperty-style: DescriptionNone;
-	max-width: 24px;
-	max-height: 24px;
-}
-
-
 ProfileArtistWidget {
   border: none;
-  margin: 5px 0px;
+  margin: 10px 0px;
 }
 
 ProfileArtistWidget QLabel#artistImage {
-  margin-right: 20px;
+  margin: 0px 20px 0px 0px;
 }
 
 ProfileArtistWidget QLabel#artistName {
   color: #333;
   font-size: 14px;
   font-weight: bold;
-  margin: 0px 0px 3px;
 }
 
 ProfileArtistWidget QLabel#plays {
@@ -916,12 +915,23 @@ background-image: url(":/radio_friends_PRESS.png");
 RadioWidget PlayableItemWidget#station,
 FriendWidget PlayableItemWidget,
 ProfileWidget PlayableItemWidget {
-background-image: url(":/radio_play_small_REST.png");
-text-align: center left;
-font-size: 12px;
-height: 24px;
-padding: 0px 0px 0px 28px;
-margin: 2px 0px;
+	background-image: url(":/radio_play_small_REST.png");
+	font-size: 12px;
+	max-height: 24px;
+	margin: 0px;
+	padding: 0px;
+}
+
+RadioWidget PlayableItemWidget#station {
+	padding-left: 30px;
+	text-align: left center;
+}
+
+FriendWidget PlayableItemWidget,
+ProfileWidget PlayableItemWidget {
+	qproperty-style: DescriptionNone;
+	color: transparent;
+	max-width: 24px;
 }
 
 RadioWidget PlayableItemWidget#station:hover,

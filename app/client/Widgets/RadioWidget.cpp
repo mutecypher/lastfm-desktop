@@ -96,6 +96,7 @@ RadioWidget::changeUser( const QString& newUsername )
 
             personalLayout->addWidget( ui.lastStation = new PlayableItemWidget( lastStation, stationTitle ) );
             ui.lastStation->setObjectName( "station" );
+            ui.lastStation->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
         }
 
         {
@@ -148,6 +149,7 @@ RadioWidget::changeUser( const QString& newUsername )
             title->setObjectName( "title" );
             layout->addWidget( ui.recentStations = new StylableWidget( this ) );
             ui.recentStations->setObjectName( "section" );
+            ui.recentStations->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
 
             QVBoxLayout* layout = new QVBoxLayout( ui.recentStations );
             layout->setContentsMargins( 0, 0, 0, 0 );
@@ -160,32 +162,6 @@ RadioWidget::changeUser( const QString& newUsername )
         layout->addStretch( 1 );
     }
 }
-
-void
-RadioWidget::onGotTopArtists()
-{
-    lastfm::XmlQuery lfm;
-
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
-    {
-        QVBoxLayout* layout = new QVBoxLayout( ui.topArtists );
-        layout->setContentsMargins( 0, 0, 0, 0 );
-        layout->setSpacing( 0 );
-
-        foreach ( const lastfm::XmlQuery& artist, lfm["topartists"].children("artist") )
-        {
-            QString artistName = artist["name"].text();
-            PlayableItemWidget* item = new PlayableItemWidget( RadioStation::similar( lastfm::Artist( artistName ) ), tr( "%1 Similar Radio" ).arg( artistName ) );
-            item->setObjectName( "station" );
-            layout->addWidget( item );
-        }
-    }
-    else
-    {
-        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
-    }
-}
-
 
 void
 RadioWidget::onGotRecentStations()
@@ -202,6 +178,7 @@ RadioWidget::onGotRecentStations()
             {
                 PlayableItemWidget* item = new PlayableItemWidget( RadioStation( stationUrl ), station["name"].text() );
                 item->setObjectName( "station" );
+                item->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
                 ui.recentStations->layout()->addWidget( item );
             }
         }
@@ -231,6 +208,7 @@ RadioWidget::onTuningIn( const RadioStation& station )
     {
         PlayableItemWidget* item = new PlayableItemWidget( station, station.title() );
         item->setObjectName( "station" );
+        item->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
         qobject_cast<QBoxLayout*>(ui.recentStations->layout())->insertWidget( 0, item );
 
         // if it exists already remove it or remove the last one

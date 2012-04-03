@@ -5,6 +5,7 @@
 #include <lastfm/Library.h>
 #include <lastfm/XmlQuery.h>
 
+#include "lib/unicorn/widgets/Label.h"
 #include "lib/unicorn/widgets/AvatarWidget.h"
 #include "lib/unicorn/StylableWidget.h"
 
@@ -48,6 +49,10 @@ ProfileWidget::onGotUserInfo( const lastfm::User& userDetails )
     ui.avatar->setUser( userDetails );
     ui.avatar->loadUrl( userDetails.imageUrl( lastfm::Large, true ), HttpImageWidget::ScaleNone );
     ui.avatar->setHref( userDetails.www() );
+
+    ui.infoString->setText( userDetails.getInfoString() );
+
+    ui.scrobbles->setText( tr( "Scrobbles since %1" ).arg( userDetails.dateRegistered().toString( "d MMMM yyyy" ) ) );
 
     connect( lastfm::Library::getArtists( userDetails.name(), 1 ), SIGNAL(finished()), SLOT(onGotLibraryArtists()));
 
@@ -103,24 +108,36 @@ ProfileWidget::changeUser( const QString& newUsername )
 
         QVBoxLayout* vl = new QVBoxLayout();
         vl->setContentsMargins( 0, 0, 0, 0 );
-        vl->setSpacing( 0 );
+        vl->setSpacing( 3 );
 
         hl->addLayout( vl, 1 );
 
-        vl->addWidget( ui.name = new QLabel( newUsername, this) );
+        vl->addWidget( ui.name = new unicorn::Label( this ) );
         ui.name->setObjectName( "name" );
+        ui.name->setTextFormat( Qt::RichText );
+        ui.name->setText( unicorn::Label::boldLinkStyle( unicorn::Label::anchor( lastfm::User( newUsername ).www().toString(), newUsername ), Qt::black ) );
+        ui.name->setAttribute( Qt::WA_LayoutUsesWidgetRect );
+
+        vl->addWidget( ui.infoString = new QLabel( "", this) );
+        ui.infoString->setObjectName( "infoString" );
+
+        vl->addStretch( 3 );
 
         vl->addWidget( ui.scrobbleCount = new QLabel( "0" ) );
         ui.scrobbleCount->setObjectName( "scrobbleCount" );
 
         vl->addWidget( ui.scrobbles = new QLabel( tr( "Scrobbles" ) ) );
-        ui.scrobbleCount->setObjectName( "scrobbles" );
+        ui.scrobbles->setObjectName( "scrobbles" );
+
+        vl->addStretch( 1 );
 
         vl->addWidget( ui.lovedCount = new QLabel( "0" ) );
         ui.lovedCount->setObjectName( "lovedCount" );
 
         vl->addWidget( ui.loved = new QLabel( tr( "Loved tracks" ) ) );
         ui.loved->setObjectName( "loved" );
+
+        vl->addStretch( 1 );
 
         layout->addWidget( ui.context = new ContextLabel( this ) );
         ui.context->setObjectName( "userBlurb" );
@@ -152,7 +169,7 @@ ProfileWidget::changeUser( const QString& newUsername )
             ui.topOverallArtists->setObjectName( "section" );
         }
 
-        layout->addStretch();
+        layout->addStretch( 1 );
 
         lastfm::User user = lastfm::User( newUsername );
 
