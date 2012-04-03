@@ -167,9 +167,9 @@ void
 UserSearch::onGetFriendsFinished()
 {
     lastfm::UserList friendPage = User::list( (QNetworkReply*)sender() );
-    m_friends += friendPage;
+    m_friends += friendPage.users();
 
-    if ( friendPage.page == friendPage.totalPages )
+    if ( friendPage.currentPage() == friendPage.totalPages() )
     {
         QStringList friends;
 
@@ -184,7 +184,7 @@ UserSearch::onGetFriendsFinished()
     else
     {
         // get the next page of friends
-        connect(User().getFriends( false, friendPage.perPage, friendPage.page + 1 ), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
+        connect(User().getFriends( false, friendPage.usersPerPage(), friendPage.currentPage() + 1 ), SIGNAL(finished()), SLOT(onGetFriendsFinished()));
     }
 }
 
