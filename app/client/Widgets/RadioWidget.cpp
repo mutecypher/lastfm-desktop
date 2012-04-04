@@ -74,17 +74,22 @@ RadioWidget::changeUser( const QString& newUsername )
         layout->addWidget( quickStartWidget );
 
         {
+            layout->addWidget( ui.nowPlayingFrame = new QFrame( this ) );
+            QVBoxLayout* nowPlayingLayout = new QVBoxLayout( ui.nowPlayingFrame );
+            nowPlayingLayout->setContentsMargins( 0, 0, 0, 0 );
+            nowPlayingLayout->setSpacing( 0 );
+
             QFrame* splitter = new QFrame( this );
-            layout->addWidget( splitter );
+            nowPlayingLayout->addWidget( splitter );
             splitter->setObjectName( "splitter" );
 
-            layout->addWidget( ui.nowPlaying = new QLabel( tr("Last Station"), this ) );
+            nowPlayingLayout->addWidget( ui.nowPlaying = new QLabel( tr("Last Station"), this ) );
             ui.nowPlaying->setObjectName( "title" );
-            layout->addWidget( ui.personal = new QFrame( this ) );
-            ui.personal->setObjectName( "section" );
-            QVBoxLayout* personalLayout = new QVBoxLayout( ui.personal );
-            personalLayout->setContentsMargins( 0, 0, 0, 0 );
-            personalLayout->setSpacing( 0 );
+            nowPlayingLayout->addWidget( ui.nowPlayingSection = new QFrame( this ) );
+            ui.nowPlayingSection->setObjectName( "section" );
+            QVBoxLayout* nowPlayingSectionLayout = new QVBoxLayout( ui.nowPlayingSection );
+            nowPlayingSectionLayout->setContentsMargins( 0, 0, 0, 0 );
+            nowPlayingSectionLayout->setSpacing( 0 );
 
             unicorn::UserSettings us( newUsername );
             QString stationUrl = us.value( "lastStationUrl", "" ).toString();
@@ -96,6 +101,9 @@ RadioWidget::changeUser( const QString& newUsername )
             personalLayout->addWidget( ui.lastStation = new PlayableItemWidget( lastStation, stationTitle ) );
             ui.lastStation->setObjectName( "station" );
             ui.lastStation->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
+
+            if ( stationUrl.isEmpty() )
+                ui.nowPlayingFrame->hide();
         }
 
         {
@@ -134,7 +142,7 @@ RadioWidget::changeUser( const QString& newUsername )
             networkLayout->setSpacing( 0 );
             networkLayout->addWidget( ui.friends = new PlayableItemWidget( RadioStation::friends( User( newUsername ) ), tr( "My Friends' Radio" ), tr( "Music your friends like" ) ) );
             ui.friends->setObjectName( "friends" );
-            networkLayout->addWidget( ui.neighbours = new PlayableItemWidget( RadioStation::neighbourhood( User( newUsername ) ), tr( "My Neighbours' Radio" ), tr ( "Music from listeners like you" ) ) );
+            networkLayout->addWidget( ui.neighbours = new PlayableItemWidget( RadioStation::neighbourhood( User( newUsername ) ), tr( "My Neighbourhood Radio" ), tr ( "Music from listeners like you" ) ) );
             ui.neighbours->setObjectName( "neighbours" );
         }
 
@@ -198,6 +206,9 @@ RadioWidget::onTuningIn( const RadioStation& station )
 
     ui.nowPlaying->setText( tr( "Now Playing" ) );
     ui.lastStation->setStation( station.url(), station.title() );
+
+    if ( !station.url().isEmpty() )
+        ui.nowPlayingFrame->show();
 
     // insert at the front of the list
 

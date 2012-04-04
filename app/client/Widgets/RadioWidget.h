@@ -18,6 +18,8 @@ class RadioWidget : public QFrame
 private:
     struct
     {
+        class QFrame* nowPlayingFrame;
+        class QFrame* nowPlayingSection;
         class QLabel* nowPlaying;
 
         class QFrame* personal;
