@@ -63,6 +63,10 @@ private:
 
     void hideScrobbledNowPlaying();
 
+    void showEvent(QShowEvent *);
+
+    void fetchTrackInfo( const QList<lastfm::Track>& tracks );
+
 private:
     class ActivityListModel* m_model;
 

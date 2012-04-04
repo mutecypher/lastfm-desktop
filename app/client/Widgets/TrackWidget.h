@@ -56,6 +56,9 @@ private:
     void setTrackTitleWidth();
 
     void resizeEvent(QResizeEvent *);
+    void showEvent(QShowEvent *);
+
+    void fetchAlbumArt();
 
 private:
     Ui::TrackWidget *ui;
@@ -67,6 +70,7 @@ private:
     QPointer<TrackImageFetcher> m_trackImageFetcher;
 
     bool m_nowPlaying;
+    bool m_triedFetchAlbumArt;
 };
 
 #endif // TRACKWIDGET_H

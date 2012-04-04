@@ -17,7 +17,8 @@
 TrackWidget::TrackWidget( Track& track, QWidget *parent )
     :QFrame(parent),
     ui( new Ui::TrackWidget ),
-    m_nowPlaying( false )
+    m_nowPlaying( false ),
+    m_triedFetchAlbumArt( false )
 {
     ui->setupUi(this);
 
@@ -64,6 +65,33 @@ TrackWidget::~TrackWidget()
 }
 
 void
+TrackWidget::showEvent(QShowEvent *)
+{
+    fetchAlbumArt();
+}
+
+void
+TrackWidget::fetchAlbumArt()
+{
+    if ( isVisible() && !m_triedFetchAlbumArt )
+    {
+        m_triedFetchAlbumArt = true;
+
+        QString imageUrl = m_track.imageUrl( lastfm::Medium, true ).toString();
+
+        if ( imageUrl.isEmpty() )
+        {
+            delete m_trackImageFetcher;
+            m_trackImageFetcher = new TrackImageFetcher( m_track, lastfm::Medium );
+            connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), ui->albumArt, SLOT(setPixmap(QPixmap)) );
+            m_trackImageFetcher->startAlbum();
+        }
+        else
+            ui->albumArt->loadUrl( imageUrl );
+    }
+}
+
+void
 TrackWidget::resizeEvent(QResizeEvent *)
 {
     setTrackTitleWidth();
@@ -99,17 +127,7 @@ TrackWidget::setTrack( lastfm::Track& track )
     ui->albumArt->setPixmap( QPixmap( ":/meta_album_no_art.png" ) );
     ui->albumArt->setHref( track.www() );
 
-    QString imageUrl = m_track.imageUrl( lastfm::Medium, true ).toString();
-
-    if ( imageUrl.isEmpty() )
-    {
-        delete m_trackImageFetcher;
-        m_trackImageFetcher = new TrackImageFetcher( track, lastfm::Medium );
-        connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), ui->albumArt, SLOT(setPixmap(QPixmap)) );
-        m_trackImageFetcher->startAlbum();
-    }
-    else
-        ui->albumArt->loadUrl( imageUrl );
+    fetchAlbumArt();
 }
 
 void

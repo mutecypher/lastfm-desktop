@@ -108,6 +108,29 @@ ActivityListWidget::scroll()
 }
 #endif
 
+void
+ActivityListWidget::showEvent(QShowEvent *)
+{
+    QList<lastfm::Track> tracks;
+
+    for ( int i = 0 ; i < count() ; ++i )
+        tracks << static_cast<TrackWidget*>( itemWidget( item( i ) ) )->track();
+
+    fetchTrackInfo( tracks );
+}
+
+void
+ActivityListWidget::fetchTrackInfo( const QList<lastfm::Track>& tracks )
+{
+    if ( isVisible() )
+    {
+        // Make sure we fetch info for any tracks with unkown loved status
+        foreach ( const lastfm::Track& track, tracks )
+            if ( track.loveStatus() == lastfm::Unknown )
+                track.getInfo(  this, "write", User().name() );
+    }
+}
+
 void 
 ActivityListWidget::onItemClicked( const QModelIndex& index ) 
 {
@@ -168,11 +191,7 @@ ActivityListWidget::read()
         tracks << Track( n.toElement() );
 
     addTracks( tracks );
-
-    // Make sure we fetch info for any tracks with unknown loved status
-    foreach ( const lastfm::Track& track, tracks )
-        if ( track.loveStatus() == lastfm::Unknown )
-            track.getInfo( this, "write", User().name() );
+    fetchTrackInfo( tracks );
 
     limit( kScrobbleLimit );
 }
@@ -235,7 +254,9 @@ ActivityListWidget::onTrackStarted( const Track& track, const Track& )
 
         connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(write()));
 
-        m_track.getInfo( this, "write", User().name() );
+        QList<lastfm::Track> tracks;
+        tracks << track;
+        fetchTrackInfo( tracks );
     }
 
     hideScrobbledNowPlaying();
@@ -388,9 +409,7 @@ ActivityListWidget::onGotRecentTracks()
 
         // get info for track if we don't know the loved state. This is so it will
         // work before and after the loved field is added to user.getRecentTracks
-        foreach ( const lastfm::Track& addedTrack, addedTracks )
-            if ( addedTrack.loveStatus() == lastfm::Unknown )
-                addedTrack.getInfo(  this, "write", User().name() );
+        fetchTrackInfo( addedTracks );
 
         write();
     }
@@ -412,10 +431,7 @@ ActivityListWidget::onScrobblesSubmitted( const QList<lastfm::Track>& tracks )
 
     QList<lastfm::Track> addedTracks = addTracks( tracks );
 
-    // Make sure we fetch info for any tracks with unkown loved status
-    foreach ( const lastfm::Track& addedTrack, addedTracks )
-        if ( addedTrack.loveStatus() == lastfm::Unknown )
-            addedTrack.getInfo(  this, "write", User().name() );
+    fetchTrackInfo( addedTracks );
 }
 
 void
