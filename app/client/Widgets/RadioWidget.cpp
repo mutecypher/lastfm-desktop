@@ -8,7 +8,6 @@
 #include <lastfm/XmlQuery.h>
 #include <lastfm/Track.h>
 
-#include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/UnicornSettings.h"
 
 #include "../Services/RadioService/RadioService.h"
@@ -23,7 +22,7 @@
 #define MAX_RECENT_STATIONS 50
 
 RadioWidget::RadioWidget(QWidget *parent)
-    :StylableWidget( parent )
+    :QFrame( parent )
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
@@ -81,7 +80,7 @@ RadioWidget::changeUser( const QString& newUsername )
 
             layout->addWidget( ui.nowPlaying = new QLabel( tr("Last Station"), this ) );
             ui.nowPlaying->setObjectName( "title" );
-            layout->addWidget( ui.personal = new StylableWidget( this ) );
+            layout->addWidget( ui.personal = new QFrame( this ) );
             ui.personal->setObjectName( "section" );
             QVBoxLayout* personalLayout = new QVBoxLayout( ui.personal );
             personalLayout->setContentsMargins( 0, 0, 0, 0 );
@@ -107,7 +106,7 @@ RadioWidget::changeUser( const QString& newUsername )
             QLabel* title = new QLabel( tr("Personal Stations"), this );
             layout->addWidget( title );
             title->setObjectName( "title" );
-            layout->addWidget( ui.personal = new StylableWidget( this ) );
+            layout->addWidget( ui.personal = new QFrame( this ) );
             ui.personal->setObjectName( "section" );
             QVBoxLayout* personalLayout = new QVBoxLayout( ui.personal );
             personalLayout->setContentsMargins( 0, 0, 0, 0 );
@@ -128,7 +127,7 @@ RadioWidget::changeUser( const QString& newUsername )
             QLabel* title = new QLabel( tr("Network Stations"), this ) ;
             layout->addWidget( title );
             title->setObjectName( "title" );
-            layout->addWidget( ui.network = new StylableWidget( this ) );
+            layout->addWidget( ui.network = new QFrame( this ) );
             ui.network->setObjectName( "section" );
             QVBoxLayout* networkLayout = new QVBoxLayout( ui.network );
             networkLayout->setContentsMargins( 0, 0, 0, 0 );
@@ -147,7 +146,7 @@ RadioWidget::changeUser( const QString& newUsername )
             QLabel* title = new QLabel( tr("Recent Stations"), this ) ;
             layout->addWidget( title );
             title->setObjectName( "title" );
-            layout->addWidget( ui.recentStations = new StylableWidget( this ) );
+            layout->addWidget( ui.recentStations = new QFrame( this ) );
             ui.recentStations->setObjectName( "section" );
             ui.recentStations->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
 

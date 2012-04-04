@@ -1,17 +1,15 @@
 #ifndef TRACKWIDGET_H
 #define TRACKWIDGET_H
 
-#include <QWidget>
+#include <QFrame>
 
 #include <lastfm/Track.h>
-
-#include <lib/unicorn/StylableWidget.h>
 
 namespace Ui { class TrackWidget; }
 
 class TrackImageFetcher;
 
-class TrackWidget : public StylableWidget
+class TrackWidget : public QFrame
 {
     Q_OBJECT
     

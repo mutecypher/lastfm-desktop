@@ -45,7 +45,7 @@
 #define RESULT_LIMIT 10
 
 QuickStartWidget::QuickStartWidget( QWidget* parent )
-    :StylableWidget( parent )
+    :QFrame( parent )
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );

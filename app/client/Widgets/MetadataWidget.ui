@@ -41,7 +41,7 @@
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
-     <widget class="StylableWidget" name="scrollAreaWidgetContents">
+     <widget class="QFrame" name="scrollAreaWidgetContents">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -573,12 +573,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>StylableWidget</class>
-   <extends>QWidget</extends>
-   <header>lib/unicorn/StylableWidget.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>HttpImageWidget</class>
    <extends>QLabel</extends>

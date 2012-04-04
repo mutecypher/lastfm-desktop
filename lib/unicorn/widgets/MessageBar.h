@@ -20,12 +20,13 @@
 #ifndef MESSAGE_BAR_H
 #define MESSAGE_BAR_H
 
+#include <QFrame>
+
 #include <lastfm/Track.h>
 
-#include "lib/unicorn/StylableWidget.h"
 #include "lib/DllExportMacro.h"
 
-class UNICORN_DLLEXPORT MessageBar : public StylableWidget
+class UNICORN_DLLEXPORT MessageBar : public QFrame
 {
     Q_OBJECT 
 private:

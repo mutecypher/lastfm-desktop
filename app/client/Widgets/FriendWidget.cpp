@@ -16,7 +16,7 @@
 
 
 FriendWidget::FriendWidget( const lastfm::XmlQuery& user, QWidget* parent)
-    :StylableWidget( parent ),
+    :QFrame( parent ),
       ui( new Ui::FriendWidget ),
       m_user( user ),
       m_order( 0 - 1 ),

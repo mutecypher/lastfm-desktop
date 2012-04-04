@@ -1246,7 +1246,7 @@ ShareDialog QCheckBox {
 margin-bottom: 16px;
 }
 
-StatusBar StylableWidget {
+StatusBar QFrame {
 border: none;
 background-color: transparent;
 margin: 1px 0px 2px;
@@ -1323,6 +1323,6 @@ PlaybackControlsWidget QSlider::handle:horizontal:pressed {
 background-image: url(":/volume_knob_PRESS.png");
 }
 
-StatusBar StylableWidget#permanentWidget {
+StatusBar QFrame#permanentWidget {
 margin: 0px 10px;
 }

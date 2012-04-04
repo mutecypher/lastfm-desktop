@@ -7,7 +7,6 @@
 
 #include "lib/unicorn/widgets/Label.h"
 #include "lib/unicorn/widgets/AvatarWidget.h"
-#include "lib/unicorn/StylableWidget.h"
 
 #include "PlayableItemWidget.h"
 #include "ProfileArtistWidget.h"
@@ -19,7 +18,7 @@
 #include "ProfileWidget.h"
 
 ProfileWidget::ProfileWidget(QWidget *parent)
-    :StylableWidget(parent)
+    :QFrame(parent)
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
@@ -97,7 +96,7 @@ ProfileWidget::changeUser( const QString& newUsername )
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        layout->addWidget( ui.user = new StylableWidget( this ) );
+        layout->addWidget( ui.user = new QFrame( this ) );
         ui.user->setObjectName( "user" );
         QHBoxLayout* hl = new QHBoxLayout( ui.user );
         hl->setContentsMargins( 0, 0, 0, 0 );
@@ -153,7 +152,7 @@ ProfileWidget::changeUser( const QString& newUsername )
             QLabel* title = new QLabel( tr("Top Artists This Week"), this ) ;
             layout->addWidget( title );
             title->setObjectName( "title" );
-            layout->addWidget( ui.topWeeklyArtists = new StylableWidget( this ) );
+            layout->addWidget( ui.topWeeklyArtists = new QFrame( this ) );
             ui.topWeeklyArtists->setObjectName( "section" );
         }
 
@@ -165,7 +164,7 @@ ProfileWidget::changeUser( const QString& newUsername )
             QLabel* title = new QLabel( tr("Top Artists Overall"), this ) ;
             layout->addWidget( title );
             title->setObjectName( "title" );
-            layout->addWidget( ui.topOverallArtists = new StylableWidget( this ) );
+            layout->addWidget( ui.topOverallArtists = new QFrame( this ) );
             ui.topOverallArtists->setObjectName( "section" );
         }
 

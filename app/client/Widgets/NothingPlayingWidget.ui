@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>NothingPlayingWidget</class>
- <widget class="StylableWidget" name="NothingPlayingWidget">
+ <widget class="QFrame" name="NothingPlayingWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -126,12 +126,6 @@
    <class>QuickStartWidget</class>
    <extends>QWidget</extends>
    <header>../Widgets/QuickStartWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>StylableWidget</class>
-   <extends>QWidget</extends>
-   <header>lib/unicorn/StylableWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -64,7 +64,7 @@
 using unicorn::Label;
 
 MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
-   :StylableWidget( p ),
+   :QFrame( p ),
     ui( new Ui::MetadataWidget ),
     m_track( track ),
     m_globalTrackScrobbles( 0 ),

@@ -18,11 +18,11 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "lib/unicorn/StylableWidget.h"
+#include <QFrame>
 
 class QLabel;
 
-class TitleBar : public StylableWidget
+class TitleBar : public QFrame
 {
     Q_OBJECT
     public:

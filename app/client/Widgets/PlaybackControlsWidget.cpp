@@ -13,7 +13,7 @@
 #include "ui_PlaybackControlsWidget.h"
 
 PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
-    StylableWidget(parent),
+    QFrame(parent),
     ui(new Ui::PlaybackControlsWidget),
     m_scrobbleTrack( false )
 {

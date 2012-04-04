@@ -53,7 +53,6 @@
 #include "lib/unicorn/widgets/UserToolButton.h"
 #include "lib/unicorn/widgets/MessageBar.h"
 #include "lib/unicorn/widgets/UserMenu.h"
-#include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/qtwin.h"
 #include "lib/unicorn/layouts/SlideOverLayout.h"
 #include "lib/unicorn/widgets/SlidingStackedWidget.h"

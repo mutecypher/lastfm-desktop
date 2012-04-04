@@ -2,18 +2,16 @@
 #define PLAYBACKCONTROLS_H
 
 #include <QAction>
-#include <QWidget>
+#include <QFrame>
 #include <QPointer>
 
 #include <lastfm/RadioStation.h>
-
-#include "lib/unicorn/StylableWidget.h"
 
 namespace Ui { class PlaybackControlsWidget; }
 
 class QMovie;
 
-class PlaybackControlsWidget : public StylableWidget
+class PlaybackControlsWidget : public QFrame
 {
     Q_OBJECT
 

@@ -54,7 +54,7 @@ private:
 
 
 ProfileArtistWidget::ProfileArtistWidget( const lastfm::XmlQuery& artist, int maxPlays, QWidget* parent)
-    :StylableWidget( parent )
+    :QFrame( parent )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );

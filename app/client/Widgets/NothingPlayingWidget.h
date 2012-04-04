@@ -1,16 +1,14 @@
 #ifndef NOTHINGPLAYINGWIDGET_H
 #define NOTHINGPLAYINGWIDGET_H
 
-#include <QWidget>
-
-#include "lib/unicorn/StylableWidget.h"
+#include <QFrame>
 
 namespace lastfm { class User; }
 namespace unicorn { class Session; }
 
 namespace Ui { class NothingPlayingWidget; }
 
-class NothingPlayingWidget : public StylableWidget
+class NothingPlayingWidget : public QFrame
 {
     Q_OBJECT
 public:

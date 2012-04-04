@@ -27,7 +27,7 @@
 #include "MessageBar.h"
 
 MessageBar::MessageBar( QWidget* parent )
-    :StylableWidget( parent )
+    :QFrame( parent )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
 

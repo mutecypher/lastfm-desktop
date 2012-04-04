@@ -49,11 +49,11 @@ class StatusBar : public QStatusBar
     private:
         struct
         {
-            class StylableWidget* widget;
+            class QFrame* widget;
             class QPushButton* cog;
             unicorn::Label* message;
 
-            class StylableWidget* permanentWidget;
+            class QFrame* permanentWidget;
         } ui;
 
         bool m_online;

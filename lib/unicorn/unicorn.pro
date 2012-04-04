@@ -100,7 +100,6 @@ HEADERS += \
     UnicornCoreApplication.h \
     UnicornApplication.h \
     TrackImageFetcher.h \
-    StylableWidget.h \
     SignalBlocker.h \
     ScrobblesModel.h \
     qtwin.h \

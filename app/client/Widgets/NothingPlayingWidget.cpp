@@ -13,7 +13,7 @@
 #include "ui_NothingPlayingWidget.h"
 
 NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
-    :StylableWidget( parent ),
+    :QFrame( parent ),
       ui( new Ui::NothingPlayingWidget )
 {   
     ui->setupUi( this );

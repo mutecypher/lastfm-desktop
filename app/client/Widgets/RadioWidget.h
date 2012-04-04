@@ -2,9 +2,7 @@
 #define RADIOWIDGET_H
 
 #include <QPointer>
-#include <QWidget>
-
-#include "lib/unicorn/StylableWidget.h"
+#include <QFrame>
 
 namespace lastfm { class User; }
 namespace lastfm { class RadioStation; }
@@ -14,7 +12,7 @@ using lastfm::Track;
 
 namespace unicorn { class Session; }
 
-class RadioWidget : public StylableWidget
+class RadioWidget : public QFrame
 {
     Q_OBJECT
 private:
@@ -22,9 +20,9 @@ private:
     {
         class QLabel* nowPlaying;
 
-        class StylableWidget* personal;
-        class StylableWidget* network;
-        class StylableWidget* recentStations;
+        class QFrame* personal;
+        class QFrame* network;
+        class QFrame* recentStations;
 
         class PlayableItemWidget* lastStation;
 

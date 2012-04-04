@@ -15,7 +15,7 @@
 #include "ui_TrackWidget.h"
 
 TrackWidget::TrackWidget( Track& track, QWidget *parent )
-    :StylableWidget(parent),
+    :QFrame(parent),
     ui( new Ui::TrackWidget ),
     m_nowPlaying( false )
 {

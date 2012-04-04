@@ -1,20 +1,18 @@
 #ifndef FRIENDWIDGET_H
 #define FRIENDWIDGET_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QPointer>
 
 #include <lastfm/XmlQuery.h>
 #include <lastfm/User.h>
 #include <lastfm/Track.h>
 
-#include "lib/unicorn/StylableWidget.h"
-
 namespace Ui { class FriendWidget; }
 namespace unicorn { class Label; }
 using unicorn::Label;
 
-class FriendWidget : public StylableWidget
+class FriendWidget : public QFrame
 {
     Q_OBJECT
 public:

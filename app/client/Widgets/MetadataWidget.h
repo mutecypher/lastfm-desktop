@@ -27,7 +27,6 @@
 #include <lastfm/Album.h>
 #include <lastfm/Track.h>
 
-#include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 
 namespace Ui { class MetadataWidget; }
@@ -40,7 +39,7 @@ class BioWidget;
 class QMovie;
 
 
-class MetadataWidget : public StylableWidget
+class MetadataWidget : public QFrame
 {
     Q_OBJECT
 public:
@@ -66,7 +65,7 @@ private slots:
     void onArtistGotYourTags();
 
     void onTrackCorrected( QString correction );
-    void listItemClicked( const QModelIndex& );
+    void listItemClicked( const class QModelIndex& );
 
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
     void onScrobbleStatusChanged( short scrobbleStatus );

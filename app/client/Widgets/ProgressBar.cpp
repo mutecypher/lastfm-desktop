@@ -37,7 +37,7 @@
 
 
 ProgressBar::ProgressBar( QWidget* parent )
-    :StylableWidget( parent )
+    :QFrame( parent )
 {
     m_scrobbleMarkerOn = QImage(":/scrobble_marker_ON.png");
     m_scrobbleMarkerOff = QImage(":/scrobble_marker_OFF.png");
@@ -72,7 +72,7 @@ ProgressBar::resizeEvent( QResizeEvent* e )
 void
 ProgressBar::paintEvent( QPaintEvent* e )
 {
-    StylableWidget::paintEvent( e );
+    QFrame::paintEvent( e );
 
     QPainter p( this );
 

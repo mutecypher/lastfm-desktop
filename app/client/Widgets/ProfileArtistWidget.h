@@ -1,13 +1,11 @@
 #ifndef ProfileArtistWidget_H
 #define ProfileArtistWidget_H
 
-#include <QWidget>
-
-#include "lib/unicorn/StylableWidget.h"
+#include <QFrame>
 
 namespace lastfm { class XmlQuery; }
 
-class ProfileArtistWidget : public StylableWidget
+class ProfileArtistWidget : public QFrame
 {
     Q_OBJECT
 public:

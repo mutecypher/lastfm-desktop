@@ -7,7 +7,6 @@
 #include <lastfm/XmlQuery.h>
 
 #include "lib/unicorn/UnicornMainWindow.h"
-#include "lib/unicorn/StylableWidget.h"
 
 #ifdef  Q_OS_MAC
 #include "Services/ITunesPluginInstaller/ITunesPluginInstaller.h"

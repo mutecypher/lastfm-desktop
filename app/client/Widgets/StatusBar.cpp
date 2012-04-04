@@ -27,7 +27,6 @@
 #include <phonon/VolumeSlider>
 
 #include "lib/unicorn/widgets/Label.h"
-#include "lib/unicorn/StylableWidget.h"
 
 #include "StatusBar.h"
 
@@ -40,7 +39,7 @@ StatusBar::StatusBar( QWidget* parent )
     :QStatusBar( parent ),
       m_online( false )
 {
-    addWidget( ui.widget = new StylableWidget( this) );
+    addWidget( ui.widget = new QFrame( this) );
     QHBoxLayout* widgetLayout = new QHBoxLayout( ui.widget );
     widgetLayout->setContentsMargins( 0, 0, 0, 0 );
     widgetLayout->setSpacing( 0 );
@@ -56,7 +55,7 @@ StatusBar::StatusBar( QWidget* parent )
 
     setStatus();
 
-    addPermanentWidget( ui.permanentWidget = new StylableWidget( this ) );
+    addPermanentWidget( ui.permanentWidget = new QFrame( this ) );
     ui.permanentWidget->setObjectName( "permanentWidget" );
     QHBoxLayout* permanentWidgetLayout = new QHBoxLayout( ui.permanentWidget );
     permanentWidgetLayout->setContentsMargins( 0, 0, 0, 0 );

@@ -2,20 +2,19 @@
 #define PROFILEWIDGET_H
 
 #include <QPointer>
-#include <QWidget>
+#include <QFrame>
 
 #include "lib/unicorn/UnicornSession.h"
-#include "lib/unicorn/StylableWidget.h"
 
 namespace unicorn { class Label; }
 
-class ProfileWidget : public StylableWidget
+class ProfileWidget : public QFrame
 {
     Q_OBJECT
 private:
     struct
     {
-        class StylableWidget* user;
+        class QFrame* user;
         class AvatarWidget* avatar;
         unicorn::Label* name;
         class QLabel* infoString;
@@ -26,8 +25,8 @@ private:
 
         class ContextLabel* context;
 
-        class StylableWidget* topWeeklyArtists;
-        class StylableWidget* topOverallArtists;
+        class QFrame* topWeeklyArtists;
+        class QFrame* topOverallArtists;
     } ui;
 
 public:

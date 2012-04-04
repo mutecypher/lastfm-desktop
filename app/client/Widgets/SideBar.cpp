@@ -45,7 +45,7 @@ QAbstractButton* newButton( const QString& text, QWidget* parent = 0 )
 
 
 SideBar::SideBar(QWidget *parent)
-    :StylableWidget(parent)
+    :QFrame(parent)
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );

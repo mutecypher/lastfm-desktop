@@ -21,14 +21,12 @@
 #ifndef SIDEBAR_H
 #define SIDEBAR_H
 
-#include <QWidget>
-
-#include "lib/unicorn/StylableWidget.h"
+#include <QFrame>
 
 namespace lastfm { class User; }
 namespace unicorn { class Session; }
 
-class SideBar : public StylableWidget
+class SideBar : public QFrame
 {
     Q_OBJECT
 private:
