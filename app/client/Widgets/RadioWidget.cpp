@@ -98,7 +98,7 @@ RadioWidget::changeUser( const QString& newUsername )
             RadioStation lastStation( stationUrl );
             lastStation.setTitle( stationTitle );
 
-            personalLayout->addWidget( ui.lastStation = new PlayableItemWidget( lastStation, stationTitle ) );
+            nowPlayingSectionLayout->addWidget( ui.lastStation = new PlayableItemWidget( lastStation, stationTitle ) );
             ui.lastStation->setObjectName( "station" );
             ui.lastStation->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
