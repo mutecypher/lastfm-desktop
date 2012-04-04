@@ -329,7 +329,12 @@ ActivityListWidget::onGotRecentTracks()
 
                     connect( m_track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(write()));
 
-                    m_track.getInfo( this, "write", User().name() );
+                    QString loved = trackXml["loved"].text();
+
+                    if ( !loved.isEmpty() )
+                        nowPlayingTrack.setLoved( loved == "1" );
+                    else
+                        m_track.getInfo( this, "write", User().name() );
                 }
 
                 m_trackItem->setHidden( false );
@@ -352,6 +357,11 @@ ActivityListWidget::onGotRecentTracks()
                         track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
                         track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
 
+                        QString loved = trackXml["loved"].text();
+
+                        if ( !loved.isEmpty() )
+                            track.setLoved( loved == "1" );
+
                         tracks << track;
                     }
                 }
@@ -362,6 +372,11 @@ ActivityListWidget::onGotRecentTracks()
                     track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
                     track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
 
+                    QString loved = trackXml["loved"].text();
+
+                    if ( !loved.isEmpty() )
+                        track.setLoved( loved == "1" );
+
                     tracks << track;
                 }
 
@@ -371,10 +386,11 @@ ActivityListWidget::onGotRecentTracks()
 
         QList<lastfm::Track> addedTracks = addTracks( tracks );
 
-        // This was a track fetched from user.getRecentTracks so we need to find
-        // out if it was loved. We can remove this when loved is included there.
+        // get info for track if we don't know the loved state. This is so it will
+        // work before and after the loved field is added to user.getRecentTracks
         foreach ( const lastfm::Track& addedTrack, addedTracks )
-            addedTrack.getInfo(  this, "write", User().name() );
+            if ( addedTrack.loveStatus() == lastfm::Unknown )
+                addedTrack.getInfo(  this, "write", User().name() );
 
         write();
     }
