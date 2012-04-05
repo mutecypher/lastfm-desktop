@@ -136,7 +136,7 @@ ProfileWidget::changeUser( const QString& newUsername )
         vl->addWidget( ui.loved = new QLabel( tr( "Loved tracks" ) ) );
         ui.loved->setObjectName( "loved" );
 
-        vl->addStretch( 1 );
+        vl->addSpacing( 12 );
 
         layout->addWidget( ui.context = new ContextLabel( this ) );
         ui.context->setObjectName( "userBlurb" );
