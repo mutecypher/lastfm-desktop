@@ -127,6 +127,7 @@ TrackWidget::setTrack( lastfm::Track& track )
     ui->albumArt->setPixmap( QPixmap( ":/meta_album_no_art.png" ) );
     ui->albumArt->setHref( track.www() );
 
+    m_triedFetchAlbumArt = false;
     fetchAlbumArt();
 }
 
