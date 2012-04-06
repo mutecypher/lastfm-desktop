@@ -923,6 +923,7 @@ ProfileWidget PlayableItemWidget {
 }
 
 RadioWidget PlayableItemWidget#station {
+	qproperty-style: DescriptionElide;
 	padding-left: 30px;
 	text-align: left center;
 }

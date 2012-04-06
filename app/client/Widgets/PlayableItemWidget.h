@@ -32,7 +32,7 @@ class PlayableItemWidget : public QPushButton
 public:
     enum Style
     {
-        DescriptionRight,
+        DescriptionElide,
         DescriptionBottom,
         ThreePart,
         DescriptionNone
@@ -68,6 +68,8 @@ private:
     void contextMenuEvent( class QContextMenuEvent* event );
 
     bool event( QEvent* e );
+
+    QSize sizeHint() const;
 
 private:
     RadioStation m_rs;

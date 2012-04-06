@@ -100,7 +100,6 @@ RadioWidget::changeUser( const QString& newUsername )
 
             nowPlayingSectionLayout->addWidget( ui.lastStation = new PlayableItemWidget( lastStation, stationTitle ) );
             ui.lastStation->setObjectName( "station" );
-            ui.lastStation->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
             if ( stationUrl.isEmpty() )
                 ui.nowPlayingFrame->hide();
@@ -156,7 +155,6 @@ RadioWidget::changeUser( const QString& newUsername )
             title->setObjectName( "title" );
             layout->addWidget( ui.recentStations = new QFrame( this ) );
             ui.recentStations->setObjectName( "section" );
-            ui.recentStations->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
 
             QVBoxLayout* layout = new QVBoxLayout( ui.recentStations );
             layout->setContentsMargins( 0, 0, 0, 0 );
@@ -185,7 +183,6 @@ RadioWidget::onGotRecentStations()
             {
                 PlayableItemWidget* item = new PlayableItemWidget( RadioStation( stationUrl ), station["name"].text() );
                 item->setObjectName( "station" );
-                item->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
                 ui.recentStations->layout()->addWidget( item );
             }
         }
@@ -218,7 +215,6 @@ RadioWidget::onTuningIn( const RadioStation& station )
     {
         PlayableItemWidget* item = new PlayableItemWidget( station, station.title() );
         item->setObjectName( "station" );
-        item->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
         qobject_cast<QBoxLayout*>(ui.recentStations->layout())->insertWidget( 0, item );
 
         // if it exists already remove it or remove the last one
