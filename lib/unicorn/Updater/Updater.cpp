@@ -15,8 +15,10 @@ unicorn::Updater::Updater(QObject *parent) :
 #ifdef Q_OS_WIN
     win_sparkle_init();
 
-    if ( qApp->arguments().contains( "--debug" ) )
+    if ( qApp->arguments().contains( "--update" ) )
         win_sparkle_set_appcast_url( "http://users.last.fm/~michael/updates_win.xml" );
+    else
+        win_sparkle_set_appcast_url( "http://cdn.last.fm/client/Win/updates.xml" );
 #endif
 }
 

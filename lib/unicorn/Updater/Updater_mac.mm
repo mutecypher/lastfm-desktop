@@ -47,8 +47,10 @@ unicorn::Updater::Updater(QObject *parent) :
     g_Delegate = [UpdaterDelegate alloc];
     [updater setDelegate:g_Delegate];
 
-    if ( qApp->arguments().contains( "--debug" ) )
+    if ( qApp->arguments().contains( "--update" ) )
         [updater setFeedURL:[NSURL URLWithString:@"http://users.last.fm/~michael/updates_mac.xml"]];
+    else
+        [updater setFeedURL:[NSURL URLWithString:@"http://cdn.last.fm/client/Mac/updates.xml"]];
 }
 
 void
