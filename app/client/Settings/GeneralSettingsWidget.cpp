@@ -84,7 +84,10 @@ GeneralSettingsWidget::saveSettings()
 
         if ( unicorn::AppSettings().value( "language", "" ) != currLanguage )
         {
-            QLocale::setDefault( QLocale( currLanguage ) );
+            if ( currLanguage == ""  )
+                QLocale::setDefault( QLocale::system() );
+            else
+                QLocale::setDefault( QLocale( currLanguage ) );
 
             unicorn::AppSettings().setValue( "language", currLanguage );
 //            QMessageBoxBuilder( 0 )
