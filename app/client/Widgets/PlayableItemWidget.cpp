@@ -81,6 +81,17 @@ PlayableItemWidget::event( QEvent* e )
     return QPushButton::event( e );
 }
 
+QSize
+PlayableItemWidget::sizeHint() const
+{
+    QSize sizeHint = QPushButton::sizeHint();
+
+    if ( m_style == DescriptionElide )
+        sizeHint.setWidth( 0 );
+
+    return sizeHint;
+}
+
 void
 PlayableItemWidget::setStation(const RadioStation& rs, const QString& title, const QString& description)
 {
@@ -173,35 +184,39 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
     static QPixmap m_radio_left_hover = QPixmap( ":/meta_radio_LEFT_HOVER.png" );
     static QPixmap m_radio_left_press = QPixmap( ":/meta_radio_LEFT_PRESS.png" );
     static QPixmap m_radio_left_rest = QPixmap( ":/meta_radio_LEFT_REST.png" );
+
     static QPixmap m_radio_middle_hover = QPixmap( ":/meta_radio_MIDDLE_HOVER.png" );
     static QPixmap m_radio_middle_press = QPixmap( ":/meta_radio_MIDDLE_PRESS.png" );
     static QPixmap m_radio_middle_rest = QPixmap( ":/meta_radio_MIDDLE_REST.png" );
+
     static QPixmap m_radio_right_hover = QPixmap( ":/meta_radio_RIGHT_HOVER.png" );
     static QPixmap m_radio_right_press = QPixmap( ":/meta_radio_RIGHT_PRESS.png" );
     static QPixmap m_radio_right_rest = QPixmap( ":/meta_radio_RIGHT_REST.png" );
+
+    static QPixmap m_radio_small_hover = QPixmap( ":/radio_play_small_HOVER.png" );
+    static QPixmap m_radio_small_press = QPixmap( ":/radio_play_small_PRESS.png" );
+    static QPixmap m_radio_small_rest = QPixmap( ":/radio_play_small_REST.png" );
 
     if ( m_style == DescriptionNone )
     {
         QPushButton::paintEvent( event );
     }
-    else if ( m_style == DescriptionRight )
+    else if ( m_style == DescriptionElide )
     {
-        QPushButton::paintEvent( event );
-
-        QPainter p( this );
-
-        p.setPen( QColor( 0x898989 ) );
-
-        QFont font = p.font();
-        font.setPixelSize( 12 );
-        p.setFont( font );
+        QPainter p(this);
 
         QTextOption to;
-        to.setAlignment( Qt::AlignVCenter );
+        to.setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
 
-        QFontMetrics fm( font );
-        p.drawText( rect().adjusted( fm.width( text() ) + 45, 0, 0, 0 ), m_description, to );
+        QRect textRect = contentsRect().adjusted( 30, 0, 0, 0 );
+        p.drawText( textRect, fontMetrics().elidedText( text(), Qt::ElideRight, textRect.width() ), to );
 
+        if ( isDown() )
+            p.drawPixmap( rect().topLeft(), m_radio_small_press );
+        else if ( m_hovered )
+            p.drawPixmap( rect().topLeft(), m_radio_small_hover );
+        else
+            p.drawPixmap( rect().topLeft(), m_radio_small_rest );
     }
     else if ( m_style == DescriptionBottom )
     {
