@@ -5,6 +5,9 @@ QT = core gui xml network
 include( ../../admin/include.qmake )
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
 
+DEFINES += API_KEY=\\\"${LASTFM_API_KEY}\\\"
+DEFINES += API_SECRET=\\\"${LASTFM_API_SECRET}\\\"
+
 # UniqueApplication
 win32:LIBS += user32.lib shell32.lib ole32.lib
 
