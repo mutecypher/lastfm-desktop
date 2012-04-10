@@ -21,7 +21,8 @@
 #ifndef APIKEY_H
 #define APIKEY_H
 
-#define API_KEY ""
-#define API_SECRET  ""
+#define API_KEY "9e89b44de1ff37c5246ad0af18406454"
+#define API_SECRET  "147320ea9b8930fe196a4231da50ada4"
+
 
 #endif // APIKEY_H
