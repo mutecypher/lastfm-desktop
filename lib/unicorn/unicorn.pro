@@ -133,7 +133,6 @@ HEADERS += \
     Updater/Updater.h \
     DesktopServices.h \
     CrashReporter/CrashReporter.h \
-    ApiKey.h \
     widgets/StackedWidget.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
