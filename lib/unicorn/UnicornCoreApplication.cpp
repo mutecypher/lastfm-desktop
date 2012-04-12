@@ -50,6 +50,8 @@ unicorn::CoreApplication::init()
     QCoreApplication::setOrganizationName( "Last.fm" /*unicorn::organizationName() */ );
     QCoreApplication::setOrganizationDomain( "last.fm" /*unicorn::organizationDomain()*/ );
 
+    // you can override this api key and secret by setting the
+    // environment variables LASTFM_API_KEY and LASTFM_API_SECRET
     lastfm::ws::ApiKey = QString( API_KEY ).isEmpty() ? "9e89b44de1ff37c5246ad0af18406454" : API_KEY;
     lastfm::ws::SharedSecret = QString( API_SECRET ).isEmpty() ? "147320ea9b8930fe196a4231da50ada4" : API_SECRET;
 
