@@ -198,7 +198,7 @@
 
 + (id)scriptingLastfmImageWithDescriptor:(NSAppleEventDescriptor *)descriptor
 {
-    if ( [descriptor descriptorType] == typeType && [descriptor typeCodeValue] == cMissingValue )
+    if ( [descriptor descriptorType] == typeType && [descriptor typeCodeValue] == 'msng' )
     {
         return nil;
     }
