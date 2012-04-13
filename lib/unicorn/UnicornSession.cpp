@@ -194,8 +194,8 @@ Session::cacheUserInfo( const lastfm::User& userInfo )
     s.setValue( "DateRegistered", userInfo.dateRegistered() );
     s.setValue( "RealName", userInfo.realName() );
 
-    QList<lastfm::ImageSize> sizes;
-    sizes << lastfm::Small << lastfm::Medium << lastfm::Large;
+    QList<User::ImageSize> sizes;
+    sizes << User::SmallImage << User::MediumImage << User::LargeImage;
 
     s.beginWriteArray( "ImageUrls", sizes.count() );
     for ( int i = 0; i < sizes.count(); i++ )
