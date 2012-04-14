@@ -21,6 +21,7 @@
 #include "UserToolButton.h"
 #include <QApplication>
 
+#include <QDebug>
 #include <QToolButton>
 #include <QPainter>
 #include <lastfm/User.h>

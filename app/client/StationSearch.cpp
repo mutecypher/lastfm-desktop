@@ -21,6 +21,8 @@
 #include <lastfm/ws.h>
 #include <lastfm/XmlQuery.h>
 
+#include <QDebug>
+
 using namespace lastfm;
 
 void

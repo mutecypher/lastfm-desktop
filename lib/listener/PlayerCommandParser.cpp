@@ -18,6 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QDebug>
 #include <QStringList>
 #include <QUrl>
 #ifdef Q_OS_WIN

@@ -21,6 +21,7 @@
 #include "AbstractFileBootstrapper.h"
 #include <lastfm/misc.h>
 #include <QFile>
+#include <QTextStream>
 
 static const int k_maxPlaysPerTrack = 10000;
 static const int k_maxTotalPlays = 300000;

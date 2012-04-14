@@ -25,12 +25,12 @@
 
 #include "lib/listener/State.h"
 
+#include <lastfm/Audioscrobbler.h>
 #include <lastfm/Track.h>
 
 namespace unicorn { class Session; }
 class PlayerMediator;
 class PlayerConnection;
-class Audioscrobbler;
 class StopWatch;
 class DeviceScrobbler;
 

@@ -19,6 +19,7 @@
 */
 
 #include <QByteArray>
+#include <QDebug>
 #include <QHeaderView>
 #include <QProcess>
 

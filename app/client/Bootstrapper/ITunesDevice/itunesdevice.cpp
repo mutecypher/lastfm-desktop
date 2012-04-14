@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include <QCoreApplication>
+#include <QDebug>
 #include <QDir>
 #include <QSettings>
 #include "itunesdevice.h"

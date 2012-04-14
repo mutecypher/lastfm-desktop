@@ -21,6 +21,7 @@
 #include <lastfm/Track.h>
 #include <lastfm/ws.h>
 #include <lastfm/XmlQuery.h>
+#include <QDebug>
 #include <QPixmap>
 #include <QStringList>
 

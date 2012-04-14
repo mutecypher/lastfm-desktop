@@ -20,7 +20,7 @@
 #ifndef DIAGNOSTICS_DIALOG_H
 #define DIAGNOSTICS_DIALOG_H
 
-#include <lastfm/global.h>
+#include <lastfm/Track.h>
 
 #include <QDialog>
 #include <QLabel>
