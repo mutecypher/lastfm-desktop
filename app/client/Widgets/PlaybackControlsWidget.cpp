@@ -250,7 +250,7 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
 
     setIconForRadio( station );
 
-    ui->status->setText( tr("Tuning...") );
+    ui->status->setText( tr("Tuning") );
     ui->device->setText( station.title() );
 
     ui->play->setChecked( true );
@@ -309,7 +309,7 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
             // A radio track!
             connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool)));
 
-            ui->status->setText( tr("Listening to...") );
+            ui->status->setText( tr("Listening to") );
             ui->device->setText( RadioService::instance().station().title() );
 
             connect( &RadioService::instance(), SIGNAL(tick(qint64)), SLOT(onTick(qint64)) );
@@ -319,9 +319,9 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
             // Not a radio track
 
             if ( track.extra( "playerId" ) == "spt" )
-                ui->status->setText( tr("Listening to...") );
+                ui->status->setText( tr("Listening to") );
             else
-                ui->status->setText( tr("Scrobbling from...") );
+                ui->status->setText( tr("Scrobbling from") );
 
             ui->device->setText( track.extra( "playerName" ) );
 
