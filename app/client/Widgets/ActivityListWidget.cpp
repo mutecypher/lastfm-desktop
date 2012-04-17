@@ -124,7 +124,7 @@ ActivityListWidget::fetchTrackInfo( const QList<lastfm::Track>& tracks )
 {
     if ( isVisible() )
     {
-        // Make sure we fetch info for any tracks with unkown loved status
+        // Make sure we fetch info for any tracks with unknown loved status
         foreach ( const lastfm::Track& track, tracks )
             if ( track.loveStatus() == lastfm::Track::UnknownLoveStatus )
                 track.getInfo(  this, "write", User().name() );
