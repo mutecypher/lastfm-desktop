@@ -124,6 +124,10 @@ Application::init()
     // Initialise the unicorn base class first!
     unicorn::Application::init();
 
+#ifdef Q_WS_X11
+    setWindowIcon( QIcon( ":/as.png" ) );
+#endif
+
     if ( !currentSession() )
     {
         // there won't be a current session if one wasn't created by the wizard
