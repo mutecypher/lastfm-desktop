@@ -22,7 +22,7 @@ public:
     void refresh();
 
 signals:
-    void trackClicked( const Track& );
+    void trackClicked( class TrackWidget& );
 
 private slots:
     void onRefreshing( bool refreshing );

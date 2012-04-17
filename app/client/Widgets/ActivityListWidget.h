@@ -22,14 +22,14 @@ public:
     ActivityListWidget( QWidget* parent = 0 );
 
 signals:
-    void trackClicked( const Track& );
+    void trackClicked( class TrackWidget& );
     void refreshing( bool refreshing );
 
 public slots:
     void refresh();
 
 private slots: 
-    void onItemClicked( const QModelIndex& index );
+    void onItemClicked( class TrackWidget& index );
 
     void onTrackStarted( const Track& track, const Track& );
 
@@ -66,6 +66,9 @@ private:
     void showEvent(QShowEvent *);
 
     void fetchTrackInfo( const QList<lastfm::Track>& tracks );
+
+    void mousePressEvent( QMouseEvent* event );
+    void mouseReleaseEvent( QMouseEvent* event );
 
 private:
     class ActivityListModel* m_model;

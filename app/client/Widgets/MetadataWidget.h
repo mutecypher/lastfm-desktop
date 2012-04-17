@@ -46,6 +46,8 @@ public:
     MetadataWidget( const Track& track, QWidget* p = 0 );
     ~MetadataWidget();
 
+    void fetchTrackInfo();
+
     class ScrobbleControls* scrobbleControls() const;
 
     QWidget* basicInfoWidget();
@@ -75,14 +77,13 @@ private slots:
 signals:
     void lovedStateChanged(bool loved);
     void backClicked();
+    void finished();
 
 private:
     void setTrackDetails( const Track& track );
 
     QString contextString( const Track& track );
     QString scrobbleString( const Track& track );
-
-    void fetchTrackInfo();
 
     void showEvent( QShowEvent *e );
 

@@ -52,6 +52,7 @@ unicorn::SlidingStackedWidget::slideWidget( QWidget* newwidget )
     if ( now == next )
     {
         m_active=false;
+        emit currentChanged( currentIndex() );
         return;
     }
     else if ( now < next )

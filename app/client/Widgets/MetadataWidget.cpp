@@ -115,8 +115,6 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     connect( track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onTrackCorrected(QString)));
 
     connect( ui->back, SIGNAL(clicked()), SIGNAL(backClicked()));
-
-    fetchTrackInfo();
 }
 
 MetadataWidget::~MetadataWidget()
@@ -178,6 +176,8 @@ MetadataWidget::checkFinished()
     {
         ui->loadingStack->setCurrentWidget( ui->content );
         m_movie->stop();
+
+        emit finished();
     }
 }
 

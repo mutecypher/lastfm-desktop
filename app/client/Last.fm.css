@@ -536,14 +536,35 @@ TrackWidget {
 	border-top: 1px solid white;
 	border-bottom: 1px solid #aaa;
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #eeeeee, stop:1 #dddddd);
-	padding: 3px 10px;
+}
+
+TrackWidget QFrame#frame {
+	border: none;
+}
+
+TrackWidget QStackedWidget {
+	border: none;
+	padding: 10px 20px;
+}
+
+TrackWidget:hover {
+	background-color: #eeeeee;
+}
+
+TrackWidget:pressed {
+	background-color: #d6d6d6;
 }
 
 TrackWidget#nowPlaying {
-	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fffcca, stop:1 #eeebb9);
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #f2efc0, stop:1 #fffcca);
+}
+
+TrackWidget#nowPlaying:hover {
+	background-color: #fffcca;
 }
 
 TrackWidget QLabel#trackTitle {
+	font-weight: bold;
 	font-size: 13px;
 }
 
@@ -555,12 +576,15 @@ TrackWidget QLabel#timestamp {
 	font-size: 11px;
 }
 
-TrackWidget QPushButton {
+TrackWidget QPushButton#love,
+TrackWidget QPushButton#tag,
+TrackWidget QPushButton#share,
+TrackWidget QPushButton#buy {
 	color: transparent;
 	border: none;
 	background-repeat: no-repeat;
 	background-color: transparent;
-	margin: 1px 0px 0px 5px;
+	margin: 1px 0px 0px 0px;
 }
 
 TrackWidget QPushButton#love {
@@ -599,17 +623,6 @@ TrackWidget QPushButton#buy:hover { background-image: url(":/meta_buy_HOVER.png"
 TrackWidget QPushButton#buy:pressed { background-image: url(":/meta_buy_PRESS.png"); }
 TrackWidget QPushButton#buy::menu-indicator { image: none; }
 
-TrackWidget QPushButton#remove {
-	background-image: url(":/message_close.png");
-	width: 17px;
-	height: 17px;
-	margin: 0px;
-}
-
-TrackWidget QPushButton#remove:disabled {
-	background-image: none;
-}
-
 TrackWidget QLabel#asterisk {
 	background-repeat: no-repeat;
 	background-position: center;
@@ -619,7 +632,6 @@ TrackWidget QLabel#asterisk {
 	max-height: 11px;
 	margin: 0px 0px 0px 3px;
 }
-
 
 FriendListWidget QListWidget {
 background-color: #eeeeee;

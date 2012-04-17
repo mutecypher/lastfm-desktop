@@ -1,10 +1,15 @@
 
 #include <QWidget>
-#include "ScrobblesWidget.h"
-#include "MetadataWidget.h"
-#include "lib/unicorn/layouts/SideBySideLayout.h"
-#include <lastfm/Track.h>
+#include <QLayoutItem>
 #include <QDebug>
+
+#include <lastfm/Track.h>
+
+#include "lib/unicorn/layouts/SideBySideLayout.h"
+
+#include "ScrobblesWidget.h"
+#include "TrackWidget.h"
+#include "MetadataWidget.h"
 
 #include "RecentTracksWidget.h"
 
@@ -16,7 +21,7 @@ RecentTracksWidget::RecentTracksWidget( QWidget* parent )
     setLayout( m_layout );
     m_layout->addWidget( m_scrobbles = new ScrobblesWidget );
 
-    connect( m_scrobbles, SIGNAL( trackClicked(Track)), SLOT( onTrackClicked(Track)));
+    connect( m_scrobbles, SIGNAL( trackClicked(TrackWidget&)), SLOT( onTrackClicked(TrackWidget&)));
     connect( m_layout, SIGNAL( moveFinished(QLayoutItem*)), SLOT(onMoveFinished(QLayoutItem*)));
 }
 
@@ -31,19 +36,29 @@ RecentTracksWidget::onCurrentChanged( int index )
 {
     if ( index == 1 )
         m_scrobbles->refresh(); // this tab was clicked on
-    else
-        m_layout->moveToWidget( m_scrobbles );
+
+    m_layout->moveToWidget( m_scrobbles );
 }
 
 void
-RecentTracksWidget::onTrackClicked( const Track& track )
+RecentTracksWidget::onTrackClicked( TrackWidget& trackWidget )
 {
     MetadataWidget* w;
-    m_layout->addWidget( w = new MetadataWidget( track ));
+    m_layout->addWidget( w = new MetadataWidget( trackWidget.track() ));
+    w->fetchTrackInfo();
     w->setBackButtonVisible( true );
-    m_layout->moveForward();
 
+    trackWidget.startSpinner();
+    connect( m_layout, SIGNAL( moveFinished(QLayoutItem*)), &trackWidget, SLOT(clearSpinner()) );
+
+    connect( w, SIGNAL(finished()), SLOT(onMetadataWidgetFinished()));
     connect( w, SIGNAL(backClicked()), SLOT(onBackClicked()));
+}
+
+void
+RecentTracksWidget::onMetadataWidgetFinished()
+{
+    m_layout->moveForward();
 }
 
 void
@@ -57,12 +72,11 @@ RecentTracksWidget::onMoveFinished( QLayoutItem* i )
 {
     if( i->widget() == m_scrobbles )
     {
-        QWidget* nextWidget = m_layout->nextWidget();
-
-        if( nextWidget )
+        while ( m_layout->count() > 1 )
         {
-            m_layout->removeWidget( nextWidget );
-            nextWidget->deleteLater();
+            QLayoutItem* item = m_layout->takeAt( 1 );
+            item->widget()->deleteLater();
+            delete item;
         }
     }
 }

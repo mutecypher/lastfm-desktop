@@ -17,9 +17,10 @@ public slots:
     void refresh();
 
 protected slots:
-    void onTrackClicked( const Track& track );
+    void onTrackClicked( class TrackWidget& trackWidget );
     void onBackClicked();
     void onMoveFinished( class QLayoutItem* i );
+    void onMetadataWidgetFinished();
 
 protected:
     class SideBySideLayout* m_layout;

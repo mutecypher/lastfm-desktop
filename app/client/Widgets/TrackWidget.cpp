@@ -9,18 +9,21 @@
 #include <lib/unicorn/TrackImageFetcher.h>
 
 #include "../Application.h"
+#include "../Services/RadioService/RadioService.h"
 #include "../Services/ScrobbleService/ScrobbleService.h"
 
 #include "TrackWidget.h"
 #include "ui_TrackWidget.h"
 
 TrackWidget::TrackWidget( Track& track, QWidget *parent )
-    :QFrame(parent),
+    :QPushButton(parent),
     ui( new Ui::TrackWidget ),
     m_nowPlaying( false ),
     m_triedFetchAlbumArt( false )
 {
-    ui->setupUi(this);
+    ui->setupUi( this );
+
+    ui->stackedWidget->setCurrentWidget( ui->trackPage );
 
 #ifdef NDEBUG
     // hide the delete button from release builds until we get a proper design
@@ -31,10 +34,10 @@ TrackWidget::TrackWidget( Track& track, QWidget *parent )
     m_movie->setCacheMode( QMovie::CacheAll );
     ui->equaliser->setMovie( m_movie );
 
-    layout()->setAlignment( ui->love, Qt::AlignTop );
-    layout()->setAlignment( ui->tag, Qt::AlignTop );
-    layout()->setAlignment( ui->share, Qt::AlignTop );
-    layout()->setAlignment( ui->buy, Qt::AlignTop );
+    ui->buttonLayout->setAlignment( ui->love, Qt::AlignTop );
+    ui->buttonLayout->setAlignment( ui->tag, Qt::AlignTop );
+    ui->buttonLayout->setAlignment( ui->share, Qt::AlignTop );
+    ui->buttonLayout->setAlignment( ui->buy, Qt::AlignTop );
     ui->trackTitleLayout->setAlignment( ui->asterisk, Qt::AlignTop );
 
     ui->albumArt->setAttribute( Qt::WA_LayoutUsesWidgetRect );
@@ -44,6 +47,8 @@ TrackWidget::TrackWidget( Track& track, QWidget *parent )
     ui->buy->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
     setAttribute( Qt::WA_MacNoClickThrough );
+    ui->stackedWidget->setAttribute( Qt::WA_MacNoClickThrough );
+    ui->trackPage->setAttribute( Qt::WA_MacNoClickThrough );
     ui->albumArt->setAttribute( Qt::WA_MacNoClickThrough );
     ui->love->setAttribute( Qt::WA_MacNoClickThrough );
     ui->tag->setAttribute( Qt::WA_MacNoClickThrough );
@@ -54,7 +59,8 @@ TrackWidget::TrackWidget( Track& track, QWidget *parent )
     connect( ui->tag, SIGNAL(clicked()), SLOT(onTagClicked()));
     connect( ui->share, SIGNAL(clicked()), SLOT(onShareClicked()));
     connect( ui->buy, SIGNAL(clicked()), SLOT(onBuyClicked()));
-    connect( ui->remove, SIGNAL(clicked()), SLOT(onRemoveClicked()));
+
+    connect( this, SIGNAL(clicked()), SLOT(onClicked()) );
 
     setTrack( track );
 }
@@ -62,6 +68,82 @@ TrackWidget::TrackWidget( Track& track, QWidget *parent )
 TrackWidget::~TrackWidget()
 {
     delete ui;
+}
+
+QSize
+TrackWidget::sizeHint() const
+{
+    return ui->stackedWidget->sizeHint();
+}
+
+void
+TrackWidget::onClicked()
+{
+    emit clicked( *this );
+}
+
+void
+TrackWidget::contextMenuEvent( QContextMenuEvent* event )
+{
+    QMenu* contextMenu = new QMenu( this );
+
+    if ( ! m_nowPlaying )
+    {
+        contextMenu->addAction( tr( "Delete this scrobble from your profile" ), this, SLOT(onRemoveClicked()));
+        contextMenu->addSeparator();
+    }
+
+    contextMenu->addAction( tr( "Play %1 Radio" ).arg( m_track.artist().name() ), this, SLOT(play()));
+
+    if ( RadioService::instance().state() == Playing )
+        contextMenu->addAction( tr( "Cue %1 Radio" ).arg( m_track.artist().name() ), this, SLOT(playNext()));
+
+    if ( contextMenu->actions().count() )
+        contextMenu->exec( event->globalPos() );
+}
+
+void
+TrackWidget::play()
+{
+    lastfm::RadioStation rs = lastfm::RadioStation::similar( m_track.artist().name() );
+    rs.setTitle( tr( "%1 Radio" ).arg( m_track.artist().name() ) );
+    RadioService::instance().play( rs );
+}
+
+void
+TrackWidget::playNext()
+{
+    lastfm::RadioStation rs = lastfm::RadioStation::similar( m_track.artist().name() );
+    rs.setTitle( tr( "%1 Radio" ).arg( m_track.artist().name() ) );
+    RadioService::instance().playNext( rs );
+}
+
+void
+TrackWidget::startSpinner()
+{
+    if ( !m_spinner )
+    {
+        m_spinner = new QMovie( ":/loading_meta.gif", "GIF", this );
+        m_spinner->setCacheMode( QMovie::CacheAll );
+        ui->spinner->setMovie( m_spinner );
+    }
+
+    m_spinner->start();
+    ui->stackedWidget->setCurrentWidget( ui->spinnerPage );
+}
+
+void
+TrackWidget::clearSpinner()
+{
+    if ( !m_spinner )
+    {
+        m_spinner = new QMovie( ":/loading_meta.gif", "GIF", this );
+        m_spinner->setCacheMode( QMovie::CacheAll );
+        ui->spinner->setMovie( m_spinner );
+    }
+
+    m_spinner->stop();
+    ui->stackedWidget->setCurrentWidget( ui->trackPage );
 }
 
 void
@@ -280,9 +362,6 @@ void
 TrackWidget::setNowPlaying( bool nowPlaying )
 {
     m_nowPlaying = nowPlaying;
-
-    ui->remove->setEnabled( !nowPlaying );
-
     updateTimestamp();
 }
 

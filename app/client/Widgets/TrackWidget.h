@@ -1,15 +1,16 @@
 #ifndef TRACKWIDGET_H
 #define TRACKWIDGET_H
 
-#include <QFrame>
+#include <QPushButton>
 
 #include <lastfm/Track.h>
 
 namespace Ui { class TrackWidget; }
 
+class QMovie;
 class TrackImageFetcher;
 
-class TrackWidget : public QFrame
+class TrackWidget : public QPushButton
 {
     Q_OBJECT
     
@@ -22,10 +23,16 @@ public:
 
     void setNowPlaying( bool nowPlaying );
 
+public slots:
+    void startSpinner();
+    void clearSpinner();
+
 signals:
+    void clicked( TrackWidget& trackWidget );
     void removed();
 
 private slots:
+    void onClicked();
     void onLoveClicked( bool loved );
     void onTagClicked();
     void onShareClicked();
@@ -47,7 +54,13 @@ private slots:
     void onScrobbleStatusChanged();
     void onCorrected( QString correction );
 
+    void play();
+    void playNext();
+
     void updateTimestamp();
+
+public:
+    QSize sizeHint() const;
 
 private:
     QString price( const QString& price, const QString& currency ) const;
@@ -57,11 +70,12 @@ private:
 
     void resizeEvent(QResizeEvent *);
     void showEvent(QShowEvent *);
+    void contextMenuEvent( QContextMenuEvent* event );
 
     void fetchAlbumArt();
 
 private:
-    Ui::TrackWidget *ui;
+    Ui::TrackWidget* ui;
 
     lastfm::Track m_track;
 
@@ -71,6 +85,8 @@ private:
 
     bool m_nowPlaying;
     bool m_triedFetchAlbumArt;
+
+    QPointer<QMovie> m_spinner;
 };
 
 #endif // TRACKWIDGET_H

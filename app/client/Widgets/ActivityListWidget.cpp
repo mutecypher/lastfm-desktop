@@ -131,10 +131,22 @@ ActivityListWidget::fetchTrackInfo( const QList<lastfm::Track>& tracks )
     }
 }
 
-void 
-ActivityListWidget::onItemClicked( const QModelIndex& index ) 
+void
+ActivityListWidget::mousePressEvent( QMouseEvent* event )
 {
-    emit trackClicked( static_cast<TrackWidget*>( itemWidget( item( index.row() ) ) )->track() );
+    event->setAccepted( false );
+}
+
+void
+ActivityListWidget::mouseReleaseEvent( QMouseEvent* event )
+{
+    event->setAccepted( false );
+}
+
+void 
+ActivityListWidget::onItemClicked( TrackWidget& trackWidget )
+{
+    emit trackClicked( trackWidget );
 }
 
 void
@@ -176,6 +188,8 @@ ActivityListWidget::read()
     m_trackItem->setSizeHint( trackWidget->sizeHint() );
     m_trackItem->setHidden( true );
     m_trackItem->setNowPlaying( true );
+
+    connect( trackWidget, SIGNAL(clicked(TrackWidget&)), SLOT(onItemClicked(TrackWidget&)) );
 
     QFile file( m_path );
     file.open( QFile::Text | QFile::ReadOnly );
@@ -478,6 +492,7 @@ ActivityListWidget::addTracks( const QList<lastfm::Track>& tracks )
             item->setSizeHint( trackWidget->sizeHint() );
 
             connect( trackWidget, SIGNAL(removed()), SLOT(onTrackWidgetRemoved()));
+            connect( trackWidget, SIGNAL(clicked(TrackWidget&)), SLOT(onItemClicked(TrackWidget&)) );
 
             connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(write()));
             connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged(short)), SLOT(write()));

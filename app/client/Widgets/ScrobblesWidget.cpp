@@ -23,7 +23,7 @@ ScrobblesWidget::ScrobblesWidget(QWidget *parent) :
     layout->addWidget( ui.activityList = new ActivityListWidget );
     ui.activityList->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-    connect( ui.activityList, SIGNAL(trackClicked(Track)), SIGNAL(trackClicked(Track)) );
+    connect( ui.activityList, SIGNAL(trackClicked(TrackWidget&)), SIGNAL(trackClicked(TrackWidget&)) );
     connect( ui.refresh, SIGNAL(clicked()), ui.activityList, SLOT(refresh()) );
 
     connect( ui.activityList, SIGNAL(refreshing(bool)), SLOT(onRefreshing(bool)));
