@@ -346,7 +346,7 @@ ActivityListWidget::onGotRecentTracks()
             if ( trackXml.attribute( "nowplaying" ) == "true" )
             {
                 nowPlayingTrack.setTitle( trackXml["name"].text() );
-                nowPlayingTrack.setArtist( trackXml["artist"].text() );
+                nowPlayingTrack.setArtist( trackXml["artist"]["name"].text() );
                 nowPlayingTrack.setAlbum( trackXml["album"].text() );
 
                 if ( nowPlayingTrack != m_track )
@@ -378,29 +378,13 @@ ActivityListWidget::onGotRecentTracks()
             {
                 MutableTrack track;
                 track.setTitle( trackXml["name"].text() );
-                track.setArtist( trackXml["artist"].text() );
+                track.setArtist( trackXml["artist"]["name"].text() );
                 track.setAlbum( trackXml["album"].text() );
 
                 track.setTimeStamp( QDateTime::fromTime_t( trackXml["date"].attribute("uts").toUInt() ) );
 
-                if ( !checkedFirstScrobble )
-                {
-                    if ( track != nowPlayingTrack && track.timestamp().secsTo( QDateTime::currentDateTime() ) < 10 * 60 )
-                    {
-                        track.setImageUrl( Track::SmallImage, trackXml["image size=small"].text() );
-                        track.setImageUrl( Track::MediumImage, trackXml["image size=medium"].text() );
-                        track.setImageUrl( Track::LargeImage, trackXml["image size=large"].text() );
-                        track.setImageUrl( Track::ExtraLargeImage, trackXml["image size=extralarge"].text() );
-
-                        QString loved = trackXml["loved"].text();
-
-                        if ( !loved.isEmpty() )
-                            track.setLoved( loved == "1" );
-
-                        tracks << track;
-                    }
-                }
-                else
+                if ( checkedFirstScrobble ||
+                      (!checkedFirstScrobble && ( track != nowPlayingTrack || (track == nowPlayingTrack && track.timestamp().secsTo( QDateTime::currentDateTime() ) > 10 * 60 ) ) ) )
                 {
                     track.setImageUrl( Track::SmallImage, trackXml["image size=small"].text() );
                     track.setImageUrl( Track::MediumImage, trackXml["image size=medium"].text() );
