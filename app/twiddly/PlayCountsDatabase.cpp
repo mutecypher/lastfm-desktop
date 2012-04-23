@@ -32,6 +32,7 @@
 #include <QSqlQuery>
 #include <QTemporaryFile>
 #include <iostream>
+#include <QDebug>
 
 
 /** @author Max Howell <max@last.fm>

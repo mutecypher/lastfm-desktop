@@ -24,7 +24,7 @@
 #include <QDateTime>
 #include <QFileInfo>
 #include <QStringList>
-
+#include <QDebug>
 
 ITunesLibrary::ITunesLibrary( const QString& pid, bool )
         : m_currentIndex( 0 )

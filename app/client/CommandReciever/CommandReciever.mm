@@ -278,7 +278,7 @@ CommandReciever::onTrackSpooled( const Track& track )
     if ( !m_trackImageFetcher && !track.isNull() )
     {
         m_artworkDownloaded = false;
-        m_trackImageFetcher = new TrackImageFetcher( track, lastfm::Mega );
+        m_trackImageFetcher = new TrackImageFetcher( track, Track::MegaImage );
         connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), SLOT(onFinished(QPixmap)));
         m_trackImageFetcher->startAlbum();
     }
