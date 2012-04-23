@@ -151,7 +151,8 @@ macx:HEADERS += mac/AppleScript.h \
 FORMS += \
 	dialogs/ShareDialog.ui \
 	dialogs/LoginDialog.ui \
-    dialogs/TagDialog.ui
+    dialogs/TagDialog.ui \
+    dialogs/AboutDialog.ui
 
 RESOURCES += \
 	qrc/unicorn.qrc

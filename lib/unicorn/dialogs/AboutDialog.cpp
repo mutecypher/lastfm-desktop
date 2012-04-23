@@ -23,38 +23,29 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-
-static inline QLabel* label( const QString& text, Qt::WidgetAttribute size = Qt::WA_MacSmallSize )
-{
-    QLabel* l = new QLabel( text );
-    l->setAttribute( size );
-    l->setOpenExternalLinks( true );
-    return l;
-}
+#include "ui_AboutDialog.h"
 
 
 AboutDialog::AboutDialog( QWidget* parent )
-           : QDialog( parent )
+           : QDialog( parent ),
+             ui( new Ui::AboutDialog )
 {
     Q_ASSERT( qApp->applicationVersion().size() );
 
-    QVBoxLayout* v = new QVBoxLayout( this );
-    v->addWidget( new QLabel( "<b>" + qApp->applicationName() ) );
-    v->addWidget( label( tr( "%1 (built on Qt %2)"  ).arg( qApp->applicationVersion(), qVersion() ) ) );
-    v->addSpacing( 10 );
-    v->addWidget( label( "<a href='http://www.last.fm'>www.last.fm</a>" ) );
-    v->addWidget( label( "<a href='irc://irc.audioscrobbler.com#audioscrobbler'>irc.audioscrobbler.com</a>" ) );
-    v->addSpacing( 10 );
-    v->addWidget( label( QString::fromUtf8("Copyright © 2005-2012 Last.fm Ltd.") ) );
+    ui->setupUi( this );
 
-    v->setSizeConstraint( QLayout::SetFixedSize );
-    v->setSpacing( 2 );
+    ui->appName->setText( "<b>" + qApp->applicationName() );
+    ui->qtVersion->setText(  tr( "%1 (built on Qt %2)"  ).arg( qApp->applicationVersion(), qVersion() ) );
 
-#ifdef Q_WS_MAC
-    foreach (QLabel* l, findChildren<QLabel*>())
-        l->setAlignment( Qt::AlignHCenter );
-#else
+    ui->lastfmLink->setText(  "<a href='http://www.last.fm'>www.last.fm</a>" );
+    ui->ircLink->setText(  "<a href='irc://irc.audioscrobbler.com#audioscrobbler'>irc.audioscrobbler.com</a>" );
+
+    ui->copyright->setText( QString::fromUtf8("™ & © 2005, 2006 - 2012 Last.fm Limited") );
+
+#ifndef Q_WS_MAC
     // yeah, really, don't do it on Mac. Weird.
     setWindowTitle( tr("About") );
+#else
+    setWindowTitle( "" );
 #endif
 }

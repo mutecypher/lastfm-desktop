@@ -20,9 +20,13 @@
 #include "lib/DllExportMacro.h"
 #include <QDialog>
 
+namespace Ui { class AboutDialog; }
 
 class UNICORN_DLLEXPORT AboutDialog : public QDialog
 {
 public:
     AboutDialog( QWidget* parent );
+
+private:
+    Ui::AboutDialog* ui;
 };
