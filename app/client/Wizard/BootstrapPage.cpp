@@ -34,7 +34,7 @@ BootstrapPage::BootstrapPage()
     layout->addLayout( m_pluginsLayout );
 
     layout->addWidget( ui.description = new QLabel( tr( "<p>For the best possible recommendations based on your music taste we advise that you import your listening history from your media player.</p>"
-                                                        "<p>Please select your prefered media player and click <strong>Start Import</strong></p>" ) ),
+                                                        "<p>Please select your preferred media player and click <strong>Start Import</strong></p>" ) ),
                        0,
                        Qt::AlignTop);
     ui.description->setObjectName( "description" );

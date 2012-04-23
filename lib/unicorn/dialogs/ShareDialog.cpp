@@ -73,7 +73,7 @@ ShareDialog::ShareDialog( const Track& track, QWidget* parent )
     else
         ui->description->setText( tr( "A track by %1 from the release %2" ).arg( unicorn::Label::anchor( m_track.artist().www().toString(), m_track.artist().name() ), unicorn::Label::anchor( m_track.album().www().toString(), m_track.album() ) ) );
 
-    m_imageFetcher = new TrackImageFetcher( m_track, lastfm::Medium );
+    m_imageFetcher = new TrackImageFetcher( m_track, Track::MediumImage );
     connect( m_imageFetcher, SIGNAL(finished(QPixmap)), ui->icon, SLOT(setPixmap(QPixmap)) );
     m_imageFetcher->startAlbum();
 

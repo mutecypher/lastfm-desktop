@@ -181,7 +181,7 @@ ProgressBar::paintEvent( QPaintEvent* e )
                         else if ( !unicorn::UserSettings().value( "podcasts", true ).toBool() && m_track.isPodcast() )
                             offMessage = tr( "Not scrobbling - podcasts disabled" );
                         else if ( m_track.artist().isNull() )
-                            offMessage = tr( "Not scrobbling - missing aritst" );
+                            offMessage = tr( "Not scrobbling - missing artist" );
                     }
                     else
                     {

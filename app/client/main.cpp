@@ -71,7 +71,13 @@ int main( int argc, char** argv )
     {
         audioscrobbler::Application app( argc, argv );
 
-        if ( app.sendMessage( app.arguments() ) || app.arguments().contains("--exit") )
+#ifdef Q_OS_WIN32
+        QStringList args = app.arguments();
+#else
+        QStringList args = app.arguments().mid( 1 );
+#endif
+
+        if ( app.sendMessage( args ) || args.contains("--exit") )
             return 0;
 
         // It's possible that we were unable to send the
@@ -87,7 +93,7 @@ int main( int argc, char** argv )
 #endif
 
         app.init();
-        app.parseArguments( app.arguments() );
+        app.parseArguments( args );
         return app.exec();
     }
     catch (std::exception& e)

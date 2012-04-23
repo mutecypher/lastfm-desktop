@@ -22,6 +22,7 @@
 
 #include <lastfm/misc.h>
 
+#include <QDebug>
 #include <QSqlQuery>
 #include <QSqlError>
 

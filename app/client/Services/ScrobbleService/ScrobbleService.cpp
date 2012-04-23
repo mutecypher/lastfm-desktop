@@ -19,7 +19,6 @@
 */
 
 #include "ScrobbleService.h"
-#include <lastfm/Audioscrobbler.h>
 #include <lastfm/ws.h>
 
 #ifdef QT_DBUS_LIB

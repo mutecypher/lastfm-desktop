@@ -73,9 +73,9 @@ using audioscrobbler::Application;
 #define APPLE_KEY_CHAR QString::fromUtf8("⌘")
 
 #ifdef Q_WS_X11
-    #define AS_TRAY_ICON ":16x16.png"
-#elif defined( Q_WS_WIN )
     #define AS_TRAY_ICON ":22x22.png"
+#elif defined( Q_WS_WIN )
+    #define AS_TRAY_ICON ":16x16.png"
 #elif defined( Q_WS_MAC )
     #define AS_TRAY_ICON ":systray_icon_rest_mac.png"
 #endif
@@ -123,6 +123,10 @@ Application::init()
 {
     // Initialise the unicorn base class first!
     unicorn::Application::init();
+
+#ifdef Q_WS_X11
+    setWindowIcon( QIcon( ":/as.png" ) );
+#endif
 
     if ( !currentSession() )
     {
@@ -246,7 +250,7 @@ Application::init()
     m_mw->addWinThumbBarButton( m_skip_action );
 
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
-#ifndef Q_OS_LINUX
+#ifndef Q_WS_X11
      AudioscrobblerSettings settings;
      setRaiseHotKey( settings.raiseShortcutModifiers(), settings.raiseShortcutKey() );
 #endif
@@ -295,7 +299,12 @@ Application::init()
     // make sure cached scrobbles get submitted when the connection comes back online
     connect( m_icm, SIGNAL(up(QString)), &ScrobbleService::instance(), SLOT(submitCache()) );
 
-    emit messageReceived( arguments() );
+#ifdef Q_OS_WIN32
+    QStringList args = arguments();
+#else
+    QStringList args = arguments().mid( 1 );
+#endif
+    emit messageReceived( args );
 
 #ifdef Q_OS_MAC
     m_notify = new Notify( this );

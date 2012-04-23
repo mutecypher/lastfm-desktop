@@ -6,6 +6,7 @@
 #include <QPointer>
 
 #include <lastfm/RadioStation.h>
+#include <lastfm/Track.h>
 
 namespace Ui { class PlaybackControlsWidget; }
 

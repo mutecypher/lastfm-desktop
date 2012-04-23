@@ -23,6 +23,7 @@
 #include <lastfm/ws.h>
 #include <lastfm/misc.h>
 
+#include <QDebug>
 #include <QNetworkRequest>
 #include <QUrl>
 #include <QFile>

@@ -20,6 +20,7 @@
 #include "UpdateDialog.h"
 #include <lastfm/misc.h>
 #include <QCoreApplication>
+#include <QDebug>
 #include <QDesktopServices>
 #include <QTemporaryFile>
 #include <QFileInfo>

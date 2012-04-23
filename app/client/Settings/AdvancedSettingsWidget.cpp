@@ -51,12 +51,16 @@ AdvancedSettingsWidget::AdvancedSettingsWidget( QWidget* parent )
 {
     ui->setupUi( this );
 
+#ifdef Q_WS_X11
+    ui->shortcuts->hide();
+#else
     AudioscrobblerSettings settings;
     ui->sce->setTextValue( settings.raiseShortcutDescription() );
     ui->sce->setModifiers( settings.raiseShortcutModifiers() );
     ui->sce->setKey( settings.raiseShortcutKey() );
 
     connect( ui->sce, SIGNAL(editTextChanged(QString)), this, SLOT(onSettingsChanged()));
+#endif
 }
 
 void

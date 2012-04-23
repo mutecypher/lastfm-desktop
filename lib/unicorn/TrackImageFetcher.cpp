@@ -21,11 +21,12 @@
 #include <lastfm/Track.h>
 #include <lastfm/ws.h>
 #include <lastfm/XmlQuery.h>
+#include <QDebug>
 #include <QPixmap>
 #include <QStringList>
 
 
-TrackImageFetcher::TrackImageFetcher( const Track& track, lastfm::ImageSize size )
+TrackImageFetcher::TrackImageFetcher( const Track& track, Track::ImageSize size )
     :m_track( track ),
      m_size( size )
 {
@@ -130,20 +131,20 @@ TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node
         // cache all the sizes
         if ( root_node == "artist" )
         {
-            m_track.artist().setImageUrl( lastfm::Mega, lfm[root_node]["image size=mega"].text() );
-            m_track.artist().setImageUrl( lastfm::ExtraLarge, lfm[root_node]["image size=extralarge"].text() );
-            m_track.artist().setImageUrl( lastfm::Large, lfm[root_node]["image size=large"].text() );
-            m_track.artist().setImageUrl( lastfm::Medium, lfm[root_node]["image size=medium"].text() );
-            m_track.artist().setImageUrl( lastfm::Small, lfm[root_node]["image size=small"].text() );
+            m_track.artist().setImageUrl( Track::MegaImage, lfm[root_node]["image size=mega"].text() );
+            m_track.artist().setImageUrl( Track::ExtraLargeImage, lfm[root_node]["image size=extralarge"].text() );
+            m_track.artist().setImageUrl( Track::LargeImage, lfm[root_node]["image size=large"].text() );
+            m_track.artist().setImageUrl( Track::MediumImage, lfm[root_node]["image size=medium"].text() );
+            m_track.artist().setImageUrl( Track::SmallImage, lfm[root_node]["image size=small"].text() );
         }
         else
         {
             lastfm::MutableTrack track( m_track );
-            track.setImageUrl( lastfm::Mega, lfm[root_node]["image size=mega"].text() );
-            track.setImageUrl( lastfm::ExtraLarge, lfm[root_node]["image size=extralarge"].text() );
-            track.setImageUrl( lastfm::Large, lfm[root_node]["image size=large"].text() );
-            track.setImageUrl( lastfm::Medium, lfm[root_node]["image size=medium"].text() );
-            track.setImageUrl( lastfm::Small, lfm[root_node]["image size=small"].text() );
+            track.setImageUrl( Track::MegaImage, lfm[root_node]["image size=mega"].text() );
+            track.setImageUrl( Track::ExtraLargeImage, lfm[root_node]["image size=extralarge"].text() );
+            track.setImageUrl( Track::LargeImage, lfm[root_node]["image size=large"].text() );
+            track.setImageUrl( Track::MediumImage, lfm[root_node]["image size=medium"].text() );
+            track.setImageUrl( Track::SmallImage, lfm[root_node]["image size=small"].text() );
 
         }
 
@@ -170,22 +171,22 @@ TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node
 QUrl
 TrackImageFetcher::url( const QString& root_node )
 {
-    QList<lastfm::ImageSize> sizes;
+    QList<Track::ImageSize> sizes;
 
     switch ( m_size )
     {
         default:
-        case lastfm::Mega: sizes << lastfm::Mega;
-        case lastfm::ExtraLarge: sizes << lastfm::ExtraLarge;
-        case lastfm::Large: sizes << lastfm::Large;
-        case lastfm::Medium: sizes << lastfm::Medium;
-        case lastfm::Small: sizes << lastfm::Small;
+        case Track::MegaImage: sizes << Track::MegaImage;
+        case Track::ExtraLargeImage: sizes << Track::ExtraLargeImage;
+        case Track::LargeImage: sizes << Track::LargeImage;
+        case Track::MediumImage: sizes << Track::MediumImage;
+        case Track::SmallImage: sizes << Track::SmallImage;
     }
 
     QUrl imageUrl;
-    lastfm::ImageSize foundSize;
+    Track::ImageSize foundSize;
 
-    foreach ( lastfm::ImageSize size, sizes )
+    foreach ( Track::ImageSize size, sizes )
     {
         QUrl const url = root_node == "artist" ? m_track.artist().imageUrl( size ) : m_track.imageUrl( size, false );
 

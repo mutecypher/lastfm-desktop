@@ -264,8 +264,10 @@ MainWindow::setupMenuBar()
 
     /// Tools (should only show on non-mac)
     QMenu* toolsMenu = appMenuBar()->addMenu( tr("Tools") );
+#ifndef Q_WS_X11
     QAction* c4u = toolsMenu->addAction( tr("Check for Updates"), this, SLOT(checkForUpdates()) );
     c4u->setMenuRole( QAction::ApplicationSpecificRole );
+#endif
     QAction* prefs = toolsMenu->addAction( tr("Options"), this, SLOT(onPrefsTriggered()) );
     prefs->setMenuRole( QAction::PreferencesRole );
 

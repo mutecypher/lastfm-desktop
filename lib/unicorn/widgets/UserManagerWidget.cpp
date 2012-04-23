@@ -43,7 +43,7 @@ UserRadioButton::UserRadioButton( const User& user )
 
     setUser( user );
 
-    if( user.imageUrl( lastfm::Medium ).isEmpty() )
+    if( user.imageUrl( User::MediumImage ).isEmpty() )
     {
         QNetworkReply* reply = User::getInfo( user.name() );
         connect( reply, SIGNAL(finished()), SLOT( onUserFetched()));
@@ -88,8 +88,8 @@ UserRadioButton::setUser( const lastfm::User& user )
     if( user == User() )
         ui.loggedIn->setText( tr( "(currently logged in)" ) );
 
-    if ( !user.imageUrl( lastfm::Medium ).isEmpty() )
-            ui.image->loadUrl( user.imageUrl( lastfm::Medium ) );
+    if ( !user.imageUrl( User::MediumImage ).isEmpty() )
+            ui.image->loadUrl( user.imageUrl( User::MediumImage ) );
 
     ui.image->setHref( user.www() );
 }

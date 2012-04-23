@@ -4,6 +4,8 @@
 #include <QPointer>
 #include <QFrame>
 
+#include <lastfm/Track.h>
+
 #include "lib/unicorn/UnicornSession.h"
 
 namespace unicorn { class Label; }

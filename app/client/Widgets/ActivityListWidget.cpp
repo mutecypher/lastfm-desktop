@@ -124,9 +124,9 @@ ActivityListWidget::fetchTrackInfo( const QList<lastfm::Track>& tracks )
 {
     if ( isVisible() )
     {
-        // Make sure we fetch info for any tracks with unkown loved status
+        // Make sure we fetch info for any tracks with unknown loved status
         foreach ( const lastfm::Track& track, tracks )
-            if ( track.loveStatus() == lastfm::Unknown )
+            if ( track.loveStatus() == lastfm::Track::UnknownLoveStatus )
                 track.getInfo(  this, "write", User().name() );
     }
 }
@@ -354,10 +354,10 @@ ActivityListWidget::onGotRecentTracks()
                     // This is a different track so change to it
                     nowPlayingTrack.setTimeStamp( QDateTime::fromTime_t( trackXml["date"].attribute("uts").toUInt() ) );
 
-                    nowPlayingTrack.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
-                    nowPlayingTrack.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
-                    nowPlayingTrack.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
-                    nowPlayingTrack.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
+                    nowPlayingTrack.setImageUrl( Track::SmallImage, trackXml["image size=small"].text() );
+                    nowPlayingTrack.setImageUrl( Track::MediumImage, trackXml["image size=medium"].text() );
+                    nowPlayingTrack.setImageUrl( Track::LargeImage, trackXml["image size=large"].text() );
+                    nowPlayingTrack.setImageUrl( Track::ExtraLargeImage, trackXml["image size=extralarge"].text() );
 
                     m_track = nowPlayingTrack;
                     m_trackItem->setTrack( m_track );
@@ -387,10 +387,10 @@ ActivityListWidget::onGotRecentTracks()
                 {
                     if ( track != nowPlayingTrack && track.timestamp().secsTo( QDateTime::currentDateTime() ) < 10 * 60 )
                     {
-                        track.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
-                        track.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
-                        track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
-                        track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
+                        track.setImageUrl( Track::SmallImage, trackXml["image size=small"].text() );
+                        track.setImageUrl( Track::MediumImage, trackXml["image size=medium"].text() );
+                        track.setImageUrl( Track::LargeImage, trackXml["image size=large"].text() );
+                        track.setImageUrl( Track::ExtraLargeImage, trackXml["image size=extralarge"].text() );
 
                         QString loved = trackXml["loved"].text();
 
@@ -402,10 +402,10 @@ ActivityListWidget::onGotRecentTracks()
                 }
                 else
                 {
-                    track.setImageUrl( lastfm::Small, trackXml["image size=small"].text() );
-                    track.setImageUrl( lastfm::Medium, trackXml["image size=medium"].text() );
-                    track.setImageUrl( lastfm::Large, trackXml["image size=large"].text() );
-                    track.setImageUrl( lastfm::ExtraLarge, trackXml["image size=extralarge"].text() );
+                    track.setImageUrl( Track::SmallImage, trackXml["image size=small"].text() );
+                    track.setImageUrl( Track::MediumImage, trackXml["image size=medium"].text() );
+                    track.setImageUrl( Track::LargeImage, trackXml["image size=large"].text() );
+                    track.setImageUrl( Track::ExtraLargeImage, trackXml["image size=extralarge"].text() );
 
                     QString loved = trackXml["loved"].text();
 

@@ -434,7 +434,7 @@ DeviceScrobbler::onIpodScrobblingError()
             QMessageBoxBuilder( 0 )
                 .setIcon( QMessageBox::Critical )
                 .setTitle( tr( "Scrobble iPod" ) )
-                .setText( tr( "An unkown error occurred while trying to access the iPod database." ) )
+                .setText( tr( "An unknown error occurred while trying to access the iPod database." ) )
                 .exec();
             delete iPod;
             iPod = 0;

@@ -161,12 +161,12 @@ TrackWidget::fetchAlbumArt()
     {
         m_triedFetchAlbumArt = true;
 
-        QString imageUrl = m_track.imageUrl( lastfm::Medium, true ).toString();
+        QString imageUrl = m_track.imageUrl( Track::MediumImage, true ).toString();
 
         if ( imageUrl.isEmpty() )
         {
             delete m_trackImageFetcher;
-            m_trackImageFetcher = new TrackImageFetcher( m_track, lastfm::Medium );
+            m_trackImageFetcher = new TrackImageFetcher( m_track, Track::MediumImage );
             connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), ui->albumArt, SLOT(setPixmap(QPixmap)) );
             m_trackImageFetcher->startAlbum();
         }
