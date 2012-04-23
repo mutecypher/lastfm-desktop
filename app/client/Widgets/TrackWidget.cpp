@@ -73,7 +73,9 @@ TrackWidget::~TrackWidget()
 QSize
 TrackWidget::sizeHint() const
 {
-    return ui->stackedWidget->sizeHint();
+    QSize sizeHint = ui->stackedWidget->sizeHint();
+    sizeHint.setWidth( QPushButton::sizeHint().width() );
+    return sizeHint;
 }
 
 void
