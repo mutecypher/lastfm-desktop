@@ -213,42 +213,11 @@ PlaybackControlsWidget::onBanFinished()
 }
 
 void
-PlaybackControlsWidget::setIconForRadio( const RadioStation& /*station*/ )
-{
-//    QString url = station.url();
-
-//    if ( url.startsWith("lastfm://user") )
-//    {
-//        if ( url.contains( "/friends" )
-//            || url.contains( "/neighbours" )
-//            || url.startsWith( "lastfm://users") )
-//            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_friends.png" ) );
-//        if ( url.contains( "/library" )
-//             || url.contains( "/personal") )
-//            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_library.png" ) );
-//        else if ( url.contains( "/mix" ) )
-//            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_mix.png" ) );
-//        else if ( url.contains( "/recommended" ) )
-//            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_rec.png" ) );
-
-//    }
-//    else if ( url.startsWith("lastfm://artist") )
-//        ui->icon->setPixmap( QPixmap( ":/control_bar_radio_artist.png" ) );
-//    else if ( url.startsWith("lastfm://tag")
-//                || url.startsWith( "lastfm://globaltags" ) )
-//        ui->icon->setPixmap( QPixmap( ":/control_bar_radio_tag.png" ) );
-//    else
-//        ui->icon->setPixmap( QPixmap( ":/control_bar_radio_library.png" ) );
-
-    ui->icon->setPixmap( QPixmap( ":/control_bar_radio_as.png" ) );
-}
-
-void
 PlaybackControlsWidget::onTuningIn( const RadioStation& station )
 {
     setScrobbleTrack( false );
 
-    setIconForRadio( station );
+    ui->icon->setPixmap( QPixmap( ":/control_bar_radio_as.png" ) );
 
     ui->status->setText( tr("Tuning") );
     ui->device->setText( station.title() );
@@ -342,7 +311,7 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
         else if (id == "spt")
             ui->icon->setPixmap( QPixmap( ":/control_bar_scrobble_spotify.png" ) );
         else if (id == "ass")
-            setIconForRadio( RadioService::instance().station() );
+            ui->icon->setPixmap( QPixmap( ":/control_bar_radio_as.png" ) );
     }
 }
 

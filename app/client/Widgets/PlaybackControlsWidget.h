@@ -45,9 +45,6 @@ private slots:
     void onTick( qint64 );
 
 private:
-    void setIconForRadio( const RadioStation& station );
-
-private:
     Ui::PlaybackControlsWidget *ui;
 
     QPointer<QAction> m_playAction;
