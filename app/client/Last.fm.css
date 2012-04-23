@@ -544,10 +544,6 @@ TrackWidget {
 
 TrackWidget QFrame#frame {
 	border: none;
-}
-
-TrackWidget QStackedWidget {
-	border: none;
 	padding: 10px 20px;
 }
 
@@ -555,8 +551,10 @@ TrackWidget:hover {
 	background-color: #eeeeee;
 }
 
-TrackWidget:pressed {
-	background-color: #d6d6d6;
+TrackWidget:pressed,
+TrackWidget:disabled {
+		border-top: 1px solid #d6d6d6;
+		background-color: #d6d6d6;
 }
 
 TrackWidget#nowPlaying {
@@ -1342,4 +1340,14 @@ background-image: url(":/volume_knob_PRESS.png");
 
 StatusBar QFrame#permanentWidget {
 margin: 0px 10px;
+}
+
+QDialog QLabel#as {
+	border: none;
+	background-repeat: no-repeat;
+	background-position: center;
+	qproperty-pixmap: url(":/as.png");
+	qproperty-scaledContents: true;
+	max-height: 64px;
+	max-width: 64px;
 }

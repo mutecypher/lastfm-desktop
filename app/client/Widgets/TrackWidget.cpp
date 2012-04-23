@@ -23,7 +23,9 @@ TrackWidget::TrackWidget( Track& track, QWidget *parent )
 {
     ui->setupUi( this );
 
-    ui->stackedWidget->setCurrentWidget( ui->trackPage );
+    m_spinner = new QLabel( this );
+    m_spinner->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+    m_spinner->hide();
 
 #ifdef NDEBUG
     // hide the delete button from release builds until we get a proper design
@@ -47,8 +49,6 @@ TrackWidget::TrackWidget( Track& track, QWidget *parent )
     ui->buy->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
     setAttribute( Qt::WA_MacNoClickThrough );
-    ui->stackedWidget->setAttribute( Qt::WA_MacNoClickThrough );
-    ui->trackPage->setAttribute( Qt::WA_MacNoClickThrough );
     ui->albumArt->setAttribute( Qt::WA_MacNoClickThrough );
     ui->love->setAttribute( Qt::WA_MacNoClickThrough );
     ui->tag->setAttribute( Qt::WA_MacNoClickThrough );
@@ -73,7 +73,7 @@ TrackWidget::~TrackWidget()
 QSize
 TrackWidget::sizeHint() const
 {
-    QSize sizeHint = ui->stackedWidget->sizeHint();
+    QSize sizeHint = ui->frame->sizeHint();
     sizeHint.setWidth( QPushButton::sizeHint().width() );
     return sizeHint;
 }
@@ -123,29 +123,35 @@ TrackWidget::playNext()
 void
 TrackWidget::startSpinner()
 {
-    if ( !m_spinner )
+    m_spinner->setGeometry( rect() );
+
+    if ( !m_spinnerMovie )
     {
-        m_spinner = new QMovie( ":/loading_meta.gif", "GIF", this );
-        m_spinner->setCacheMode( QMovie::CacheAll );
-        ui->spinner->setMovie( m_spinner );
+        m_spinnerMovie = new QMovie( ":/loading_meta.gif", "GIF", this );
+        m_spinnerMovie->setCacheMode( QMovie::CacheAll );
+        m_spinner->setMovie( m_spinnerMovie );
     }
 
-    m_spinner->start();
-    ui->stackedWidget->setCurrentWidget( ui->spinnerPage );
+    setEnabled( false );
+
+    m_spinnerMovie->start();
+    m_spinner->show();
 }
 
 void
 TrackWidget::clearSpinner()
 {
-    if ( !m_spinner )
+    if ( !m_spinnerMovie )
     {
-        m_spinner = new QMovie( ":/loading_meta.gif", "GIF", this );
-        m_spinner->setCacheMode( QMovie::CacheAll );
-        ui->spinner->setMovie( m_spinner );
+        m_spinnerMovie = new QMovie( ":/loading_meta.gif", "GIF", this );
+        m_spinnerMovie->setCacheMode( QMovie::CacheAll );
+        m_spinner->setMovie( m_spinnerMovie );
     }
 
-    m_spinner->stop();
-    ui->stackedWidget->setCurrentWidget( ui->trackPage );
+    setEnabled( true );
+
+    m_spinnerMovie->stop();
+    m_spinner->hide();
 }
 
 void

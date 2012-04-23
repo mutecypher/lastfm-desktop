@@ -86,7 +86,8 @@ private:
     bool m_nowPlaying;
     bool m_triedFetchAlbumArt;
 
-    QPointer<QMovie> m_spinner;
+    QPointer<QMovie> m_spinnerMovie;
+    class QLabel* m_spinner;
 };
 
 #endif // TRACKWIDGET_H
