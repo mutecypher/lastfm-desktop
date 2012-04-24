@@ -167,9 +167,10 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     setStatusBar( ui.statusBar );
 
-    finishUi();
-
+    // This is the default window size it will get changed
+    // by finishUi if the app has ever been opened before
     resize( 565, 710 );
+    finishUi();
 
 #ifdef Q_OS_WIN32
     m_pluginList = new PluginList( this );

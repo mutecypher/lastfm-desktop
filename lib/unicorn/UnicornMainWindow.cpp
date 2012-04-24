@@ -208,7 +208,7 @@ unicorn::MainWindow::storeGeometry() const
 {
     AppSettings s;
     s.beginGroup( metaObject()->className());
-        s.setValue( "geometry", frameGeometry());
+    s.setValue( "geometry", frameGeometry());
     s.endGroup();
 }
 
@@ -231,30 +231,37 @@ void
 unicorn::MainWindow::cleverlyPosition()
 {
     AppSettings s;
-    s.beginGroup( metaObject()->className());
-        QRect geo = s.value( "geometry", QRect()).toRect();
+    s.beginGroup( metaObject()->className() );
+    QRect geo = s.value( "geometry", QRect()).toRect();
     s.endGroup();
 
-    if( !geo.isValid())
-        return;
+    if( geo.isValid() )
+    {
+        // there is a saved geometry so restore it
+        move( geo.topLeft() );
+        resize( geo.size() );
+    }
 
-    move( geo.topLeft());
-    resize( geo.size());
-    
     int screenNum = qApp->desktop()->screenNumber( this );
     QRect screenRect = qApp->desktop()->availableGeometry( screenNum );
-    if( !screenRect.contains( frameGeometry(), true)) {
-        QRect diff;
 
-        diff = screenRect.intersected( frameGeometry() );
+    if( !screenRect.contains( frameGeometry(), true) )
+    {
+        // the window is not entirly inside the screen
+
+        // make sure it is able to fit
+        resize( qMin( screenRect.width(), width() ), qMin( screenRect.height(), height() ) );
+
+        // make sure the window is on the screen
+        QRect diff = screenRect.intersected( frameGeometry() );
 
         if (diff.left() == screenRect.left() )
-            move( diff.left(), pos().y());
-        if( diff.right() == screenRect.right())
-            move( diff.right() - width(), pos().y());
-        if( diff.top() == screenRect.top())
-            move( pos().x(), diff.top());
-        if( diff.bottom() == screenRect.bottom())
-            move( pos().x(), diff.bottom() - height());
+            move( diff.left(), pos().y() );
+        if( diff.right() == screenRect.right() )
+            move( diff.right() - width(), pos().y() );
+        if( diff.top() == screenRect.top() )
+            move( pos().x(), diff.top() );
+        if( diff.bottom() == screenRect.bottom() )
+            move( pos().x(), diff.bottom() - height() );
     }
 }
