@@ -179,7 +179,7 @@ RadioWidget::onGotRecentStations()
         {
             QString stationUrl = station["url"].text();
 
-            if ( !stationUrl.startsWith( "lastfm://user/" ) )
+            if ( !stationUrl.startsWith( "lastfm://user/" + User().name() ) )
             {
                 PlayableItemWidget* item = new PlayableItemWidget( RadioStation( stationUrl ), station["name"].text() );
                 item->setObjectName( "station" );
@@ -211,7 +211,7 @@ RadioWidget::onTuningIn( const RadioStation& station )
 
     if ( ui.recentStations && ui.recentStations->layout()
          && !station.url().isEmpty()
-         && !station.url().startsWith( "lastfm://user/" ) )
+         && !station.url().startsWith( "lastfm://user/" + User().name() ) )
     {
         PlayableItemWidget* item = new PlayableItemWidget( station, station.title() );
         item->setObjectName( "station" );
