@@ -551,8 +551,7 @@ TrackWidget:hover {
 	background-color: #eeeeee;
 }
 
-TrackWidget:pressed,
-TrackWidget:disabled {
+TrackWidget:pressed {
 		border-top: 1px solid #d6d6d6;
 		background-color: #d6d6d6;
 }
@@ -1342,7 +1341,15 @@ StatusBar QFrame#permanentWidget {
 margin: 0px 10px;
 }
 
-QDialog QLabel#as {
+QDialog#AboutDialog QFrame#frame {
+	margin: 10px 20px 20px;
+}
+
+QDialog#AboutDialog QLabel {
+	font-size: 11px;
+}
+
+QDialog#AboutDialog QLabel#as {
 	border: none;
 	background-repeat: no-repeat;
 	background-position: center;
