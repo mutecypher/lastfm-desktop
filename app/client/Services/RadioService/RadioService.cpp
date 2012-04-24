@@ -125,6 +125,16 @@ RadioService::playNext( const RadioStation& station )
     {
         m_station = station;
 
+        if ( m_station.url() == "" )
+        {
+            unicorn::UserSettings us;
+            QString stationUrl = us.value( "lastStationUrl", "" ).toString();
+            QString stationTitle = us.value( "lastStationTitle", tr( "A Radio Station" ) ).toString();
+
+            m_station.setUrl( stationUrl );
+            m_station.setTitle( stationTitle );
+        }
+
         // Make sure the radio station has the radio options from the settings
         bool ok;
         m_station.setRep( unicorn::AppSettings().value( "rep", 0.5 ).toDouble( &ok ) );
