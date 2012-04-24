@@ -100,12 +100,12 @@ PlayableItemWidget::setStation(const RadioStation& rs, const QString& title, con
 
     m_rs = rs;
     m_rs.setTitle( title );
-    setText( title );
-    setToolTip( tr( "Play %1" ).arg( title ) );
+    setText( title.isEmpty() ? tr( "A Radio Station" ) :  title );
+    setToolTip( tr( "Play %1" ).arg( text() ) );
 
     m_description = description;
 
-    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged(RadioStation)) );
     connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
 
     connect( this, SIGNAL(clicked()), SLOT(play()));
@@ -165,12 +165,13 @@ PlayableItemWidget::playMultiNext()
 
 
 void
-PlayableItemWidget::onRadioChanged()
+PlayableItemWidget::onRadioChanged( const RadioStation& station )
 {
-    if ( RadioService::instance().station() == m_rs )
+    if ( station == m_rs )
     {
         // This is the current radio station
-        setText( RadioService::instance().station().title() );
+        if ( !station.title().isEmpty() )
+            setText( station.title() );
     }
     else
     {

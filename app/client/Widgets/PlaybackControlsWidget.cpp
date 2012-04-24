@@ -220,7 +220,7 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
     ui->icon->setPixmap( QPixmap( ":/control_bar_radio_as.png" ) );
 
     ui->status->setText( tr("Tuning") );
-    ui->device->setText( station.title() );
+    ui->device->setText( station.title().isEmpty() ? tr( "A Radio Station" ) : station.title() );
 
     ui->play->setChecked( true );
     aApp->playAction()->setChecked( true );

@@ -93,7 +93,7 @@ RadioWidget::changeUser( const QString& newUsername )
 
             unicorn::UserSettings us( newUsername );
             QString stationUrl = us.value( "lastStationUrl", "" ).toString();
-            QString stationTitle = us.value( "lastStationTitle", "" ).toString();
+            QString stationTitle = us.value( "lastStationTitle", tr( "A Radio Station" ) ).toString();
 
             RadioStation lastStation( stationUrl );
             lastStation.setTitle( stationTitle );
@@ -197,12 +197,8 @@ void
 RadioWidget::onTuningIn( const RadioStation& station )
 {
     // Save this as the last station played
-    unicorn::UserSettings us;
-    us.setValue( "lastStationUrl", station.url() );
-    us.setValue( "lastStationTitle", station.title() );
-
     ui.nowPlaying->setText( tr( "Now Playing" ) );
-    ui.lastStation->setStation( station.url(), station.title() );
+    ui.lastStation->setStation( station.url(), station.title().isEmpty() ? tr( "A Radio Station" ) : station.title() );
 
     if ( !station.url().isEmpty() )
         ui.nowPlayingFrame->show();
@@ -213,32 +209,29 @@ RadioWidget::onTuningIn( const RadioStation& station )
          && !station.url().isEmpty()
          && !station.url().startsWith( "lastfm://user/" + User().name() ) )
     {
-        PlayableItemWidget* item = new PlayableItemWidget( station, station.title() );
-        item->setObjectName( "station" );
-        qobject_cast<QBoxLayout*>(ui.recentStations->layout())->insertWidget( 0, item );
-
-        // if it exists already remove it or remove the last one
-        bool removed = false;
-
-        for ( int i = 1 ; i < ui.recentStations->layout()->count() ; ++i )
+        // if it exists already remove it
+        for ( int i = 0 ; i < ui.recentStations->layout()->count() ; ++i )
         {
             if ( station.url() == qobject_cast<PlayableItemWidget*>(ui.recentStations->layout()->itemAt( i )->widget())->station().url() )
             {
                 QLayoutItem* item = ui.recentStations->layout()->takeAt( i );
-                QWidget* taken = item->widget();
+                item->widget()->deleteLater();
                 delete item;
-                taken->deleteLater();
-                removed = true;
                 break;
             }
         }
 
-        if ( !removed && ui.recentStations->layout()->count() > MAX_RECENT_STATIONS )
+        // insert the new one at the beginning
+        PlayableItemWidget* newItem = new PlayableItemWidget( station, station.title(), "", this );
+        newItem->setObjectName( "station" );
+        qobject_cast<QBoxLayout*>(ui.recentStations->layout())->insertWidget( 0, newItem );
+
+        // limit the stations
+        if ( ui.recentStations->layout()->count() > MAX_RECENT_STATIONS )
         {
             QLayoutItem* item = ui.recentStations->layout()->takeAt( ui.recentStations->layout()->count() - 1 );
-            QWidget* taken = item->widget();
+            item->widget()->deleteLater();
             delete item;
-            taken->deleteLater();
         }
     }
 }
