@@ -54,6 +54,7 @@ public:
     void setStyle( Style style ) { m_style = style; }
 
 public slots:
+    void onRadioChanged();
     void onRadioChanged( const RadioStation& station );
 
     void play();

@@ -57,7 +57,7 @@ PlayableItemWidget::PlayableItemWidget( const RadioStation& rs, const QString& t
 
     setCursor( Qt::PointingHandCursor );
 
-    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged(RadioStation)) );
     connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
 }
 
@@ -161,6 +161,12 @@ PlayableItemWidget::playMultiNext()
 {
     if ( m_rs.url().startsWith("lastfm://user/") )
         RadioService::instance().playNext( getMultiStation() );
+}
+
+void
+PlayableItemWidget::onRadioChanged()
+{
+    onRadioChanged( RadioService::instance().station() );
 }
 
 
