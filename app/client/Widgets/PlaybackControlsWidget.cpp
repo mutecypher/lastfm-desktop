@@ -279,7 +279,8 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
             connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool)));
 
             ui->status->setText( tr("Listening to") );
-            ui->device->setText( RadioService::instance().station().title() );
+            QString title = RadioService::instance().station().title();
+            ui->device->setText( title.isEmpty() ? tr( "A Radio Station" ) : title );
 
             connect( &RadioService::instance(), SIGNAL(tick(qint64)), SLOT(onTick(qint64)) );
         }
