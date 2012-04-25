@@ -85,7 +85,8 @@ PlayerConnection::handleCommand( PlayerCommand command, Track t )
                 if (t.isNull()) throw FatalError("Can't start a null track");
                 m_state = Playing;
                 if ( m_stoppedTimer ) m_stoppedTimer->stop();
-                if (t == m_track)
+                if (t == m_track
+                        && t.timestamp() == m_track.timestamp())
                 {
                     emit resumed();
                     throw NonFatalError("Already playing this track");

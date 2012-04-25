@@ -111,7 +111,7 @@ public:
     void determineTrackInformation();
         
     QString artist, name, album, path, pid;
-    int duration, position;
+    int duration;
     ITunesListener::State const state; // *MUST* be after m_info
     
 private:
@@ -168,9 +168,6 @@ ITunesDictionaryHelper::determineTrackInformation()
     CFStringRef location = token<CFStringRef>( CFSTR("Location") );
     QUrl url = QUrl::fromEncoded( lastfm::CFStringToUtf8( location ) );
     path = url.toString().remove( "file://localhost" );
-    
-    static AppleScript script( "tell application \"iTunes\" to return player position" );
-    position = script.exec().toInt();
 }
 /******************************************************************************/
 
@@ -190,9 +187,9 @@ ITunesListener::callback( CFDictionaryRef info )
     m_state = dict.state;
     
     if ( m_state == Paused )
-            m_connection->pause();
+        m_connection->pause();
     else if ( m_state == Stopped )
-            m_connection->stop();
+        m_connection->stop();
     else if ( m_state == Playing )
     {
         QString output = m_currentTrackScript.exec();
@@ -211,13 +208,9 @@ ITunesListener::callback( CFDictionaryRef info )
         QString videoKind = s.readLine();
         bool video = videoKind != "none" && videoKind != "music video";
 
-        // if the track is restarted it has the same pid and a position of 0
-        if ( m_previousPid == pid && dict.position != 0 )
-        {
-            if (previousState == Paused)
-                m_connection->resume();
-            //else the user changed some metadata or the track's rating etc.
-        }
+        // if the track is restarted it has the same pid
+        if ( m_previousPid == pid && previousState == Paused )
+            m_connection->resume();
         else
         {
             MutableTrack t;
