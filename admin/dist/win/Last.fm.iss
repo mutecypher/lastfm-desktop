@@ -6,9 +6,9 @@ Version=2.1.17
 
 
 [Setup]
-OutputBaseFilename=Last.fm-2.1.17
-VersionInfoVersion=2.1.17
-VersionInfoTextVersion=2.1.17
+OutputBaseFilename=Last.fm-2.1.18
+VersionInfoVersion=2.1.18
+VersionInfoTextVersion=2.1.18
 AppName=Last.fm
 AppVerName=Last.fm {cm:Version}
 VersionInfoDescription=Last.fm Installer
