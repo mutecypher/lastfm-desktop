@@ -25,7 +25,7 @@
 #include <cassert>
 #include <QDateTime>
 #include <QFileInfo>
-
+#include <QDebug>
 
 using namespace std;
 

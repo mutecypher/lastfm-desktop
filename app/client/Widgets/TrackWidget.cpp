@@ -27,11 +27,6 @@ TrackWidget::TrackWidget( Track& track, QWidget *parent )
     m_spinner->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
     m_spinner->hide();
 
-#ifdef NDEBUG
-    // hide the delete button from release builds until we get a proper design
-    ui->remove->hide();
-#endif
-
     m_movie = new QMovie( ":/icon_eq.gif", "GIF", this );
     m_movie->setCacheMode( QMovie::CacheAll );
     ui->equaliser->setMovie( m_movie );
