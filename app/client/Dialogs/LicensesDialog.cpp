@@ -21,7 +21,11 @@ LicensesDialog::LicensesDialog(QWidget *parent) :
     QString licenseText;
     licenseText.append( "<div id=\"content\">" );
 
-    // Qt - LGPL http://qt.nokia.com/products/licensing/
+    licenseText.append( "<h3>Third-Party Licenses</h3>" );
+    licenseText.append( "<p>The Last.fm Desktop App wouldn't be such a thing of beauty without the frameworks and software listed below. A big shoutout from everyone at Last.HQ, and a tip-of-the-hat to all the developers involved in bringing these great open source projects to life.</p>" );
+
+    // Qt
+    licenseText.append( "<hr>" );
     licenseText.append( "<h3>Qt</h3>" );
     licenseText.append( "<ul>" );
     licenseText.append( "<li>" + unicorn::Label::anchor( "http://qt.nokia.com", "Qt" ) + "</li>");
