@@ -46,7 +46,6 @@ LicensesDialog::LicensesDialog(QWidget *parent) :
 #ifdef Q_OS_WIN
     // Winsparkle
     licenseText.append( "<hr>" );
-    licenseText.append( "<hr>" );
     licenseText.append( "<h3>winsparkle</h3>" );
     licenseText.append( "<ul>" );
     licenseText.append( "<li>" + unicorn::Label::anchor( "https://github.com/vslavik/winsparkle/blob/master/COPYING", "Winsparkle License" ) + "</li>" );
@@ -94,13 +93,13 @@ LicensesDialog::LicensesDialog(QWidget *parent) :
 
     licenseText.append( "</div>" );
 
-    licenseText = QString( "<html><head><style type=text/css>"
+    licenseText = QString( "<html><head><style type=text/css>\n"
                      "#content {margin: 20px;}"
                      "a:link {color:%1; font-weight: bold; text-decoration:none;}"
                      "a:hover {color:%1; font-weight: bold; text-decoration:none;}"
-                     "</style></head><body>%2</body></html>" ).arg( QColor( Qt::black ).name(), licenseText );
+                     "</style></head><body>%2</body></html>" ).arg( QColor( 0xd71005 ).name(), licenseText );
 
-    ui->textBrowser->setText( unicorn::Label::boldLinkStyle( licenseText, Qt::black ) );
+    ui->textBrowser->setText( licenseText );
 }
 
 LicensesDialog::~LicensesDialog()
