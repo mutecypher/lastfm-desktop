@@ -288,8 +288,12 @@ MainWindow::setupMenuBar()
     helpMenu->addSeparator();
     helpMenu->addAction( tr("FAQ"), aApp, SLOT(onFaqTriggered()) );
     helpMenu->addAction( tr("Forums"), aApp, SLOT(onForumsTriggered()) );
+    helpMenu->addSeparator();
     helpMenu->addAction( tr("Tour"), aApp, SLOT(onTourTriggered()) );
+    helpMenu->addSeparator();
+    helpMenu->addAction( tr("Show Licenses"), aApp, SLOT(onLicensesTriggered()) );
 #ifndef Q_WS_X11 // it's only the scrobble log tab at the moment so no use on linux
+    helpMenu->addSeparator();
     helpMenu->addAction( tr("Diagnostics"), aApp, SLOT(onDiagnosticsTriggered()) );
 #endif
 }

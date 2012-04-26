@@ -103,7 +103,8 @@ SOURCES += \
     Widgets/PushButton.cpp \
     Dialogs/BetaDialog.cpp \
     Dialogs/CloseAppsDialog.cpp \
-    Widgets/TrackWidget.cpp
+    Widgets/TrackWidget.cpp \
+    Dialogs/LicensesDialog.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -181,7 +182,8 @@ HEADERS += \
     Widgets/PushButton.h \
     Dialogs/BetaDialog.h \
     Dialogs/CloseAppsDialog.h \
-    Widgets/TrackWidget.h
+    Widgets/TrackWidget.h \
+    Dialogs/LicensesDialog.h
 
 
 win32:HEADERS += Plugins/FooBar08PluginInfo.h \
@@ -229,7 +231,8 @@ FORMS += \
     Widgets/FriendListWidget.ui \
     Dialogs/BetaDialog.ui \
     Dialogs/CloseAppsDialog.ui \
-    Widgets/TrackWidget.ui
+    Widgets/TrackWidget.ui \
+    Dialogs/LicensesDialog.ui
 
 unix:!mac:HEADERS += MediaDevices/IpodDevice_linux.h
 unix:!mac:SOURCES += MediaDevices/IpodDevice_linux.cpp

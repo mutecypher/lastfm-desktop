@@ -34,6 +34,7 @@
 #include "Bootstrapper/PluginBootstrapper.h"
 
 class AboutDialog;
+class LicensesDialog;
 class MainWindow;
 class RadioWidget;
 class QAction;
@@ -90,6 +91,7 @@ namespace audioscrobbler
         void* m_raiseHotKeyId;
 
         QPointer<AboutDialog> m_aboutDialog;
+        QPointer<LicensesDialog> m_licensesDialog;
         
         QAction* m_submit_scrobbles_toggle;
         QAction* m_love_action;
@@ -181,6 +183,7 @@ namespace audioscrobbler
         void onForumsTriggered();
         void onAboutTriggered();
         void onTourTriggered();
+        void onLicensesTriggered();
 
         void showWindow();
         void toggleWindow();

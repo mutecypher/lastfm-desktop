@@ -51,6 +51,7 @@
 #include "CommandReciever/CommandReciever.h"
 #endif
 
+#include "Dialogs/LicensesDialog.h"
 #include "MediaDevices/DeviceScrobbler.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
@@ -479,6 +480,14 @@ Application::onAboutTriggered()
     if ( !m_aboutDialog )
         m_aboutDialog = new AboutDialog( m_mw );
     m_aboutDialog->show();
+}
+
+void
+Application::onLicensesTriggered()
+{
+    if ( !m_licensesDialog )
+        m_licensesDialog = new LicensesDialog( m_mw );
+    m_licensesDialog->show();
 }
 
 void 
