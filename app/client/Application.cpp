@@ -688,8 +688,8 @@ Application::quit()
     int result = 1;
     if( !unicorn::AppSettings().value( "quitDontAsk", false ).toBool())
       result =
-          QMessageBoxBuilder( activeWindow()).setTitle( tr("%1 is about to quit.").arg(applicationName()))
-                                             .setText( tr("Tracks played will not be scrobbled if you continue." ) )
+          QMessageBoxBuilder( activeWindow()).setTitle( tr("Are you sure you want to quit %1?").arg(applicationName()))
+                                             .setText( tr("%1 is about to quit. Tracks played will not be scrobbled if you continue." ).arg(applicationName()) )
                                              .dontAskAgain()
                                              .setIcon( QMessageBox::Question )
                                              .setButtons( QMessageBox::Yes | QMessageBox::No )
