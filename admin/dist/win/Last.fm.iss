@@ -161,7 +161,7 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"; Filename
 
 
 [Run]
-Filename: "{app}\Last.fm.exe"; Description: "Last.fm"; Flags: nowait postinstall
+Filename: "{app}\Last.fm.exe"; Description: "Start The Last.fm Desktop App now?"; Flags: nowait postinstall
 Filename: "{app}\UninsHs.exe"; Parameters: "/r0=LastFM,{language},{srcexe},{app}\Installer.exe"; Flags: runminimized runhidden nowait
 
 [InstallDelete]
