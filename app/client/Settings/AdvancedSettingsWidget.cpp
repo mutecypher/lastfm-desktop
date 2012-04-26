@@ -31,7 +31,6 @@
 
 #include <lastfm/User.h>
 
-
 #include <QApplication>
 #include <QComboBox>
 #include <QGroupBox>
@@ -61,6 +60,10 @@ AdvancedSettingsWidget::AdvancedSettingsWidget( QWidget* parent )
 
     connect( ui->sce, SIGNAL(editTextChanged(QString)), this, SLOT(onSettingsChanged()));
 #endif
+    connect( ui->proxyHost, SIGNAL(textChanged(QString)), this, SLOT(onSettingsChanged()));
+    connect( ui->proxyPort, SIGNAL(textChanged(QString)), this, SLOT(onSettingsChanged()));
+    connect( ui->proxyUsername, SIGNAL(textChanged(QString)), this, SLOT(onSettingsChanged()));
+    connect( ui->proxyPassword, SIGNAL(textChanged(QString)), this, SLOT(onSettingsChanged()));
 }
 
 void
@@ -68,10 +71,21 @@ AdvancedSettingsWidget::saveSettings()
 {
     qDebug() << "has unsaved changes?" << hasUnsavedChanges();
 
-    AudioscrobblerSettings settings;
-    settings.setRaiseShortcutKey( ui->sce->key() );
-    settings.setRaiseShortcutModifiers( ui->sce->modifiers() );
-    settings.setRaiseShortcutDescription( ui->sce->textValue() );
+    if ( hasUnsavedChanges() )
+    {
+        AudioscrobblerSettings settings;
+        settings.setRaiseShortcutKey( ui->sce->key() );
+        settings.setRaiseShortcutModifiers( ui->sce->modifiers() );
+        settings.setRaiseShortcutDescription( ui->sce->textValue() );
 
-    aApp->setRaiseHotKey( ui->sce->modifiers(), ui->sce->key() );
+        aApp->setRaiseHotKey( ui->sce->modifiers(), ui->sce->key() );
+
+        if ( ui->proxyHost->text().trimmed().isEmpty()
+             && ui->proxyPort->text().trimmed().isEmpty()
+             && ui->proxyUsername->text().trimmed().isEmpty()
+             && ui->proxyPassword->text().trimmed().isEmpty() )
+        {
+
+        }
+    }
 }
