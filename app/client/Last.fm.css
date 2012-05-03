@@ -1,7 +1,3 @@
-QToolTip {
-	background-color: transparent;
-	padding: 1px;
-}
 
 SlidingStackedWidget {
 	qproperty-speed: 200;
