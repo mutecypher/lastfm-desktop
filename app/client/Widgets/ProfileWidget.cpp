@@ -104,6 +104,7 @@ ProfileWidget::changeUser( const QString& newUsername )
 
         hl->addWidget( ui.avatar = new AvatarWidget( this ) );
         ui.avatar->setObjectName( "avatar" );
+        ui.avatar->setAlignment( Qt::AlignCenter );
 
         QVBoxLayout* vl = new QVBoxLayout();
         vl->setContentsMargins( 0, 0, 0, 0 );

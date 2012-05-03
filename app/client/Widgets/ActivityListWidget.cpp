@@ -72,8 +72,6 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
 {
     setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
 
-    connect( this, SIGNAL( clicked(QModelIndex) ), SLOT(onItemClicked(QModelIndex)));
-
 #ifdef Q_OS_MAC
     connect( verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(scroll()) );
 #endif
