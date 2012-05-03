@@ -33,7 +33,7 @@
 #include "../Application.h"
 
 ScrobbleControls::ScrobbleControls( QWidget* parent )
-    :StylableWidget( parent )
+    :QFrame( parent )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );

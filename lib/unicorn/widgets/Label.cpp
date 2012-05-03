@@ -5,6 +5,7 @@
 #include <QUrl>
 #include <QGraphicsDropShadowEffect>
 #include <QDateTime>
+#include <QTimer>
 
 #include "../DesktopServices.h"
 
@@ -63,6 +64,12 @@ unicorn::Label::boldLinkStyle( const QString& text )
     return boldLinkStyle( text, m_linkColor );
 }
 
+QString
+unicorn::Label::text() const
+{
+    return m_text;
+}
+
 void
 unicorn::Label::setText( const QString& text )
 {
@@ -88,36 +95,56 @@ unicorn::Label::anchor( const QString& url, const QString& text )
     return QString( "<a href=\"%1\">%2</a>" ).arg( url, text );
 }
 
-QString
-unicorn::Label::prettyTime( const QDateTime& timestamp )
+void
+unicorn::Label::prettyTime( Label& timestampLabel, const QDateTime& timestamp, QTimer* callback )
 {
     QDateTime now = QDateTime::currentDateTime();
+
+    // Full time in the tool tip
+    QString dateFormat( "d MMM h:mmap" );
+
+    timestampLabel.setToolTip( timestamp.toString( "d MMM h:mmap yyyy" ) );
+
     int secondsAgo = timestamp.secsTo( now );
 
     if ( secondsAgo < (60 * 60) )
     {
         // Less than an hour ago
         int minutesAgo = ( timestamp.secsTo( now ) / 60 );
-        return (minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) );
+        timestampLabel.setText( QString( minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) ) );
+        if ( callback ) callback->start( now.secsTo( timestamp.addSecs(((minutesAgo + 1 ) * 60 ) + 1 ) ) * 1000 );
     }
     else if ( secondsAgo < (60 * 60 * 6) || now.date() == timestamp.date() )
     {
         // Less than 6 hours ago or on the same date
         int hoursAgo = ( timestamp.secsTo( now ) / (60 * 60) );
-        return (hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) );
+        timestampLabel.setText( QString( hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) ) );
+        if ( callback ) callback->start( now.secsTo( timestamp.addSecs( ( (hoursAgo + 1) * 60 * 60 ) + 1 ) ) * 1000 );
     }
-    else if ( secondsAgo < (60 * 60 * 24 * 365) || now.date() == timestamp.date() )
+    else if ( secondsAgo < (60 * 60 * 24 * 365) )
     {
         // less than a year ago
-        return timestamp.toString( "d MMM h:mmap" );
+        timestampLabel.setText( timestamp.toString( dateFormat ) );
         // We don't need to set the timer because this date will never change (well, it might in a year's time)
     }
     else
     {
-        // less than a year ago
-        return timestamp.toString( "d MMM h:mmap yyyy" );
+        timestampLabel.setText( timestamp.toString( "d MMM h:mmap yyyy" ) );
         // We don't need to set the timer because this date will never change
     }
+}
+
+
+
+QSize
+unicorn::Label::sizeHint() const
+{
+    QSize sizeHint = QLabel::sizeHint();
+
+    if ( textFormat() != Qt::RichText )
+        sizeHint.setWidth( qMin ( sizeHint.width(), fontMetrics().width( m_text ) + 1 ) );
+
+    return sizeHint;
 }
 
 void

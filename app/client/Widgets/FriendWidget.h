@@ -1,20 +1,18 @@
 #ifndef FRIENDWIDGET_H
 #define FRIENDWIDGET_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QPointer>
 
 #include <lastfm/XmlQuery.h>
 #include <lastfm/User.h>
 #include <lastfm/Track.h>
 
-#include "lib/unicorn/StylableWidget.h"
-
 namespace Ui { class FriendWidget; }
 namespace unicorn { class Label; }
 using unicorn::Label;
 
-class FriendWidget : public StylableWidget
+class FriendWidget : public QFrame
 {
     Q_OBJECT
 public:
@@ -30,23 +28,22 @@ public:
 
     bool operator<( const FriendWidget& that ) const;
 
-signals:
-    void sizeChanged( const QSize& size );
-
 private:
     void setDetails();
 
-    void resizeEvent(QResizeEvent *);
+private slots:
+    void updateTimestamp();
 
 private:
     Ui::FriendWidget* ui;
 
     lastfm::User m_user;
-    lastfm::MutableTrack m_recentTrack;
+    lastfm::MutableTrack m_track;
     unsigned int m_order;
     bool m_listeningNow;
 
     QPointer<QMovie> m_movie;
+    QPointer<QTimer> m_timestampTimer;
 };
 
 #endif // FRIENDWIDGET_H

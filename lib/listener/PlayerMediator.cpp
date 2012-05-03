@@ -82,6 +82,7 @@ PlayerMediator::assess( PlayerConnection* connection )
                 qWarning() << "Unsupported state for PlayerConnection";
                 break;                
 
+            default:
             case Stopped:
             case Paused:
                 break;

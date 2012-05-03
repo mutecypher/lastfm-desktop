@@ -94,7 +94,7 @@ protected:
 };
 
 DataListWidget::DataListWidget(QWidget* parent)
-    :StylableWidget(parent)
+    :QFrame(parent)
 {
     new FlowLayout( this, 0, 0, 0 );
 }

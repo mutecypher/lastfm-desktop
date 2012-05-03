@@ -2,24 +2,31 @@
 #define RADIOWIDGET_H
 
 #include <QPointer>
-#include <QWidget>
+#include <QFrame>
 
-#include "lib/unicorn/StylableWidget.h"
+namespace lastfm { class User; }
+namespace lastfm { class RadioStation; }
+namespace lastfm { class Track; }
+using lastfm::RadioStation;
+using lastfm::Track;
 
-#include "../Services/RadioService/RadioService.h"
+namespace unicorn { class Session; }
 
-namespace unicorn { class Session; };
-
-class RadioWidget : public StylableWidget
+class RadioWidget : public QFrame
 {
     Q_OBJECT
 private:
     struct
     {
-        class StylableWidget* personal;
-        class StylableWidget* network;
-        class StylableWidget* topArtists;
-        class StylableWidget* recentStations;
+        class QFrame* nowPlayingFrame;
+        class QFrame* nowPlayingSection;
+        class QLabel* nowPlaying;
+
+        class QFrame* personal;
+        class QFrame* network;
+        class QFrame* recentStations;
+
+        class PlayableItemWidget* lastStation;
 
         class PlayableItemWidget* library;
         class PlayableItemWidget* mix;
@@ -36,8 +43,9 @@ private slots:
     void onGotUserInfo( const lastfm::User& userDetails );
 
     void onTuningIn( const RadioStation& station );
+    void onRadioStopped();
+    void onTrackStarted( const Track& track , const Track& oldTrack );
 
-    void onGotTopArtists();
     void onGotRecentStations();
 
 private:

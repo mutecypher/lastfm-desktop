@@ -18,6 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QStyle>
 #include "HttpImageWidget.h"
 
 #include "lib/unicorn/DesktopServices.h"
@@ -28,14 +29,6 @@ HttpImageWidget::HttpImageWidget( QWidget* parent )
     setAttribute( Qt::WA_LayoutUsesWidgetRect );
     setAttribute( Qt::WA_MacNoClickThrough );
 }
-
-void 
-HttpImageWidget::setPlaceholder( const QPixmap& placeholder )
-{
-    if( !pixmap() || pixmap()->isNull())
-        setPixmap( placeholder.scaled( maximumWidth(), maximumHeight(), Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
-}
-
 
 void
 HttpImageWidget::loadUrl( const QUrl& url, ScaleType scale )
@@ -55,12 +48,13 @@ void HttpImageWidget::setHref( const QUrl& url )
 
     setToolTip( m_href.toString() );
 
-    if( m_href.isValid()) {
+    unsetCursor();
+    disconnect( this, SIGNAL( clicked()), this, SLOT(onClick()));
+
+    if( m_href.isValid())
+    {
         setCursor( Qt::PointingHandCursor );
         connect( this, SIGNAL(clicked()), SLOT(onClick()));
-    } else {
-        unsetCursor();
-        disconnect( this, SIGNAL( clicked()), this, SLOT(onClick()));
     }
 }
 

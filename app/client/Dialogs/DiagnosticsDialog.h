@@ -20,23 +20,23 @@
 #ifndef DIAGNOSTICS_DIALOG_H
 #define DIAGNOSTICS_DIALOG_H
 
-#include <lastfm/global.h>
-#include "ui_DiagnosticsDialog.h"
+#include <lastfm/Track.h>
+
+#include <QDialog>
+#include <QLabel>
 #include <QDateTime>
 #include <QPointer>
 #include <QProcess> //Qt enums
 #include <QFile>
 
+namespace Ui { class DiagnosticsDialog; }
 
 class DiagnosticsDialog : public QDialog
 {
     Q_OBJECT
-
-    Ui::DiagnosticsDialog ui;
-    class DelayedLabelText* m_delay;
-
 public:
     DiagnosticsDialog( QWidget *parent = 0 );
+    ~DiagnosticsDialog();
     
 public slots:
     void fingerprinted( const Track& );
@@ -49,15 +49,19 @@ private:
 	void scrobbleIPod( bool isManual = false );
 	QString diagnosticInformation();
 
-    QPointer<QProcess> m_twiddly;
-    QFile* m_ipod_log;
-
 private slots:
 	void onScrobbleIPodClicked();
 	void onSendLogsClicked();
 	void poll();
     void onTwiddlyFinished( int, QProcess::ExitStatus );
     void onTwiddlyError( QProcess::ProcessError );
+
+private:
+    Ui::DiagnosticsDialog* ui;
+    class DelayedLabelText* m_delay;
+    QPointer<QProcess> m_twiddly;
+    QFile* m_ipod_log;
+
 };
 
 

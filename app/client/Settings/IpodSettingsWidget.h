@@ -42,7 +42,6 @@ private slots:
 
 private:
     void populateIpodAssociations();
-    void doRemoveIpodAssociation( const QString deviceId, const QString username );
 
 private:
     Ui::IpodSettingsWidget* ui;

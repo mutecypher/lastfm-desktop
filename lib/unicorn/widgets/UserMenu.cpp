@@ -41,11 +41,10 @@ UserMenu::onSessionChanged( unicorn::Session* s )
 void
 UserMenu::onTriggered( QAction* a )
 {
-    unicorn::Settings s;
+    unicorn::UserSettings us( a->text() );
 
-    s.beginGroup( a->text() );
     QString username = a->text();
-    QString sessionKey = s.value( "SessionKey", "" ).toString();
+    QString sessionKey = us.value( "SessionKey", "" ).toString();
     QMetaObject::invokeMethod( qApp, "changeSession",
                                      Q_ARG( const QString, username ),
                                      Q_ARG( const QString, sessionKey ) );
@@ -78,7 +77,6 @@ UserMenu::refresh()
 {
     clear();
 
-    addAction( tr( "Manage Accounts" ), this, SLOT(manageUsers()));
     m_subscribe = addAction( tr( "Subscribe" ), this, SLOT(subscribe()));
 
     addSeparator();

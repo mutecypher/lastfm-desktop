@@ -16,8 +16,9 @@
 #endif
 
 Plugin::Plugin( const XmlQuery& query )
-       :m_valid( true ),
-        m_bootstrapType( NoBootstrap )
+       :m_bootstrapType( NoBootstrap ),
+        m_valid( true )
+
 {
     m_name = query.attribute( "name" );
     m_id = query.attribute( "id" );

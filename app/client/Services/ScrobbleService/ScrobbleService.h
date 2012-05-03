@@ -22,12 +22,15 @@
 
 #include <QObject>
 #include <QPointer>
+
+#include "lib/listener/State.h"
+
+#include <lastfm/Audioscrobbler.h>
 #include <lastfm/Track.h>
 
 namespace unicorn { class Session; }
 class PlayerMediator;
 class PlayerConnection;
-class Audioscrobbler;
 class StopWatch;
 class DeviceScrobbler;
 
@@ -39,8 +42,8 @@ public:
     ScrobbleService();
     ~ScrobbleService();
 
-    bool scrobblingOn() const;
-    void setScrobblingOn( bool scrobblingOn );
+
+    bool scrobblableTrack( const lastfm::Track& track ) const;
 
     Track currentTrack() const { return m_currentTrack; }
     QPointer<DeviceScrobbler> deviceScrobbler() { return m_deviceScrobbler; }
@@ -49,20 +52,13 @@ public:
 
     void handleTwiddlyMessage( const QStringList& message );
     void handleIPodDetectedMessage( const QStringList& message );
-
-    enum State
-    {
-        Unknown,
-        Stopped,
-        Paused,
-        Playing
-    };
     
     static ScrobbleService& instance() { static ScrobbleService s; return s; }
 
 public slots:
     void onSessionChanged( unicorn::Session* );
     void onScrobble();
+    void scrobbleSettingsChanged();
 
 signals:
     void trackStarted( Track, Track );
@@ -85,7 +81,6 @@ public slots:
 
 protected slots:
     void setConnection( PlayerConnection* );
-    void onTrackStarted( const Track& );
     void onTrackStarted( const Track&, const Track& );
     void onPaused();
     void onResumed(); 
@@ -93,6 +88,7 @@ protected slots:
 
 private:
     void resetScrobbler();
+    bool scrobblingOn() const;
 
 protected:
     State state;
@@ -104,7 +100,6 @@ protected:
     QPointer <DeviceScrobbler> m_deviceScrobbler;
     Track m_currentTrack;
     Track m_trackToScrobble;
-    bool m_scrobblingOn;
 };
 
 

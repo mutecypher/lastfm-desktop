@@ -25,7 +25,7 @@
 #include <cassert>
 #include <QDateTime>
 #include <QFileInfo>
-
+#include <QDebug>
 
 using namespace std;
 
@@ -109,6 +109,8 @@ ITunesLibrary::Track::lastfmTrack() const
     t.setDuration( i.duration() );
     t.setAlbum( QString::fromStdWString( i.album() ) );
     t.setPlayCount( i.playCount() );
+    t.setPodcast( i.podcast() );
+    t.setVideo( i.video() );
 
     QDateTime stamp = QDateTime::fromString( QString::fromStdWString( i.lastPlayed() ), "yyyy-MM-dd hh:mm:ss" );
     if ( stamp.isValid() )

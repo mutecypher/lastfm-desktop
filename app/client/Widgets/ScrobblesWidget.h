@@ -1,5 +1,5 @@
-#ifndef SCROBBLESWIDGET_H
-#define SCROBBLESWIDGET_H
+#ifndef RECENT_TRACKS_WIDGET_H_
+#define RECENT_TRACKS_WIDGET_H_
 
 #include <QWidget>
 
@@ -8,24 +8,23 @@ using lastfm::Track;
 
 class ScrobblesWidget : public QWidget
 {
-    Q_OBJECT
-private:
-    struct
-    {
-        class QPushButton* refresh;
-        class ActivityListWidget* activityList;
-    } ui;
-
+Q_OBJECT
 public:
-    explicit ScrobblesWidget(QWidget *parent = 0);
+    ScrobblesWidget( QWidget* parent = 0 );
 
+public slots:
+    void onCurrentChanged( int index );
     void refresh();
 
-signals:
-    void trackClicked( const Track& );
+protected slots:
+    void onTrackClicked( class TrackWidget& trackWidget );
+    void onBackClicked();
+    void onMoveFinished( class QLayoutItem* i );
+    void onMetadataWidgetFinished();
 
-private slots:
-    void onRefreshing( bool refreshing );
+protected:
+    class SideBySideLayout* m_layout;
+    class ScrobblesListWidget* m_scrobbles;
 };
 
-#endif // SCROBBLESWIDGET_H
+#endif //RECENT_TRACKS_WIDGET_H_

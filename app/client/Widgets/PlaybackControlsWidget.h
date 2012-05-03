@@ -1,18 +1,18 @@
 #ifndef PLAYBACKCONTROLS_H
 #define PLAYBACKCONTROLS_H
 
-#include <QWidget>
+#include <QAction>
+#include <QFrame>
 #include <QPointer>
 
 #include <lastfm/RadioStation.h>
-
-#include "lib/unicorn/StylableWidget.h"
+#include <lastfm/Track.h>
 
 namespace Ui { class PlaybackControlsWidget; }
 
 class QMovie;
 
-class PlaybackControlsWidget : public StylableWidget
+class PlaybackControlsWidget : public QFrame
 {
     Q_OBJECT
 
@@ -21,18 +21,17 @@ public:
     ~PlaybackControlsWidget();
 
 public:
-    Q_PROPERTY( bool scrobbleTrack READ scrobbleTrack WRITE setScrobbleTrack );
+    Q_PROPERTY( bool scrobbleTrack READ scrobbleTrack WRITE setScrobbleTrack )
 
     bool scrobbleTrack() { return m_scrobbleTrack; }
     void setScrobbleTrack( bool scrobbleTrack );
 
-    void addToMenu( class QMenu& menu );
+    void addToMenu( class QMenu& menu, QAction* before = 0 );
 
 private slots:
     void onActionsChanged();
     void onSpace();
     void onPlayClicked( bool checked );
-    void onPlayTriggered( bool checked );
     void onSkipClicked();
     void onLoveClicked( bool loved );
     void onLoveTriggered( bool loved );
@@ -47,13 +46,11 @@ private slots:
     void onTick( qint64 );
 
 private:
-    void setIconForRadio( const RadioStation& station );
-
-private:
     Ui::PlaybackControlsWidget *ui;
 
+    QPointer<QAction> m_playAction;
+
     bool m_scrobbleTrack;
-    QPointer<QMovie> m_movie;
 };
 
 #endif // PLAYBACKCONTROLS_H

@@ -56,13 +56,15 @@ RadioService::onLastFmUrl( const QUrl& url )
 void
 RadioService::play( const RadioStation& station )
 {
-    if( m_state == Paused && station.url() == "" )
+    if( m_state == Paused
+            && (station.url() == "" || station.url() == m_station.url() ) )
     {
         m_mediaObject->play();
         return;
     }
 
-    if( m_state != Stopped && station.url() == "" )
+    if( m_state != Stopped
+            && ( station.url() == "" || station.url() == m_station.url() ) )
     {
         // do nothing
         return;
@@ -89,6 +91,16 @@ RadioService::play( const RadioStation& station )
 
     m_station = station;
 
+    if ( m_station.url() == "" )
+    {
+        unicorn::UserSettings us;
+        QString stationUrl = us.value( "lastStationUrl", "" ).toString();
+        QString stationTitle = us.value( "lastStationTitle", tr( "A Radio Station" ) ).toString();
+
+        m_station.setUrl( stationUrl );
+        m_station.setTitle( stationTitle );
+    }
+
     // Make sure the radio station has the radio options from the settings
     bool ok;
     m_station.setRep( unicorn::AppSettings().value( "rep", 0.5 ).toDouble( &ok ) );
@@ -112,6 +124,16 @@ RadioService::playNext( const RadioStation& station )
     if (m_state == Playing)
     {
         m_station = station;
+
+        if ( m_station.url() == "" )
+        {
+            unicorn::UserSettings us;
+            QString stationUrl = us.value( "lastStationUrl", "" ).toString();
+            QString stationTitle = us.value( "lastStationTitle", tr( "A Radio Station" ) ).toString();
+
+            m_station.setUrl( stationUrl );
+            m_station.setTitle( stationTitle );
+        }
 
         // Make sure the radio station has the radio options from the settings
         bool ok;
@@ -144,9 +166,6 @@ RadioService::skip()
 {
     if (!m_mediaObject)
         return;
-
-    if (m_track.extra( "rating" ).isEmpty())
-        MutableTrack( m_track ).setExtra( "rating", "S" );
     
     // attempt to refill the phonon queue if it's empty
     if (m_mediaObject->queue().isEmpty())
@@ -154,15 +173,10 @@ RadioService::skip()
     
     QList<Phonon::MediaSource> q = m_mediaObject->queue();
 
-    if (q.size())
+    if ( q.size() )
     {
-        Phonon::MediaSource source = q.takeFirst();
-#ifdef Q_WS_X11
-        m_mediaObject->clearQueue();
-#else
-        m_mediaObject->setQueue( q );
-#endif
-        m_mediaObject->setCurrentSource( source );
+        m_mediaObject->setCurrentSource( q[0] );
+
         //if the error returns a 403 permission denied error, the mediaObject is uninitialised
         if( m_mediaObject )
             m_mediaObject->play();
@@ -291,6 +305,9 @@ RadioService::onPhononStateChanged( Phonon::State newstate, Phonon::State oldsta
             }
             else
             {
+                qWarning() << "Phonon normal error:" << m_mediaObject->errorString();
+                emit error( lastfm::ws::UnknownError, QVariant( m_mediaObject->errorString() ));
+
                 // seems we need to clear the error state before trying to play again.
                 m_bErrorRecover = true;
                 m_mediaObject->stop();
@@ -362,26 +379,17 @@ RadioService::phononEnqueue()
         m_track = t;
         Phonon::MediaSource ms( t.url() );
 
-        // if we are playing a track now, enqueue, otherwise start now!
-        if (m_mediaObject->currentSource().url().isValid()) {
-            //on Linux we should wait to track finish so we're not gonna enqueue
-            #ifdef Q_WS_X11
-            return;
-            #endif
-            qDebug() << "enqueuing " << t;
+        qDebug() << "enqueuing " << t;
+        try
+        {
             m_mediaObject->enqueue( ms );
-        } else {
-            qDebug() << "starting " << t;
-            try
-            {
-                m_mediaObject->setCurrentSource( ms );
-                m_mediaObject->play();
-            }
-            catch (...)
-            {
-                continue;
-            }
+            m_mediaObject->play();
         }
+        catch (...)
+        {
+            continue;
+        }
+
         break;
     }
 }
@@ -416,24 +424,25 @@ RadioService::changeState( State const newstate )
     
     switch (newstate)
 	{
-        case TuningIn:
-            qDebug() << "Tuning to:" << m_station;
-            emit tuningIn( m_station );
-            break;
-            
-        case Buffering:
-            break;
-        case Playing:
-            emit resumed();
-            break;
+    case TuningIn:
+        qDebug() << "Tuning to:" << m_station;
+        emit tuningIn( m_station );
+        break;
 
-        case Stopped:
-            emit stopped();
-            break;
+    default:
+    case Buffering:
+        break;
+    case Playing:
+        emit resumed();
+        break;
 
-        case Paused:
-            emit paused();
-            break;
+    case Stopped:
+        emit stopped();
+        break;
+
+    case Paused:
+        emit paused();
+        break;
 	}
 }
 
@@ -442,6 +451,10 @@ void
 RadioService::setStationName( const QString& s )
 {
     m_station.setTitle( s );
+
+    unicorn::UserSettings us;
+    us.setValue( "lastStationUrl", m_station.url() );
+    us.setValue( "lastStationTitle", m_station.title() );
 }
 
 
@@ -507,6 +520,11 @@ RadioService::initRadio()
             m_prevVolume = 1; //give it a initial value just in case
         }
     }
+    else
+    {
+        audioOutput->setVolume( 1 );
+        m_prevVolume = 1; //give it a initial value just in case
+    }
 
     audioOutput->setMuted(unicorn::AppSettings().value("Muted", false).toBool());
 
@@ -546,9 +564,7 @@ RadioService::initRadio()
     connect( mediaObject, SIGNAL(stateChanged( Phonon::State, Phonon::State )), SLOT(onPhononStateChanged( Phonon::State, Phonon::State )) );
     connect( mediaObject, SIGNAL(bufferStatus(int)), SLOT(onBuffering(int)));
     connect( mediaObject, SIGNAL(currentSourceChanged( Phonon::MediaSource )), SLOT(onPhononCurrentSourceChanged( Phonon::MediaSource )) );
-#ifndef Q_WS_X11
     connect( mediaObject, SIGNAL(aboutToFinish()), SLOT(phononEnqueue()) ); // this fires when the whole queue is about to finish
-#endif
     connect( mediaObject, SIGNAL(finished()), SLOT(onFinished()));
     connect( mediaObject, SIGNAL(tick(qint64)), SIGNAL(tick(qint64)));
     connect( audioOutput, SIGNAL(mutedChanged(bool)), SLOT(onMutedChanged(bool)));

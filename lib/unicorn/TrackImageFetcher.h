@@ -32,8 +32,7 @@ class UNICORN_DLLEXPORT TrackImageFetcher : public QObject
 {
     Q_OBJECT
 public:
-    TrackImageFetcher( const Track& t ) : m_track( t )
-    {}
+    TrackImageFetcher( const Track& track, Track::ImageSize size );
 
     void startAlbum();
     void startArtist();
@@ -41,7 +40,9 @@ public:
     Track track() const { return m_track; }
 
 private:
-    Track m_track;
+    lastfm::Track m_track;
+
+    QUrl url( const QString& root_node );
 
     void artistGetInfo();
     void fail();
@@ -58,6 +59,9 @@ private slots:
     void onArtistGotInfo();
     void onAlbumImageDownloaded();
     void onArtistImageDownloaded();
+
+private:
+    lastfm::Track::ImageSize m_size;
 };
 
 #endif

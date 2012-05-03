@@ -20,11 +20,12 @@ PointyArrow::PointyArrow()
 
 PointyArrow::~PointyArrow()
 {
+    disconnect( m_timeline, 0, this, 0 );
     delete m_timeline;
 }
 
 void 
-PointyArrow::paintEvent( QPaintEvent* event )
+PointyArrow::paintEvent( QPaintEvent* /*event*/ )
 {
     QPainter p( this );
     p.drawPixmap( QPoint( 0, 0 ), m_pm );

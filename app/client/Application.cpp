@@ -36,6 +36,7 @@
 #include <lastfm/XmlQuery.h>
 #include <lastfm/misc.h>
 
+#include "lib/listener/State.h"
 #include "lib/listener/PlayerConnection.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/dialogs/AboutDialog.h"
@@ -50,6 +51,7 @@
 #include "CommandReciever/CommandReciever.h"
 #endif
 
+#include "Dialogs/LicensesDialog.h"
 #include "MediaDevices/DeviceScrobbler.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
@@ -59,7 +61,6 @@
 #include "Wizard/FirstRunWizard.h"
 #include "Application.h"
 #include "MainWindow.h"
-#include "SkipListener.h"
 #include "AudioscrobblerSettings.h"
 
 #ifdef Q_OS_WIN32
@@ -73,34 +74,23 @@ using audioscrobbler::Application;
 #define APPLE_KEY_CHAR QString::fromUtf8("⌘")
 
 #ifdef Q_WS_X11
-    #define AS_TRAY_ICON ":16x16.png"
-#elif defined( Q_WS_WIN )
     #define AS_TRAY_ICON ":22x22.png"
+#elif defined( Q_WS_WIN )
+    #define AS_TRAY_ICON ":16x16.png"
 #elif defined( Q_WS_MAC )
-    #include "Services/ITunesPluginInstaller/ITunesPluginInstaller.h"
     #define AS_TRAY_ICON ":systray_icon_rest_mac.png"
 #endif
 
 Application::Application(int& argc, char** argv) 
     :unicorn::Application(argc, argv), m_raiseHotKeyId( (void*)-1 )
 {
-#ifdef Q_OS_MAC
-    FSRef outRef;
-    OSStatus err = FSPathMakeRef( reinterpret_cast<const UInt8*>( QCoreApplication::applicationDirPath().append( "/../.." ).toUtf8().data() ), &outRef, NULL );
-
-    if ( err == noErr )
-    {
-        OSStatus status = LSRegisterFSRef( &outRef, true );
-
-        if ( status == noErr )
-            qDebug() << "Registered the app with launch services!";
-    }
-#endif
 }
 
 void
 Application::initiateLogin( bool forceWizard ) throw( StubbornUserException )
 {
+    closeAllWindows();
+
     if( forceWizard || !unicorn::Settings().value( SETTING_FIRST_RUN_WIZARD_COMPLETED, false ).toBool() )
     {
         setWizardRunning( true );
@@ -132,15 +122,12 @@ Application::initiateLogin( bool forceWizard ) throw( StubbornUserException )
 void
 Application::init()
 {
-#ifdef Q_WS_MAC
-    // The mac plugin needs to be installed before we
-    // run the wizard for possible bootstrapping
-    ITunesPluginInstaller installer;
-    installer.install();
-#endif
-
     // Initialise the unicorn base class first!
     unicorn::Application::init();
+
+#ifdef Q_WS_X11
+    setWindowIcon( QIcon( ":/as.png" ) );
+#endif
 
     if ( !currentSession() )
     {
@@ -157,13 +144,13 @@ Application::init()
 //    diskCache->setCacheDirectory( lastfm::dir::cache().path() );
 //    lastfm::nam()->setCache( diskCache );
 
-    m_menuBar = new QMenuBar( 0 );
-
 /// tray
     tray(); // this will initialise m_tray if it doesn't already exist
 
     /// tray menu
     QMenu* menu = new QMenu;
+    m_tray->setContextMenu(menu);
+
     menu->addMenu( new UserMenu() )->setText( "Accounts" );
 
     m_show_window_action = menu->addAction( tr("Show Scrobbler"));
@@ -171,7 +158,8 @@ Application::init()
     menu->addSeparator();
 
     {
-        m_love_action = menu->addAction( tr("Love") );
+        m_love_action = new QAction( tr("Love"), this );
+        m_love_action->setIconVisibleInMenu( false );
         m_love_action->setCheckable( true );
         QIcon loveIcon;
         loveIcon.addFile( ":/meta_love_OFF_REST.png", QSize( 16, 16 ), QIcon::Normal, QIcon::Off );
@@ -182,28 +170,8 @@ Application::init()
         connect( m_love_action, SIGNAL(triggered(bool)), SLOT(changeLovedState(bool)));
     }
     {
-        m_tag_action = menu->addAction(tr("Tag")+ELLIPSIS);
-        m_tag_action->setIcon( QIcon( ":/meta_tag_REST.png" ) );
-        m_tag_action->setEnabled( false );
-        connect( m_tag_action, SIGNAL(triggered()), SLOT(onTagTriggered()));
-    }
-
-    {
-        m_share_action = menu->addAction(tr("Share")+ELLIPSIS);
-        m_share_action->setIcon( QIcon( ":/meta_share_REST.png" ) );
-        m_share_action->setEnabled( false );
-        connect( m_share_action, SIGNAL(triggered()), SLOT(onShareTriggered()));
-    }
-
-    {
-        m_ban_action = new QAction( tr( "Ban" ), this );
-        QIcon banIcon;
-        banIcon.addFile( ":/controls_ban_REST.png" );
-        m_ban_action->setIcon( banIcon );
-        m_ban_action->setEnabled( false );
-    }
-    {
         m_play_action = new QAction( tr( "Play" ), this );
+        m_play_action->setIconVisibleInMenu( false );
         m_play_action->setCheckable( true );
         QIcon playIcon;
         playIcon.addFile( ":/controls_pause_REST.png", QSize(), QIcon::Normal, QIcon::On );
@@ -212,11 +180,39 @@ Application::init()
     }
     {
         m_skip_action = new QAction( tr( "Skip" ), this );
+        m_skip_action->setIconVisibleInMenu( false );
         QIcon skipIcon;
         skipIcon.addFile( ":/controls_skip_REST.png" );
         m_skip_action->setIcon( skipIcon );
         m_skip_action->setEnabled( false );
     }
+    {
+        m_tag_action = new QAction( tr( "Tag" ) + ELLIPSIS, this );
+        m_tag_action->setIconVisibleInMenu( false );
+        m_tag_action->setIcon( QIcon( ":/meta_tag_REST.png" ) );
+        m_tag_action->setEnabled( false );
+        connect( m_tag_action, SIGNAL(triggered()), SLOT(onTagTriggered()));
+    }
+    {
+        m_share_action = new QAction( tr( "Share" ) + ELLIPSIS, this );
+        m_share_action->setIconVisibleInMenu( false );
+        m_share_action->setIcon( QIcon( ":/meta_share_REST.png" ) );
+        m_share_action->setEnabled( false );
+        connect( m_share_action, SIGNAL(triggered()), SLOT(onShareTriggered()));
+    }
+    {
+        m_ban_action = new QAction( tr( "Ban" ), this );
+        m_ban_action->setIconVisibleInMenu( false );
+        QIcon banIcon;
+        banIcon.addFile( ":/controls_ban_REST.png" );
+        m_ban_action->setIcon( banIcon );
+        m_ban_action->setEnabled( false );
+    }
+    {
+        m_mute_action = new QAction( tr( "Mute" ), this );
+        m_mute_action->setEnabled( true );
+    }
+
 
 #ifdef Q_WS_X11
     menu->addSeparator();
@@ -231,23 +227,21 @@ Application::init()
 
     menu->addSeparator();
 
-    m_submit_scrobbles_toggle = menu->addAction( tr("Submit Scrobbles") );
+    m_submit_scrobbles_toggle = menu->addAction( tr("Enable Scrobbling") );
     m_submit_scrobbles_toggle->setCheckable( true );
     bool scrobblingOn = unicorn::UserSettings().value( "scrobblingOn", true ).toBool();
     m_submit_scrobbles_toggle->setChecked( scrobblingOn );
-    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
+    ScrobbleService::instance().scrobbleSettingsChanged();
 
     connect( m_submit_scrobbles_toggle, SIGNAL(toggled(bool)), SLOT(onScrobbleToggled(bool)) );
+    connect( this, SIGNAL(scrobbleToggled(bool)), &ScrobbleService::instance(), SLOT(scrobbleSettingsChanged()) );
 
     menu->addSeparator();
 
     QAction* quit = menu->addAction(tr("Quit %1").arg( applicationName()));
-
     connect(quit, SIGNAL(triggered()), SLOT(quit()));
 
-
-    m_tray->setContextMenu(menu);
-
+    m_menuBar = new QMenuBar( 0 );
 
 /// MainWindow
     m_mw = new MainWindow( m_menuBar );
@@ -257,16 +251,16 @@ Application::init()
     m_mw->addWinThumbBarButton( m_skip_action );
 
     m_toggle_window_action = new QAction( this ), SLOT( trigger());
-#ifndef Q_OS_LINUX
+#ifndef Q_WS_X11
      AudioscrobblerSettings settings;
      setRaiseHotKey( settings.raiseShortcutModifiers(), settings.raiseShortcutKey() );
 #endif
-    m_play_action->setShortcut( Qt::Key_Space );
     m_skip_action->setShortcut( Qt::CTRL + Qt::Key_Right );
     m_tag_action->setShortcut( Qt::CTRL + Qt::Key_T );
     m_share_action->setShortcut( Qt::CTRL + Qt::Key_S );
     m_love_action->setShortcut( Qt::CTRL + Qt::Key_L );
     m_ban_action->setShortcut( Qt::CTRL + Qt::Key_B );
+    m_mute_action->setShortcut( Qt::CTRL + Qt::ALT + Qt::Key_Down );
 
     // make the love buttons sychronised
     connect(this, SIGNAL(lovedStateChanged(bool)), m_love_action, SLOT(setChecked(bool)));
@@ -306,17 +300,18 @@ Application::init()
     // make sure cached scrobbles get submitted when the connection comes back online
     connect( m_icm, SIGNAL(up(QString)), &ScrobbleService::instance(), SLOT(submitCache()) );
 
-    emit messageReceived( arguments() );
+#ifdef Q_OS_WIN32
+    QStringList args = arguments();
+#else
+    QStringList args = arguments().mid( 1 );
+#endif
+    emit messageReceived( args );
 
 #ifdef Q_OS_MAC
     m_notify = new Notify( this );
     connect( m_notify, SIGNAL(clicked()), SLOT(showWindow()) );
 
     new CommandReciever( this );
-#endif
-
-#ifdef CLIENT_ROOM_RADIO
-    new SkipListener( this );
 #endif
 }
 
@@ -353,7 +348,7 @@ Application::showAs( bool showAs )
 #ifdef Q_OS_MAC
     setQuitOnLastWindowClosed( false );
 #else
-    setQuitOnLastWindowClosed( !showAs );
+    setQuitOnLastWindowClosed( !showAs && !QSystemTrayIcon::isSystemTrayAvailable() );
 #endif
 }
 
@@ -396,13 +391,16 @@ Application::onCorrected(QString /*correction*/)
 
 
 void
-Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
+Application::onTrackStarted( const Track& track, const Track& oldTrack )
 {
+    disconnect( oldTrack.signalProxy(), 0, this, 0 );
+
     if ( track != m_currentTrack )
     {
         m_currentTrack = track;
 
-        if ( track.extra( "playerId" ) != "spt" )
+        if ( ScrobbleService::instance().scrobblableTrack( m_currentTrack )
+             && unicorn::Settings().value( SETTING_NOTIFICATIONS, true ).toBool() )
         {
 #ifdef Q_OS_MAC
             m_notify->newTrack( track );
@@ -424,27 +422,8 @@ Application::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
 }
 
 void
-Application::onTrackSpooled( const Track& track )
+Application::onTrackSpooled( const Track& /*track*/ )
 {
-#ifdef CLIENT_ROOM_RADIO
-    QString strippedContextString = MetadataWidget::getContextString( track );
-
-    QRegExp re( "<[^>]*>" );
-
-    strippedContextString.replace( re, "" );
-
-    QString ircMessage = QString( "#last.clientradio %1 (%2) %3" ).arg( track.toString(), Track::durationString( track.duration() ), strippedContextString );
-
-    if ( track.context().values().count() == ( RadioService::instance().station().url().count( "," ) + 1 ) )
-        ircMessage.append( " BINGO!" );
-
-    QTcpSocket socket;
-    socket.connectToHost( "localhost", 12345 );
-    socket.waitForConnected();
-    socket.write( ircMessage.toUtf8() );
-    socket.flush();
-    socket.close();
-#endif
 }
 
 void
@@ -503,6 +482,14 @@ Application::onAboutTriggered()
     m_aboutDialog->show();
 }
 
+void
+Application::onLicensesTriggered()
+{
+    if ( !m_licensesDialog )
+        m_licensesDialog = new LicensesDialog( m_mw );
+    m_licensesDialog->show();
+}
+
 void 
 Application::changeLovedState(bool loved)
 {
@@ -518,8 +505,8 @@ void
 Application::onScrobbleToggled( bool scrobblingOn )
 {
     unicorn::UserSettings().setValue( "scrobblingOn", scrobblingOn );
-    ScrobbleService::instance().setScrobblingOn( scrobblingOn );
     m_submit_scrobbles_toggle->setChecked( scrobblingOn );
+    emit scrobbleToggled( scrobblingOn );
 }
 
 void
@@ -564,7 +551,8 @@ Application::onWsError( lastfm::ws::Error e )
     switch (e)
     {
         case lastfm::ws::InvalidSessionKey:
-            quit();
+            //quit();
+            // ask the current user to reauthenticate!
             break;
         default:
             break;
@@ -577,6 +565,7 @@ Application::Argument Application::argument( const QString& arg )
     if (arg == "--pause") return Pause;
     if (arg == "--skip") return Skip;
     if (arg == "--exit") return Exit;
+    if (arg == "--stop") return Stop;
 
     QUrl url( arg );
     //TODO show error if invalid schema and that
@@ -589,6 +578,18 @@ void
 Application::onPrefsTriggered()
 {
     m_mw->onPrefsTriggered();
+}
+
+void
+Application::onBetaTriggered()
+{
+    m_mw->onBetaTriggered();
+}
+
+void
+Application::onDiagnosticsTriggered()
+{
+    m_mw->onDiagnosticsTriggered();
 }
     
 void
@@ -638,10 +639,8 @@ Application::parseArguments( const QStringList& args )
 {
     qDebug() << args;
 
-    if (args.size() <= 1)
-        return;
-
-    foreach (QString const arg, args.mid( 1 ))
+    foreach ( QString const arg, args )
+    {
         switch (argument( arg ))
         {
         case LastFmUrl:
@@ -656,6 +655,10 @@ Application::parseArguments( const QStringList& args )
             RadioService::instance().skip();
             break;
 
+        case Stop:
+            RadioService::instance().stop();
+            break;
+
         case Pause:
             if ( RadioService::instance().state() == Playing )
                 RadioService::instance().pause();
@@ -667,12 +670,13 @@ Application::parseArguments( const QStringList& args )
             qDebug() << "Unknown argument:" << arg;
             break;
         }
+    }
 }
 
 void 
 Application::quit()
 {
-    if( activeWindow())
+    if( activeWindow() )
         activeWindow()->raise();
 
     if( unicorn::AppSettings().value( "quitDontAsk", false ).toBool()) {
@@ -684,8 +688,8 @@ Application::quit()
     int result = 1;
     if( !unicorn::AppSettings().value( "quitDontAsk", false ).toBool())
       result =
-          QMessageBoxBuilder( activeWindow()).setTitle( tr("%1 is about to quit.").arg(applicationName()))
-                                             .setText( tr("Tracks played will not be scrobbled if you continue." ) )
+          QMessageBoxBuilder( activeWindow()).setTitle( tr("Are you sure you want to quit %1?").arg(applicationName()))
+                                             .setText( tr("%1 is about to quit. Tracks played will not be scrobbled if you continue." ).arg(applicationName()) )
                                              .dontAskAgain()
                                              .setIcon( QMessageBox::Question )
                                              .setButtons( QMessageBox::Yes | QMessageBox::No )

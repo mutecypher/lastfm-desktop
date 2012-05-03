@@ -7,12 +7,19 @@
 #include <lastfm/XmlQuery.h>
 
 #include "lib/unicorn/UnicornMainWindow.h"
-#include "lib/unicorn/StylableWidget.h"
+
+#ifdef  Q_OS_MAC
+#include "Services/ITunesPluginInstaller/ITunesPluginInstaller.h"
+#endif
 
 #include "Settings/PreferencesDialog.h"
+#include "Dialogs/BetaDialog.h"
+#include "Dialogs/DiagnosticsDialog.h"
 
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
 namespace unicorn { class Updater; }
 using unicorn::Updater;
+#endif
 
 using lastfm::XmlQuery;
 
@@ -41,7 +48,7 @@ class MainWindow : public unicorn::MainWindow
         class QStackedWidget* stackedWidget;
 
         class NowPlayingStackedWidget* nowPlaying;
-        class RecentTracksWidget* recentTracks;
+        class ScrobblesWidget* scrobbles;
 
         class QScrollArea* profileScrollArea;
         QWidget* profile;
@@ -69,6 +76,8 @@ signals:
 
 public slots:
     void onPrefsTriggered();
+    void onBetaTriggered();
+    void onDiagnosticsTriggered();
 
 private slots:
     void onVisitProfile();
@@ -82,6 +91,8 @@ private slots:
     void onRadioError( int error, const QVariant& data );
 
     void checkForUpdates();
+
+    void onSpace();
 
 #ifdef Q_OS_WIN32
     void checkUpdatedPlugins();
@@ -99,6 +110,11 @@ private:
     void setupMenuBar();
     bool macEvent(EventHandlerCallRef, EventRef);
 
+    void showEvent(QShowEvent *);
+    void hideEvent(QHideEvent *);
+
+    static QString applicationName();
+
     //void resizeEvent( QResizeEvent* event ) { qDebug() << event->size(); }
 
 private:
@@ -108,10 +124,17 @@ private:
     QList<QAction*> m_buttons;
 
     QPointer<PreferencesDialog> m_preferences;
+    QPointer<BetaDialog> m_beta;
+    QPointer<DiagnosticsDialog> m_diagnostics;
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     QPointer<Updater> m_updater;
-
-    QPointer<MediaKey> m_mediaKey;
+#endif
     QPointer<PluginList> m_pluginList;
+
+#ifdef Q_WS_MAC
+    QPointer<MediaKey> m_mediaKey;
+    QPointer<ITunesPluginInstaller> m_installer;
+#endif
 };
 
 #endif //METADATA_WINDOW_H_

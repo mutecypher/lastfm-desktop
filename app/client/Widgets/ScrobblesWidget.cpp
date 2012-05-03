@@ -1,43 +1,82 @@
 
-#include <QVBoxLayout>
-#include <QPushButton>
+#include <QWidget>
+#include <QLayoutItem>
+#include <QDebug>
 
-#include "ActivityListWidget.h"
-#include "RefreshButton.h"
+#include <lastfm/Track.h>
+
+#include "lib/unicorn/layouts/SideBySideLayout.h"
+
+#include "ScrobblesListWidget.h"
+#include "TrackWidget.h"
+#include "MetadataWidget.h"
 
 #include "ScrobblesWidget.h"
 
-ScrobblesWidget::ScrobblesWidget(QWidget *parent) :
-    QWidget(parent)
+
+ScrobblesWidget::ScrobblesWidget( QWidget* parent )
+    :QWidget( parent )
 {
-    QVBoxLayout* layout = new QVBoxLayout( this );
-    layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->setSpacing( 0 );
+    m_layout = new SideBySideLayout();
+    setLayout( m_layout );
+    m_layout->addWidget( m_scrobbles = new ScrobblesListWidget( this ) );
 
-    layout->addWidget( ui.refresh = new RefreshButton( this ) );
-    ui.refresh->setObjectName( "refresh" );
-    ui.refresh->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-
-    onRefreshing( false );
-
-    layout->addWidget( ui.activityList = new ActivityListWidget );
-    ui.activityList->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-
-    connect( ui.activityList, SIGNAL(trackClicked(Track)), SIGNAL(trackClicked(Track)) );
-    connect( ui.refresh, SIGNAL(clicked()), ui.activityList, SLOT(refresh()) );
-
-    connect( ui.activityList, SIGNAL(refreshing(bool)), SLOT(onRefreshing(bool)));
+    connect( m_scrobbles, SIGNAL( trackClicked(TrackWidget&)), SLOT( onTrackClicked(TrackWidget&)));
+    connect( m_layout, SIGNAL( moveFinished(QLayoutItem*)), SLOT(onMoveFinished(QLayoutItem*)));
 }
 
 void
 ScrobblesWidget::refresh()
 {
-    ui.activityList->refresh();
+    m_scrobbles->refresh();
 }
 
 void
-ScrobblesWidget::onRefreshing( bool refreshing )
+ScrobblesWidget::onCurrentChanged( int index )
 {
-    ui.refresh->setText( refreshing ? tr( "Refreshing..." ) : tr( "Refresh Scrobbles" ) );
-    ui.refresh->setEnabled( !refreshing );
+    if ( index == 1 )
+        m_scrobbles->refresh(); // this tab was clicked on
+
+    m_layout->moveToWidget( m_scrobbles );
+}
+
+void
+ScrobblesWidget::onTrackClicked( TrackWidget& trackWidget )
+{
+    MetadataWidget* w;
+    m_layout->addWidget( w = new MetadataWidget( trackWidget.track() ));
+    w->fetchTrackInfo();
+    w->setBackButtonVisible( true );
+
+    trackWidget.startSpinner();
+    connect( m_layout, SIGNAL( moveFinished(QLayoutItem*)), &trackWidget, SLOT(clearSpinner()) );
+
+    connect( w, SIGNAL(finished()), SLOT(onMetadataWidgetFinished()));
+    connect( w, SIGNAL(backClicked()), SLOT(onBackClicked()));
+}
+
+void
+ScrobblesWidget::onMetadataWidgetFinished()
+{
+    m_layout->moveForward();
+}
+
+void
+ScrobblesWidget::onBackClicked()
+{
+    m_layout->moveToWidget( m_scrobbles );
+}
+
+void
+ScrobblesWidget::onMoveFinished( QLayoutItem* i )
+{
+    if( i->widget() == m_scrobbles )
+    {
+        while ( m_layout->count() > 1 )
+        {
+            QLayoutItem* item = m_layout->takeAt( 1 );
+            item->widget()->deleteLater();
+            delete item;
+        }
+    }
 }

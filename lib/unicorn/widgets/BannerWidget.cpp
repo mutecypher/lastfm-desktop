@@ -38,7 +38,12 @@ BannerWidget::setWidget( QWidget* w )
 void 
 BannerWidget::setHref( const QUrl& url )
 {
-    m_href = url;
+#ifdef Q_OS_MAC
+    //On OSX Percent encoding seems to get applied to the url again.
+    m_href = QUrl::fromPercentEncoding( url.toString().toUtf8() );
+#else
+    m_href = url.toString();
+#endif
 
     if( url.isValid())
         setCursor( Qt::PointingHandCursor );

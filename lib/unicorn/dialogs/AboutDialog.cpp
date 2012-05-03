@@ -23,82 +23,29 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-
-static inline QLabel* label( const QString& text, Qt::WidgetAttribute size = Qt::WA_MacSmallSize )
-{
-    QLabel* l = new QLabel( text );
-    l->setAttribute( size );
-    l->setOpenExternalLinks( true );
-    return l;
-}
+#include "ui_AboutDialog.h"
 
 
 AboutDialog::AboutDialog( QWidget* parent )
-           : QDialog( parent )
+           : QDialog( parent ),
+             ui( new Ui::AboutDialog )
 {
-    QLabel* lauthors;
-    QLabel* lalumni;
-
     Q_ASSERT( qApp->applicationVersion().size() );
 
-    QStringList authors, raw_authors;
-    raw_authors << "Michael Coffey" << "eartle" << "michaelc@last.fm";
+    ui->setupUi( this );
 
+    ui->appName->setText( "<b>" + qApp->applicationName() );
+    ui->qtVersion->setText(  tr( "%1 (built on Qt %2)"  ).arg( qApp->applicationVersion(), qVersion() ) );
 
-    QStringListIterator i( raw_authors );
-    while(i.hasNext()) {
-        QString name = i.next();
-        QString twit = i.next();
-        QString mail = i.next();
-        authors << "&lt;<a href='mailto:" + mail + "'>" + mail + "</a>&gt; " 
-                 + name + ' '
-                 + "<a href='http://twitter.com/" + twit + "'>@" + twit + "</a>";
-    }
+    ui->lastfmLink->setText(  "<a href='http://www.last.fm'>www.last.fm</a>" );
+    ui->ircLink->setText(  "<a href='irc://irc.audioscrobbler.com#audioscrobbler'>irc.audioscrobbler.com</a>" );
 
-    QStringList alumni, raw_alumni;
-    raw_alumni  << "Jono Cole" << "jonocole"
-                << "Doug Mansell" << "dougma"
-                << "Hannah Donovan" << "han"
-                << "Matt Brown" << "irvinebrown"
-                << "Max Howell" << "mxcl"
-                << "William Viana Soares" << "vianasw";
+    ui->copyright->setText( QString::fromUtf8("™ & © 2005, 2006 - 2012 Last.fm Limited") );
 
-
-
-    QStringListIterator j( raw_alumni );
-    while(j.hasNext()) {
-        QString name = j.next();
-        QString twit = j.next();
-        alumni << name + ' '
-                 + "<a href='http://twitter.com/" + twit + "'>@" + twit + "</a>";
-    }
-    
-    QVBoxLayout* v = new QVBoxLayout( this );
-    v->addWidget( new QLabel( "<b>" + qApp->applicationName() ) );
-    v->addWidget( label( qApp->applicationVersion() ) );
-    v->addSpacing( 10 );
-    v->addWidget( label( "<a href='http://www.last.fm'>www.last.fm</a>" ) );
-    v->addWidget( label( "<a href='irc://irc.audioscrobbler.com#audioscrobbler'>irc.audioscrobbler.com</a>" ) );
-    v->addSpacing( 10 );
-    v->addWidget( label( QString::fromUtf8("Copyright © 2005-2010 Last.fm Ltd.") ) );
-    v->addSpacing( 10 );
-    v->addWidget( new QLabel( "<b>Staff" ) );
-    v->addWidget( lauthors = label( authors.join( "<br>" ), Qt::WA_MacMiniSize ) );
-    v->addSpacing( 10 );
-    v->addWidget( new QLabel( "<b>Alumni" ) );
-    v->addWidget( lalumni = label( alumni.join( "<br>" ), Qt::WA_MacMiniSize ) );
-
-    v->setSizeConstraint( QLayout::SetFixedSize );
-    v->setSpacing( 2 );
-
-    lauthors->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse );
-    lalumni->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse );
-
-#ifdef Q_WS_MAC
-    foreach (QLabel* l, findChildren<QLabel*>())
-        l->setAlignment( Qt::AlignHCenter );
-#else
+#ifndef Q_WS_MAC
     // yeah, really, don't do it on Mac. Weird.
     setWindowTitle( tr("About") );
+#else
+    setWindowTitle( "" );
 #endif
 }

@@ -38,7 +38,7 @@ private:
     class BannerWidgetPrivate* m_banner;
     bool m_bannerVisible;
 
-    QUrl m_href;
+    QString m_href;
     QWidget* m_childWidget;
 };
 

@@ -49,12 +49,12 @@ TrackWidget::TrackWidget( const lastfm::Track& track )
     ui.image->setScaledContents( true );
 
     // start fetching the image
-    m_fetcherAlbum = new TrackImageFetcher( track );
+    m_fetcherAlbum = new TrackImageFetcher( track, Track::MediumImage );
     connect( m_fetcherAlbum, SIGNAL(finished( QPixmap )), SLOT(onCoverDownloaded( QPixmap )) );
     m_fetcherAlbum->startAlbum();
 
     // start fetching the image
-    m_fetcherArtist = new TrackImageFetcher( track );
+    m_fetcherArtist = new TrackImageFetcher( track, Track::MediumImage );
     connect( m_fetcherArtist, SIGNAL(finished( QPixmap )), SLOT(onArtistDownloaded( QPixmap )) );
     m_fetcherArtist->startArtist();
 

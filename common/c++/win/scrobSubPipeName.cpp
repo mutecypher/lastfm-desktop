@@ -68,7 +68,6 @@ scrobSubPipeName(string* pipeName)
 {
     #define PIPE_PREFIX "\\\\.\\pipe\\lastfm_scrobsub_"
 
-#ifdef NDEBUG
     bool ok = false;
 
     HANDLE hToken;
@@ -94,9 +93,5 @@ scrobSubPipeName(string* pipeName)
     }
 
     return ok ? 0 : GetLastError();
-#else
-    pipeName->assign(PIPE_PREFIX "debug");
-    return 0;
-#endif
 }
 

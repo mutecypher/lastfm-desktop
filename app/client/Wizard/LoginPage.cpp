@@ -47,8 +47,8 @@ LoginPage::LoginPage()
     layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignTop | Qt::AlignHCenter );
     ui.image->setObjectName( "image" );
 
-    layout->addWidget( ui.description = new QLabel( tr( "<p>Already a Last.fm user? You can connect the Last.fm Desktop App to your profile and keep a record of the music you listen to.</p>"
-                                                        "<p>If you don't have an account you can sign up now for free.</p>" ) ),
+    layout->addWidget( ui.description = new QLabel( tr( "<p>Already a Last.fm user? Connect your account with the Last.fm Desktop App and it'll update your profile with the music you're listening to.</p>"
+                                                        "<p>If you don't have an account you can sign up now for free now.</p>" ) ),
                        0,
                        Qt::AlignTop );
     
@@ -60,7 +60,7 @@ LoginPage::LoginPage()
 void
 LoginPage::initializePage()
 {
-    setTitle( tr( "Hello! Let's get started by connecting your Last.fm account" ) );
+    setTitle( tr( "Let's get started by connecting your Last.fm account" ) );
 
     wizard()->setButton( FirstRunWizard::NextButton, tr( "Connect Your Account" ) );
     QAbstractButton* custom = wizard()->setButton( FirstRunWizard::CustomButton, tr( "Sign up" ) );

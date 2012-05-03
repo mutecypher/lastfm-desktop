@@ -103,6 +103,8 @@ IpodTracksFetcher::setTrackInfo( Track& lstTrack, Itdb_Track* iTrack )
     MutableTrack( lstTrack ).setAlbum( QString::fromUtf8( iTrack->album ) );
     MutableTrack( lstTrack ).setTitle( QString::fromUtf8( iTrack->title ) );
     MutableTrack( lstTrack ).setSource( Track::MediaDevice );
+    if ( iTrack->mediatype & ITDB_MEDIATYPE_PODCAST )
+        MutableTrack( lstTrack ).setPodcast( true );
 
     QDateTime t;
     t.setTime_t( iTrack->time_played );

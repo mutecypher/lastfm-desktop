@@ -19,10 +19,11 @@
 */
 
 #include "ScrobbleService.h"
-#include <lastfm/Audioscrobbler.h>
 #include <lastfm/ws.h>
 
+#ifdef QT_DBUS_LIB
 #include "lib/listener/DBusListener.h"
+#endif
 #include "lib/listener/legacy/LegacyPlayerListener.h"
 #include "lib/listener/PlayerConnection.h"
 #include "lib/listener/PlayerListener.h"
@@ -39,7 +40,6 @@
 #endif
 
 ScrobbleService::ScrobbleService()
-    :m_scrobblingOn( true )
 {
 /// mediator
     m_mediator = new PlayerMediator(this);
@@ -80,23 +80,33 @@ ScrobbleService::ScrobbleService()
     resetScrobbler();
 }
 
+
+bool
+ScrobbleService::scrobblableTrack( const lastfm::Track& track ) const
+{
+    return unicorn::UserSettings().value( "scrobblingOn", true ).toBool()
+            && track.extra( "playerId" ) != "spt"
+            && !track.artist().isNull()
+            && ( unicorn::UserSettings().value( "podcasts", true ).toBool() || !track.isPodcast() )
+            && !track.isVideo();
+}
+
 bool
 ScrobbleService::scrobblingOn() const
 {
-    return m_scrobblingOn;
+    return scrobblableTrack( m_trackToScrobble );
 }
 
 void
-ScrobbleService::setScrobblingOn( bool scrobblingOn )
+ScrobbleService::scrobbleSettingsChanged()
 {
-    m_scrobblingOn = scrobblingOn;
+    bool scrobblingOn = scrobblableTrack( m_trackToScrobble );
 
-    if( m_as
-            && m_watch
-            && m_watch->scrobbled()
-            && m_currentTrack.scrobbleStatus() == Track::Null
-            && m_scrobblingOn
-            && m_trackToScrobble.extra( "playerId" ) != "spt" )
+    if ( m_as
+         && m_watch
+         && m_watch->scrobbled()
+         && m_trackToScrobble.scrobbleStatus() == Track::Null
+         && scrobblingOn )
         m_as->cache( m_trackToScrobble );
 
     emit scrobblingOnChanged( scrobblingOn );
@@ -105,10 +115,7 @@ ScrobbleService::setScrobblingOn( bool scrobblingOn )
 void
 ScrobbleService::submitCache()
 {
-    if ( m_as )
-    {
-        m_as->submit();
-    }
+    if ( m_as ) m_as->submit();
 }
 
 void 
@@ -155,7 +162,7 @@ ScrobbleService::setConnection(PlayerConnection*c)
     connect(c, SIGNAL(resumed()), SLOT(onResumed()));
     connect(c, SIGNAL(stopped()), SLOT(onStopped()));
 
-    connect(c, SIGNAL(trackStarted(Track, Track)), SIGNAL(trackStarted(Track, Track)));
+    //connect(c, SIGNAL(trackStarted(Track, Track)), SIGNAL(trackStarted(Track, Track)));
     connect(c, SIGNAL(resumed()), SIGNAL(resumed()));
     connect(c, SIGNAL(paused()), SIGNAL(paused()));
     connect(c, SIGNAL(stopped()), SIGNAL(stopped()));
@@ -171,21 +178,13 @@ ScrobbleService::setConnection(PlayerConnection*c)
 }
 
 void
-ScrobbleService::onTrackStarted( const Track& track )
+ScrobbleService::onTrackStarted( const Track& t, const Track& ot )
 {
-    onTrackStarted( track, m_currentTrack );
-    emit trackStarted( track, m_currentTrack );
-}
-
-void
-ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
-{
-    // This stops the loving of tracks in the recent tracks list affecting the current track
-#pragma message ( "check this list //disconnect( m_currentTrack.signalProxy(), SIGNAL(loveToggled(bool)), this, SIGNAL(lovedStateChanged(bool)) );" )
+    Q_ASSERT(m_connection);
 
     state = Playing;
 
-    Q_ASSERT(m_connection);
+    Track oldtrack = ot.isNull() ? m_currentTrack : ot;
 
     //TODO move to playerconnection
     if(t.isNull())
@@ -224,13 +223,14 @@ ScrobbleService::onTrackStarted(const Track& t, const Track& oldtrack)
     {
         m_as->submit();
 
-        if ( m_scrobblingOn && t.extra( "playerId" ) != "spt" )
+        if ( scrobblableTrack( t ) )
         {
             qDebug() << "************** Now Playing..";
             m_as->nowPlaying( t );
         }
     }
 
+    emit trackStarted( t, oldtrack );
 }
 
 void
@@ -242,7 +242,7 @@ ScrobbleService::onPaused()
 
     state = Paused;
 
-    m_currentTrack.removeNowPlaying();
+    //m_currentTrack.removeNowPlaying();
 
     Q_ASSERT(m_connection);
     Q_ASSERT(m_watch);
@@ -282,7 +282,7 @@ ScrobbleService::onResumed()
     Q_ASSERT(m_watch);
     Q_ASSERT(m_connection);
 
-    m_currentTrack.updateNowPlaying( m_currentTrack.duration() - (m_watch->elapsed()/1000) );
+    //m_currentTrack.updateNowPlaying( m_currentTrack.duration() - (m_watch->elapsed()/1000) );
 
     if (m_watch)
         m_watch->resume();
@@ -295,8 +295,8 @@ ScrobbleService::onScrobble()
 {
     Q_ASSERT(m_connection);
 
-    if( m_as && m_scrobblingOn && m_trackToScrobble.extra( "playerId" ) != "spt" )
-            m_as->cache( m_trackToScrobble );
+    if( m_as && scrobblableTrack( m_trackToScrobble ) )
+        m_as->cache( m_trackToScrobble );
 }
 
 void 

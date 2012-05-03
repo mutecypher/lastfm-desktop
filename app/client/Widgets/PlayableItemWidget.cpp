@@ -57,7 +57,7 @@ PlayableItemWidget::PlayableItemWidget( const RadioStation& rs, const QString& t
 
     setCursor( Qt::PointingHandCursor );
 
-    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged(RadioStation)) );
     connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
 }
 
@@ -81,6 +81,17 @@ PlayableItemWidget::event( QEvent* e )
     return QPushButton::event( e );
 }
 
+QSize
+PlayableItemWidget::sizeHint() const
+{
+    QSize sizeHint = QPushButton::sizeHint();
+
+    if ( m_style == DescriptionElide )
+        sizeHint.setWidth( 0 );
+
+    return sizeHint;
+}
+
 void
 PlayableItemWidget::setStation(const RadioStation& rs, const QString& title, const QString& description)
 {
@@ -89,11 +100,12 @@ PlayableItemWidget::setStation(const RadioStation& rs, const QString& title, con
 
     m_rs = rs;
     m_rs.setTitle( title );
-    setText( title );
+    setText( title.isEmpty() ? tr( "A Radio Station" ) :  title );
+    setToolTip( tr( "Play %1" ).arg( text() ) );
 
     m_description = description;
 
-    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged()) );
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onRadioChanged(RadioStation)) );
     connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onRadioChanged()));
 
     connect( this, SIGNAL(clicked()), SLOT(play()));
@@ -151,14 +163,21 @@ PlayableItemWidget::playMultiNext()
         RadioService::instance().playNext( getMultiStation() );
 }
 
-
 void
 PlayableItemWidget::onRadioChanged()
 {
-    if ( RadioService::instance().station() == m_rs )
+    onRadioChanged( RadioService::instance().station() );
+}
+
+
+void
+PlayableItemWidget::onRadioChanged( const RadioStation& station )
+{
+    if ( station == m_rs )
     {
         // This is the current radio station
-        setText( RadioService::instance().station().title() );
+        if ( !station.title().isEmpty() )
+            setText( station.title() );
     }
     else
     {
@@ -172,31 +191,39 @@ PlayableItemWidget::paintEvent( QPaintEvent* event )
     static QPixmap m_radio_left_hover = QPixmap( ":/meta_radio_LEFT_HOVER.png" );
     static QPixmap m_radio_left_press = QPixmap( ":/meta_radio_LEFT_PRESS.png" );
     static QPixmap m_radio_left_rest = QPixmap( ":/meta_radio_LEFT_REST.png" );
+
     static QPixmap m_radio_middle_hover = QPixmap( ":/meta_radio_MIDDLE_HOVER.png" );
     static QPixmap m_radio_middle_press = QPixmap( ":/meta_radio_MIDDLE_PRESS.png" );
     static QPixmap m_radio_middle_rest = QPixmap( ":/meta_radio_MIDDLE_REST.png" );
+
     static QPixmap m_radio_right_hover = QPixmap( ":/meta_radio_RIGHT_HOVER.png" );
     static QPixmap m_radio_right_press = QPixmap( ":/meta_radio_RIGHT_PRESS.png" );
     static QPixmap m_radio_right_rest = QPixmap( ":/meta_radio_RIGHT_REST.png" );
 
-    if ( m_style == DescriptionRight )
+    static QPixmap m_radio_small_hover = QPixmap( ":/radio_play_small_HOVER.png" );
+    static QPixmap m_radio_small_press = QPixmap( ":/radio_play_small_PRESS.png" );
+    static QPixmap m_radio_small_rest = QPixmap( ":/radio_play_small_REST.png" );
+
+    if ( m_style == DescriptionNone )
     {
         QPushButton::paintEvent( event );
-
-        QPainter p( this );
-
-        p.setPen( QColor( 0x898989 ) );
-
-        QFont font = p.font();
-        font.setPixelSize( 12 );
-        p.setFont( font );
+    }
+    else if ( m_style == DescriptionElide )
+    {
+        QPainter p(this);
 
         QTextOption to;
-        to.setAlignment( Qt::AlignVCenter );
+        to.setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
 
-        QFontMetrics fm( font );
-        p.drawText( rect().adjusted( fm.width( text() ) + 45, 0, 0, 0 ), m_description, to );
+        QRect textRect = contentsRect().adjusted( 30, 0, 0, 0 );
+        p.drawText( textRect, fontMetrics().elidedText( text(), Qt::ElideRight, textRect.width() ), to );
 
+        if ( isDown() )
+            p.drawPixmap( rect().topLeft(), m_radio_small_press );
+        else if ( m_hovered )
+            p.drawPixmap( rect().topLeft(), m_radio_small_hover );
+        else
+            p.drawPixmap( rect().topLeft(), m_radio_small_rest );
     }
     else if ( m_style == DescriptionBottom )
     {
@@ -265,21 +292,25 @@ PlayableItemWidget::contextMenuEvent( QContextMenuEvent* event )
 {
     QMenu* contextMenu = new QMenu( this );
 
-    contextMenu->addAction( tr( "Play" ), this, SLOT(play()));
+    contextMenu->addAction( tr( "Play %1" ).arg( m_rs.title() ), this, SLOT(play()));
 
     if ( RadioService::instance().state() == Playing )
-        contextMenu->addAction( tr( "Play next" ), this, SLOT(playNext()));
+        contextMenu->addAction( tr( "Cue %1" ).arg( m_rs.title() ), this, SLOT(playNext()));
 
     if ( m_rs.url().startsWith( "lastfm://user/" )
          &&  ( m_rs.url().endsWith( "/library" ) || m_rs.url().endsWith( "/personal" ) )
          && m_rs.url() != RadioStation::library( User() ).url() )
     {
+        int endPos = m_rs.url().indexOf( "/", 14 );
+        if ( endPos == -1 )
+            endPos = m_rs.url().length();
+
         // if it's a user station that isn't yours we should
         // let them start a multi-station with yours
         contextMenu->addSeparator();
-        contextMenu->addAction( tr( "Play with your library" ), this, SLOT(playMulti()));
+        contextMenu->addAction( tr( "Play %1 and %2 Library Radio" ).arg( m_rs.url().mid( 14, endPos - 14 ), User().name() ), this, SLOT(playMulti()));
         if ( RadioService::instance().state() == Playing )
-            contextMenu->addAction( tr( "Play with your library next" ), this, SLOT(playMultiNext()));
+            contextMenu->addAction( tr( "Cue %1 and %2 Library Radio" ).arg( m_rs.url().mid( 14, endPos - 14 ), User().name() ), this, SLOT(playMultiNext()));
     }
 
     if ( contextMenu->actions().count() )

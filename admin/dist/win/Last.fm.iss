@@ -2,13 +2,13 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [CustomMessages]
-Version=2.0.7.0
+Version=2.1.18
 
 
 [Setup]
-OutputBaseFilename=Last.fm-0.0.0.0
-VersionInfoVersion=2.0.7
-VersionInfoTextVersion=2.0.7
+OutputBaseFilename=Last.fm-2.1.18
+VersionInfoVersion=2.1.18
+VersionInfoTextVersion=2.1.18
 AppName=Last.fm
 AppVerName=Last.fm {cm:Version}
 VersionInfoDescription=Last.fm Installer
@@ -75,6 +75,7 @@ Source: "..\..\..\_bin\iPodScrobbler.exe"; DestDir: "{app}"; Flags: ignoreversio
 Source: "..\..\..\_bin\lastfm.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\unicorn.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\listener.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\logger.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ;Visual Studio redistributable packages
 Source: "%VSDIR%\VC\redist\x86\Microsoft.VC90.CRT\*"; DestDir: "{app}"; Flags: ignoreversion
@@ -96,12 +97,15 @@ Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\imageformats";
 ;phonon backend plugin
 Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\phonon_backend"; Flags: ignoreversion
 
+;phonon backend plugin
+Source: "%QTDIR%\plugins\sqldrivers\qsqlite4.dll"; DestDir: "{app}\sqldrivers"; Flags: ignoreversion
+
 ;media player plugin installers
-Source: "FooPlugin0.9.4Setup_2.3.1.2.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
-Source: "FooPlugin0.9Setup_2.1.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
-Source: "iTunesPluginWinSetup_5.0.0.0.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
-Source: "WinampPluginSetup_2.1.0.9.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
-Source: "WmpPluginSetup_2.1.0.6.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\FooPlugin0.9.4Setup_2.3.1.2.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\FooPlugin0.9Setup_2.1.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\iTunesPluginWinSetup_5.0.3.0.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\WinampPluginSetup_2.1.0.9.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\WmpPluginSetup_2.1.0.6.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
 
 ;3rd party
 Source: "..\..\..\_bin\WinSparkle.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -115,8 +119,11 @@ Source: "UninsHs.exe"; DestDir: "{app}"; Flags: onlyifdoesntexist
 ;Text files?
 
 [Registry]
-Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Version"; ValueData: "{cm:Version}"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\Last.fm.exe"; Flags: uninsdeletekey
+; The Path is looked for in both places by plugins
+Root: HKCU; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Version"; ValueData: "{cm:Version}"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Last.fm\Client"; ValueType: string; ValueName: "Path"; ValueData: "{app}\Last.fm.exe"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Last.fm\Last.fm"; ValueType: string; ValueName: "Version"; ValueData: "{cm:Version}"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Last.fm\Last.fm"; ValueType: string; ValueName: "Path"; ValueData: "{app}\Last.fm.exe"; Flags: uninsdeletekey
 
 ; Register last.fm protocol only if it isn't already
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: ""; ValueData: "URL:lastfm"; Flags: uninsdeletekey
@@ -154,7 +161,7 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"; Filename
 
 
 [Run]
-Filename: "{app}\Last.fm.exe"; Description: "Last.fm"; Flags: nowait postinstall
+Filename: "{app}\Last.fm.exe"; Description: "Start The Last.fm Desktop App now?"; Flags: nowait postinstall
 Filename: "{app}\UninsHs.exe"; Parameters: "/r0=LastFM,{language},{srcexe},{app}\Installer.exe"; Flags: runminimized runhidden nowait
 
 [InstallDelete]

@@ -45,7 +45,8 @@ FirstRunWizard::FirstRunWizard( bool startFromTour, QWidget* parent )
     :QDialog( parent ),
       ui( new Ui::FirstRunWizard ),
       m_commitPage( false ),
-      m_showWelcome( false )
+      m_showWelcome( false ),
+      m_user( "" )
 {
 #ifdef Q_OS_WIN32
     m_plugins = new PluginList;
@@ -84,6 +85,18 @@ FirstRunWizard::~FirstRunWizard()
 #ifdef Q_OS_WIN32
     delete m_plugins;
 #endif
+}
+
+lastfm::User
+FirstRunWizard::user() const
+{
+    return m_user;
+}
+
+void
+FirstRunWizard::setUser( const lastfm::User& user )
+{
+    m_user = user;
 }
 
 void
@@ -169,12 +182,12 @@ FirstRunWizard::next()
         else if ( currentPage == ui->pluginsPage )
             ui->stackedWidget->setCurrentWidget( ui->pluginsInstallPage );
         else if ( currentPage == ui->pluginsInstallPage )
-            if( aApp->currentSession() && aApp->currentSession()->userInfo().canBootstrap() )
+            if( m_user.canBootstrap() )
                 ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
             else
                 ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
 #elif defined Q_OS_MAC
-            if( aApp->currentSession() && aApp->currentSession()->userInfo().canBootstrap() )
+            if( m_user.canBootstrap() )
                 ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
             else
                 ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
@@ -199,7 +212,7 @@ FirstRunWizard::next()
         if ( m_showWelcome )
         {
             m_showWelcome = false;
-            ui->welcome->setText( tr( "Thanks <strong>%1</strong>, your account is now connected!" ).arg( aApp->currentSession()->userInfo().name() ) );
+            ui->welcome->setText( tr( "Thanks <strong>%1</strong>, your account is now connected!" ).arg( m_user.name() ) );
             ui->welcome->show();
         }
 
@@ -213,6 +226,8 @@ void
 FirstRunWizard::back()
 {
     setCommitPage( false );
+
+    ui->welcome->hide();
 
     cleanupPage( ui->stackedWidget->currentWidget() );
     ui->stackedWidget->setCurrentWidget( m_pages.takeLast() );
@@ -241,12 +256,12 @@ FirstRunWizard::skip()
     else if ( currentPage == ui->pluginsPage )
         ui->stackedWidget->setCurrentWidget( ui->pluginsInstallPage );
     else if ( currentPage == ui->pluginsInstallPage )
-        if( aApp->currentSession() && aApp->currentSession()->userInfo().canBootstrap() )
+        if( m_user.canBootstrap() )
             ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
         else
             ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
 #elif defined Q_OS_MAC
-        if( aApp->currentSession() && aApp->currentSession()->userInfo().canBootstrap() )
+        if( m_user.canBootstrap() )
             ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
         else
             ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
@@ -254,7 +269,7 @@ FirstRunWizard::skip()
         ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
 #endif
     else if ( currentPage == ui->bootstrapPage )
-        ui->stackedWidget->setCurrentWidget( ui->bootstrapProgressPage );
+        ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
     else if ( currentPage == ui->bootstrapProgressPage )
         ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
     else if ( currentPage == ui->tourScrobblesPage
@@ -262,6 +277,8 @@ FirstRunWizard::skip()
               || currentPage == ui->tourRadioPage
               || currentPage == ui->tourLocationPage )
         ui->stackedWidget->setCurrentWidget( ui->tourFinishPage );
+
+    ui->welcome->hide();
 
     initializePage( ui->stackedWidget->currentWidget() );
 }
@@ -304,7 +321,8 @@ FirstRunWizard::onBootstrapStarted( const QString& pluginId )
 
     ui->importLabel->setText( tr( "Importing..." ) );
 
-    QMovie* movie = new QMovie( ":/graphic_import.gif", "gif", this );
+    QMovie* movie = new QMovie( ":/graphic_import.gif", "GIF", this );
+    movie->setCacheMode( QMovie::CacheAll );
     ui->importIcon->setMovie( movie );
     movie->start();
 
@@ -331,12 +349,4 @@ FirstRunWizard::onWizardCompleted()
 void
 FirstRunWizard::onRejected()
 {
-    // if the user doesn't finish the wizard then we make sure
-    // the settings are removed.
-    QMap<QString, QString> lastSession = unicorn::Session::lastSessionData();
-    if ( lastSession.contains( "username" ) )
-    {
-        unicorn::Settings us;
-        us.remove( lastSession[ "username" ] );
-    }
 }

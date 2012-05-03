@@ -90,8 +90,8 @@ function fixLocalLibs {
 		echo $cpPath "$bundlePath/Contents/MacOS"
 
         cp -L -R -f $cpPath "$bundlePath/Contents/MacOS"
-        install_name_tool -id @executable_path/$lib "$bundlePath/Contents/MacOS/$lib"
-        install_name_tool -change $libPath @executable_path/$lib "$bin"
+        install_name_tool -id @executable_path/../MacOS/$lib "$bundlePath/Contents/MacOS/$lib"
+        install_name_tool -change $libPath @executable_path/../MacOS/$lib "$bin"
         
         fixFrameworks "$bundlePath/Contents/MacOS/$lib"
         fixLocalLibs "$bundlePath/Contents/MacOS/$lib"
@@ -139,6 +139,7 @@ echo ======= Copying 3rd party frameworks ===========
 
 cp -Rf /Library/Frameworks/Growl.framework "$bundlePath/Contents/Frameworks"
 cp -Rf /Library/Frameworks/Sparkle.framework "$bundlePath/Contents/Frameworks"
+cp -Rf /Library/Frameworks/Breakpad.framework "$bundlePath/Contents/Frameworks"
 
 echo
 

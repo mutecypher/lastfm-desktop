@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>PreferencesDialog</class>
  <widget class="QMainWindow" name="PreferencesDialog">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,10 +14,13 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -25,54 +31,13 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QFrame" name="tabFrame">
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
+     <widget class="unicorn::StackedWidget" name="stackedWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QPushButton" name="generalButton">
-         <property name="text">
-          <string>General</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="accountsButton">
-         <property name="text">
-          <string>Accounts</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="scrobblingButton">
-         <property name="text">
-          <string>Scrobbling</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="ipodButton">
-         <property name="text">
-          <string>iPod</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="advancedButton">
-         <property name="text">
-          <string>Advanced</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QStackedWidget" name="stackedWidget">
       <widget class="GeneralSettingsWidget" name="general"/>
       <widget class="AccountSettingsWidget" name="accounts"/>
       <widget class="ScrobbleSettingsWidget" name="scrobbling"/>
@@ -80,8 +45,112 @@
       <widget class="AdvancedSettingsWidget" name="advanced"/>
      </widget>
     </item>
+    <item>
+     <widget class="QDialogButtonBox" name="buttonBox">
+      <property name="standardButtons">
+       <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::TopToolBarArea</set>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionGeneral"/>
+   <addaction name="actionAccounts"/>
+   <addaction name="actionScrobbling"/>
+   <addaction name="actionDevices"/>
+   <addaction name="actionAdvanced"/>
+  </widget>
+  <action name="actionGeneral">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../qrc/audioscrobbler.qrc">
+     <normaloff>:/preferences_general.png</normaloff>:/preferences_general.png</iconset>
+   </property>
+   <property name="text">
+    <string>General</string>
+   </property>
+  </action>
+  <action name="actionAccounts">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../qrc/audioscrobbler.qrc">
+     <normaloff>:/preferences_accounts.png</normaloff>:/preferences_accounts.png</iconset>
+   </property>
+   <property name="text">
+    <string>Accounts</string>
+   </property>
+  </action>
+  <action name="actionScrobbling">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../qrc/audioscrobbler.qrc">
+     <normaloff>:/preferences_scrobbling.png</normaloff>:/preferences_scrobbling.png</iconset>
+   </property>
+   <property name="text">
+    <string>Scrobbling</string>
+   </property>
+  </action>
+  <action name="actionDevices">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../qrc/audioscrobbler.qrc">
+     <normaloff>:/preferences_devices.png</normaloff>:/preferences_devices.png</iconset>
+   </property>
+   <property name="text">
+    <string>Devices</string>
+   </property>
+  </action>
+  <action name="actionAdvanced">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../qrc/audioscrobbler.qrc">
+     <normaloff>:/preferences_advanced.png</normaloff>:/preferences_advanced.png</iconset>
+   </property>
+   <property name="text">
+    <string>Advanced</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -114,7 +183,15 @@
    <header>../Settings/AdvancedSettingsWidget.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>unicorn::StackedWidget</class>
+   <extends>QStackedWidget</extends>
+   <header>lib/unicorn/widgets/StackedWidget.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../qrc/audioscrobbler.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -22,12 +22,9 @@
 #define NOW_PLAYING_WIDGET_H
 
 #include <QWidget>
-#include <QPointer>
 
 #include <lastfm/Track.h>
 #include <lastfm/RadioStation.h>
-
-#include "MetadataWidget.h"
 
 class NowPlayingWidget : public QWidget
 {
@@ -36,6 +33,9 @@ private:
     struct
     {
         class PlaybackControlsWidget* playbackControls;
+        class QStackedWidget* stack;
+        class QLabel* spinner;
+        class MetadataWidget* metadata;
     } ui;
 
 public:
@@ -49,7 +49,7 @@ private slots:
     void onStopped();
 
 private:
-    QPointer<MetadataWidget> m_metadata;
+    class QMovie* m_movie;
 };
 
 #endif

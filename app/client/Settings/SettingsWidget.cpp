@@ -30,7 +30,11 @@ void
 SettingsWidget::onSettingsChanged()
 {
     m_settingsChanged = true;
+#ifdef Q_OS_MAC
+    saveSettings();
+#else
     emit settingsChanged();
+#endif
 }
 
 void

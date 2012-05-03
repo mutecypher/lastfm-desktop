@@ -122,7 +122,7 @@ LfmListModel::addUser( const User& a_user )
     User* user = new User;
     *user = a_user;
     LfmItem* item = new LfmItem( user );
-    item->loadImage( user->imageUrl(lastfm::Small, true ));
+    item->loadImage( user->imageUrl(User::SmallImage, true ));
 
     beginInsertRows( QModelIndex(), rowCount(), rowCount());
     m_items << item;
@@ -137,7 +137,7 @@ LfmListModel::addArtist( const Artist& a_artist )
     Artist* artist = new Artist;
     *artist = a_artist;
     LfmItem* item = new LfmItem( artist );
-    item->loadImage( artist->imageUrl( lastfm::Small, true ));
+    item->loadImage( artist->imageUrl( Artist::SmallImage, true ));
 
     beginInsertRows( QModelIndex(), rowCount(), rowCount());
     m_items << item;

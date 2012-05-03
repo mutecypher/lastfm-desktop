@@ -22,8 +22,14 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QCheckBox" name="open">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
-         <string>Open Last.fm</string>
+         <string>Raise/Hide Last.fm</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -34,15 +40,21 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="proxy">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
-      <string>GroupBox</string>
+      <string>Proxy:</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QRadioButton" name="radioButton">
         <property name="text">
          <string>Automatic</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -77,10 +89,10 @@
          </widget>
         </item>
         <item row="2" column="1" rowspan="2" colspan="3">
-         <widget class="QLineEdit" name="lineEdit"/>
+         <widget class="QLineEdit" name="proxyUsername"/>
         </item>
         <item row="4" column="1" colspan="3">
-         <widget class="QLineEdit" name="lineEdit_2"/>
+         <widget class="QLineEdit" name="proxyPassword"/>
         </item>
         <item row="0" column="2" rowspan="2">
          <widget class="QLabel" name="label_4">
@@ -90,10 +102,10 @@
          </widget>
         </item>
         <item row="0" column="1" rowspan="2">
-         <widget class="QLineEdit" name="lineEdit_3"/>
+         <widget class="QLineEdit" name="proxyHost"/>
         </item>
         <item row="0" column="3" rowspan="2">
-         <widget class="QLineEdit" name="lineEdit_4"/>
+         <widget class="QLineEdit" name="proxyPort"/>
         </item>
         <item row="5" column="1" colspan="3">
          <widget class="QLabel" name="direct">
@@ -116,6 +128,19 @@
       <string>Cache Size:</string>
      </property>
     </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>0</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

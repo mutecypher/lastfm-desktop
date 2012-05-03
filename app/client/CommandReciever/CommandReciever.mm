@@ -29,7 +29,7 @@
 
 - (AppleScriptDelegate*) init:(CommandReciever*)observer
 {
-    if ( self = [super init] )
+    if ( (self = [super init]) )
     {
         self->m_observer = observer;
     }
@@ -41,6 +41,7 @@
 
 - (BOOL)application:(NSApplication*)sender delegateHandlesKey:(NSString*)key
 {
+    Q_UNUSED(sender);
     return [[NSSet setWithObjects: @"trackTitle", @"artist", @"album", @"duration", @"artwork", @"loved", nil] containsObject:key];
 }
 
@@ -197,7 +198,7 @@
 
 + (id)scriptingLastfmImageWithDescriptor:(NSAppleEventDescriptor *)descriptor
 {
-    if ( [descriptor descriptorType] == typeType && [descriptor typeCodeValue] == cMissingValue )
+    if ( [descriptor descriptorType] == typeType && [descriptor typeCodeValue] == 'msng' )
     {
         return nil;
     }
@@ -277,7 +278,7 @@ CommandReciever::onTrackSpooled( const Track& track )
     if ( !m_trackImageFetcher && !track.isNull() )
     {
         m_artworkDownloaded = false;
-        m_trackImageFetcher = new TrackImageFetcher( track );
+        m_trackImageFetcher = new TrackImageFetcher( track, Track::MegaImage );
         connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), SLOT(onFinished(QPixmap)));
         m_trackImageFetcher->startAlbum();
     }

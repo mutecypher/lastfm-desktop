@@ -1,9 +1,12 @@
 TARGET = unicorn
 TEMPLATE = lib
-CONFIG += dll lastfm sparkle growl
+CONFIG += dll lastfm sparkle growl break logger
 QT = core gui xml network
-include( $$ROOT_DIR/admin/include.qmake )
+include( ../../admin/include.qmake )
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
+
+DEFINES += API_KEY=\\\"$(LASTFM_API_KEY)\\\"
+DEFINES += API_SECRET=\\\"$(LASTFM_API_SECRET)\\\"
 
 # UniqueApplication
 win32:LIBS += user32.lib shell32.lib ole32.lib
@@ -11,7 +14,6 @@ win32:LIBS += user32.lib shell32.lib ole32.lib
 macx:LIBS += -framework Cocoa
 
 SOURCES += \
-    $$ROOT_DIR/common/c++/Logger.cpp \
     dialogs/ShareDialog.cpp \
     widgets/AvatarWidget.cpp \
     layouts/FlowLayout.cpp \
@@ -63,7 +65,10 @@ SOURCES += \
     dialogs/AboutDialog.cpp \
     dialogs/ScrobbleConfirmationDialog.cpp \
     AnimatedStatusBar.cpp \
-    DesktopServices.cpp
+    DesktopServices.cpp \
+    Updater/Updater.cpp \
+    CrashReporter/CrashReporter.cpp \
+    widgets/StackedWidget.cpp
 
 HEADERS += \
     widgets/UserToolButton.h \
@@ -98,7 +103,6 @@ HEADERS += \
     UnicornCoreApplication.h \
     UnicornApplication.h \
     TrackImageFetcher.h \
-    StylableWidget.h \
     SignalBlocker.h \
     ScrobblesModel.h \
     qtwin.h \
@@ -127,24 +131,28 @@ HEADERS += \
     layouts/FlowLayout.h \
     widgets/SlidingStackedWidget.h \
     Updater/Updater.h \
-    DesktopServices.h
+    DesktopServices.h \
+    CrashReporter/CrashReporter.h \
+    widgets/StackedWidget.h
 	
-win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp \
-               Updater/Updater.cpp
+win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	
+macx:SOURCES += mac/AppleScript.cpp
 
-macx:SOURCES += mac/AppleScript.cpp \
-               UnicornApplication_mac.mm \
-               Updater/Updater.mm \
-               notify/Notify.mm
+macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
+                          notify/Notify.mm \
+                          Updater/Updater_mac.mm \
+                          CrashReporter/CrashReporter_mac.mm
 
 macx:HEADERS += mac/AppleScript.h \
                 notify/Notify.h
 
+                          
 FORMS += \
 	dialogs/ShareDialog.ui \
-	dialogs/LoginDialog.ui
+	dialogs/LoginDialog.ui \
+    dialogs/TagDialog.ui \
+    dialogs/AboutDialog.ui
 
 RESOURCES += \
 	qrc/unicorn.qrc
-

@@ -2,30 +2,32 @@ TARGET = iPodScrobbler
 LIBS += -lunicorn -llastfm
 QT = core xml sql
 
-macx:CONFIG( app_bundle ) {
-    DESTDIR = "$$DESTDIR/Last.fm.app/Contents/MacOS"
-    QMAKE_POST_LINK += $$ROOT_DIR/admin/dist/mac/bundleFrameworks.sh \"$$DESTDIR/$$TARGET\"
-}
-
-CONFIG += lastfm
+CONFIG += lastfm logger
 CONFIG -= app_bundle
 
-include( $$ROOT_DIR/admin/include.qmake )
+include( ../../admin/include.qmake )
+
+# TODO: FIX THIS: I think this means that we can only build bundles
+mac {
+    DESTDIR = "../../_bin/Last.fm.app/Contents/Helpers"
+    QMAKE_POST_LINK += ../../admin/dist/mac/bundleFrameworks.sh \"$$DESTDIR/$$TARGET\"
+}
 
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 SOURCES = main.cpp \
           TwiddlyApplication.cpp \
           PlayCountsDatabase.cpp \
           IPod.cpp \
-          $$ROOT_DIR/common/c++/Logger.cpp
+          Utils.cpp
 
 HEADERS = TwiddlyApplication.h \
           PlayCountsDatabase.h \
           IPod.h \
-          $$ROOT_DIR/common/c++/Logger.h
+          Utils.h
 
 mac {
     SOURCES += ITunesLibrary_mac.cpp
+    OBJECTIVE_SOURCES += Utils_mac.mm
 }
 
 win32 {
@@ -49,14 +51,16 @@ win32 {
     system( chmod a+r ITunesEventInterface.h )
 
     SOURCES += ITunesLibrary_win.cpp \
-			   ITunesTrack.cpp \
+               ITunesTrack.cpp \
                ITunesComWrapper.cpp \
                $$ROOT_DIR/plugins/scrobsub/EncodingUtils.cpp \
                $$ROOT_DIR/lib/3rdparty/iTunesCOMAPI/iTunesCOMInterface_i.c
 
     HEADERS += ITunesTrack.h \
                ITunesComWrapper.h \
-               $$ROOT_DIR/plugins/scrobsub/EncodingUtils.h \
+               ITunesEventInterface.h \
+               ITunesExceptions.h \
+               $$ROOT_DIR/plugins/scrobsub/EncodingUtils.h
 
     LIBS += -lcomsuppw
 

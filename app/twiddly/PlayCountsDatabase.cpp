@@ -22,7 +22,6 @@
 #include "TwiddlyApplication.h"
 #include "IPod.h"
 #include "ITunesLibrary.h"
-#include "Settings.h"
 #include "common/qt/msleep.cpp"
 #include "common/c++/fileCreationTime.cpp"
 #include "lib/unicorn/UnicornSettings.h"
@@ -33,6 +32,7 @@
 #include <QSqlQuery>
 #include <QTemporaryFile>
 #include <iostream>
+#include <QDebug>
 
 
 /** @author Max Howell <max@last.fm>
@@ -264,13 +264,13 @@ pluginPath()
     path += "/Library/iTunes/iTunes Plug-ins/AudioScrobbler.bundle/Contents/MacOS/AudioScrobbler";
     return path;
   #else
-	QString path = Plugin::Settings().value( "itw/Path" ).toString();
+    QSettings settings( "HKEY_LOCAL_MACHINE\\SOFTWARE\\Last.fm\\Client\\Plugins\\", QSettings::NativeFormat );
+    QString path = settings.value( "itw/Path" ).toString();
     if (path.isEmpty())
         throw "Unknown iTunes plugin path";
     return path;
   #endif
 }
-
 
 void
 AutomaticIPod::PlayCountsDatabase::bootstrap()
@@ -343,6 +343,7 @@ AutomaticIPod::PlayCountsDatabase::bootstrap()
     
     QString const t = QString::number( common::fileCreationTime( pluginPath() ) );
     query.exec( "INSERT INTO metadata (key, value) VALUES ('plugin_ctime', '"+t+"')" );
+
 
     endTransaction();
 

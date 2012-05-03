@@ -484,7 +484,10 @@ ITunesComWrapper::uninitialiseCom()
             m_sinkAsUnknown->Release();
 
         if ( g_atlModule != 0 )
+        {
             delete g_atlModule;
+            g_atlModule = 0;
+        }
 
         if ( m_allTracks != 0 )
             m_allTracks->Release();

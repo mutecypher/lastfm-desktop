@@ -19,9 +19,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "IPod.h"
-#include "app/twiddly.h"
 #include "TwiddlyApplication.h"
-#include "Settings.h"
 #include "lib/unicorn/UnicornCoreApplication.h"
 #include "plugins/iTunes/ITunesExceptions.h"
 #include <lastfm/misc.h>
@@ -29,9 +27,7 @@
 #include <QtXml>
 #include <iostream>
 #include "common/c++/Logger.h"
-
-// until breakpad can be installed more easily
-#undef NDEBUG
+#include "Utils.h"
 
 void writeXml( const QDomDocument&, const QString& path );
 void logException( QString );
@@ -44,14 +40,6 @@ void logException( QString );
 int
 main( int argc, char** argv )
 {
-#ifdef NDEBUG
-    google_breakpad::ExceptionHandler( CoreDir::save().path().toStdString(),
-                                       0,
-                                       breakPadExecUploader,
-                                       this,
-                                       HANDLER_ALL );
-#endif
-
     // Make sure the logger exists in this binary
 #ifdef Q_OS_WIN
     QString bytes = TwiddlyApplication::log( TwiddlyApplication::applicationName() ).absoluteFilePath();
@@ -62,11 +50,17 @@ main( int argc, char** argv )
 #endif
     new Logger( path );
 
-    TwiddlyApplication::setApplicationName( twiddly::applicationName() );
+    TwiddlyApplication::setApplicationName( "iPodScrobbler" );
     TwiddlyApplication::setApplicationVersion( "2" );
 
     TwiddlyApplication app( argc, argv );
-    
+
+#ifdef Q_OS_MAC
+    // We need to tell twiddly where to load the plugins because it
+    // loads system ones when not in the /Contents/MacOS directory
+    TwiddlyApplication::addLibraryPath( QDir( TwiddlyApplication::applicationDirPath() ).absoluteFilePath( "../plugins" ) );
+#endif
+
     try
     {
         if ( app.arguments().contains( "--bootstrap-needed?" ) )
@@ -89,7 +83,7 @@ main( int argc, char** argv )
                 args << "--tray";
                 args << "--twiddly";
                 args << "starting";
-                moose::startAudioscrobbler( args );
+                Utils::startAudioscrobbler( args );
             }
 
             app.sendBusMessage( "--twiddling" );
@@ -146,7 +140,7 @@ main( int argc, char** argv )
                 args << "--deviceName";
                 args << ipod->name;
 
-                moose::startAudioscrobbler( args );
+                Utils::startAudioscrobbler( args );
             }
             else
             {
@@ -159,7 +153,7 @@ main( int argc, char** argv )
                 args << "--deviceName";
                 args << ipod->name;
 
-                moose::startAudioscrobbler( args );
+                Utils::startAudioscrobbler( args );
             }
 
             // do last so we don't record a sync if we threw and thus it "didn't" happen

@@ -169,9 +169,16 @@ BioWidget::sendMouseEvent( QMouseEvent* event )
 }
 
 void
-BioWidget::showEvent( QShowEvent* event )
+BioWidget::showEvent( QShowEvent* /*event*/ )
 {
-    QTimer::singleShot( 20, this, SLOT(polish()));
+    // HACK: onBioChanged reports the wrong size for the document
+    // and id we polish it a bit later it gets set correctly.
+    // Polish very soon after being shown so that it gets
+    // the right height quickly if you're looking at it.
+    // Do another polish a bit later as for the case when you
+    // switch to that tab as the first one won't work.
+    QTimer::singleShot( 1, this, SLOT(polish()));
+    QTimer::singleShot( 200, this, SLOT(polish()));
 }
 
 void 
@@ -184,17 +191,12 @@ BioWidget::onAnchorClicked( const QUrl& link )
 void
 BioWidget::onDocumentLayoutChanged()
 {
-    qDebug() << document()->size();
-
     setFixedHeight( document()->size().height() );
 }
 
 void 
-BioWidget::onBioChanged( const QSizeF& size )
+BioWidget::onBioChanged( const QSizeF& /*size*/ )
 {
-    qDebug() << size.toSize();
-    qDebug() << document()->size();
-
     updateGeometry();
 
     onDocumentLayoutChanged();

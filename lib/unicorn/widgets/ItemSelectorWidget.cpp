@@ -34,7 +34,7 @@
 #include <lastfm/User.h>
 
 ItemSelectorWidget::ItemSelectorWidget( QWidget* parent )
-    :StylableWidget(parent), m_clearText( false )
+    :QFrame(parent), m_clearText( false )
 {
     QLayout* layout = new FlowLayout( this, 0, 0, 0 );
     layout->setContentsMargins( 0, 0, 0, 0 );

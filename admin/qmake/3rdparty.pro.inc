@@ -29,6 +29,17 @@ CONFIG( boost ) {
     }
 }
 
+CONFIG( break ) {
+    win32{
+        CONFIG += link_pkgconfig
+        PKGCONFIG += breakpad
+        LIBS += wininet.lib
+    }
+    else:mac{
+        LIBS += -framework Breakpad
+    }
+}
+
 CONFIG( fftw3f ) {
     win32{
 		LIBS += -L$$COMMON_LIBS_DIR/libfftw -lfftw3f
@@ -59,7 +70,6 @@ CONFIG( samplerate ) {
 
 CONFIG( sparkle ) {
     win32{
-        LIBS += -L$$COMMON_LIBS_DIR/WinSparkle -lWinSparkle
         CONFIG += link_pkgconfig
         PKGCONFIG += sparkle
     }

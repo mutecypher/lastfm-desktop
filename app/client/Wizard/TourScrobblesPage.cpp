@@ -13,8 +13,8 @@ TourScrobblesPage::TourScrobblesPage()
 
     layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignTop | Qt::AlignHCenter );
     ui.image->setObjectName( "image" );
-    layout->addWidget( ui.description = new QLabel( tr( "<p>Use the Last.fm Desktop App to listen to non-stop personailsed radio based on the music you want to hear.</p>"
-                                                          "<p>Every play of every Last.fm station is totally different, from stations based on aritsts and tags to brand new recommendations tailored to your music taste.</p>"), this ),
+    layout->addWidget( ui.description = new QLabel( tr( "<p>The desktop client runs in the background, quietly updating your Last.fm profile with the music you're playing, which you can use to get music recommendations, gig tips and more. </p>"
+                                                        "<p>You can also use the Last.fm Desktop App to find out more about the artist you're listening to, and to play personalised radio.</p>"), this ),
                          0,
                          Qt::AlignTop);
     ui.description->setObjectName( "description" );

@@ -41,7 +41,7 @@
 #include "../Widgets/FriendListWidget.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "../Widgets/NowPlayingStackedWidget.h"
-#include "../Widgets/RecentTracksWidget.h"
+#include "../Widgets/ScrobblesWidget.h"
 #include "../Widgets/SideBar.h"
 #include "../Widgets/StatusBar.h"
 #include "../Widgets/TitleBar.h"
@@ -54,12 +54,13 @@
 #include "lib/unicorn/widgets/UserToolButton.h"
 #include "lib/unicorn/widgets/MessageBar.h"
 #include "lib/unicorn/widgets/UserMenu.h"
-#include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/qtwin.h"
 #include "lib/unicorn/layouts/SlideOverLayout.h"
 #include "lib/unicorn/widgets/SlidingStackedWidget.h"
 #include "lib/listener/PlayerConnection.h"
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
 #include "lib/unicorn/Updater/Updater.h"
+#endif
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/DesktopServices.h"
 
@@ -90,6 +91,8 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     layout->addWidget( ui.messageBar = new MessageBar( this ) );
 
+    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), ui.messageBar, SLOT(hide()) );
+
     QHBoxLayout* h = new QHBoxLayout();
     h->setContentsMargins( 0, 0, 0, 0 );
     h->setSpacing( 0 );
@@ -105,10 +108,10 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     ui.stackedWidget->addWidget( ui.nowPlaying = new NowPlayingStackedWidget(this) );
     ui.nowPlaying->setObjectName( "nowPlaying" );
 
-    ui.stackedWidget->addWidget( ui.recentTracks = new RecentTracksWidget( this ) );
-    ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
+    ui.stackedWidget->addWidget( ui.scrobbles = new ScrobblesWidget( this ) );
+    ui.scrobbles->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
-    connect( ui.stackedWidget, SIGNAL(currentChanged(int)), ui.recentTracks, SLOT(onCurrentChanged(int)) );
+    connect( ui.stackedWidget, SIGNAL(currentChanged(int)), ui.scrobbles, SLOT(onCurrentChanged(int)) );
 
     ui.stackedWidget->addWidget( ui.profileScrollArea = new QScrollArea( this ) );
     ui.profileScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
@@ -133,10 +136,9 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     ui.statusBar->setSizeGripEnabled( false );
 
-    setWindowTitle( aApp->applicationName() );
+    setWindowTitle( applicationName() );
     setUnifiedTitleAndToolBarOnMac( true );
 
-    connect( qApp, SIGNAL( sessionChanged( unicorn::Session* ) ), SLOT( onSessionChanged( unicorn::Session* ) ) );
     connect( &ScrobbleService::instance(), SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
     connect( &ScrobbleService::instance(), SIGNAL( paused() ), SLOT( onPaused() ) );
     connect( &ScrobbleService::instance(), SIGNAL( resumed() ), SLOT( onResumed() ) );
@@ -154,19 +156,22 @@ MainWindow::MainWindow( QMenuBar* menuBar )
         connect( deviceScrobbler, SIGNAL( noScrobblesFound(QString)),SLOT( onNoScrobblesFound(QString)));
     }
 
+
+    new QShortcut( Qt::Key_Space, this, SLOT(onSpace()) );
+
     //for some reason some of the stylesheet is not being applied properly unless reloaded
     //here. StyleSheets see very flaky to me. :s
     aApp->refreshStyleSheet();
 
     setMinimumWidth( 540 );
+    setMaximumWidth( 800 );
 
     setStatusBar( ui.statusBar );
 
-    finishUi();
-
+    // This is the default window size it will get changed
+    // by finishUi if the app has ever been opened before
     resize( 565, 710 );
-
-    show();
+    finishUi();
 
 #ifdef Q_OS_WIN32
     m_pluginList = new PluginList( this );
@@ -176,18 +181,30 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 #endif
 
     setupMenuBar();
-    m_menuBar->show();
 
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     m_updater = new Updater( this );
+#endif
 
 #ifdef Q_OS_MAC
-    QMenu* dockMenu = new QMenu( this );
+    QMenu* dockMenu = new QMenu();
     ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *dockMenu  );
     qt_mac_set_dock_menu( dockMenu );
 
 
     m_mediaKey = new MediaKey( this );
 #endif
+
+    if (aApp->tray())
+    {
+        ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *aApp->tray()->contextMenu(), aApp->tray()->contextMenu()->actions()[3] );
+    }
+}
+
+QString
+MainWindow::applicationName()
+{
+    return QCoreApplication::applicationName() + " Beta";
 }
 
 
@@ -249,7 +266,7 @@ MainWindow::setupMenuBar()
 
     /// Scrobbles
     QMenu* scrobblesMenu = appMenuBar()->addMenu( tr("Scrobbles") );
-    scrobblesMenu->addAction( tr( "Refresh" ), ui.recentTracks, SLOT(refresh()), Qt::CTRL + Qt::SHIFT + Qt::Key_R );
+    scrobblesMenu->addAction( tr( "Refresh" ), ui.scrobbles, SLOT(refresh()), Qt::CTRL + Qt::SHIFT + Qt::Key_R );
 
     /// Controls
     QMenu* controlsMenu = appMenuBar()->addMenu( tr("Controls") );
@@ -260,30 +277,43 @@ MainWindow::setupMenuBar()
 
     /// Tools (should only show on non-mac)
     QMenu* toolsMenu = appMenuBar()->addMenu( tr("Tools") );
+#ifndef Q_WS_X11
     QAction* c4u = toolsMenu->addAction( tr("Check for Updates"), this, SLOT(checkForUpdates()) );
     c4u->setMenuRole( QAction::ApplicationSpecificRole );
+#endif
     QAction* prefs = toolsMenu->addAction( tr("Options"), this, SLOT(onPrefsTriggered()) );
     prefs->setMenuRole( QAction::PreferencesRole );
 
     /// Window
     QMenu* windowMenu = appMenuBar()->addMenu( tr("Window") );
-    QAction* minimize = windowMenu->addAction( tr( "Minimize" ) );
-    QAction* zoom = windowMenu->addAction( tr( "Zoom" ) );
+    windowMenu->addAction( tr( "Minimize" ) );
+    windowMenu->addAction( tr( "Zoom" ) );
     windowMenu->addSeparator();
-    QAction* lastfm = windowMenu->addAction( tr( "Last.fm" ) );
+    windowMenu->addAction( tr( "Last.fm" ) );
     windowMenu->addSeparator();
-    QAction* toFront = windowMenu->addAction( tr( "Bring All to Front" ) );
+    windowMenu->addAction( tr( "Bring All to Front" ) );
 
     /// Help
     QMenu* helpMenu = appMenuBar()->addMenu( tr("Help") );
     QAction* about = helpMenu->addAction( tr("About"), aApp, SLOT(onAboutTriggered()) );
     about->setMenuRole( QAction::AboutRole );
     helpMenu->addSeparator();
-    QAction* faq = helpMenu->addAction( tr("FAQ"), aApp, SLOT(onFaqTriggered()) );
-    QAction* forums = helpMenu->addAction( tr("Forums"), aApp, SLOT(onForumsTriggered()) );
-    QAction* tour = helpMenu->addAction( tr("Tour"), aApp, SLOT(onTourTriggered()) );
-    //helpMenu->addSeparator();
-    //QAction* diagnostics = helpMenu->addAction( tr("Diagnostics") );
+    helpMenu->addAction( tr("FAQ"), aApp, SLOT(onFaqTriggered()) );
+    helpMenu->addAction( tr("Forums"), aApp, SLOT(onForumsTriggered()) );
+    helpMenu->addSeparator();
+    helpMenu->addAction( tr("Tour"), aApp, SLOT(onTourTriggered()) );
+    helpMenu->addSeparator();
+    helpMenu->addAction( tr("Show Licenses"), aApp, SLOT(onLicensesTriggered()) );
+#ifndef Q_WS_X11 // it's only the scrobble log tab at the moment so no use on linux
+    helpMenu->addSeparator();
+    helpMenu->addAction( tr("Diagnostics"), aApp, SLOT(onDiagnosticsTriggered()) );
+#endif
+}
+
+void
+MainWindow::onSpace()
+{
+    aApp->playAction()->trigger();
 }
 
 void
@@ -293,18 +323,66 @@ MainWindow::onVisitProfile()
 }
 
 void
+MainWindow::showEvent(QShowEvent *)
+{
+    if ( m_preferences )
+        m_preferences->show();
+
+    m_menuBar->show();
+    m_menuBar->activateWindow();
+
+#ifdef Q_OS_MAC
+    if ( !m_installer )
+    {
+        m_installer = new ITunesPluginInstaller( this );
+        QTimer::singleShot( 1000, m_installer, SLOT(install()) );
+    }
+#endif
+}
+
+void
+MainWindow::hideEvent(QHideEvent *)
+{
+    if ( m_preferences )
+        m_preferences->hide();
+}
+
+void
 MainWindow::onPrefsTriggered()
 {
     if ( !m_preferences )
-        m_preferences = new PreferencesDialog( m_menuBar );
+        m_preferences = new PreferencesDialog( 0 );
 
     m_preferences->show();
+    m_preferences->activateWindow();
+}
+
+void
+MainWindow::onBetaTriggered()
+{
+    if ( !m_beta )
+        m_beta = new BetaDialog( this );
+
+    m_beta->show();
+    m_beta->activateWindow();
+}
+
+void
+MainWindow::onDiagnosticsTriggered()
+{
+    if ( !m_diagnostics )
+        m_diagnostics = new DiagnosticsDialog( this );
+
+    m_diagnostics->show();
+    m_diagnostics->activateWindow();
 }
 
 void
 MainWindow::checkForUpdates()
 {
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     m_updater->checkForUpdates();
+#endif
 }
 
 void
@@ -320,9 +398,9 @@ MainWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )
     m_currentTrack = t;
 
     if ( m_currentTrack.source() == Track::LastFmRadio )
-        setWindowTitle( tr( "%1 - %2 - %3" ).arg( QApplication::applicationName(), RadioService::instance().station().title(), t.toString() ) );
+        setWindowTitle( tr( "%1 - %2 - %3" ).arg( t.toString(), RadioService::instance().station().title(), applicationName() ) );
     else
-        setWindowTitle( tr( "%1 - %2" ).arg( QApplication::applicationName(), t.toString() ) );
+        setWindowTitle( tr( "%1 - %2" ).arg( t.toString(), applicationName() ) );
 }
 
 
@@ -331,7 +409,7 @@ MainWindow::onStopped()
 {
     m_currentTrack = Track();
 
-    setWindowTitle( QApplication::applicationName() );
+    setWindowTitle( applicationName() );
 }
 
 
@@ -339,9 +417,9 @@ void
 MainWindow::onResumed()
 {
     if ( m_currentTrack.source() == Track::LastFmRadio )
-        setWindowTitle( tr( "%1 - %2 - %3" ).arg( QApplication::applicationName(), RadioService::instance().station().title(), m_currentTrack.toString() ) );
+        setWindowTitle( tr( "%1 - %2 - %3" ).arg( m_currentTrack.toString(), RadioService::instance().station().title(), applicationName() ) );
     else
-        setWindowTitle( tr( "%1 - %2" ).arg( QApplication::applicationName(), m_currentTrack.toString() ) );
+        setWindowTitle( tr( "%1 - %2" ).arg( m_currentTrack.toString(), applicationName() ) );
 }
 
 
@@ -349,9 +427,9 @@ void
 MainWindow::onPaused()
 {
     if ( m_currentTrack.source() == Track::LastFmRadio )
-        setWindowTitle( tr( "%1 - %2 - Paused - %3" ).arg( QApplication::applicationName(), RadioService::instance().station().title(), m_currentTrack.toString() ) );
+        setWindowTitle( tr( "%1 - %2" ).arg( RadioService::instance().station().title(), applicationName() ) );
     else
-        setWindowTitle( tr( "%1 - Paused - %2" ).arg( QApplication::applicationName(), m_currentTrack.toString() ) );
+        setWindowTitle( tr( "%1" ).arg( applicationName() ) );
 }
 
 
@@ -369,7 +447,7 @@ MainWindow::onIPodDetected( const QString& iPod )
 }
 
 void
-MainWindow::onProcessingScrobbles( const QString& iPodName )
+MainWindow::onProcessingScrobbles( const QString& /*iPodName*/ )
 {
     ui.messageBar->show( tr("Processing iPod Scrobbles...") , "ipod");
 }

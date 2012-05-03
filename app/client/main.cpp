@@ -43,7 +43,8 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include "Services/ScrobbleService.h"
 #include "Services/RadioService.h"
-#include "app/moose.h"
+
+#include "lib/unicorn/CrashReporter/CrashReporter.h"
 
 void cleanup();
 
@@ -55,6 +56,8 @@ namespace lastfm
 
 int main( int argc, char** argv )
 {
+    //unicorn::CrashReporter* crashReporter = new unicorn::CrashReporter;
+
     QtSingleCoreApplication::setApplicationName( "Last.fm" );
     QtSingleCoreApplication::setOrganizationName( "Last.fm" );
     QtSingleCoreApplication::setApplicationVersion( APP_VERSION );
@@ -72,7 +75,13 @@ int main( int argc, char** argv )
     {
         audioscrobbler::Application app( argc, argv );
 
-        if ( app.sendMessage( app.arguments() ) || app.arguments().contains("--exit") )
+#ifdef Q_OS_WIN32
+        QStringList args = app.arguments();
+#else
+        QStringList args = app.arguments().mid( 1 );
+#endif
+
+        if ( app.sendMessage( args ) || args.contains("--exit") )
             return 0;
 
         // It's possible that we were unable to send the
@@ -90,7 +99,7 @@ int main( int argc, char** argv )
 #endif
 
         app.init();
-        app.parseArguments( app.arguments() );
+        app.parseArguments( args );
         return app.exec();
     }
     catch (std::exception& e)
@@ -102,6 +111,8 @@ int main( int argc, char** argv )
         // user wouldn't log in
         return 0;
     }
+
+    //delete crashReporter;
 }
 
 #ifdef Q_OS_MAC

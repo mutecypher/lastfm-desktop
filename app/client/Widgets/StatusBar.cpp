@@ -24,10 +24,9 @@
 #include <QLabel>
 #include <QSizeGrip>
 
-#include <Phonon/VolumeSlider>
+#include <phonon/VolumeSlider>
 
 #include "lib/unicorn/widgets/Label.h"
-#include "lib/unicorn/StylableWidget.h"
 
 #include "StatusBar.h"
 
@@ -37,9 +36,10 @@
 #include "../Application.h"
 
 StatusBar::StatusBar( QWidget* parent )
-    :QStatusBar( parent )
+    :QStatusBar( parent ),
+      m_online( false )
 {
-    addWidget( ui.widget = new StylableWidget( this) );
+    addWidget( ui.widget = new QFrame( this) );
     QHBoxLayout* widgetLayout = new QHBoxLayout( ui.widget );
     widgetLayout->setContentsMargins( 0, 0, 0, 0 );
     widgetLayout->setSpacing( 0 );
@@ -55,21 +55,11 @@ StatusBar::StatusBar( QWidget* parent )
 
     setStatus();
 
-    addPermanentWidget( ui.permanentWidget = new StylableWidget( this ) );
+    addPermanentWidget( ui.permanentWidget = new QFrame( this ) );
     ui.permanentWidget->setObjectName( "permanentWidget" );
     QHBoxLayout* permanentWidgetLayout = new QHBoxLayout( ui.permanentWidget );
     permanentWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
     permanentWidgetLayout->setSpacing( 0 );
-
-    permanentWidgetLayout->addStretch( 1 );
-    permanentWidgetLayout->addWidget( ui.volMin = new QLabel( this ) );
-    ui.volMin->setObjectName( "volMin" );
-    ui.volMin->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    permanentWidgetLayout->addWidget( ui.volumeSlider = new Phonon::VolumeSlider( RadioService::instance().audioOutput(), this ) );
-    ui.volumeSlider->setOrientation( Qt::Horizontal );
-    permanentWidgetLayout->addWidget( ui.volMax = new QLabel( this ) );
-    ui.volMax->setObjectName( "volMax" );
-    ui.volMax->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
     aApp->isInternetConnectionUp() ? onConnectionUp() : onConnectionDown();
 
@@ -86,7 +76,7 @@ StatusBar::StatusBar( QWidget* parent )
 
 
 void
-StatusBar::onSessionChanged( unicorn::Session* session )
+StatusBar::onSessionChanged( unicorn::Session* /*session*/ )
 {
     setStatus();
 }

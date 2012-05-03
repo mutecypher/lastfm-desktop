@@ -18,12 +18,11 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QFrame>
+
 #include <lastfm/Track.h>
 
-#include "lib/unicorn/StylableWidget.h"
-
-
-class ProgressBar : public StylableWidget
+class ProgressBar : public QFrame
 {
     Q_OBJECT
 

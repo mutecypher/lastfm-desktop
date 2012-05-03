@@ -7,9 +7,9 @@
 
 unicorn::SlidingStackedWidget::SlidingStackedWidget( QWidget* parent )
     : QStackedWidget(parent),
-    m_vertical( false ),
     m_speed( 200 ),
     m_animationtype( QEasingCurve::InQuad ),
+    m_vertical( false ),
     m_now( 0 ),
     m_next( 0 ),
     m_pnow( QPoint(0,0) ),
@@ -52,6 +52,7 @@ unicorn::SlidingStackedWidget::slideWidget( QWidget* newwidget )
     if ( now == next )
     {
         m_active=false;
+        emit currentChanged( currentIndex() );
         return;
     }
     else if ( now < next )

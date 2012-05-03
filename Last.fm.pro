@@ -1,15 +1,13 @@
 TEMPLATE = subdirs
 CONFIG += ordered
-SUBDIRS = lib/unicorn \
+SUBDIRS = lib/logger \
+          lib/unicorn \
           lib/listener \
           app/client \
           app/twiddly
           #app/boffin
 
-#mac:SUBDIRS += app/mac-bundle
-
-linux*:SUBDIRS -= app/twiddly
-#mac:SUBDIRS += app/audioscrobbler/PrefPane
+unix:!mac:SUBDIRS -= app/twiddly
 
 CONFIG( tests ) {
     SUBDIRS += \

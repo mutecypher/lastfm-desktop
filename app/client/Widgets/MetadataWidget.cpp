@@ -64,18 +64,20 @@
 using unicorn::Label;
 
 MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
-   :StylableWidget( p ),
+   :QFrame( p ),
     ui( new Ui::MetadataWidget ),
     m_track( track ),
     m_globalTrackScrobbles( 0 ),
     m_userTrackScrobbles( 0 ),
-    m_userArtistScrobbles( 0 )
+    m_userArtistScrobbles( 0 ),
+    m_fetchedTrackInfo( false )
 {
     ui->setupUi( this );
 
     ui->artistBioEdit->hide();
 
     m_movie = new QMovie( ":/loading_meta.gif", "GIF", this );
+    m_movie->setCacheMode( QMovie::CacheAll );
     ui->spinnerLabel->setMovie (m_movie );
     m_movie->start();
 
@@ -97,10 +99,10 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     ui->artistYourTags->setLinkColor( QRgb( 0x008AC7 ) );
     ui->artistPopTags->setLinkColor( QRgb( 0x008AC7 ) );
 
-    ui->artist1->setPlaceholder( QPixmap( ":/meta_artist_no_photo.png" ) );
-    ui->artist2->setPlaceholder( QPixmap( ":/meta_artist_no_photo.png" ) );
-    ui->artist3->setPlaceholder( QPixmap( ":/meta_artist_no_photo.png" ) );
-    ui->artist4->setPlaceholder( QPixmap( ":/meta_artist_no_photo.png" ) );
+    ui->artist1->setPixmap( QPixmap( ":/meta_artist_no_photo.png" ) );
+    ui->artist2->setPixmap( QPixmap( ":/meta_artist_no_photo.png" ) );
+    ui->artist3->setPixmap( QPixmap( ":/meta_artist_no_photo.png" ) );
+    ui->artist4->setPixmap( QPixmap( ":/meta_artist_no_photo.png" ) );
 
     ui->scrobbleControls->setTrack( track );
 
@@ -113,23 +115,6 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     connect( track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onTrackCorrected(QString)));
 
     connect( ui->back, SIGNAL(clicked()), SIGNAL(backClicked()));
-
-    // fetch Track info
-    connect( m_track.signalProxy(), SIGNAL( gotInfo(QByteArray)), SLOT( onTrackGotInfo(QByteArray)));
-    m_track.getInfo();
-
-    if( !m_track.album().isNull() )
-        connect( m_track.album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
-
-    connect( m_track.artist().getInfo(), SIGNAL(finished()), SLOT(onArtistGotInfo()));
-
-    connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
-    connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
-    connect( m_track.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
-
-    connect( m_track.getBuyLinks( "united kingdom" /*aApp->currentSession()->userInfo().country()*/ ), SIGNAL(finished()), SLOT(onTrackGotBuyLinks()) );
-
-    m_numCalls = m_track.album().isNull() ? 6: 7;
 }
 
 MetadataWidget::~MetadataWidget()
@@ -138,12 +123,61 @@ MetadataWidget::~MetadataWidget()
 }
 
 void
+MetadataWidget::fetchTrackInfo()
+{
+    if ( isVisible() && !m_fetchedTrackInfo )
+    {
+        m_fetchedTrackInfo = true;
+
+        m_numCalls = m_track.album().isNull() ? 6: 7;
+
+        QString username = User().name();
+
+        qWarning() << username;
+
+        // fetch Track info
+        m_track.getInfo( this, "onTrackGotInfo", username );
+
+        if( !m_track.album().isNull() )
+            connect( m_track.album().getInfo( username ), SIGNAL(finished()), SLOT(onAlbumGotInfo()));
+
+        connect( m_track.artist().getInfo( username ), SIGNAL(finished()), SLOT(onArtistGotInfo()));
+
+        connect( m_track.getTags(), SIGNAL(finished()), SLOT(onTrackGotYourTags()));
+        connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
+        connect( m_track.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
+
+        QString country = aApp->currentSession()->userInfo().country();
+        qDebug() << country;
+
+        if ( country.compare( "us", Qt::CaseInsensitive ) == 0 )
+            country = "united states";
+        else if ( country.compare( "de", Qt::CaseInsensitive ) == 0 )
+            country = "germany";
+        else
+            country = "united kingdom";
+
+        connect( m_track.getBuyLinks( country ), SIGNAL(finished()), SLOT(onTrackGotBuyLinks()) );
+    }
+}
+
+void
+MetadataWidget::showEvent( QShowEvent* /*e*/ )
+{
+    fetchTrackInfo();
+}
+
+void
 MetadataWidget::checkFinished()
 {
+    Q_ASSERT( m_numCalls > 0 );
+
     if ( --m_numCalls == 0 )
     {
         ui->loadingStack->setCurrentWidget( ui->content );
         m_movie->stop();
+
+        emit finished();
     }
 }
 
@@ -182,8 +216,6 @@ MetadataWidget::setTrackDetails( const Track& track )
    }
 
    ui->radio->setStation( RadioStation::similar( Artist( track.artist().name() ) ), tr( "Play %1 Radio" ).arg( track.artist().name() ) );
-
-   ui->back->setDescription( tr( "%1 by %2" ).arg( track.title(), track.artist().name() ) );
 
    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->scrobbleControls, SLOT(setLoveChecked(bool)));
 
@@ -391,6 +423,23 @@ MetadataWidget::onAlbumGotInfo()
     checkFinished();
 }
 
+QString
+price( const QString& price, const QString& currency )
+{
+    QString returnPrice;
+
+    if ( currency.compare( "eur", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "€%1" ).arg( price );
+    else if ( currency.compare( "usd", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "$%1" ).arg( price );
+    else if ( currency.compare( "gbp", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "£%1" ).arg( price );
+    else
+        returnPrice = QString( "%1 %2" ).arg( price, currency );
+
+    return returnPrice;
+}
+
 void
 MetadataWidget::onTrackGotBuyLinks()
 {
@@ -402,6 +451,27 @@ MetadataWidget::onTrackGotBuyLinks()
 
         QMenu* menu = new QMenu( this );
 
+        menu->addAction( tr("Downloads") )->setEnabled( false );
+
+        // USD EUR GBP
+
+        foreach ( const XmlQuery& affiliation, lfm["affiliations"]["downloads"].children( "affiliation" ) )
+        {
+            bool isSearch = affiliation["isSearch"].text() == "1";
+
+            QAction* buyAction = 0;
+
+            if ( isSearch )
+                buyAction = menu->addAction( tr("Search on %1").arg( affiliation["supplierName"].text() ) );
+            else
+                buyAction = menu->addAction( tr("Buy on %1 %2").arg( affiliation["supplierName"].text(), price( affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) ) );
+
+            buyAction->setData( affiliation["buyLink"].text() );
+
+            thingsToBuy = true;
+        }
+
+        menu->addSeparator();
         menu->addAction( tr("Physical") )->setEnabled( false );
 
         foreach ( const XmlQuery& affiliation, lfm["affiliations"]["physicals"].children( "affiliation" ) )
@@ -413,26 +483,7 @@ MetadataWidget::onTrackGotBuyLinks()
             if ( isSearch )
                 buyAction = menu->addAction( tr("Search on %1").arg( affiliation["supplierName"].text() ) );
             else
-                buyAction = menu->addAction( tr("Buy on %1 %2 %3").arg( affiliation["supplierName"].text(), affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) );
-
-            buyAction->setData( affiliation["buyLink"].text() );
-
-            thingsToBuy = true;
-        }
-
-        menu->addSeparator();
-        menu->addAction( tr("Downloads") )->setEnabled( false );
-
-        foreach ( const XmlQuery& affiliation, lfm["affiliations"]["downloads"].children( "affiliation" ) )
-        {
-            bool isSearch = affiliation["isSearch"].text() == "1";
-
-            QAction* buyAction = 0;
-
-            if ( isSearch )
-                buyAction = menu->addAction( tr("Search on %1").arg( affiliation["supplierName"].text() ) );
-            else
-                buyAction = menu->addAction( tr("Buy on %1 %2 %3").arg( affiliation["supplierName"].text(), affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) );
+                buyAction = menu->addAction( tr("Buy on %1 %2").arg( affiliation["supplierName"].text(), price( affiliation["price"]["amount"].text(), affiliation["price"]["currency"].text() ) ) );
 
             buyAction->setData( affiliation["buyLink"].text() );
 
@@ -467,8 +518,9 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
     if ( lfm.parse( data ) )
     {
         m_globalTrackScrobbles = lfm["track"]["playcount"].text().toInt();
-        int listeners = lfm["track"]["listeners"].text().toInt();
-        m_userTrackScrobbles = lfm["track"]["userplaycount"].text().toInt();
+        //int listeners = lfm["track"]["listeners"].text().toInt();
+        if ( lfm["track"]["userplaycount"].text().length() > 0 )
+            m_userTrackScrobbles = lfm["track"]["userplaycount"].text().toInt();
 
         // Update the context now that we have the user track listens
         ui->context->setText( contextString( m_track ) );
@@ -476,7 +528,8 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
         //ui->albumImage->loadUrl( lfm["track"]["album"]["image size=medium"].text() );
         ui->albumImage->setHref( lfm["track"]["url"].text());
 
-        ui->scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
+        if ( lfm["track"]["userloved"].text().length() > 0 )
+            ui->scrobbleControls->setLoveChecked( lfm["track"]["userloved"].text() == "1" );
 
         // get the popular tags
         QList<XmlQuery> tags = lfm["track"]["toptags"].children("tag").mid( 0, 5 );
@@ -505,7 +558,7 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
                 if ( !albumTitle.isEmpty() )
                 {
                     m_albumGuess = lastfm::Album( m_track.artist().name(), albumTitle );
-                    connect( m_albumGuess.getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
+                    connect( m_albumGuess.getInfo( User().name() ), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
                     ++m_numCalls;
 
                     setTrackDetails( m_track );
@@ -570,14 +623,14 @@ void
 MetadataWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
    foreach ( lastfm::Track track, tracks )
-       connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
+       connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged( short )), SLOT(onScrobbleStatusChanged( short )));
 }
 
 void
-MetadataWidget::onScrobbleStatusChanged()
+MetadataWidget::onScrobbleStatusChanged( short scrobbleStatus )
 {
 
-   if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
+   if (scrobbleStatus == lastfm::Track::Submitted)
    {
        // update total scrobbles and your scrobbles!
        ++m_userTrackScrobbles;
@@ -648,6 +701,9 @@ MetadataWidget::getContextString( const Track& track )
                }
            }
            break;
+       default:
+           // when there is no context they will just get scrobble counts
+           break;
        }
    }
    else
@@ -699,9 +755,21 @@ MetadataWidget::scrobbleString( const Track& track )
     QString userArtistScrobblesString = numberOfTimes( m_userArtistScrobbles );
     QString userTrackScrobblesString = numberOfTimes( m_userTrackScrobbles );
 
-    return m_userTrackScrobbles != 0 ?
-        tr( "You've listened to %1 %2 and %3 %4." ).arg( artistString, userArtistScrobblesString, trackString, userTrackScrobblesString ):
-        tr( "You've listened to %1 %2, but not this track." ).arg( artistString, userArtistScrobblesString );
+    QString scrobbleString;
+
+    qDebug() << m_userTrackScrobbles << m_userArtistScrobbles;
+
+    if ( m_userTrackScrobbles != 0 )
+        scrobbleString = tr( "You've listened to %1 %2 and %3 %4." ).arg( artistString, userArtistScrobblesString, trackString, userTrackScrobblesString );
+    else
+    {
+        if ( m_userArtistScrobbles != 0 )
+            scrobbleString = tr( "You've listened to %1 %2, but not this track." ).arg( artistString, userArtistScrobblesString );
+        else
+            scrobbleString = tr( "This is the first time you've listened to %1." ).arg( artistString );
+    }
+
+    return scrobbleString;
 }
 
 void

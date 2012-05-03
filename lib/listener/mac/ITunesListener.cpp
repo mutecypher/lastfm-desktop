@@ -21,8 +21,6 @@
 
 #include <lastfm/misc.h>
 
-#include "lib/unicorn/mac/AppleScript.h"
-
 #include "ITunesListener.h"
 #include "../PlayerConnection.h"
 
@@ -52,6 +50,16 @@ ITunesListener::ITunesListener( QObject* parent )
 {
     qRegisterMetaType<Track>("Track");
     connect( parent, SIGNAL(destroyed()), SLOT(deleteLater()) ); //FIXME safe?
+
+    m_currentTrackScript = AppleScript("tell application \"iTunes\" to tell current track\n"
+                                          "try\n"
+                                              "set L to location\n"
+                                              "set L to POSIX path of L\n"
+                                          "on error\n"
+                                              "set L to \"\"\n"
+                                          "end try\n"
+                                          "return artist & \"\n\" & album & \"\n\" & name & \"\n\" & (duration as integer) & \"\n\" & L & \"\n\" & persistent ID & \"\n\" & podcast & \"\n\" & video kind\n"
+                                      "end tell\n" );
 }
 
 
@@ -103,7 +111,7 @@ public:
     void determineTrackInformation();
         
     QString artist, name, album, path, pid;
-    int duration, position;
+    int duration;
     ITunesListener::State const state; // *MUST* be after m_info
     
 private:
@@ -155,15 +163,11 @@ ITunesDictionaryHelper::determineTrackInformation()
     album = token<QString>( CFSTR("Album") );
     name = token<QString>( CFSTR("Name") );
     pid = QString::number( token<int>( CFSTR("PersistentID") ) );
-
     
     // Get path decoded - iTunes encodes the file location as URL
     CFStringRef location = token<CFStringRef>( CFSTR("Location") );
     QUrl url = QUrl::fromEncoded( lastfm::CFStringToUtf8( location ) );
     path = url.toString().remove( "file://localhost" );
-    
-    static AppleScript script( "tell application \"iTunes\" to return player position" );
-    position = script.exec().toInt();
 }
 /******************************************************************************/
 
@@ -182,64 +186,49 @@ ITunesListener::callback( CFDictionaryRef info )
     State const previousState = m_state;
     m_state = dict.state;
     
-    switch (m_state)
+    if ( m_state == Paused )
+        m_connection->pause();
+    else if ( m_state == Stopped )
+        m_connection->stop();
+    else if ( m_state == Playing )
     {
-        case Paused:
-            m_connection->pause();
-            break;
+        QString output = m_currentTrackScript.exec();
 
-        case Stopped:
-            m_connection->stop();
-            break;
-            
-        case Playing:
-            if (!isMusic())
-            {
-                qDebug() << "Ignoring current track because it isn't music.";
-                break;
-            }
+        qDebug() << output;
 
-            dict.determineTrackInformation();
+        QTextStream s( &output, QIODevice::ReadOnly | QIODevice::Text );
 
-            // if the track is restarted it has the same pid and a position of 0
-            if (m_previousPid == dict.pid && dict.position != 0)
-            {
-                if (previousState == Paused)
-                    m_connection->resume();
-                //else the user changed some metadata or the track's rating etc.
-            }
-            else
-            {
-                MutableTrack t;
-                t.setArtist( dict.artist );
-                t.setTitle( dict.name );
-                t.setAlbum( dict.album );
-                t.setDuration( dict.duration );
-                t.setUrl( QUrl::fromLocalFile( dict.path ) );
-                m_connection->start( t );
-                
-                m_previousPid = dict.pid;
-            }
-            break;
+        QString artist = s.readLine();
+        QString album = s.readLine();
+        QString track = s.readLine();
+        QString duration = s.readLine();
+        QString path = s.readLine();
+        QString pid = s.readLine();
+        bool podcast = s.readLine() == "true";
+        QString videoKind = s.readLine();
+        bool video = videoKind != "none" && videoKind != "music video";
 
-        default:
-          qWarning() << "Unknown state.";
-          break;
+        // if the track is restarted it has the same pid
+        if ( m_previousPid == pid && previousState == Paused )
+            m_connection->resume();
+        else
+        {
+            MutableTrack t;
+            t.setArtist( artist );
+            t.setTitle( track );
+            t.setAlbum( album );
+            t.setDuration( duration.toInt() );
+            t.setUrl( QUrl::fromLocalFile( path ) );
+            t.setPodcast( podcast );
+            t.setVideo( video );
+            m_connection->start( t );
+        }
+
+        m_previousPid = pid;
     }
-}
+    else
+          qWarning() << "Unknown state.";
 
-
-bool //static
-ITunesListener::isMusic()
-{
-    const char* code = "with timeout of 1 seconds\n"
-                           "tell application \"iTunes\" to if running then return video kind of current track\n"
-                       "end timeout";
-
-    static AppleScript script( code ); //compile once
-    QString const r = script.exec();
-
-    return r == "none" || r == "music video" || r == "";
 }
 
 
@@ -253,33 +242,14 @@ ITunesListener::iTunesIsPlaying()
 
 void
 ITunesListener::setupCurrentTrack()
-{
-    qDebug() << "hi";
-    
-    if (!iTunesIsPlaying() || !isMusic())
+{  
+    if ( !iTunesIsPlaying() )
         return;
-    
-    qDebug() << "hi";
-    
-    #define ENDL " & \"\n\" & "
-    const char* code =
-        "tell application \"iTunes\" to tell current track\n"
-            "try\n"
-                "set L to location\n"
-                "set L to POSIX path of L\n"
-            "on error\n"
-                "set L to \"\"\n"
-            "end try\n"
-            "return artist" ENDL
-                   "album" ENDL
-                   "name" ENDL
-                   "(duration as integer)" ENDL
-                   "L" ENDL
-                   "persistent ID\n"
-        "end tell";
-    #undef ENDL
-    
-    QString output = AppleScript( code ).exec();
+
+    QString output = m_currentTrackScript.exec();
+
+    qDebug() << output;
+
     QTextStream s( &output, QIODevice::ReadOnly | QIODevice::Text );
 
     QString artist = s.readLine();
@@ -287,17 +257,20 @@ ITunesListener::setupCurrentTrack()
     QString track = s.readLine();
     QString duration = s.readLine();
     QString path = s.readLine();
+    QString persistentID = s.readLine();
+    bool podcast = s.readLine() == "true";
+    QString videoKind = s.readLine();
+    bool video = videoKind != "none" && videoKind != "music video";
 
-    m_previousPid = s.readLine();
+    m_previousPid = persistentID;
         
-    if (!artist.isEmpty())
-    {
-        MutableTrack t;
-        t.setArtist( artist );
-        t.setTitle( track );
-        t.setAlbum( album );
-        t.setDuration( duration.toInt() );
-        t.setUrl( QUrl::fromLocalFile( path ) );
-        m_connection->start( t );
-    }
+    MutableTrack t;
+    t.setArtist( artist );
+    t.setTitle( track );
+    t.setAlbum( album );
+    t.setDuration( duration.toInt() );
+    t.setUrl( QUrl::fromLocalFile( path ) );
+    t.setPodcast( podcast );
+    t.setVideo( video );
+    m_connection->start( t );
 }

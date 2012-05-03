@@ -2,13 +2,13 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [CustomMessages]
-Version=5.0.0.0
+Version=5.0.4.0
 
 [Setup]
-OutputBaseFilename=iTunesPluginWinSetup_5.0.0.0
+OutputBaseFilename=iTunesPluginWinSetup_5.0.4.0
 ; setup.exe version
-VersionInfoVersion=5.0.0
-VersionInfoTextVersion=5.0.0
+VersionInfoVersion=5.0.4
+VersionInfoTextVersion=5.0.4
 AppName=Last.fm iTunes Plugin
 AppVerName=Last.fm iTunes Plugin {cm:Version}
 VersionInfoDescription=Last.fm iTunes Plugin Installer

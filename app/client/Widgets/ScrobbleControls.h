@@ -21,17 +21,17 @@
 #ifndef SCROBBLE_CONTROLS_H
 #define SCROBBLE_CONTROLS_H
 
-#include "lib/unicorn/StylableWidget.h"
+#include <QFrame>
 
 #include <lastfm/Track.h>
 #include <lastfm/XmlQuery.h>
 
-namespace unicorn{ class Session; };
-namespace lastfm{ class User; };
+namespace unicorn{ class Session; }
+namespace lastfm{ class User; }
 
 class QPushButton;
 
-class ScrobbleControls : public StylableWidget
+class ScrobbleControls : public QFrame
 {
     Q_OBJECT
 public:

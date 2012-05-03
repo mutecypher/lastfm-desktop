@@ -21,16 +21,16 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
-#include "lib/unicorn/StylableWidget.h"
 #include "lib/DllExportMacro.h"
 
-class UNICORN_DLLEXPORT DataBox : public StylableWidget {
+class UNICORN_DLLEXPORT DataBox : public QFrame
+{
     Q_OBJECT
 public:
     DataBox( const QString& title, QWidget* child, QWidget* p = 0 )
-        :StylableWidget( p )
+        :QFrame( p )
     { 
-        StylableWidget* w = new StylableWidget();
+        QFrame* w = new QFrame();
         w->setObjectName( "header" );
         new QHBoxLayout( w );
         w->layout()->setContentsMargins( 0, 0, 0, 0 );
@@ -44,7 +44,7 @@ public:
 
         new QVBoxLayout( this );
         layout()->addWidget( w );
-        QWidget* cw = new StylableWidget();
+        QWidget* cw = new QFrame();
         cw->setObjectName( "contents" );
         QVBoxLayout* v = new QVBoxLayout( cw );
         v->setContentsMargins( 0, 0, 0, 0 );

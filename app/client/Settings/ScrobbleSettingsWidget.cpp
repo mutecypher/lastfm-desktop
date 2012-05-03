@@ -18,11 +18,6 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ui_ScrobbleSettingsWidget.h"
-#include "ScrobbleSettingsWidget.h"
-
-#include "lib/unicorn/UnicornSettings.h"
-
 #include <QCheckBox>
 #include <QDebug>
 #include <QFrame>
@@ -32,9 +27,16 @@
 #include <QSlider>
 #include <QVBoxLayout>
 
+#include "lib/unicorn/UnicornSettings.h"
+
+#include "../Application.h"
+#include "../Services/ScrobbleService/ScrobbleService.h"
+
+#include "ui_ScrobbleSettingsWidget.h"
+#include "ScrobbleSettingsWidget.h"
+
 #define SETTING_SCROBBLE_POINT "scrobblePoint"
 #define SETTING_ALLOW_FINGERPRINTING "allowFingerprint"
-#define SETTING_AUDIOBOOKS "audiobooks"
 #define SETTING_PODCASTS "podcasts"
 
 
@@ -44,14 +46,6 @@ ScrobbleSettingsWidget::ScrobbleSettingsWidget( QWidget* parent )
 {
     ui->setupUi( this );
 
-    connect( ui->scrobblePoint, SIGNAL(sliderMoved(int)), SLOT(onSliderMoved(int)) );
-    connect( ui->scrobblePoint, SIGNAL(sliderMoved(int)), SLOT(onSettingsChanged()) );
-    connect( ui->allowFingerprint, SIGNAL(stateChanged(int)), SLOT(onSettingsChanged()) );
-
-    connect( ui->audiobooks, SIGNAL(stateChanged(int)), SLOT(onSettingsChanged()) );
-    connect( ui->podcasts, SIGNAL(stateChanged(int)), SLOT(onSettingsChanged()) );
-
-
     int scrobblePointValue = unicorn::UserSettings().value( SETTING_SCROBBLE_POINT, ui->scrobblePoint->value() ).toInt();
     ui->scrobblePoint->setValue( scrobblePointValue );
     onSliderMoved( scrobblePointValue );
@@ -59,10 +53,16 @@ ScrobbleSettingsWidget::ScrobbleSettingsWidget( QWidget* parent )
 
     ui->allowFingerprint->setChecked( unicorn::UserSettings().value( SETTING_ALLOW_FINGERPRINTING, ui->allowFingerprint->isChecked() ).toBool() );
 
-    ui->audiobooks->setChecked( unicorn::UserSettings().value( SETTING_AUDIOBOOKS, ui->audiobooks->isChecked() ).toBool() );
+    ui->scrobblingOn->setChecked( unicorn::UserSettings().value( "scrobblingOn", ui->scrobblingOn->isChecked() ).toBool() );
     ui->podcasts->setChecked( unicorn::UserSettings().value( SETTING_PODCASTS, ui->podcasts->isChecked() ).toBool() );
 
-    ui->line->setFrameShape( QFrame::HLine );
+    connect( ui->scrobblePoint, SIGNAL(valueChanged(int)), SLOT(onSliderMoved(int)) );
+    connect( ui->scrobblePoint, SIGNAL(valueChanged(int)), SLOT(onSettingsChanged()) );
+    connect( ui->allowFingerprint, SIGNAL(stateChanged(int)), SLOT(onSettingsChanged()) );
+
+    connect( aApp, SIGNAL(scrobbleToggled(bool)), ui->scrobblingOn, SLOT(setChecked(bool)));
+    connect( ui->scrobblingOn, SIGNAL(clicked(bool)), SLOT(onSettingsChanged()) );
+    connect( ui->podcasts, SIGNAL(stateChanged(int)), SLOT(onSettingsChanged()) );
 }
 
 void
@@ -79,10 +79,12 @@ ScrobbleSettingsWidget::saveSettings()
     {
         qDebug() << "Saving settings...";
 
+        aApp->onScrobbleToggled( ui->scrobblingOn->isChecked() );
         unicorn::UserSettings().setValue( SETTING_SCROBBLE_POINT, ui->scrobblePoint->value() );
         unicorn::UserSettings().setValue( SETTING_ALLOW_FINGERPRINTING, ui->allowFingerprint->isChecked() );
-        unicorn::UserSettings().setValue( SETTING_AUDIOBOOKS, ui->audiobooks->isChecked() );
         unicorn::UserSettings().setValue( SETTING_PODCASTS, ui->podcasts->isChecked() );
+
+        ScrobbleService::instance().scrobbleSettingsChanged();
 
         onSettingsSaved();
     }

@@ -23,6 +23,7 @@
 #include "ITunesDevice/itunesdevice.h"
 
 #include <QApplication>
+#include <QDebug>
 
 
 iTunesBootstrapper::iTunesBootstrapper( QObject* parent )

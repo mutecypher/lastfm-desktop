@@ -29,7 +29,7 @@
     #define UNICORN_HKEY L"Software\\Last.fm\\" 
     #define MOOSE_HKEY_A "Software\\Last.fm\\Last.fm"
     #define MOOSE_HKEY  L"Software\\Last.fm\\Last.fm"
-    #define MOOSE_PLUGIN_HKEY_A MOOSE_HKEY_A "\\Plugins\\itw"
+    #define MOOSE_PLUGIN_HKEY_A MOOSE_HKEY_A "\\Software\\Last.fm\\Plugins\\itw"
 #else
     #define MOOSE_PREFS_PLIST "fm.last.scrobbler"
     #include <vector>
@@ -116,7 +116,7 @@ namespace Moose
         FSRefMakePath( &appRef, (unsigned char*)path, PATH_MAX );
         
         std::string ret( path );
-        ret.append( "/Contents/MacOS/iPodScrobbler" );
+        ret.append( "/Contents/Helpers/iPodScrobbler" );
         
 		return ret;
     }

@@ -35,13 +35,14 @@
 #endif
 
 #define SETTING_SHOW_AS "showAS"
-#define SETTING_LAUNCH_ITUNES "launchItunes"
+#define SETTING_LAUNCH_ITUNES "LaunchWithMediaPlayer"
 #define SETTING_NOTIFICATIONS "notifications"
 #define SETTING_LAST_RADIO "lastRadio"
 #define SETTING_SEND_CRASH_REPORTS "sendCrashReports"
 #define SETTING_CHECK_UPDATES "checkUpdates"
+#define SETTING_HIDE_DOCK "hideDock"
 
-#define SETTING_FIRST_RUN_WIZARD_COMPLETED "FirstRunWizardCompletedAlpha"
+#define SETTING_FIRST_RUN_WIZARD_COMPLETED "FirstRunWizardCompletedBeta"
 
 namespace lastfm{
     class User;
@@ -171,6 +172,10 @@ namespace unicorn
         void unInstallHotKey( void* id );
         bool isInternetConnectionUp() const;
 
+#ifdef Q_OS_MAC
+        void hideDockIcon( bool hideDockIcon );
+#endif
+
     public slots:
         void manageUsers();
         unicorn::Session* changeSession( const QString& username, const QString& sessionKey, bool announce = true );
@@ -194,8 +199,12 @@ namespace unicorn
         QString m_cssFileName;
 
 #ifdef __APPLE__
-        void installCocoaEventHandler() const;
+        void setOpenApplicationEventHandler();
+        void setGetURLEventHandler();
+    public:
         void appleEventReceived( const QStringList& messages );
+
+    private:
         static OSStatus hotkeyEventHandler( EventHandlerCallRef, EventRef, void* );
 
 #ifdef Q_OS_MAC64
@@ -211,7 +220,7 @@ namespace unicorn
         /**
          * Reimplement this function if you want to control the initial login process.
          */
-        virtual void initiateLogin() throw( StubbornUserException );
+        virtual void initiateLogin( bool forceWizard = false ) throw( StubbornUserException );
 
         void setWizardRunning( bool running );
 

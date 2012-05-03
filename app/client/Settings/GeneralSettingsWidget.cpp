@@ -10,6 +10,12 @@
 #include "GeneralSettingsWidget.h"
 
 
+#ifdef Q_OS_MAC
+#define APP_LAUNCH "scrobbler"
+#else
+#define APP_LAUNCH "Client"
+#endif
+
 GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
     :SettingsWidget( parent ),
       ui( new Ui::GeneralSettingsWidget )
@@ -20,19 +26,32 @@ GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
 
     connect( ui->languages, SIGNAL( currentIndexChanged( int ) ), SLOT( onSettingsChanged() ) );
 
-    connect( ui->showAs, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
-    connect( ui->launch, SIGNAL(stateChanged(int) ), SLOT( onSettingsChanged() ) );
-    connect( ui->notifications, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
-    connect( ui->lastRadio, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
-    connect( ui->sendCrashReports, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
-    connect( ui->updates, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
-
     ui->showAs->setChecked( unicorn::Settings().value( SETTING_SHOW_AS, ui->showAs->isChecked() ).toBool() );
-    ui->launch->setChecked( unicorn::Settings().value( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() ).toBool() );
     ui->notifications->setChecked( unicorn::Settings().value( SETTING_NOTIFICATIONS, ui->notifications->isChecked() ).toBool() );
     ui->lastRadio->setChecked( unicorn::Settings().value( SETTING_LAST_RADIO, ui->lastRadio->isChecked() ).toBool() );
     ui->sendCrashReports->setChecked( unicorn::Settings().value( SETTING_SEND_CRASH_REPORTS, ui->sendCrashReports->isChecked() ).toBool() );
+
+    connect( ui->showAs, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+    connect( ui->notifications, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+    connect( ui->lastRadio, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+    connect( ui->sendCrashReports, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+
+#ifdef Q_OS_MAC
+    ui->hideDock->setChecked( unicorn::Settings().value( SETTING_HIDE_DOCK, ui->hideDock->isChecked() ).toBool() );
+    connect( ui->hideDock, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+#else
+    ui->hideDock->hide();
+#endif
+
+#ifndef Q_WS_X11
+    ui->launch->setChecked( unicorn::AppSettings( APP_LAUNCH ).value( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() ).toBool() );
     ui->updates->setChecked( unicorn::Settings().value( SETTING_CHECK_UPDATES, ui->updates->isChecked() ).toBool() );
+    connect( ui->launch, SIGNAL(stateChanged(int) ), SLOT( onSettingsChanged() ) );
+    connect( ui->updates, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
+#else
+    ui->launch->hide();
+    ui->updates->hide();
+#endif
 }
 
 void
@@ -40,17 +59,17 @@ GeneralSettingsWidget::populateLanguages()
 {
     ui->languages->addItem( tr( "System Language" ), "" );
     ui->languages->addItem( "English", QLocale( QLocale::English ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "FranÃ§ais" ), QLocale( QLocale::French ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "français" ), QLocale( QLocale::French ).name().left( 2 ) );
     ui->languages->addItem( "Italiano", QLocale( QLocale::Italian ).name().left( 2 )  );
     ui->languages->addItem( "Deutsch", QLocale( QLocale::German ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "EspaÃ±ol" ), QLocale( QLocale::Spanish ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "PortuguÃ©s" ), QLocale( QLocale::Portuguese ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "Español" ), QLocale( QLocale::Spanish ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "Português" ), QLocale( QLocale::Portuguese ).name().left( 2 ) );
     ui->languages->addItem( "Polski", QLocale( QLocale::Polish ).name().left( 2 ) );
     ui->languages->addItem( "Svenska", QLocale( QLocale::Swedish ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "TÃ¼kÃ§e" ), QLocale( QLocale::Turkish ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "Ð ÑÑÑÐºÐ¸Ð¹" ), QLocale( QLocale::Russian ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "ä¸­æ" ), QLocale( QLocale::Chinese ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "æ¥æ¬èª" ), QLocale( QLocale::Japanese ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "Türkçe" ), QLocale( QLocale::Turkish ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "Руccкий" ), QLocale( QLocale::Russian ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "简体中文" ), QLocale( QLocale::Chinese ).name().left( 2 ) );
+    ui->languages->addItem( QString::fromUtf8( "日本語" ), QLocale( QLocale::Japanese ).name().left( 2 ) );
 
     QString currLanguage = unicorn::AppSettings().value( "language", "" ).toString();
     int index = ui->languages->findData( currLanguage );
@@ -71,22 +90,33 @@ GeneralSettingsWidget::saveSettings()
 
         if ( unicorn::AppSettings().value( "language", "" ) != currLanguage )
         {
+            if ( currLanguage == ""  )
+                QLocale::setDefault( QLocale::system() );
+            else
+                QLocale::setDefault( QLocale( currLanguage ) );
+
             unicorn::AppSettings().setValue( "language", currLanguage );
-            QMessageBoxBuilder( 0 )
-                .setIcon( QMessageBox::Information )
-                .setTitle( tr( "Restart needed" ) )
-                .setText( tr( "You need to restart the application for the language change to take effect." ) )
-                .exec();
+//            QMessageBoxBuilder( 0 )
+//                .setIcon( QMessageBox::Information )
+//                .setTitle( tr( "Restart needed" ) )
+//                .setText( tr( "You need to restart the application for the language change to take effect." ) )
+//                .exec();
         }
 
         unicorn::Settings().setValue( SETTING_SHOW_AS, ui->showAs->isChecked() );
         aApp->showAs( ui->showAs->isChecked() );
 
-        unicorn::Settings().setValue( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() );
+        // setting is for the 'Client' aplication for compatibility with old media player plugins
+        unicorn::AppSettings( APP_LAUNCH ).setValue( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() );
+
         unicorn::Settings().setValue( SETTING_NOTIFICATIONS, ui->notifications->isChecked() );
         unicorn::Settings().setValue( SETTING_LAST_RADIO, ui->lastRadio->isChecked() );
         unicorn::Settings().setValue( SETTING_SEND_CRASH_REPORTS, ui->sendCrashReports->isChecked() );
         unicorn::Settings().setValue( SETTING_CHECK_UPDATES, ui->updates->isChecked() );
+#ifdef Q_OS_MAC
+        unicorn::Settings().setValue( SETTING_HIDE_DOCK, ui->hideDock->isChecked() );
+        aApp->hideDockIcon( ui->hideDock->isChecked() );
+#endif
 
         onSettingsSaved();
     }

@@ -143,12 +143,10 @@ DeviceScrobbler::twiddled( QStringList arguments )
 
             if ( result == QMessageBox::Yes )
             {
-                unicorn::Settings s;
                 // Switch accounts!
-                s.beginGroup( associatedUser.name() );
-                QString sessionKey = s.value( "SessionKey", "" ).toString();
+                unicorn::UserSettings us( associatedUser.name() );
+                QString sessionKey = us.value( "SessionKey", "" ).toString();
                 aApp->changeSession( associatedUser.name(), sessionKey );
-                s.endGroup();
             }
         }
 
@@ -170,8 +168,7 @@ DeviceScrobbler::onScrobbleSetupClicked( bool scrobble, bool alwaysAsk, QString 
     // We need to store the result so we can check it next time
     IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
 
-    if ( !ipod->isDeviceKnown() )
-        ipod->associateDevice( username );
+    ipod->associateDevice( username );
 
     if ( username == User().name() )
     {
@@ -216,10 +213,19 @@ DeviceScrobbler::scrobbleIpodFiles( QStringList iPodScrobbleFiles, const IpodDev
             {
                 lastfm::Track track( tracks.at(i).toElement() );
 
-                int playcount = track.extra("playCount").toInt();
+                // don't add tracks to the list if they don't have an artist
+                // don't add podcasts to the list if podcast scrobbling is off
+                // don't add videos to the list (well, videos that aren't "music video")
 
-                for ( int j(0) ; j < playcount ; ++j )
-                    scrobbles << track;
+                if ( !track.artist().isNull()
+                     && ( unicorn::UserSettings().value( "podcasts", true ).toBool() || !track.isPodcast() )
+                     && !track.isVideo() )
+                {
+                    int playcount = track.extra("playCount").toInt();
+
+                    for ( int j(0) ; j < playcount ; ++j )
+                        scrobbles << track;
+                }
             }
         }
 
@@ -428,7 +434,7 @@ DeviceScrobbler::onIpodScrobblingError()
             QMessageBoxBuilder( 0 )
                 .setIcon( QMessageBox::Critical )
                 .setTitle( tr( "Scrobble iPod" ) )
-                .setText( tr( "An unkown error occurred while trying to access the iPod database." ) )
+                .setText( tr( "An unknown error occurred while trying to access the iPod database." ) )
                 .exec();
             delete iPod;
             iPod = 0;

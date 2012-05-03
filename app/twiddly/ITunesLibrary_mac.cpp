@@ -24,7 +24,7 @@
 #include <QDateTime>
 #include <QFileInfo>
 #include <QStringList>
-
+#include <QDebug>
 
 ITunesLibrary::ITunesLibrary( const QString& pid, bool )
         : m_currentIndex( 0 )
@@ -138,7 +138,7 @@ ITunesLibrary::Track::lastfmTrack() const
         << "tell application 'iTunes' to tell t"
         <<     "set l to location"
         <<     "try" << "set l to POSIX path of l" << "end try"
-        <<     "return artist & '\n' & name & '\n' & (duration as integer)  & '\n' & album & '\n' & played count  & '\n' & d & '\n' & l"
+        <<     "return artist & '\n' & name & '\n' & (duration as integer)  & '\n' & album & '\n' & played count  & '\n' & d & '\n' & l  & '\n' & podcast & '\n' & video kind"
         << "end tell";
 
     QString out = script.exec();
@@ -153,6 +153,10 @@ ITunesLibrary::Track::lastfmTrack() const
 
     QFileInfo fileinfo( s.readLine() );
     t.setUrl( QUrl::fromLocalFile( fileinfo.absolutePath() ) );
+
+    t.setPodcast( s.readLine() == "true" );
+    QString videoKind = s.readLine();
+    t.setVideo( videoKind != "none" && videoKind != "music video" );
 
     return t;
 }

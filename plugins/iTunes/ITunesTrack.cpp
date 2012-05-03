@@ -392,6 +392,78 @@ ITunesTrack::pathForTrack( IITTrack* track )
 }
 #endif
 
+#ifdef WIN32
+bool
+ITunesTrack::podcast()
+{
+    VARIANT_BOOL podcast = FALSE;
+    IITFileOrCDTrack* fileTrack = 0;
+    HRESULT res = m_comTrack->QueryInterface( IID_IITFileOrCDTrack, (void**)&fileTrack );
+    if ( res != S_OK || fileTrack == 0 )
+    {
+        ITunesComWrapper::logComError( res, L"Casting IITrack to IITFileOrCDTrack failed" );
+    }
+    else
+    {
+        res = fileTrack->get_Podcast( &podcast );
+        if ( res != S_OK )
+        {
+            BSTR a;
+            BSTR n;
+            fileTrack->get_Artist( &a );
+            fileTrack->get_Name( &n );
+            wstring artist = ITunesComWrapper::bstrToWString( a );
+            wstring track = ITunesComWrapper::bstrToWString( n );
+            wostringstream os;
+            os << L"COM couldn't get podcast for " << artist << L" - " << track;
+            ITunesComWrapper::logComError( res, os.str() );
+        }
+
+        fileTrack->Release();
+    }
+
+    return podcast != FALSE;
+}
+#endif
+
+#ifdef WIN32
+bool
+ITunesTrack::video()
+{
+    bool video = false;
+    IITFileOrCDTrack* fileTrack = 0;
+    HRESULT res = m_comTrack->QueryInterface( IID_IITFileOrCDTrack, (void**)&fileTrack );
+    if ( res != S_OK || fileTrack == 0 )
+    {
+        ITunesComWrapper::logComError( res, L"Casting IITrack to IITFileOrCDTrack failed" );
+    }
+    else
+    {
+        ITVideoKind videoKind = ITVideoKindNone;
+        res = fileTrack->get_VideoKind( &videoKind );
+        if ( res == S_OK )
+        {
+            video = videoKind != ITVideoKindNone && videoKind != ITVideoKindMusicVideo;
+        }
+        else
+        {
+            BSTR a;
+            BSTR n;
+            fileTrack->get_Artist( &a );
+            fileTrack->get_Name( &n );
+            wstring artist = ITunesComWrapper::bstrToWString( a );
+            wstring track = ITunesComWrapper::bstrToWString( n );
+            wostringstream os;
+            os << L"COM couldn't get video kind for " << artist << L" - " << track;
+            ITunesComWrapper::logComError( res, os.str() );
+        }
+
+        fileTrack->Release();
+    }
+
+    return video;
+}
+#endif
 
 int
 ExtendedITunesTrack::playCountDifference() const throw( PlayCountException )

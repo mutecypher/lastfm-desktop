@@ -14,26 +14,25 @@ class PreferencesDialog : public unicorn::MainWindow
     Q_OBJECT
 
 public:
-    explicit PreferencesDialog( QMenuBar* menuBar );
+    explicit PreferencesDialog( QMenuBar* menuBar, QWidget* parent = 0 );
     ~PreferencesDialog();
 
 signals:
     void saveNeeded();
 
-private:
-    void closeEvent(QCloseEvent *);
-
 private slots:
     void onTabButtonClicked();
 
     void onAccepted();
+    void onRejected();
+
     void onSettingsChanged();
     void onApplyButtonClicked();
 
+    void onStackCurrentChanged( int index );
+
 private:
     Ui::PreferencesDialog *ui;
-
-    class QToolBar* m_toolBar;
 };
 
 #endif // PREFERENCESDIALOG_H

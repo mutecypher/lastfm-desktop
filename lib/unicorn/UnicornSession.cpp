@@ -1,10 +1,13 @@
-#include "UnicornSession.h"
-#include "UnicornSettings.h"
-
-#include <lastfm/User.h>
 
 #include <QApplication>
 #include <QDebug>
+
+#include <lastfm/User.h>
+#include <lastfm/Auth.h>
+#include <lastfm/XmlQuery.h>
+
+#include "UnicornSession.h"
+#include "UnicornSettings.h"
 
 namespace unicorn {
 
@@ -18,25 +21,12 @@ Session::lastSessionData()
     //use the Username setting or the first username if there have been any logged in previously
     QString username = s.value( "Username", QString() ).toString();
 
-    QStringList groups = s.childGroups();
-    if( (username.isEmpty()
-         || ( !groups.contains(username, Qt::CaseInsensitive )) && !groups.isEmpty() ) )
-    {
-        foreach( QString child, s.childGroups())
-        {
-            if( child == "com" || !s.contains( child + "/SessionKey") )
-                continue;
-            username = child;
-            break;
-        }
-    }
-
     if( !username.isEmpty() )
     {
-        s.beginGroup( username );
+        UserSettings us( username );
 
         sessionData[ "username" ] = username;
-        const QString sk = s.value( "SessionKey", "" ).toString();
+        const QString sk = us.value( "SessionKey", "" ).toString();
 
         if( !sk.isEmpty() )
             sessionData[ "sessionKey" ] = sk;
@@ -79,8 +69,7 @@ Session::init( const QString& username, const QString& sessionKey )
 {
     m_sessionKey = sessionKey;
 
-    Settings s;
-    s.beginGroup( username );
+    UserSettings s( username );
     m_userInfo.setName( username );
     m_userInfo.setScrobbleCount( s.value( "ScrobbleCount", 0 ).toInt() );
     m_userInfo.setDateRegistered( s.value( "DateRegistered", QDateTime() ).toDateTime() );
@@ -100,9 +89,10 @@ Session::init( const QString& username, const QString& sessionKey )
 
     m_userInfo.setImages( imageUrls );
 
-    s.setValue( "SessionKey", sessionKey );
-
-    s.endGroup();
+    if ( sessionKey.isEmpty() )
+        Q_ASSERT( false );
+    else
+        s.setValue( "SessionKey", sessionKey );
 
     fetchUserInfo();
 
@@ -116,6 +106,7 @@ Session::fetchUserInfo()
     lastfm::ws::Username = m_userInfo.name();
     lastfm::ws::SessionKey = m_sessionKey;
     connect( lastfm::User::getInfo(), SIGNAL( finished() ), SLOT( onUserGotInfo() ) );
+    connect( lastfm::Auth::getSessionInfo(), SIGNAL(finished()), SLOT(onAuthGotSessionInfo()) );
 }
 
 void
@@ -146,18 +137,65 @@ Session::onUserGotInfo()
 }
 
 void
+Session::onAuthGotSessionInfo()
+{
+    XmlQuery lfm;
+
+    /*
+    <lfm status="ok">
+        <application>
+          <session>
+            <name>eartle</name>
+            <key>5be299e899764d175ebff77beb40d54b</key>
+            <subscriber>1</subscriber>
+          </session>
+          <country>GB</country>
+          <radioPermission>
+            <user type="you">
+              <radio>0</radio>
+              <freetrial>0</freetrial>
+            </user>
+            <user type="registered">
+              <radio>1</radio>
+              <freetrial>0</freetrial>
+            </user>
+            <user type="subscriber">
+              <radio>1</radio>
+              <freetrial>0</freetrial>
+            </user>
+          </radioPermission>
+        </application>
+      </lfm>
+
+     */
+
+    if ( lfm.parse( static_cast<QNetworkReply*>( sender() )->readAll() ) )
+    {
+        qDebug() << lfm;
+
+        bool radio = lfm["application"]["radioPermission"]["user type=you"]["radio"].text() != "0";
+        bool canUpgrade = lfm["application"]["radioPermission"]["user type=subscriber"]["radio"].text() != "0";
+        bool freeTrial = lfm["application"]["radioPermission"]["user type=you"]["freeTrial"].text() != "0";
+    }
+    else
+    {
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
+    }
+}
+
+void
 Session::cacheUserInfo( const lastfm::User& userInfo )
 {
     const char* key = UserSettings::subscriptionKey();
-    Settings s;
-    s.beginGroup( userInfo.name() );
+
+    UserSettings s( userInfo.name() );
     s.setValue( key, userInfo.isSubscriber() );
     s.setValue( "ScrobbleCount", userInfo.scrobbleCount() );
     s.setValue( "DateRegistered", userInfo.dateRegistered() );
     s.setValue( "RealName", userInfo.realName() );
 
-    QList<lastfm::ImageSize> sizes;
-    sizes << lastfm::Small << lastfm::Medium << lastfm::Large;
+    QList<User::ImageSize> sizes;
+    sizes << User::SmallImage << User::MediumImage << User::LargeImage;
 
     s.beginWriteArray( "ImageUrls", sizes.count() );
     for ( int i = 0; i < sizes.count(); i++ )
@@ -166,7 +204,6 @@ Session::cacheUserInfo( const lastfm::User& userInfo )
         s.setValue( "Url", userInfo.imageUrl( sizes[ i ] ) );
     }
     s.endArray();
-    s.endGroup();
 
 }
 

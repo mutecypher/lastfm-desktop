@@ -20,7 +20,8 @@
 #ifndef QUICK_START_WIDGET_H
 #define QUICK_START_WIDGET_H
 
-#include "lib/unicorn/StylableWidget.h"
+#include <QFrame>
+
 #include <lastfm/RadioStation.h>
 
 class QComboBox;
@@ -29,7 +30,7 @@ namespace unicorn { class Label; }
 using unicorn::Label;
 namespace unicorn { class Session; }
 
-class QuickStartWidget : public StylableWidget
+class QuickStartWidget : public QFrame
 {
     Q_OBJECT
 private:

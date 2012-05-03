@@ -44,8 +44,6 @@ public:
 
     HttpImageWidget( QWidget* parent = 0 );
 
-    void setPlaceholder( const QPixmap& );
-
 public slots:
     void loadUrl( const QUrl& url, ScaleType scale = ScaleAuto );
     void setHref( const QUrl& url );

@@ -21,12 +21,15 @@
 #include <lastfm/ws.h>
 #include <lastfm/XmlQuery.h>
 
+#include <QDebug>
+
 using namespace lastfm;
 
 void
 StationSearch::startSearch(const QString& name)
 {
-    if (name.length()) {
+    if (name.length())
+    {
         m_name = name.toLower();
         QMap<QString, QString> params;
         params["method"] = "radio.search";
@@ -38,27 +41,34 @@ StationSearch::startSearch(const QString& name)
 void
 StationSearch::onFinished()
 {
-    lastfm::XmlQuery x;
+    lastfm::XmlQuery lfm;
 
-    if ( x.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
-        lastfm::XmlQuery station = x["stations"]["station"];
-        RadioStation rs(QUrl::fromPercentEncoding( station["url"].text().toUtf8()));
+        lastfm::XmlQuery station = lfm["stations"]["station"];
+        RadioStation rs( QUrl::fromPercentEncoding( station["url"].text().toUtf8() ) );
 
         if (rs.url().length())
         {
-            rs.setTitle(station["name"].text());
+            rs.setTitle( station["name"].text() );
             emit searchResult(rs);
             return;
         }
+        else
+        {
+            emit error( tr("Could not start radio: %1").arg( tr( "no results for \"%1\"" ).arg( m_name ) ), "radio" );
+        }
     }
     else
-        qDebug() << "exception";
+    {
+        emit error( tr("Could not start radio: %1").arg( lfm.parseError().message() ), "radio" );
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
+    }
 
     // no artist or tag result
     // maybe the user wanted to hear a friend's library?
-    lastfm::User you;
-    connect(you.getFriends(), SIGNAL(finished()), SLOT(onUserGotFriends()));
+    //lastfm::User you;
+    //connect(you.getFriends(), SIGNAL(finished()), SLOT(onUserGotFriends()));
 }
 
 void
@@ -70,11 +80,13 @@ StationSearch::onUserGotFriends()
 
     if ( lfm.parse( qobject_cast<QNetworkReply*>( sender() )->readAll() ) )
     {
-        foreach (lastfm::XmlQuery e, lfm["friends"].children("user")) {
-            if (m_name == e["name"].text().toLower()) {
+        foreach (lastfm::XmlQuery e, lfm["friends"].children("user"))
+        {
+            if (m_name == e["name"].text().toLower())
+            {
                 // friend!
                 RadioStation rs = RadioStation::library(User(m_name));
-                emit searchResult(rs);
+                emit searchResult( rs );
                 return;
             }
         }

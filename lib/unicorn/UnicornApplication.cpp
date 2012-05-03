@@ -39,7 +39,7 @@
 #include "SignalBlocker.h"
 #include "UnicornCoreApplication.h"
 #include "UnicornSettings.h"
-
+#include "DesktopServices.h"
 #include <lastfm/misc.h>
 #include <lastfm/User.h>
 #include <lastfm/InternetConnectionMonitor.h>
@@ -50,18 +50,20 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QTemporaryFile>
 #include <QFileInfo>
 #include <QLocale>
 #include <QRegExp>
 #include <QStyle>
 #include <QTimer>
 #include <QTranslator>
+#include <QAction>
 
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
-                      m_wizardRunning( true ),
                       m_currentSession( 0 ),
+                      m_wizardRunning( true ),
                       m_icm( 0 )
 {
 }
@@ -80,9 +82,13 @@ unicorn::Application::init()
     setupHotKeys();
 
 #ifdef __APPLE__
-    installCocoaEventHandler();
-    AEEventHandlerUPP h = NewAEEventHandlerUPP( appleEventHandler );
-    AEInstallEventHandler( kCoreEventClass, kAEReopenApplication, h, 0, false );
+    setGetURLEventHandler();
+    AEEventHandlerUPP urlHandler = NewAEEventHandlerUPP( appleEventHandler );
+    AEInstallEventHandler( kInternetEventClass, kAEGetURL, urlHandler, 0, false );
+
+    setOpenApplicationEventHandler();
+    AEEventHandlerUPP openHandler = NewAEEventHandlerUPP( appleEventHandler );
+    AEInstallEventHandler( kCoreEventClass, kAEReopenApplication, openHandler, 0, false );
 #endif
 
 #ifdef Q_WS_MAC
@@ -121,7 +127,7 @@ unicorn::Application::loadStyleSheet( QFile& file )
 }
 
 void
-unicorn::Application::initiateLogin() throw( StubbornUserException )
+unicorn::Application::initiateLogin( bool ) throw( StubbornUserException )
 {
     Session* newSession = 0;
 
@@ -186,14 +192,16 @@ unicorn::Application::manageUsers()
 void
 unicorn::Application::translate()
 {
-#ifdef NDEBUG
     //Try to load the language set by the user and
     //if there wasn't any, then use the system language
-    QString const iso639 = AppSettings().value( "language", "" ).toString();
+    QString iso639 = AppSettings().value( "language", "" ).toString();
     if ( iso639.isEmpty() )
     {
-        QString const iso639 = QLocale().name().left( 2 );
+        iso639 = QLocale().name().left( 2 );
     }
+
+    // set the default locale for the app which will be used by web services
+    QLocale::setDefault( QLocale( iso639 ) );
 
 #ifdef Q_WS_MAC
     QDir const d = lastfm::dir::bundle().filePath( "Contents/Resources/qm" );
@@ -210,23 +218,12 @@ unicorn::Application::translate()
 
     installTranslator( t1 );
     installTranslator( t2 );
-#endif
 }
 
 
 unicorn::Application::~Application()
 {
-    // we do this here, rather than when the setting is changed because if we 
-    // did it then the user would be unable to change their mind
-    /*
-    if (Settings().logOutOnExit() || m_logoutAtQuit)
-    {
-        AppSettings s;
-        s.remove( "SessionKey" );
-        s.remove( "Password" );
-    }*/
 }
-
 
 void
 unicorn::Application::onUserGotInfo()
@@ -297,9 +294,6 @@ unicorn::Application::changeSession( const QString& username, const QString& ses
 unicorn::Session*
 unicorn::Application::changeSession( Session* newSession, bool announce )
 {
-    if ( m_currentSession && newSession->userInfo().name() == m_currentSession->userInfo().name() )
-        return m_currentSession;
-
     if( m_currentSession && !m_wizardRunning &&  Settings().value( "changeSessionConfirmation", true ).toBool() )
     {
         bool dontAskAgain = false;
@@ -469,7 +463,7 @@ unicorn::Application::findMainWindow()
 {
     QMainWindow* ret = 0;
     foreach (QWidget* w, qApp->topLevelWidgets())
-        if (ret = qobject_cast<QMainWindow*>(w))
+        if ( (ret = qobject_cast<QMainWindow*>(w)) )
             break;
 
     return ret;
@@ -504,44 +498,71 @@ unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long 
     OSType id = typeWildCard;
     AEGetAttributePtr( e, keyEventIDAttr, typeType, 0, &id, sizeof(id), 0 );
  
-    switch (id)
+    if ( id  == kAEQuitApplication )
     {
-        case kAEQuitApplication:
-            qApp->quit();
-            return noErr;
-
-        default:
-            break;
+        qApp->quit();
+        return noErr;
     }
+    else if ( id == kAEGetURL )
+    {
+        OSErr err = noErr;
+        Size actualSize = 0;
+        DescType descType = typeChar;
 
-    AEAddressDesc descList;
+        if ( (err = AESizeOfParam( e, keyDirectObject, &descType, &actualSize)) == noErr )
+        {
+            if ( 0 != actualSize )
+            {
+                // make a buffer (Qt style)
+                QByteArray bUrl;
+                bUrl.resize(actualSize);
 
-    OSErr ret;
-    ret = AEGetParamDesc( e, keyAEPropData, typeAEList, &descList );
-    long count = 0;
-    ret = AECountItems( &descList, &count );
-    if( ret != noErr )
-        count = 0;
+                err = AEGetParamPtr(e,
+                                    keyDirectObject,
+                                    typeChar,
+                                    0,
+                                    bUrl.data(),
+                                    actualSize,
+                                    &actualSize);
 
-    QStringList args;
-    for( int i = 1; i <= count; ++i ) {
-        AEAddressDesc desc;
-        AEGetNthDesc( &descList, i, typeChar, NULL, &desc );
-        if( ret == noErr ) {
-            unsigned int size = AEGetDescDataSize( &desc );
-            char data[size + 1];
-            data[ size ] = 0;
-            ret = AEGetDescData( &desc, data, size );
-            QString dataString( data );
-
-            qDebug() << dataString;
-            args << dataString;
+                qobject_cast<unicorn::Application*>(qApp)->appleEventReceived( QStringList() << bUrl );
+            }
         }
+
+        return noErr;
+    }
+    else
+    {
+        AEAddressDesc descList;
+
+        OSErr ret;
+        ret = AEGetParamDesc( e, keyAEPropData, typeAEList, &descList );
+        long count = 0;
+        ret = AECountItems( &descList, &count );
+        if( ret != noErr )
+            count = 0;
+
+        QStringList args;
+        for( int i = 1; i <= count; ++i ) {
+            AEAddressDesc desc;
+            AEGetNthDesc( &descList, i, typeChar, NULL, &desc );
+            if( ret == noErr ) {
+                unsigned int size = AEGetDescDataSize( &desc );
+                char data[size + 1];
+                data[ size ] = 0;
+                ret = AEGetDescData( &desc, data, size );
+                QString dataString = QString::fromUtf8( data );
+
+                qDebug() << dataString;
+                args << dataString;
+            }
+        }
+
+        qobject_cast<unicorn::Application*>(qApp)->appleEventReceived( args );
+        return noErr;
     }
 
-    qobject_cast<unicorn::Application*>(qApp)->appleEventReceived( args );
     return unimpErr;
-
 }
 #endif
 
@@ -572,3 +593,45 @@ unicorn::Application::isInternetConnectionUp() const
 {
     return m_icm->isUp();
 }
+
+#ifdef Q_OS_MAC
+void
+unicorn::Application::hideDockIcon( bool hideDockIcon )
+{
+    QFile f( QDir( applicationDirPath() ).absoluteFilePath( "../Info.plist" ) );
+
+    if ( f.open( QIODevice::ReadOnly ) )
+    {
+        QTemporaryFile newFile;
+
+        if ( newFile.open() )
+        {
+            while ( !f.atEnd() )
+            {
+                QByteArray line = f.readLine();
+                newFile.write( line );
+
+                if ( line.contains( "<key>LSUIElement</key>" ) && !f.atEnd() )
+                {
+                    // read the next line from the source and throw it away
+                    QString boolLine = f.readLine();
+
+                    // replace <true> or <false> with the correct thing
+                    QRegExp rx("(<true/>|<false/>)");      // match ampersands but not &amp;
+                    boolLine.replace( rx, hideDockIcon ? "<true/>" : "<false/>" );
+
+                    newFile.write( boolLine.toAscii() );
+                }
+            }
+
+            newFile.close();
+        }
+
+        f.close();
+
+        f.remove();
+        newFile.copy( f.fileName() );
+    }
+}
+#endif
+

@@ -15,16 +15,20 @@ public:
     explicit Label( QWidget* parent = 0 );
     explicit Label( const QString& text, QWidget* parent = 0 );
 
+    QString text() const;
     void setText( const QString& text );
     void setLinkColor( QColor linkColor );
 
     static QString anchor( const QString& url, const QString& text );
     static QString boldLinkStyle( const QString& text, QColor linkColor );
 
-    static QString prettyTime( const class QDateTime& timestamp );
+    // Gives you a pretty time string and will call your slot when it's time to change it again
+    static void prettyTime( Label& timestampLabel, const class QDateTime& timestamp, QTimer* callback = 0 );
 
 private:
     void paintEvent( QPaintEvent* event );
+
+    QSize sizeHint() const;
 
     QString boldLinkStyle( const QString& text );
 

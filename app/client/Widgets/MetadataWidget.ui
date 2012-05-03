@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>445</width>
-    <height>690</height>
+    <height>590</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,9 +21,9 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="BackButton" name="back">
+    <widget class="QPushButton" name="back">
      <property name="text">
-      <string>Track and Artist Info</string>
+      <string>Back to Scrobbles</string>
      </property>
     </widget>
    </item>
@@ -41,13 +41,13 @@
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
-     <widget class="StylableWidget" name="scrollAreaWidgetContents">
+     <widget class="QFrame" name="scrollAreaWidgetContents">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
         <width>433</width>
-        <height>666</height>
+        <height>566</height>
        </rect>
       </property>
       <property name="autoFillBackground">
@@ -164,7 +164,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QStackedWidget" name="loadingStack">
+        <widget class="unicorn::StackedWidget" name="loadingStack">
          <property name="currentIndex">
           <number>0</number>
          </property>
@@ -442,6 +442,9 @@
                    <property name="text">
                     <string>Artist</string>
                    </property>
+                   <property name="scaledContents">
+                    <bool>true</bool>
+                   </property>
                   </widget>
                  </item>
                  <item>
@@ -461,6 +464,9 @@
                   <widget class="SimilarArtistWidget" name="artist2">
                    <property name="text">
                     <string>Artist</string>
+                   </property>
+                   <property name="scaledContents">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
@@ -482,6 +488,9 @@
                    <property name="text">
                     <string>Artist</string>
                    </property>
+                   <property name="scaledContents">
+                    <bool>true</bool>
+                   </property>
                   </widget>
                  </item>
                  <item>
@@ -501,6 +510,9 @@
                   <widget class="SimilarArtistWidget" name="artist4">
                    <property name="text">
                     <string>Artist</string>
+                   </property>
+                   <property name="scaledContents">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
@@ -546,7 +558,7 @@
               <string>TextLabel</string>
              </property>
              <property name="alignment">
-              <set>Qt::AlignHCenter|Qt::AlignTop</set>
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
@@ -572,12 +584,6 @@
    <header>lib/unicorn/widgets/Label.h</header>
   </customwidget>
   <customwidget>
-   <class>StylableWidget</class>
-   <extends>QWidget</extends>
-   <header>lib/unicorn/StylableWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>ScrobbleControls</class>
    <extends>QFrame</extends>
    <header>../Widgets/ScrobbleControls.h</header>
@@ -594,11 +600,6 @@
    <header>../Widgets/PlayableItemWidget.h</header>
   </customwidget>
   <customwidget>
-   <class>BackButton</class>
-   <extends>QPushButton</extends>
-   <header>../Widgets/BackButton.h</header>
-  </customwidget>
-  <customwidget>
    <class>ContextLabel</class>
    <extends>QLabel</extends>
    <header>../Widgets/ContextLabel.h</header>
@@ -607,6 +608,12 @@
    <class>SimilarArtistWidget</class>
    <extends>QLabel</extends>
    <header>../Widgets/SimilarArtistWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>unicorn::StackedWidget</class>
+   <extends>QStackedWidget</extends>
+   <header>lib/unicorn/widgets/StackedWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

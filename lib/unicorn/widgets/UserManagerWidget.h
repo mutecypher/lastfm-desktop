@@ -1,10 +1,10 @@
 #ifndef USER_MANAGER_WIDGET_H_
 #define USER_MANAGER_WIDGET_H_
 
-
-
-#include <QWidget>
+#include <QLayout>
 #include <QRadioButton>
+#include <QPointer>
+
 #include "lib/DllExportMacro.h"
 
 namespace lastfm{ class User; }
@@ -23,29 +23,41 @@ class QLabel;
 class QPushButton;
 class QVBoxLayout;
 
-class UNICORN_DLLEXPORT UserRadioButton : public QRadioButton
+class UNICORN_DLLEXPORT UserRadioButton : public QHBoxLayout
 {
 Q_OBJECT
+
+    friend class UserManagerWidget;
 
 public:
     UserRadioButton( const lastfm::User& user );
     const QString user() const;
 
-protected slots:
+    void click();
+    bool isChecked() const;
+
+signals:
+    void clicked();
+    void remove();
+
+private:
+    void setUser( const lastfm::User& user );
+
+private slots:
     void onUserFetched();
-    void onImageLoaded();
-    void removeMe();
+    void onSessionChanged( unicorn::Session* session );
 
-protected:
-    bool eventFilter( QObject* obj, QEvent* event );
-
-protected:
-    QString m_userName;
-    QLabel* m_name;
-    QLabel* m_realName;
-    QLabel* m_loggedIn;
-    QLabel* m_image;
-    QFrame* m_f;
+private:
+    struct
+    {
+        QRadioButton* button;
+        QPushButton* remove;
+        QLabel* username;
+        QLabel* realName;
+        QLabel* loggedIn;
+        class AvatarWidget* image;
+        QFrame* frame;
+    } ui;
 };
 
 
@@ -56,7 +68,7 @@ public:
     UserManagerWidget( QWidget* parent = 0 );
     ~UserManagerWidget();
 
-    QAbstractButton* checkedButton() const;
+    UserRadioButton* checkedButton() const;
 
 signals:
     void rosterUpdated();
@@ -66,6 +78,7 @@ protected slots:
     void onAddUserClicked();
     void onLoginDialogAccepted();
     void onUserAdded();
+    void onUserRemoved();
 
 protected:
     void add( UserRadioButton*, bool = true );
@@ -76,16 +89,13 @@ protected:
         class QPushButton* addUserButton;
     } ui;
 
-private:
-    void setTabOrders();
 
 private slots:
-    void onGotSession( unicorn::Session& s );
+    void onGotSession( unicorn::Session* s );
 
 private:
-    QButtonGroup* m_buttonGroup;
-    unicorn::LoginProcess* m_loginProcess;
-    LoginContinueDialog* m_lcd;
+    QPointer<unicorn::LoginProcess> m_loginProcess;
+    QPointer<LoginContinueDialog> m_lcd;
 };
 
 #endif //USER_MANAGER_WIDGET_H_

@@ -69,7 +69,7 @@ namespace unicorn
         Q_OBJECT
 
     public:
-        MainWindow( QMenuBar* );
+        MainWindow( QMenuBar*, QWidget* parent = 0 );
         ~MainWindow();
 
         /** call this to add the account menu and about menu action, etc. */

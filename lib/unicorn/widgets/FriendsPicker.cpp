@@ -50,7 +50,7 @@ FriendsPicker::FriendsPicker( const User& user )
 void
 FriendsPicker::onGetFriendsReturn()
 {
-    foreach (User u, User::list( (QNetworkReply*)sender() ))
+    foreach (User u, User::list( (QNetworkReply*)sender() ).users())
         ui.list->addItem( u );
 }
 

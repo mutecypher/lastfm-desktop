@@ -21,10 +21,11 @@
 #ifndef ITEM_SELECTOR_WIDGET_H
 #define ITEM_SELECTOR_WIDGET_H
 
-#include "lib/unicorn/StylableWidget.h"
+#include <QFrame>
+
 #include "lib/DllExportMacro.h"
 
-class UNICORN_DLLEXPORT ItemSelectorWidget : public StylableWidget
+class UNICORN_DLLEXPORT ItemSelectorWidget : public QFrame
 {
     Q_OBJECT
 private:

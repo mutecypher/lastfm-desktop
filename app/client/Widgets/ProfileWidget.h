@@ -2,27 +2,33 @@
 #define PROFILEWIDGET_H
 
 #include <QPointer>
-#include <QWidget>
+#include <QFrame>
+
+#include <lastfm/Track.h>
 
 #include "lib/unicorn/UnicornSession.h"
-#include "lib/unicorn/StylableWidget.h"
 
-class ProfileWidget : public StylableWidget
+namespace unicorn { class Label; }
+
+class ProfileWidget : public QFrame
 {
     Q_OBJECT
 private:
     struct
     {
-        class StylableWidget* user;
+        class QFrame* user;
         class AvatarWidget* avatar;
-        class QLabel* name;
+        unicorn::Label* name;
+        class QLabel* infoString;
         class QLabel* scrobbleCount;
         class QLabel* scrobbles;
         class QLabel* lovedCount;
         class QLabel* loved;
 
-        class StylableWidget* topWeeklyArtists;
-        class StylableWidget* topOverallArtists;
+        class ContextLabel* context;
+
+        class QFrame* topWeeklyArtists;
+        class QFrame* topOverallArtists;
     } ui;
 
 public:
@@ -35,10 +41,12 @@ private slots:
     void onGotTopWeeklyArtists();
     void onGotTopOverallArtists();
 
+    void onGotLibraryArtists();
+
     void onGotLovedTracks();
 
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
-    void onScrobbleStatusChanged();
+    void onScrobbleStatusChanged( short scrobbleStatus );
     void setScrobbleCount();
 
 private:

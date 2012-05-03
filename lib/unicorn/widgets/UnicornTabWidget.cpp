@@ -17,13 +17,16 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "UnicornTabWidget.h"
+
 #include <QMouseEvent>
 #include <QPainter>
 #include <QTabBar>
 #include <QHBoxLayout>
+#include <QApplication>
 
-const uint unicorn::TabBar::k_startTearDistance = 30;
+#include "UnicornTabWidget.h"
+
+const int unicorn::TabBar::k_startTearDistance = 30;
 
 unicorn::TabBar::TabBar()
         :m_spacing( 0 ),
@@ -100,8 +103,6 @@ unicorn::TabBar::mouseReleaseEvent( QMouseEvent* )
     m_mouseDownPos = QPoint();
 }
 
-
-#include <QApplication>
 void 
 unicorn::TabBar::mouseMoveEvent( QMouseEvent* e )
 {

@@ -38,7 +38,7 @@ PluginsPage::PluginsPage()
     layout->setSpacing( 20 );
 
     // add the radio buttons
-    m_pluginsLayout = new QVBoxLayout( this );
+    m_pluginsLayout = new QVBoxLayout();
     m_pluginsLayout->setContentsMargins( 0, 0, 0, 0 );
     m_pluginsLayout->setSpacing( 0 );
 
@@ -105,6 +105,8 @@ PluginsPage::initializePage()
         }
     }
 #endif
+
+    m_pluginsLayout->addStretch();
 
     setTitle( tr( "Next step, install the Last.fm plugins to be able to scrobble the music you listen to." ));
 

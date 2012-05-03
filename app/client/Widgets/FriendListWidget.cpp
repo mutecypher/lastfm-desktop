@@ -7,6 +7,7 @@
 #include <QListWidgetItem>
 #include <QMovie>
 #include <QNetworkReply>
+#include <QScrollBar>
 
 #include <lastfm/User.h>
 #include <lastfm/XmlQuery.h>
@@ -53,6 +54,10 @@ FriendListWidget::FriendListWidget(QWidget *parent) :
 {
     ui->setupUi( this );
 
+#ifdef Q_OS_MAC
+    connect( ui->friends->verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(scroll()) );
+#endif
+
     ui->noFriends->setText( tr( "<h3>You haven't made any friends on Last.fm yet.</h3>"
                                 "<p>Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.<p>" ) );
 
@@ -63,8 +68,6 @@ FriendListWidget::FriendListWidget(QWidget *parent) :
 
     ui->friends->setObjectName( "friends" );
     ui->friends->setAttribute( Qt::WA_MacShowFocusRect, false );
-    ui->friends->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
-    //ui->friends->setUniformItemSizes( true );
 
     connect( ui->filter, SIGNAL(textChanged(QString)), SLOT(onTextChanged(QString)));
 
@@ -72,6 +75,7 @@ FriendListWidget::FriendListWidget(QWidget *parent) :
     connect( aApp, SIGNAL(gotUserInfo(lastfm::User)), SLOT(onGotUserInfo(lastfm::User)) );
 
     m_movie = new QMovie( ":/loading_meta.gif", "GIF", this );
+    m_movie->setCacheMode( QMovie::CacheAll );
     ui->spinner->setMovie( m_movie );
 
     ui->stackedWidget->setCurrentWidget( ui->spinnerPage );
@@ -79,6 +83,15 @@ FriendListWidget::FriendListWidget(QWidget *parent) :
 
     onSessionChanged( aApp->currentSession() );
 }
+
+#ifdef Q_OS_MAC
+void
+FriendListWidget::scroll()
+{
+    // KLUDGE: The friend list widgets don't move unless we do this
+    ui->friends->sortItems( Qt::AscendingOrder );
+}
+#endif
 
 void
 FriendListWidget::onSessionChanged( unicorn::Session* session )

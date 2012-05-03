@@ -3,6 +3,7 @@
 #include <QStringList>
 #include <QCoreApplication>
 #include <QProcess>
+#include <QDebug>
 
 #include <windows.h>
 #include <Shellapi.h>

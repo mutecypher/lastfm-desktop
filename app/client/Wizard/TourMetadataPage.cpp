@@ -17,8 +17,8 @@ TourMetadataPage::TourMetadataPage()
 
     layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignTop | Qt::AlignHCenter );
     ui.image->setObjectName( "image" );
-    layout->addWidget( ui.description = new QLabel( tr( "<p>Discover more about the artists you love, including biographies, photos, similar artists and how users tag them, as well as their listening stats</p>"
-                                                          "<p>Check out the artist info for your current track on the <strong>Now Playing</strong> tab, or simply click on any track in your listening history to learn more.</p>"), this ),
+    layout->addWidget( ui.description = new QLabel( tr( "<p>Find out more about the music you're listening to, including biographies, listening stats, photos and similar artists, as well as the tags listeners use to describe them.</p>"
+                                                          "<p>Check out the <strong>Now Playing</strong> tab, or simply click on any track in your <strong>Scrobbles</strong> tab to learn more.</p>"), this ),
                          0,
                          Qt::AlignTop);
     ui.description->setObjectName( "description" );

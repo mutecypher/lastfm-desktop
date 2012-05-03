@@ -27,7 +27,6 @@ StopWatch::StopWatch( uint duration, ScrobblePoint timeout )
     m_timeline = new QTimeLine( duration * 1000, this );
     m_timeline->setFrameRange( 0, duration * 1000 );
     m_timeline->setEasingCurve( QEasingCurve::Linear );
-    m_timeline->setUpdateInterval( 20 );
 
     connect( m_timeline, SIGNAL(finished()), SIGNAL(timeout()) );
     connect( m_timeline, SIGNAL(frameChanged(int)), SIGNAL(frameChanged(int)));
@@ -36,7 +35,7 @@ StopWatch::StopWatch( uint duration, ScrobblePoint timeout )
 
 void StopWatch::onFrameChanged( int frame )
 {
-    if ( !m_scrobbled && frame >= (m_point * 1000) )
+    if ( !m_scrobbled && static_cast<uint>(frame) >= (m_point * 1000) )
     {
         emit scrobble();
         m_scrobbled = true;

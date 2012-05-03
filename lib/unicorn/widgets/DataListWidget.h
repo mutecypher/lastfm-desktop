@@ -21,12 +21,13 @@
 #ifndef DATA_LIST_WIDGET_H_
 #define DATA_LIST_WIDGET_H_
 
+#include <QFrame>
+
 #include "lib/DllExportMacro.h"
-#include "lib/unicorn/StylableWidget.h"
 
 class QUrl;
 
-class UNICORN_DLLEXPORT DataListWidget : public StylableWidget 
+class UNICORN_DLLEXPORT DataListWidget : public QFrame 
 {
     Q_OBJECT
 

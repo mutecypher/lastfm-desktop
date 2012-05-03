@@ -10,7 +10,7 @@
 
 
 @interface Delegate : NSObject <GrowlApplicationBridgeDelegate> {
-    unicorn::Notify* observer;
+    unicorn::Notify* m_observer;
 }
     - (Delegate*) init:(unicorn::Notify*)observer;
     - (void) growlNotificationWasClicked:(id)clickContext;
@@ -19,9 +19,9 @@
 @implementation Delegate
 - (Delegate*) init:(unicorn::Notify*)observer
 {
-    if ( self = [super init] )
+    if ( (self = [super init]) )
     {
-        self->observer = observer;
+        self->m_observer = observer;
     }
 
     return self;
@@ -29,7 +29,8 @@
 
 - (void) growlNotificationWasClicked:(id)clickContext
 {
-    self->observer->growlNotificationWasClicked();
+    Q_UNUSED(clickContext)
+    self->m_observer->growlNotificationWasClicked();
 }
 @end
 
@@ -45,7 +46,7 @@ void
 unicorn::Notify::newTrack( const lastfm::Track& track )
 {
     delete m_trackImageFetcher;
-    m_trackImageFetcher = new TrackImageFetcher( track );
+    m_trackImageFetcher = new TrackImageFetcher( track, Track::LargeImage );
     connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), SLOT(onFinished(QPixmap)) );
     m_trackImageFetcher->startAlbum();
 }

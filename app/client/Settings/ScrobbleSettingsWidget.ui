@@ -59,9 +59,19 @@
     </layout>
    </item>
    <item>
+    <widget class="QCheckBox" name="scrobblingOn">
+     <property name="text">
+      <string>Enable scrobbling</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QCheckBox" name="podcasts">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="text">
       <string>Scrobble podcasts</string>
@@ -72,20 +82,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="audiobooks">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="text">
-      <string>Scrobble audiobooks</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="line">
+    <widget class="QFrame" name="splitter">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -103,6 +100,19 @@
       <string>Allow Last.fm to fingerprint my tracks</string>
      </property>
     </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>0</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

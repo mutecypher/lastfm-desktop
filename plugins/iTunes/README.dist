@@ -1,6 +1,6 @@
 Edit the version in:
 
-iTunesPlugin.h
+main.h
 iScrobbleWin.rc
 itunes_install.iss
 iTunes Scrobbler.plist

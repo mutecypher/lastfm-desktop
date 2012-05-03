@@ -45,13 +45,13 @@
 #define RESULT_LIMIT 10
 
 QuickStartWidget::QuickStartWidget( QWidget* parent )
-    :StylableWidget( parent )
+    :QFrame( parent )
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
-    QHBoxLayout* h = new QHBoxLayout( this );
+    QHBoxLayout* h = new QHBoxLayout();
     h->setContentsMargins( 0, 0, 0, 0 );
     h->setSpacing( 0 );
 
@@ -225,9 +225,12 @@ QuickStartWidget::play()
             RadioService::instance().play( RadioStation( trimmedText ) );
         else if ( ui.edit->text().length() )
         {
-            StationSearch* s = new StationSearch();
-            connect(s, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)));
-            s->startSearch( ui.edit->text() );
+            StationSearch* search = new StationSearch();
+
+            connect( search, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)));
+            connect( search, SIGNAL(error(QString,QString)), aApp, SIGNAL(showMessage(QString,QString)));
+
+            search->startSearch( ui.edit->text() );
         }
 
         ui.edit->clear();
@@ -237,7 +240,10 @@ QuickStartWidget::play()
         if ( RadioService::instance().state() != Playing )
             RadioService::instance().play( RadioStation() );
         else
-            ;
+        {
+            // They are already playing something. Maybe we
+            // should switch to the now playing view
+        }
     }
 }
 

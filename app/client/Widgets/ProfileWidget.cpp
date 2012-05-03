@@ -2,11 +2,15 @@
 #include <QBoxLayout>
 #include <QLabel>
 
+#include <lastfm/Library.h>
+#include <lastfm/XmlQuery.h>
+
+#include "lib/unicorn/widgets/Label.h"
 #include "lib/unicorn/widgets/AvatarWidget.h"
-#include "lib/unicorn/StylableWidget.h"
 
 #include "PlayableItemWidget.h"
 #include "ProfileArtistWidget.h"
+#include "ContextLabel.h"
 
 #include "../Services/ScrobbleService/ScrobbleService.h"
 #include "../Application.h"
@@ -14,7 +18,7 @@
 #include "ProfileWidget.h"
 
 ProfileWidget::ProfileWidget(QWidget *parent)
-    :StylableWidget(parent)
+    :QFrame(parent)
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
@@ -42,12 +46,36 @@ ProfileWidget::onGotUserInfo( const lastfm::User& userDetails )
 
     m_scrobbleCount = userDetails.scrobbleCount();
     ui.avatar->setUser( userDetails );
-    ui.avatar->loadUrl( userDetails.imageUrl( lastfm::Medium, true ), HttpImageWidget::ScaleNone );
+    ui.avatar->loadUrl( userDetails.imageUrl( User::LargeImage, true ), HttpImageWidget::ScaleNone );
     ui.avatar->setHref( userDetails.www() );
+
+    ui.infoString->setText( userDetails.getInfoString() );
+
+    ui.scrobbles->setText( tr( "Scrobbles since %1" ).arg( userDetails.dateRegistered().toString( "d MMMM yyyy" ) ) );
+
+    connect( lastfm::Library::getArtists( userDetails.name(), 1 ), SIGNAL(finished()), SLOT(onGotLibraryArtists()));
 
     setScrobbleCount();
 }
 
+void
+ProfileWidget::onGotLibraryArtists()
+{
+    lastfm::XmlQuery lfm;
+
+    if ( lfm.parse( static_cast<QNetworkReply*>(sender())->readAll() ) )
+    {
+        int scrobblesPerDay = aApp->currentSession()->userInfo().scrobbleCount() / aApp->currentSession()->userInfo().dateRegistered().daysTo( QDateTime::currentDateTime() );
+        int totalArtists = lfm["artists"].attribute( "total" ).toInt();
+
+        ui.context->setText( tr( "You have %L1 artists in you library and on average listen to %L2 tracks per day." ).arg( totalArtists ).arg( scrobblesPerDay ) );
+        ui.context->show();
+    }
+    else
+    {
+        qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
+    }
+}
 
 void
 ProfileWidget::changeUser( const QString& newUsername )
@@ -68,7 +96,7 @@ ProfileWidget::changeUser( const QString& newUsername )
         layout->setContentsMargins( 0, 0, 0, 0 );
         layout->setSpacing( 0 );
 
-        layout->addWidget( ui.user = new StylableWidget( this ) );
+        layout->addWidget( ui.user = new QFrame( this ) );
         ui.user->setObjectName( "user" );
         QHBoxLayout* hl = new QHBoxLayout( ui.user );
         hl->setContentsMargins( 0, 0, 0, 0 );
@@ -76,36 +104,46 @@ ProfileWidget::changeUser( const QString& newUsername )
 
         hl->addWidget( ui.avatar = new AvatarWidget( this ) );
         ui.avatar->setObjectName( "avatar" );
+        ui.avatar->setAlignment( Qt::AlignCenter );
 
         QVBoxLayout* vl = new QVBoxLayout();
         vl->setContentsMargins( 0, 0, 0, 0 );
-        vl->setSpacing( 0 );
+        vl->setSpacing( 3 );
 
         hl->addLayout( vl, 1 );
 
-        vl->addWidget( ui.name = new QLabel( newUsername, this) );
+        vl->addWidget( ui.name = new unicorn::Label( this ) );
         ui.name->setObjectName( "name" );
+        ui.name->setTextFormat( Qt::RichText );
+        ui.name->setText( unicorn::Label::boldLinkStyle( unicorn::Label::anchor( lastfm::User( newUsername ).www().toString(), newUsername ), Qt::black ) );
+        ui.name->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-        QGridLayout* grid = new QGridLayout;
+        vl->addWidget( ui.infoString = new QLabel( "", this) );
+        ui.infoString->setObjectName( "infoString" );
 
-        vl->addLayout( grid );
+        vl->addStretch( 3 );
 
-        grid->addWidget( ui.scrobbleCount = new QLabel( "0" ), 0, 0 );
+        vl->addWidget( ui.scrobbleCount = new QLabel( "0" ) );
         ui.scrobbleCount->setObjectName( "scrobbleCount" );
 
-        grid->addWidget( ui.scrobbles = new QLabel( tr( "Scrobbles" ) ), 1, 0 );
-        ui.scrobbleCount->setObjectName( "scrobbles" );
+        vl->addWidget( ui.scrobbles = new QLabel( tr( "Scrobbles" ) ) );
+        ui.scrobbles->setObjectName( "scrobbles" );
 
-        QFrame* splitter = new QFrame;
-        splitter->setObjectName( "splitter" );
-        splitter->setFrameStyle( QFrame::VLine );
-        grid->addWidget( splitter, 0, 1, 2, 1, Qt::AlignLeft );
+        vl->addStretch( 1 );
 
-        grid->addWidget( ui.lovedCount = new QLabel( "0" ), 0, 2 );
+        vl->addWidget( ui.lovedCount = new QLabel( "0" ) );
         ui.lovedCount->setObjectName( "lovedCount" );
 
-        grid->addWidget( ui.loved = new QLabel( tr( "Loved tracks" ) ), 1, 2 );
+        vl->addWidget( ui.loved = new QLabel( tr( "Loved tracks" ) ) );
         ui.loved->setObjectName( "loved" );
+
+        vl->addSpacing( 12 );
+
+        layout->addWidget( ui.context = new ContextLabel( this ) );
+        ui.context->setObjectName( "userBlurb" );
+        ui.context->setTextFormat( Qt::RichText );
+        ui.context->setWordWrap( true );
+        ui.context->hide();
 
         {
             QFrame* splitter = new QFrame( this );
@@ -115,7 +153,7 @@ ProfileWidget::changeUser( const QString& newUsername )
             QLabel* title = new QLabel( tr("Top Artists This Week"), this ) ;
             layout->addWidget( title );
             title->setObjectName( "title" );
-            layout->addWidget( ui.topWeeklyArtists = new StylableWidget( this ) );
+            layout->addWidget( ui.topWeeklyArtists = new QFrame( this ) );
             ui.topWeeklyArtists->setObjectName( "section" );
         }
 
@@ -127,7 +165,7 @@ ProfileWidget::changeUser( const QString& newUsername )
             QLabel* title = new QLabel( tr("Top Artists Overall"), this ) ;
             layout->addWidget( title );
             title->setObjectName( "title" );
-            layout->addWidget( ui.topOverallArtists = new StylableWidget( this ) );
+            layout->addWidget( ui.topOverallArtists = new QFrame( this ) );
             ui.topOverallArtists->setObjectName( "section" );
         }
 
@@ -207,13 +245,13 @@ void
 ProfileWidget::onScrobblesCached( const QList<lastfm::Track>& tracks )
 {
     foreach ( lastfm::Track track, tracks )
-        connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged()), SLOT(onScrobbleStatusChanged()));
+        connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged( short )), SLOT(onScrobbleStatusChanged( short )));
 }
 
 void
-ProfileWidget::onScrobbleStatusChanged()
+ProfileWidget::onScrobbleStatusChanged( short scrobbleStatus )
 {
-    if (static_cast<lastfm::TrackData*>(sender())->scrobbleStatus == lastfm::Track::Submitted)
+    if (scrobbleStatus == lastfm::Track::Submitted)
     {
         ++m_scrobbleCount;
         setScrobbleCount();

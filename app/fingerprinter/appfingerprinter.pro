@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = 'Last.fm Fingerprinter'
-linux*:TARGET = last.fingerprinter
+unix:!mac:TARGET = last.fingerprinter
 QT = core gui network xml sql
 CONFIG += unicorn fingerprint taglib mad
 VERSION = 1.1.0

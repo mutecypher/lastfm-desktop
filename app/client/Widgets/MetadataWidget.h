@@ -27,7 +27,6 @@
 #include <lastfm/Album.h>
 #include <lastfm/Track.h>
 
-#include "lib/unicorn/StylableWidget.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 
 namespace Ui { class MetadataWidget; }
@@ -40,12 +39,14 @@ class BioWidget;
 class QMovie;
 
 
-class MetadataWidget : public StylableWidget
+class MetadataWidget : public QFrame
 {
     Q_OBJECT
 public:
     MetadataWidget( const Track& track, QWidget* p = 0 );
     ~MetadataWidget();
+
+    void fetchTrackInfo();
 
     class ScrobbleControls* scrobbleControls() const;
 
@@ -66,22 +67,25 @@ private slots:
     void onArtistGotYourTags();
 
     void onTrackCorrected( QString correction );
-    void listItemClicked( const QModelIndex& );
+    void listItemClicked( const class QModelIndex& );
 
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
-    void onScrobbleStatusChanged();
+    void onScrobbleStatusChanged( short scrobbleStatus );
 
     void checkFinished();
 
 signals:
     void lovedStateChanged(bool loved);
     void backClicked();
+    void finished();
 
 private:
     void setTrackDetails( const Track& track );
 
     QString contextString( const Track& track );
     QString scrobbleString( const Track& track );
+
+    void showEvent( QShowEvent *e );
 
 private:
     Ui::MetadataWidget *ui;
@@ -97,6 +101,7 @@ private:
     Album m_albumGuess;
 
     int m_numCalls;
+    bool m_fetchedTrackInfo;
 
     QPointer<QMovie> m_movie;
 };
