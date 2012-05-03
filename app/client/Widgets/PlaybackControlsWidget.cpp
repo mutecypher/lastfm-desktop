@@ -311,7 +311,7 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
             ui->icon->setPixmap( QPixmap( ":/control_bar_scrobble_wmp.png" ) );
         else if (id == "spt")
             ui->icon->setPixmap( QPixmap( ":/control_bar_scrobble_spotify.png" ) );
-        else if (id == "ass")
+        else
             ui->icon->setPixmap( QPixmap( ":/control_bar_radio_as.png" ) );
     }
 }
