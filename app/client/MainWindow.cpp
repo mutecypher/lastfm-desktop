@@ -40,7 +40,7 @@
 #include "../Widgets/FriendListWidget.h"
 #include "../Widgets/ScrobbleControls.h"
 #include "../Widgets/NowPlayingStackedWidget.h"
-#include "../Widgets/RecentTracksWidget.h"
+#include "../Widgets/ScrobblesWidget.h"
 #include "../Widgets/SideBar.h"
 #include "../Widgets/StatusBar.h"
 #include "../Widgets/TitleBar.h"
@@ -107,10 +107,10 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     ui.stackedWidget->addWidget( ui.nowPlaying = new NowPlayingStackedWidget(this) );
     ui.nowPlaying->setObjectName( "nowPlaying" );
 
-    ui.stackedWidget->addWidget( ui.recentTracks = new RecentTracksWidget( this ) );
-    ui.recentTracks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
+    ui.stackedWidget->addWidget( ui.scrobbles = new ScrobblesWidget( this ) );
+    ui.scrobbles->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
 
-    connect( ui.stackedWidget, SIGNAL(currentChanged(int)), ui.recentTracks, SLOT(onCurrentChanged(int)) );
+    connect( ui.stackedWidget, SIGNAL(currentChanged(int)), ui.scrobbles, SLOT(onCurrentChanged(int)) );
 
     ui.stackedWidget->addWidget( ui.profileScrollArea = new QScrollArea( this ) );
     ui.profileScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
@@ -254,7 +254,7 @@ MainWindow::setupMenuBar()
 
     /// Scrobbles
     QMenu* scrobblesMenu = appMenuBar()->addMenu( tr("Scrobbles") );
-    scrobblesMenu->addAction( tr( "Refresh" ), ui.recentTracks, SLOT(refresh()), Qt::CTRL + Qt::SHIFT + Qt::Key_R );
+    scrobblesMenu->addAction( tr( "Refresh" ), ui.scrobbles, SLOT(refresh()), Qt::CTRL + Qt::SHIFT + Qt::Key_R );
 
     /// Controls
     QMenu* controlsMenu = appMenuBar()->addMenu( tr("Controls") );

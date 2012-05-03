@@ -3,6 +3,7 @@
 #include <QScrollBar>
 
 #include <lastfm/Track.h>
+#include <lastfm/UrlBuilder.h>
 
 #include "lib/unicorn/dialogs/ShareDialog.h"
 #include "lib/unicorn/dialogs/TagDialog.h"
@@ -11,15 +12,16 @@
 #include "../Services/ScrobbleService.h"
 #include "../Application.h"
 
+#include "RefreshButton.h"
 #include "TrackWidget.h"
-#include "ActivityListWidget.h"
+#include "ScrobblesListWidget.h"
 
 #define kScrobbleLimit 30
 
-class ActivityListWidgetItem : public QListWidgetItem
+class ScrobblesListWidgetItem : public QListWidgetItem
 {
 public:
-    ActivityListWidgetItem( QListWidget* parent );
+    ScrobblesListWidgetItem( QListWidget* parent );
     bool operator<( const QListWidgetItem& that ) const;
 
     bool isNowPlaying() const;
@@ -31,43 +33,63 @@ private:
     bool m_nowPlaying;
 };
 
-ActivityListWidgetItem::ActivityListWidgetItem( QListWidget* parent )
+ScrobblesListWidgetItem::ScrobblesListWidgetItem( QListWidget* parent )
     :QListWidgetItem( parent ), m_nowPlaying( false )
 {
 }
 
 bool
-ActivityListWidgetItem::isNowPlaying() const
+ScrobblesListWidgetItem::isNowPlaying() const
 {
     return m_nowPlaying;
 }
 
 void
-ActivityListWidgetItem::setNowPlaying( bool nowPlaying )
+ScrobblesListWidgetItem::setNowPlaying( bool nowPlaying )
 {
     m_nowPlaying = nowPlaying;
     static_cast<TrackWidget*>( listWidget()->itemWidget( this ) )->setNowPlaying( true );
 }
 
 void
-ActivityListWidgetItem::setTrack( lastfm::Track& track )
+ScrobblesListWidgetItem::setTrack( lastfm::Track& track )
 {
     static_cast<TrackWidget*>( listWidget()->itemWidget( this ) )->setTrack( track );
 }
 
 bool
-ActivityListWidgetItem::operator<( const QListWidgetItem& that ) const
+ScrobblesListWidgetItem::operator<( const QListWidgetItem& that ) const
 {
+    if ( !qobject_cast<TrackWidget*>(listWidget()->itemWidget( const_cast<ScrobblesListWidgetItem*>(this) )) )
+    {
+        // this isn't a track widget
+
+        if ( qobject_cast<RefreshButton*>(listWidget()->itemWidget( const_cast<ScrobblesListWidgetItem*>(this) )) )
+            return true; // this is a refresh button
+        else
+            return false; // more button goes at the bottom
+    }
+
+    if ( qobject_cast<RefreshButton*>(listWidget()->itemWidget( const_cast<QListWidgetItem*>(&that) )) )
+        return false; // that is a refresh button so this is not less than. refresh button goes at the top
+
+    if ( !qobject_cast<TrackWidget*>(listWidget()->itemWidget( const_cast<QListWidgetItem*>(&that) )) )
+        return true; // that is the more push button. everything else is less than it
+
+    // at this point both this and that are of type TrackWidget
+
+    // check if it's the now playing track
     if ( m_nowPlaying )
-        return true;
-    else if ( static_cast<const ActivityListWidgetItem*>(&that)->m_nowPlaying )
+        return true; // now playing goes at the top of the tracks
+    else if ( static_cast<const ScrobblesListWidgetItem*>(&that)->m_nowPlaying )
         return false;
 
-    return static_cast<TrackWidget*>( listWidget()->itemWidget( const_cast<ActivityListWidgetItem*>( this ) ) )->track().timestamp().toTime_t()
+    // now order by timestamp
+    return static_cast<TrackWidget*>( listWidget()->itemWidget( const_cast<ScrobblesListWidgetItem*>( this ) ) )->track().timestamp().toTime_t()
             > static_cast<TrackWidget*>( listWidget()->itemWidget( const_cast<QListWidgetItem*>( &that ) ) )->track().timestamp().toTime_t();
 }
 
-ActivityListWidget::ActivityListWidget( QWidget* parent )
+ScrobblesListWidget::ScrobblesListWidget( QWidget* parent )
     :QListWidget( parent ), m_trackItem( 0 )
 {
     setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
@@ -99,7 +121,7 @@ ActivityListWidget::ActivityListWidget( QWidget* parent )
 
 #ifdef Q_OS_MAC
 void
-ActivityListWidget::scroll()
+ScrobblesListWidget::scroll()
 {
     // KLUDGE: The friend list widgets don't move unless we do this
     sortItems( Qt::AscendingOrder );
@@ -107,18 +129,23 @@ ActivityListWidget::scroll()
 #endif
 
 void
-ActivityListWidget::showEvent(QShowEvent *)
+ScrobblesListWidget::showEvent(QShowEvent *)
 {
     QList<lastfm::Track> tracks;
 
     for ( int i = 0 ; i < count() ; ++i )
-        tracks << static_cast<TrackWidget*>( itemWidget( item( i ) ) )->track();
+    {
+        TrackWidget* trackWidget = qobject_cast<TrackWidget*>( itemWidget( item( i ) ) );
+
+        if ( trackWidget )
+            tracks << trackWidget->track();
+    }
 
     fetchTrackInfo( tracks );
 }
 
 void
-ActivityListWidget::fetchTrackInfo( const QList<lastfm::Track>& tracks )
+ScrobblesListWidget::fetchTrackInfo( const QList<lastfm::Track>& tracks )
 {
     if ( isVisible() )
     {
@@ -130,31 +157,37 @@ ActivityListWidget::fetchTrackInfo( const QList<lastfm::Track>& tracks )
 }
 
 void
-ActivityListWidget::mousePressEvent( QMouseEvent* event )
+ScrobblesListWidget::mousePressEvent( QMouseEvent* event )
 {
     event->setAccepted( false );
 }
 
 void
-ActivityListWidget::mouseReleaseEvent( QMouseEvent* event )
+ScrobblesListWidget::mouseReleaseEvent( QMouseEvent* event )
 {
     event->setAccepted( false );
 }
 
 void 
-ActivityListWidget::onItemClicked( TrackWidget& trackWidget )
+ScrobblesListWidget::onItemClicked( TrackWidget& trackWidget )
 {
     emit trackClicked( trackWidget );
 }
 
 void
-ActivityListWidget::onSessionChanged( unicorn::Session* session )
+ScrobblesListWidget::onMoreClicked()
+{
+    unicorn::DesktopServices::openUrl( lastfm::UrlBuilder( "user" ).slash( User().name() ).slash( "tracks" ).url() );
+}
+
+void
+ScrobblesListWidget::onSessionChanged( unicorn::Session* session )
 {
     onSessionChanged( session->userInfo().name() );
 }
 
 void
-ActivityListWidget::onSessionChanged( const QString& username )
+ScrobblesListWidget::onSessionChanged( const QString& username )
 {
     if ( !username.isEmpty() )
     {
@@ -172,14 +205,14 @@ ActivityListWidget::onSessionChanged( const QString& username )
 
 
 void
-ActivityListWidget::read()
+ScrobblesListWidget::read()
 {
     qDebug() << m_path;
 
     clear();
 
     // always have a now playing item in the list
-    m_trackItem = new ActivityListWidgetItem( this );
+    m_trackItem = new ScrobblesListWidgetItem( this );
     TrackWidget* trackWidget = new TrackWidget( m_track, this );
     trackWidget->setObjectName( "nowPlaying" );
     setItemWidget( m_trackItem, trackWidget );
@@ -188,6 +221,26 @@ ActivityListWidget::read()
     m_trackItem->setNowPlaying( true );
 
     connect( trackWidget, SIGNAL(clicked(TrackWidget&)), SLOT(onItemClicked(TrackWidget&)) );
+
+    // always have the refresh button in the list
+    m_refreshItem = new ScrobblesListWidgetItem( this );
+    RefreshButton* refreshButton = new RefreshButton( this );
+    refreshButton->setObjectName( "refresh" );
+    setItemWidget( m_refreshItem, refreshButton );
+    m_refreshItem->setSizeHint( refreshButton->sizeHint() );
+
+    connect( refreshButton, SIGNAL(clicked()), SLOT(refresh()) );
+
+    onRefreshing( false );
+
+    // always have a view more item in the list
+    m_moreItem = new ScrobblesListWidgetItem( this );
+    QPushButton* moreButton = new QPushButton( tr( "More Scrobbles at Last.fm" ), this );
+    moreButton->setObjectName( "more" );
+    setItemWidget( m_moreItem, moreButton );
+    m_moreItem->setSizeHint( moreButton->sizeHint() );
+
+    connect( moreButton, SIGNAL(clicked()), SLOT(onMoreClicked()) );
 
     QFile file( m_path );
     file.open( QFile::Text | QFile::ReadOnly );
@@ -209,7 +262,7 @@ ActivityListWidget::read()
 }
 
 void
-ActivityListWidget::write()
+ScrobblesListWidget::write()
 {
     if ( !m_writeTimer )
     {
@@ -222,7 +275,7 @@ ActivityListWidget::write()
 }
 
 void
-ActivityListWidget::doWrite()
+ScrobblesListWidget::doWrite()
 {
     qDebug() << "Writing recent_tracks";
 
@@ -237,7 +290,9 @@ ActivityListWidget::doWrite()
 
         for ( int i = 0 ; i < count() ; ++i )
         {
-            if ( !static_cast<ActivityListWidgetItem*>( item( i ) )->isNowPlaying() )
+            TrackWidget* trackWidget = qobject_cast<TrackWidget*>( itemWidget( item( i ) ) );
+
+            if ( trackWidget && !static_cast<ScrobblesListWidgetItem*>( item( i ) )->isNowPlaying() )
                 e.appendChild( static_cast<TrackWidget*>( itemWidget( item( i ) ) )->track().toDomElement( xml ) );
         }
 
@@ -254,7 +309,7 @@ ActivityListWidget::doWrite()
 }
 
 void
-ActivityListWidget::onTrackStarted( const Track& track, const Track& )
+ScrobblesListWidget::onTrackStarted( const Track& track, const Track& )
 {
     // Don't display Spotify here as we don't know if the current user is the one scrobbling
     // If it is the current user it will be fetch by user.getRecentTracks
@@ -275,7 +330,7 @@ ActivityListWidget::onTrackStarted( const Track& track, const Track& )
 }
 
 void
-ActivityListWidget::onResumed()
+ScrobblesListWidget::onResumed()
 {
     m_trackItem->setHidden( false );
 
@@ -283,7 +338,7 @@ ActivityListWidget::onResumed()
 }
 
 void
-ActivityListWidget::onPaused()
+ScrobblesListWidget::onPaused()
 {
     m_trackItem->setHidden( true );
 
@@ -291,7 +346,7 @@ ActivityListWidget::onPaused()
 }
 
 void
-ActivityListWidget::onStopped()
+ScrobblesListWidget::onStopped()
 {
     m_trackItem->setHidden( true );
 
@@ -299,15 +354,16 @@ ActivityListWidget::onStopped()
 }
 
 void
-ActivityListWidget::hideScrobbledNowPlaying()
+ScrobblesListWidget::hideScrobbledNowPlaying()
 {
     for ( int i = 0 ; i < count() ; ++i )
     {
         if ( item( i ) != m_trackItem )
         {
-            TrackWidget* trackWidget = static_cast<TrackWidget*>( itemWidget( item( i ) ) );
+            TrackWidget* trackWidget = qobject_cast<TrackWidget*>( itemWidget( item( i ) ) );
 
-            item( i )->setHidden( !m_trackItem->isHidden()
+            item( i )->setHidden( trackWidget
+                                    && !m_trackItem->isHidden()
                                     && ( trackWidget->track().timestamp().toTime_t() == m_track.timestamp().toTime_t()
                                     || trackWidget->track().timestamp().toTime_t() == ScrobbleService::instance().currentTrack().timestamp().toTime_t() ) );
         }
@@ -315,18 +371,28 @@ ActivityListWidget::hideScrobbledNowPlaying()
 }
 
 void
-ActivityListWidget::refresh()
+ScrobblesListWidget::refresh()
 {
     if ( !m_recentTrackReply )
     {
         m_recentTrackReply = User().getRecentTracks( kScrobbleLimit, 1 );
         connect( m_recentTrackReply, SIGNAL(finished()), SLOT(onGotRecentTracks()) );
-        emit refreshing( true );
+        onRefreshing( true );
     }
 }
 
+
 void
-ActivityListWidget::onGotRecentTracks()
+ScrobblesListWidget::onRefreshing( bool refreshing )
+{
+    RefreshButton* refreshButton = qobject_cast<RefreshButton*>( itemWidget( m_refreshItem ) );
+
+    refreshButton->setText( refreshing ? tr( "Refreshing..." ) : tr( "Refresh Scrobbles" ) );
+    refreshButton->setEnabled( !refreshing );
+}
+
+void
+ScrobblesListWidget::onGotRecentTracks()
 {
     XmlQuery lfm;
 
@@ -410,7 +476,7 @@ ActivityListWidget::onGotRecentTracks()
         write();
     }
 
-    emit refreshing( false );
+    onRefreshing( false );
 
     m_recentTrackReply->deleteLater();
 
@@ -419,7 +485,7 @@ ActivityListWidget::onGotRecentTracks()
 
 
 void
-ActivityListWidget::onScrobblesSubmitted( const QList<lastfm::Track>& tracks )
+ScrobblesListWidget::onScrobblesSubmitted( const QList<lastfm::Track>& tracks )
 {
     // We need to find out if info has already been fetched for this track or not.
     // If the now playing view wasn't visible it won't have been.
@@ -431,7 +497,7 @@ ActivityListWidget::onScrobblesSubmitted( const QList<lastfm::Track>& tracks )
 }
 
 void
-ActivityListWidget::onTrackWidgetRemoved()
+ScrobblesListWidget::onTrackWidgetRemoved()
 {
     for ( int i = 0 ; i < count() ; ++i )
     {
@@ -445,7 +511,7 @@ ActivityListWidget::onTrackWidgetRemoved()
 }
 
 QList<lastfm::Track>
-ActivityListWidget::addTracks( const QList<lastfm::Track>& tracks )
+ScrobblesListWidget::addTracks( const QList<lastfm::Track>& tracks )
 {
     QList<lastfm::Track> addedTracks;
 
@@ -453,11 +519,13 @@ ActivityListWidget::addTracks( const QList<lastfm::Track>& tracks )
     {
         int pos = -1;
 
-        // start from 1 because 0 is the now playing track
         for ( int j = 0 ; j < count() ; ++j )
         {
-            if ( !static_cast<ActivityListWidgetItem*>( item( j ) )->isNowPlaying()
-                    && tracks[i].timestamp().toTime_t() == static_cast<TrackWidget*>( itemWidget( item( j ) ) )->track().timestamp().toTime_t() )
+            TrackWidget* trackWidget = qobject_cast<TrackWidget*>( itemWidget( item( j ) ) );
+
+            if ( trackWidget
+                    && !static_cast<ScrobblesListWidgetItem*>( item( j ) )->isNowPlaying()
+                    && tracks[i].timestamp().toTime_t() == trackWidget->track().timestamp().toTime_t() )
             {
                 pos = j;
                 break;
@@ -467,7 +535,7 @@ ActivityListWidget::addTracks( const QList<lastfm::Track>& tracks )
         if ( pos == -1 )
         {
             // the track was not in the list
-            ActivityListWidgetItem* item = new ActivityListWidgetItem( this );
+            ScrobblesListWidgetItem* item = new ScrobblesListWidgetItem( this );
             Track track = tracks[i];
             TrackWidget* trackWidget = new TrackWidget( track, this );
             setItemWidget( item, trackWidget );
@@ -496,7 +564,7 @@ ActivityListWidget::addTracks( const QList<lastfm::Track>& tracks )
 
 
 void
-ActivityListWidget::limit( int limit )
+ScrobblesListWidget::limit( int limit )
 {
     sortItems();
 
@@ -504,7 +572,7 @@ ActivityListWidget::limit( int limit )
     {
         while ( count() > limit )
         {
-            QListWidgetItem* item = takeItem( count() - 1 );
+            QListWidgetItem* item = takeItem( count() - 2 );
             itemWidget( item )->deleteLater();
             delete item;
         }

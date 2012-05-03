@@ -58,8 +58,6 @@ SOURCES += \
     Bootstrapper/iTunesBootstrapper.cpp \
     Bootstrapper/AbstractFileBootstrapper.cpp \
     Bootstrapper/AbstractBootstrapper.cpp \
-    Widgets/ActivityListWidget.cpp \
-    Widgets/RecentTracksWidget.cpp \
     Widgets/TitleBar.cpp \
     Widgets/TagFilterDialog.cpp \
     Widgets/StatusBar.cpp \
@@ -82,7 +80,6 @@ SOURCES += \
     Widgets/PlaybackControlsWidget.cpp \
     Widgets/PlayableItemWidget.cpp \
     Widgets/NowPlayingWidget.cpp \
-    Widgets/ScrobblesWidget.cpp \
     Widgets/RefreshButton.cpp \
     Widgets/WidgetTextObject.cpp \
     Wizard/LoginPage.cpp \
@@ -104,7 +101,9 @@ SOURCES += \
     Dialogs/BetaDialog.cpp \
     Dialogs/CloseAppsDialog.cpp \
     Widgets/TrackWidget.cpp \
-    Dialogs/LicensesDialog.cpp
+    Dialogs/LicensesDialog.cpp \
+    Widgets/ScrobblesWidget.cpp \
+    Widgets/ScrobblesListWidget.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -149,8 +148,6 @@ HEADERS += \
     Widgets/PlaybackControlsWidget.h \
     Widgets/PlayableItemWidget.h \
     Widgets/NowPlayingWidget.h \
-    Widgets/ActivityListWidget.h \
-    Widgets/RecentTracksWidget.h \
     Widgets/RadioWidget.h \
     Widgets/NothingPlayingWidget.h \
     Widgets/NowPlayingStackedWidget.h \
@@ -161,7 +158,6 @@ HEADERS += \
     Widgets/MetadataWidget.h \
     Widgets/TagWidget.h \
     Widgets/ProfileArtistWidget.h \
-    Widgets/ScrobblesWidget.h \
     Widgets/RefreshButton.h \
     Widgets/WidgetTextObject.h \
     Wizard/AccessPage.h \
@@ -183,7 +179,9 @@ HEADERS += \
     Dialogs/BetaDialog.h \
     Dialogs/CloseAppsDialog.h \
     Widgets/TrackWidget.h \
-    Dialogs/LicensesDialog.h
+    Dialogs/LicensesDialog.h \
+    Widgets/ScrobblesListWidget.h \
+    Widgets/ScrobblesWidget.h
 
 
 win32:HEADERS += Plugins/FooBar08PluginInfo.h \

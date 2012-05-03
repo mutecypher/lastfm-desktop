@@ -506,11 +506,12 @@ max-height: 49px;
 qproperty-style: ThreePart;
 }
 
-ActivityListWidget {
+ScrobblesListWidget {
 border: none;
 }
 
-RefreshButton {
+RefreshButton,
+QPushButton#more {
 background-position: center left;
 background-repeat: none;
 padding: 0px 10%;
@@ -522,12 +523,13 @@ min-height: 38px;
 max-height: 38px;
 }
 
-RefreshButton:hover {
+RefreshButton:hover,
+QPushButton#more:hover {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #fcfcfc, stop:1 #e5e5e5);
 }
 
 RefreshButton:pressed,
-RefreshButton:disabled {
+QPushButton#more:pressed {
 background-color: #d6d6d6;
 }
 

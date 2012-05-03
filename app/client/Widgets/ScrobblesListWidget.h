@@ -1,5 +1,5 @@
-#ifndef ACTIVITY_LIST_WIDGET_H
-#define ACTIVITY_LIST_WIDGET_H
+#ifndef SCROBBLES_LIST_WIDGET_H
+#define SCROBBLES_LIST_WIDGET_H
 
 #include <QListWidget>
 #include <QMouseEvent>
@@ -15,21 +15,21 @@ namespace unicorn { class Session; }
 
 class QNetworkReply;
 
-class ActivityListWidget : public QListWidget
+class ScrobblesListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-    ActivityListWidget( QWidget* parent = 0 );
+    ScrobblesListWidget( QWidget* parent = 0 );
 
 signals:
     void trackClicked( class TrackWidget& );
-    void refreshing( bool refreshing );
 
 public slots:
     void refresh();
 
 private slots: 
     void onItemClicked( class TrackWidget& index );
+    void onMoreClicked();
 
     void onTrackStarted( const Track& track, const Track& );
 
@@ -70,20 +70,18 @@ private:
     void mousePressEvent( QMouseEvent* event );
     void mouseReleaseEvent( QMouseEvent* event );
 
+    void onRefreshing( bool refreshing );
+
 private:
-    class ActivityListModel* m_model;
-
     QString m_path;
-
-    QModelIndex m_shareIndex;
-
-    QPoint m_buyCursor;
 
     QPointer<QTimer> m_writeTimer;
     QPointer<QNetworkReply> m_recentTrackReply;
 
-    class ActivityListWidgetItem* m_trackItem;
     lastfm::Track m_track;
+    class ScrobblesListWidgetItem* m_refreshItem;
+    class ScrobblesListWidgetItem* m_trackItem;
+    class ScrobblesListWidgetItem* m_moreItem;
 };
 
 
