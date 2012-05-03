@@ -166,9 +166,6 @@ RadioService::skip()
 {
     if (!m_mediaObject)
         return;
-
-    if (m_track.extra( "rating" ).isEmpty())
-        MutableTrack( m_track ).setExtra( "rating", "S" );
     
     // attempt to refill the phonon queue if it's empty
     if (m_mediaObject->queue().isEmpty())
@@ -176,11 +173,10 @@ RadioService::skip()
     
     QList<Phonon::MediaSource> q = m_mediaObject->queue();
 
-    if (q.size())
+    if ( q.size() )
     {
-        Phonon::MediaSource source = q.takeFirst();
-        m_mediaObject->setQueue( q );
-        m_mediaObject->setCurrentSource( source );
+        m_mediaObject->setCurrentSource( q[0] );
+
         //if the error returns a 403 permission denied error, the mediaObject is uninitialised
         if( m_mediaObject )
             m_mediaObject->play();
@@ -309,6 +305,9 @@ RadioService::onPhononStateChanged( Phonon::State newstate, Phonon::State oldsta
             }
             else
             {
+                qWarning() << "Phonon normal error:" << m_mediaObject->errorString();
+                emit error( lastfm::ws::UnknownError, QVariant( m_mediaObject->errorString() ));
+
                 // seems we need to clear the error state before trying to play again.
                 m_bErrorRecover = true;
                 m_mediaObject->stop();
@@ -380,25 +379,17 @@ RadioService::phononEnqueue()
         m_track = t;
         Phonon::MediaSource ms( t.url() );
 
-        // if we are playing a track now, enqueue, otherwise start now!
-        if (m_mediaObject->currentSource().url().isValid())
+        qDebug() << "enqueuing " << t;
+        try
         {
-            qDebug() << "enqueuing " << t;
             m_mediaObject->enqueue( ms );
+            m_mediaObject->play();
         }
-        else
+        catch (...)
         {
-            qDebug() << "starting " << t;
-            try
-            {
-                m_mediaObject->setCurrentSource( ms );
-                m_mediaObject->play();
-            }
-            catch (...)
-            {
-                continue;
-            }
+            continue;
         }
+
         break;
     }
 }
@@ -528,6 +519,11 @@ RadioService::initRadio()
             audioOutput->setVolume( 1 );
             m_prevVolume = 1; //give it a initial value just in case
         }
+    }
+    else
+    {
+        audioOutput->setVolume( 1 );
+        m_prevVolume = 1; //give it a initial value just in case
     }
 
     audioOutput->setMuted(unicorn::AppSettings().value("Muted", false).toBool());
