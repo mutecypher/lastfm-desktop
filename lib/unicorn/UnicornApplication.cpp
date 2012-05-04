@@ -66,6 +66,7 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
                       m_wizardRunning( true ),
                       m_icm( 0 )
 {
+    m_delegate = new UnicornApplicationDelegate( this );
 }
 
 void

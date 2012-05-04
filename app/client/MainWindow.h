@@ -108,7 +108,6 @@ private:
     void setCurrentWidget( QWidget* );
     void addWinThumbBarButtons( QList<QAction*>& );
     void setupMenuBar();
-    bool macEvent(EventHandlerCallRef, EventRef);
 
     void showEvent(QShowEvent *);
     void hideEvent(QHideEvent *);

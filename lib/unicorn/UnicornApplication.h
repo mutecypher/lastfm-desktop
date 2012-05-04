@@ -22,6 +22,7 @@
 
 #include "qtsingleapplication/qtsingleapplication.h"
 
+#include "UnicornApplicationDelegate.h"
 #include "common/HideStupidWarnings.h"
 #include "lib/DllExportMacro.h"
 #include "UnicornSession.h"
@@ -29,6 +30,7 @@
 #include "PlayBus.h"
 #include <QDebug>
 #include <QMainWindow>
+#include <QPointer>
 
 #ifdef Q_OS_MAC64
 #include <Carbon/Carbon.h>
@@ -50,7 +52,6 @@ namespace lastfm{
 }
 
 class LoginContinueDialog;
-
 class QNetworkReply;
 
 namespace unicorn
@@ -174,6 +175,7 @@ namespace unicorn
 
 #ifdef Q_OS_MAC
         void hideDockIcon( bool hideDockIcon );
+        UnicornApplicationDelegate* delegate() const { return m_delegate; }
 #endif
 
     public slots:
@@ -197,6 +199,7 @@ namespace unicorn
         QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
         QString m_cssDir;
         QString m_cssFileName;
+        QPointer<UnicornApplicationDelegate> m_delegate;
 
 #ifdef __APPLE__
         void setOpenApplicationEventHandler();

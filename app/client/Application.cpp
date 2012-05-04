@@ -47,6 +47,7 @@
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "lib/unicorn/DesktopServices.h"
 #ifdef Q_OS_MAC
+#include "MediaKeys/MediaKey.h"
 #include "lib/unicorn/notify/Notify.h"
 #include "CommandReciever/CommandReciever.h"
 #endif
@@ -84,6 +85,7 @@ using audioscrobbler::Application;
 Application::Application(int& argc, char** argv) 
     :unicorn::Application(argc, argv), m_raiseHotKeyId( (void*)-1 )
 {
+    m_mediaKey = new MediaKey( this );
 }
 
 void
@@ -419,6 +421,15 @@ Application::onTrackStarted( const Track& track, const Track& oldTrack )
     // make sure that if the love state changes we update all the buttons
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SIGNAL(lovedStateChanged(bool)) );
     connect( track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
+}
+
+bool
+Application::macEventFilter( EventHandlerCallRef caller, EventRef event )
+{
+    if (!m_mediaKey)
+        m_mediaKey = new MediaKey( this );
+
+    return m_mediaKey->macEventFilter( caller, event );
 }
 
 void

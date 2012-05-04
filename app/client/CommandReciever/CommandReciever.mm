@@ -11,138 +11,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface AppleScriptDelegate : NSObject <NSApplicationDelegate> {
-    CommandReciever* m_observer;
-    NSData* m_logo;
-}
-
-- (AppleScriptDelegate*) init:(CommandReciever*)observer;
-@end
-
 @interface LastfmPlayPauseCommand: NSScriptCommand { } @end
 @interface LastfmNextCommand: NSScriptCommand { } @end
 @interface LastfmPrevCommand: NSScriptCommand { } @end
 @interface LastfmLoveCommand: NSScriptCommand { } @end
 @interface LastfmBanCommand: NSScriptCommand { } @end
-
-@implementation AppleScriptDelegate
-
-- (AppleScriptDelegate*) init:(CommandReciever*)observer
-{
-    if ( (self = [super init]) )
-    {
-        self->m_observer = observer;
-    }
-
-    m_logo = nil;
-
-    return self;
-}
-
-- (BOOL)application:(NSApplication*)sender delegateHandlesKey:(NSString*)key
-{
-    Q_UNUSED(sender);
-    return [[NSSet setWithObjects: @"trackTitle", @"artist", @"album", @"duration", @"artwork", @"loved", nil] containsObject:key];
-}
-
-- (NSString*)trackTitle
-{
-    Track track = m_observer->track();
-
-    if ( !track.isNull() && m_observer->artworkDownloaded() )
-    {
-        QString title = track.title();
-        NSString* nsTitle = [NSString stringWithCharacters:(const unichar *)title.unicode() length:(NSUInteger)title.length() ];
-        return nsTitle;
-    }
-
-    return nil;
-}
-
-- (NSString*)artist
-{
-    Track track = m_observer->track();
-
-    if ( !track.isNull() && m_observer->artworkDownloaded() )
-    {
-        QString artist = track.artist();
-        NSString* nsArtist = [NSString stringWithCharacters:(const unichar *)artist.unicode() length:(NSUInteger)artist.length() ];
-        return nsArtist;
-    }
-
-    return nil;
-}
-
-- (NSString*)album
-{
-    Track track = m_observer->track();
-
-    if ( !track.isNull() && m_observer->artworkDownloaded() )
-    {
-        if ( !track.album().isNull() )
-        {
-            QString album = track.album();
-            NSString* nsAlbum = [NSString stringWithCharacters:(const unichar *)album.unicode() length:(NSUInteger)album.length() ];
-            return nsAlbum;
-        }
-    }
-
-    return nil;
-}
-
-- (NSNumber*)duration
-{
-    Track track = m_observer->track();
-
-    if ( !track.isNull() && m_observer->artworkDownloaded() )
-    {
-        int duration = track.duration();
-        return [NSNumber numberWithInt:duration];
-    }
-
-    return nil;
-}
-
-- (NSData*)artwork
-{
-    Track track = m_observer->track();
-
-    if ( !track.isNull() )
-    {
-        QPixmap pixmap = m_observer->getArtwork();
-
-        if ( !pixmap.isNull() && m_observer->artworkDownloaded() )
-        {
-            CGImageRef cgImage = pixmap.toMacCGImageRef();
-            NSImage* nsImage = [[NSImage alloc] initWithCGImage:(CGImageRef)cgImage size:(NSSize)NSZeroSize];
-            NSData* data = [nsImage TIFFRepresentation];
-            return data;
-        }
-        else
-        {
-            NSImage* img = [NSImage imageNamed: NSImageNameApplicationIcon];
-            NSData* data = [img TIFFRepresentation];
-            return data;
-        }
-    }
-
-    return nil;
-}
-
-- (BOOL)loved
-{
-    Track track = m_observer->track();
-
-    if ( !track.isNull() && m_observer->artworkDownloaded() )
-    {
-
-        return track.isLoved() ? YES : NO;
-    }
-
-    return nil;
-}
-
-@end
 
 @implementation LastfmPlayPauseCommand
 
@@ -222,8 +95,6 @@
 
 @end
 
-AppleScriptDelegate* g_delegate;
-
 CommandReciever::CommandReciever( QObject *parent )
     :QObject( parent ), m_artworkDownloaded( false )
 {
@@ -238,9 +109,7 @@ CommandReciever::CommandReciever( QObject *parent )
     success = QFile::copy( QApplication::applicationDirPath() + "/../Resources/fm.last.Last.fm.scpt",
                                     QDir::home().filePath( "Library/Application Support/Airfoil/TrackTitles/fm.last.Last.fm.scpt" ) );
 
-    //
-    g_delegate = [[AppleScriptDelegate alloc] init:this];
-    [[NSApplication sharedApplication] setDelegate:(id<NSApplicationDelegate>)g_delegate];
+    aApp->delegate()->setCommandObserver( this );
 
     connect( &RadioService::instance(), SIGNAL(trackSpooled(Track)), SLOT(onTrackSpooled(Track)) );
     connect( &RadioService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
@@ -253,7 +122,7 @@ CommandReciever::artworkDownloaded() const
 }
 
 Track
-CommandReciever::track()
+CommandReciever::track() const
 {
     if ( m_trackImageFetcher )
         return m_trackImageFetcher->track();
@@ -301,6 +170,80 @@ QPixmap
 CommandReciever::getArtwork() const
 {
     return m_pixmap;
+}
+
+QString
+CommandReciever::trackTitle() const
+{
+    Track t = track();
+    QString string;
+
+    if ( !t.isNull() && artworkDownloaded() )
+        string = t.title( Track::Corrected );
+
+    return string;
+}
+
+QString
+CommandReciever::artist() const
+{
+    Track t = track();
+    QString string;
+
+    if ( !t.isNull() && artworkDownloaded() )
+        string = t.artist( Track::Corrected );
+
+    return string;
+}
+
+QString
+CommandReciever::album() const
+{
+    Track t = track();
+    QString string;
+
+    if ( !t.isNull() && artworkDownloaded() )
+        string = t.album( Track::Corrected );
+
+    return string;
+}
+
+int
+CommandReciever::duration()
+{
+    Track t = track();
+
+    if ( !t.isNull() && artworkDownloaded() )
+        return t.duration();
+
+    return 0;
+}
+
+QPixmap
+CommandReciever::artwork()
+{
+    Track t = track();
+
+    if ( !t.isNull() )
+    {
+        QPixmap pixmap = getArtwork();
+
+        if ( !pixmap.isNull() && artworkDownloaded() )
+            return pixmap;
+    }
+
+    return QPixmap();
+}
+
+bool
+CommandReciever::loved()
+{
+    Track t = track();
+
+    if ( !t.isNull() && artworkDownloaded() )
+        return t.isLoved();
+
+    return false;
 }
 
 CommandReciever::~CommandReciever()

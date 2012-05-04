@@ -6,8 +6,9 @@
 #include <QPixmap>
 
 #include <lib/unicorn/TrackImageFetcher.h>
+#include <lib/unicorn/UnicornApplicationDelegate.h>
 
-class CommandReciever : public QObject
+class CommandReciever : public QObject, public unicorn::UnicornApplicationDelegateCommandObserver
 {
     Q_OBJECT
 public:
@@ -16,9 +17,15 @@ public:
 
     bool artworkDownloaded() const;
     QPixmap getArtwork() const;
-    Track track();
+    Track track() const;
 
-signals:
+private:
+    QString trackTitle() const;
+    QString artist() const;
+    QString album() const;
+    int duration();
+    QPixmap artwork();
+    bool loved();
 
 private slots:
     void onFinished( const class QPixmap& image );

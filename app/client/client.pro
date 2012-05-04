@@ -205,22 +205,18 @@ win32:SOURCES += Plugins/PluginList.cpp \
 mac:HEADERS += CommandReciever/CommandReciever.h \
                 Services/ITunesPluginInstaller.h \
                 Services/ITunesPluginInstaller/ITunesPluginInstaller.h \
-                MediaKeysApplication.h \
                 MediaKeys/MediaKey.h \
-                MediaKeys/SPMediaKeyTap.h \
-                MediaKeys/SPMediaKeyTapDelegate.h \
-                MediaKeys/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.h
+                ../../lib/3rdparty/SPMediaKeyTap/SPMediaKeyTap.h \
+                ../../lib/3rdparty/SPMediaKeyTap/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.h
 
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
 mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
                             Dialogs/CloseAppsDialog_mac.mm \
                             Widgets/NothingPlayingWidget_mac.mm \
-                            MediaKeysApplication.mm \
                             MediaKeys/MediaKey.mm \
-                            MediaKeys/SPMediaKeyTap.mm \
-                            MediaKeys/SPMediaKeyTapDelegate.mm \
-                            MediaKeys/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.mm
+                            ../../lib/3rdparty/SPMediaKeyTap/SPMediaKeyTap.m \
+                            ../../lib/3rdparty/SPMediaKeyTap/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.m
 
 FORMS += \
     Widgets/TagFilterDialog.ui \
