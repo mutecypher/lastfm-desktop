@@ -162,7 +162,7 @@ for plugin in $plugins; do
     echo
 done
 
-
+echo ======= creating qt.conf ===========
 qtconf=$bundlePath/Contents/Resources/qt.conf
 echo [Paths] > "$qtconf"
-echo Plugins = plugins >> "$qtconf"
+echo Plugins = ../plugins >> "$qtconf"
