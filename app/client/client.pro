@@ -2,8 +2,8 @@ TEMPLATE = app
 TARGET = "Last.fm"
 VERSION = 2.1.18
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
-QT = core gui xml network sql phonon
-CONFIG += lastfm unicorn listener logger
+QT = core gui xml network sql
+CONFIG += lastfm unicorn listener logger phonon
 win32:LIBS += user32.lib
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 

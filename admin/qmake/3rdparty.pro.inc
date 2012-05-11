@@ -57,6 +57,18 @@ CONFIG( growl ) {
     }
 }
 
+CONFIG( phonon ) {
+    mac {
+        # Prefer to use the specific phonon we build ourselves than the old one ditributed with Qt
+        exists( /usr/local/Cellar/kde-phonon/4.6.0/lib/libphonon.dylib ) {
+            LIBS += /usr/local/Cellar/kde-phonon/4.6.0/lib/libphonon.dylib
+        }
+        else {
+            QT += phonon
+        }
+    }
+}
+
 CONFIG( samplerate ) {
     win32{
 		LIBS += -L$$COMMON_LIBS_DIR/libsamplerate -lsamplerate
