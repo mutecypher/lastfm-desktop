@@ -72,7 +72,11 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
 void
 unicorn::Application::init()
 {
-    addLibraryPath(applicationDirPath());
+    QString libraryPath = applicationDirPath() + "/../plugins";
+    qDebug() << libraryPath;
+
+    addLibraryPath( applicationDirPath() );
+    addLibraryPath( libraryPath );
 
 #ifdef Q_WS_MAC
     qt_mac_set_menubar_icons( false );
