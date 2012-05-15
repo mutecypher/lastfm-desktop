@@ -58,14 +58,12 @@ CONFIG( growl ) {
 }
 
 CONFIG( phonon ) {
-    mac {
+    mac:exists( /usr/local/Cellar/kde-phonon/4.6.0/lib/libphonon.dylib ) {
         # Prefer to use the specific phonon we build ourselves than the old one ditributed with Qt
-        exists( /usr/local/Cellar/kde-phonon/4.6.0/lib/libphonon.dylib ) {
-            LIBS += /usr/local/Cellar/kde-phonon/4.6.0/lib/libphonon.dylib
-        }
-        else {
-            QT += phonon
-        }
+        LIBS += /usr/local/Cellar/kde-phonon/4.6.0/lib/libphonon.dylib
+    }
+    else {
+        QT += phonon
     }
 }
 
