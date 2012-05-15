@@ -247,7 +247,7 @@ PlaybackControlsWidget::onTrackStarted( const Track& track, const Track& oldTrac
 
     disconnect( oldTrack.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool)));
 
-    if ( !track.isNull() )
+    if ( track != Track() )
     {
         disconnect( &RadioService::instance(), SIGNAL(tick(qint64)), this, SLOT(onTick(qint64)));
         disconnect( &ScrobbleService::instance(), SIGNAL(frameChanged(int)), ui->progressBar, SLOT(onFrameChanged(int)) );

@@ -78,7 +78,7 @@ ProgressBar::paintEvent( QPaintEvent* e )
 
     StopWatch* sw = ScrobbleService::instance().stopWatch();
 
-    if ( !m_track.isNull() )
+    if ( m_track != Track() )
     {
         QFont timeFont = font();
         timeFont.setPixelSize( 10 );

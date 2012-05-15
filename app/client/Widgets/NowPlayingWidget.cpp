@@ -71,21 +71,24 @@ NowPlayingWidget::onTuningIn( const RadioStation& )
 void
 NowPlayingWidget::onTrackStarted( const Track& track, const Track& )
 {
-    setUpdatesEnabled( false );
-
-    if ( ui.metadata )
+    if ( track != Track() )
     {
-        ui.stack->removeWidget( ui.metadata );
-        ui.metadata->deleteLater();
+        setUpdatesEnabled( false );
+
+        if ( ui.metadata )
+        {
+            ui.stack->removeWidget( ui.metadata );
+            ui.metadata->deleteLater();
+        }
+
+        ui.stack->addWidget( ui.metadata = new MetadataWidget( track, this ) );
+        ui.metadata->setBackButtonVisible( false );
+
+        ui.stack->setCurrentWidget( ui.metadata );
+        m_movie->stop();
+
+        setUpdatesEnabled( true );
     }
-
-    ui.stack->addWidget( ui.metadata = new MetadataWidget( track, this ) );
-    ui.metadata->setBackButtonVisible( false );
-
-    ui.stack->setCurrentWidget( ui.metadata );
-    m_movie->start();
-
-    setUpdatesEnabled( true );
 }
 
 void
