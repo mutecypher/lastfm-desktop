@@ -306,7 +306,6 @@ RadioService::onPhononStateChanged( Phonon::State newstate, Phonon::State oldsta
             else
             {
                 qWarning() << "Phonon normal error:" << m_mediaObject->errorString();
-                emit error( lastfm::ws::UnknownError, QVariant( m_mediaObject->errorString() ));
 
                 // seems we need to clear the error state before trying to play again.
                 m_bErrorRecover = true;
