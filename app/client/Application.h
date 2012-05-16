@@ -41,7 +41,9 @@ class QAction;
 class ScrobbleInfoFetcher;
 class Drawer;
 class QMenuBar;
+#ifdef Q_OS_MAC
 class MediaKey;
+#endif
 
 namespace unicorn { class Notify; }
 using unicorn::Notify;
@@ -83,7 +85,9 @@ namespace audioscrobbler
         QPointer<MainWindow> m_mw;
         QPointer<QMenuBar> m_menuBar;
         QPointer<Notify> m_notify;
+#ifdef Q_OS_MAC
         QPointer<MediaKey> m_mediaKey;
+#endif
 
         QPointer<AbstractBootstrapper> m_bootstrapper;
 
@@ -173,7 +177,9 @@ namespace audioscrobbler
     private:
         static Argument argument( const QString& arg );
 
+#ifdef Q_OS_MAC
         bool macEventFilter ( EventHandlerCallRef caller, EventRef event );
+#endif
 
     private slots:
         void onTrayActivated(QSystemTrayIcon::ActivationReason);

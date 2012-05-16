@@ -22,6 +22,7 @@
     #include <Carbon/Carbon.h>
     #include <ApplicationServices/ApplicationServices.h>
     #include <QMainWindow>
+    #include "UnicornApplicationDelegate.h"
     extern void qt_mac_set_menubar_icons( bool );
 #elif defined WIN32
     #include <windows.h>
@@ -66,7 +67,9 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
                       m_wizardRunning( true ),
                       m_icm( 0 )
 {
+#ifdef Q_OS_MAC
     m_delegate = new UnicornApplicationDelegate( this );
+#endif
 }
 
 void
