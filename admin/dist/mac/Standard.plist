@@ -11,7 +11,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>fm.last.@EXECUTABLE@</string>
 	<key>CFBundleVersion</key>
-	<string>2.1.18</string>
+	<string>2.1.19</string>
 	<key>SUFeedURL</key>
 	<string>http://cdn.last.fm/client/Mac/updates.xml</string>
 	<key>SUEnableAutomaticChecks</key>
