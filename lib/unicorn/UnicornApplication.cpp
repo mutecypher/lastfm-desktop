@@ -66,7 +66,9 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
                       m_wizardRunning( true ),
                       m_icm( 0 )
 {
+#ifdef Q_OS_MAC
     m_delegate = new UnicornApplicationDelegate( this );
+#endif
 }
 
 void

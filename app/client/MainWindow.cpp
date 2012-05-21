@@ -32,7 +32,6 @@
 
 #include "MainWindow.h"
 
-#include "MediaKeys/MediaKey.h"
 #include "Application.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
@@ -69,6 +68,7 @@
 #endif
 
 #ifdef Q_OS_MAC
+#include "MediaKeys/MediaKey.h"
 void qt_mac_set_dock_menu(QMenu *menu);
 #endif
 

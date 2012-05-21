@@ -133,8 +133,7 @@ HEADERS += \
     Updater/Updater.h \
     DesktopServices.h \
     CrashReporter/CrashReporter.h \
-    widgets/StackedWidget.h \
-    UnicornApplicationDelegate.h
+    widgets/StackedWidget.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	
@@ -147,7 +146,8 @@ macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
                           UnicornApplicationDelegate.mm
 
 macx:HEADERS += mac/AppleScript.h \
-                notify/Notify.h
+                notify/Notify.h \
+                UnicornApplicationDelegate.h
 
                           
 FORMS += \

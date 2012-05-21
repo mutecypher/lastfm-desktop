@@ -85,7 +85,9 @@ using audioscrobbler::Application;
 Application::Application(int& argc, char** argv) 
     :unicorn::Application(argc, argv), m_raiseHotKeyId( (void*)-1 )
 {
+#ifdef Q_OS_MAC
     m_mediaKey = new MediaKey( this );
+#endif
 }
 
 void
@@ -423,6 +425,7 @@ Application::onTrackStarted( const Track& track, const Track& oldTrack )
     connect( track.signalProxy(), SIGNAL(corrected(QString)), SLOT(onCorrected(QString)));
 }
 
+#ifdef Q_OS_MAC
 bool
 Application::macEventFilter( EventHandlerCallRef caller, EventRef event )
 {
@@ -431,6 +434,7 @@ Application::macEventFilter( EventHandlerCallRef caller, EventRef event )
 
     return m_mediaKey->macEventFilter( caller, event );
 }
+#endif
 
 void
 Application::onTrackSpooled( const Track& /*track*/ )
