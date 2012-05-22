@@ -62,9 +62,13 @@ CONFIG( phonon ) {
         # Prefer to use the specific phonon we build ourselves than the old one ditributed with Qt
         LIBS += /usr/local/Cellar/kde-phonon/4.6.0/lib/libphonon.dylib
     }
-    else {
-        QT += phonon
+    else:win32 {
+        CONFIG += link_pkgconfig
+        PKGCONFIG += phonon
     }
+	else {
+		QT += phonon
+	}
 }
 
 CONFIG( samplerate ) {
