@@ -31,6 +31,10 @@
 #include <QMainWindow>
 #include <QPointer>
 
+#ifdef Q_OS_MAC
+#include "UnicornApplicationDelegate.h"
+#endif
+
 #ifdef Q_OS_MAC64
 #include <Carbon/Carbon.h>
 #endif
@@ -200,6 +204,7 @@ namespace unicorn
         QString m_cssFileName;
 #ifdef Q_OS_MAC
         QPointer<UnicornApplicationDelegate> m_delegate;
+#endif
 
         void setOpenApplicationEventHandler();
         void setGetURLEventHandler();
