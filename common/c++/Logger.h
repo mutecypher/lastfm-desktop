@@ -28,6 +28,7 @@
 #include <sstream>
 #ifdef WIN32
 #include <windows.h> //for CRITICAL_SECTION
+#pragma warning(disable: 4251)
 #endif
 
 
