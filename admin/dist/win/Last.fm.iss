@@ -87,18 +87,30 @@ Source: "%QTDIR%\bin\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "%QTDIR%\bin\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "%QTDIR%\bin\QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "%QTDIR%\bin\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "%QTDIR%\bin\phonon4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\phonon.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ;image formats plugins
-Source: "%QTDIR%\plugins\imageformats\qjpeg4.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "%QTDIR%\plugins\imageformats\qgif4.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
+Source: "%QTDIR%\plugins\imageformats\qjpeg4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
+Source: "%QTDIR%\plugins\imageformats\qgif4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
+Source: "%QTDIR%\plugins\imageformats\qmng4.dll"; DestDir: "{app}\plugins\imageformats"; Flags: ignoreversion
 
 ;phonon backend plugin
-Source: "%QTDIR%\plugins\phonon_backend\phonon_ds94.dll"; DestDir: "{app}\phonon_backend"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\phonon_backend\phonon_vlc.dll"; DestDir: "{app}\plugins\phonon_backend"; Flags: ignoreversion
 
-;phonon backend plugin
-Source: "%QTDIR%\plugins\sqldrivers\qsqlite4.dll"; DestDir: "{app}\sqldrivers"; Flags: ignoreversion
+;sqlite plugin
+Source: "%QTDIR%\plugins\sqldrivers\qsqlite4.dll"; DestDir: "{app}\plugins\sqldrivers"; Flags: ignoreversion
+
+; vlc libraries
+Source: "..\..\..\_bin\libvlccore.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\libvlc.dll"; DestDir: "{app}"; Flags: ignoreversion
+
+; vlc plugins
+Source: "..\..\..\_bin\plugins\access\*"; DestDir: "{app}\plugins\access"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\*"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_mixer\*"; DestDir: "{app}\plugins\audio_mixer"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_output\*"; DestDir: "{app}\plugins\audio_output"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\codec\*"; DestDir: "{app}\plugins\codec"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\demux\*"; DestDir: "{app}\plugins\demux"; Flags: ignoreversion
 
 ;media player plugin installers
 Source: "..\..\..\_bin\plugins\FooPlugin0.9.4Setup_2.3.1.2.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
@@ -169,9 +181,13 @@ Filename: "{app}\UninsHs.exe"; Parameters: "/r0=LastFM,{language},{srcexe},{app}
 Type: Files; Name: "{commondesktop}\Last.fm.lnk"
 Type: Files; Name: "{app}\Last.fm.exe"
 Type: Files; Name: "{app}\phonon4.dll"
+Type: Files; Name: "{app}\phonon.dll"
 Type: Files; Name: "{app}\Last.fm.css"
-Type: Files; Name: "{app}\phonon_backend\phonon_ds94.dll"
-Type: dirifempty; Name: "{app}\phonon_backend\"
+Type: filesandordirs; Name: "{app}\phonon_backend"
+Type: filesandordirs; Name: "{app}\plugins"
+Type: filesandordirs; Name: "{app}\phonon_backend"
+Type: filesandordirs; Name: "{app}\imageformats"
+Type: filesandordirs; Name: "{app}\sqldrivers"
 
 ; This is the LAST step of uninstallation
 [UninstallDelete]
