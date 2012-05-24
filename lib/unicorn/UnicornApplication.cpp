@@ -75,11 +75,11 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
 void
 unicorn::Application::init()
 {
-    QString libraryPath = applicationDirPath() + "/../plugins";
-    qDebug() << libraryPath;
-
-    addLibraryPath( applicationDirPath() );
-    addLibraryPath( libraryPath );
+#ifdef Q_OS_MAC
+    addLibraryPath( applicationDirPath() + "/../plugins" );
+#elif defined Q_OS_WIN
+    addLibraryPath( applicationDirPath() + "/plugins" );
+#endif
 
 #ifdef Q_WS_MAC
     qt_mac_set_menubar_icons( false );
