@@ -204,7 +204,6 @@ namespace unicorn
         QString m_cssFileName;
 #ifdef Q_OS_MAC
         QPointer<UnicornApplicationDelegate> m_delegate;
-#endif
 
         void setOpenApplicationEventHandler();
         void setGetURLEventHandler();
