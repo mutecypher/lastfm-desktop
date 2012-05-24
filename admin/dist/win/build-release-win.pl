@@ -22,8 +22,8 @@ my $ISSFILE = 'Last.fm.tmp.iss';
 
 my $QTDIR = quotemeta( $ENV{'QTDIR'} or die $! );
 my $VSDIR = quotemeta( $ENV{'VSDIR'} or die $! );
-$QTDIR =~ s/\\/\\\\/g; #double escape \s for the shell :(
-$VSDIR =~ s/\\/\\\\/g;
+#$QTDIR =~ s/\\/\\\\/g; #double escape \s for the shell :(
+#$VSDIR =~ s/\\/\\\\/g;
 
 ########################################################################
 header( "Building release and installer for Last.fm-$VERSION" );
