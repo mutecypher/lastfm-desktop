@@ -68,7 +68,7 @@ ProfileWidget::onGotLibraryArtists()
         int scrobblesPerDay = aApp->currentSession()->userInfo().scrobbleCount() / aApp->currentSession()->userInfo().dateRegistered().daysTo( QDateTime::currentDateTime() );
         int totalArtists = lfm["artists"].attribute( "total" ).toInt();
 
-        ui.context->setText( tr( "You have %L1 artists in you library and on average listen to %L2 tracks per day." ).arg( totalArtists ).arg( scrobblesPerDay ) );
+        ui.context->setText( tr( "You have %L1 artists in your library and on average listen to %L2 tracks per day." ).arg( totalArtists ).arg( scrobblesPerDay ) );
         ui.context->show();
     }
     else
