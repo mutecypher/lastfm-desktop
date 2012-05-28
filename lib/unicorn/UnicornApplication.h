@@ -22,7 +22,6 @@
 
 #include "qtsingleapplication/qtsingleapplication.h"
 
-#include "UnicornApplicationDelegate.h"
 #include "common/HideStupidWarnings.h"
 #include "lib/DllExportMacro.h"
 #include "UnicornSession.h"
@@ -31,6 +30,10 @@
 #include <QDebug>
 #include <QMainWindow>
 #include <QPointer>
+
+#ifdef Q_OS_MAC
+#include "UnicornApplicationDelegate.h"
+#endif
 
 #ifdef Q_OS_MAC64
 #include <Carbon/Carbon.h>
@@ -199,9 +202,9 @@ namespace unicorn
         QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
         QString m_cssDir;
         QString m_cssFileName;
+#ifdef Q_OS_MAC
         QPointer<UnicornApplicationDelegate> m_delegate;
 
-#ifdef __APPLE__
         void setOpenApplicationEventHandler();
         void setGetURLEventHandler();
     public:

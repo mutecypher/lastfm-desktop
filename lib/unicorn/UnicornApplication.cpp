@@ -22,6 +22,7 @@
     #include <Carbon/Carbon.h>
     #include <ApplicationServices/ApplicationServices.h>
     #include <QMainWindow>
+    #include "UnicornApplicationDelegate.h"
     extern void qt_mac_set_menubar_icons( bool );
 #elif defined WIN32
     #include <windows.h>
@@ -66,17 +67,19 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
                       m_wizardRunning( true ),
                       m_icm( 0 )
 {
+#ifdef Q_OS_MAC
     m_delegate = new UnicornApplicationDelegate( this );
+#endif
 }
 
 void
 unicorn::Application::init()
 {
-    QString libraryPath = applicationDirPath() + "/../plugins";
-    qDebug() << libraryPath;
-
-    addLibraryPath( applicationDirPath() );
-    addLibraryPath( libraryPath );
+#ifdef Q_OS_MAC
+    addLibraryPath( applicationDirPath() + "/../plugins" );
+#elif defined Q_OS_WIN
+    addLibraryPath( applicationDirPath() + "/plugins" );
+#endif
 
 #ifdef Q_WS_MAC
     qt_mac_set_menubar_icons( false );

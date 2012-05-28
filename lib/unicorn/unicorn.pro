@@ -1,6 +1,6 @@
 TARGET = unicorn
 TEMPLATE = lib
-CONFIG += dll lastfm sparkle growl break logger
+CONFIG += dll lastfm sparkle growl logger
 QT = core gui xml network
 include( ../../admin/include.qmake )
 DEFINES += _UNICORN_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
@@ -67,7 +67,6 @@ SOURCES += \
     AnimatedStatusBar.cpp \
     DesktopServices.cpp \
     Updater/Updater.cpp \
-    CrashReporter/CrashReporter.cpp \
     widgets/StackedWidget.cpp
 
 HEADERS += \
@@ -132,9 +131,7 @@ HEADERS += \
     widgets/SlidingStackedWidget.h \
     Updater/Updater.h \
     DesktopServices.h \
-    CrashReporter/CrashReporter.h \
-    widgets/StackedWidget.h \
-    UnicornApplicationDelegate.h
+    widgets/StackedWidget.h
 	
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
 	
@@ -143,12 +140,17 @@ macx:SOURCES += mac/AppleScript.cpp
 macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
                           notify/Notify.mm \
                           Updater/Updater_mac.mm \
-                          CrashReporter/CrashReporter_mac.mm \
                           UnicornApplicationDelegate.mm
 
 macx:HEADERS += mac/AppleScript.h \
-                notify/Notify.h
+                notify/Notify.h \
+                UnicornApplicationDelegate.h
 
+CONFIG( break ) {
+    HEADERS += CrashReporter/CrashReporter.h
+    SOURCES += CrashReporter/CrashReporter.cpp
+    macx:OBJECTIVE_SOURCES += CrashReporter/CrashReporter_mac.mm
+}
                           
 FORMS += \
 	dialogs/ShareDialog.ui \

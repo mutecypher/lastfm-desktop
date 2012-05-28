@@ -37,18 +37,12 @@ win32 {
     # So here we are copying them and their dependencies.
     # Oh, and for some reason, cygwin mutilates their permissions.
     
-    system( cp -f ../../plugins/iTunes/ITunesTrack.cpp . )
-    system( cp -f ../../plugins/iTunes/ITunesTrack.h . )
-    system( cp -f ../../plugins/iTunes/ITunesExceptions.h . )
-    system( cp -f ../../plugins/iTunes/ITunesComWrapper.cpp . )
-    system( cp -f ../../plugins/iTunes/ITunesComWrapper.h . )
-    system( cp -f ../../plugins/iTunes/ITunesEventInterface.h . )
-    system( chmod a+r ITunesTrack.cpp )
-    system( chmod a+r ITunesTrack.h )
-    system( chmod a+r ITunesExceptions.h )
-    system( chmod a+r ITunesComWrapper.cpp )
-    system( chmod a+r ITunesComWrapper.h )
-    system( chmod a+r ITunesEventInterface.h )
+    system( xcopy ..\\..\\plugins\\iTunes\\ITunesTrack.cpp . /Y /Q )
+    system( xcopy ..\\..\\plugins\\iTunes\\ITunesTrack.h . /Y /Q )
+    system( xcopy ..\\..\\plugins\\iTunes\\ITunesExceptions.h . /Y /Q )
+    system( xcopy ..\\..\\plugins\\iTunes\\ITunesComWrapper.cpp . /Y /Q )
+    system( xcopy ..\\..\\plugins\\iTunes\\ITunesComWrapper.h . /Y /Q )
+    system( xcopy ..\\..\\plugins\\iTunes\\ITunesEventInterface.h . /Y /Q )
 
     SOURCES += ITunesLibrary_win.cpp \
                ITunesTrack.cpp \
