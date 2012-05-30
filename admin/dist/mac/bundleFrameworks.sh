@@ -174,75 +174,46 @@ echo ======= Copying vlc plugins ===========
 
 mkdir -p "$bundlePath/Contents/plugins"
 
-accessPlugins="libaccess_http_plugin.dylib"
+vlcPlugins='libaccess_http_plugin.dylib
+            liba52tofloat32_plugin.dylib
+            liba52tospdif_plugin.dylib
+            libaudio_format_plugin.dylib
+            libaudiobargraph_a_plugin.dylib
+            libchorus_flanger_plugin.dylib
+            libconverter_fixed_plugin.dylib
+            libdolby_surround_decoder_plugin.dylib
+            libdtstofloat32_plugin.dylib
+            libdtstospdif_plugin.dylib
+            libequalizer_plugin.dylib
+            libheadphone_channel_mixer_plugin.dylib
+            libmono_plugin.dylib
+            libmpgatofixed32_plugin.dylib
+            libnormvol_plugin.dylib
+            libparam_eq_plugin.dylib
+            libscaletempo_plugin.dylib
+            libsimple_channel_mixer_plugin.dylib
+            libspatializer_plugin.dylib
+            libtrivial_channel_mixer_plugin.dylib
+            libugly_resampler_plugin.dylib
+            libauhal_plugin.dylib
+            libfloat32_mixer_plugin.dylib
+            libavcodec_plugin.dylib
+            libmpeg_audio_plugin.dylib'
 
-for plugin in $accessPlugins; do
-    pluginDir="/usr/local/lib/vlc/plugins/access"
+for plugin in $vlcPlugins; do
+    pluginDir="/usr/local/lib/vlc/plugins"
 
-    mkdir -p "$bundlePath/Contents/plugins/access"
-    cp -RL $pluginDir/$plugin "$bundlePath/Contents/plugins/access"
-    chmod -R u+w "$bundlePath/Contents/plugins/access"
+    mkdir -p "$bundlePath/Contents/plugins"
+    cp -RL $pluginDir/$plugin "$bundlePath/Contents/plugins"
+    chmod -R u+w "$bundlePath/Contents/plugins"
     
-    fixFrameworks "$bundlePath/Contents/plugins/access/$plugin"
-    fixLocalLibs "$bundlePath/Contents/plugins/access/$plugin"
+    fixFrameworks "$bundlePath/Contents/plugins/$plugin"
+    fixLocalLibs "$bundlePath/Contents/plugins/$plugin"
     echo
 done
 
-audioFilterPlugins='liba52tofloat32_plugin.dylib liba52tospdif_plugin.dylib libaudio_format_plugin.dylib libaudiobargraph_a_plugin.dylib libchorus_flanger_plugin.dylib libconverter_fixed_plugin.dylib libdolby_surround_decoder_plugin.dylib libdtstofloat32_plugin.dylib libdtstospdif_plugin.dylib libequalizer_plugin.dylib libheadphone_channel_mixer_plugin.dylib libmono_plugin.dylib libmpgatofixed32_plugin.dylib libnormvol_plugin.dylib libparam_eq_plugin.dylib libscaletempo_plugin.dylib libsimple_channel_mixer_plugin.dylib libspatializer_plugin.dylib libtrivial_channel_mixer_plugin.dylib libugly_resampler_plugin.dylib'
 
-for plugin in $audioFilterPlugins; do
-    pluginDir="/usr/local/lib/vlc/plugins/audio_filter"
 
-    mkdir -p "$bundlePath/Contents/plugins/audio_filter"
-    cp -RL $pluginDir/$plugin "$bundlePath/Contents/plugins/audio_filter"
-    chmod -R u+w "$bundlePath/Contents/plugins/audio_filter"
-    
-    fixFrameworks "$bundlePath/Contents/plugins/audio_filter/$plugin"
-    fixLocalLibs "$bundlePath/Contents/plugins/audio_filter/$plugin"
-    echo
-done
-
-audioOutputPlugins='libauhal_plugin.dylib'
-
-for plugin in $audioOutputPlugins; do
-    pluginDir="/usr/local/lib/vlc/plugins/audio_output"
-
-    mkdir -p "$bundlePath/Contents/plugins/audio_output"
-    cp -RL $pluginDir/$plugin "$bundlePath/Contents/plugins/audio_output"
-    chmod -R u+w "$bundlePath/Contents/plugins/audio_output"
-    
-    fixFrameworks "$bundlePath/Contents/plugins/audio_output/$plugin"
-    fixLocalLibs "$bundlePath/Contents/plugins/audio_output/$plugin"
-    echo
-done
-
-audioMixerPlugins='libfloat32_mixer_plugin.dylib libspdif_mixer_plugin.dylib libtrivial_mixer_plugin.dylib'
-
-for plugin in $audioMixerPlugins; do
-    pluginDir="/usr/local/lib/vlc/plugins/audio_mixer"
-
-    mkdir -p "$bundlePath/Contents/plugins/audio_mixer"
-    cp -RL $pluginDir/$plugin "$bundlePath/Contents/plugins/audio_mixer"
-    chmod -R u+w "$bundlePath/Contents/plugins/audio_mixer"
-    
-    fixFrameworks "$bundlePath/Contents/plugins/audio_mixer/$plugin"
-    fixLocalLibs "$bundlePath/Contents/plugins/audio_mixer/$plugin"
-    echo
-done
-
-codecPlugins="libavcodec_plugin.dylib libmpeg_audio_plugin.dylib"
-
-for plugin in $codecPlugins; do
-    pluginDir="/usr/local/lib/vlc/plugins/codec"
-
-    mkdir -p "$bundlePath/Contents/plugins/codec"
-    cp -RL $pluginDir/$plugin "$bundlePath/Contents/plugins/codec"
-    chmod -R u+w "$bundlePath/Contents/plugins/codec"
-    
-    fixFrameworks "$bundlePath/Contents/plugins/codec/$plugin"
-    fixLocalLibs "$bundlePath/Contents/plugins/codec/$plugin"
-    echo
-done
 
 echo ======= creating qt.conf ===========
 qtconf=$bundlePath/Contents/Resources/qt.conf
