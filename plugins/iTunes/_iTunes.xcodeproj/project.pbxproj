@@ -260,7 +260,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				HEADER_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
-				SDKROOT = macosx;
+				SDKROOT = macosx10.5;
 				USER_HEADER_SEARCH_PATHS = ../../;
 			};
 			name = Development;
