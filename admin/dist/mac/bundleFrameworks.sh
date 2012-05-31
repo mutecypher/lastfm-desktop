@@ -178,27 +178,22 @@ vlcPlugins='libaccess_http_plugin.dylib
             liba52tofloat32_plugin.dylib
             liba52tospdif_plugin.dylib
             libaudio_format_plugin.dylib
-            libaudiobargraph_a_plugin.dylib
             libconverter_fixed_plugin.dylib
             libdolby_surround_decoder_plugin.dylib
             libdtstofloat32_plugin.dylib
             libdtstospdif_plugin.dylib
-            libequalizer_plugin.dylib
-            libheadphone_channel_mixer_plugin.dylib
-            libmono_plugin.dylib
             libmpgatofixed32_plugin.dylib
-            libnormvol_plugin.dylib
-            libparam_eq_plugin.dylib
+            libsamplerate_plugin.dylib
             libscaletempo_plugin.dylib
             libsimple_channel_mixer_plugin.dylib
-            libspatializer_plugin.dylib
+            libspeex_resampler_plugin.dylib
             libtrivial_channel_mixer_plugin.dylib
             libugly_resampler_plugin.dylib
-            libauhal_plugin.dylib
             libfloat32_mixer_plugin.dylib
-            libavcodec_plugin.dylib
             libmpeg_audio_plugin.dylib
+            libes_plugin.dylib
             liblogger_plugin.dylib'
+
 
 for plugin in $vlcPlugins; do
     pluginDir="/usr/local/lib/vlc/plugins"
