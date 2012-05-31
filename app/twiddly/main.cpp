@@ -59,6 +59,8 @@ main( int argc, char** argv )
     // We need to tell twiddly where to load the plugins because it
     // loads system ones when not in the /Contents/MacOS directory
     TwiddlyApplication::addLibraryPath( QDir( TwiddlyApplication::applicationDirPath() ).absoluteFilePath( "../plugins" ) );
+#elif defined Q_OS_WIN
+    TwiddlyApplication::addLibraryPath( QDir( TwiddlyApplication::applicationDirPath() ).absoluteFilePath( "plugins" ) );
 #endif
 
     try
