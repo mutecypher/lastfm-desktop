@@ -105,12 +105,26 @@ Source: "..\..\..\_bin\libvlccore.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\libvlc.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; vlc plugins
-Source: "..\..\..\_bin\plugins\access\*"; DestDir: "{app}\plugins\access"; Flags: ignoreversion
-Source: "..\..\..\_bin\plugins\audio_filter\*"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
-Source: "..\..\..\_bin\plugins\audio_mixer\*"; DestDir: "{app}\plugins\audio_mixer"; Flags: ignoreversion
-Source: "..\..\..\_bin\plugins\audio_output\*"; DestDir: "{app}\plugins\audio_output"; Flags: ignoreversion
-Source: "..\..\..\_bin\plugins\codec\*"; DestDir: "{app}\plugins\codec"; Flags: ignoreversion
-Source: "..\..\..\_bin\plugins\demux\*"; DestDir: "{app}\plugins\demux"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\access\libaccess_http_plugin.dll"; DestDir: "{app}\plugins\access"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\liba52tofloat32_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\liba52tospdif_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\libaudio_format_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\libconverter_fixed_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\libdolby_surround_decoder_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\libdtstofloat32_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\libdtstospdif_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\libmpgatofixed32_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\libsamplerate_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\libscaletempo_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\libsimple_channel_mixer_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\libspeex_resampler_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\libtrivial_channel_mixer_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_filter\libugly_resampler_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_mixer\libfloat32_mixer_plugin.dll"; DestDir: "{app}\plugins\audio_mixer"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_output\libwaveout_plugin.dll"; DestDir: "{app}\plugins\audio_output"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\codec\libmpeg_audio_plugin.dll"; DestDir: "{app}\plugins\codec"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\demux\libes_plugin.dll"; DestDir: "{app}\plugins\demux"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\misc\liblogger_plugin.dll"; DestDir: "{app}\plugins\misc"; Flags: ignoreversion
 
 ;media player plugin installers
 Source: "..\..\..\_bin\plugins\FooPlugin0.9.4Setup_2.3.1.2.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
