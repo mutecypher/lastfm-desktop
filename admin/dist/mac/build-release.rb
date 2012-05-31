@@ -127,11 +127,11 @@ end
 
 
 # run all the things
-clean
-build
-copy_plugin
-create_zip
-create_deltas
+#clean
+#build
+#copy_plugin
+#create_zip
+#create_deltas
 upload_files
 generate_appcast_xml
 
