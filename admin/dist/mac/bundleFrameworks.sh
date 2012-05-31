@@ -179,7 +179,6 @@ vlcPlugins='libaccess_http_plugin.dylib
             liba52tospdif_plugin.dylib
             libaudio_format_plugin.dylib
             libaudiobargraph_a_plugin.dylib
-            libchorus_flanger_plugin.dylib
             libconverter_fixed_plugin.dylib
             libdolby_surround_decoder_plugin.dylib
             libdtstofloat32_plugin.dylib
@@ -198,7 +197,8 @@ vlcPlugins='libaccess_http_plugin.dylib
             libauhal_plugin.dylib
             libfloat32_mixer_plugin.dylib
             libavcodec_plugin.dylib
-            libmpeg_audio_plugin.dylib'
+            libmpeg_audio_plugin.dylib
+            liblogger_plugin.dylib'
 
 for plugin in $vlcPlugins; do
     pluginDir="/usr/local/lib/vlc/plugins"
