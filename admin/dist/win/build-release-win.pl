@@ -61,7 +61,12 @@ header( "Installer" );
     #my $ISDIR = $ENV{'ISDIR'} or "c:\\Program Files\\Inno Setup 5";
     #$ISDIR =~ s/\\/\//g;
     #run( "$ISDIR\\iscc.exe", "$ISSFILE" ) or die $!;
-	run( "c:/Program Files (x86)/Inno Setup 5/iscc.exe", $ISSFILE ) or die $!;
+	
+	my $output = qx/"c:\/Program Files (x86)\/Inno Setup 5\/iscc.exe" $ISSFILE/  or die $!;
+	print $output;
+	my @lines = split(/\n/, $output);
+	my $installer = @lines[-1..-1];
+	print $installer;
 
 #header( "Building symbolstore" );
 #    dumpSyms( "bin" );
@@ -69,6 +74,10 @@ header( "Installer" );
 #    chdir( "build/syms" );
 #    run( "tar", "cjf", "../../dist/Last.fm-$VERSION-win.symbols.tar.bz2", "." );
 
+header( "Signing" );
+	system( 'signtool sign /a /d "The Last.fm Desktop App" /du http://www.last.fm/download ' . $installer );
+
+	
 header( "done!" );
     print "To upload the symbols, issue the following command:\n";
     print "       perl dist\\build-release-win.pl --upload";
