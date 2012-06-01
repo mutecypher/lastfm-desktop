@@ -99,7 +99,7 @@ SkipListener::onNewConnection()
 
             if ( newUsers.count() > 0 && currentUsers.count() > 0 )
             {
-                lastfm::UserList users;
+                QList<lastfm::User> users;
 
                 // add all the users
                 QStringList allUsers = currentUsers + newUsers;
@@ -128,7 +128,7 @@ SkipListener::onNewConnection()
 
                 if ( currentUsers.count() > 0 )
                 {
-                    lastfm::UserList users;
+                    QList<lastfm::User> users;
 
                     // add the user
                     foreach ( const QString& currentUser, currentUsers )
@@ -157,7 +157,7 @@ SkipListener::onNewConnection()
 
                 if ( userList.count() > 0 )
                 {
-                    lastfm::UserList users;
+                    QList<lastfm::User> users;
 
                     userList.removeDuplicates();
 
