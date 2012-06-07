@@ -121,7 +121,7 @@ Source: "..\..\..\_bin\plugins\audio_filter\libspeex_resampler_plugin.dll"; Dest
 Source: "..\..\..\_bin\plugins\audio_filter\libtrivial_channel_mixer_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
 Source: "..\..\..\_bin\plugins\audio_filter\libugly_resampler_plugin.dll"; DestDir: "{app}\plugins\audio_filter"; Flags: ignoreversion
 Source: "..\..\..\_bin\plugins\audio_mixer\libfloat32_mixer_plugin.dll"; DestDir: "{app}\plugins\audio_mixer"; Flags: ignoreversion
-Source: "..\..\..\_bin\plugins\audio_output\libwaveout_plugin.dll"; DestDir: "{app}\plugins\audio_output"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\audio_output\libaout_directx_plugin.dll"; DestDir: "{app}\plugins\audio_output"; Flags: ignoreversion
 Source: "..\..\..\_bin\plugins\codec\libmpeg_audio_plugin.dll"; DestDir: "{app}\plugins\codec"; Flags: ignoreversion
 Source: "..\..\..\_bin\plugins\demux\libes_plugin.dll"; DestDir: "{app}\plugins\demux"; Flags: ignoreversion
 Source: "..\..\..\_bin\plugins\misc\liblogger_plugin.dll"; DestDir: "{app}\plugins\misc"; Flags: ignoreversion
@@ -197,11 +197,13 @@ Type: Files; Name: "{app}\Last.fm.exe"
 Type: Files; Name: "{app}\phonon4.dll"
 Type: Files; Name: "{app}\phonon.dll"
 Type: Files; Name: "{app}\Last.fm.css"
-Type: filesandordirs; Name: "{app}\phonon_backend"
-Type: filesandordirs; Name: "{app}\plugins"
-Type: filesandordirs; Name: "{app}\phonon_backend"
-Type: filesandordirs; Name: "{app}\imageformats"
-Type: filesandordirs; Name: "{app}\sqldrivers"
+Type: filesandordirs; Name: "{app}\imageformats\*"
+Type: filesandordirs; Name: "{app}\phonon_backend\*"
+Type: filesandordirs; Name: "{app}\sqldrivers\*"
+Type: dirifempty; Name: "{app}\imageformats"
+Type: dirifempty; Name: "{app}\phonon_backend"
+Type: dirifempty; Name: "{app}\sqldrivers"
+Type: filesandordirs; Name: "{app}\plugins\*"
 
 ; This is the LAST step of uninstallation
 [UninstallDelete]
