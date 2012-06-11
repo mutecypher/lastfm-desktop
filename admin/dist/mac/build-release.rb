@@ -6,7 +6,7 @@
 #version = ARGV[0]
 
 # TODO: find out the app version from the app's plist.info
-$version = '2.1.19'
+$version = '2.1.20'
 
 # TODO: get the version numbers from the argument list
 $deltas = []
@@ -127,11 +127,11 @@ end
 
 
 # run all the things
-#clean
-#build
-#copy_plugin
-#create_zip
-#create_deltas
+clean
+build
+copy_plugin
+create_zip
+create_deltas
 upload_files
 generate_appcast_xml
 
