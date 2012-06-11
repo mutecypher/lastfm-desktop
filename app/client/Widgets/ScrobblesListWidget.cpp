@@ -137,7 +137,7 @@ ScrobblesListWidget::showEvent(QShowEvent *)
     {
         TrackWidget* trackWidget = qobject_cast<TrackWidget*>( itemWidget( item( i ) ) );
 
-        if ( trackWidget )
+        if ( trackWidget && !item( i )->isHidden() )
             tracks << trackWidget->track();
     }
 
@@ -568,9 +568,11 @@ ScrobblesListWidget::limit( int limit )
 {
     sortItems();
 
-    if ( count() > limit )
+    // we add three to the limit here to account for the refresh button,
+    // the now playing track (usually hidden), and the more button
+    if ( count() > limit + 3 )
     {
-        while ( count() > limit )
+        while ( count() > limit + 3 )
         {
             QListWidgetItem* item = takeItem( count() - 2 );
             itemWidget( item )->deleteLater();
