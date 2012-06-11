@@ -35,20 +35,28 @@ TrackImageFetcher::TrackImageFetcher( const Track& track, Track::ImageSize size 
 void
 TrackImageFetcher::startAlbum()
 {
-    if (!album().isNull()) 
+    if (!album().isNull())
     {
         QUrl imageUrl = url( "album" );
 
         if ( imageUrl.isValid() )
             connect( lastfm::nam()->get( QNetworkRequest( imageUrl ) ), SIGNAL(finished()), SLOT(onAlbumImageDownloaded()) );
         else
-        {
-            QNetworkReply* reply = album().getInfo();
-            connect( reply, SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
-        }
+            connect( album().getInfo(), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
     }
     else
-        startArtist();
+        startTrack();
+}
+
+void
+TrackImageFetcher::startTrack()
+{
+    QUrl imageUrl = url( "track" );
+
+    if ( imageUrl.isValid() )
+        connect( lastfm::nam()->get( QNetworkRequest( imageUrl ) ), SIGNAL(finished()), SLOT(onTrackImageDownloaded()) );
+    else
+        trackGetInfo();
 }
 
 
@@ -65,12 +73,60 @@ TrackImageFetcher::startArtist()
 
 
 void
+TrackImageFetcher::trackGetInfo()
+{
+    if (!artist().isNull())
+        m_track.getInfo( this, "onTrackGotInfo" );
+    else
+        fail();
+}
+
+
+void
+TrackImageFetcher::artistGetInfo()
+{
+    if (!artist().isNull())
+        connect( artist().getInfo(), SIGNAL(finished()), SLOT(onArtistGotInfo()) );
+    else
+        fail();
+}
+
+void
 TrackImageFetcher::onAlbumGotInfo()
 {
     if (!downloadImage( (QNetworkReply*)sender(), "album" ))
-        artistGetInfo();
+        startTrack();
 }
 
+void
+TrackImageFetcher::onTrackGotInfo( const QByteArray& data )
+{
+    XmlQuery lfm;
+
+    if ( lfm.parse( data ) )
+    {
+        lastfm::MutableTrack track( m_track );
+        track.setImageUrl( Track::MegaImage, lfm["track"]["image size=mega"].text() );
+        track.setImageUrl( Track::ExtraLargeImage, lfm["track"]["image size=extralarge"].text() );
+        track.setImageUrl( Track::LargeImage, lfm["track"]["image size=large"].text() );
+        track.setImageUrl( Track::MediumImage, lfm["track"]["image size=medium"].text() );
+        track.setImageUrl( Track::SmallImage, lfm["track"]["image size=small"].text() );
+
+        if (!downloadImage( 0, "track" ))
+            startArtist();
+    }
+    else
+    {
+        qWarning() << lfm.parseError().message();
+    }
+}
+
+void
+TrackImageFetcher::onArtistGotInfo()
+{
+    if (!downloadImage( (QNetworkReply*)sender(), "artist" ))
+        fail();
+}
 
 void
 TrackImageFetcher::onAlbumImageDownloaded()
@@ -80,32 +136,23 @@ TrackImageFetcher::onAlbumImageDownloaded()
     if ( i.loadFromData( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
         emit finished( i );
     else
-        artistGetInfo();
-    
+        startTrack();
+
     sender()->deleteLater(); //always deleteLater from slots connected to sender()
 }
 
-
 void
-TrackImageFetcher::artistGetInfo()
+TrackImageFetcher::onTrackImageDownloaded()
 {
-    if (!artist().isNull())
-    {
-        QNetworkReply* reply = artist().getInfo();
-        connect( reply, SIGNAL(finished()), SLOT(onArtistGotInfo()) );
-    }
+    QPixmap i;
+
+    if ( i.loadFromData( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+        emit finished( i );
     else
-        fail();
+        startArtist();
+
+    sender()->deleteLater(); //always deleteLater from slots connected to sender()
 }
-
-
-void
-TrackImageFetcher::onArtistGotInfo()
-{
-    if (!downloadImage( (QNetworkReply*)sender(), "artist" ))
-        fail();
-}
-
 
 void
 TrackImageFetcher::onArtistImageDownloaded()
@@ -129,7 +176,15 @@ TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node
     if ( lfm.parse( reply->readAll() ) )
     {
         // cache all the sizes
-        if ( root_node == "artist" )
+        if ( root_node == "album" )
+        {
+            m_track.album().setImageUrl( Track::MegaImage, lfm[root_node]["image size=mega"].text() );
+            m_track.album().setImageUrl( Track::ExtraLargeImage, lfm[root_node]["image size=extralarge"].text() );
+            m_track.album().setImageUrl( Track::LargeImage, lfm[root_node]["image size=large"].text() );
+            m_track.album().setImageUrl( Track::MediumImage, lfm[root_node]["image size=medium"].text() );
+            m_track.album().setImageUrl( Track::SmallImage, lfm[root_node]["image size=small"].text() );
+        }
+        else if ( root_node == "artist" )
         {
             m_track.artist().setImageUrl( Track::MegaImage, lfm[root_node]["image size=mega"].text() );
             m_track.artist().setImageUrl( Track::ExtraLargeImage, lfm[root_node]["image size=extralarge"].text() );
@@ -137,34 +192,30 @@ TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node
             m_track.artist().setImageUrl( Track::MediumImage, lfm[root_node]["image size=medium"].text() );
             m_track.artist().setImageUrl( Track::SmallImage, lfm[root_node]["image size=small"].text() );
         }
-        else
-        {
-            lastfm::MutableTrack track( m_track );
-            track.setImageUrl( Track::MegaImage, lfm[root_node]["image size=mega"].text() );
-            track.setImageUrl( Track::ExtraLargeImage, lfm[root_node]["image size=extralarge"].text() );
-            track.setImageUrl( Track::LargeImage, lfm[root_node]["image size=large"].text() );
-            track.setImageUrl( Track::MediumImage, lfm[root_node]["image size=medium"].text() );
-            track.setImageUrl( Track::SmallImage, lfm[root_node]["image size=small"].text() );
-
-        }
-
-        QUrl imageUrl = url( root_node );
-
-        qDebug() << root_node << imageUrl;
-
-        QNetworkReply* get = lastfm::nam()->get( QNetworkRequest( imageUrl ) );
-
-        if ( root_node == "artist" )
-            connect( get, SIGNAL(finished()), SLOT(onArtistImageDownloaded()) );
-        else
-            connect( get, SIGNAL(finished()), SLOT(onAlbumImageDownloaded()) );
-
-        return true;
     }
     else
     {
         qWarning() << lfm.parseError().message();
     }
+
+    QUrl imageUrl = url( root_node );
+
+    qWarning() << root_node << imageUrl;
+
+    if ( imageUrl.isValid() )
+    {
+        QNetworkReply* get = lastfm::nam()->get( QNetworkRequest( imageUrl ) );
+
+        if ( root_node == "album" )
+            connect( get, SIGNAL(finished()), SLOT(onAlbumImageDownloaded()) );
+        else if ( root_node == "track" )
+            connect( get, SIGNAL(finished()), SLOT(onTrackImageDownloaded()) );
+        else
+            connect( get, SIGNAL(finished()), SLOT(onArtistImageDownloaded()) );
+
+        return true;
+    }
+
     return false;
 }
 
@@ -188,7 +239,14 @@ TrackImageFetcher::url( const QString& root_node )
 
     foreach ( Track::ImageSize size, sizes )
     {
-        QUrl const url = root_node == "artist" ? m_track.artist().imageUrl( size ) : m_track.imageUrl( size, false );
+        QUrl url;
+
+        if ( root_node == "album" )
+            url = m_track.album().imageUrl( size, true );
+        else if ( root_node == "track" )
+            url = m_track.imageUrl( size, true );
+        else if ( root_node == "artist" )
+            url = m_track.artist().imageUrl( size, true );
 
         // we seem to get a load of album.getInfos where the node exists
         // but the value is "" and "mega" isn't currently used for album images

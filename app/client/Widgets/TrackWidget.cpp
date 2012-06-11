@@ -162,17 +162,10 @@ TrackWidget::fetchAlbumArt()
     {
         m_triedFetchAlbumArt = true;
 
-        QString imageUrl = m_track.imageUrl( Track::MediumImage, true ).toString();
-
-        if ( imageUrl.isEmpty() )
-        {
-            delete m_trackImageFetcher;
-            m_trackImageFetcher = new TrackImageFetcher( m_track, Track::MediumImage );
-            connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), ui->albumArt, SLOT(setPixmap(QPixmap)) );
-            m_trackImageFetcher->startAlbum();
-        }
-        else
-            ui->albumArt->loadUrl( imageUrl );
+        delete m_trackImageFetcher;
+        m_trackImageFetcher = new TrackImageFetcher( m_track, Track::MediumImage );
+        connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), ui->albumArt, SLOT(setPixmap(QPixmap)) );
+        m_trackImageFetcher->startAlbum();
     }
 }
 

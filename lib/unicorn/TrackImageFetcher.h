@@ -34,7 +34,12 @@ class UNICORN_DLLEXPORT TrackImageFetcher : public QObject
 public:
     TrackImageFetcher( const Track& track, Track::ImageSize size );
 
+    // The order of preference is this
+    // * if we know the album then use the album image
+    // * if no album image found, use track image which could be a guess at the album
+    // * if neither album nor track image found, fallback to an artist image.
     void startAlbum();
+    void startTrack();
     void startArtist();
 
     Track track() const { return m_track; }
@@ -44,6 +49,7 @@ private:
 
     QUrl url( const QString& root_node );
 
+    void trackGetInfo();
     void artistGetInfo();
     void fail();
     bool downloadImage( QNetworkReply*, const QString& root_node_name );
@@ -56,8 +62,10 @@ signals:
 
 private slots:
     void onAlbumGotInfo();
+    void onTrackGotInfo(const QByteArray &data);
     void onArtistGotInfo();
     void onAlbumImageDownloaded();
+    void onTrackImageDownloaded();
     void onArtistImageDownloaded();
 
 private:
