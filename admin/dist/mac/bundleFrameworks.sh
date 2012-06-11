@@ -188,6 +188,7 @@ vlcPlugins='libaccess_http_plugin.dylib
             libsimple_channel_mixer_plugin.dylib
             libspeex_resampler_plugin.dylib
             libtrivial_channel_mixer_plugin.dylib
+            libauhal_plugin.dylib
             libugly_resampler_plugin.dylib
             libfloat32_mixer_plugin.dylib
             libmpeg_audio_plugin.dylib
