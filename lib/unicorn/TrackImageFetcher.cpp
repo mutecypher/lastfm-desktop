@@ -173,7 +173,7 @@ TrackImageFetcher::downloadImage( QNetworkReply* reply, const QString& root_node
 {
     XmlQuery lfm;
 
-    if ( lfm.parse( reply->readAll() ) )
+    if ( reply && lfm.parse( reply->readAll() ) )
     {
         // cache all the sizes
         if ( root_node == "album" )
