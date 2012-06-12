@@ -525,7 +525,6 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
         // Update the context now that we have the user track listens
         ui->context->setText( contextString( m_track ) );
 
-        //ui->albumImage->loadUrl( lfm["track"]["album"]["image size=medium"].text() );
         ui->albumImage->setHref( lfm["track"]["url"].text());
 
         if ( lfm["track"]["userloved"].text().length() > 0 )
@@ -550,19 +549,10 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
 
             ui->trackPopTags->setText( tagString );
 
-            // If we don't know the album then get it from this response
+            // If we don't know the album then set the track image
             if ( m_track.album().isNull() )
             {
-                QString albumTitle = lfm["track"]["album"]["title"].text();
-
-                if ( !albumTitle.isEmpty() )
-                {
-                    m_albumGuess = lastfm::Album( m_track.artist().name(), albumTitle );
-                    connect( m_albumGuess.getInfo( User().name() ), SIGNAL(finished()), SLOT(onAlbumGotInfo()) );
-                    ++m_numCalls;
-
-                    setTrackDetails( m_track );
-                }
+                ui->albumImage->loadUrl( lfm["track"]["album"]["image size=medium"].text() );
             }
         }
     }
