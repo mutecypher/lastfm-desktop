@@ -43,7 +43,7 @@ namespace common
         struct STAT st;
         if (stat( path.c_str(), &st ) != 0)
         {
-            COMMON_LOG( 3, "Couldn't stat" << path );
+            //COMMON_LOG( 3, "Couldn\'t stat" << path );
             return 0;
         }
         else
