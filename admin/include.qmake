@@ -21,7 +21,7 @@ unix:QMAKE_CXXFLAGS += -fno-operator-names
 
 macx* {
     QMAKE_PKGINFO_TYPEINFO = last
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.5
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
 }
 
 include( qmake/debug.pro.inc )

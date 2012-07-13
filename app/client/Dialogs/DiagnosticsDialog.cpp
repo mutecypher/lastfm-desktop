@@ -33,7 +33,7 @@
 #include "ui_DiagnosticsDialog.h"
 #include "DiagnosticsDialog.h"
 
-#include "common/c++/Logger.cpp"
+#include "common/c++/Logger.h"
 
 DiagnosticsDialog::DiagnosticsDialog( QWidget *parent )
         : QDialog( parent ),

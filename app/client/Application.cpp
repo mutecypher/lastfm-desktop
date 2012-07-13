@@ -314,6 +314,7 @@ Application::init()
 #ifdef Q_OS_MAC
     m_notify = new Notify( this );
     connect( m_notify, SIGNAL(clicked()), SLOT(showWindow()) );
+    connect( &ScrobbleService::instance(), SIGNAL(stopped()), m_notify, SLOT(onStopped()) );
 
     new CommandReciever( this );
 #endif
