@@ -65,11 +65,16 @@
 unicorn::Notify::Notify(QObject *parent) :
     QObject(parent)
 {
-    GrowlDelegate* growlDelegate = [[GrowlDelegate alloc] init: this];
-    [GrowlApplicationBridge setGrowlDelegate:growlDelegate];
-
-    MacDelegate* macDelegate = [[MacDelegate alloc] init: this];
-    [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:macDelegate];
+    if ( [NSUserNotificationCenter class] )
+    {
+        MacDelegate* macDelegate = [[MacDelegate alloc] init: this];
+        [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:macDelegate];
+    }
+    else
+    {
+        GrowlDelegate* growlDelegate = [[GrowlDelegate alloc] init: this];
+        [GrowlApplicationBridge setGrowlDelegate:growlDelegate];
+    }
 }
 
 void
@@ -78,7 +83,25 @@ unicorn::Notify::newTrack( const lastfm::Track& track )
     delete m_trackImageFetcher;
     m_trackImageFetcher = new TrackImageFetcher( track, Track::LargeImage );
     connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), SLOT(onFinished(QPixmap)) );
-    m_trackImageFetcher->startAlbum();
+
+    if ( [NSUserNotificationCenter class] )
+    {
+        [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
+        onFinished( QPixmap() );
+    }
+    else
+    {
+        m_trackImageFetcher->startAlbum();
+    }
+}
+
+void
+unicorn::Notify::stopped()
+{
+    if ( [NSUserNotificationCenter class] )
+    {
+        [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
+    }
 }
 
 void

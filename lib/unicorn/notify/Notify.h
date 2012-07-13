@@ -22,6 +22,7 @@ signals:
 
 public slots:
     void newTrack( const lastfm::Track& track );
+    void stopped();
 
 private slots:
     void onFinished( const QPixmap& pixmap );
