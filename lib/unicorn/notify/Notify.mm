@@ -69,11 +69,20 @@ unicorn::Notify::Notify(QObject *parent) :
     {
         MacDelegate* macDelegate = [[MacDelegate alloc] init: this];
         [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:macDelegate];
+        [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
     }
     else
     {
         GrowlDelegate* growlDelegate = [[GrowlDelegate alloc] init: this];
         [GrowlApplicationBridge setGrowlDelegate:growlDelegate];
+    }
+}
+
+unicorn::Notify::~Notify()
+{
+    if ( [NSUserNotificationCenter class] )
+    {
+        [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
     }
 }
 
@@ -96,11 +105,34 @@ unicorn::Notify::newTrack( const lastfm::Track& track )
 }
 
 void
+unicorn::Notify::paused()
+{
+    if ( [NSUserNotificationCenter class] )
+    {
+        [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
+    }
+}
+
+void
+unicorn::Notify::resumed()
+{
+    if ( [NSUserNotificationCenter class] )
+    {
+        if ( m_trackImageFetcher )
+        {
+            [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
+            onFinished( QPixmap() );
+        }
+    }
+}
+
+void
 unicorn::Notify::stopped()
 {
     if ( [NSUserNotificationCenter class] )
     {
         [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
+        delete m_trackImageFetcher;
     }
 }
 
