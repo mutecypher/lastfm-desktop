@@ -81,6 +81,7 @@ public slots:
     void onMinimizeTriggered();
     void onZoomTriggered();
     void onBringAllToFrontTriggered();
+    void showMessage( const QString& message, const QString& id = "", int timeout = -1 /*seconds*/ );
 
 private slots:
     void onVisitProfile();

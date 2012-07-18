@@ -22,6 +22,7 @@
 #define AUDIOSCROBBLER_APPLICATION_H_
 
 #include <QPointer>
+#include <QQueue>
 #include <QSystemTrayIcon>
 
 #include <lastfm/global.h>
@@ -45,6 +46,7 @@ class QMenuBar;
 class MediaKey;
 #endif
 
+namespace lastfm { class RadioStation; }
 namespace unicorn { class Notify; }
 using unicorn::Notify;
 
@@ -81,6 +83,8 @@ namespace audioscrobbler
             Settings,
             ArgUnknown
         };
+
+        QMap<QString, QQueue<QDateTime> > m_skips;
 
         // we delete these so QPointers
         QPointer<QSystemTrayIcon> m_tray;
@@ -154,6 +158,8 @@ namespace audioscrobbler
         void trackGotTags(const XmlQuery& lfm);
 
         void finished();
+
+        void skipTriggered();
 		
         void error( const QString& message );
         void status( const QString& message, const QString& id );
@@ -184,6 +190,8 @@ namespace audioscrobbler
 
     private:
         static Argument argument( const QString& arg );
+        void saveSkips() const;
+        int minutesUntilNextSkip( const lastfm::RadioStation& station );
 
 #ifdef Q_OS_MAC
         bool macEventFilter ( EventHandlerCallRef caller, EventRef event );
@@ -193,6 +201,7 @@ namespace audioscrobbler
         void onTrayActivated(QSystemTrayIcon::ActivationReason);
         void onCorrected(QString correction);
 
+        void onSkipTriggered();
         void onTagTriggered();
         void onShareTriggered();
 
@@ -210,6 +219,8 @@ namespace audioscrobbler
         void onTrackPaused( bool );
 
         void onTrackSpooled( const Track& );
+
+        void onSessionChanged( unicorn::Session& );
 
         void onMessageReceived(const QStringList& message);
 		

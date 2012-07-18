@@ -97,8 +97,6 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     layout->addWidget( ui.messageBar = new MessageBar( this ) );
 
-    connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), ui.messageBar, SLOT(hide()) );
-
     QHBoxLayout* h = new QHBoxLayout();
     h->setContentsMargins( 0, 0, 0, 0 );
     h->setSpacing( 0 );
@@ -199,6 +197,12 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     }
 
     connect( lastfm::nam()->get( QNetworkRequest( CONFIG_URL ) ), SIGNAL(finished()), SLOT(onConfigRetrieved()) );
+}
+
+void
+MainWindow::showMessage( const QString& message, const QString& id, int timeout )
+{
+    ui.messageBar->show( message, id, timeout );
 }
 
 QString
