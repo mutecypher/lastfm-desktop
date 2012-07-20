@@ -6,11 +6,14 @@
 namespace lastfm { class Track; }
 using lastfm::Track;
 
+namespace Ui { class ScrobblesWidget; }
+
 class ScrobblesWidget : public QWidget
 {
 Q_OBJECT
 public:
-    ScrobblesWidget( QWidget* parent = 0 );
+    explicit ScrobblesWidget( QWidget* parent = 0 );
+    ~ScrobblesWidget();
 
 public slots:
     void onCurrentChanged( int index );
@@ -23,8 +26,7 @@ protected slots:
     void onMetadataWidgetFinished();
 
 protected:
-    class SideBySideLayout* m_layout;
-    class ScrobblesListWidget* m_scrobbles;
+    Ui::ScrobblesWidget* ui;
 };
 
 #endif //RECENT_TRACKS_WIDGET_H_
