@@ -36,7 +36,7 @@
 #include "ScrobbleSettingsWidget.h"
 
 #define SETTING_SCROBBLE_POINT "scrobblePoint"
-#define SETTING_ALLOW_FINGERPRINTING "allowFingerprint"
+#define SETTING_ALLOW_FINGERPRINTING "fingerprint"
 #define SETTING_PODCASTS "podcasts"
 
 

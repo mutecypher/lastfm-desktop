@@ -200,7 +200,7 @@ PlayerCommandParser::extractTrack( const QMap<QChar, QString>& args )
         ITunesTrack comTrack = com->currentTrack();
         bool podcast = comTrack.podcast();
         bool video = comTrack.video();
-        QString path = QString::fromStdWString( comTrack.path() );
+        QUrl path = QUrl::fromLocalFile( QString::fromStdWString( comTrack.path() ) );
 
         qDebug() << QString::fromStdWString( comTrack.artist() )
                  << QString::fromStdWString( comTrack.track() )

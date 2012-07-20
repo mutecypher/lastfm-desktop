@@ -3,7 +3,7 @@ TARGET = "Last.fm"
 VERSION = 2.1.20
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql
-CONFIG += lastfm unicorn listener logger phonon
+CONFIG += lastfm unicorn listener logger phonon fingerprint mad faad fftw3f vorbis flac
 win32:LIBS += user32.lib
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 
@@ -103,7 +103,12 @@ SOURCES += \
     Widgets/TrackWidget.cpp \
     Dialogs/LicensesDialog.cpp \
     Widgets/ScrobblesWidget.cpp \
-    Widgets/ScrobblesListWidget.cpp
+    Widgets/ScrobblesListWidget.cpp \
+    Fingerprinter/AacSource.cpp \
+    Fingerprinter/Fingerprinter.cpp \
+    Fingerprinter/FlacSource.cpp \
+    Fingerprinter/MadSource.cpp \
+    Fingerprinter/VorbisSource.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -181,7 +186,13 @@ HEADERS += \
     Widgets/TrackWidget.h \
     Dialogs/LicensesDialog.h \
     Widgets/ScrobblesListWidget.h \
-    Widgets/ScrobblesWidget.h
+    Widgets/ScrobblesWidget.h \
+    Fingerprinter/AacSource_p.h \
+    Fingerprinter/AacSource.h \
+    Fingerprinter/Fingerprinter.h \
+    Fingerprinter/FlacSource.h \
+    Fingerprinter/MadSource.h \
+    Fingerprinter/VorbisSource.h
 
 
 win32:HEADERS += Plugins/FooBar08PluginInfo.h \

@@ -10,14 +10,44 @@ CONFIG( taglib ) {
 }
 
 CONFIG( mad ) {
-    win32{
-		LIBS += -L$$COMMON_LIBS_DIR/libmad -lmad
-	}else:CONFIG( app_bundle ){
+    mac{
                 LIBS += /usr/local/lib/libmad.a
 	}else{
         CONFIG += link_pkgconfig
         PKGCONFIG += mad
     } 
+}
+
+CONFIG( faad ) {
+    mac {
+                LIBS += /usr/local/lib/libfaad.a
+                LIBS += /usr/local/lib/libmp4ff.a
+                DEFINES += HAVE_STDINT_H
+        }else{
+        CONFIG += link_pkgconfig
+        PKGCONFIG += faad2
+        PKGCONFIG += mp4ff
+    }
+}
+
+CONFIG( vorbis ) {
+    mac{
+                LIBS += /usr/local/lib/libvorbis.a
+                LIBS += /usr/local/lib/libvorbisfile.a
+                LIBS += /usr/local/lib/libogg.a
+        }else{
+        CONFIG += link_pkgconfig
+        PKGCONFIG += vorbis
+    }
+}
+
+CONFIG( flac ) {
+    mac{
+                LIBS += /usr/local/lib/libFLAC.a
+        }else{
+        CONFIG += link_pkgconfig
+        PKGCONFIG += flac
+    }
 }
 
 CONFIG( boost ) {
@@ -41,9 +71,7 @@ CONFIG( break ) {
 }
 
 CONFIG( fftw3f ) {
-    win32{
-		LIBS += -L$$COMMON_LIBS_DIR/libfftw -lfftw3f
-	}else:CONFIG( app_bundle ){
+    mac{
                 LIBS += /usr/local/lib/libfftw3f.a
 	}else{
         CONFIG += link_pkgconfig

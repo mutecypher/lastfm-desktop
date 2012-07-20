@@ -52,6 +52,7 @@
 #include "CommandReciever/CommandReciever.h"
 #endif
 
+#include "Fingerprinter/Fingerprinter.h"
 #include "Dialogs/LicensesDialog.h"
 #include "MediaDevices/DeviceScrobbler.h"
 #include "Services/RadioService.h"
@@ -398,7 +399,7 @@ Application::onCorrected(QString /*correction*/)
 
 
 void
-Application::onTrackStarted( const Track& track, const Track& oldTrack )
+Application::onTrackStarted( const lastfm::Track& track, const Track& oldTrack )
 {
     disconnect( oldTrack.signalProxy(), 0, this, 0 );
 
@@ -415,6 +416,13 @@ Application::onTrackStarted( const Track& track, const Track& oldTrack )
             tray()->showMessage( track.toString(), tr("from %1").arg( track.album() ) );
 #endif
         }
+    }
+
+    if ( unicorn::UserSettings().value( "fingerprint", true ).toBool() && track.url().isLocalFile() )
+    {
+        Fingerprinter* fingerprinter = new Fingerprinter( track, this );
+        connect( fingerprinter, SIGNAL(finished()), fingerprinter, SLOT(deleteLater()) );
+        fingerprinter->start();
     }
 
     m_tray->setToolTip( track.toString() );
