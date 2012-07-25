@@ -296,21 +296,10 @@ RadioService::onPhononStateChanged( Phonon::State newstate, Phonon::State oldsta
     switch (newstate)
     {
         case Phonon::ErrorState:
-            if (m_mediaObject->errorType() == Phonon::FatalError)
-            {
-                qWarning() << "Phonon fatal error:" << m_mediaObject->errorString();
-                emit error( lastfm::ws::UnknownError, QVariant( m_mediaObject->errorString() ));
-                deInitRadio();
-                changeState( Stopped );
-            }
-            else
-            {
-                qWarning() << "Phonon normal error:" << m_mediaObject->errorString();
-
-                // seems we need to clear the error state before trying to play again.
-                m_bErrorRecover = true;
-                m_mediaObject->stop();
-            }
+            qWarning() << "Phonon fatal error:" << m_mediaObject->errorString();
+            emit error( lastfm::ws::UnknownError, QVariant( m_mediaObject->errorString() ));
+            deInitRadio();
+            changeState( Stopped );
             break;
 			
         case Phonon::PausedState:
@@ -357,7 +346,7 @@ RadioService::phononEnqueue()
 
     // keep only one track in the phononQueue
     // Loop until we get a null url or a valid url.
-    for (;;)
+    forever
     {
         // consume next track from the track source. a null track 
         // response means wait until the trackAvailable signal
@@ -399,6 +388,11 @@ RadioService::phononEnqueue()
 void
 RadioService::onPhononCurrentSourceChanged( const Phonon::MediaSource& )
 {
+    if (m_mediaObject == 0) {
+        qDebug() << "m_mediaObject is null!";
+        return;
+    }
+
     MutableTrack( m_track ).stamp();
 
     if (m_mediaObject->state() != Phonon::PlayingState)
