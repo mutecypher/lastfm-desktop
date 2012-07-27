@@ -78,7 +78,7 @@ function fixLocalLibs {
 
     local libs=`otool -L "$bin" | sed -n '/^[^\/]*$/ s/^[[:space:]]*\(.*\) (com.*/\1/p'`
     local extralibs=`otool -L "$bin" | sed -n '/\/usr\/local.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'|grep -v framework`
-    local moreExtralibs=`otool -L "$bin" | sed -n '/\/Users.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'|grep -v framework`
+    local moreExtralibs=`otool -L "$bin" | sed -n '/\/usr\/X11.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'|grep -v framework`
     local libs="$libs $extralibs $moreExtralibs"
     local lib
     local cpPath
