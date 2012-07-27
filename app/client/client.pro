@@ -237,7 +237,8 @@ FORMS += \
     Dialogs/BetaDialog.ui \
     Dialogs/CloseAppsDialog.ui \
     Widgets/TrackWidget.ui \
-    Dialogs/LicensesDialog.ui
+    Dialogs/LicensesDialog.ui \
+    Widgets/ScrobblesWidget.ui
 
 unix:!mac:HEADERS += MediaDevices/IpodDevice_linux.h
 unix:!mac:SOURCES += MediaDevices/IpodDevice_linux.cpp
