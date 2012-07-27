@@ -53,7 +53,7 @@ function fixFrameworks {
 
         if [ ! -e "$bundlePath/Contents/Frameworks/$frameworkName" ]; then 
             #cp -Rf -P /opt/qt/qt.git/lib/QtXml.framework (app name.app)/Contents/Frameworks
-            cp -Rf -p $framework "$bundlePath/Contents/Frameworks"
+            cp -R -H -f $framework "$bundlePath/Contents/Frameworks"
 
             chmod -R u+w "$bundlePath/Contents/Frameworks"
 
@@ -78,7 +78,7 @@ function fixLocalLibs {
 
     local libs=`otool -L "$bin" | sed -n '/^[^\/]*$/ s/^[[:space:]]*\(.*\) (com.*/\1/p'`
     local extralibs=`otool -L "$bin" | sed -n '/\/usr\/local.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'|grep -v framework`
-    local moreExtralibs=`otool -L "$bin" | sed -n '/\/usr\/X11.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'|grep -v framework`
+    local moreExtralibs=`otool -L "$bin" | sed -n '/\/Users.*/ s/^[^\/]*\([^(]*\) [^(]*([^)]*)/\1/p'|grep -v framework`
     local libs="$libs $extralibs $moreExtralibs"
     local lib
     local cpPath
@@ -93,7 +93,7 @@ function fixLocalLibs {
 
 		echo $cpPath "$bundlePath/Contents/MacOS"
 
-        cp -L -R -f -p $cpPath "$bundlePath/Contents/MacOS"
+        cp -R -H -f $cpPath "$bundlePath/Contents/MacOS"
 
         chmod -R u+w "$bundlePath/Contents/MacOS"
 
@@ -144,9 +144,9 @@ echo
 
 echo ======= Copying 3rd party frameworks ===========
 
-cp -Rf /Library/Frameworks/Growl.framework "$bundlePath/Contents/Frameworks"
-cp -Rf /Library/Frameworks/Sparkle.framework "$bundlePath/Contents/Frameworks"
-cp -Rf /Library/Frameworks/Breakpad.framework "$bundlePath/Contents/Frameworks"
+cp -R -H -f /Library/Frameworks/Growl.framework "$bundlePath/Contents/Frameworks"
+cp -R -H -f /Library/Frameworks/Sparkle.framework "$bundlePath/Contents/Frameworks"
+#cp -R -L -f /Library/Frameworks/Breakpad.framework "$bundlePath/Contents/Frameworks"
 
 echo
 
@@ -161,7 +161,7 @@ for plugin in $plugins; do
     else
         pluginDir=`qmake --version |sed -n 's/^.*in \(\/.*$\)/\1/p'`/../plugins
     fi
-    cp -R $pluginDir/$plugin "$bundlePath/Contents/plugins"
+    cp -R -H -f $pluginDir/$plugin "$bundlePath/Contents/plugins"
     for i in "$bundlePath"/Contents/plugins/$plugin/*; do
         fixFrameworks "$i"
         fixLocalLibs "$i"
@@ -200,7 +200,7 @@ for plugin in $vlcPlugins; do
     pluginDir="/usr/local/lib/vlc/plugins"
 
     mkdir -p "$bundlePath/Contents/plugins"
-    cp -RL $pluginDir/$plugin "$bundlePath/Contents/plugins"
+    cp -R -H -f $pluginDir/$plugin "$bundlePath/Contents/plugins"
     chmod -R u+w "$bundlePath/Contents/plugins"
     
     fixFrameworks "$bundlePath/Contents/plugins/$plugin"
