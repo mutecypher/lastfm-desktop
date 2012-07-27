@@ -510,6 +510,24 @@ ScrobblesListWidget {
 border: none;
 }
 
+ScrobblesWidget #noScrobbles {
+border: none;
+}
+
+ScrobblesWidget #noScrobbles QLabel {
+color: #333;
+}
+
+ScrobblesWidget #noScrobbles QLabel#title {
+font-weight: bold;
+font-size: 16px;
+}
+
+ScrobblesWidget #noScrobbles QLabel#description {
+font-size: 12px;
+}
+
+
 RefreshButton,
 QPushButton#more {
 background-position: center left;
