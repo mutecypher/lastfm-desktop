@@ -36,8 +36,68 @@ Get the latest Sparkle from here http://sparkle.andymatuschak.org/
 Unzip both and put their frameworks in /Library/Frameworks/ so the build will find them.
 
 ## Windows
+We used to build using Cygwin, but now we prefer not to.
+
+You should get Windows version of the tool chain. Here are some recommendations.
+
+- Git: http://code.google.com/p/msysgit/downloads/list
+- CMake: http://www.cmake.org/cmake/resources/software.html
+- pkg-config: http://www.gtk.org/download/win32.php
+- Ruby: http://rubyinstaller.org/
+- Perl: http://www.perl.org/get.html
+
+### Qt
+Install Qt binaries from either the Qt SDK or standalone binary package. You should be able to find everything here http://qt.nokia.com/downloads
 
 You will also need the latest Windows SDK. We build using Visual Studio 2008.
+
+### Phonon
+We build the latest version of Phonon. This step is optional, if you're happy with the outdated one that ships with Qt.
+
+You can clone Phonon from here git://anongit.kde.org/phonon
+
+Follow their instructions to build it using cmake, etc. I found that CMake needed a little help wiht cmake-gui.
+
+Create a pkg-config file for Phonon like this:
+
+```
+Name: Phonon
+Description: Multimedia Library
+Version: 4.6.0
+Libs: -LC:/dev/Install/Phonon/lib C:/dev/Install/Phonon/lib/phonon.lib
+Cflags: -IC:/dev/Install/Phonon/include
+```
+
+### VLC
+We use the VLC backend for phonon. This step is optional, if you are happy with the directx plugin that ships with Qt.
+
+Download Latest VLC from http://www.videolan.org/vlc/download-windows.html
+
+VLC is compiled with MinGW so we need to generate a .lib so that we can link to it with MSVC.
+
+To do this you should follow the instructions here http://wiki.videolan.org/GenerateLibFromDll
+
+Create a pkg-config file for VLC so that Phonon-VLC can find it.
+
+I found I also had to copy libvlc.dll and libvlccore.dll into lastfm-desktop/_bin
+
+### Phonon-VLC
+This is the Qt plugin that gets Phonon to use libvlc. Again, this is an optional.
+
+You can clone phonon-vlc from here git://anongit.kde.org/phonon-vlc
+
+Follow there instructions for building it. I found that CMake needed a little help wiht cmake-gui.
+
+You should copy the resulting phonon_vlc.dll into lastfm-desktop/_bin/plugins/phonon_backend
+
+### Winsparkle
+This is the library we use to check for app updates. You should download the latest dll and headers form here http://winsparkle.org
+
+This step should be optional really as most people will not want to add the update checking.
+
+Create a pkg-config file for WinSparkle.  I found that I also needed to copy the dll into the lastfm-desktop/_bin folder.
+
+###
 
 ## Linux
 
@@ -53,7 +113,7 @@ probably go:
 
 ```
 sudo apt-get install qt4-dev pkg-config libtag libsamplerate libfftw3 libmad
-./configure && make -j2 && make install
+qmake -r && make -j2 && make install
 ```
 
 I wrote that from memory as I'm working on a Mac today. If it's wrong please
@@ -71,6 +131,8 @@ sudo apt-get install libsqlite3-dev libqt4-sql-sqlite
 qmake -r
 make
 ```
+
+Note that if you installed Qt through homebrew it will default to a release build.
 
 # Run Instructions
 
