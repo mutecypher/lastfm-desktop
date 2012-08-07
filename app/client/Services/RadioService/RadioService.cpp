@@ -296,7 +296,7 @@ RadioService::onPhononStateChanged( Phonon::State newstate, Phonon::State oldsta
     switch (newstate)
     {
         case Phonon::ErrorState:
-            qWarning() << "Phonon fatal error:" << m_mediaObject->errorString();
+            qWarning() << m_mediaObject->errorType() << m_mediaObject->errorString();
             emit error( lastfm::ws::UnknownError, QVariant( m_mediaObject->errorString() ));
             deInitRadio();
             changeState( Stopped );

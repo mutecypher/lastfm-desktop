@@ -30,6 +30,6 @@ CONFIG( lastfm ) {
         }
         macx:QMAKE_MAC_SDK = $$MAC_SDK
 
-        LIBS += -framework Carbon -framework CoreFoundation -weak_framework Foundation # various
+        LIBS += -weak_framework Carbon -weak_framework CoreFoundation -weak_framework Foundation
     }
 }

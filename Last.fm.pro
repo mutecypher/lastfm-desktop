@@ -3,8 +3,8 @@ CONFIG += ordered
 SUBDIRS = lib/logger \
           lib/unicorn \
           lib/listener \
-          app/twiddly \
-          app/client
+          app/client \
+          app/twiddly 
           #app/boffin
 
 unix:!mac:SUBDIRS -= app/twiddly

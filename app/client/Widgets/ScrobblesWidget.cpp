@@ -13,43 +13,50 @@
 
 #include "ScrobblesWidget.h"
 
+#include "ui_ScrobblesWidget.h"
 
 ScrobblesWidget::ScrobblesWidget( QWidget* parent )
-    :QWidget( parent )
+    :QWidget( parent ), ui( new Ui::ScrobblesWidget )
 {
-    m_layout = new SideBySideLayout();
-    setLayout( m_layout );
-    m_layout->addWidget( m_scrobbles = new ScrobblesListWidget( this ) );
+    ui->setupUi( this );
 
-    connect( m_scrobbles, SIGNAL( trackClicked(TrackWidget&)), SLOT( onTrackClicked(TrackWidget&)));
-    connect( m_layout, SIGNAL( moveFinished(QLayoutItem*)), SLOT(onMoveFinished(QLayoutItem*)));
+    connect( ui->scrobbles, SIGNAL( trackClicked(TrackWidget&)), SLOT( onTrackClicked(TrackWidget&)));
+    connect( ui->layout, SIGNAL( moveFinished(QLayoutItem*)), SLOT(onMoveFinished(QLayoutItem*)));
+
+    ui->stackedWidget->setCurrentWidget( ui->noScrobbles );
 }
+
+ScrobblesWidget::~ScrobblesWidget()
+{
+    delete ui;
+}
+
 
 void
 ScrobblesWidget::refresh()
 {
-    m_scrobbles->refresh();
+    ui->scrobbles->refresh();
 }
 
 void
 ScrobblesWidget::onCurrentChanged( int index )
 {
     if ( index == 1 )
-        m_scrobbles->refresh(); // this tab was clicked on
+        ui->scrobbles->refresh(); // this tab was clicked on
 
-    m_layout->moveToWidget( m_scrobbles );
+    ui->layout->moveToWidget( ui->scrobbles );
 }
 
 void
 ScrobblesWidget::onTrackClicked( TrackWidget& trackWidget )
 {
     MetadataWidget* w;
-    m_layout->addWidget( w = new MetadataWidget( trackWidget.track() ));
+    ui->layout->addWidget( w = new MetadataWidget( trackWidget.track() ));
     w->fetchTrackInfo();
     w->setBackButtonVisible( true );
 
     trackWidget.startSpinner();
-    connect( m_layout, SIGNAL( moveFinished(QLayoutItem*)), &trackWidget, SLOT(clearSpinner()) );
+    connect( ui->layout, SIGNAL( moveFinished(QLayoutItem*)), &trackWidget, SLOT(clearSpinner()) );
 
     connect( w, SIGNAL(finished()), SLOT(onMetadataWidgetFinished()));
     connect( w, SIGNAL(backClicked()), SLOT(onBackClicked()));
@@ -58,23 +65,23 @@ ScrobblesWidget::onTrackClicked( TrackWidget& trackWidget )
 void
 ScrobblesWidget::onMetadataWidgetFinished()
 {
-    m_layout->moveForward();
+    ui->layout->moveForward();
 }
 
 void
 ScrobblesWidget::onBackClicked()
 {
-    m_layout->moveToWidget( m_scrobbles );
+    ui->layout->moveToWidget( ui->scrobbles );
 }
 
 void
 ScrobblesWidget::onMoveFinished( QLayoutItem* i )
 {
-    if( i->widget() == m_scrobbles )
+    if( i->widget() == ui->scrobbles )
     {
-        while ( m_layout->count() > 1 )
+        while ( ui->layout->count() > 1 )
         {
-            QLayoutItem* item = m_layout->takeAt( 1 );
+            QLayoutItem* item = ui->layout->takeAt( 1 );
             item->widget()->deleteLater();
             delete item;
         }
