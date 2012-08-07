@@ -24,6 +24,6 @@ CONFIG( lastfm ) {
 
     }
     mac{
-        LIBS += -framework Carbon -framework CoreFoundation # various
+        LIBS += -framework Carbon -framework CoreFoundation -framework Foundation # various
     }
 }
