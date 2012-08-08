@@ -1,5 +1,7 @@
 
+#ifdef LASTFM_USER_NOTIFICATIONS
 #include <Foundation/NSUserNotification.h>
+#endif
 
 #include <QPixmap>
 
@@ -10,15 +12,16 @@
 #include "Notify.h"
 
 
-@interface MacDelegate : NSObject <NSUserNotificationCenterDelegate> {
+#ifdef LASTFM_USER_NOTIFICATIONS
+@interface MacClickDelegate : NSObject <NSUserNotificationCenterDelegate> {
     unicorn::Notify* m_observer;
 }
-    - (MacDelegate*) init:(unicorn::Notify*)observer;
+    - (MacClickDelegate*) initialise:(unicorn::Notify*)observer;
     - (void) userNotificationCenter:(NSUserNotificationCenter *)center didActivateNotification:(NSUserNotification *)notification;
 @end
 
-@implementation MacDelegate
-- (MacDelegate*) init:(unicorn::Notify*)observer
+@implementation MacClickDelegate
+- (MacClickDelegate*) initialise:(unicorn::Notify*)observer
 {
     if ( (self = [super init]) )
     {
@@ -35,16 +38,17 @@
     self->m_observer->growlNotificationWasClicked();
 }
 @end
+#endif
 
-@interface GrowlDelegate : NSObject <GrowlApplicationBridgeDelegate> {
+@interface GrowlClickDelegate : NSObject <GrowlApplicationBridgeDelegate> {
     unicorn::Notify* m_observer;
 }
-    - (GrowlDelegate*) init:(unicorn::Notify*)observer;
+    - (GrowlClickDelegate*) init:(unicorn::Notify*)observer;
     - (void) growlNotificationWasClicked:(id)clickContext;
 @end
 
-@implementation GrowlDelegate
-- (GrowlDelegate*) init:(unicorn::Notify*)observer
+@implementation GrowlClickDelegate
+- (GrowlClickDelegate*) init:(unicorn::Notify*)observer
 {
     if ( (self = [super init]) )
     {
@@ -59,31 +63,34 @@
     Q_UNUSED(clickContext)
     self->m_observer->growlNotificationWasClicked();
 }
-
 @end
 
 unicorn::Notify::Notify(QObject *parent) :
     QObject(parent)
 {
+#ifdef LASTFM_USER_NOTIFICATIONS
     if ( [NSUserNotificationCenter class] )
     {
-        MacDelegate* macDelegate = [[MacDelegate alloc] init: this];
+        MacClickDelegate* macDelegate = [[MacClickDelegate alloc] initialise: this];
         [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:macDelegate];
         [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
     }
     else
+#endif
     {
-        GrowlDelegate* growlDelegate = [[GrowlDelegate alloc] init: this];
-        [GrowlApplicationBridge setGrowlDelegate:growlDelegate];
+        GrowlClickDelegate* growlDelegate = [[GrowlClickDelegate alloc] init: this];
+        [GrowlApplicationBridge setGrowlClickDelegate:growlDelegate];
     }
 }
 
 unicorn::Notify::~Notify()
 {
+#ifdef LASTFM_USER_NOTIFICATIONS
     if ( [NSUserNotificationCenter class] )
     {
         [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
     }
+#endif
 }
 
 void
@@ -93,12 +100,14 @@ unicorn::Notify::newTrack( const lastfm::Track& track )
     m_trackImageFetcher = new TrackImageFetcher( track, Track::LargeImage );
     connect( m_trackImageFetcher, SIGNAL(finished(QPixmap)), SLOT(onFinished(QPixmap)) );
 
+#ifdef LASTFM_USER_NOTIFICATIONS
     if ( [NSUserNotificationCenter class] )
     {
         [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
         onFinished( QPixmap() );
     }
     else
+#endif
     {
         m_trackImageFetcher->startAlbum();
     }
@@ -107,15 +116,16 @@ unicorn::Notify::newTrack( const lastfm::Track& track )
 void
 unicorn::Notify::paused()
 {
+#ifdef LASTFM_USER_NOTIFICATIONS
     if ( [NSUserNotificationCenter class] )
-    {
         [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
-    }
+#endif
 }
 
 void
 unicorn::Notify::resumed()
 {
+#ifdef LASTFM_USER_NOTIFICATIONS
     if ( [NSUserNotificationCenter class] )
     {
         if ( m_trackImageFetcher )
@@ -124,16 +134,19 @@ unicorn::Notify::resumed()
             onFinished( QPixmap() );
         }
     }
+#endif
 }
 
 void
 unicorn::Notify::stopped()
 {
+#ifdef LASTFM_USER_NOTIFICATIONS
     if ( [NSUserNotificationCenter class] )
     {
         [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
         delete m_trackImageFetcher;
     }
+#endif
 }
 
 void
@@ -150,6 +163,7 @@ unicorn::Notify::onFinished( const QPixmap& pixmap )
     NSString* nsTitle = [NSString stringWithCharacters:(const unichar *)title.unicode() length:(NSUInteger)title.length() ];
     NSString* nsDescription = [NSString stringWithCharacters:(const unichar *)description.unicode() length:(NSUInteger)description.length() ];
 
+#ifdef LASTFM_USER_NOTIFICATIONS
     if ( [NSUserNotificationCenter class] )
     {
         NSUserNotification* userNotification = [NSUserNotification alloc];
@@ -160,6 +174,7 @@ unicorn::Notify::onFinished( const QPixmap& pixmap )
         [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:userNotification];
     }
     else
+#endif
     {
         NSData* data = nil;
 

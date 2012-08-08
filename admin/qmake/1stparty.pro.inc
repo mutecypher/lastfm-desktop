@@ -25,10 +25,14 @@ CONFIG( lastfm ) {
     }
     mac{
         MAC_SDK  = $$system(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+
         if( !exists( $$MAC_SDK) ) {
-            error("The selected Mac OSX SDK does not exist at $$MAC_SDK!")
+            message("You do not have the MacOSX10.8 SDK installed. User Notifications will not be built.")
         }
-        macx:QMAKE_MAC_SDK = $$MAC_SDK
+        else {
+            macx:QMAKE_MAC_SDK = $$MAC_SDK
+            DEFINES += LASTFM_USER_NOTIFICATIONS
+        }
 
         LIBS += -weak_framework Carbon -weak_framework CoreFoundation -weak_framework Foundation
     }
