@@ -45,6 +45,8 @@ You should get Windows version of the tool chain. Here are some recommendations.
 - pkg-config: http://www.gtk.org/download/win32.php
 - Ruby: http://rubyinstaller.org/
 - Perl: http://www.perl.org/get.html
+- Win Platform SDK:http://www.microsoft.com/en-us/download/details.aspx?id=8279
+- KDE Support: http://windows.kde.org/ Install the automoc and dbus packages.
 
 ### Qt
 Install Qt binaries from either the Qt SDK or standalone binary package. You should be able to find everything here http://qt.nokia.com/downloads
@@ -77,7 +79,7 @@ VLC is compiled with MinGW so we need to generate a .lib so that we can link to 
 
 To do this you should follow the instructions here http://wiki.videolan.org/GenerateLibFromDll
 
-Create a pkg-config file for VLC so that Phonon-VLC can find it.
+- Copy the pkg-config files from 'INSTALL_DIR\VideoLAN\VLC\sdk\lib\pkgconfig' to your pkg-config search directory.
 
 I found I also had to copy libvlc.dll and libvlccore.dll into lastfm-desktop/_bin
 
@@ -95,7 +97,15 @@ This is the library we use to check for app updates. You should download the lat
 
 This step should be optional really as most people will not want to add the update checking.
 
-Create a pkg-config file for WinSparkle.  I found that I also needed to copy the dll into the lastfm-desktop/_bin folder.
+I found that I also needed to copy the dll into the lastfm-desktop/_bin folder. Create a pkg-config file for WinSparkle like this:
+
+```
+Name: sparkle
+Description: Multimedia Library
+Version: 0.3
+Libs: -LC:/dev/Install/WinSparkle/Release -lWinSparkle
+Cflags: -IC:/dev/Install/WinSparkle/include
+```
 
 ###
 
@@ -131,6 +141,8 @@ sudo apt-get install libsqlite3-dev libqt4-sql-sqlite
 qmake -r
 make
 ```
+
+Note: use nmake on Windows
 
 Note that if you installed Qt through homebrew it will default to a release build.
 
