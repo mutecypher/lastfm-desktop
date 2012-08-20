@@ -182,7 +182,7 @@ void
 FriendListWidget::refresh()
 {
     if ( !m_reply
-         || m_reply && m_reply->isFinished() )
+         || ( m_reply && m_reply->isFinished() ) )
     {
         RefreshButton* refresh = qobject_cast<RefreshButton*>(ui->friends->itemWidget( ui->friends->item( 0 ) ) );
         refresh->setEnabled( false );
