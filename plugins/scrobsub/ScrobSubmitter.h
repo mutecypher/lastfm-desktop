@@ -161,6 +161,7 @@ public:
     int
     Start(
         std::string artist,
+		std::string albumArtist,
         std::string track,
         std::string album,
         std::string mbId,

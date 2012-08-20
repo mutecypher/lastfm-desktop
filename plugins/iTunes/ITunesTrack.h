@@ -59,6 +59,7 @@ public:
     /** Unicode */
     std::wstring track() const;
     std::wstring artist() const;
+	std::wstring albumArtist() const;
     std::wstring album() const;
 
     /** Date format: "YYYY-MM-DD HH:MM:SS", returns an empty string if track was never played */

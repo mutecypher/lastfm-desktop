@@ -310,6 +310,7 @@ ScrobSubmitter::LaunchClient()
 int
 ScrobSubmitter::Start(
     string artist,
+	string albumArtist,
     string track,
     string album,
     string mbId,
@@ -320,6 +321,7 @@ ScrobSubmitter::Start(
     if (encoding != UTF_8)
     {
         ConvertToUTF8(artist, encoding);
+		ConvertToUTF8(albumArtist, encoding);
         ConvertToUTF8(track, encoding);
         ConvertToUTF8(album, encoding);
         ConvertToUTF8(mbId, encoding);
@@ -329,6 +331,7 @@ ScrobSubmitter::Start(
     ostringstream osCmd;
     osCmd << "START c=" << mPluginId        << "&" <<
                    "a=" << Escape(artist)   << "&" <<
+				   "d=" << Escape(albumArtist)   << "&" <<
                    "t=" << Escape(track)    << "&" <<
                    "b=" << Escape(album)    << "&" <<
                    "m=" << Escape(mbId)     << "&" <<

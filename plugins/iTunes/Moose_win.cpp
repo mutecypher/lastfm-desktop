@@ -19,7 +19,6 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Moose.h"
-#include "app/moose.h"
 #include <Windows.h>
 #include <shlobj.h>
 #include <wchar.h>

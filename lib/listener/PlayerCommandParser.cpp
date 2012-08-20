@@ -182,6 +182,7 @@ PlayerCommandParser::extractTrack( const QMap<QChar, QString>& args )
 {
     lastfm::MutableTrack track;
     track.setArtist( args['a'] );
+    track.setAlbumArtist( args['d'] );
     track.setTitle( args['t'] );
     track.setAlbum( args['b'] );
     track.setMbid( Mbid( args['m'] ) );

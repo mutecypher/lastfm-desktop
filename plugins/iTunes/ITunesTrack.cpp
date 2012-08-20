@@ -215,6 +215,31 @@ ITunesTrack::artist() const
 
 #ifdef WIN32
 wstring
+ITunesTrack::albumArtist() const
+{
+    if ( m_comTrack == 0 )
+        return L"";  // empty track case
+
+    BSTR bstrAlbumArtist = 0;
+
+	ITTrackKind kind = ITTrackKind::ITTrackKindUnknown;
+	m_comTrack->get_Kind( &kind );
+
+	if ( kind == ITTrackKind::ITTrackKindFile 
+		|| kind == ITTrackKind::ITTrackKindCD )
+	{
+		IITFileOrCDTrack* fileOrCDTrack = static_cast<IITFileOrCDTrack*>(m_comTrack);
+
+		HRESULT res = fileOrCDTrack->get_AlbumArtist( &bstrAlbumArtist );
+		ITunesComWrapper::handleComResult( res, L"Failed to read album artist of track" );
+	}
+
+	return ITunesComWrapper::bstrToWString( bstrAlbumArtist );
+}
+#endif
+
+#ifdef WIN32
+wstring
 ITunesTrack::album() const
 {
     if ( m_comTrack == 0 )

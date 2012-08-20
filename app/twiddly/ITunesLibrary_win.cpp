@@ -105,6 +105,7 @@ ITunesLibrary::Track::lastfmTrack() const
     // These will throw if something goes wrong
     IPodScrobble t;
     t.setArtist( QString::fromStdWString( i.artist() ) );
+    t.setAlbumArtist( QString::fromStdWString( i.albumArtist() ) );
     t.setTitle( QString::fromStdWString( i.track() ) );
     t.setDuration( i.duration() );
     t.setAlbum( QString::fromStdWString( i.album() ) );

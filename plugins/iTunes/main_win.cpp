@@ -46,6 +46,7 @@ std::wstring gErrStringX; // an error
 
 // the current track info
 std::wstring gArtist;
+std::wstring gAlbumArtist;
 std::wstring gTrack;
 std::wstring gAlbum;
 std::wstring gPath;
@@ -143,6 +144,7 @@ void
 LogTrack()
 {
     LOGWL( 3, "Artist: " << gArtist << "\n  " <<
+        "Album Artist: " << gAlbumArtist << "\n  " <<
         "Track: " << gTrack << "\n  " <<
         "Album: " << gAlbum << "\n  " <<
         "Length: " << gLen << "\n  " <<
@@ -160,6 +162,7 @@ LogTrack()
 static void ASStart()
 {
     int id = gSubmitter.Start( Moose::wStringToUtf8( gArtist ),
+                               Moose::wStringToUtf8( gAlbumArtist ),
                                Moose::wStringToUtf8( gTrack ),
                                Moose::wStringToUtf8( gAlbum ),
                                "",
@@ -185,6 +188,7 @@ static void ASStop()
     LOGL( 3, os.str() );
 
     gArtist = L"";
+	gAlbumArtist = L"";
     gTrack = L"";
 
     gASState = AS_STOPPED;
@@ -237,8 +241,10 @@ HandleTrack( ITTrackInfo* pTrack )
         return;
 
     std::wstring artist = (wchar_t*)pTrack->artist;
+	std::wstring albumArtist = (wchar_t*)pTrack->albumArtist;
     std::wstring track = (wchar_t*)pTrack->name;
     artist = Moose::fixStr(artist);
+	albumArtist = Moose::fixStr(albumArtist);
     track = Moose::fixStr(track);
 
     // On a 1x looped track, we will get a ChangeTrack event which means we
@@ -268,6 +274,7 @@ HandleTrack( ITTrackInfo* pTrack )
         ASStop();
 
         gArtist  = artist;
+		gAlbumArtist = albumArtist;
         gTrack = track;
         gAlbum = (wchar_t*)pTrack->album;
         gAlbum = Moose::fixStr(gAlbum);
@@ -361,6 +368,7 @@ HandleTrack( ITTrackInfo* pTrack )
         // Give this track to the ITunesComThread for syncing playcount with local db
         VisualPluginTrack vpt = {
             gArtist,
+			gAlbumArtist,
             gTrack,
             gAlbum,
             gPath,
