@@ -81,6 +81,7 @@ SpotifyListenerMac::loop()
         static AppleScript titleScript( "tell application id \"com.spotify.client\" to return name of current track" );
         static AppleScript albumScript( "tell application id \"com.spotify.client\" to return album of current track" );
         static AppleScript artistScript( "tell application id \"com.spotify.client\" to return artist of current track" );
+        static AppleScript albumArtistScript( "tell application id \"com.spotify.client\" to return album artist of current track" );
         static AppleScript durationScript( "tell application id \"com.spotify.client\" to return duration of current track" );
 
         if ( playerState == "playing" )
@@ -89,6 +90,7 @@ SpotifyListenerMac::loop()
             t.setTitle( titleScript.exec() );
             t.setAlbum( albumScript.exec() );
             t.setArtist( artistScript.exec() );
+            t.setAlbumArtist( albumArtistScript.exec() );
             t.setDuration( durationScript.exec().toInt() );
 
             if ( t != m_lastTrack )

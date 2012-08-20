@@ -138,13 +138,14 @@ ITunesLibrary::Track::lastfmTrack() const
         << "tell application 'iTunes' to tell t"
         <<     "set l to location"
         <<     "try" << "set l to POSIX path of l" << "end try"
-        <<     "return artist & '\n' & name & '\n' & (duration as integer)  & '\n' & album & '\n' & played count  & '\n' & d & '\n' & l  & '\n' & podcast & '\n' & video kind"
+        <<     "return artist & '\n' & album artist & '\n' & name & '\n' & (duration as integer)  & '\n' & album & '\n' & played count  & '\n' & d & '\n' & l  & '\n' & podcast & '\n' & video kind"
         << "end tell";
 
     QString out = script.exec();
     QTextStream s( &out, QIODevice::ReadOnly );
 
     t.setArtist( s.readLine() );
+    t.setAlbumArtist( s.readLine() );
     t.setTitle( s.readLine() );
     t.setDuration( (uint) s.readLine().toFloat() );
     t.setAlbum( s.readLine() );
