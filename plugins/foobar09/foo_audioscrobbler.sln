@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "foo_audioscrobbler", "foo_audioscrobbler.vcproj", "{7F80BCEE-72AB-4256-9D3A-3A03E15D2A1B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6530D504-E2F9-4073-9E42-3138A6085BFA} = {6530D504-E2F9-4073-9E42-3138A6085BFA}

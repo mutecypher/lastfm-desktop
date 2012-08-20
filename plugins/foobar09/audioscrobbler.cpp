@@ -58,7 +58,8 @@ class play_callback_jump : public play_callback_static
             path = path.substr(7, path.length() - 1);
         }
         
-        scrobbler.Start(std::string(coalesce(info.meta_get("artist", 0))), 
+        scrobbler.Start(std::string(coalesce(info.meta_get("artist", 0))),
+						std::string(coalesce(info.meta_get("album artist", 0))),
                         std::string(coalesce(info.meta_get("title", 0))), 
                         std::string(coalesce(info.meta_get("album", 0))),
                         std::string(coalesce(info.meta_get("MUSICBRAINZ_TRACKID", 0))), 
