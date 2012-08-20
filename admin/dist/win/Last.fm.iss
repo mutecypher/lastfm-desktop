@@ -127,11 +127,10 @@ Source: "..\..\..\_bin\plugins\demux\libes_plugin.dll"; DestDir: "{app}\plugins\
 Source: "..\..\..\_bin\plugins\misc\liblogger_plugin.dll"; DestDir: "{app}\plugins\misc"; Flags: ignoreversion
 
 ;media player plugin installers
-Source: "..\..\..\_bin\plugins\FooPlugin0.9.4Setup_2.3.1.2.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
-Source: "..\..\..\_bin\plugins\FooPlugin0.9Setup_2.1.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
-Source: "..\..\..\_bin\plugins\iTunesPluginWinSetup_5.0.3.0.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
-Source: "..\..\..\_bin\plugins\WinampPluginSetup_2.1.0.9.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
-Source: "..\..\..\_bin\plugins\WmpPluginSetup_2.1.0.6.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\FooPlugin0.9.4Setup_2.3.1.3.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\iTunesPluginWinSetup_5.0.4.1.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\WinampPluginSetup_2.1.0.10.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
+Source: "..\..\..\_bin\plugins\WmpPluginSetup_2.1.0.7.exe"; DestDir: "{app}\plugins"; Flags: ignoreversion
 
 ;3rd party
 Source: "..\..\..\_bin\WinSparkle.dll"; DestDir: "{app}"; Flags: ignoreversion

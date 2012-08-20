@@ -2,13 +2,13 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [CustomMessages]
-Version=2.3.1.2
+Version=2.3.1.3
 
 [Setup]
-OutputBaseFilename=FooPlugin0.9.4Setup_2.3.1.2
+OutputBaseFilename=FooPlugin0.9.4Setup_2.3.1.3
 ; setup.exe version
-VersionInfoVersion=1.3
-VersionInfoTextVersion=1.3
+VersionInfoVersion=2.3.1.3
+VersionInfoTextVersion=2.3.1.3
 AppName=Last.fm foobar2000 0.9.4 Plugin
 AppVerName=Last.fm foobar2000 0.9.4 Plugin {cm:Version}
 VersionInfoDescription=Last.fm foobar2000 0.9.4 Plugin Installer

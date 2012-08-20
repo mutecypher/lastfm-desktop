@@ -11,7 +11,7 @@ FooBar09PluginInfo::FooBar09PluginInfo( QObject* parent )
 Version
 FooBar09PluginInfo::version() const
 {
-    return Version( 2, 3, 1, 2 );
+    return Version( 2, 3, 1, 3 );
 }
 
 QString
@@ -73,6 +73,6 @@ QString FooBar09PluginInfo::pluginInstallPath() const
 QString
 FooBar09PluginInfo::pluginInstaller() const
 {
-    return "FooPlugin0.9.4Setup_2.3.1.2.exe";
+    return "FooPlugin0.9.4Setup_2.3.1.3.exe";
 }
 

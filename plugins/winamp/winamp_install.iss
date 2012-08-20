@@ -2,13 +2,13 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [CustomMessages]
-Version=2.1.0.9
+Version=2.1.0.10
 
 [Setup]
-OutputBaseFilename=WinampPluginSetup_2.1.0.9
+OutputBaseFilename=WinampPluginSetup_2.1.0.10
 ; setup.exe version
-VersionInfoVersion=1.1.0.1
-VersionInfoTextVersion=1.1.0.1
+VersionInfoVersion=2.1.0.10
+VersionInfoTextVersion=2.1.0.10
 AppName=Last.fm Winamp Plugin
 AppVerName=Last.fm Winamp Plugin {cm:Version}
 VersionInfoDescription=Last.fm Winamp Plugin Installer
