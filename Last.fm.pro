@@ -4,7 +4,7 @@ SUBDIRS = lib/logger \
           lib/unicorn \
           lib/listener \
           app/client \
-          app/twiddly
+          app/twiddly 
           #app/boffin
 
 unix:!mac:SUBDIRS -= app/twiddly

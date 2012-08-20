@@ -58,7 +58,7 @@ ITunesListener::ITunesListener( QObject* parent )
                                           "on error\n"
                                               "set L to \"\"\n"
                                           "end try\n"
-                                          "return artist & \"\n\" & album & \"\n\" & name & \"\n\" & (duration as integer) & \"\n\" & L & \"\n\" & persistent ID & \"\n\" & podcast & \"\n\" & video kind\n"
+                                          "return artist & \"\n\" & album artist & \"\n\" & album & \"\n\" & name & \"\n\" & (duration as integer) & \"\n\" & L & \"\n\" & persistent ID & \"\n\" & podcast & \"\n\" & video kind\n"
                                       "end tell\n" );
 }
 
@@ -199,6 +199,7 @@ ITunesListener::callback( CFDictionaryRef info )
         QTextStream s( &output, QIODevice::ReadOnly | QIODevice::Text );
 
         QString artist = s.readLine();
+        QString albumArtist = s.readLine();
         QString album = s.readLine();
         QString track = s.readLine();
         QString duration = s.readLine();
@@ -215,6 +216,7 @@ ITunesListener::callback( CFDictionaryRef info )
         {
             MutableTrack t;
             t.setArtist( artist );
+            t.setAlbumArtist( albumArtist );
             t.setTitle( track );
             t.setAlbum( album );
             t.setDuration( duration.toInt() );
@@ -253,6 +255,7 @@ ITunesListener::setupCurrentTrack()
     QTextStream s( &output, QIODevice::ReadOnly | QIODevice::Text );
 
     QString artist = s.readLine();
+    QString albumArtist = s.readLine();
     QString album = s.readLine();
     QString track = s.readLine();
     QString duration = s.readLine();
@@ -266,6 +269,7 @@ ITunesListener::setupCurrentTrack()
         
     MutableTrack t;
     t.setArtist( artist );
+    t.setAlbumArtist( albumArtist );
     t.setTitle( track );
     t.setAlbum( album );
     t.setDuration( duration.toInt() );

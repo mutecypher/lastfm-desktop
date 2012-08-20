@@ -41,7 +41,7 @@ private slots:
 private:
     QString m_lastPlayerState;
     lastfm::Track m_lastTrack;
-    QPointer<class SpotifyConnection> m_connection;
+    QPointer<struct SpotifyConnection> m_connection;
 };
 
 #endif

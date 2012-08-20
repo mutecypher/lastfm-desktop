@@ -215,3 +215,7 @@ echo ======= creating qt.conf ===========
 qtconf=$bundlePath/Contents/Resources/qt.conf
 echo [Paths] > "$qtconf"
 echo Plugins = ../plugins >> "$qtconf"
+
+
+echo ======= signing bundle ===========
+codesign -f -s "Developer ID Application: Last.fm" -i fm.last.Last.fm "$bundlePath"

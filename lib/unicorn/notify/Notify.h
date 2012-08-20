@@ -16,12 +16,16 @@ class Notify : public QObject
     Q_OBJECT
 public:
     explicit Notify(QObject *parent = 0);
+    ~Notify();
 
 signals:
     void clicked();
 
 public slots:
     void newTrack( const lastfm::Track& track );
+    void paused();
+    void resumed();
+    void stopped();
 
 private slots:
     void onFinished( const QPixmap& pixmap );

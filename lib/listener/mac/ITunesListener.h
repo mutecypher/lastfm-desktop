@@ -55,7 +55,7 @@ private:
 
     State m_state;
     QString m_previousPid;
-    class ITunesConnection* m_connection;
+    struct ITunesConnection* m_connection;
 
     AppleScript m_currentTrackScript;
 };

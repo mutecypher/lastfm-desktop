@@ -24,6 +24,12 @@ CONFIG( lastfm ) {
 
     }
     mac{
-        LIBS += -framework Carbon -framework CoreFoundation # various
+        MAC_SDK  = $$system(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+        if( !exists( $$MAC_SDK) ) {
+            error("The selected Mac OSX SDK does not exist at $$MAC_SDK!")
+        }
+        macx:QMAKE_MAC_SDK = $$MAC_SDK
+
+        LIBS += -weak_framework Carbon -weak_framework CoreFoundation -weak_framework Foundation
     }
 }

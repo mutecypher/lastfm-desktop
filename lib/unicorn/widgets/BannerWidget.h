@@ -20,7 +20,7 @@ public:
     BannerWidget( const QString& text, QWidget* parent = 0 );
     bool bannerVisible() const;
     void setWidget( QWidget* w );
-    virtual QSize sizeHint();
+    QSize sizeHint();
 
 public slots:
     void setHref( const QUrl& url );

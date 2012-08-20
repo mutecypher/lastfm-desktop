@@ -20,7 +20,7 @@
     return self;
 }
 
--(void)initialize;
+-(void)initialize
 {
     m_observer->forceInitialize();
 }
