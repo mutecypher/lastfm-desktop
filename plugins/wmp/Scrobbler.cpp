@@ -461,6 +461,7 @@ void CScrobbler::ASStart()
 {
     int id = m_Submitter.Start(
         m_CurrentSong.m_strArtist,
+		m_CurrentSong.m_strAlbumArtist,
         m_CurrentSong.m_strTrack,
         m_CurrentSong.m_strAlbum,
         "",

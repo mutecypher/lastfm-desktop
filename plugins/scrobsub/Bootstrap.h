@@ -74,6 +74,7 @@ protected:
     
     struct BootStrapItem{
         std::wstring artist;
+		std::wstring albumArtist;
         std::wstring track;
         std::wstring album;
         std::wstring duration;

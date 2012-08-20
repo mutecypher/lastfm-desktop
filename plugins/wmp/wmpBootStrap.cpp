@@ -5,7 +5,7 @@
 #define TEST_OR_CONTINUE( function ) if( function != S_OK ) \
     continue
 
-enum BootStrapDetails{ ARTIST=0, ALBUM, TRACK, DURATION, PLAYCOUNT, FILENAME, TIMESTAMP };
+enum BootStrapDetails{ ARTIST=0, ALBUMARTIST, ALBUM, TRACK, DURATION, PLAYCOUNT, FILENAME, TIMESTAMP };
 
 wmpBootStrap::wmpBootStrap( )
              :BootStrap( L"wmp" ),
@@ -13,6 +13,7 @@ wmpBootStrap::wmpBootStrap( )
 {
     //Extract the following data
     attributes[L"Artist"]             = ARTIST;
+	attributes[L"AlbumArtist"]        = ALBUMARTIST;
     attributes[L"Album"]              = ALBUM;
     attributes[L"Title"]              = TRACK;
     attributes[L"Duration"]           = DURATION;
@@ -105,6 +106,10 @@ void wmpBootStrap::readAttributes( IWMPMedia* media )
         {
             case ARTIST:
                 details.artist = valueStr;
+                break;
+
+			case ALBUMARTIST:
+                details.albumArtist = valueStr;
                 break;
                 
             case ALBUM:

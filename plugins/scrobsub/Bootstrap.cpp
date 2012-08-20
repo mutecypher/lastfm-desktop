@@ -620,6 +620,7 @@ void BootStrap::appendTrack( struct BootStrapItem* item )
 
 
     xmlentities( item->artist );
+	xmlentities( item->albumArtist );
     xmlentities( item->album );
     xmlentities( item->track );
     xmlentities( item->duration );
@@ -629,6 +630,7 @@ void BootStrap::appendTrack( struct BootStrapItem* item )
     xmlBuffer << " <item>\n";
 
     xmlBuffer << "  <artist>"    << item->artist    << "</artist>\n";
+	xmlBuffer << "  <albumArtist>"    << item->albumArtist    << "</albumArtist>\n";
     xmlBuffer << "  <album>"     << item->album     << "</album>\n";
     xmlBuffer << "  <track>"     << item->track     << "</track>\n";
     xmlBuffer << "  <duration>"  << item->duration  << "</duration>\n";

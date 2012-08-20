@@ -337,6 +337,9 @@ BOOL CWmp_scrobbler::GetCurrentSong(SONG_INFO* pSong)
 			pMedia->getItemInfo(L"Author", &bstrValue);
             EncodingUtils::UnicodeToUtf8(bstrValue, -1, pSong->m_strArtist, SONG_INFO_FIELD_SIZE);
             bstrValue.Empty();
+			pMedia->getItemInfo(L"AlbumArtist", &bstrValue);
+            EncodingUtils::UnicodeToUtf8(bstrValue, -1, pSong->m_strAlbumArtist, SONG_INFO_FIELD_SIZE);
+            bstrValue.Empty();
             pMedia->getItemInfo(L"Title", &bstrValue);
             EncodingUtils::UnicodeToUtf8(bstrValue, -1, pSong->m_strTrack, SONG_INFO_FIELD_SIZE);
             bstrValue.Empty();
