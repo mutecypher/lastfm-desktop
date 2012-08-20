@@ -50,6 +50,7 @@
 typedef struct
 {
 	CStdString	strArtist;
+	CStdString	strAlbumArtist;
 	CStdString	strAlbum;
 	CStdString	strComment;
 	CStdString	strGenre;

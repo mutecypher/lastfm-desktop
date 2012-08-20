@@ -210,11 +210,13 @@ BOOL CWinampScrobbler::GetCurrentSong(SONG_INFO* pSong, bool utf8)
 void CWinampScrobbler::GetSongMetaDataUtf8(SONG_INFO* pSong)
 {
     CStdString artist = m_Controller.GetCurrentSongMetadataUtf8("artist");
+	CStdString albumArtist = m_Controller.GetCurrentSongMetadataUtf8("albumartist");
 	CStdString title = m_Controller.GetCurrentSongMetadataUtf8("title");
 	CStdString album = m_Controller.GetCurrentSongMetadataUtf8("album");
 	CStdString fileName = m_Controller.GetCurrentSongFileNameUtf8();
 
     strncpy(pSong->m_strArtist, artist, sizeof(pSong->m_strArtist));
+	strncpy(pSong->m_strAlbumArtist, albumArtist, sizeof(pSong->m_strAlbumArtist));
     strncpy(pSong->m_strTrack, title, sizeof(pSong->m_strTrack));
 	strncpy(pSong->m_strAlbum, album, sizeof(pSong->m_strAlbum));
 	strncpy(pSong->m_strFileName, fileName, sizeof(pSong->m_strFileName));
@@ -232,6 +234,9 @@ void CWinampScrobbler::GetSongMetaData(SONG_INFO* pSong)
 		strncpy(pSong->m_strArtist, 
             info.strArtist,
             sizeof(pSong->m_strArtist));
+		strncpy(pSong->m_strAlbumArtist, 
+            info.strAlbumArtist,
+            sizeof(pSong->m_strAlbumArtist));
 		strncpy(pSong->m_strTrack, 
             info.strTitle,
             sizeof(pSong->m_strTrack));
@@ -258,6 +263,9 @@ void CWinampScrobbler::GetSongMetaData(SONG_INFO* pSong)
 		// Winamp 5 or Winamp 2.90 onwards.
 		CStdString artist = m_Controller.GetCurrentSongMetadata("artist");
 		strncpy(pSong->m_strArtist, artist, sizeof(pSong->m_strArtist));
+
+		CStdString albumArtist = m_Controller.GetCurrentSongMetadata("albumartist");
+		strncpy(pSong->m_strAlbumArtist, albumArtist, sizeof(pSong->m_strAlbumArtist));
 
 		CStdString title = m_Controller.GetCurrentSongMetadata("title");
 		strncpy(pSong->m_strTrack, title, sizeof(pSong->m_strTrack));

@@ -37,6 +37,7 @@ typedef struct
 {
     char    m_strFileName[MAX_PATH];
     char    m_strArtist[SONG_INFO_FIELD_SIZE];
+	char    m_strAlbumArtist[SONG_INFO_FIELD_SIZE];
     char    m_strTrack [SONG_INFO_FIELD_SIZE];
     char    m_strAlbum [SONG_INFO_FIELD_SIZE];
     char    m_strGenre [SONG_INFO_FIELD_SIZE];
