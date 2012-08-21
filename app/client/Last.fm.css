@@ -1301,6 +1301,8 @@ StatusBar QPushButton#cog:pressed {
 background-image: url(":/settings_PRESS.png");
 }
 
+StatusBar QLabel#scrobbleIcon { qproperty-pixmap: url(":/scrobble_OFF.png"); }
+
 PlaybackControlsWidget QFrame#volume {
 border: none;
 margin: 0px 0px 4px 4px;

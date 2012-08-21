@@ -44,22 +44,36 @@ StatusBar::StatusBar( QWidget* parent )
     widgetLayout->setContentsMargins( 0, 0, 0, 0 );
     widgetLayout->setSpacing( 0 );
 
-    widgetLayout->addWidget( ui.cog = new QPushButton( this ), 0, Qt::AlignVCenter );
+    widgetLayout->addWidget( ui.cog = new QPushButton(this), 0, Qt::AlignVCenter);
     ui.cog->setObjectName( "cog" );
     ui.cog->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
-    widgetLayout->addWidget( ui.message = new unicorn::Label( this ), 1, Qt::AlignVCenter );
+    widgetLayout->addWidget( ui.message = new unicorn::Label(this), 1, Qt::AlignVCenter);
     ui.message->setObjectName( "message" );
     ui.message->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    ui.message->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
+    ui.message->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
 
     setStatus();
 
-    addPermanentWidget( ui.permanentWidget = new QFrame( this ) );
-    ui.permanentWidget->setObjectName( "permanentWidget" );
-    QHBoxLayout* permanentWidgetLayout = new QHBoxLayout( ui.permanentWidget );
-    permanentWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
-    permanentWidgetLayout->setSpacing( 0 );
+    addPermanentWidget( ui.scrobbleWidget = new QFrame( this ));
+    ui.scrobbleWidget->setObjectName("scrobbleWidget");
+    QHBoxLayout* scrobbleWidgetLayout = new QHBoxLayout( ui.scrobbleWidget );
+    scrobbleWidgetLayout->setContentsMargins( 50, 0, 0, 0 );
+    scrobbleWidgetLayout->setSpacing( 0 );
+
+    bool isScrobblingOff = unicorn::UserSettings().value("scrobblingOn", true).toBool();
+
+    scrobbleWidgetLayout->addWidget( ui.scrobbleIcon = new QLabel(this) );
+    ui.scrobbleIcon->setObjectName("scrobbleIcon");
+    ui.scrobbleIcon->setHidden(isScrobblingOff);
+
+    scrobbleWidgetLayout->addWidget( ui.scrobbleMessage = new unicorn::Label(this), 1, Qt::AlignVCenter);
+    ui.scrobbleMessage->setObjectName("scrobbleMessage");
+    ui.scrobbleMessage->setAttribute(Qt::WA_LayoutUsesWidgetRect);
+    ui.scrobbleMessage->setAlignment(Qt::AlignRight | Qt::AlignVCenter );
+    ui.scrobbleMessage->setStyleSheet("QLabel { color : red; }");
+    ui.scrobbleMessage->setText("Scrobbling is Off");
+    ui.scrobbleMessage->setHidden(isScrobblingOff);
 
     aApp->isInternetConnectionUp() ? onConnectionUp() : onConnectionDown();
 
@@ -67,6 +81,8 @@ StatusBar::StatusBar( QWidget* parent )
     connect( aApp, SIGNAL( internetConnectionUp() ), SLOT( onConnectionUp() ) );
 
     connect( this, SIGNAL(messageChanged(QString)), SLOT(onMessagedChanged(QString)));
+    connect( aApp, SIGNAL(scrobbleToggled(bool)), ui.scrobbleMessage, SLOT(setHidden(bool)));
+    connect( aApp, SIGNAL(scrobbleToggled(bool)), ui.scrobbleIcon, SLOT(setHidden(bool)));
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)));
     connect( aApp, SIGNAL( gotUserInfo(lastfm::User)), SLOT( onGotUserInfo(lastfm::User) ) );
@@ -86,7 +102,6 @@ StatusBar::onGotUserInfo( lastfm::User /*userDetails*/ )
 {
     setStatus();
 }
-
 
 void
 StatusBar::onMessagedChanged( const QString& message )
