@@ -46,6 +46,7 @@
 #define SETTING_SEND_CRASH_REPORTS "sendCrashReports"
 #define SETTING_CHECK_UPDATES "checkUpdates"
 #define SETTING_HIDE_DOCK "hideDock"
+#define SETTING_SHOW_WHERE "showWhere"
 
 #define SETTING_FIRST_RUN_WIZARD_COMPLETED "FirstRunWizardCompletedBeta"
 

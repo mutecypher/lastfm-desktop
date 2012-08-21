@@ -47,7 +47,7 @@
 #include <lastfm/ws.h>
 #include <lastfm/XmlQuery.h>
 
-
+#include <QProcess>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -592,8 +592,21 @@ unicorn::Application::winEventFilter ( void* message )
 void
 unicorn::Application::restart()
 {
-    qApp->closeAllWindows();
-    initiateLogin();
+#ifdef Q_OS_WIN
+    QProcess::startDetached( applicationFilePath() );
+#endif
+
+#ifdef Q_OS_MAC
+    // In Mac OS the full path of aplication binary is:
+    //    <base-path>/myApp.app/Contents/MacOS/myApp
+    QStringList args;
+    args << applicationDirPath() + "/../../../Last.fm.app";
+    args << "-n"; // open a new instance even if one is running
+    qDebug() << QProcess::startDetached( "open", args );
+#endif
+
+    // Terminate current instance:
+    exit(0); // Exit gracefully by terminating the myApp instance
 }
 
 bool

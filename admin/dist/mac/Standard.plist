@@ -55,5 +55,7 @@
 			</array>
 		</dict>
 	</array>
+	<key>LSUIElement</key>
+	<false/>
 </dict>
 </plist>
