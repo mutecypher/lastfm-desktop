@@ -53,7 +53,9 @@ class StatusBar : public QStatusBar
             class QPushButton* cog;
             unicorn::Label* message;
 
-            class QFrame* permanentWidget;
+            class QFrame* scrobbleWidget;
+            unicorn::Label* scrobbleMessage;
+            class QLabel* scrobbleIcon;
         } ui;
 
         bool m_online;

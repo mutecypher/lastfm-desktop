@@ -12,3 +12,7 @@ admin/dist/mac/dsa_priv.pem
 *.sln
 *.suo
 .DS_Store
+
+*.breakpad
+
+*.user

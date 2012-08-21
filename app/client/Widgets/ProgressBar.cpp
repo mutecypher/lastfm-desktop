@@ -172,7 +172,7 @@ ProgressBar::paintEvent( QPaintEvent* e )
                 }
                 else
                 {
-                    QString offMessage = tr( "Not scrobbling" );
+                    QString offMessage = NULL;
 
                     if ( unicorn::UserSettings().value( "scrobblingOn", true ).toBool() )
                     {
@@ -183,15 +183,14 @@ ProgressBar::paintEvent( QPaintEvent* e )
                         else if ( m_track.artist().isNull() )
                             offMessage = tr( "Not scrobbling - missing artist" );
                     }
-                    else
-                    {
-                        offMessage = tr( "Not scrobbling - scrobbling disabled" );
-                    }
 
-                    p.setPen( QColor( 0x333333 ) );
-                    QTextOption textOption;
-                    textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
-                    p.drawText( rect().adjusted( 0, 0, -6, 0 ), offMessage, textOption );
+                    if(offMessage != NULL)
+                    {
+                        p.setPen( QColor( 0x333333 ) );
+                        QTextOption textOption;
+                        textOption.setAlignment( Qt::AlignVCenter | Qt::AlignRight );
+                        p.drawText( rect().adjusted( 0, 0, -6, 0 ), offMessage, textOption );
+                    }
                 }
             }
             else
