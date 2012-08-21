@@ -120,6 +120,8 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     ui.profileScrollArea->setWidgetResizable( true );
     ui.profile->setObjectName( "profile" );
 
+    connect( ui.stackedWidget, SIGNAL(currentChanged(int)), ui.profile, SLOT(onCurrentChanged(int)) );
+
     ui.stackedWidget->addWidget( ui.friends = new FriendListWidget(this) );
     ui.friends->setObjectName( "friends" );
 

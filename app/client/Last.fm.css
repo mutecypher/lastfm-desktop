@@ -721,8 +721,7 @@ border: none;
 margin: 0px 20px;
 }
 
-RadioWidget QFrame#section,
-ProfileWidget QFrame#section {
+RadioWidget QFrame#section {
 border: none;
 }
 
@@ -976,7 +975,8 @@ background-image: url(":/radio_play_small_PRESS.png");
 }
 
 RadioWidget QLabel#title,
-ProfileWidget QLabel#title {
+ProfileWidget QLabel#weekTitle,
+ProfileWidget QLabel#overallTitle {
 padding: 0px 0px 10px;
 border: none;
 font-weight: bold;

@@ -238,7 +238,8 @@ FORMS += \
     Dialogs/CloseAppsDialog.ui \
     Widgets/TrackWidget.ui \
     Dialogs/LicensesDialog.ui \
-    Widgets/ScrobblesWidget.ui
+    Widgets/ScrobblesWidget.ui \
+    Widgets/ProfileWidget.ui
 
 unix:!mac:HEADERS += MediaDevices/IpodDevice_linux.h
 unix:!mac:SOURCES += MediaDevices/IpodDevice_linux.cpp

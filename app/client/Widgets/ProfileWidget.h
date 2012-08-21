@@ -10,29 +10,18 @@
 
 namespace unicorn { class Label; }
 
+namespace Ui { class ProfileWidget; }
+
 class ProfileWidget : public QFrame
 {
     Q_OBJECT
-private:
-    struct
-    {
-        class QFrame* user;
-        class AvatarWidget* avatar;
-        unicorn::Label* name;
-        class QLabel* infoString;
-        class QLabel* scrobbleCount;
-        class QLabel* scrobbles;
-        class QLabel* lovedCount;
-        class QLabel* loved;
-
-        class ContextLabel* context;
-
-        class QFrame* topWeeklyArtists;
-        class QFrame* topOverallArtists;
-    } ui;
-
 public:
     explicit ProfileWidget(QWidget *parent = 0);
+    ~ProfileWidget();
+
+public slots:
+    void onCurrentChanged( int index );
+    void refresh();
 
 private slots:
     void onSessionChanged( unicorn::Session* session );
@@ -50,12 +39,12 @@ private slots:
     void setScrobbleCount();
 
 private:
-    void changeUser( const QString& newUsername );
+    void changeUser( const lastfm::User& userDetails );
 
 private:
-    QPointer<QWidget> m_main;
+    Ui::ProfileWidget* ui;
 
-    QString m_currentUsername;
+    lastfm::User m_currentUser;
 
     int m_scrobbleCount;
 };
