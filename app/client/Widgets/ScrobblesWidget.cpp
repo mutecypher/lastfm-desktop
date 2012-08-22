@@ -23,7 +23,7 @@ ScrobblesWidget::ScrobblesWidget( QWidget* parent )
     connect( ui->scrobbles, SIGNAL( trackClicked(TrackWidget&)), SLOT( onTrackClicked(TrackWidget&)));
     connect( ui->layout, SIGNAL( moveFinished(QLayoutItem*)), SLOT(onMoveFinished(QLayoutItem*)));
 
-    ui->stackedWidget->setCurrentWidget( ui->noScrobbles );
+    ui->stackedWidget->setCurrentWidget( ui->scrobbles );
 }
 
 ScrobblesWidget::~ScrobblesWidget()
@@ -44,7 +44,7 @@ ScrobblesWidget::onCurrentChanged( int index )
     if ( index == 1 )
         ui->scrobbles->refresh(); // this tab was clicked on
 
-    ui->layout->moveToWidget( ui->scrobbles );
+    ui->layout->moveToWidget( ui->stackedWidget );
 }
 
 void
@@ -71,13 +71,13 @@ ScrobblesWidget::onMetadataWidgetFinished()
 void
 ScrobblesWidget::onBackClicked()
 {
-    ui->layout->moveToWidget( ui->scrobbles );
+    ui->layout->moveToWidget( ui->stackedWidget );
 }
 
 void
 ScrobblesWidget::onMoveFinished( QLayoutItem* i )
 {
-    if( i->widget() == ui->scrobbles )
+    if( i->widget() == ui->stackedWidget )
     {
         while ( ui->layout->count() > 1 )
         {
