@@ -79,7 +79,7 @@ unicorn::Notify::Notify(QObject *parent) :
 #endif
     {
         GrowlClickDelegate* growlDelegate = [[GrowlClickDelegate alloc] init: this];
-        [GrowlApplicationBridge setGrowlClickDelegate:growlDelegate];
+        [GrowlApplicationBridge setGrowlDelegate:growlDelegate];
     }
 }
 
