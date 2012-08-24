@@ -73,6 +73,7 @@ Source: "..\..\..\_bin\iPodScrobbler.exe"; DestDir: "{app}"; Flags: ignoreversio
 
 ;libraries
 Source: "..\..\..\_bin\lastfm.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\lastfm_fingerprint.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\unicorn.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\listener.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\logger.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -134,6 +135,12 @@ Source: "..\..\..\_bin\plugins\WmpPluginSetup_2.1.0.7.exe"; DestDir: "{app}\plug
 
 ;3rd party
 Source: "..\..\..\_bin\WinSparkle.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\libfftw3f-3.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\libFLAC_dynamic.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\libogg.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\libsamplerate-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\libvorbis.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\libvorbisfile.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ;The stylesheets
 Source: "..\..\..\app\client\Last.fm.css"; DestDir: "{app}"; Flags: ignoreversion
