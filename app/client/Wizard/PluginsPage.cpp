@@ -23,6 +23,7 @@
 #include <QCheckBox>
 #include <QProcess>
 #include <QDebug>
+#include <QStyle>
 
 #ifdef Q_OS_WIN32
 #include "../Plugins/PluginList.h"
@@ -40,7 +41,7 @@ PluginsPage::PluginsPage()
     // add the radio buttons
     m_pluginsLayout = new QVBoxLayout();
     m_pluginsLayout->setContentsMargins( 0, 0, 0, 0 );
-    m_pluginsLayout->setSpacing( 0 );
+    m_pluginsLayout->setSpacing( 6 );
 
     layout->addLayout( m_pluginsLayout );
 
@@ -86,6 +87,7 @@ PluginsPage::initializePage()
 
         cb->setObjectName( plugin->id() );
         cb->setChecked( plugin->isAppInstalled() );
+        cb->style()->polish( cb );
 
         if ( plugin->isInstalled() )
         {

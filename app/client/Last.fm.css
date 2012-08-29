@@ -95,6 +95,18 @@ TourRadioPage QLabel#image { qproperty-pixmap: url(":/graphic_radio.png"); }
 TourLocationPage QLabel#image { qproperty-pixmap: url(":/graphic_access.png"); }
 TourFinishPage QLabel#image { qproperty-pixmap: url(":/graphic_finish.png"); }
 
+PluginsPage QCheckBox,
+BootstrapPage QRadioButton { qproperty-iconSize: 44px; }
+PluginsPage QCheckBox#itw,
+BootstrapPage QRadioButton#itw { qproperty-icon: url(":/player_itunes_64.png"); }
+PluginsPage QCheckBox#wa2,
+BootstrapPage QRadioButton#wa2 { qproperty-icon: url(":/player_winamp_64.png"); }
+PluginsPage QCheckBox#wmp,
+BootstrapPage QRadioButton#wmp { qproperty-icon: url(":/player_wmp_64.png"); }
+PluginsPage QCheckBox#foo3,
+BootstrapPage QRadioButton#foo3 { qproperty-icon: url(":/player_foobar_64.png"); }
+
+
 MessageBar {
 	border: none;
 }

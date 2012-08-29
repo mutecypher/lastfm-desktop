@@ -33,7 +33,7 @@ BootstrapPage::BootstrapPage()
 
     m_pluginsLayout = new QVBoxLayout();
     m_pluginsLayout->setContentsMargins( 0, 0, 0, 0 );
-    m_pluginsLayout->setSpacing( 0 );
+    m_pluginsLayout->setSpacing( 6 );
 
     layout->addLayout( m_pluginsLayout );
 
@@ -106,6 +106,8 @@ BootstrapPage::initializePage()
     {
         m_pluginsLayout->addWidget( rb = new QRadioButton( plugin->name()));
         rb->setObjectName( plugin->id() );
+
+        rb->style()->polish( rb );
 
         connect( rb, SIGNAL(clicked()), SLOT(playerSelected()));
 
