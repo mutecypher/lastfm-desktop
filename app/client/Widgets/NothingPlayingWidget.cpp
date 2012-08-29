@@ -9,6 +9,9 @@
 
 #include "lib/unicorn/widgets/Label.h"
 
+#include "../Plugins/IPluginInfo.h"
+#include "../Plugins/PluginList.h"
+
 #include "NothingPlayingWidget.h"
 #include "ui_NothingPlayingWidget.h"
 
@@ -40,11 +43,12 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
     connect( ui->itunes, SIGNAL(clicked()), SLOT(oniTunesClicked()));
 
 #ifndef Q_OS_MAC
-    ui->wmp->show();
+    PluginList pluginList;
+    ui->wmp->setVisible( pluginList.pluginById( "wmp" )->isAppInstalled() );
     ui->wmp->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    ui->winamp->show();
+    ui->winamp->setVisible( pluginList.pluginById( "wa2" )->isAppInstalled() );
     ui->winamp->setAttribute( Qt::WA_LayoutUsesWidgetRect );
-    ui->foobar->show();
+    ui->foobar->setVisible( pluginList.pluginById( "foo3" )->isAppInstalled() );
     ui->foobar->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 #endif
 #endif
