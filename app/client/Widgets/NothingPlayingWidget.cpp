@@ -9,8 +9,10 @@
 
 #include "lib/unicorn/widgets/Label.h"
 
+#ifdef Q_OS_WIN
 #include "../Plugins/IPluginInfo.h"
 #include "../Plugins/PluginList.h"
+#endif
 
 #include "NothingPlayingWidget.h"
 #include "ui_NothingPlayingWidget.h"

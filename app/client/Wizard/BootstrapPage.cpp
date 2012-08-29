@@ -55,6 +55,7 @@ BootstrapPage::playerSelected()
 bool
 BootstrapPage::validatePage()
 {
+#ifdef Q_OS_WIN
     // make sure the user has closed their chosen plugin (except iTunes)
     IPluginInfo* plugin = wizard()->pluginList()->pluginById( m_playerId );
 
@@ -82,6 +83,7 @@ BootstrapPage::validatePage()
         }
     }
     else
+#endif
         aApp->startBootstrap( m_playerId );
 
     // once you start importing you can't go back

@@ -5,9 +5,9 @@
 #ifdef Q_OS_WIN
 #include <windows.h>
 #include <psapi.h>
-#endif
 
 #include "../Plugins/IPluginInfo.h"
+#endif
 
 #include "CloseAppsDialog.h"
 #include "ui_CloseAppsDialog.h"

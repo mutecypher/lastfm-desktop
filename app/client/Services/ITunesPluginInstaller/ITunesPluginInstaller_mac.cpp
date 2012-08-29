@@ -74,13 +74,12 @@ ITunesPluginInstaller::install()
         {
             qDebug() << "Installing shipped iTunes plugin...";
 
+            CloseAppsDialog* closeApps = new CloseAppsDialog();
 
-            if ( CloseAppsDialog::runningApps().count() != 0 )
-            {
-                CloseAppsDialog* closeApps = new CloseAppsDialog();
+            if ( closeApps->result() != QDialog::Accepted )
                 closeApps->exec();
-                delete closeApps;
-            }
+            else
+                closeApps->deleteLater();
 
             if ( !removeInstalledPlugin() )
             {
