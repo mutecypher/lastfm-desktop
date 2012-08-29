@@ -182,7 +182,7 @@ FirstRunWizard::next()
         else if ( currentPage == ui->pluginsPage )
             ui->stackedWidget->setCurrentWidget( ui->pluginsInstallPage );
         else if ( currentPage == ui->pluginsInstallPage )
-            if( m_user.canBootstrap() )
+            if( m_user.canBootstrap() && (m_plugins->bootstrappablePlugins().count() > 0) )
                 ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
             else
                 ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
@@ -251,12 +251,12 @@ FirstRunWizard::skip()
     if ( currentPage == ui->loginPage )
         ui->stackedWidget->setCurrentWidget( ui->accessPage );
     else if ( currentPage == ui->accessPage )
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
         ui->stackedWidget->setCurrentWidget( ui->pluginsPage );
     else if ( currentPage == ui->pluginsPage )
         ui->stackedWidget->setCurrentWidget( ui->pluginsInstallPage );
     else if ( currentPage == ui->pluginsInstallPage )
-        if( m_user.canBootstrap() )
+        if( m_user.canBootstrap() && (m_plugins->bootstrappablePlugins().count() > 0) )
             ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
         else
             ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );

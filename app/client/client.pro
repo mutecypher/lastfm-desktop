@@ -4,7 +4,7 @@ VERSION = 2.1.20
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql
 CONFIG += lastfm unicorn listener logger phonon fingerprint mad faad fftw3f vorbis flac
-win32:LIBS += user32.lib
+win32:LIBS += user32.lib kernel32.lib psapi.lib
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 
 macx:LIBS += -framework Cocoa

@@ -9,7 +9,11 @@
 #include <Shellapi.h>
 #include <Wtsapi32.h>
 
+#include "lib/unicorn/QMessageBoxBuilder.h"
+
 #include "lib/unicorn/UnicornSettings.h"
+
+#include "../Dialogs/CloseAppsDialog.h"
 
 #include "IPluginInfo.h"
 #include "KillProcess.h"
@@ -43,12 +47,35 @@ IPluginInfo::IPluginInfo( QObject* parent )
 void
 IPluginInfo::doInstall()
 {
-    QString installer = QString( "\"%1\"" ).arg( QCoreApplication::applicationDirPath() + "/plugins/" + pluginInstaller() );
-    qDebug() << installer;
-    QProcess* installerProcess = new QProcess( this );
-    installerProcess->start( installer );
-    bool finished = installerProcess->waitForFinished( -1 );
-    qDebug() << finished << installerProcess->error() << installerProcess->errorString();
+    QList<IPluginInfo*> plugins;
+    plugins << this;
+
+    CloseAppsDialog* closeApps = new CloseAppsDialog( plugins, 0 );
+
+    if ( closeApps->result() != QDialog::Accepted )
+        closeApps->exec();
+    else
+        closeApps->deleteLater();
+
+    if ( closeApps->result() == QDialog::Accepted )
+    {
+        QString installer = QString( "\"%1\"" ).arg( QCoreApplication::applicationDirPath() + "/plugins/" + pluginInstaller() );
+        qDebug() << installer;
+        QProcess* installerProcess = new QProcess( this );
+        installerProcess->start( installer );
+        bool finished = installerProcess->waitForFinished( -1 );
+        qDebug() << finished << installerProcess->error() << installerProcess->errorString();
+
+    }
+    else
+    {
+        // The user didn't close their media players
+        QMessageBoxBuilder( 0 ).setTitle( tr( "The %1 plugin hasn't been installed" ).arg( name() ) )
+                .setIcon( QMessageBox::Warning )
+                .setText( tr( "You didn't close %1 so its plugin hasn't been installed." ).arg( name() ) )
+                .setButtons( QMessageBox::Ok )
+                .exec();
+    }
 }
 
 bool

@@ -3,6 +3,10 @@
 #include <QLabel>
 #include <QTimer>
 
+#include "lib/unicorn/QMessageBoxBuilder.h"
+
+#include "../Dialogs/CloseAppsDialog.h"
+
 #include "FirstRunWizard.h"
 #include "PluginsInstallPage.h"
 
@@ -55,8 +59,30 @@ void
 PluginsInstallPage::install()
 {
 #ifdef Q_OS_WIN32
-    foreach( IPluginInfo* plugin, wizard()->pluginList()->installList() )
-        plugin->doInstall();
+    // Tell the user to close any aplications we are about to install
+    // plugins for
+
+    CloseAppsDialog* closeApps = new CloseAppsDialog( wizard()->pluginList()->installList(), this );
+
+    if ( closeApps->result() != QDialog::Accepted )
+        closeApps->exec();
+    else
+        closeApps->deleteLater();
+
+    if ( closeApps->result() == QDialog::Accepted )
+    {
+        foreach( IPluginInfo* plugin, wizard()->pluginList()->installList() )
+            plugin->doInstall();
+    }
+    else
+    {
+        // The user didn't close their media players
+        QMessageBoxBuilder( this ).setTitle( tr( "Your plugins haven't been installed" ) )
+                .setIcon( QMessageBox::Warning )
+                .setText( tr( "You can install them later through the file menu" ) )
+                .setButtons( QMessageBox::Ok )
+                .exec();
+    }
 #endif
 
     QAbstractButton* continueButton = wizard()->setButton( FirstRunWizard::NextButton, tr( "Continue" ) );

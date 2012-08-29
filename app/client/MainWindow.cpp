@@ -37,6 +37,7 @@
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
 #include "MediaDevices/DeviceScrobbler.h"
+#include "Dialogs/CloseAppsDialog.h"
 #include "../Widgets/ProfileWidget.h"
 #include "../Widgets/FriendListWidget.h"
 #include "../Widgets/ScrobbleControls.h"
@@ -223,8 +224,27 @@ MainWindow::checkUpdatedPlugins()
              .setButtons( QMessageBox::Yes | QMessageBox::No )
              .exec() == QMessageBox::Yes )
         {
-            foreach ( IPluginInfo* info, m_pluginList->updatedList() )
-                info->doInstall();
+            CloseAppsDialog* closeApps = new CloseAppsDialog( m_pluginList->updatedList(), this );
+
+            if ( closeApps->result() != QDialog::Accepted )
+                closeApps->exec();
+            else
+                closeApps->deleteLater();
+
+            if ( closeApps->result() == QDialog::Accepted )
+            {
+                foreach ( IPluginInfo* info, m_pluginList->updatedList() )
+                    info->doInstall();
+            }
+            else
+            {
+                // The user didn't close their media players
+                QMessageBoxBuilder( this ).setTitle( tr( "Your plugins haven't been installed" ) )
+                        .setIcon( QMessageBox::Warning )
+                        .setText( tr( "You can install them later through the file menu" ) )
+                        .setButtons( QMessageBox::Ok )
+                        .exec();
+            }
         }
     }
 }

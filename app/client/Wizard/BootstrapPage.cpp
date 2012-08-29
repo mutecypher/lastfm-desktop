@@ -18,6 +18,10 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "lib/unicorn/QMessageBoxBuilder.h"
+
+#include "../Dialogs/CloseAppsDialog.h"
+
 #include "FirstRunWizard.h"
 #include "BootstrapPage.h"
 
@@ -51,8 +55,34 @@ BootstrapPage::playerSelected()
 bool
 BootstrapPage::validatePage()
 {
-    /// start the bootstrap from whatever music player they chose.
-    aApp->startBootstrap( m_playerId );
+    // make sure the user has closed their chosen plugin (except iTunes)
+    IPluginInfo* plugin = wizard()->pluginList()->pluginById( m_playerId );
+
+    if ( plugin->bootstrapType() == IPluginInfo::PluginBootstrap )
+    {
+        QList<IPluginInfo*> plugins;
+        plugins << plugin;
+
+        CloseAppsDialog* closeApps = new CloseAppsDialog( plugins, this );
+
+        if ( closeApps->result() != QDialog::Accepted )
+            closeApps->exec();
+        else
+            closeApps->deleteLater();
+
+        if ( closeApps->result() == QDialog::Accepted )
+            aApp->startBootstrap( m_playerId );
+        else
+        {
+            // The user didn't close their media players
+            QMessageBoxBuilder( this ).setTitle( tr( "Your plugins haven't been installed" ) )
+                    .setText( tr( "You can install them later through the file menu" ) )
+                    .setButtons( QMessageBox::Ok )
+                    .exec();
+        }
+    }
+    else
+        aApp->startBootstrap( m_playerId );
 
     // once you start importing you can't go back
     // if they didn't click "Start Import" they won't get here
