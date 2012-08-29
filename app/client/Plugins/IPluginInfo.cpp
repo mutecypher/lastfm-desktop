@@ -64,13 +64,6 @@ IPluginInfo::install( bool install )
     m_install = install;
 }
 
-bool
-IPluginInfo::isAppInstalled() const
-{
-    pluginInstallPath();
-    return true;
-}
-
 BOOL
 IPluginInfo::isWow64()
 {

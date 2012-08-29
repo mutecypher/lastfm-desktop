@@ -69,27 +69,20 @@ public:
     virtual Version version() const = 0;
     Version installedVersion() const;
 
-    virtual Version minVersion() const = 0;
-    virtual Version maxVersion() const = 0;
-
     virtual QString id() const = 0;
     virtual BootstrapType bootstrapType() const = 0;
 
-    virtual QString processName() const = 0;
+    virtual bool isAppInstalled() const = 0;
 
-    // Plugin install path relative to media player's base install path
-    virtual QString pluginPath() const = 0;
+    virtual QString processName() const = 0;
 
     // DisplayName string value as found in the HKEY_LM/Software/Microsoft/CurrentVersion/Uninstall/{GUID}/
     virtual QString displayName() const = 0;
-
-    virtual QString pluginInstallPath() const = 0;
 
     virtual QString pluginInstaller() const = 0;
 
     static BOOL isWow64();
 
-    virtual bool isAppInstalled() const;
     virtual bool isInstalled() const;
     bool canBootstrap() const;
 

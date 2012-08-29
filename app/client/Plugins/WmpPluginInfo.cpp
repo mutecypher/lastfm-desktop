@@ -19,24 +19,6 @@ WmpPluginInfo::name() const
     return "Windows Media Player";
 }
 
-Version
-WmpPluginInfo::minVersion() const
-{
-    return Version( 9 );
-}
-
-Version
-WmpPluginInfo::maxVersion() const
-{
-    return Version();
-}
-
-QString
-WmpPluginInfo::pluginPath() const
-{
-    return QString( "Plugins" );
-}
-
 QString
 WmpPluginInfo::displayName() const
 {
@@ -55,16 +37,16 @@ WmpPluginInfo::id() const
     return "wmp";
 }
 
+bool
+WmpPluginInfo::isAppInstalled() const
+{
+    return QSettings("HKEY_CURRENT_USER\\Software\\Microsoft\\MediaPlayer\\Preferences", QSettings::NativeFormat).contains("FirstRun");
+}
+
 IPluginInfo::BootstrapType
 WmpPluginInfo::bootstrapType() const
 {
     return PluginBootstrap;
-}
-
-QString
-WmpPluginInfo::pluginInstallPath() const
-{
-    return programFilesX86() + "\\Windows Media Player";
 }
 
 QString

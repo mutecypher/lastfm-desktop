@@ -10,18 +10,15 @@ public:
     WmpPluginInfo( QObject* parent = 0 );
 
     Version version() const;
-
     QString name() const;
-    Version minVersion() const;
-    Version maxVersion() const;
-    
-    QString pluginPath() const;
+
     QString displayName() const;
     QString processName() const;
 
     QString id() const;
     BootstrapType bootstrapType() const;
 
+    bool isAppInstalled() const;
     QString pluginInstallPath() const;
     QString pluginInstaller() const;
 };

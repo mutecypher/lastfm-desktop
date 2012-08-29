@@ -19,24 +19,6 @@ WinampPluginInfo::name() const
     return "Winamp";
 }
 
-Version
-WinampPluginInfo::minVersion() const
-{
-    return Version();
-}
-
-Version
-WinampPluginInfo::maxVersion() const
-{
-    return Version();
-}
-
-QString
-WinampPluginInfo::pluginPath() const
-{
-    return QString( "plugins" );
-}
-
 QString
 WinampPluginInfo::displayName() const
 {
@@ -55,18 +37,16 @@ WinampPluginInfo::id() const
     return "wa2";
 }
 
+bool
+WinampPluginInfo::isAppInstalled() const
+{
+    return QSettings("HKEY_CURRENT_USER\\Software\\Winamp", QSettings::NativeFormat).contains(".");
+}
+
 IPluginInfo::BootstrapType
 WinampPluginInfo::bootstrapType() const
 {
     return PluginBootstrap;
-}
-
-QString
-WinampPluginInfo::pluginInstallPath() const
-{
-    QSettings settings( "HKEY_CURRENT_USER\\Software\\Winamp", QSettings::NativeFormat );
-    QString winampFolder = settings.value( ".", programFilesX86().append( "/Winamp" ) ).toString().append( "/plugins" );
-    return winampFolder;
 }
 
 QString

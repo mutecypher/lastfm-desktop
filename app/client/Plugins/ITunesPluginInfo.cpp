@@ -19,24 +19,6 @@ ITunesPluginInfo::name() const
     return "iTunes";
 }
 
-Version
-ITunesPluginInfo::minVersion() const
-{
-    return Version();
-}
-
-Version
-ITunesPluginInfo::maxVersion() const
-{
-    return Version();
-}
-
-QString
-ITunesPluginInfo::pluginPath() const
-{
-    return QString( "Plug-Ins" );
-}
-
 QString
 ITunesPluginInfo::displayName() const
 {
@@ -59,15 +41,16 @@ ITunesPluginInfo::id() const
 #endif
 }
 
+bool
+ITunesPluginInfo::isAppInstalled() const
+{
+    return QSettings("HKEY_CURRENT_USER\\Software\\Apple Computer, Inc.\\iTunes", QSettings::NativeFormat).contains("SM Shortcut Installed");
+}
+
 IPluginInfo::BootstrapType
 ITunesPluginInfo::bootstrapType() const
 {
     return ClientBootstrap;
-}
-
-QString ITunesPluginInfo::pluginInstallPath() const
-{
-    return programFilesX86() + "\\iTunes\\Plug-Ins";
 }
 
 QString

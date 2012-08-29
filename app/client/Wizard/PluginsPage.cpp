@@ -80,15 +80,12 @@ PluginsPage::initializePage()
     QList<IPluginInfo*> supportedPlugins = wizard()->pluginList()->supportedList();
     foreach( IPluginInfo* plugin, supportedPlugins )
     {
-        if( !plugin->isAppInstalled() )
-            continue;
-
         QCheckBox* cb;
         m_pluginsLayout->addWidget( cb = new QCheckBox( plugin->name(), this ));
         connect( cb, SIGNAL(toggled(bool)), plugin, SLOT(install(bool)));
 
         cb->setObjectName( plugin->id() );
-        cb->setChecked( true );
+        cb->setChecked( plugin->isAppInstalled() );
 
         if ( plugin->isInstalled() )
         {

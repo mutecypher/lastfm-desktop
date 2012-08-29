@@ -17,25 +17,7 @@ FooBar09PluginInfo::version() const
 QString
 FooBar09PluginInfo::name() const
 {
-    return "Foobar 2000 0.9.4";
-}
-
-Version
-FooBar09PluginInfo::minVersion() const
-{
-    return Version( 0, 9, 4 );
-}
-
-Version
-FooBar09PluginInfo::maxVersion() const
-{
-    return Version( 0, 9, 9999 );
-}
-
-QString
-FooBar09PluginInfo::pluginPath() const
-{
-    return QString( "components" );
+    return "foobar2000";
 }
 
 QString
@@ -56,18 +38,16 @@ FooBar09PluginInfo::id() const
     return QString( "foo3" );
 }
 
+bool
+FooBar09PluginInfo::isAppInstalled() const
+{
+    return QSettings("HKEY_CURRENT_USER\\Software\\foobar2000", QSettings::NativeFormat).contains("DefaultShellAction");
+}
+
 IPluginInfo::BootstrapType
 FooBar09PluginInfo::bootstrapType() const
 {
     return NoBootstrap;
-}
-
-QString FooBar09PluginInfo::pluginInstallPath() const
-{
-    // This isn't the correct key, I'm not sure there is one
-    QSettings settings( "HKEY_CURRENT_USER\\foobar2000", QSettings::NativeFormat );
-    QString foobarLocation = settings.value( ".", programFilesX86().append( "\\foobar2000" ) ).toString().append( "\\components" );
-    return foobarLocation;
 }
 
 QString
