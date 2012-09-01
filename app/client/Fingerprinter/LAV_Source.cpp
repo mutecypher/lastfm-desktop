@@ -280,12 +280,14 @@ LAV_Source::LAV_Source()
     : d(new LAV_SourcePrivate())
 {
     av_register_all();
+    avformat_network_init();
 }
 
 
 LAV_Source::~LAV_Source()
 {
     release();
+    avformat_network_deinit();
     delete d;
 }
 
