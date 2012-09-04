@@ -17,7 +17,7 @@ INCLUDEPATH = $$ROOT_DIR
 
 win32:DEFINES += _CRT_SECURE_NO_WARNINGS WIN32_LEAN_AND_MEAN
 
-unix:QMAKE_CXXFLAGS += -fno-operator-names
+unix:!mac:QMAKE_CXXFLAGS += -fno-operator-names
 
 macx* {
     QMAKE_PKGINFO_TYPEINFO = last
