@@ -12,10 +12,9 @@ PreferencesDialog::PreferencesDialog( QMenuBar* menuBar, QWidget* parent )
     ui( new Ui::PreferencesDialog )
 {
     // Disable the minimize and maximize buttons.
-     Qt::WindowFlags flags = this->windowFlags();
-     flags |= Qt::CustomizeWindowHint;
-     flags &= ~Qt::WindowMinMaxButtonsHint;
-     setWindowFlags(flags);
+    Qt::WindowFlags flags = this->windowFlags();
+    flags &= ~Qt::WindowMinMaxButtonsHint;
+    setWindowFlags(flags);
 
     ui->setupUi( this );
 
