@@ -371,6 +371,7 @@ MainWindow::onPrefsTriggered()
 
     m_preferences->show();
     m_preferences->activateWindow();
+    m_preferences->adjustSize();
 }
 
 void
