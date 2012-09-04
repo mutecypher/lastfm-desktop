@@ -25,15 +25,13 @@
 {
     Q_UNUSED(updater)
     Q_UNUSED(update)
-
-    static_cast<unicorn::Application*>(qApp)->hideDockIcon( false );
 }
 
 - (void) updaterWillRelaunchApplication:(SUUpdater *)updater
 {
     Q_UNUSED(updater)
 
-    static_cast<unicorn::Application*>(qApp)->hideDockIcon( unicorn::Settings().value( SETTING_HIDE_DOCK, false ).toBool() );
+    static_cast<unicorn::Application*>(qApp)->hideDockIcon( unicorn::Settings().value( SETTING_SHOW_WHERE, 0 ).toInt() == 2 );
 }
 
 @end
