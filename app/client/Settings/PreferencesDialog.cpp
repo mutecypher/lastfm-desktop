@@ -7,18 +7,10 @@
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
 
-#define FIXED_WIDTH 550
-
 PreferencesDialog::PreferencesDialog( QMenuBar* menuBar, QWidget* parent )
     :unicorn::MainWindow( menuBar, parent ),
     ui( new Ui::PreferencesDialog )
 {
-    // Disable the minimize and maximize buttons.
-    Qt::WindowFlags flags = this->windowFlags();
-    flags |= Qt::CustomizeWindowHint;
-    flags &= ~Qt::WindowMinMaxButtonsHint;
-    setWindowFlags(flags);
-
     ui->setupUi( this );
 
     setAttribute( Qt::WA_DeleteOnClose, true );
@@ -65,7 +57,7 @@ PreferencesDialog::PreferencesDialog( QMenuBar* menuBar, QWidget* parent )
     applyButton->setEnabled( false );
     connect( applyButton, SIGNAL( clicked() ), SLOT( onApplyButtonClicked() ) );
 
-    setFixedWidth( FIXED_WIDTH );
+    setFixedWidth( 550 );
 
     ui->actionGeneral->trigger();
 }

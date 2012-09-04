@@ -35,6 +35,9 @@ public:
 public slots:
     virtual void saveSettings();
 
+private slots:
+    void onSliderMoved( int value );
+
 private:
     Ui::ScrobbleSettingsWidget* ui;
 };

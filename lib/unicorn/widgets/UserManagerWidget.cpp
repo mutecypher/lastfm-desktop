@@ -32,15 +32,10 @@ UserRadioButton::UserRadioButton( const User& user )
     addWidget( ui.image = new AvatarWidget() );
     ui.image->setObjectName( "image" );
 
-    QVBoxLayout* userTextLayout = new QVBoxLayout();
-    userTextLayout->setContentsMargins( 0, 0, 0, 0 );
-    userTextLayout->setSpacing( 0 );
-
-    userTextLayout->addWidget( ui.username = new QLabel( user.name() ) );
-    userTextLayout->addWidget( ui.realName = new QLabel() );
-    userTextLayout->addWidget( ui.loggedIn = new QLabel() );
+    addWidget( ui.username = new QLabel( user.name() ) );
+    addWidget( ui.realName = new QLabel() );
+    addWidget( ui.loggedIn = new QLabel() );
     ui.realName->setObjectName( "realname" );
-    addLayout(userTextLayout);
 
     addStretch();
 
@@ -88,7 +83,7 @@ UserRadioButton::setUser( const lastfm::User& user )
     ui.username->setText( user.name() );
 
     if( !user.realName().isEmpty() )
-        ui.realName->setText( QString( "(%1)" ).arg( user.realName() ) );
+        ui.realName->setText( QString( " (%1)" ).arg( user.realName() ) );
 
     if( user == User() )
         ui.loggedIn->setText( tr( "(currently logged in)" ) );
@@ -248,8 +243,8 @@ UserManagerWidget::onUserAdded()
     {
         QMessageBoxBuilder( this )
                     .setIcon( QMessageBox::Information )
-                    .setTitle( tr( "Add User Error" ) )
-                    .setText( tr( "To add a new account you must connect it to the Last.fm user permissions.") )
+                    .setTitle( tr( "User already added" ) )
+                    .setText( tr( "This user has already been added." ) )
                     .exec();
 
     }
