@@ -17,6 +17,8 @@ unicorn::Updater::Updater(QObject *parent) :
 
     if ( qApp->arguments().contains( "--update" ) )
         win_sparkle_set_appcast_url( "http://users.last.fm/~michael/updates_win.xml" );
+    else if ( qApp->arguments().contains( "--update-static" ) )
+        win_sparkle_set_appcast_url( "http://static.last.fm/client/Mac/updates.xml" );
     else
         win_sparkle_set_appcast_url( "http://cdn.last.fm/client/Win/updates.xml" );
 #endif
