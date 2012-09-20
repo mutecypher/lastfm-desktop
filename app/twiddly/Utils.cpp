@@ -32,10 +32,10 @@
 void
 Utils::startAudioscrobbler( QStringList& vargs )
 {
-    QString path = unicorn::Settings().value( "Path" ).toString();
+    QString path = unicorn::AppSettings( "Client" ).value( "Path" ).toString();
     if ( path.size() == 0 )
     {
-        path = QSettings("HKEY_LOCAL_MACHINE\\Software\\Last.fm\\Client", QSettings::NativeFormat ).value( "Path" ).toString();
+        path = unicorn::AppSettings( "Last.fm" ).value( "Path" ).toString();
 
         if ( path.size() == 0 )
         {
