@@ -70,12 +70,12 @@ CONFIG( break ) {
     }
 }
 
-CONFIG( fftw3f ) {
+CONFIG( fftw ) {
     mac{
                 LIBS += /usr/local/lib/libfftw3f.a
 	}else{
         CONFIG += link_pkgconfig
-        PKGCONFIG += fftw3f
+        PKGCONFIG += fftw
     }
 }
 
