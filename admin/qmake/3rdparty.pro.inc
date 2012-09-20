@@ -30,6 +30,23 @@ CONFIG( faad ) {
     }
 }
 
+CONFIG( ffmpeg )
+{
+    mac {
+        LIBS += /usr/local/lib/libavcodec.a
+        LIBS += /usr/local/lib/libavformat.a
+        LIBS += /usr/local/lib/libavutil.a
+        LIBS += /usr/local/lib/libswresample.a
+    } else {
+        CONFIG += link_pkgconfig
+        PKGCONFIG += libavformat
+        packagesExist(libswresample) {
+            PKGCONFIG += libswresample
+            DEFINES += HAVE_SWRESAMPLE
+        }
+    }
+}
+
 CONFIG( vorbis ) {
     mac{
                 LIBS += /usr/local/lib/libvorbis.a
