@@ -98,7 +98,9 @@ lastfm::FingerprintableSource* factory(int type)
     switch (type) {
         case MP3: return new MadSource;
         case OGG: return new VorbisSource;
-        case FLAC: return new FlacSource;
+// The flac source is crashing on Windows
+// disable until we find a proper fix
+//        case FLAC: return new FlacSource;
         case AAC: return new AacSource;
         default: return 0;
     }
