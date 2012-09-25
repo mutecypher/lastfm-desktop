@@ -123,19 +123,13 @@ PlayableItemWidget::setDescription( const QString& description )
 void 
 PlayableItemWidget::play()
 {
-    if(RadioService::instance().isRadioUsageAllowed())
-    {
-        RadioService::instance().play( m_rs );
-    }
+    RadioService::instance().play( m_rs );
 }
 
 void
 PlayableItemWidget::playNext()
 {
-    if(RadioService::instance().isRadioUsageAllowed())
-    {
-        RadioService::instance().playNext( m_rs );
-    }
+    RadioService::instance().playNext( m_rs );
 }
 
 RadioStation
@@ -158,21 +152,15 @@ PlayableItemWidget::getMultiStation() const
 void
 PlayableItemWidget::playMulti()
 {
-    if(RadioService::instance().isRadioUsageAllowed())
-    {
-        if ( m_rs.url().startsWith("lastfm://user/") )
-            RadioService::instance().play( getMultiStation() );
-    }
+    if ( m_rs.url().startsWith("lastfm://user/") )
+        RadioService::instance().play( getMultiStation() );
 }
 
 void
 PlayableItemWidget::playMultiNext()
 {
-    if(RadioService::instance().isRadioUsageAllowed())
-    {
-        if ( m_rs.url().startsWith("lastfm://user/") )
-            RadioService::instance().playNext( getMultiStation() );
-    }
+    if ( m_rs.url().startsWith("lastfm://user/") )
+        RadioService::instance().playNext( getMultiStation() );
 }
 
 void
