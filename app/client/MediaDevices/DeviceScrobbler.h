@@ -2,8 +2,8 @@
 #define DEVICE_SCROBBLER_H_
 
 #include <QDialogButtonBox>
+#include <QProcess>
 
-#include "../Dialogs/ScrobbleSetupDialog.h"
 #include "lib/unicorn/UnicornSession.h"
 #include "lib/unicorn/UnicornSettings.h"
 #include <lastfm/User.h>
@@ -16,17 +16,16 @@
 
 using unicorn::Session;
 
+class ScrobbleConfirmationDialog;
+
 class DeviceScrobbler : public QObject
 {
     Q_OBJECT
 public:
-    DeviceScrobbler();
+    DeviceScrobbler( QObject* parent = 0 );
 
 signals:
-    void detectedIPod( const QString& id );
-    void processingScrobbles( const QString& id );
-    void noScrobblesFound( const QString& id );
-    void foundScrobbles( const QList<lastfm::Track>& tracks, const QString& id );
+    void foundScrobbles( const QList<lastfm::Track>& tracks );
 
 public slots:
 #ifdef Q_WS_X11
@@ -34,15 +33,20 @@ public slots:
 #endif
 
 private slots:
-    void onScrobbleSetupClicked( bool scrobble, bool alwaysAsk, QString username, QString deviceId, QString deviceName, QStringList iPodFiles );
 #ifdef Q_WS_X11
     void onCalculatingScrobbles( int trackCount );
     void scrobbleIpodTracks( int trackCount );
     void onIpodScrobblingError();
 #endif
 
-public:
+    void twiddle();
+    void onTwiddlyFinished( int, QProcess::ExitStatus );
+    void onTwiddlyError( QProcess::ProcessError );
+
+    void onScrobblesConfirmationFinished( int result );
     void checkCachedIPodScrobbles();
+
+public:
     void handleMessage( const QStringList& );
     void iPodDetected( const QStringList& arguments );
 
@@ -50,10 +54,16 @@ private:
 #ifdef Q_WS_X11
     QPointer<IpodDeviceLinux> iPod;
 #endif
-    void twiddled( QStringList arguments );
-    void scrobbleIpodFiles( QStringList iPodScrobbleFiles, const IpodDevice& ipod );
+    void twiddled( const QStringList& arguments );
+    void scrobbleIpodFiles( const QStringList& files );
+    QList<lastfm::Track> scrobblesFromFiles( const QStringList& files );
 
     lastfm::User associatedUser( QString deviceId );
+
+private:
+    QPointer<QProcess> m_twiddly;
+    QTimer* m_twiddlyTimer;
+    QPointer<ScrobbleConfirmationDialog> m_confirmDialog;
 };
 
 #endif //DEVICE_SCROBBLER_H_

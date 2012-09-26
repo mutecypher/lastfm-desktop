@@ -495,7 +495,6 @@ unicorn::Application::hotkeyEventHandler( EventHandlerCallRef, EventRef event, v
 void
 unicorn::Application::appleEventReceived( const QStringList& messages )
 {
-    qDebug() << "Messages: " << messages;
     emit messageReceived( messages );
 }
 
@@ -562,10 +561,7 @@ unicorn::Application::appleEventHandler( const AppleEvent* e, AppleEvent*, long 
                 char data[size + 1];
                 data[ size ] = 0;
                 ret = AEGetDescData( &desc, data, size );
-                QString dataString = QString::fromUtf8( data );
-
-                qDebug() << dataString;
-                args << dataString;
+                args << QString::fromUtf8( data );
             }
         }
 

@@ -592,6 +592,8 @@ Application::Argument Application::argument( const QString& arg )
     if (arg == "--skip") return Skip;
     if (arg == "--exit") return Exit;
     if (arg == "--stop") return Stop;
+    if (arg == "--twiddly") return Twiddly;
+    if (arg == "--settings") return Settings;
 
     QUrl url( arg );
     //TODO show error if invalid schema and that
@@ -625,25 +627,6 @@ Application::onMessageReceived( const QStringList& message )
 
     qDebug() << "Messages: " << message;
 
-    if ( message.contains( "--twiddly" ))
-    {
-        ScrobbleService::instance().handleTwiddlyMessage( message );
-    }
-    else if ( message.contains( "--exit" ) )
-    {
-        exit();
-    }
-    else if ( message.contains( "--settings" ) )
-    {
-        // raise the settings window
-        m_mw->onPrefsTriggered();
-    }
-    else if ( message.contains( "--new-ipod-detected" ) ||
-              message.contains( "--ipod-detected" ))
-    {
-        ScrobbleService::instance().handleIPodDetectedMessage( message );
-    }
-
     if ( !( message.contains( "--tray" )
            || message.contains( "--twiddly" )
            || message.contains( "--new-ipod-detected" )
@@ -667,7 +650,7 @@ Application::parseArguments( const QStringList& args )
 
     foreach ( QString const arg, args )
     {
-        switch (argument( arg ))
+        switch ( argument( arg ) )
         {
         case LastFmUrl:
             RadioService::instance().play( RadioStation( arg ) );
@@ -692,8 +675,15 @@ Application::parseArguments( const QStringList& args )
                 RadioService::instance().resume();
             break;
 
+        case Twiddly:
+            ScrobbleService::instance().handleTwiddlyMessage( args );
+            break;
+
+        case Settings:
+            m_mw->onPrefsTriggered();
+            break;
+
         case ArgUnknown:
-            qDebug() << "Unknown argument:" << arg;
             break;
         }
     }

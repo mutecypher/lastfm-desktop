@@ -37,7 +37,7 @@
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
 #include "MediaDevices/DeviceScrobbler.h"
-#include "Dialogs/CloseAppsDialog.h"
+#include "lib/unicorn/dialogs/CloseAppsDialog.h"
 #include "../Widgets/ProfileWidget.h"
 #include "../Widgets/FriendListWidget.h"
 #include "../Widgets/ScrobbleControls.h"
@@ -151,15 +151,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn()));
     connect( &RadioService::instance(), SIGNAL(error(int,QVariant)), SLOT(onRadioError(int,QVariant)));
 
-    DeviceScrobbler* deviceScrobbler = ScrobbleService::instance().deviceScrobbler();
-    if ( deviceScrobbler )
-    {
-        connect( deviceScrobbler, SIGNAL( detectedIPod( QString )), SLOT( onIPodDetected( QString )));
-        connect( deviceScrobbler, SIGNAL( processingScrobbles(QString)), SLOT( onProcessingScrobbles(QString)));
-        connect( deviceScrobbler, SIGNAL( foundScrobbles( QList<lastfm::Track>, QString )), SLOT( onFoundScrobbles( QList<lastfm::Track>, QString )));
-        connect( deviceScrobbler, SIGNAL( noScrobblesFound(QString)),SLOT( onNoScrobblesFound(QString)));
-    }
-
+    connect( &ScrobbleService::instance(), SIGNAL(foundIPodScrobbles(QList<lastfm::Track>)), SLOT(onFoundScrobbles(QList<lastfm::Track>)));
 
     new QShortcut( Qt::Key_Space, this, SLOT(onSpace()) );
 
@@ -224,7 +216,7 @@ MainWindow::checkUpdatedPlugins()
              .setButtons( QMessageBox::Yes | QMessageBox::No )
              .exec() == QMessageBox::Yes )
         {
-            CloseAppsDialog* closeApps = new CloseAppsDialog( m_pluginList->updatedList(), this );
+            unicorn::CloseAppsDialog* closeApps = new unicorn::CloseAppsDialog( m_pluginList->updatedList(), this );
 
             if ( closeApps->result() != QDialog::Accepted )
                 closeApps->exec();
@@ -456,31 +448,17 @@ MainWindow::onRadioError( int error, const QVariant& data )
     ui.messageBar->show( tr( "%1: %2" ).arg( data.toString(), QString::number( error ) ), "radio" );
 }
 
-
 void
-MainWindow::onIPodDetected( const QString& iPod )
+MainWindow::onFoundScrobbles( const QList<lastfm::Track>& tracks )
 {
-    ui.messageBar->show( tr("The iPod \"%1\" has been detected!").arg( iPod ), "ipod" );
-}
+    ui.messageBar->addTracks( tracks );
 
-void
-MainWindow::onProcessingScrobbles( const QString& /*iPodName*/ )
-{
-    ui.messageBar->show( tr("Processing iPod Scrobbles...") , "ipod");
-}
+    int count = 0;
 
-void
-MainWindow::onFoundScrobbles( const QList<lastfm::Track>& tracks, const QString& iPod )
-{
-    ui.messageBar->setTracks( tracks );
+    foreach ( const lastfm::Track& track, ui.messageBar->tracks() )
+        count += track.extra( "playCount" ).toInt();
 
-    ui.messageBar->show( tr( "<a href=\"tracks\">%n track(s)</a> has been scrobbled from the iPod \"%1\"", "", tracks.count() ).arg( iPod ), "ipod" );
-}
-
-void
-MainWindow::onNoScrobblesFound( const QString& iPod )
-{
-    ui.messageBar->show( tr("No tracks were found from the iPod \"%1\"" ).arg( iPod ), "ipod" );
+    ui.messageBar->show( tr( "<a href=\"tracks\">%n play(s)</a> ha(s|ve) been scrobbled from a device", "", count ), "ipod" );
 }
 
 void

@@ -51,7 +51,6 @@ SOURCES += \
     Services/ScrobbleService/ScrobbleService.cpp \
     Services/RadioService/RadioService.cpp \
     Services/RadioService/RadioConnection.cpp \
-    Dialogs/ScrobbleSetupDialog.cpp \
     Dialogs/DiagnosticsDialog.cpp \
     Bootstrapper/PluginBootstrapper.cpp \
     Bootstrapper/ITunesDevice/itunesdevice.cpp \
@@ -98,7 +97,6 @@ SOURCES += \
     Widgets/SimilarArtistWidget.cpp \
     Widgets/PushButton.cpp \
     Dialogs/BetaDialog.cpp \
-    Dialogs/CloseAppsDialog.cpp \
     Widgets/TrackWidget.cpp \
     Dialogs/LicensesDialog.cpp \
     Widgets/ScrobblesWidget.cpp \
@@ -121,7 +119,6 @@ HEADERS += \
     MediaDevices/MediaDevice.h \
     MediaDevices/IpodDevice.h \
     MediaDevices/DeviceScrobbler.h \
-    Dialogs/ScrobbleSetupDialog.h \
     Dialogs/DiagnosticsDialog.h \
     Bootstrapper/PluginBootstrapper.h \
     Bootstrapper/ITunesDevice/MediaDeviceInterface.h \
@@ -177,7 +174,6 @@ HEADERS += \
     Widgets/SimilarArtistWidget.h \
     Widgets/PushButton.h \
     Dialogs/BetaDialog.h \
-    Dialogs/CloseAppsDialog.h \
     Widgets/TrackWidget.h \
     Dialogs/LicensesDialog.h \
     Widgets/ScrobblesListWidget.h \
@@ -213,7 +209,6 @@ mac:HEADERS += CommandReciever/CommandReciever.h \
 mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
 mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
-                            Dialogs/CloseAppsDialog_mac.mm \
                             Widgets/NothingPlayingWidget_mac.mm \
                             MediaKeys/MediaKey.mm \
                             ../../lib/3rdparty/SPMediaKeyTap/SPMediaKeyTap.m \
@@ -221,7 +216,6 @@ mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
 
 FORMS += \
     Widgets/PlaybackControlsWidget.ui \
-    Dialogs/ScrobbleSetupDialog.ui \
     Dialogs/DiagnosticsDialog.ui \
     Widgets/MetadataWidget.ui \
     Settings/PreferencesDialog.ui \
@@ -235,7 +229,6 @@ FORMS += \
     Widgets/FriendWidget.ui \
     Widgets/FriendListWidget.ui \
     Dialogs/BetaDialog.ui \
-    Dialogs/CloseAppsDialog.ui \
     Widgets/TrackWidget.ui \
     Dialogs/LicensesDialog.ui \
     Widgets/ScrobblesWidget.ui \

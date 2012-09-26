@@ -35,14 +35,6 @@ public:
 public slots:
     virtual void saveSettings();
 
-private slots:
-    void clearIpodAssociations();
-    void removeIpodAssociation();
-    void onItemActivated();
-
-private:
-    void populateIpodAssociations();
-
 private:
     Ui::IpodSettingsWidget* ui;
 };

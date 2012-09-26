@@ -39,6 +39,12 @@
 #include <Carbon/Carbon.h>
 #endif
 
+#ifdef Q_OS_MAC
+#define OLDE_PLUGIN_SETTINGS "scrobbler"
+#else
+#define OLDE_PLUGIN_SETTINGS "Client"
+#endif
+
 #define SETTING_SHOW_AS "showAS"
 #define SETTING_LAUNCH_ITUNES "LaunchWithMediaPlayer"
 #define SETTING_NOTIFICATIONS "notifications"
@@ -47,6 +53,8 @@
 #define SETTING_CHECK_UPDATES "checkUpdates"
 #define SETTING_HIDE_DOCK "hideDock"
 #define SETTING_SHOW_WHERE "showWhere"
+#define SETTING_OLDE_ITUNES_DEVICE_SCROBBLING_ENABLED "iPodScrobblingEnabled"
+#define SETTING_ALWAYS_ASK "alwaysAsk"
 
 #define SETTING_FIRST_RUN_WIZARD_COMPLETED "FirstRunWizardCompletedBeta"
 

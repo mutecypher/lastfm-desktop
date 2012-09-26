@@ -62,6 +62,7 @@ SOURCES += \
     dialogs/LoginContinueDialog.cpp \
     dialogs/AboutDialog.cpp \
     dialogs/ScrobbleConfirmationDialog.cpp \
+    dialogs/CloseAppsDialog.cpp \
     AnimatedStatusBar.cpp \
     DesktopServices.cpp \
     Updater/Updater.cpp \
@@ -119,6 +120,7 @@ HEADERS += \
     dialogs/LoginContinueDialog.h \
     dialogs/AboutDialog.h \
     dialogs/ScrobbleConfirmationDialog.h \
+    dialogs/CloseAppsDialog.h \
     AnimatedStatusBar.h \
     AnimatedPushButton.h \
     dialogs/ShareDialog.h \
@@ -136,7 +138,8 @@ macx:SOURCES += mac/AppleScript.cpp
 macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
                           notify/Notify.mm \
                           Updater/Updater_mac.mm \
-                          UnicornApplicationDelegate.mm
+                          UnicornApplicationDelegate.mm \
+                          dialogs/CloseAppsDialog_mac.mm \
 
 macx:HEADERS += mac/AppleScript.h \
                 notify/Notify.h \
@@ -152,7 +155,9 @@ FORMS += \
 	dialogs/ShareDialog.ui \
 	dialogs/LoginDialog.ui \
     dialogs/TagDialog.ui \
-    dialogs/AboutDialog.ui
+    dialogs/AboutDialog.ui \
+    dialogs/CloseAppsDialog.ui \
+    dialogs/ScrobbleConfirmationDialog.ui
 
 RESOURCES += \
 	qrc/unicorn.qrc

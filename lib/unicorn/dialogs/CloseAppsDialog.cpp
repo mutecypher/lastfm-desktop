@@ -13,14 +13,14 @@
 #include "ui_CloseAppsDialog.h"
 
 
-CloseAppsDialog::CloseAppsDialog( const QList<IPluginInfo*>& plugins, QWidget *parent )
+unicorn::CloseAppsDialog::CloseAppsDialog( const QList<IPluginInfo*>& plugins, QWidget *parent )
     :QDialog( parent ),
       ui(new Ui::CloseAppsDialog), m_plugins( plugins )
 {
     commonSetup();
 }
 
-CloseAppsDialog::CloseAppsDialog(QWidget *parent) :
+unicorn::CloseAppsDialog::CloseAppsDialog(QWidget *parent) :
     QDialog( parent ),
     ui(new Ui::CloseAppsDialog)
 {
@@ -28,7 +28,7 @@ CloseAppsDialog::CloseAppsDialog(QWidget *parent) :
 }
 
 void
-CloseAppsDialog::commonSetup()
+unicorn::CloseAppsDialog::commonSetup()
 {
     ui->setupUi(this);
 
@@ -44,8 +44,24 @@ CloseAppsDialog::commonSetup()
     timer->start();
 }
 
+bool
+unicorn::CloseAppsDialog::isITunesRunning()
+{
+    QStringList apps;
+#ifndef Q_OS_MAC
+    QList<IPluginInfo*> plugins;
+    ITunesPluginInfo* iTunesPluginInfo = new ITunesPluginInfo;
+    plugins << iTunesPluginInfo;
+    apps = runningApps( plugins );
+    delete iTunesPluginInfo;
+#else
+    apps = runningApps();
+#endif
+    return apps.count() == 1;
+}
+
 void
-CloseAppsDialog::checkApps()
+unicorn::CloseAppsDialog::checkApps()
 {
     QStringList apps = runningApps();
 
@@ -64,7 +80,13 @@ CloseAppsDialog::checkApps()
 
 #ifndef Q_OS_MAC
 QStringList
-CloseAppsDialog::runningApps()
+unicorn::CloseAppsDialog::runningApps()
+{
+    return runningApps( m_plugins );
+}
+
+QStringList
+unicorn::CloseAppsDialog::runningApps( const QList<IPluginInfo*>& plugins )
 {
     QStringList apps;
 
@@ -103,7 +125,7 @@ CloseAppsDialog::runningApps()
 
                         qDebug() << QString( "%1  (PID: %2)").arg( QString::fromStdWString( szProcessName ), QString::number( aProcesses[i] ) );
 
-                        foreach( IPluginInfo* plugin, m_plugins )
+                        foreach( IPluginInfo* plugin, plugins )
                             if ( plugin->processName().compare( QString::fromStdWString( szProcessName ), Qt::CaseInsensitive ) == 0 )
                                 apps << plugin->name();
                     }
@@ -119,7 +141,7 @@ CloseAppsDialog::runningApps()
 }
 #endif
 
-CloseAppsDialog::~CloseAppsDialog()
+unicorn::CloseAppsDialog::~CloseAppsDialog()
 {
     delete ui;
 }

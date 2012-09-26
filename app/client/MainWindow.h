@@ -33,6 +33,7 @@ class SlideOverLayout;
 class UserToolButton;
 class MediaKey;
 class PluginList;
+class IpodDevice;
 
 class MainWindow : public unicorn::MainWindow
 {
@@ -99,10 +100,7 @@ private slots:
 #endif
 
     // iPod scrobbling things
-    void onIPodDetected( const QString& iPodName );
-    void onProcessingScrobbles( const QString& iPodName );
-    void onFoundScrobbles( const QList<lastfm::Track>& tracks, const QString& iPodName );
-    void onNoScrobblesFound( const QString& iPodName );
+    void onFoundScrobbles( const QList<lastfm::Track>& tracks );
 
 private:
     void setCurrentWidget( QWidget* );

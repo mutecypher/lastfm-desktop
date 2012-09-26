@@ -49,32 +49,6 @@ IpodDevice::deviceName() const
 }
 
 void
-IpodDevice::setScrobble( bool scrobble )
-{
-    setSetting( "scrobble", scrobble );
-}
-
-bool
-IpodDevice::scrobble() const
-{
-    return const_cast<IpodDevice*>(this)->setting( "scrobble", false ).toBool();
-}
-
-
-void
-IpodDevice::setAlwaysAsk( bool alwaysAsk )
-{
-    setSetting( "alwaysAsk", alwaysAsk );
-}
-
-bool
-IpodDevice::alwaysAsk() const
-{
-    return const_cast<IpodDevice*>(this)->setting( "alwaysAsk", true ).toBool();
-}
-
-
-void
 IpodDevice::setSetting( QString key, QVariant value )
 {
     // Find the setting for this

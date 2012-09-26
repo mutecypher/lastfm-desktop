@@ -218,65 +218,50 @@
 <context>
     <name>CloseAppsDialog</name>
     <message>
-        <location filename="../app/client/Dialogs/CloseAppsDialog.ui" line="14"/>
+        <location filename="../lib/unicorn/dialogs/CloseAppsDialog.ui" line="14"/>
         <source>Close Apps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/CloseAppsDialog.cpp" line="35"/>
-        <source>Please close the following apps to continue.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>DeviceScrobbler</name>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="139"/>
-        <source>Switch user accounts to scrobble iPod &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="140"/>
-        <source>This iPod is associated with a different user. To scrobble tracks from it, please switch to the account &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="331"/>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="341"/>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="387"/>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="397"/>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="427"/>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="436"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="315"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="325"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="371"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="381"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="411"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="420"/>
         <source>Scrobble iPod</source>
         <translation>iPod 歌曲记录</translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="332"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="316"/>
         <source>Do you want to associate the device %1 to your audioscrobbler user account?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="342"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="326"/>
         <source>Device successfully associated to your user account. From now on you can scrobble the tracks you listen on this device.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="388"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="372"/>
         <source>%1 tracks scrobbled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="398"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="382"/>
         <source>No tracks to scrobble since your last sync.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="428"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="412"/>
         <source>The iPod database could not be opened.</source>
         <translation>无法打开 iPod 数据库。</translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="437"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="421"/>
         <source>An unknown error occurred while trying to access the iPod database.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -490,32 +475,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Settings/GeneralSettingsWidget.cpp" line="39"/>
+        <location filename="../app/client/Settings/GeneralSettingsWidget.cpp" line="32"/>
         <source>Menu bar and dock icons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Settings/GeneralSettingsWidget.cpp" line="40"/>
+        <location filename="../app/client/Settings/GeneralSettingsWidget.cpp" line="33"/>
         <source>Only dock icon (hide menu bar icon)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Settings/GeneralSettingsWidget.cpp" line="41"/>
+        <location filename="../app/client/Settings/GeneralSettingsWidget.cpp" line="34"/>
         <source>Only menu bar icon (hide dock icon)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Settings/GeneralSettingsWidget.cpp" line="77"/>
+        <location filename="../app/client/Settings/GeneralSettingsWidget.cpp" line="70"/>
         <source>System Language</source>
         <translation>系统语言</translation>
     </message>
     <message>
-        <location filename="../app/client/Settings/GeneralSettingsWidget.cpp" line="155"/>
+        <location filename="../app/client/Settings/GeneralSettingsWidget.cpp" line="148"/>
         <source>Restart now?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Settings/GeneralSettingsWidget.cpp" line="156"/>
+        <location filename="../app/client/Settings/GeneralSettingsWidget.cpp" line="149"/>
         <source>An application restart is required for the change to take effect. Would you like to restart now?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -544,38 +529,23 @@
 <context>
     <name>IpodSettingsWidget</name>
     <message>
+        <location filename="../app/client/Settings/IpodSettingsWidget.cpp" line="107"/>
+        <source>Setting not changed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/client/Settings/IpodSettingsWidget.cpp" line="109"/>
+        <source>You did not close iTunes for this setting to change</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../app/client/Settings/IpodSettingsWidget.ui" line="20"/>
-        <source>Associated iPods:</source>
+        <source>Enable Device Scrobbling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Settings/IpodSettingsWidget.ui" line="96"/>
-        <source>Remove Association</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Settings/IpodSettingsWidget.ui" line="103"/>
-        <source>Clear Associations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Settings/IpodSettingsWidget.cpp" line="68"/>
-        <source>User</source>
-        <translation>用户</translation>
-    </message>
-    <message>
-        <location filename="../app/client/Settings/IpodSettingsWidget.cpp" line="69"/>
-        <source>Device Name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Settings/IpodSettingsWidget.cpp" line="70"/>
-        <source>Scrobble</source>
-        <translation>歌曲记录</translation>
-    </message>
-    <message>
-        <location filename="../app/client/Settings/IpodSettingsWidget.cpp" line="71"/>
-        <source>Always Ask</source>
+        <location filename="../app/client/Settings/IpodSettingsWidget.ui" line="27"/>
+        <source>Confirm Device Scrobbles</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -664,184 +634,169 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="222"/>
+        <location filename="../app/client/MainWindow.cpp" line="214"/>
         <source>There are updates to your media player plugins. Would you like to install them now?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="242"/>
+        <location filename="../app/client/MainWindow.cpp" line="234"/>
         <source>Your plugins haven&apos;t been installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="244"/>
+        <location filename="../app/client/MainWindow.cpp" line="236"/>
         <source>You can install them later through the file menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="258"/>
+        <location filename="../app/client/MainWindow.cpp" line="250"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="261"/>
+        <location filename="../app/client/MainWindow.cpp" line="253"/>
         <source>Install plugins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="269"/>
+        <location filename="../app/client/MainWindow.cpp" line="261"/>
         <source>&amp;Quit</source>
         <translation>退出(&amp;Q)</translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="278"/>
+        <location filename="../app/client/MainWindow.cpp" line="270"/>
         <source>View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="281"/>
+        <location filename="../app/client/MainWindow.cpp" line="273"/>
         <source>My Last.fm Profile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="284"/>
+        <location filename="../app/client/MainWindow.cpp" line="276"/>
         <source>Scrobbles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="285"/>
+        <location filename="../app/client/MainWindow.cpp" line="277"/>
         <source>Refresh</source>
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="288"/>
+        <location filename="../app/client/MainWindow.cpp" line="280"/>
         <source>Controls</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="292"/>
+        <location filename="../app/client/MainWindow.cpp" line="284"/>
         <source>Account</source>
         <translation>帐户</translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="295"/>
+        <location filename="../app/client/MainWindow.cpp" line="287"/>
         <source>Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="297"/>
+        <location filename="../app/client/MainWindow.cpp" line="289"/>
         <source>Check for Updates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="300"/>
+        <location filename="../app/client/MainWindow.cpp" line="292"/>
         <source>Options</source>
         <translation>选项</translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="304"/>
+        <location filename="../app/client/MainWindow.cpp" line="296"/>
         <source>Window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="305"/>
+        <location filename="../app/client/MainWindow.cpp" line="297"/>
         <source>Minimize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="306"/>
+        <location filename="../app/client/MainWindow.cpp" line="298"/>
         <source>Zoom</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="308"/>
+        <location filename="../app/client/MainWindow.cpp" line="300"/>
         <source>Last.fm</source>
         <translation>Last.fm</translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="310"/>
+        <location filename="../app/client/MainWindow.cpp" line="302"/>
         <source>Bring All to Front</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="313"/>
+        <location filename="../app/client/MainWindow.cpp" line="305"/>
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="314"/>
+        <location filename="../app/client/MainWindow.cpp" line="306"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="317"/>
+        <location filename="../app/client/MainWindow.cpp" line="309"/>
         <source>FAQ</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="318"/>
+        <location filename="../app/client/MainWindow.cpp" line="310"/>
         <source>Forums</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="320"/>
+        <location filename="../app/client/MainWindow.cpp" line="312"/>
         <source>Tour</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="322"/>
+        <location filename="../app/client/MainWindow.cpp" line="314"/>
         <source>Show Licenses</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="325"/>
+        <location filename="../app/client/MainWindow.cpp" line="317"/>
         <source>Diagnostics</source>
         <translation>诊断</translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="418"/>
-        <location filename="../app/client/MainWindow.cpp" line="437"/>
+        <location filename="../app/client/MainWindow.cpp" line="410"/>
+        <location filename="../app/client/MainWindow.cpp" line="429"/>
         <source>%1 - %2 - %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="420"/>
+        <location filename="../app/client/MainWindow.cpp" line="412"/>
+        <location filename="../app/client/MainWindow.cpp" line="431"/>
         <location filename="../app/client/MainWindow.cpp" line="439"/>
-        <location filename="../app/client/MainWindow.cpp" line="447"/>
         <source>%1 - %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="449"/>
+        <location filename="../app/client/MainWindow.cpp" line="441"/>
         <source>%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MainWindow.cpp" line="456"/>
+        <location filename="../app/client/MainWindow.cpp" line="448"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../app/client/MainWindow.cpp" line="463"/>
-        <source>The iPod &quot;%1&quot; has been detected!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/MainWindow.cpp" line="469"/>
-        <source>Processing iPod Scrobbles...</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message numerus="yes">
-        <location filename="../app/client/MainWindow.cpp" line="477"/>
-        <source>&lt;a href=&quot;tracks&quot;&gt;%n track(s)&lt;/a&gt; has been scrobbled from the iPod &quot;%1&quot;</source>
+        <location filename="../app/client/MainWindow.cpp" line="461"/>
+        <source>&lt;a href=&quot;tracks&quot;&gt;%n play(s)&lt;/a&gt; ha(s|ve) been scrobbled from a device</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
-    </message>
-    <message>
-        <location filename="../app/client/MainWindow.cpp" line="483"/>
-        <source>No tracks were found from the iPod &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -854,16 +809,16 @@
     <message>
         <location filename="../app/client/Widgets/MetadataWidget.ui" line="210"/>
         <location filename="../app/client/Widgets/MetadataWidget.ui" line="382"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="292"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="544"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="283"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="518"/>
         <source>Popular tags:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../app/client/Widgets/MetadataWidget.ui" line="223"/>
         <location filename="../app/client/Widgets/MetadataWidget.ui" line="395"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="362"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="586"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="353"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="560"/>
         <source>Your tags:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -873,180 +828,180 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="205"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="196"/>
         <source>by %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="209"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="215"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="200"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="206"/>
         <source>from %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="218"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="209"/>
         <source>Play %1 Radio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="226"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="217"/>
         <source>Auto-corrected from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="244"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="245"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="246"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="235"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="236"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="237"/>
         <source>%L1</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="248"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="637"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="239"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="611"/>
         <source>Play(s)</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="249"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="638"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="240"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="612"/>
         <source>Play(s) in your library</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="250"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="639"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="241"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="613"/>
         <source>Listener(s)</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="279"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="270"/>
         <source>With %1 and more.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="281"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="272"/>
         <source>With %1, %2 and more.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="297"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="367"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="549"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="591"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="288"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="358"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="523"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="565"/>
         <source> %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="299"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="369"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="551"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="593"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="290"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="360"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="525"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="567"/>
         <source> %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="330"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="321"/>
         <source>Edited on %1 | %2 Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="458"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="432"/>
         <source>Downloads</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="469"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="488"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="443"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="462"/>
         <source>Search on %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="471"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="490"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="445"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="464"/>
         <source>Buy on %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="479"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="453"/>
         <source>Physical</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="676"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="650"/>
         <source>Recommended because you listen to %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="677"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="651"/>
         <source>Recommended because you listen to %1 and %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="678"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="652"/>
         <source>Recommended because you listen to %1, %2, and %3.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="679"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="653"/>
         <source>Recommended because you listen to %1, %2, %3, and %4.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="680"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="654"/>
         <source>Recommended because you listen to %1, %2, %3, %4, and %5.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="694"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="668"/>
         <source>From %2%1s library.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="695"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="669"/>
         <source>From %2 and %3%1s libraries.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="696"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="670"/>
         <source>From %2, %3, and %4%1s libraries.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="697"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="671"/>
         <source>From %2, %3, %4, and %5%1s libraries.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="698"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="672"/>
         <source>From %2, %3, %4, %5, and %6%1s libraries.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="733"/>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="734"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="707"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="708"/>
         <source>%L1 time(s)</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="741"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="715"/>
         <source>You&apos;ve listened to %1 %2 and %3 %4.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="745"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="719"/>
         <source>You&apos;ve listened to %1 %2, but not this track.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="747"/>
+        <location filename="../app/client/Widgets/MetadataWidget.cpp" line="721"/>
         <source>This is the first time you&apos;ve listened to %1.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1494,7 +1449,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="297"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="281"/>
         <source>Where is your iPod mounted?</source>
         <translation>您的 iPod 安装在何处？</translation>
     </message>
@@ -1623,14 +1578,31 @@ Your profile will be updated with the new tracks in a few minutes.</source>
 <context>
     <name>ScrobbleConfirmationDialog</name>
     <message>
-        <location filename="../lib/unicorn/dialogs/ScrobbleConfirmationDialog.cpp" line="59"/>
-        <source>These are the tracks you are about to scrobble.</source>
+        <location filename="../lib/unicorn/dialogs/ScrobbleConfirmationDialog.ui" line="14"/>
+        <source>Device Scrobbles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lib/unicorn/dialogs/ScrobbleConfirmationDialog.cpp" line="62"/>
+        <location filename="../lib/unicorn/dialogs/ScrobbleConfirmationDialog.ui" line="20"/>
+        <source>It looks like you&apos;ve played these tracks. Would you like to scrobble them?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../lib/unicorn/dialogs/ScrobbleConfirmationDialog.ui" line="76"/>
+        <source>Scrobble devices automatically</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../lib/unicorn/dialogs/ScrobbleConfirmationDialog.ui" line="90"/>
         <source>Toggle selection</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../lib/unicorn/dialogs/ScrobbleConfirmationDialog.cpp" line="71"/>
+        <source>%n play(s) ha(s|ve) been scrobbled from a device</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -1718,104 +1690,6 @@ Your profile will be updated with the new tracks in a few minutes.</source>
     </message>
 </context>
 <context>
-    <name>ScrobbleSetupDialog</name>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.ui" line="14"/>
-        <source>iPod is ready for scrobbling</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.ui" line="70"/>
-        <source>Always automatically scrobble</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.ui" line="77"/>
-        <source>Tracks you&apos;ve played on this iPod will be automatically scrobbles when the device is synced.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.ui" line="87"/>
-        <source>Manually manage scrobbles</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.ui" line="94"/>
-        <source>Manually select and confirm which tracks should be scrobbled from a list of tracks played on this iPod.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.ui" line="104"/>
-        <source>Never scrobble</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.ui" line="111"/>
-        <source>Never scrobble any tracks on this iPod.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.ui" line="137"/>
-        <source>Not user?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.cpp" line="39"/>
-        <source>&lt;p&gt;Do you want to start scrobbling the iPod &quot;%1&quot;?&lt;p&gt;&lt;p&gt;This will automatically scrobble tracks you&apos;ve played on your iPod to the user account &lt;strong&gt;&quot;%2&quot;&lt;/strong&gt; everytime it&apos;s synced with iTunes.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.cpp" line="42"/>
-        <source>&lt;p&gt;How would you like to manage scrobbling from iPod &quot;%1&quot;?&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.cpp" line="51"/>
-        <source>&lt;p&gt;Not %1? Scrobble this iPod to a different user:&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.cpp" line="68"/>
-        <source>More Options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.cpp" line="69"/>
-        <source>Scrobble</source>
-        <translation>歌曲记录</translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.cpp" line="70"/>
-        <source>Not Now</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.cpp" line="93"/>
-        <source>Your iPod is ready for scrobbling!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.cpp" line="94"/>
-        <source>&lt;p&gt;From now on, anything you listen to on your iPod will be automatically scrobbled to the user &quot;&lt;strong&gt;%1&lt;/strong&gt;&quot; when the device is synced.&lt;/p&gt;&lt;p&gt;Change your iPod scrobble settings and user associations at any time in the preferences area.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.cpp" line="104"/>
-        <source>&lt;p&gt;From now on, you&apos;ll be asked to confirm any scrobbles from your iPod to the user &quot;&lt;strong&gt;%1&lt;/strong&gt;&quot; when the device is synced.&lt;/p&gt;&lt;p&gt;Change your iPod scrobble settings and user associations at any time in the preferences area.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.cpp" line="111"/>
-        <source>You seleceted to never scrobble :c</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Dialogs/ScrobbleSetupDialog.cpp" line="112"/>
-        <source>&lt;p&gt;Change your iPod scrobble settings and user associations at any time in the preferences area.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ScrobblesListWidget</name>
     <message>
         <location filename="../app/client/Widgets/ScrobblesListWidget.cpp" line="238"/>
@@ -1830,6 +1704,39 @@ Your profile will be updated with the new tracks in a few minutes.</source>
     <message>
         <location filename="../app/client/Widgets/ScrobblesListWidget.cpp" line="390"/>
         <source>Refresh Scrobbles</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ScrobblesModel</name>
+    <message>
+        <location filename="../lib/unicorn/ScrobblesModel.cpp" line="23"/>
+        <source>Artist</source>
+        <translation type="unfinished">艺术家</translation>
+    </message>
+    <message>
+        <location filename="../lib/unicorn/ScrobblesModel.cpp" line="24"/>
+        <source>Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../lib/unicorn/ScrobblesModel.cpp" line="25"/>
+        <source>Album</source>
+        <translation type="unfinished">专辑</translation>
+    </message>
+    <message>
+        <location filename="../lib/unicorn/ScrobblesModel.cpp" line="26"/>
+        <source>Plays</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../lib/unicorn/ScrobblesModel.cpp" line="27"/>
+        <source>Last Played</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../lib/unicorn/ScrobblesModel.cpp" line="28"/>
+        <source>Loved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2263,29 +2170,29 @@ or choose from below</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/TrackWidget.cpp" line="389"/>
+        <location filename="../app/client/Widgets/TrackWidget.cpp" line="363"/>
         <source>Now listening</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/TrackWidget.cpp" line="416"/>
+        <location filename="../app/client/Widgets/TrackWidget.cpp" line="390"/>
         <source>Downloads</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/TrackWidget.cpp" line="427"/>
-        <location filename="../app/client/Widgets/TrackWidget.cpp" line="446"/>
+        <location filename="../app/client/Widgets/TrackWidget.cpp" line="401"/>
+        <location filename="../app/client/Widgets/TrackWidget.cpp" line="420"/>
         <source>Search on %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/TrackWidget.cpp" line="429"/>
-        <location filename="../app/client/Widgets/TrackWidget.cpp" line="448"/>
+        <location filename="../app/client/Widgets/TrackWidget.cpp" line="403"/>
+        <location filename="../app/client/Widgets/TrackWidget.cpp" line="422"/>
         <source>Buy on %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/TrackWidget.cpp" line="437"/>
+        <location filename="../app/client/Widgets/TrackWidget.cpp" line="411"/>
         <source>Physical</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2413,12 +2320,12 @@ or choose from below</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Application.cpp" line="717"/>
+        <location filename="../app/client/Application.cpp" line="707"/>
         <source>Are you sure you want to quit %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Application.cpp" line="718"/>
+        <location filename="../app/client/Application.cpp" line="708"/>
         <source>%1 is about to quit. Tracks played will not be scrobbled if you continue.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2437,16 +2344,29 @@ or choose from below</source>
     </message>
 </context>
 <context>
+    <name>unicorn::CloseAppsDialog</name>
+    <message>
+        <location filename="../lib/unicorn/dialogs/CloseAppsDialog.cpp" line="35"/>
+        <source>Please close the following apps to continue.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>unicorn::Label</name>
-    <message numerus="yes">
+    <message>
         <location filename="../lib/unicorn/widgets/Label.cpp" line="114"/>
+        <source>Time is broken</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../lib/unicorn/widgets/Label.cpp" line="116"/>
         <source>%n minute(s) ago</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../lib/unicorn/widgets/Label.cpp" line="121"/>
+        <location filename="../lib/unicorn/widgets/Label.cpp" line="124"/>
         <source>%n hour(s) ago</source>
         <translation type="unfinished">
             <numerusform></numerusform>

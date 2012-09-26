@@ -69,7 +69,7 @@ signals:
     void scrobblesCached( const QList<lastfm::Track>& tracks );
     void scrobblesSubmitted( const QList<lastfm::Track>& tracks );
 
-    void foundIPodScrobbles( const QList<lastfm::Track>& tracks, const QString& id );
+    void foundIPodScrobbles( const QList<lastfm::Track>& tracks );
     void bootstrapReady( const QString& playerId );
 
     void paused( bool );
@@ -85,6 +85,8 @@ protected slots:
     void onPaused();
     void onResumed(); 
     void onStopped();
+
+    void onFoundScrobbles( QList<lastfm::Track> tracks );
 
 private:
     void resetScrobbler();

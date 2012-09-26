@@ -139,11 +139,22 @@ ScrobbleService::resetScrobbler()
     if( m_deviceScrobbler )
         delete m_deviceScrobbler;
 
-    m_deviceScrobbler = new DeviceScrobbler;
-    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<lastfm::Track>, QString)), this, SIGNAL( foundIPodScrobbles(QList<lastfm::Track>, QString) ));
-    connect( m_deviceScrobbler, SIGNAL(foundScrobbles( QList<lastfm::Track>, QString )), m_as, SLOT( cacheBatch( QList<lastfm::Track>, QString)));
-    m_deviceScrobbler->checkCachedIPodScrobbles();
+    m_deviceScrobbler = new DeviceScrobbler( this );
+
+    connect( m_deviceScrobbler, SIGNAL(foundScrobbles(QList<lastfm::Track>)), SLOT(onFoundScrobbles(QList<lastfm::Track>)));
+    connect( m_deviceScrobbler, SIGNAL(foundScrobbles(QList<lastfm::Track>)), SIGNAL(foundIPodScrobbles(QList<lastfm::Track>)));
+
+    // Do this a bit later to as it's nicer for the user and
+    // it gives the main window time to be diplayed on boot
+    QTimer::singleShot( 3000, m_deviceScrobbler, SLOT(checkCachedIPodScrobbles()) );
 }
+
+void
+ScrobbleService::onFoundScrobbles( QList<lastfm::Track> tracks )
+{
+    m_as->cacheBatch( tracks );
+}
+
 
 void
 ScrobbleService::setConnection(PlayerConnection*c)

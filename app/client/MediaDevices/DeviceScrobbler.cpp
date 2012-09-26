@@ -1,207 +1,201 @@
 #include "DeviceScrobbler.h"
 #include <QDebug>
+#include <QDirIterator>
 
 #include "../Application.h"
 #include "lib/unicorn/dialogs/ScrobbleConfirmationDialog.h"
 #include "lib/unicorn/UnicornApplication.h"
 #include "IpodDevice.h"
+#include "lib/unicorn/dialogs/CloseAppsDialog.h"
 
 #include "lib/unicorn/QMessageBoxBuilder.h"
 
 #ifdef Q_WS_X11
 #include <QFileDialog>
-
 #endif
+
+// check for iTunes playcount difference once a minute
+#define BACKGROUND_CHECK_INTERVAL 60000
 
 QString getIpodMountPath();
 
-DeviceScrobbler::DeviceScrobbler()
+DeviceScrobbler::DeviceScrobbler( QObject *parent )
+    :QObject( parent )
 {
+    m_twiddlyTimer = new QTimer( this );
+    connect( m_twiddlyTimer, SIGNAL(timeout()), SLOT(twiddle()) );
+    m_twiddlyTimer->start( BACKGROUND_CHECK_INTERVAL );
+}
+
+
+void
+DeviceScrobbler::twiddle()
+{
+#ifndef Q_WS_X11
+    if ( unicorn::CloseAppsDialog::isITunesRunning() )
+    {
+        if (m_twiddly)
+        {
+            qWarning() << "m_twiddly already running. Early out.";
+            return;
+        }
+
+        //"--device diagnostic --vid 0000 --pid 0000 --serial UNKNOWN
+
+        QStringList args = (QStringList()
+                            << "--device" << "background"
+                            << "--vid" << "0000"
+                            << "--pid" << "0000"
+                            << "--serial" << "UNKNOWN");
+
+        if ( false )
+            args += "--manual";
+
+        m_twiddly = new QProcess( this );
+        connect( m_twiddly, SIGNAL(finished( int, QProcess::ExitStatus )), SLOT(onTwiddlyFinished( int, QProcess::ExitStatus )) );
+        connect( m_twiddly, SIGNAL(error( QProcess::ProcessError )), SLOT(onTwiddlyError( QProcess::ProcessError )) );
+#ifdef Q_OS_WIN
+        m_twiddly->start( QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "iPodScrobbler.exe" ), args );
+#else
+        m_twiddly->start( QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "../Helpers/iPodScrobbler" ), args );
+#endif
+    }
+#endif //  Q_WS_X11
+}
+
+void
+DeviceScrobbler::onTwiddlyFinished( int exitCode, QProcess::ExitStatus exitStatus )
+{
+    qDebug() << exitCode << exitStatus;
+    m_twiddly->deleteLater();
+}
+
+void
+DeviceScrobbler::onTwiddlyError( QProcess::ProcessError error )
+{
+    qDebug() << error;
+    m_twiddly->deleteLater();
 }
 
 void 
 DeviceScrobbler::checkCachedIPodScrobbles()
 {
-    // Check if there are any iPod scrobbles
-    unicorn::Session* currentSession = aApp->currentSession();
+    QStringList files;
 
-    if( !currentSession )
-        return;
+    // check if there are any iPod scrobbles in its folder
+    QDir scrobblesDir = lastfm::dir::runtimeData();
 
-    unicorn::UserSettings us( currentSession->userInfo().name() );
-    int count = us.beginReadArray( "associatedDevices" );
-
-    for ( int i = 0; i < count; i++ )
+    if ( scrobblesDir.cd( "devices" ) )
     {
-        us.setArrayIndex( i );
+        QDirIterator iterator( scrobblesDir, QDirIterator::Subdirectories );
 
-        QString deviceId = us.value( "deviceId" ).toString();
-        QString deviceName = us.value( "deviceName" ).toString();
-
-        IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
-
-        // check if there are any iPod scrobbles in its folder
-        QDir scrobblesDir = lastfm::dir::runtimeData();
-
-        if ( scrobblesDir.cd( "devices/" + ipod->deviceId() + "/scrobbles" ) )
+        while ( iterator.hasNext() )
         {
-            scrobblesDir.setFilter(QDir::Files | QDir::NoSymLinks);
-            scrobblesDir.setNameFilters( QStringList() << "*.xml" );
+            iterator.next();
 
-            QFileInfoList list = scrobblesDir.entryInfoList();
-
-            if ( list.count() > 0 )
+            if ( iterator.fileInfo().isFile() )
             {
-                // There are iPod files!
-                QStringList iPodFiles;
-                foreach ( QFileInfo fileInfo, list )
-                    iPodFiles << fileInfo.filePath();
+                QString filename = iterator.fileName();
 
-                onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), currentSession->userInfo().name(), deviceId, deviceName, iPodFiles );
+                if ( filename.endsWith(".xml") )
+                    files << iterator.fileInfo().absoluteFilePath();
             }
         }
-
-        delete ipod;
     }
-    us.endArray();
+
+    scrobbleIpodFiles( files );
 }
+
 
 
 void 
 DeviceScrobbler::handleMessage( const QStringList& message )
 {
-    qDebug() << message;
-
     int pos = message.indexOf( "--twiddly" );
     const QString& action = message[ pos + 1 ];
     
-    if( action == "starting" )
-        emit processingScrobbles( "" );
-    else if( action == "no-tracks-found"
-             || action == "complete" )
+    if( action == "complete" )
         twiddled( message );
 }
 
 
 void 
-DeviceScrobbler::iPodDetected( const QStringList& arguments )
+DeviceScrobbler::iPodDetected( const QStringList& /*arguments*/ )
 {
-    bool newIpod = false;
-
-    int pos = arguments.indexOf( "--ipod-detected" );
-
-    if ( pos == -1 )
-    {
-        pos = arguments.indexOf( "--new-ipod-detected" );
-        newIpod = true;
-    }
-
-    QString deviceId;
-
-    if ( pos > -1 )
-        deviceId = arguments[ pos + 1 ];
-
-    emit detectedIPod( deviceId );
 }
 
 void 
-DeviceScrobbler::twiddled( QStringList arguments )
+DeviceScrobbler::twiddled( const QStringList& arguments )
 {
     // iPod scrobble time!
-
-    // Check if this iPod has been associated to any of our users
-    QString deviceId = arguments[ arguments.indexOf( "--deviceId" ) + 1 ];
-    QString deviceName = arguments[ arguments.indexOf( "--deviceName" ) + 1 ];
     QString iPodPath = arguments[ arguments.indexOf( "--ipod-path" ) + 1 ];
 
-    // Check if the device has been associated with a user
-    // and then if it is with the current user
-    lastfm::User associatedUser = IpodDevice::associatedUser( deviceId );
-
-    if ( !associatedUser.name().isEmpty() )
-    {
-        IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
-
-        if ( associatedUser.name() == lastfm::ws::Username )
-        {
-            if ( arguments.contains( "no-tracks-found" ) )
-                emit noScrobblesFound( deviceName );
-            else
-                onScrobbleSetupClicked( ipod->scrobble(), ipod->alwaysAsk(), associatedUser.name(), deviceId, deviceName, QStringList( iPodPath ) );
-        }
-        else
-        {
-            // The iPod is associated with a differnt user
-            // it will be scrobbled the next time that user is online
-
-            int result = QMessageBoxBuilder( 0 )
-                .setIcon( QMessageBox::Question )
-                .setTitle( tr( "Switch user accounts to scrobble iPod \"%1\"?" ).arg( ipod->deviceName() ) )
-                .setText( tr( "This iPod is associated with a different user. To scrobble tracks from it, please switch to the account \"%1\"?" ).arg( associatedUser.name() ) )
-                .setButtons( QMessageBox::Yes | QMessageBox::No )
-                .exec();
-
-            if ( result == QMessageBox::Yes )
-            {
-                // Switch accounts!
-                unicorn::UserSettings us( associatedUser.name() );
-                QString sessionKey = us.value( "SessionKey", "" ).toString();
-                aApp->changeSession( associatedUser.name(), sessionKey );
-            }
-        }
-
-        delete ipod;
-    }
-    else
-    {
-        // The ipod is not associated with a user so try to do that now
-        ScrobbleSetupDialog* scrobbleSetup = new ScrobbleSetupDialog( deviceId, deviceName, QStringList( iPodPath ) );
-        connect( scrobbleSetup, SIGNAL(clicked(bool,bool,QString,QString,QString,QStringList)), SLOT(onScrobbleSetupClicked(bool,bool,QString,QString,QString,QStringList)));
-        scrobbleSetup->show();
-    }
+    if ( !arguments.contains( "no-tracks-found" ) )
+        scrobbleIpodFiles( QStringList( iPodPath ) );
 }
 
 
-void
-DeviceScrobbler::onScrobbleSetupClicked( bool scrobble, bool alwaysAsk, QString username, QString deviceId, QString deviceName, QStringList iPodFiles )
-{
-    // We need to store the result so we can check it next time
-    IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
-
-    ipod->associateDevice( username );
-
-    if ( username == User().name() )
-    {
-        // it has been associated to the current user so do the scrobble business
-
-        if ( scrobble )
-        {
-            scrobbleIpodFiles( iPodFiles, *ipod );
-        }
-        else
-        {
-            foreach ( QString iPodFile, iPodFiles )
-                QFile::remove( iPodFile );
-        }
-    }
-
-    // remember the settings that the user selected
-    ipod->setScrobble( scrobble );
-    ipod->setAlwaysAsk( alwaysAsk );
-
-    delete ipod;
-}
 
 void 
-DeviceScrobbler::scrobbleIpodFiles( QStringList iPodScrobbleFiles, const IpodDevice& ipod )
+DeviceScrobbler::scrobbleIpodFiles( const QStringList& files )
 {
-    qDebug() << iPodScrobbleFiles;
+    qDebug() << files;
 
+    bool removeFiles = false;
+
+    if ( unicorn::AppSettings( OLDE_PLUGIN_SETTINGS ).value( SETTING_OLDE_ITUNES_DEVICE_SCROBBLING_ENABLED, true ).toBool() )
+    {
+        QList<lastfm::Track> scrobbles = scrobblesFromFiles( files );
+
+        if ( scrobbles.count() > 0 )
+        {
+            if ( unicorn::AppSettings().value( SETTING_ALWAYS_ASK, false ).toBool() )
+            {
+                if ( m_confirmDialog )
+                    m_confirmDialog->addTracks( scrobbles ); // add tracks to the already existing dialog
+                else
+                {
+                    m_confirmDialog = new ScrobbleConfirmationDialog( scrobbles );
+                    connect( m_confirmDialog, SIGNAL(finished(int)), SLOT(onScrobblesConfirmationFinished(int)) );
+                }
+
+                // add the files so it can delete them when the user has decided what to do
+                m_confirmDialog->addFiles( files );
+                m_confirmDialog->show();
+                m_confirmDialog->raise();
+            }
+            else
+            {
+                // sort the iPod scrobbles before caching them
+                if ( scrobbles.count() > 1 )
+                    qSort ( scrobbles.begin(), scrobbles.end() );
+
+                emit foundScrobbles( scrobbles );
+
+                removeFiles = true;
+            }
+        }
+        else
+            removeFiles = true;
+
+    }
+    else
+        removeFiles = true;
+
+    if ( removeFiles )
+        foreach ( QString file, files )
+            QFile::remove( file );
+
+}
+
+QList<lastfm::Track>
+DeviceScrobbler::scrobblesFromFiles( const QStringList& files  )
+{
     QList<lastfm::Track> scrobbles;
 
-    foreach ( const QString iPodScrobbleFilename, iPodScrobbleFiles )
+    foreach ( const QString file, files )
     {
-        QFile iPodScrobbleFile( iPodScrobbleFilename );
+        QFile iPodScrobbleFile( file );
 
         if ( iPodScrobbleFile.open( QIODevice::ReadOnly | QIODevice::Text ) )
         {
@@ -220,45 +214,35 @@ DeviceScrobbler::scrobbleIpodFiles( QStringList iPodScrobbleFiles, const IpodDev
                 if ( !track.artist().isNull()
                      && ( unicorn::UserSettings().value( "podcasts", true ).toBool() || !track.isPodcast() )
                      && !track.isVideo() )
-                {
-                    int playcount = track.extra("playCount").toInt();
-
-                    for ( int j(0) ; j < playcount ; ++j )
-                        scrobbles << track;
-                }
+                    scrobbles << track;
             }
         }
-
-        iPodScrobbleFile.remove();
     }
 
-    if ( scrobbles.count() > 0 )
+    return scrobbles;
+}
+
+void
+DeviceScrobbler::onScrobblesConfirmationFinished( int result )
+{
+    if ( result == QDialog::Accepted )
     {
-        if ( ipod.alwaysAsk() )
-        {
-            ScrobbleConfirmationDialog confirmDialog( scrobbles );
-            if ( confirmDialog.exec() == QDialog::Accepted )
-            {
-                scrobbles = confirmDialog.tracksToScrobble();
+        QList<lastfm::Track> scrobbles = m_confirmDialog->tracksToScrobble();
 
-                // sort the iPod scrobbles before caching them
-                if ( scrobbles.count() > 1 )
-                    qSort ( scrobbles.begin(), scrobbles.end() );
+        // sort the iPod scrobbles before caching them
+        if ( scrobbles.count() > 1 )
+            qSort ( scrobbles.begin(), scrobbles.end() );
 
-                emit foundScrobbles( scrobbles, ipod.deviceName() );
-            }
-        }
-        else
-        {
-            // sort the iPod scrobbles before caching them
-            if ( scrobbles.count() > 1 )
-                qSort ( scrobbles.begin(), scrobbles.end() );
+        emit foundScrobbles( scrobbles );
 
-            emit foundScrobbles( scrobbles, ipod.deviceName()  );
-        }
+        unicorn::AppSettings().setValue( SETTING_ALWAYS_ASK, !m_confirmDialog->autoScrobble() );
     }
-    else
-        emit noScrobblesFound( ipod.deviceName() );
+
+    // delete all the iPod scrobble files whether it was accepted or not
+    foreach ( const QString file, m_confirmDialog->files() )
+        QFile::remove( file );
+
+    m_confirmDialog->deleteLater();
 }
 
 #ifdef Q_WS_X11
@@ -372,7 +356,7 @@ DeviceScrobbler::scrobbleIpodTracks( int trackCount )
                     if ( tracks.count() > 1 )
                         qSort ( tracks.begin(), tracks.end() );
 
-                    emit foundScrobbles( tracks, iPod->deviceName() );
+                    emit foundScrobbles( tracks );
                 }
             }
             else
@@ -381,7 +365,7 @@ DeviceScrobbler::scrobbleIpodTracks( int trackCount )
                 if ( tracks.count() > 1 )
                     qSort ( tracks.begin(), tracks.end() );
 
-                emit foundScrobbles( tracks, iPod->deviceName()  );
+                emit foundScrobbles( tracks );
                 QMessageBoxBuilder( 0 )
                     .setIcon( QMessageBox::Information )
                     .setTitle( tr( "Scrobble iPod" ) )

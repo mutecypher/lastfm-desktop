@@ -6,6 +6,9 @@
 namespace Ui { class CloseAppsDialog; }
 class IPluginInfo;
 
+namespace unicorn
+{
+
 class CloseAppsDialog : public QDialog
 {
     Q_OBJECT
@@ -15,7 +18,14 @@ public:
     explicit CloseAppsDialog(QWidget *parent = 0);
     ~CloseAppsDialog();
 
+    static bool isITunesRunning();
+
 private:
+#ifndef Q_OS_MAC
+    static QStringList runningApps( const QList<IPluginInfo*>& plugins );
+#else
+    static // this method is only statis on mac
+#endif
     QStringList runningApps();
 
 private slots:
@@ -28,5 +38,7 @@ private:
     Ui::CloseAppsDialog *ui;
     QList<IPluginInfo*> m_plugins;
 };
+
+}
 
 #endif // CLOSEAPPSDIALOG_H

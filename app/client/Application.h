@@ -77,6 +77,8 @@ namespace audioscrobbler
             Skip,
             Exit,
             Stop,
+            Twiddly,
+            Settings,
             ArgUnknown
         };
 

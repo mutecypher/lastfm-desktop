@@ -9,13 +9,6 @@
 #include "ui_GeneralSettingsWidget.h"
 #include "GeneralSettingsWidget.h"
 
-
-#ifdef Q_OS_MAC
-#define APP_LAUNCH "scrobbler"
-#else
-#define APP_LAUNCH "Client"
-#endif
-
 GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
     :SettingsWidget( parent ),
       ui( new Ui::GeneralSettingsWidget )
@@ -61,7 +54,7 @@ GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
 #endif
 
 #ifndef Q_WS_X11
-    ui->launch->setChecked( unicorn::AppSettings( APP_LAUNCH ).value( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() ).toBool() );
+    ui->launch->setChecked( unicorn::AppSettings( OLDE_PLUGIN_SETTINGS ).value( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() ).toBool() );
     ui->updates->setChecked( unicorn::Settings().value( SETTING_CHECK_UPDATES, ui->updates->isChecked() ).toBool() );
     connect( ui->launch, SIGNAL(stateChanged(int) ), SLOT( onSettingsChanged() ) );
     connect( ui->updates, SIGNAL(stateChanged(int)), SLOT( onSettingsChanged() ) );
@@ -120,7 +113,7 @@ GeneralSettingsWidget::saveSettings()
         }
 
         // setting is for the 'Client' aplication for compatibility with old media player plugins
-        unicorn::AppSettings( APP_LAUNCH ).setValue( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() );
+        unicorn::AppSettings( OLDE_PLUGIN_SETTINGS ).setValue( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() );
 
         unicorn::Settings().setValue( SETTING_NOTIFICATIONS, ui->notifications->isChecked() );
         unicorn::Settings().setValue( SETTING_LAST_RADIO, ui->lastRadio->isChecked() );

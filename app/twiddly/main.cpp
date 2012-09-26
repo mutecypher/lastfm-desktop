@@ -80,17 +80,22 @@ main( int argc, char** argv )
         }
         else // twiddle!
         {
+            app.sendBusMessage( "--twiddling" );
+
+            IPod* ipod = IPod::fromCommandLineArguments( app.arguments() );
+
             {
                 QStringList args;
                 args << "--tray";
                 args << "--twiddly";
                 args << "starting";
+                args << "--deviceId";
+                args << ipod->uid();
+                args << "--deviceName";
+                args << ipod->name;
+
                 Utils::startAudioscrobbler( args );
             }
-
-            app.sendBusMessage( "--twiddling" );
-
-            IPod* ipod = IPod::fromCommandLineArguments( app.arguments() );
 
             qDebug() << "Twiddling device: " << ipod->serial;
             ipod->twiddle();
@@ -163,7 +168,7 @@ main( int argc, char** argv )
             delete ipod;           
         }
         
-        qDebug() << "Procedure took:" << (time.elapsed() / 1000) << "seconds";
+        qDebug() << "Procedure took:" << time.elapsed() << "milliseconds";
     }
     catch( QString& s )
     {

@@ -32,12 +32,6 @@ public:
     virtual QString deviceId() const;
     virtual QString deviceName() const;
 
-    void setScrobble( bool scrobble );
-    bool scrobble() const;
-
-    void setAlwaysAsk( bool alwaysAsk );
-    bool alwaysAsk() const;
-
 #ifdef Q_WS_X11
     /**
      * @return The mount path of the device.

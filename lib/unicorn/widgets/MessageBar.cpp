@@ -43,7 +43,7 @@ MessageBar::MessageBar( QWidget* parent )
     ui.close->setObjectName( "close" );
 
     connect( ui.message, SIGNAL(linkActivated(QString)), SLOT(onLinkActivated(QString)));
-    connect( ui.close, SIGNAL(clicked()), SLOT(hide()));
+    connect( ui.close, SIGNAL(clicked()), SLOT(onCloseClicked()));
 
     connect( qApp, SIGNAL(showMessage(QString,QString)), SLOT(show(QString,QString)));
 
@@ -51,9 +51,15 @@ MessageBar::MessageBar( QWidget* parent )
 }
 
 void
-MessageBar::setTracks( const QList<lastfm::Track>& tracks )
+MessageBar::addTracks( const QList<lastfm::Track>& tracks )
 {
-    m_tracks = tracks;
+    m_tracks << tracks;
+}
+
+const QList<lastfm::Track>&
+MessageBar::tracks() const
+{
+    return m_tracks;
 }
 
 void
@@ -69,8 +75,18 @@ MessageBar::show( const QString& message, const QString& id )
 }
 
 void
+MessageBar::onCloseClicked()
+{
+    m_tracks.clear();
+    hide();
+}
+
+void
 MessageBar::onLinkActivated( const QString& /*link*/ )
 {
+    // always sort the tracks before displaying them
+    qSort ( m_tracks.begin(), m_tracks.end() );
+
     // Show a dialog with the tracks
     ScrobbleConfirmationDialog confirmDialog( m_tracks );
     confirmDialog.setReadOnly();

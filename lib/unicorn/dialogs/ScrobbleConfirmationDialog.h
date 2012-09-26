@@ -27,8 +27,7 @@
 
 #include "lib/DllExportMacro.h"
 
-#define MIN_WIDTH  500
-#define MIN_HEIGHT 500
+namespace Ui { class ScrobbleConfirmationDialog; }
 
 class ScrobblesModel;
 
@@ -36,28 +35,29 @@ class UNICORN_DLLEXPORT ScrobbleConfirmationDialog : public QDialog
 {
     Q_OBJECT
 public:
-
     ScrobbleConfirmationDialog( const QList<lastfm::Track>& tracks, QWidget* parent = 0 );
+    ~ScrobbleConfirmationDialog();
+
     QList<lastfm::Track> tracksToScrobble() const;
+
+    void addTracks( const QList<lastfm::Track>& tracks );
+
+    const QStringList& files() const;
+    void addFiles( const QStringList& files );
 
     void setReadOnly();
 
-private:
-    void setupUi();
+    bool autoScrobble() const;
 
 private slots:
     void toggleSelection();
+
 private:
-    struct Ui
-    {
-        class QDialogButtonBox* buttons;
-        class QTableView* scrobblesView;
-        class QLabel* infoText;
-        class QPushButton* toggleButton;
-    }ui;
+    Ui::ScrobbleConfirmationDialog* ui;
 
     ScrobblesModel* m_scrobblesModel;
     bool m_toggled;
+    QStringList m_files;
 };
 
 #endif // SCROBBLECONFIRMATIONDIALOG_H

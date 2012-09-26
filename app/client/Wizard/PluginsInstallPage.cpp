@@ -5,7 +5,7 @@
 
 #include "lib/unicorn/QMessageBoxBuilder.h"
 
-#include "../Dialogs/CloseAppsDialog.h"
+#include "lib/unicorn/dialogs/CloseAppsDialog.h"
 
 #include "FirstRunWizard.h"
 #include "PluginsInstallPage.h"
@@ -62,7 +62,7 @@ PluginsInstallPage::install()
     // Tell the user to close any aplications we are about to install
     // plugins for
 
-    CloseAppsDialog* closeApps = new CloseAppsDialog( wizard()->pluginList()->installList(), this );
+    unicorn::CloseAppsDialog* closeApps = new unicorn::CloseAppsDialog( wizard()->pluginList()->installList(), this );
 
     if ( closeApps->result() != QDialog::Accepted )
         closeApps->exec();

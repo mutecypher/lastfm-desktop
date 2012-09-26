@@ -25,6 +25,14 @@
 #include "../MediaDevices/IpodDevice_linux.h"
 #endif
 
+#ifdef Q_OS_WIN
+#include "Plugins/ITunesPluginInfo.h"
+#endif
+
+#include "lib/unicorn/UnicornApplication.h"
+#include "lib/unicorn/dialogs/CloseAppsDialog.h"
+#include "lib/unicorn/QMessageBoxBuilder.h"
+
 #include "../MediaDevices/IpodDevice.h"
 
 #include "lib/unicorn/UnicornSettings.h"
@@ -44,38 +52,17 @@
 #include <QTreeWidget>
 #include <QVBoxLayout>
 
-enum
-{
-    IpodColumnUser,
-    IpodColumnDeviceName,
-    IpodColumnScrobble,
-    IpodColumnAlwaysAsk,
-    IpodColumnCount
-};
-
 IpodSettingsWidget::IpodSettingsWidget( QWidget* parent )
     : SettingsWidget( parent ),
       ui( new Ui::IpodSettingsWidget )
 {
     ui->setupUi( this );
 
-    connect( ui->clearAssociations, SIGNAL( clicked() ), this, SLOT( clearIpodAssociations() ) );
-    connect( ui->removeAssociation, SIGNAL( clicked() ), this, SLOT( removeIpodAssociation() ) );
+    ui->alwaysAsk->setChecked( unicorn::AppSettings().value( SETTING_ALWAYS_ASK, true ).toBool() );
+    connect( ui->alwaysAsk, SIGNAL(clicked(bool)), SLOT(onSettingsChanged()));
 
-    ui->iPodAssociations->header()->setResizeMode( QHeaderView::ResizeToContents );
-
-    QStringList headerLabels;
-    headerLabels.append( tr( "User" ) );
-    headerLabels.append( tr( "Device Name" ) );
-    headerLabels.append( tr( "Scrobble" ) );
-    headerLabels.append( tr( "Always Ask" ) );
-    ui->iPodAssociations->setHeaderLabels( headerLabels );
-
-    populateIpodAssociations();
-
-    // do these after populating so we don't corrupt the associations
-    connect( ui->iPodAssociations, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), SLOT( onItemActivated() ) );
-    connect( ui->iPodAssociations, SIGNAL( itemChanged(QTreeWidgetItem*,int)), SLOT( onSettingsChanged() ) );
+    ui->deviceScrobblingEnabled->setChecked( unicorn::AppSettings( OLDE_PLUGIN_SETTINGS ).value( SETTING_OLDE_ITUNES_DEVICE_SCROBBLING_ENABLED, true ).toBool() );
+    connect( ui->deviceScrobblingEnabled, SIGNAL(clicked(bool)), SLOT(onSettingsChanged()));
 }
 
 void
@@ -86,104 +73,45 @@ IpodSettingsWidget::saveSettings()
         // save settings
         qDebug() << "Saving settings...";
 
-        // remove all associations and add them again with the current settings
-        QList<lastfm::User> roster = unicorn::Settings().userRoster();
+        unicorn::AppSettings().setValue( SETTING_ALWAYS_ASK, ui->alwaysAsk->isChecked() );
 
-        foreach( lastfm::User user, roster )
+        // we need to restart iTunes for this setting to take affect
+        bool currentlyEnabled = unicorn::AppSettings( OLDE_PLUGIN_SETTINGS ).value( SETTING_OLDE_ITUNES_DEVICE_SCROBBLING_ENABLED, true ).toBool();
+
+        if ( currentlyEnabled != ui->deviceScrobblingEnabled->isChecked() )
         {
-            unicorn::UserSettings us( user.name() );
-            us.remove( "associatedDevices" );
-        }
+#ifdef Q_OS_WIN
+            QList<PluginInfo*> plugins;
+            ITunesPluginInfo* iTunesPluginInfo = new ITunesPluginInfo;
+            plugins << iTunesPluginInfo;
+            unicorn::CloseAppsDialog* closeApps = new unicorn::CloseAppsDialog( plugins, this );
+            delete iTunesPluginInfo;
+#else
+            unicorn::CloseAppsDialog* closeApps = new unicorn::CloseAppsDialog( this );
+#endif
 
-        for ( int i = 0 ; i < ui->iPodAssociations->topLevelItemCount() ; ++i )
-        {
-            QTreeWidgetItem* item = ui->iPodAssociations->topLevelItem( i );
-            QString deviceName = item->text( IpodColumnDeviceName );
-            QString deviceId = item->data( IpodColumnDeviceName, Qt::UserRole ).toString();
-            IpodDevice* ipod = new IpodDevice( deviceId, deviceName );
+            if ( closeApps->result() != QDialog::Accepted )
+                closeApps->exec();
+            else
+                closeApps->deleteLater();
 
-            ipod->associateDevice( static_cast<QComboBox*>( ui->iPodAssociations->itemWidget( item, IpodColumnUser ) )->currentText() );
-            ipod->setScrobble( item->checkState( IpodColumnScrobble ) == Qt::Checked );
-            ipod->setAlwaysAsk( item->checkState( IpodColumnAlwaysAsk ) == Qt::Checked );
+            if ( closeApps->result() == QDialog::Accepted )
+            {
+                unicorn::AppSettings( OLDE_PLUGIN_SETTINGS ).setValue( SETTING_OLDE_ITUNES_DEVICE_SCROBBLING_ENABLED, ui->deviceScrobblingEnabled->isChecked() );
+            }
+            else
+            {
+                ui->deviceScrobblingEnabled->setChecked( currentlyEnabled );
+
+                // The user didn't close their media players
+                QMessageBoxBuilder( this ).setTitle( tr( "Setting not changed" ) )
+                        .setIcon( QMessageBox::Warning )
+                        .setText( tr( "You did not close iTunes for this setting to change" ) )
+                        .setButtons( QMessageBox::Ok )
+                        .exec();
+            }
         }
 
         onSettingsSaved();
     }
-}
-
-void
-IpodSettingsWidget::populateIpodAssociations()
-{
-    QList<lastfm::User> roster = unicorn::Settings().userRoster();
-
-    foreach( lastfm::User user, roster )
-    {
-        unicorn::UserSettings us( user.name() );
-        int count = us.beginReadArray( "associatedDevices" );
-
-        for ( int i = 0 ; i < count ; i++ )
-        {
-            us.setArrayIndex( i );
-            QTreeWidgetItem* item = new QTreeWidgetItem( ui->iPodAssociations );
-            QComboBox* comboBox = new QComboBox( ui->iPodAssociations );
-
-            for ( int i = 0 ; i < roster.count() ; ++i )
-            {
-                comboBox->addItem( roster.at( i ).name() );
-
-                if ( roster.at( i ).name() == user.name() )
-                    comboBox->setCurrentIndex( i );
-            }
-
-            ui->iPodAssociations->setItemWidget( item, IpodColumnUser, comboBox );
-
-            item->setText( IpodColumnDeviceName, us.value( "deviceName" ).toString() );
-            item->setData( IpodColumnDeviceName, Qt::UserRole, us.value( "deviceId" ).toString() );
-
-            item->setCheckState( IpodColumnScrobble, us.value( "scrobble" ).toBool() ? Qt::Checked : Qt::Unchecked );
-            item->setCheckState( IpodColumnAlwaysAsk, us.value( "alwaysAsk" ).toBool() ? Qt::Checked : Qt::Unchecked );
-
-        }
-
-        us.endArray();
-    }
-
-    ui->clearAssociations->setEnabled( ui->iPodAssociations->topLevelItemCount() > 0 );
-    ui->removeAssociation->setEnabled( false );
-}
-
-void
-IpodSettingsWidget::clearIpodAssociations()
-{
-    QList<lastfm::User> roster = unicorn::Settings().userRoster();
-    foreach( lastfm::User user, roster )
-    {
-        unicorn::UserSettings us( user.name() );
-        us.remove( "associatedDevices" );
-    }
-
-#ifdef Q_WS_X11
-    IpodDeviceLinux::deleteDevicesHistory();
-#endif
-
-    ui->iPodAssociations->clear();
-    ui->clearAssociations->setEnabled( false );
-    ui->removeAssociation->setEnabled( false );
-}
-
-void
-IpodSettingsWidget::onItemActivated()
-{
-    ui->removeAssociation->setEnabled( true );
-}
-
-void
-IpodSettingsWidget::removeIpodAssociation()
-{
-    QTreeWidgetItem* association = ui->iPodAssociations->currentItem();
-    ui->iPodAssociations->takeTopLevelItem( ui->iPodAssociations->indexOfTopLevelItem( association ) );
-    ui->removeAssociation->setEnabled( false );
-
-    // This will delete all the users associations and only restore the remaining ones
-    onSettingsChanged();
 }

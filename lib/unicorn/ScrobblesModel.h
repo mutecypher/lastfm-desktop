@@ -18,12 +18,14 @@ public:
         Artist,
         Title,
         Album,
+        Plays,
         TimeStamp,
         Loved
     };
 
 
-    ScrobblesModel( const QList<lastfm::Track> tracks, QObject* parent = 0 );
+    ScrobblesModel( QObject* parent = 0 );
+    void addTracks( const QList<lastfm::Track>& tracks );
 
     void setReadOnly();
 
@@ -47,13 +49,15 @@ private:
         QString title() const{ return m_track.title(); }
         QString artist() const{ return m_track.artist(); }
         QString album() const{ return m_track.album(); }
-        QString timestamp() const{ return m_track.timestamp().toString( Qt::SystemLocaleShortDate ); }
+        QDateTime timestamp() const{ return m_track.timestamp(); }
         bool isLoved() const{ return m_track.isLoved(); } 
         bool isScrobblingEnabled() const{ return m_scrobblingEnabled; }
 
         void setEnableScrobbling( bool allow ) { m_scrobblingEnabled = allow; }
 
         QVariant attribute( int index ) const;
+
+        bool operator<( const Scrobble& that ) const { return this->m_track < that.m_track;}
 
     private:
         lastfm::Track m_track;

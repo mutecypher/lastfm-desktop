@@ -40,13 +40,15 @@ private:
 public:
     explicit MessageBar( QWidget* parent );
 
-    void setTracks( const QList<lastfm::Track>& tracks );
+    void addTracks( const QList<lastfm::Track>& tracks );
+    const QList<lastfm::Track>& tracks() const;
     
 public slots:
     void show( const QString& message, const QString& id = QString() );
 
 private slots:
     void onLinkActivated( const QString& link );
+    void onCloseClicked();
 
 private:
     QList<lastfm::Track> m_tracks;
