@@ -9,44 +9,31 @@ CONFIG( taglib ) {
     win32:debug:LIBS += tagd.lib    # tagd.lib will precede PKGCONFIG added libs
 }
 
-CONFIG( mad ) {
-    mac{
-                LIBS += /usr/local/lib/libmad.a
-	}else{
-        CONFIG += link_pkgconfig
-        PKGCONFIG += mad
-    } 
-}
+CONFIG( ffmpeg )
+{
+    DEFINES += FFMPEG_FINGERPRINTING
 
-CONFIG( faad ) {
     mac {
-                LIBS += /usr/local/lib/libfaad.a
-                LIBS += /usr/local/lib/libmp4ff.a
-                DEFINES += HAVE_STDINT_H
-        }else{
+        LIBS += /usr/local/lib/libavcodec.a
+        LIBS += /usr/local/lib/libavformat.a
+        LIBS += /usr/local/lib/libavutil.a
+        LIBS += /usr/local/lib/libswresample.a
+    } else {
         CONFIG += link_pkgconfig
-        PKGCONFIG += faad2
-        PKGCONFIG += mp4ff
+        PKGCONFIG += libavformat
+        packagesExist(libswresample) {
+            PKGCONFIG += libswresample
+            DEFINES += HAVE_SWRESAMPLE
+        }
     }
-}
 
-CONFIG( vorbis ) {
-    mac{
-                LIBS += /usr/local/lib/libvorbis.a
-                LIBS += /usr/local/lib/libvorbisfile.a
-                LIBS += /usr/local/lib/libogg.a
-        }else{
-        CONFIG += link_pkgconfig
-        PKGCONFIG += vorbis
-    }
-}
-
-CONFIG( flac ) {
-    mac{
-                LIBS += /usr/local/lib/libFLAC.a
-        }else{
-        CONFIG += link_pkgconfig
-        PKGCONFIG += flac
+    win32:CONFIG(debug, debug|release) {
+        # disable fingerprinting on windows debug
+        # the pre-built ffmpeg we use is incompatible with debug builds
+        # because the crt it links against is incompatible
+        PKGCONFIG -= libavformat
+        PKGCONFIG -= libswresample
+        DEFINES -= FFMPEG_FINGERPRINTING
     }
 }
 
@@ -70,15 +57,6 @@ CONFIG( break ) {
     }
 }
 
-CONFIG( fftw3f ) {
-    mac{
-                LIBS += /usr/local/lib/libfftw3f.a
-	}else{
-        CONFIG += link_pkgconfig
-        PKGCONFIG += fftw3f
-    }
-}
-
 CONFIG( growl ) {
     mac {
         LIBS += -framework Growl
@@ -97,17 +75,6 @@ CONFIG( phonon ) {
 	else {
 		QT += phonon
 	}
-}
-
-CONFIG( samplerate ) {
-    win32{
-		LIBS += -L$$COMMON_LIBS_DIR/libsamplerate -lsamplerate
-	}else:mac:CONFIG( app_bundle ){
-                LIBS += libsamplerate.a -L/usr/local/lib
-	}else{
-        CONFIG += link_pkgconfig
-        PKGCONFIG += samplerate
-    }
 }
 
 CONFIG( sparkle ) {
