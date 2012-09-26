@@ -136,7 +136,7 @@ ProgressBar::paintEvent( QPaintEvent* e )
                 bool scrobblingOn = ScrobbleService::instance().scrobblableTrack( m_track );
 
                 if ( scrobblingOn ||
-                     !scrobblingOn && m_track.scrobbleStatus() != Track::Null )
+                     ( !scrobblingOn && (m_track.scrobbleStatus() != Track::Null) ) )
                 {
                     if ( !scrobblingOn && m_track.scrobbleStatus() != Track::Null )
                     {
