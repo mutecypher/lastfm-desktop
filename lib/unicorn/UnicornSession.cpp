@@ -30,8 +30,6 @@ Session::lastSessionData()
 
         if( !sk.isEmpty() )
             sessionData[ "sessionKey" ] = sk;
-
-        s.endGroup();
     }
 
     return sessionData;
@@ -175,7 +173,7 @@ Session::onAuthGotSessionInfo()
 
         bool radio = lfm["application"]["radioPermission"]["user type=you"]["radio"].text() != "0";
         bool canUpgrade = lfm["application"]["radioPermission"]["user type=subscriber"]["radio"].text() != "0";
-        bool freeTrial = lfm["application"]["radioPermission"]["user type=you"]["freeTrial"].text() != "0";
+        bool freeTrial = lfm["application"]["radioPermission"]["user type=you"]["freetrial"].text() != "0";
     }
     else
     {
