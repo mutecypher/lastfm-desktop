@@ -413,6 +413,7 @@ void LAV_Source::release()
     {
         avformat_close_input(&d->inFormatContext);
     }
+#if defined(HAVE_SWRESAMPLE) || defined(HAVE_AVRESAMPLE)
     if ( d->resampleContext)
     {
 #if defined(HAVE_SWRESAMPLE)
@@ -421,6 +422,7 @@ void LAV_Source::release()
         avresample_free(&d->resampleContext);
 #endif
     }
+#endif
     d->inCodecContext = NULL;
     d->inFormatContext = NULL;
     d->streamIndex = -1;
