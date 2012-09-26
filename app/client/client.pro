@@ -1,9 +1,9 @@
 TEMPLATE = app
 TARGET = "Last.fm"
-VERSION = 2.1.21
+VERSION = 2.1.22
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql
-CONFIG += lastfm unicorn listener logger phonon fingerprint mad faad fftw vorbis flac
+CONFIG += lastfm unicorn listener logger phonon fingerprint ffmpeg
 win32:LIBS += user32.lib kernel32.lib psapi.lib
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 
@@ -104,11 +104,8 @@ SOURCES += \
     Dialogs/LicensesDialog.cpp \
     Widgets/ScrobblesWidget.cpp \
     Widgets/ScrobblesListWidget.cpp \
-    Fingerprinter/AacSource.cpp \
-    Fingerprinter/Fingerprinter.cpp \
-    Fingerprinter/FlacSource.cpp \
-    Fingerprinter/MadSource.cpp \
-    Fingerprinter/VorbisSource.cpp
+    Fingerprinter/Fingerprinter.cpp\
+    Fingerprinter/LAV_Source.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -187,13 +184,8 @@ HEADERS += \
     Dialogs/LicensesDialog.h \
     Widgets/ScrobblesListWidget.h \
     Widgets/ScrobblesWidget.h \
-    Fingerprinter/AacSource_p.h \
-    Fingerprinter/AacSource.h \
     Fingerprinter/Fingerprinter.h \
-    Fingerprinter/FlacSource.h \
-    Fingerprinter/MadSource.h \
-    Fingerprinter/VorbisSource.h
-
+    Fingerprinter/LAV_Source.h
 
 win32:HEADERS += Plugins/FooBar08PluginInfo.h \
                     Plugins/FooBar09PluginInfo.h \
