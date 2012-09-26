@@ -14,10 +14,10 @@ CONFIG( ffmpeg )
     DEFINES += FFMPEG_FINGERPRINTING
 
     mac {
-        LIBS += /usr/local/lib/libavcodec.a
-        LIBS += /usr/local/lib/libavformat.a
-        LIBS += /usr/local/lib/libavutil.a
-        LIBS += /usr/local/lib/libswresample.a
+        LIBS += /usr/local/lib/libavcodec.dylib
+        LIBS += /usr/local/lib/libavformat.dylib
+        LIBS += /usr/local/lib/libavutil.dylib
+        LIBS += /usr/local/lib/libswresample.dylib
     } else {
         CONFIG += link_pkgconfig
         PKGCONFIG += libavformat
