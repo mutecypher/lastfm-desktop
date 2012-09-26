@@ -136,11 +136,11 @@ Source: "..\..\..\_bin\plugins\WmpPluginSetup_2.1.0.7.exe"; DestDir: "{app}\plug
 ;3rd party
 Source: "..\..\..\_bin\WinSparkle.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\libfftw3f-3.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\..\_bin\libFLAC_dynamic.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\..\_bin\libogg.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\libsamplerate-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\..\_bin\libvorbis.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\..\_bin\libvorbisfile.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\avcodec-54.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\avformat-54.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\avutil-51.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\swresample-0.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ;The stylesheets
 Source: "..\..\..\app\client\Last.fm.css"; DestDir: "{app}"; Flags: ignoreversion
@@ -198,6 +198,12 @@ Filename: "{app}\UninsHs.exe"; Parameters: "/r0=LastFM,{language},{srcexe},{app}
 
 [InstallDelete]
 ;All the files that are not in fixed components (so the Radio compontent is actually removed on modify)
+
+Type: Files; Name: "{app}\libFLAC_dynamic.dll"
+Type: Files; Name: "{app}\libogg.dll"
+Type: Files; Name: "{app}\libvorbis.dll"
+Type: Files; Name: "{app}\libvorbisfile.dll"
+
 Type: Files; Name: "{commondesktop}\Last.fm.lnk"
 Type: Files; Name: "{app}\Last.fm.exe"
 Type: Files; Name: "{app}\phonon4.dll"
@@ -210,6 +216,8 @@ Type: dirifempty; Name: "{app}\imageformats"
 Type: dirifempty; Name: "{app}\phonon_backend"
 Type: dirifempty; Name: "{app}\sqldrivers"
 Type: filesandordirs; Name: "{app}\plugins\*"
+
+
 
 ; This is the LAST step of uninstallation
 [UninstallDelete]
