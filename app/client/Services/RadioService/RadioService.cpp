@@ -30,11 +30,14 @@
 #include "lib/unicorn/UnicornSettings.h"
 #include <QCoreApplication>
 
+#define ALLOW_ALL_USAGE -1
+
 RadioService::RadioService( )
      : m_audioOutput( 0 ),
        m_mediaObject( 0 ),
        m_state( Stopped ),
-       m_bErrorRecover( false )
+       m_bErrorRecover( false ),
+       m_maxUsageCount( 160 )
 {
     initRadio();
 
@@ -46,6 +49,43 @@ RadioService::onLastFmUrl( const QUrl& url )
 {
     RadioStation rs( url.toString() );
     play( rs );
+}
+
+bool
+RadioService::isRadioUsageAllowed(bool showError)
+{
+    bool isAllowed = true;
+    unicorn::UserSettings us;
+    bool isSubscriber = us.value(unicorn::UserSettings::subscriptionKey(), false).toBool();
+    if(!isSubscriber)
+    {
+        int usageCount = us.value("usageCount", 0).toInt();
+        if(usageCount >= m_maxUsageCount && m_maxUsageCount != ALLOW_ALL_USAGE)
+        {
+            if(showError)
+            {
+                emit message( "Free trial limit reached. Become a subscriber to continue listening.");
+            }
+            deInitRadio();
+            changeState( Stopped );
+            isAllowed = false;
+        }
+    }
+
+    return isAllowed;
+}
+
+void
+RadioService::IncrementRadioUsageCount()
+{
+    unicorn::UserSettings us;
+    bool isSubscriber = us.value(unicorn::UserSettings::subscriptionKey(), false).toBool();
+    if(!isSubscriber)
+    {
+        int count = us.value("usageCount", 0).toInt();
+        ++count;
+        us.setValue("usageCount", count);
+    }
 }
 
 // fixme:
@@ -115,6 +155,7 @@ RadioService::play( const RadioStation& station )
     connect( m_tuner, SIGNAL(error( lastfm::ws::Error, QString )), SLOT(onTunerError( lastfm::ws::Error, QString )) );
 
     changeState( TuningIn );
+    IncrementRadioUsageCount();
 }
 
 // play this radio station after the current track has finished
@@ -164,6 +205,9 @@ RadioService::enqueue()
 void
 RadioService::skip()
 {
+    if(!isRadioUsageAllowed())
+        return;
+
     if (!m_mediaObject)
         return;
     
@@ -195,6 +239,8 @@ RadioService::skip()
         m_mediaObject->blockSignals( false );
         changeState( TuningIn );
     }
+
+    IncrementRadioUsageCount();
 }
 
 
@@ -450,7 +496,6 @@ RadioService::changeState( State const newstate )
 	}
 }
 
-
 void
 RadioService::setStationName( const QString& s )
 {
@@ -461,11 +506,16 @@ RadioService::setStationName( const QString& s )
     us.setValue( "lastStationTitle", m_station.title() );
 }
 
-
 void
 RadioService::setSupportsDisco( bool supportsDiscovery )
 {
     emit supportsDisco( supportsDiscovery );
+}
+
+void
+RadioService::setMaxUsageCount(int count)
+{
+    m_maxUsageCount = count;
 }
 
 void

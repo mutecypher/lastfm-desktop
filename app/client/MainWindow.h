@@ -89,10 +89,13 @@ private slots:
     void onTuningIn();
 
     void onRadioError( int error, const QVariant& data );
+    void onRadioMessage(const QString& message);
 
     void checkForUpdates();
 
     void onSpace();
+
+    void onConfigRetrieved();
 
 #ifdef Q_OS_WIN32
     void checkUpdatedPlugins();

@@ -28,6 +28,7 @@
 #include "lib/listener/PlayerListener.h"
 #include "lib/listener/PlayerMediator.h"
 #include "../MediaDevices/DeviceScrobbler.h"
+#include "../RadioService/RadioService.h"
 #include "../RadioService/RadioConnection.h"
 #include "StopWatch.h"
 #ifdef Q_WS_MAC
@@ -294,6 +295,11 @@ ScrobbleService::onScrobble()
 
     if( m_as && scrobblableTrack( m_trackToScrobble ) )
         m_as->cache( m_trackToScrobble );
+
+    if(RadioService::instance().state() == Playing)
+    {
+        RadioService::instance().IncrementRadioUsageCount();
+    }
 }
 
 void 
