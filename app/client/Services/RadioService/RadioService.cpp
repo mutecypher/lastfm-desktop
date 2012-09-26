@@ -330,9 +330,6 @@ RadioService::onPhononStateChanged( Phonon::State newstate, Phonon::State oldsta
 void
 RadioService::restoreVolume()
 {
-    if (m_mediaObject->state() != Phonon::PlayingState)
-        changeState( Buffering );
-
     // restore the last volume
     if ( unicorn::AppSettings().contains("Volume") )
     {
@@ -408,6 +405,9 @@ RadioService::onPhononCurrentSourceChanged( const Phonon::MediaSource& )
     }
 
     MutableTrack( m_track ).stamp();
+
+    if (m_mediaObject->state() != Phonon::PlayingState)
+        changeState( Buffering );
 
     emit trackSpooled( m_track );
 }
