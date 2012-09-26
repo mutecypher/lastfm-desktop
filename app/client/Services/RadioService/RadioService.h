@@ -61,9 +61,6 @@ public:
 
     static RadioService& instance(){ static RadioService r; return r; }
 
-    bool isRadioUsageAllowed(bool showError=true);
-    void IncrementRadioUsageCount();
-
 public slots:
     void play( const RadioStation& station );
     void playNext( const RadioStation& station );
@@ -75,7 +72,6 @@ public slots:
     void pause();
     void resume();
     void setSupportsDisco( bool supportsDisco );
-    void setMaxUsageCount(int count);
 
 signals:
     /** emitted up to twice, as first time may not have a title for the station
@@ -92,7 +88,6 @@ signals:
       * if UnknownError, then data is a fatal error from Phonon */
     void error( int, const QVariant& data = QVariant() );
     void tick( qint64 );
-    void message( const QString& message );
 
 private slots:
     void enqueue();
@@ -129,7 +124,6 @@ private:
     Track m_track;
     RadioStation m_station;
     bool m_bErrorRecover;
-    int m_maxUsageCount;
 
     double m_prevVolume;
 };
