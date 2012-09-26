@@ -18,6 +18,8 @@
 
 #include "LAV_Source.h"
 
+#ifdef FFMPEG_FINGERPRINTING
+
 // Needed by libavutil/common.h
 #ifndef __STDC_CONSTANT_MACROS
 #define __STDC_CONSTANT_MACROS 1
@@ -52,7 +54,6 @@ using namespace std;
 const AVSampleFormat outSampleFmt = AV_SAMPLE_FMT_S16;
 const int outSampleSize           = av_get_bytes_per_sample(outSampleFmt);
 const int outMaxChannels          = 2;
-
 
 class LAV_SourcePrivate
 {
@@ -275,30 +276,47 @@ uint8_t * LAV_SourcePrivate::decodeOneFrame(int &dataSize, int &channels, int& n
     return outBuffer;
 }
 
+#endif // FFMPEG_FINGERPRINTING
 
 LAV_Source::LAV_Source()
-    : d(new LAV_SourcePrivate())
+
+    : d(
+#ifdef FFMPEG_FINGERPRINTING
+          new LAV_SourcePrivate()
+#else
+          0
+#endif // FFMPEG_FINGERPRINTING
+          )
 {
+#ifdef FFMPEG_FINGERPRINTING
     av_register_all();
     avformat_network_init();
+#endif // FFMPEG_FINGERPRINTING
 }
 
 
 LAV_Source::~LAV_Source()
 {
+#ifdef FFMPEG_FINGERPRINTING
     release();
     avformat_network_deinit();
     delete d;
+#endif // FFMPEG_FINGERPRINTING
 }
 
 bool LAV_Source::eof() const
 {
+#ifdef FFMPEG_FINGERPRINTING
     return (d->eof || d->inFormatContext->pb->eof_reached);
+#else
+    return true;
+#endif
 }
 
 
 void LAV_Source::init(const QString& fileName)
 {
+#ifdef FFMPEG_FINGERPRINTING
     // Assume that we want to start fresh
     if ( d->inFormatContext || d->inCodecContext )
         release();
@@ -363,12 +381,13 @@ void LAV_Source::init(const QString& fileName)
         throw std::runtime_error ("The file has an incompatible sample format!");
     }
 #endif
-
+#endif // FFMPEG_FINGERPRINTING
 }
 
 
 void LAV_Source::getInfo(int& lengthSecs, int& samplerate, int& bitrate, int& nchannels )
 {
+#ifdef FFMPEG_FINGERPRINTING
     lengthSecs = d->duration;
     samplerate = d->inCodecContext->sample_rate;
     bitrate = d->bitrate;
@@ -379,11 +398,13 @@ void LAV_Source::getInfo(int& lengthSecs, int& samplerate, int& bitrate, int& nc
     if (nchannels > outMaxChannels)
         nchannels = outMaxChannels;
 #endif
+#endif // FFMPEG_FINGERPRINTING
 }
 
 
 void LAV_Source::release()
 {
+#ifdef FFMPEG_FINGERPRINTING
     if ( d->inCodecContext && d->inCodecContext->codec_id != CODEC_ID_NONE )
     {
         avcodec_close(d->inCodecContext);
@@ -407,11 +428,13 @@ void LAV_Source::release()
     d->bitrate = 0;
     d->eof = false;
     d->overflowSize = 0;
+#endif // FFMPEG_FINGERPRINTING
 }
 
 
 void LAV_Source::skipSilence(double silenceThreshold /* = 0.0001 */)
 {
+#ifdef FFMPEG_FINGERPRINTING
     silenceThreshold *= static_cast<double>( numeric_limits<short>::max() );
 
     int dataSize, channels, nSamples;
@@ -439,11 +462,13 @@ void LAV_Source::skipSilence(double silenceThreshold /* = 0.0001 */)
     }
 
     avcodec_flush_buffers(d->inCodecContext);
+#endif // FFMPEG_FINGERPRINTING
 }
 
 
 void LAV_Source::skip(const int mSecs)
 {
+#ifdef FFMPEG_FINGERPRINTING
     char buf[256];
     if ( mSecs <= 0 || d->streamIndex < 0 || !d->inFormatContext )
         return;
@@ -463,12 +488,14 @@ void LAV_Source::skip(const int mSecs)
     }
 
     avcodec_flush_buffers(d->inCodecContext);
+#endif // FFMPEG_FINGERPRINTING
 }
 
 
 int LAV_Source::updateBuffer(signed short* pBuffer, size_t bufferSize)
 {
     size_t bufferFill = 0;
+#ifdef FFMPEG_FINGERPRINTING
     int dataSize;
 
     if ( d->overflowSize )
@@ -505,5 +532,6 @@ int LAV_Source::updateBuffer(signed short* pBuffer, size_t bufferSize)
         bufferFill += bytesToBuffer/outSampleSize;
     }
 
+#endif // FFMPEG_FINGERPRINTING
     return bufferFill;
 }

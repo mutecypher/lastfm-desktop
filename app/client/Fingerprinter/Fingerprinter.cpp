@@ -29,7 +29,9 @@
 #include <lastfm/FingerprintableSource.h>
 #include <lastfm/Track.h>
 
+#ifdef FFMPEG_FINGERPRINTING
 #include "LAV_Source.h"
+#endif
 
 #include "Fingerprinter.h"
 
@@ -48,7 +50,11 @@ Fingerprinter::run()
 
     if ( fingerprint.id().isNull() )
     {
+#ifdef FFMPEG_FINGERPRINTING
         lastfm::FingerprintableSource* fingerprintableSource = new LAV_Source();
+#else
+        lastfm::FingerprintableSource* fingerprintableSource = 0;
+#endif
 
         if ( fingerprintableSource )
         {
