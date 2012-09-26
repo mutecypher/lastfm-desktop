@@ -112,6 +112,8 @@ private:
     void clear();
     bool initRadio();
     void deInitRadio();
+
+    void restoreVolume();
     
     /** emits signals if appropriate */
     void changeState( State );
@@ -124,8 +126,6 @@ private:
     Track m_track;
     RadioStation m_station;
     bool m_bErrorRecover;
-
-    double m_prevVolume;
 };
 
 

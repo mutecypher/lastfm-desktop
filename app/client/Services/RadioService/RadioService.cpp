@@ -273,15 +273,7 @@ RadioService::volumeDown()
 void
 RadioService::mute()
 {
-    if( m_audioOutput->volume() > 0 )
-    {
-        m_prevVolume = m_audioOutput->volume();
-        m_audioOutput->setVolume( 0 );
-    }
-    else
-    {
-        m_audioOutput->setVolume( m_prevVolume );
-    }
+    m_audioOutput->setMuted( !m_audioOutput->isMuted() );
 }
 
 void
@@ -323,6 +315,7 @@ RadioService::onPhononStateChanged( Phonon::State newstate, Phonon::State oldsta
 			
         case Phonon::BufferingState:
             changeState( Buffering );
+            restoreVolume();
             break;
 
         case Phonon::PlayingState:
@@ -334,6 +327,27 @@ RadioService::onPhononStateChanged( Phonon::State newstate, Phonon::State oldsta
     }
 }
 
+void
+RadioService::restoreVolume()
+{
+    if (m_mediaObject->state() != Phonon::PlayingState)
+        changeState( Buffering );
+
+    // restore the last volume
+    if ( unicorn::AppSettings().contains("Volume") )
+    {
+        bool ok;
+        double volume = unicorn::AppSettings().value( "Volume", 1 ).toReal(&ok);
+        if (ok)
+            m_audioOutput->setVolume(volume);
+        else
+            m_audioOutput->setVolume( 1 );
+    }
+    else
+        m_audioOutput->setVolume( 1 );
+
+    m_audioOutput->setMuted(unicorn::AppSettings().value("Muted", false).toBool());
+}
 
 void
 RadioService::phononEnqueue()
@@ -394,9 +408,6 @@ RadioService::onPhononCurrentSourceChanged( const Phonon::MediaSource& )
     }
 
     MutableTrack( m_track ).stamp();
-
-    if (m_mediaObject->state() != Phonon::PlayingState)
-        changeState( Buffering );
 
     emit trackSpooled( m_track );
 }
@@ -478,7 +489,7 @@ RadioService::onOutputDeviceChanged(const Phonon::AudioOutputDevice& newDevice)
 void
 RadioService::onVolumeChanged(qreal vol)
 {
-    unicorn::AppSettings().setValue("Volume", vol);
+    unicorn::AppSettings().setValue( "Volume", vol );
 }
 
 void
@@ -496,30 +507,6 @@ RadioService::initRadio()
 {
     qDebug() << "initRadio";
     Phonon::AudioOutput* audioOutput = new Phonon::AudioOutput( Phonon::MusicCategory, this );
-
-    // restore the last volume
-    if (unicorn::AppSettings().contains("Volume"))
-    {
-        bool ok;
-        double volume = unicorn::AppSettings().value("Volume", 1).toDouble(&ok);
-        if (ok)
-        {
-            audioOutput->setVolume(volume);
-            m_prevVolume = volume; //give it a initial value just in case
-        }
-        else
-        {
-            audioOutput->setVolume( 1 );
-            m_prevVolume = 1; //give it a initial value just in case
-        }
-    }
-    else
-    {
-        audioOutput->setVolume( 1 );
-        m_prevVolume = 1; //give it a initial value just in case
-    }
-
-    audioOutput->setMuted(unicorn::AppSettings().value("Muted", false).toBool());
 
     qDebug() << audioOutput->name();
     qDebug() << audioOutput->outputDevice().description();
@@ -566,6 +553,9 @@ RadioService::initRadio()
 
     m_audioOutput = audioOutput;
     m_mediaObject = mediaObject;
+
+    restoreVolume();
+
     return true;
 }
 
