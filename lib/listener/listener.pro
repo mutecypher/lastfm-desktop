@@ -20,7 +20,8 @@ SOURCES += \
 	PlayerMediator.cpp \
 	PlayerListener.cpp \
 	PlayerConnection.cpp \
-	PlayerCommandParser.cpp
+	PlayerCommandParser.cpp \
+        legacy/LegacyPlayerListener.cpp
 
 HEADERS += \
 	State.h \
@@ -28,7 +29,8 @@ HEADERS += \
 	PlayerListener.h \
 	PlayerConnection.h \
 	PlayerCommandParser.h \
-	PlayerCommand.h
+	PlayerCommand.h \
+        legacy/LegacyPlayerListener.h
 
 mac {
     SOURCES += mac/ITunesListener.cpp
