@@ -37,6 +37,7 @@
 #include "Application.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
+#include "Services/AnalyticsService.h"
 #include "MediaDevices/DeviceScrobbler.h"
 #include "Dialogs/CloseAppsDialog.h"
 #include "../Widgets/ProfileWidget.h"
@@ -74,6 +75,8 @@
 #include "MediaKeys/MediaKey.h"
 void qt_mac_set_dock_menu(QMenu *menu);
 #endif
+
+const QString CONFIG_URL = "http://static.last.fm/client/config.xml";
 
 MainWindow::MainWindow( QMenuBar* menuBar )
     :unicorn::MainWindow( menuBar )
@@ -206,8 +209,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
         ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *aApp->tray()->contextMenu(), aApp->tray()->contextMenu()->actions()[3] );
     }
 
-    QString configURL = "http://static.last.fm/client/config.xml";
-    connect( lastfm::nam()->get( QNetworkRequest( configURL ) ), SIGNAL(finished()), SLOT(onConfigRetrieved()) );
+    connect( lastfm::nam()->get( QNetworkRequest( CONFIG_URL ) ), SIGNAL(finished()), SLOT(onConfigRetrieved()) );
 }
 
 QString

@@ -31,6 +31,7 @@
 
 #include "../Application.h"
 #include "../Services/ScrobbleService/ScrobbleService.h"
+#include "../Services/AnalyticsService.h"
 
 #include "ui_ScrobbleSettingsWidget.h"
 #include "ScrobbleSettingsWidget.h"
@@ -48,7 +49,7 @@ ScrobbleSettingsWidget::ScrobbleSettingsWidget( QWidget* parent )
 
     int scrobblePointValue = unicorn::UserSettings().value( SETTING_SCROBBLE_POINT, ui->scrobblePoint->value() ).toInt();
     ui->scrobblePoint->setValue( scrobblePointValue );
-    onSliderMoved( scrobblePointValue );
+    ui->percentText->setText( QString::number(scrobblePointValue) );
     ui->percentText->setFixedWidth( ui->percentText->fontMetrics().width( "100" ) );
 
     ui->allowFingerprint->setChecked( unicorn::UserSettings().value( SETTING_ALLOW_FINGERPRINTING, ui->allowFingerprint->isChecked() ).toBool() );
@@ -69,6 +70,7 @@ void
 ScrobbleSettingsWidget::onSliderMoved( int value )
 {
     ui->percentText->setText( QString::number( value ) );
+    AnalyticsService::instance().SendEvent(SETTINGS_CATEGORY, SCROBBLING_SETTINGS, "ScrobblePercentageChanged");
 }
 
 

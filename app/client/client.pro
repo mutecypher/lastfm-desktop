@@ -108,7 +108,8 @@ SOURCES += \
     Fingerprinter/Fingerprinter.cpp \
     Fingerprinter/FlacSource.cpp \
     Fingerprinter/MadSource.cpp \
-    Fingerprinter/VorbisSource.cpp
+    Fingerprinter/VorbisSource.cpp \
+    Services/AnalyticsService/AnalyticsService.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -192,7 +193,9 @@ HEADERS += \
     Fingerprinter/Fingerprinter.h \
     Fingerprinter/FlacSource.h \
     Fingerprinter/MadSource.h \
-    Fingerprinter/VorbisSource.h
+    Fingerprinter/VorbisSource.h \
+    Services/AnalyticsService.h \
+    Services/AnalyticsService/AnalyticsService.h
 
 
 win32:HEADERS += Plugins/FooBar08PluginInfo.h \
