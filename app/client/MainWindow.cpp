@@ -474,9 +474,7 @@ MainWindow::onFoundScrobbles( const QList<lastfm::Track>& tracks, const QString&
 {
     ui.messageBar->setTracks( tracks );
 
-    tracks.count() == 1 ?
-        ui.messageBar->show( tr("<a href=\"tracks\">%1 track</a> has been scrobbled from the iPod \"%2\"").arg( QString::number( tracks.count() ), iPod ), "ipod" ):
-        ui.messageBar->show( tr("<a href=\"tracks\">%1 tracks</a> have been scrobbled from the iPod \"%2\"").arg( QString::number( tracks.count() ), iPod ), "ipod" );
+    ui.messageBar->show( tr( "<a href=\"tracks\">%n track(s)</a> has been scrobbled from the iPod \"%1\"", "", tracks.count() ).arg( iPod ), "ipod" );
 }
 
 void

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>iPod is ready for scrobbling</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -32,7 +32,7 @@
       <item>
        <widget class="QLabel" name="description">
         <property name="text">
-         <string>Description</string>
+         <string notr="true">Description</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -60,7 +60,7 @@
       <item>
        <widget class="QLabel" name="moreTitle">
         <property name="text">
-         <string>Title</string>
+         <string notr="true">Title</string>
         </property>
        </widget>
       </item>

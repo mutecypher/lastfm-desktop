@@ -204,12 +204,15 @@ unicorn::Application::translate()
     //if there wasn't any, then use the system language
     QString iso639 = AppSettings().value( "language", "" ).toString();
     if ( iso639.isEmpty() )
-    {
-        iso639 = QLocale().name().left( 2 );
-    }
+        iso639 = QLocale::system().name();
+
+    qDebug() << "Locale: " << iso639;
 
     // set the default locale for the app which will be used by web services
     QLocale::setDefault( QLocale( iso639 ) );
+
+    QString qmExt = iso639.left( 2 ) == "zh" ? iso639 : iso639.left( 2 );
+    qDebug() << "Language ext: " << qmExt;
 
 #ifdef Q_WS_MAC
     QDir const d = lastfm::dir::bundle().filePath( "Contents/Resources/qm" );
@@ -219,10 +222,10 @@ unicorn::Application::translate()
 
     //TODO need a unicorn/core/etc. translation, plus policy of no translations elsewhere or something!
     QTranslator* t1 = new QTranslator;
-    t1->load( d.filePath( "lastfm_" + iso639 ) );
+    t1->load( d.filePath( "lastfm_" + qmExt ) );
 
     QTranslator* t2 = new QTranslator;
-    t2->load( d.filePath( "qt_" + iso639 ) );
+    t2->load( d.filePath( "qt_" + qmExt ) );
 
     installTranslator( t1 );
     installTranslator( t2 );

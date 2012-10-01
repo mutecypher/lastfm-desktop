@@ -72,7 +72,7 @@ StatusBar::StatusBar( QWidget* parent )
     ui.scrobbleMessage->setAttribute(Qt::WA_LayoutUsesWidgetRect);
     ui.scrobbleMessage->setAlignment(Qt::AlignRight | Qt::AlignVCenter );
     ui.scrobbleMessage->setStyleSheet("QLabel { color : red; }");
-    ui.scrobbleMessage->setText("Scrobbling is Off");
+    ui.scrobbleMessage->setText( tr("Scrobbling is off") );
     ui.scrobbleMessage->setHidden(isScrobblingOff);
 
     aApp->isInternetConnectionUp() ? onConnectionUp() : onConnectionDown();

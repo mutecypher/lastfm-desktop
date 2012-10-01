@@ -69,6 +69,10 @@ macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
     QMAKE_POST_LINK += echo Copying airfoil remote file..; cp \"$$ROOT_DIR/admin/dist/mac/dacp.fm.last.Last.fm.scpt\" \"$$BUNDLE_DIR/Contents/Resources\";
     QMAKE_POST_LINK += echo Copying airfoil tracks file..; cp \"$$ROOT_DIR/admin/dist/mac/fm.last.Last.fm.scpt\" \"$$BUNDLE_DIR/Contents/Resources\";
 
+    ## add the translations
+    QMAKE_POST_LINK += lrelease -removeidentical \"$${ROOT_DIR}/Last.fm.pro\";
+    QMAKE_POST_LINK += mkdir -p \"$${BUNDLE_DIR}/Contents/Resources/qm/\";
+    QMAKE_POST_LINK += mv -f \"$${ROOT_DIR}/i18n/\"*.qm \"$${BUNDLE_DIR}/Contents/Resources/qm/\";
 
     ## install_name_tool / copy frameworks, dylibs etc
     QMAKE_POST_LINK += $$DISTDIR/bundleFrameworks.sh \'$$BUNDLE_DIR\';

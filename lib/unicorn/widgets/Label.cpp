@@ -101,9 +101,7 @@ unicorn::Label::prettyTime( Label& timestampLabel, const QDateTime& timestamp, Q
     QDateTime now = QDateTime::currentDateTime();
 
     // Full time in the tool tip
-    QString dateFormat( "d MMM h:mmap" );
-
-    timestampLabel.setToolTip( timestamp.toString( "d MMM h:mmap yyyy" ) );
+    timestampLabel.setToolTip( timestamp.toString( Qt::DefaultLocaleLongDate ) );
 
     int secondsAgo = timestamp.secsTo( now );
 
@@ -111,25 +109,25 @@ unicorn::Label::prettyTime( Label& timestampLabel, const QDateTime& timestamp, Q
     {
         // Less than an hour ago
         int minutesAgo = ( timestamp.secsTo( now ) / 60 );
-        timestampLabel.setText( QString( minutesAgo == 1 ? tr( "%1 minute ago" ) : tr( "%1 minutes ago" ) ).arg( QString::number( minutesAgo ) ) );
+        timestampLabel.setText( tr( "%n minute(s) ago", "", minutesAgo ) );
         if ( callback ) callback->start( now.secsTo( timestamp.addSecs(((minutesAgo + 1 ) * 60 ) + 1 ) ) * 1000 );
     }
     else if ( secondsAgo < (60 * 60 * 6) || now.date() == timestamp.date() )
     {
         // Less than 6 hours ago or on the same date
         int hoursAgo = ( timestamp.secsTo( now ) / (60 * 60) );
-        timestampLabel.setText( QString( hoursAgo == 1 ? tr( "%1 hour ago" ) : tr( "%1 hours ago" ) ).arg( QString::number( hoursAgo ) ) );
+        timestampLabel.setText( tr( "%n hour(s) ago", "", hoursAgo ) );
         if ( callback ) callback->start( now.secsTo( timestamp.addSecs( ( (hoursAgo + 1) * 60 * 60 ) + 1 ) ) * 1000 );
     }
     else if ( secondsAgo < (60 * 60 * 24 * 365) )
     {
         // less than a year ago
-        timestampLabel.setText( timestamp.toString( dateFormat ) );
+        timestampLabel.setText( timestamp.toString( Qt::DefaultLocaleShortDate ) );
         // We don't need to set the timer because this date will never change (well, it might in a year's time)
     }
     else
     {
-        timestampLabel.setText( timestamp.toString( "d MMM h:mmap yyyy" ) );
+        timestampLabel.setText( timestamp.toString( Qt::DefaultLocaleLongDate ) );
         // We don't need to set the timer because this date will never change
     }
 }

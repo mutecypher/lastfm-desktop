@@ -35,7 +35,7 @@ private:
         p.setBrush( QColor( 0xdedede ) );
         p.drawRoundedRect( rect().adjusted( 0, 0, -1, -1 ), 4, 4 );
 
-        int indent = fm.width( tr( "%L1 plays" ).arg( 999999 ) );
+        int indent = fm.width( tr( "%L1 play(s)", "", 999999 ).arg( 999999 ) );
         int chunk = ( (width() - indent ) * m_plays ) / m_maxPlays;
         int adjust = indent + chunk - width();
         p.setPen( QColor( 0x2a8bad ) );
@@ -91,7 +91,7 @@ ProfileArtistWidget::ProfileArtistWidget( const lastfm::XmlQuery& artist, int ma
     vl->addLayout( hl );
 
     int playcount = artist["playcount"].text().toInt();
-    PlaysLabel* plays = new PlaysLabel( tr( playcount == 1 ? "%L1 play" : "%L1 plays" ).arg( playcount ), playcount, maxPlays, this );
+    PlaysLabel* plays = new PlaysLabel( tr( "%L1 play(s)", "", playcount ).arg( playcount ), playcount, maxPlays, this );
     vl->addWidget( plays );
     plays->setObjectName( "plays" );
 

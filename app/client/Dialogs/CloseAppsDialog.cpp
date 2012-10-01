@@ -32,8 +32,6 @@ CloseAppsDialog::commonSetup()
 {
     ui->setupUi(this);
 
-    setWindowTitle( tr( "Close Apps" ) );
-
     ui->text->setText( tr( "Please close the following apps to continue." ) );
 
     setVisible( runningApps().count() > 0 );

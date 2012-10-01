@@ -23,7 +23,7 @@
    <enum>Qt::StrongFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string notr="true">MainWindow</string>
   </property>
   <property name="unifiedTitleAndToolBarOnMac">
    <bool>true</bool>
@@ -62,7 +62,7 @@
     </sizepolicy>
    </property>
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string notr="true">toolBar</string>
    </property>
    <property name="movable">
     <bool>false</bool>
@@ -154,6 +154,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>unicorn::StackedWidget</class>
+   <extends>QStackedWidget</extends>
+   <header>lib/unicorn/widgets/StackedWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>AccountSettingsWidget</class>
    <extends>QWidget</extends>
    <header>../Settings/AccountSettingsWidget.h</header>
@@ -181,12 +187,6 @@
    <class>AdvancedSettingsWidget</class>
    <extends>QWidget</extends>
    <header>../Settings/AdvancedSettingsWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>unicorn::StackedWidget</class>
-   <extends>QStackedWidget</extends>
-   <header>lib/unicorn/widgets/StackedWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

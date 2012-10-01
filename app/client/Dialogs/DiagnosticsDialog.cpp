@@ -154,7 +154,7 @@ DiagnosticsDialog::onScrobblePointReached()
     ui->cached->insertTopLevelItems( 0, items );
 
     if (items.count())
-        ui->subs_cache_count->setText( tr("%1 locally cached tracks").arg( items.count() ) );
+        ui->subs_cache_count->setText( tr("%n locally cached track(s)", "", items.count() ) );
     else
         ui->subs_cache_count->clear();
 }

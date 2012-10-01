@@ -39,17 +39,17 @@ ScrobbleControls::ScrobbleControls( QWidget* parent )
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 5 );
 
-    layout->addWidget(ui.love = new QPushButton(tr("love")), 0, Qt::AlignCenter);
+    layout->addWidget(ui.love = new QPushButton(tr("Love")), 0, Qt::AlignCenter);
     ui.love->setObjectName("love");
     ui.love->setCheckable( true );
     ui.love->setToolTip( tr( "Love track" ) );
     connect( ui.love, SIGNAL( clicked(bool) ), SLOT( onLoveChanged( bool ) ) );
  
-    layout->addWidget(ui.tag = new QPushButton(tr("tag")), 0, Qt::AlignCenter);
+    layout->addWidget(ui.tag = new QPushButton(tr("Tag")), 0, Qt::AlignCenter);
     ui.tag->setObjectName("tag");
     ui.tag->setToolTip( tr( "Add tags" ) );
 
-    layout->addWidget(ui.share = new QPushButton(tr("share")), 0, Qt::AlignCenter);
+    layout->addWidget(ui.share = new QPushButton(tr("Share")), 0, Qt::AlignCenter);
     ui.share->setObjectName("share");
     ui.share->setToolTip( tr( "Share" ) );
 
@@ -59,7 +59,7 @@ ScrobbleControls::ScrobbleControls( QWidget* parent )
     shareMenu->addAction( tr( "Share on Facebook" ), this, SLOT(onShareFacebook()) );
     ui.share->setMenu( shareMenu );
 
-    layout->addWidget(ui.buy = new QPushButton(tr("buy")), 0, Qt::AlignCenter);
+    layout->addWidget(ui.buy = new QPushButton(tr("Buy")), 0, Qt::AlignCenter);
     ui.buy->setObjectName("buy");
     ui.buy->setToolTip( tr( "Buy" ) );
     ui.buy->setVisible( false );

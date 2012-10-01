@@ -59,7 +59,6 @@ SOURCES += \
     Bootstrapper/AbstractFileBootstrapper.cpp \
     Bootstrapper/AbstractBootstrapper.cpp \
     Widgets/TitleBar.cpp \
-    Widgets/TagFilterDialog.cpp \
     Widgets/StatusBar.cpp \
     Widgets/SideBar.cpp \
     Widgets/RadioWidget.cpp \
@@ -140,7 +139,6 @@ HEADERS += \
     Settings/AccountSettingsWidget.h \
     Widgets/ShortcutEdit.h \
     Widgets/TitleBar.h \
-    Widgets/TagFilterDialog.h \
     Widgets/StatusBar.h \
     Widgets/SideBar.h \
     Widgets/ScrobbleControls.h \
@@ -222,7 +220,6 @@ mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
                             ../../lib/3rdparty/SPMediaKeyTap/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.m
 
 FORMS += \
-    Widgets/TagFilterDialog.ui \
     Widgets/PlaybackControlsWidget.ui \
     Dialogs/ScrobbleSetupDialog.ui \
     Dialogs/DiagnosticsDialog.ui \

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -78,7 +78,7 @@
           <item>
            <widget class="HttpImageWidget" name="albumImage">
             <property name="text">
-             <string>Album</string>
+             <string notr="true">Album</string>
             </property>
            </widget>
           </item>
@@ -90,7 +90,7 @@
             <item>
              <widget class="unicorn::Label" name="trackTitle">
               <property name="text">
-               <string>Track title</string>
+               <string notr="true">Track title</string>
               </property>
               <property name="textFormat">
                <enum>Qt::RichText</enum>
@@ -106,7 +106,7 @@
             <item>
              <widget class="unicorn::Label" name="trackArtist">
               <property name="text">
-               <string>Artist</string>
+               <string notr="true">Artist</string>
               </property>
               <property name="textFormat">
                <enum>Qt::RichText</enum>
@@ -132,7 +132,7 @@
             <item>
              <widget class="unicorn::Label" name="trackAlbum">
               <property name="text">
-               <string>Album</string>
+               <string notr="true">Album</string>
               </property>
               <property name="textFormat">
                <enum>Qt::RichText</enum>
@@ -166,7 +166,7 @@
        <item>
         <widget class="unicorn::StackedWidget" name="loadingStack">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="content">
           <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -179,7 +179,7 @@
            <item>
             <widget class="ContextLabel" name="context">
              <property name="text">
-              <string>Context</string>
+              <string notr="true">Context</string>
              </property>
              <property name="textFormat">
               <enum>Qt::RichText</enum>
@@ -251,7 +251,7 @@
               <item>
                <widget class="unicorn::Label" name="artistArtist">
                 <property name="text">
-                 <string>Artist</string>
+                 <string notr="true">Artist</string>
                 </property>
                 <property name="textFormat">
                  <enum>Qt::RichText</enum>
@@ -277,7 +277,7 @@
               <item>
                <widget class="QLabel" name="artistBioEdit">
                 <property name="text">
-                 <string>Edited</string>
+                 <string notr="true">Edited</string>
                 </property>
                </widget>
               </item>
@@ -299,42 +299,42 @@
                  <item row="0" column="0">
                   <widget class="QLabel" name="artistListeners">
                    <property name="text">
-                    <string>0</string>
+                    <string notr="true">0</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="artistListenersLabel">
                    <property name="text">
-                    <string>Listeners</string>
+                    <string notr="true">Listeners</string>
                    </property>
                   </widget>
                  </item>
                  <item row="0" column="2">
                   <widget class="QLabel" name="artistPlays">
                    <property name="text">
-                    <string>0</string>
+                    <string notr="true">0</string>
                    </property>
                   </widget>
                  </item>
                  <item row="0" column="4">
                   <widget class="QLabel" name="artistUserPlays">
                    <property name="text">
-                    <string>0</string>
+                    <string notr="true">0</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="2">
                   <widget class="QLabel" name="artistPlaysLabel">
                    <property name="text">
-                    <string>Plays</string>
+                    <string notr="true">Plays</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="4">
                   <widget class="QLabel" name="artistUserPlaysLabel">
                    <property name="text">
-                    <string>Plays in your library</string>
+                    <string notr="true">Plays in your library</string>
                    </property>
                   </widget>
                  </item>
@@ -440,7 +440,7 @@
                  <item>
                   <widget class="SimilarArtistWidget" name="artist1">
                    <property name="text">
-                    <string>Artist</string>
+                    <string notr="true">Artist</string>
                    </property>
                    <property name="scaledContents">
                     <bool>true</bool>
@@ -463,7 +463,7 @@
                  <item>
                   <widget class="SimilarArtistWidget" name="artist2">
                    <property name="text">
-                    <string>Artist</string>
+                    <string notr="true">Artist</string>
                    </property>
                    <property name="scaledContents">
                     <bool>true</bool>
@@ -486,7 +486,7 @@
                  <item>
                   <widget class="SimilarArtistWidget" name="artist3">
                    <property name="text">
-                    <string>Artist</string>
+                    <string notr="true">Artist</string>
                    </property>
                    <property name="scaledContents">
                     <bool>true</bool>
@@ -509,7 +509,7 @@
                  <item>
                   <widget class="SimilarArtistWidget" name="artist4">
                    <property name="text">
-                    <string>Artist</string>
+                    <string notr="true">Artist</string>
                    </property>
                    <property name="scaledContents">
                     <bool>true</bool>
@@ -522,7 +522,7 @@
               <item>
                <widget class="PlayableItemWidget" name="radio">
                 <property name="text">
-                 <string>Play Artist Radio</string>
+                 <string notr="true">Play Artist Radio</string>
                 </property>
                </widget>
               </item>
@@ -555,7 +555,7 @@
            <item>
             <widget class="QLabel" name="spinnerLabel">
              <property name="text">
-              <string>TextLabel</string>
+              <string notr="true">TextLabel</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>

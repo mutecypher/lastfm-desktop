@@ -45,17 +45,8 @@ header( "Substituting strings in various files" );
     system( 'perl -pi".bak" -e "s/\%QTDIR\%/' . $QTDIR . '/g" ' . $ISSFILE );
     system( 'perl -pi".bak" -e "s/\%VSDIR\%/' . $VSDIR . '/g" ' . $ISSFILE );
 
-#header( "Translations" );
-#    if ($ARGV[0] eq "--jp")
-#    {
-#        mkdir ( "bin/data/i18n" );
-#        system( "lrelease i18n/lastfm_jp.ts -qm bin/data/i18n/lastfm_jp.qm" );
-#        system( "lrelease i18n/qt_jp.ts -qm bin/data/i18n/qt_jp.qm" );
-#    }
-#    else
-#    {
-#        run( "perl", "dist\\i18n.pl" ) or die $!;
-#    }
+header( "Translations" );
+    system( "lrelease  -removeidentical ../../../Last.fm.pro" );
 
 header( "Installer" );
     #my $ISDIR = $ENV{'ISDIR'} or "c:\\Program Files\\Inno Setup 5";

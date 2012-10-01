@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -38,7 +38,7 @@
       <item>
        <widget class="QLabel" name="icon">
         <property name="text">
-         <string>Icon</string>
+         <string notr="true">Icon</string>
         </property>
        </widget>
       </item>
@@ -60,14 +60,14 @@
          <item>
           <widget class="unicorn::Label" name="status">
            <property name="text">
-            <string>Status</string>
+            <string notr="true">Status</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="unicorn::Label" name="device">
            <property name="text">
-            <string>Device</string>
+            <string notr="true">Device</string>
            </property>
           </widget>
          </item>
@@ -109,6 +109,9 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="toolTip">
+               <string>Love</string>
+              </property>
               <property name="text">
                <string>Love</string>
               </property>
@@ -128,6 +131,9 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="toolTip">
+               <string>Ban</string>
+              </property>
               <property name="text">
                <string>Ban</string>
               </property>
@@ -140,6 +146,9 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="toolTip">
+               <string>Play</string>
               </property>
               <property name="text">
                <string>Play</string>
@@ -159,6 +168,9 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="toolTip">
+               <string>Skip</string>
               </property>
               <property name="text">
                <string>Skip</string>
@@ -185,8 +197,8 @@
              </widget>
             </item>
             <item>
-             <widget class="Phonon::VolumeSlider" name="volumeSlider">
-              <property name="muteVisible">
+             <widget class="Phonon::VolumeSlider" name="volumeSlider" native="true">
+              <property name="muteVisible" stdset="0">
                <bool>false</bool>
               </property>
              </widget>
@@ -221,14 +233,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Phonon::VolumeSlider</class>
-   <extends>QWidget</extends>
-   <header location="global">phonon/volumeslider.h</header>
-  </customwidget>
-  <customwidget>
    <class>unicorn::Label</class>
    <extends>QLabel</extends>
    <header>lib/unicorn/widgets/Label.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Phonon::VolumeSlider</class>
+   <extends>QWidget</extends>
+   <header location="global">phonon/volumeslider.h</header>
   </customwidget>
   <customwidget>
    <class>ProgressBar</class>

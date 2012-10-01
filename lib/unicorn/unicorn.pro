@@ -24,7 +24,6 @@ SOURCES += \
     widgets/UnicornTabWidget.cpp \
     widgets/TrackWidget.cpp \
     widgets/TagListWidget.cpp \
-    widgets/TagBuckets.cpp \
     widgets/StatusLight.cpp \
     widgets/SearchBox.cpp \
     widgets/MessageBar.cpp \
@@ -58,7 +57,6 @@ SOURCES += \
     layouts/SideBySideLayout.cpp \
     layouts/AnimatedListLayout.cpp \
     dialogs/UserManagerDialog.cpp \
-    dialogs/UpdateDialog.cpp \
     dialogs/TagDialog.cpp \
     dialogs/LoginDialog.cpp \
     dialogs/LoginContinueDialog.cpp \
@@ -77,7 +75,6 @@ HEADERS += \
     widgets/UnicornTabWidget.h \
     widgets/TrackWidget.h \
     widgets/TagListWidget.h \
-    widgets/TagBuckets.h \
     widgets/StatusLight.h \
     widgets/SpinnerLabel.h \
     widgets/Seed.h \
@@ -116,7 +113,6 @@ HEADERS += \
     layouts/SideBySideLayout.h \
     layouts/AnimatedListLayout.h \
     dialogs/UserManagerDialog.h \
-    dialogs/UpdateDialog.h \
     dialogs/UnicornDialog.h \
     dialogs/TagDialog.h \
     dialogs/LoginDialog.h \

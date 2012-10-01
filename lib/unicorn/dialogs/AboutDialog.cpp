@@ -41,11 +41,4 @@ AboutDialog::AboutDialog( QWidget* parent )
     ui->ircLink->setText(  "<a href='irc://irc.audioscrobbler.com#audioscrobbler'>irc.audioscrobbler.com</a>" );
 
     ui->copyright->setText( QString::fromUtf8("™ & © 2005, 2006 - 2012 Last.fm Limited") );
-
-#ifndef Q_WS_MAC
-    // yeah, really, don't do it on Mac. Weird.
-    setWindowTitle( tr("About") );
-#else
-    setWindowTitle( "" );
-#endif
 }

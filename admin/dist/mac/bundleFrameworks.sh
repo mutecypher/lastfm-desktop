@@ -208,7 +208,31 @@ for plugin in $vlcPlugins; do
     echo
 done
 
+echo ======= Copying Qt translations ===========
+mkdir -p "$bundlePath/Contents/Resources/qm"
 
+translations="qt_de.qm
+                qt_es.qm 
+                qt_fr.qm 
+                qt_it.qm 
+                qt_ja.qm 
+                qt_pl.qm 
+                qt_pt.qm 
+                qt_ru.qm 
+                qt_sv.qm 
+                qt_tr.qm
+                qt_zh_CN.qm"
+
+for translation in $translations; do
+    if [ -d /Developer/Applications/Qt/plugins/ ]; then
+        translationDir=/Developer/Applications/Qt/translations
+    else
+        translationDir=`qmake --version |sed -n 's/^.*in \(\/.*$\)/\1/p'`/../translations
+    fi
+
+    cp -f $translationDir/$translation "$bundlePath/Contents/Resources/qm"
+    echo
+done
 
 
 echo ======= creating qt.conf ===========

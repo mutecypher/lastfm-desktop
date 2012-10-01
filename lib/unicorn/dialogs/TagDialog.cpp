@@ -41,7 +41,6 @@ TagDialog::TagDialog( const Track& track, QWidget *parent )
           ui( new Ui::TagDialog )
 {
     ui->setupUi( this );
-    setWindowTitle( tr("Tag") );
 
     m_track = track;
 

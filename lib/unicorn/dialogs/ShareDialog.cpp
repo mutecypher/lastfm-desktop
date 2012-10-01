@@ -81,8 +81,6 @@ ShareDialog::ShareDialog( const Track& track, QWidget* parent )
     dummyDefault->setDefault( true );
     dummyDefault->setAutoDefault( true );
     dummyDefault->setVisible( false );
-
-    setWindowTitle( tr("Share with friends") );
 }
 
 void

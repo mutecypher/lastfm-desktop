@@ -36,8 +36,6 @@ ScrobbleSetupDialog::ScrobbleSetupDialog( QString deviceId, QString deviceName, 
 {
     ui->setupUi( this );
 
-    setWindowTitle( "" );
-
     ui->description->setText( tr("<p>Do you want to start scrobbling the iPod \"%1\"?<p>"
                                      "<p>This will automatically scrobble tracks you've played on your iPod to the user account <strong>\"%2\"</strong> everytime it's synced with iTunes.</p>" ).arg( deviceName, User().name() ) );
 

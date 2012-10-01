@@ -24,6 +24,9 @@ ProfileWidget::ProfileWidget(QWidget *parent)
 {
     ui->setupUi( this );
 
+    ui->scrobbles->setText( tr( "Scrobble(s)", "", 0 ) );
+    ui->loved->setText( tr( "Loved track(s)", "", 0 ) );
+
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)) );
     connect( aApp, SIGNAL(gotUserInfo(lastfm::User)), SLOT(onGotUserInfo(lastfm::User)) );
 
@@ -73,7 +76,10 @@ ProfileWidget::onGotLibraryArtists()
         int scrobblesPerDay = aApp->currentSession()->userInfo().scrobbleCount() / aApp->currentSession()->userInfo().dateRegistered().daysTo( QDateTime::currentDateTime() );
         int totalArtists = lfm["artists"].attribute( "total" ).toInt();
 
-        ui->userBlurb->setText( tr( "You have %L1 artists in your library and on average listen to %L2 tracks per day." ).arg( totalArtists ).arg( scrobblesPerDay ) );
+        QString artistsString = tr( "%L1 artist(s)", "", totalArtists ).arg( totalArtists );
+        QString tracksString = tr( "%L1 track(s)", "", scrobblesPerDay ).arg( scrobblesPerDay );
+
+        ui->userBlurb->setText( tr( "You have %1 in your library and on average listen to %2 per day." ).arg( artistsString , tracksString ) );
         ui->userBlurb->show();
     }
     else
@@ -99,7 +105,7 @@ ProfileWidget::changeUser( const lastfm::User& user )
 
     ui->infoString->setText( user.getInfoString() );
 
-    ui->scrobbles->setText( tr( "Scrobbles since %1" ).arg( user.dateRegistered().toString( "d MMMM yyyy" ) ) );
+    ui->scrobbles->setText( tr( "Scrobble(s) since %1", "", user.scrobbleCount() ).arg( user.dateRegistered().toString( "d MMMM yyyy" ) ) );
 
     m_scrobbleCount = user.scrobbleCount();
     setScrobbleCount();
@@ -182,7 +188,9 @@ ProfileWidget::onGotLovedTracks()
 
     if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
     {
-        ui->lovedCount->setText( tr( "%L1" ).arg( lfm["lovedtracks"].attribute( "total" ).toInt() ) );
+        int lovedTrackCount = lfm["lovedtracks"].attribute( "total" ).toInt();
+        ui->loved->setText( tr( "Loved track(s)", "", lovedTrackCount ) );
+        ui->lovedCount->setText( QString( "%L1" ).arg( lovedTrackCount ) );
     }
     else
     {
@@ -211,5 +219,6 @@ ProfileWidget::onScrobbleStatusChanged( short scrobbleStatus )
 void
 ProfileWidget::setScrobbleCount()
 {
+    ui->scrobbles->setText( tr( "Scrobble(s) since %1", "", aApp->currentSession()->userInfo().scrobbleCount() ).arg( aApp->currentSession()->userInfo().dateRegistered().toString( "d MMMM yyyy" ) ) );
     ui->scrobbleCount->setText( QString( "%L1" ).arg( m_scrobbleCount ) );
 }

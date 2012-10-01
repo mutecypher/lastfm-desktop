@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>About</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -32,9 +32,6 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
-      <property name="spacing">
-       <number>6</number>
-      </property>
       <property name="margin">
        <number>0</number>
       </property>
@@ -46,7 +43,7 @@
         <item>
          <widget class="QLabel" name="as">
           <property name="text">
-           <string>TextLabel</string>
+           <string notr="true">TextLabel</string>
           </property>
          </widget>
         </item>
@@ -71,14 +68,14 @@
           <item>
            <widget class="QLabel" name="appName">
             <property name="text">
-             <string>TextLabel</string>
+             <string notr="true">TextLabel</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="qtVersion">
             <property name="text">
-             <string>TextLabel</string>
+             <string notr="true">TextLabel</string>
             </property>
            </widget>
           </item>
@@ -102,7 +99,7 @@
       <item>
        <widget class="QLabel" name="lastfmLink">
         <property name="text">
-         <string>TextLabel</string>
+         <string notr="true">TextLabel</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -115,7 +112,7 @@
       <item>
        <widget class="QLabel" name="ircLink">
         <property name="text">
-         <string>TextLabel</string>
+         <string notr="true">TextLabel</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -128,7 +125,7 @@
       <item>
        <widget class="QLabel" name="copyright">
         <property name="text">
-         <string>TextLabel</string>
+         <string notr="true">TextLabel</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

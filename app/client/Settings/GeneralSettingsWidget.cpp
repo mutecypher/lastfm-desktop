@@ -75,18 +75,18 @@ void
 GeneralSettingsWidget::populateLanguages()
 {
     ui->languages->addItem( tr( "System Language" ), "" );
-    ui->languages->addItem( "English", QLocale( QLocale::English ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "français" ), QLocale( QLocale::French ).name().left( 2 ) );
-    ui->languages->addItem( "Italiano", QLocale( QLocale::Italian ).name().left( 2 )  );
-    ui->languages->addItem( "Deutsch", QLocale( QLocale::German ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "Español" ), QLocale( QLocale::Spanish ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "Português" ), QLocale( QLocale::Portuguese ).name().left( 2 ) );
-    ui->languages->addItem( "Polski", QLocale( QLocale::Polish ).name().left( 2 ) );
-    ui->languages->addItem( "Svenska", QLocale( QLocale::Swedish ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "Türkçe" ), QLocale( QLocale::Turkish ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "Руccкий" ), QLocale( QLocale::Russian ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "简体中文" ), QLocale( QLocale::Chinese ).name().left( 2 ) );
-    ui->languages->addItem( QString::fromUtf8( "日本語" ), QLocale( QLocale::Japanese ).name().left( 2 ) );
+    ui->languages->addItem( "English", QLocale( QLocale::English, QLocale::UnitedKingdom ).name() );
+    ui->languages->addItem( QString::fromUtf8( "français" ), QLocale( QLocale::French ).name() );
+    ui->languages->addItem( "Italiano", QLocale( QLocale::Italian ).name() );
+    ui->languages->addItem( "Deutsch", QLocale( QLocale::German ).name() );
+    ui->languages->addItem( QString::fromUtf8( "Español" ), QLocale( QLocale::Spanish ).name() );
+    ui->languages->addItem( QString::fromUtf8( "Português" ), QLocale( QLocale::Portuguese, QLocale::Brazil ).name() );
+    ui->languages->addItem( "Polski", QLocale( QLocale::Polish ).name() );
+    ui->languages->addItem( "Svenska", QLocale( QLocale::Swedish ).name());
+    ui->languages->addItem( QString::fromUtf8( "Türkçe" ), QLocale( QLocale::Turkish ).name() );
+    ui->languages->addItem( QString::fromUtf8( "Руccкий" ), QLocale( QLocale::Russian ).name() );
+    ui->languages->addItem( QString::fromUtf8( "简体中文" ), QLocale( QLocale::Chinese, QLocale::China ).name() );
+    ui->languages->addItem( QString::fromUtf8( "日本語" ), QLocale( QLocale::Japanese ).name());
 
     QString currLanguage = unicorn::AppSettings().value( "language", "" ).toString();
     int index = ui->languages->findData( currLanguage );
@@ -102,6 +102,8 @@ GeneralSettingsWidget::saveSettings()
     qDebug() << "has unsaved changes?" << hasUnsavedChanges();
     if ( hasUnsavedChanges() )
     {
+        bool restartNeeded = false;
+
         int currIndex = ui->languages->currentIndex();
         QString currLanguage = ui->languages->itemData( currIndex ).toString();
 
@@ -113,11 +115,8 @@ GeneralSettingsWidget::saveSettings()
                 QLocale::setDefault( QLocale( currLanguage ) );
 
             unicorn::AppSettings().setValue( "language", currLanguage );
-//            QMessageBoxBuilder( 0 )
-//                .setIcon( QMessageBox::Information )
-//                .setTitle( tr( "Restart needed" ) )
-//                .setText( tr( "You need to restart the application for the language change to take effect." ) )
-//                .exec();
+
+            restartNeeded = true;
         }
 
         // setting is for the 'Client' aplication for compatibility with old media player plugins
@@ -140,22 +139,27 @@ GeneralSettingsWidget::saveSettings()
 
         if ( ( showWhereIndex != 2 && ui->showWhere->currentIndex() == 2 )
              || (showWhereIndex == 2 && ui->showWhere->currentIndex() != 2) )
-        {
-            int button = QMessageBoxBuilder( 0 )
-                                .setIcon( QMessageBox::Question )
-                                .setTitle( tr( "Restart now?" ) )
-                                .setText( tr( "Would you like to restart now for the dock setting to take effect?" ) )
-                                .setButtons( QMessageBox::Yes | QMessageBox::No )
-                                .exec();
-
-            if ( button == QMessageBox::Yes )
-                aApp->restart();
-        }
+            restartNeeded = true;
 #else
         unicorn::Settings().setValue( SETTING_SHOW_AS, ui->showAs->isChecked() );
         aApp->showAs( ui->showAs->isChecked() );
 #endif
 
         onSettingsSaved();
+
+        if ( restartNeeded )
+        {
+
+            int button = QMessageBoxBuilder( 0 )
+                            .setIcon( QMessageBox::Question )
+                            .setTitle( tr( "Restart now?" ) )
+                            .setText( tr( "An application restart is required for the change to take effect. Would you like to restart now?" ) )
+                            .setButtons( QMessageBox::Yes | QMessageBox::No )
+                            .exec();
+
+            if ( button == QMessageBox::Yes )
+                aApp->restart();
+
+        }
     }
 }

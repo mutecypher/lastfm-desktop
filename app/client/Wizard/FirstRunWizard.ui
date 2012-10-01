@@ -29,14 +29,14 @@
    <item>
     <widget class="QLabel" name="welcome">
      <property name="text">
-      <string>Welcome</string>
+      <string notr="true">Welcome</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QLabel" name="title">
      <property name="text">
-      <string>Title</string>
+      <string notr="true">Title</string>
      </property>
     </widget>
    </item>
@@ -66,9 +66,6 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="margin">
         <number>0</number>
        </property>
        <item>
@@ -103,35 +100,35 @@
      <item>
       <widget class="QPushButton" name="back">
        <property name="text">
-        <string>Back</string>
+        <string notr="true">Back</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="skip">
        <property name="text">
-        <string>Skip</string>
+        <string notr="true">Skip</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="custom">
        <property name="text">
-        <string>Custom</string>
+        <string notr="true">Custom</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="next">
        <property name="text">
-        <string>Next</string>
+        <string notr="true">Next</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="finish">
        <property name="text">
-        <string>Finish</string>
+        <string notr="true">Finish</string>
        </property>
       </widget>
      </item>

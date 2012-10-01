@@ -245,6 +245,10 @@ MetadataWidget::onArtistGotInfo()
         ui->artistUserPlays->setText( tr( "%L1" ).arg( m_userArtistScrobbles ) );
         ui->artistListeners->setText( tr( "%L1" ).arg( m_artistListeners ) );
 
+        ui->artistPlaysLabel->setText( tr( "Play(s)", "", m_globalArtistScrobbles ) );
+        ui->artistUserPlaysLabel->setText( tr( "Play(s) in your library", "", m_userArtistScrobbles ) );
+        ui->artistListenersLabel->setText( tr( "Listener(s)", "", m_artistListeners ) );
+
         // Update the context now that we have the user track listens
         ui->context->setText( contextString( m_track ) );
 
@@ -630,6 +634,10 @@ MetadataWidget::onScrobbleStatusChanged( short scrobbleStatus )
        if ( m_userTrackScrobbles == 1 )
                ui->artistListeners->setText( QString("%L1").arg( ++m_artistListeners ) );
 
+       ui->artistPlaysLabel->setText( tr( "Play(s)", "", m_globalArtistScrobbles ) );
+       ui->artistUserPlaysLabel->setText( tr( "Play(s) in your library", "", m_userArtistScrobbles ) );
+       ui->artistListenersLabel->setText( tr( "Listener(s)", "", m_artistListeners ) );
+
        //ui->context->setText( contextString( m_track ) );
    }
 }
@@ -716,34 +724,14 @@ MetadataWidget::contextString( const Track& track )
    return context;
 }
 
-QString numberOfTimes( int num )
-{
-    QString string;
-
-    switch ( num )
-    {
-    case 1:
-        string = QObject::tr( "once" );
-        break;
-    case 2:
-        string = QObject::tr( "twice" );
-        break;
-    default:
-        string = QObject::tr( num == 1 ? "%L1 time" : "%L1 times" ).arg( num );
-        break;
-    }
-
-    return string;
-}
-
 QString
 MetadataWidget::scrobbleString( const Track& track )
 {
     QString artistString = Label::anchor( userLibraryLink( User().name(), track.artist( Track::Corrected ).toString()  ), track.artist( Track::Corrected )  );
     QString trackString = Label::anchor( userLibraryLink( User().name(), track  ), track.title( Track::Corrected )  );
 
-    QString userArtistScrobblesString = numberOfTimes( m_userArtistScrobbles );
-    QString userTrackScrobblesString = numberOfTimes( m_userTrackScrobbles );
+    QString userArtistScrobblesString = tr( "%L1 time(s)", "", m_userArtistScrobbles ).arg( m_userArtistScrobbles );
+    QString userTrackScrobblesString = tr( "%L1 time(s)", "",  m_userTrackScrobbles ).arg( m_userTrackScrobbles );
 
     QString scrobbleString;
 

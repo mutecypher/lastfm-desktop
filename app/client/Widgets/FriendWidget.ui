@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
    <property name="spacing">
@@ -44,7 +44,7 @@
         <item>
          <widget class="unicorn::Label" name="username">
           <property name="text">
-           <string>Username</string>
+           <string notr="true">Username</string>
           </property>
           <property name="textFormat">
            <enum>Qt::RichText</enum>
@@ -57,7 +57,7 @@
         <item>
          <widget class="PlayableItemWidget" name="radio">
           <property name="text">
-           <string>PushButton</string>
+           <string notr="true">PushButton</string>
           </property>
          </widget>
         </item>
@@ -67,7 +67,7 @@
      <item>
       <widget class="unicorn::Label" name="userDetails">
        <property name="text">
-        <string>User details</string>
+        <string notr="true">User details</string>
        </property>
        <property name="textFormat">
         <enum>Qt::PlainText</enum>
@@ -102,7 +102,7 @@
         <item>
          <widget class="unicorn::Label" name="lastTrack">
           <property name="text">
-           <string>Artist - Title</string>
+           <string notr="true">Artist - Title</string>
           </property>
           <property name="textFormat">
            <enum>Qt::PlainText</enum>
@@ -120,14 +120,14 @@
           <item>
            <widget class="QLabel" name="equaliser">
             <property name="text">
-             <string>e</string>
+             <string notr="true">e</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="unicorn::Label" name="timestamp">
             <property name="text">
-             <string>Timestamp</string>
+             <string notr="true">Timestamp</string>
             </property>
             <property name="textFormat">
              <enum>Qt::PlainText</enum>

@@ -14,8 +14,6 @@ BetaDialog::BetaDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setWindowTitle( tr( "Beta" ) );
-
     setAttribute( Qt::WA_DeleteOnClose );
 
     ui->description->setText( "This is a beta version of the new Last.fm Desktop App. Please be gentle!" );

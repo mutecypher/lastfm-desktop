@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0,0,1">
    <property name="spacing">
@@ -83,14 +83,14 @@
         <item>
          <widget class="QLabel" name="scrobbleCount">
           <property name="text">
-           <string>0</string>
+           <string notr="true">0</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QLabel" name="scrobbles">
           <property name="text">
-           <string>Scrobbles</string>
+           <string notr="true">Scrobbles</string>
           </property>
          </widget>
         </item>
@@ -110,14 +110,14 @@
         <item>
          <widget class="QLabel" name="lovedCount">
           <property name="text">
-           <string>0</string>
+           <string notr="true">0</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QLabel" name="loved">
           <property name="text">
-           <string>Loved tracks</string>
+           <string notr="true">Loved tracks</string>
           </property>
          </widget>
         </item>
@@ -259,9 +259,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>AvatarWidget</class>
+   <class>unicorn::Label</class>
    <extends>QLabel</extends>
-   <header>lib/unicorn/widgets/AvatarWidget.h</header>
+   <header>lib/unicorn/widgets/Label.h</header>
   </customwidget>
   <customwidget>
    <class>ContextLabel</class>
@@ -269,9 +269,9 @@
    <header>../Widgets/ContextLabel.h</header>
   </customwidget>
   <customwidget>
-   <class>unicorn::Label</class>
+   <class>AvatarWidget</class>
    <extends>QLabel</extends>
-   <header>lib/unicorn/widgets/Label.h</header>
+   <header>lib/unicorn/widgets/AvatarWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

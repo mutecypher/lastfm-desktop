@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
+    <width>502</width>
     <height>485</height>
    </rect>
   </property>
@@ -26,7 +26,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="subs_tab">
       <attribute name="title">
@@ -261,7 +261,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>&lt;a href='http://status.last.fm'&gt;http://status.last.fm&lt;/a&gt;</string>
+        <string notr="true">&lt;a href='http://status.last.fm'&gt;http://status.last.fm&lt;/a&gt;</string>
        </property>
        <property name="textFormat">
         <enum>Qt::RichText</enum>

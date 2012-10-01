@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -23,7 +23,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="friendsPage">
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -120,7 +120,7 @@
        <item>
         <widget class="QLabel" name="spinner">
          <property name="text">
-          <string>Spinner</string>
+          <string notr="true">Spinner</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>

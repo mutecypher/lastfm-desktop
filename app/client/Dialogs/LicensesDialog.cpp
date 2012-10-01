@@ -12,12 +12,6 @@ LicensesDialog::LicensesDialog(QWidget *parent) :
 
     setAttribute( Qt::WA_DeleteOnClose );
 
-#ifdef Q_OS_MAC
-    setWindowTitle( "" );
-#else
-    setWindowTitle( tr( "Licenses" ) );
-#endif
-
     QString licenseText;
     licenseText.append( "<div id=\"content\">" );
 
