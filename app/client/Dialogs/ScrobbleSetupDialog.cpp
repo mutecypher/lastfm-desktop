@@ -34,11 +34,17 @@ ScrobbleSetupDialog::ScrobbleSetupDialog( QString deviceId, QString deviceName, 
     m_deviceName( deviceName ),
     m_more( false )
 {
+    // Disable the minimize and maximize buttons.
+    Qt::WindowFlags flags = this->windowFlags();
+    flags |= Qt::CustomizeWindowHint;
+    flags &= ~Qt::WindowMinMaxButtonsHint;
+    setWindowFlags(flags);
+
     ui->setupUi( this );
 
-    setWindowTitle( "" );
+    setWindowTitle( "Last.fm" );
 
-    ui->description->setText( tr("<p>Do you want to start scrobbling the iPod \"%1\"?<p>"
+    ui->description->setText( tr("<p><b>Do you want to start scrobbling the iPod \"%1\"?</b><p>"
                                      "<p>This will automatically scrobble tracks you've played on your iPod to the user account <strong>\"%2\"</strong> everytime it's synced with iTunes.</p>" ).arg( deviceName, User().name() ) );
 
     ui->multiUser->setText( tr( "<p>How would you like to manage scrobbling from iPod \"%1\"?</p>" ).arg( deviceName ) );
@@ -70,6 +76,7 @@ ScrobbleSetupDialog::ScrobbleSetupDialog( QString deviceId, QString deviceName, 
     ui->buttonBox->button( QDialogButtonBox::Apply )->setText( tr( "More Options" ) );
     ui->buttonBox->button( QDialogButtonBox::Yes )->setText( tr( "Scrobble" ) );
     ui->buttonBox->button( QDialogButtonBox::No )->setText( tr( "Not Now" ) );
+    ui->buttonBox->button( QDialogButtonBox::Yes )->setFocus();
 
     connect( ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onClicked(QAbstractButton*)));
 }
@@ -99,7 +106,9 @@ ScrobbleSetupDialog::onClicked( QAbstractButton* button )
         if ( m_more )
         {
             if ( ui->always->isChecked() )
+            {
                 emit clicked( true, false, user, m_deviceId, m_deviceName, m_iPodFiles );
+            }
             else if ( ui->manual->isChecked() )
             {
                 emit clicked( true, true, user, m_deviceId, m_deviceName, m_iPodFiles );
@@ -116,16 +125,19 @@ ScrobbleSetupDialog::onClicked( QAbstractButton* button )
             }
         }
         else
+        {
             emit clicked( true, false, user, m_deviceId, m_deviceName, m_iPodFiles );
+        }
 
         done( 0 );
 
-        QMessageBoxBuilder( 0 )
-            .setIcon( QMessageBox::Information )
-            .setTitle( title )
-            .setText( text )
-            .setButtons( QMessageBox::Ok )
-            .exec();
+        QMessageBox mbox;
+        mbox.setIcon(QMessageBox::Information);
+        mbox.setWindowTitle(title);
+        mbox.setStandardButtons(QMessageBox::Ok);
+        mbox.setText(text);
+        mbox.setWindowFlags(Qt::WindowTitleHint | Qt::Dialog | Qt::WindowCloseButtonHint | Qt::CustomizeWindowHint);
+        mbox.exec();
 
         break;
     }
@@ -138,9 +150,11 @@ ScrobbleSetupDialog::onClicked( QAbstractButton* button )
         // add new awesome buttons
         ui->buttonBox->addButton( QDialogButtonBox::Ok );
         ui->buttonBox->addButton( QDialogButtonBox::Cancel );
+        ui->buttonBox->button( QDialogButtonBox::Ok )->setFocus();
 
         // show the correct frame
         ui->basicFrame->hide();
+        ui->moreTitle->hide();
         ui->moreFrame->show();
 
         ui->moreFrame->setFixedHeight( ui->moreFrame->sizeHint().height() );
