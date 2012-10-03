@@ -24,6 +24,7 @@ public:
 
     // Gives you a pretty time string and will call your slot when it's time to change it again
     static void prettyTime( Label& timestampLabel, const class QDateTime& timestamp, QTimer* callback = 0 );
+    static QString price( const QString& price, const QString& currency );
 
 private:
     void paintEvent( QPaintEvent* event );

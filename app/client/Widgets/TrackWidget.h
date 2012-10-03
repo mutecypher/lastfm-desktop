@@ -63,8 +63,6 @@ public:
     QSize sizeHint() const;
 
 private:
-    QString price( const QString& price, const QString& currency ) const;
-
     void setTrackDetails();
     void setTrackTitleWidth();
 

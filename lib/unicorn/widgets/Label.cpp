@@ -132,7 +132,37 @@ unicorn::Label::prettyTime( Label& timestampLabel, const QDateTime& timestamp, Q
     }
 }
 
+QString
+unicorn::Label::price( const QString& price, const QString& currency )
+{
+    QString returnPrice;
 
+    if ( currency.compare( "MXN", Qt::CaseInsensitive ) == 0
+              || currency.compare( "USD", Qt::CaseInsensitive ) == 0
+              || currency.compare( "AUD", Qt::CaseInsensitive ) == 0
+              || currency.compare( "NZD", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "$%1" ).arg( price );
+    else if ( currency.compare( "CAD", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "CAD$%1" ).arg( price );
+    else if ( currency.compare( "DKK", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "DKK%1" ).arg( price );
+    else if ( currency.compare( "CHF", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "CHF%1" ).arg( price );
+    else if ( currency.compare( "NOK", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "NOK%1" ).arg( price );
+    else if ( currency.compare( "SEK", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "SEK%1" ).arg( price );
+    else if ( currency.compare( "GBP", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "£%1" ).arg( price );
+    else if ( currency.compare( "EUR", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "€%1" ).arg( price );
+    else if ( currency.compare( "JPY", Qt::CaseInsensitive ) == 0 )
+        returnPrice = QString::fromUtf8( "¥%1" ).arg( price );
+    else
+        returnPrice = QString( "%1 %2" ).arg( price, currency );
+
+    return returnPrice;
+}
 
 QSize
 unicorn::Label::sizeHint() const
