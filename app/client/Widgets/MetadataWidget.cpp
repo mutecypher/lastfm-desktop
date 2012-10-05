@@ -79,7 +79,6 @@ MetadataWidget::MetadataWidget( const Track& track, QWidget* p )
     m_movie = new QMovie( ":/loading_meta.gif", "GIF", this );
     m_movie->setCacheMode( QMovie::CacheAll );
     ui->spinnerLabel->setMovie (m_movie );
-    m_movie->start();
 
     ui->loadingStack->setCurrentWidget( ui->spinner );
 
@@ -155,6 +154,8 @@ MetadataWidget::fetchTrackInfo()
 void
 MetadataWidget::showEvent( QShowEvent* /*e*/ )
 {
+    if ( !m_fetchedTrackInfo )
+        m_movie->start();
     fetchTrackInfo();
 }
 
