@@ -149,7 +149,7 @@ DeviceScrobbler::scrobbleIpodFiles( const QStringList& files )
 
         if ( scrobbles.count() > 0 )
         {
-            if ( unicorn::AppSettings().value( SETTING_ALWAYS_ASK, false ).toBool() )
+            if ( unicorn::AppSettings().value( SETTING_ALWAYS_ASK, true ).toBool() )
             {
                 if ( m_confirmDialog )
                     m_confirmDialog->addTracks( scrobbles ); // add tracks to the already existing dialog
