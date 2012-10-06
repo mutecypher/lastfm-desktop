@@ -58,7 +58,7 @@ BannerWidget::onClick()
 }
 
 QSize 
-BannerWidget::sizeHint()
+BannerWidget::sizeHint() const
 {
     if( m_childWidget )
         return m_childWidget->sizeHint();
