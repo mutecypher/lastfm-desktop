@@ -9,6 +9,7 @@
 
 #include "lib/unicorn/widgets/Label.h"
 #include "lib/unicorn/DesktopServices.h"
+#include "../Services/AnalyticsService.h"
 
 #include "TagWidget.h"
 
@@ -95,4 +96,6 @@ void
 TagWidget::onClicked()
 {
     unicorn::DesktopServices::openUrl( m_url );
+    AnalyticsService::instance().SendEvent(TAG_CATEGORY, TAG_CLICKED, "TagButtonPressed");
+
 }

@@ -27,6 +27,7 @@
 
 #include "lib/unicorn/dialogs/ShareDialog.h"
 #include "lib/unicorn/dialogs/TagDialog.h"
+#include "../Services/AnalyticsService.h"
 
 #include "ScrobbleControls.h"
 
@@ -133,18 +134,22 @@ ScrobbleControls::onShareLastFm()
     sd->raise();
     sd->show();
     sd->activateWindow();
+    AnalyticsService::instance().SendEvent(SHARING_CATEGORY, SHARE_CLICKED, "ShareDialog");
 }
 
 void
 ScrobbleControls::onShareTwitter()
 {
     ShareDialog::shareTwitter( m_track );
+
+    AnalyticsService::instance().SendEvent(SHARING_CATEGORY, SHARE_CLICKED, "TwitterShare");
 }
 
 void
 ScrobbleControls::onShareFacebook()
 {
     ShareDialog::shareFacebook( m_track );
+    AnalyticsService::instance().SendEvent(SHARING_CATEGORY, SHARE_CLICKED, "FacebookShare");
 }
 
 void
@@ -154,4 +159,5 @@ ScrobbleControls::onTag()
     td->raise();
     td->show();
     td->activateWindow();
+    AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, TAG_CLICKED, "TagButtonPressed");
 }

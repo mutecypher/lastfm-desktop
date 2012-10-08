@@ -27,6 +27,7 @@
 #include <lastfm/User.h>
 
 #include "lib/unicorn/widgets/AvatarWidget.h"
+#include "../Services/AnalyticsService.h"
 
 #include "../Application.h"
 #include "SideBar.h"
@@ -121,5 +122,25 @@ SideBar::click( int index )
 void
 SideBar::onButtonClicked()
 {
-    emit currentChanged( layout()->indexOf( qobject_cast<QWidget*>( sender() ) ) );
+    int index = layout()->indexOf( qobject_cast<QWidget*>( sender() ) );
+    switch(index)
+    {
+    case 0:
+        AnalyticsService::instance().SendEvent(SIDE_BAR_CATEGORY, SIDE_BAR_CLICKED, "NowPlayingClicked");
+        break;
+    case 1:
+        AnalyticsService::instance().SendEvent(SIDE_BAR_CATEGORY, SIDE_BAR_CLICKED, "ScrobblesClicked");
+        break;
+    case 2:
+        AnalyticsService::instance().SendEvent(SIDE_BAR_CATEGORY, SIDE_BAR_CLICKED, "ProfileClicked");
+        break;
+    case 3:
+        AnalyticsService::instance().SendEvent(SIDE_BAR_CATEGORY, SIDE_BAR_CLICKED, "FriendsClicked");
+        break;
+    case 4:
+        AnalyticsService::instance().SendEvent(SIDE_BAR_CATEGORY, SIDE_BAR_CLICKED, "RadioClicked");
+        break;
+    }
+
+    emit currentChanged( index);
 }

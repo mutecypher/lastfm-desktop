@@ -29,6 +29,7 @@
 
 #include "PlayableItemWidget.h"
 #include "../Services/RadioService.h"
+#include "../Services/AnalyticsService.h"
 
 PlayableItemWidget::PlayableItemWidget( QWidget* parent )
     : QPushButton( parent ),
@@ -126,6 +127,7 @@ PlayableItemWidget::play()
     if(RadioService::instance().isRadioUsageAllowed())
     {
         RadioService::instance().play( m_rs );
+        AnalyticsService::instance().SendEvent(RADIO_CATEGORY, PLAY_CLICKED, "PlayClicked");
     }
 }
 
@@ -135,6 +137,7 @@ PlayableItemWidget::playNext()
     if(RadioService::instance().isRadioUsageAllowed())
     {
         RadioService::instance().playNext( m_rs );
+        AnalyticsService::instance().SendEvent(RADIO_CATEGORY, PLAY_CLICKED, "PlayNextClicked");
     }
 }
 
@@ -161,7 +164,10 @@ PlayableItemWidget::playMulti()
     if(RadioService::instance().isRadioUsageAllowed())
     {
         if ( m_rs.url().startsWith("lastfm://user/") )
+        {
             RadioService::instance().play( getMultiStation() );
+            AnalyticsService::instance().SendEvent(RADIO_CATEGORY, PLAY_CLICKED, "PlayMultiClicked");
+        }
     }
 }
 
@@ -171,7 +177,10 @@ PlayableItemWidget::playMultiNext()
     if(RadioService::instance().isRadioUsageAllowed())
     {
         if ( m_rs.url().startsWith("lastfm://user/") )
+        {
             RadioService::instance().playNext( getMultiStation() );
+            AnalyticsService::instance().SendEvent(RADIO_CATEGORY, PLAY_CLICKED, "PlayMultiNextClicked");
+        }
     }
 }
 

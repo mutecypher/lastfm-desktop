@@ -11,6 +11,7 @@
 #include "../Application.h"
 #include "../Services/RadioService/RadioService.h"
 #include "../Services/ScrobbleService/ScrobbleService.h"
+#include "../Services/AnalyticsService.h"
 
 #include "TrackWidget.h"
 #include "ui_TrackWidget.h"
@@ -266,9 +267,15 @@ void
 TrackWidget::onLoveClicked( bool loved )
 {
     if ( loved )
+    {
         MutableTrack( m_track ).love();
+        AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, LOVE_TRACK, "TrackLoved");
+    }
     else
+    {
         MutableTrack( m_track ).unlove();
+        AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, LOVE_TRACK, "TrackUnLoved");
+    }
 }
 
 void
@@ -278,6 +285,7 @@ TrackWidget::onTagClicked()
     td->raise();
     td->show();
     td->activateWindow();
+    AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, TAG_CLICKED, "TagButtonPressed");
 }
 
 void
@@ -459,6 +467,7 @@ void
 TrackWidget::onBuyActionTriggered( QAction* buyAction )
 {
     unicorn::DesktopServices::openUrl( buyAction->data().toString() );
+    AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, BUY_CLICKED, "BuyButtonPressed");
 }
 
 void
@@ -468,17 +477,20 @@ TrackWidget::onShareLastFm()
     sd->raise();
     sd->show();
     sd->activateWindow();
+    AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, SHARE_CLICKED, "LastfmShare");
 }
 
 void
 TrackWidget::onShareTwitter()
 {
     ShareDialog::shareTwitter( m_track );
+    AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, SHARE_CLICKED, "TwitterShare");
 }
 
 void
 TrackWidget::onShareFacebook()
 {
     ShareDialog::shareFacebook( m_track );
+    AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, SHARE_CLICKED, "FacebookShare");
 }
 

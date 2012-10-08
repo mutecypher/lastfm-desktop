@@ -8,6 +8,7 @@
 #include "lib/unicorn/widgets/BannerWidget.h"
 #include "lib/unicorn/widgets/HttpImageWidget.h"
 #include "lib/unicorn/DesktopServices.h"
+#include "../Services/AnalyticsService.h"
 
 #include "WidgetTextObject.h"
 #include "BioWidget.h"
@@ -185,6 +186,7 @@ void
 BioWidget::onAnchorClicked( const QUrl& link )
 {
     unicorn::DesktopServices::openUrl( link );
+    AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, LINK_CLICKED, "BioPageLinkClicked");
 }
 
 

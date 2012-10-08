@@ -39,6 +39,7 @@
 #include "../Application.h"
 #include "../StationSearch.h"
 #include "../Services/RadioService/RadioService.h"
+#include "../Services/AnalyticsService.h"
 
 #include <QStylePainter>
 
@@ -256,6 +257,9 @@ QuickStartWidget::play()
             // should switch to the now playing view
         }
     }
+
+    AnalyticsService::instance().SendEvent(START_CATEGORY, PLAY_CLICKED, "PlayButtonPressed");
+
 }
 
 void
