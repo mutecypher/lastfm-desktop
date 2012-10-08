@@ -451,14 +451,17 @@ MainWindow::onRadioError( int error, const QVariant& data )
 void
 MainWindow::onFoundScrobbles( const QList<lastfm::Track>& tracks )
 {
-    ui.messageBar->addTracks( tracks );
+    if ( tracks.count() > 0 )
+    {
+        ui.messageBar->addTracks( tracks );
 
-    int count = 0;
+        int count = 0;
 
-    foreach ( const lastfm::Track& track, ui.messageBar->tracks() )
-        count += track.extra( "playCount" ).toInt();
+        foreach ( const lastfm::Track& track, ui.messageBar->tracks() )
+            count += track.extra( "playCount" ).toInt();
 
-    ui.messageBar->show( tr( "<a href=\"tracks\">%n play(s)</a> ha(s|ve) been scrobbled from a device", "", count ), "ipod" );
+        ui.messageBar->show( tr( "<a href=\"tracks\">%n play(s)</a> ha(s|ve) been scrobbled from a device", "", count ), "ipod" );
+    }
 }
 
 void
