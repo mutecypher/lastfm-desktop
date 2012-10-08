@@ -18,10 +18,6 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ScrobbleConfirmationDialog.h"
-
-#include "../ScrobblesModel.h"
-
 #include <QCheckBox>
 #include <QDialogButtonBox>
 #include <QHeaderView>
@@ -31,6 +27,11 @@
 #include <QTableView>
 #include <QVBoxLayout>
 
+#include <lastfm/ScrobbleCache.h>
+
+#include "../ScrobblesModel.h"
+
+#include "ScrobbleConfirmationDialog.h"
 #include "ui_ScrobbleConfirmationDialog.h"
 
 ScrobbleConfirmationDialog::ScrobbleConfirmationDialog( const QList<lastfm::Track>& tracks, QWidget* parent )
@@ -115,7 +116,13 @@ ScrobbleConfirmationDialog::files() const
 QList<lastfm::Track>
 ScrobbleConfirmationDialog::tracksToScrobble() const
 {
-    return m_scrobblesModel->tracksToScrobble();
+    QList<lastfm::Track> validTracks;
+
+    foreach ( lastfm::Track track, m_scrobblesModel->tracksToScrobble() )
+        if ( lastfm::ScrobbleCache::isValid( track ) )
+            validTracks << track;
+
+    return validTracks;
 }
 
 void

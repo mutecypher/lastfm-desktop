@@ -43,25 +43,28 @@ private:
     class Scrobble
     {
     public:
-        Scrobble( const lastfm::Track track ): m_track( track ), m_scrobblingEnabled( true ) {}
+        Scrobble( const lastfm::Track track );
 
-        lastfm::Track track() const{ return m_track; }
-        QString title() const{ return m_track.title(); }
-        QString artist() const{ return m_track.artist(); }
-        QString album() const{ return m_track.album(); }
-        QDateTime timestamp() const{ return m_track.timestamp(); }
-        bool isLoved() const{ return m_track.isLoved(); } 
-        bool isScrobblingEnabled() const{ return m_scrobblingEnabled; }
+        lastfm::Track track() const;
+        QString title() const;
+        QString artist() const;
+        QString album() const;
+        QDateTime timestamp() const;
+        bool isLoved() const;
+        bool isScrobblingEnabled() const;
 
-        void setEnableScrobbling( bool allow ) { m_scrobblingEnabled = allow; }
+        void setEnableScrobbling( bool allow );
 
         QVariant attribute( int index ) const;
 
-        bool operator<( const Scrobble& that ) const { return this->m_track < that.m_track;}
+        int originalPlayCount() const;
+
+        bool operator<( const Scrobble& that ) const;
 
     private:
         lastfm::Track m_track;
         bool m_scrobblingEnabled;
+        int m_originalPlayCount;
     };
 
 private:

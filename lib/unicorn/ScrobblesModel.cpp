@@ -1,7 +1,65 @@
 
+#include <QColor>
 #include <QDebug>
 
+#include <lastfm/ScrobbleCache.h>
+
 #include "ScrobblesModel.h"
+
+ScrobblesModel::Scrobble::Scrobble( const lastfm::Track track )
+    :m_track( track ), m_scrobblingEnabled( true )
+{
+    bool ok;
+    int count = m_track.extra( "playCount" ).toInt( &ok );
+    m_originalPlayCount = ok ? count : 1;
+}
+
+lastfm::Track
+ScrobblesModel::Scrobble::track() const
+{
+    return m_track;
+}
+
+QString
+ScrobblesModel::Scrobble::title() const
+{
+    return m_track.title();
+}
+
+QString
+ScrobblesModel::Scrobble::artist() const
+{
+    return m_track.artist();
+}
+
+QString
+ScrobblesModel::Scrobble::album() const
+{
+    return m_track.album();
+}
+
+QDateTime
+ScrobblesModel::Scrobble::timestamp() const
+{
+    return m_track.timestamp();
+}
+
+bool
+ScrobblesModel::Scrobble::isLoved() const
+{
+    return m_track.isLoved();
+}
+
+bool
+ScrobblesModel::Scrobble::isScrobblingEnabled() const
+{
+    return m_scrobblingEnabled;
+}
+
+void ScrobblesModel::Scrobble::setEnableScrobbling( bool allow )
+{
+    m_scrobblingEnabled = allow;
+}
 
 QVariant
 ScrobblesModel::Scrobble::attribute( int index ) const
@@ -19,6 +77,19 @@ ScrobblesModel::Scrobble::attribute( int index ) const
 
     return QVariant();
 }
+
+int
+ScrobblesModel::Scrobble::originalPlayCount() const
+{
+    return m_originalPlayCount;
+}
+
+bool
+ScrobblesModel::Scrobble::operator<( const Scrobble& that ) const
+{
+    return this->m_track < that.m_track;
+}
+
 
 ScrobblesModel::ScrobblesModel( QObject* parent )
     : QAbstractTableModel( parent ), m_readOnly( false )
@@ -75,10 +146,43 @@ ScrobblesModel::data( const QModelIndex& index, int role ) const
 
     if ( role == Qt::DisplayRole )
         return m_scrobbleList.at( index.row() ).attribute( index.column() );
-    else if ( role == Qt::CheckStateRole && index.column() == 0 )
+    else if ( role == Qt::TextColorRole && !m_readOnly )
+    {
+        if ( !lastfm::ScrobbleCache::isValid( m_scrobbleList.at( index.row() ).track() ) )
+            return QColor( Qt::red );
+    }
+    else if ( role == Qt::ToolTipRole && !m_readOnly )
+    {
+        Scrobble s = m_scrobbleList.at( index.row() );
+        lastfm::ScrobbleCache::Invalidity invalidity;
+
+        if ( !lastfm::ScrobbleCache::isValid( s.track(), &invalidity ) )
+        {
+            switch ( invalidity )
+            {
+            case lastfm::ScrobbleCache::TooShort:
+                return tr( "This track is under 30 seconds" );
+            case lastfm::ScrobbleCache::ArtistNameMissing:
+                return tr( "The artist name is missing" );
+            case lastfm::ScrobbleCache::TrackNameMissing:
+                return tr( "Invalid track title" );
+            case lastfm::ScrobbleCache::ArtistInvalid:
+                return tr( "Invalid artist" );
+            case lastfm::ScrobbleCache::NoTimestamp:
+                return tr( "There is no timestamp" );
+            case lastfm::ScrobbleCache::FromTheFuture:
+                return tr( "This track is too far in the future" );
+            case lastfm::ScrobbleCache::FromTheDistantPast:
+                return tr( "This track was played over two weeks ago" );
+            }
+        }
+    }
+    else if ( role == Qt::CheckStateRole && index.column() == ScrobblesModel::Artist )
     {
         if ( m_readOnly )
             return QVariant();
+        else if ( !lastfm::ScrobbleCache::isValid( m_scrobbleList.at( index.row() ).track() ) )
+            return Qt::Unchecked;
         else
             return m_scrobbleList.at( index.row() ).isScrobblingEnabled() ? Qt::Checked : Qt::Unchecked;
     }
@@ -104,10 +208,13 @@ ScrobblesModel::flags( const QModelIndex& index ) const
     if ( !index.isValid() )
         return Qt::ItemIsEnabled;
 
-    if ( index.column() == ScrobblesModel::Artist )
-        return QAbstractItemModel::flags( index ) | Qt::ItemIsUserCheckable;
-    if ( index.column() == ScrobblesModel::Plays )
-        return QAbstractItemModel::flags( index ) | Qt::ItemIsEditable;
+    if ( !m_readOnly )
+    {
+        if ( index.column() == ScrobblesModel::Artist )
+            return QAbstractItemModel::flags( index ) | Qt::ItemIsUserCheckable;
+        if ( index.column() == ScrobblesModel::Plays )
+            return QAbstractItemModel::flags( index ) | Qt::ItemIsEditable;
+    }
 
     return QAbstractItemModel::flags( index );
 }
@@ -131,7 +238,7 @@ ScrobblesModel::setData( const QModelIndex& index, const QVariant& value, int ro
             bool ok;
             int count = value.toInt( &ok );
 
-            if ( ok )
+            if ( ok && count != 0 && count <= s.originalPlayCount() )
             {
                 lastfm::MutableTrack( s.track() ).setExtra( "playCount", QString::number( count ) );
                 emit dataChanged( index, index );
