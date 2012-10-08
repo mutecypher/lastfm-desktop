@@ -158,7 +158,7 @@ TrackWidget::showEvent(QShowEvent *)
 }
 
 void
-TrackWidget::hideEvent( QHideEvent * event )
+TrackWidget::hideEvent( QHideEvent * )
 {
     m_movie->stop();
 }
