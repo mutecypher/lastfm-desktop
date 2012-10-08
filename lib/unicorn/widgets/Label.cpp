@@ -109,12 +109,7 @@ unicorn::Label::prettyTime( Label& timestampLabel, const QDateTime& timestamp, Q
     {
         // Less than an hour ago
         int minutesAgo = ( timestamp.secsTo( now ) / 60 );
-
-        if ( secondsAgo < 0 )
-            timestampLabel.setText( tr( "Time is broken" ) ); // in the future!
-        else
-            timestampLabel.setText( tr( "%n minute(s) ago", "", minutesAgo ) );
-
+        timestampLabel.setText( tr( "%n minute(s) ago", "", minutesAgo ) );
         if ( callback ) callback->start( now.secsTo( timestamp.addSecs(((minutesAgo + 1 ) * 60 ) + 1 ) ) * 1000 );
     }
     else if ( secondsAgo < (60 * 60 * 6) || now.date() == timestamp.date() )
@@ -135,6 +130,9 @@ unicorn::Label::prettyTime( Label& timestampLabel, const QDateTime& timestamp, Q
         timestampLabel.setText( timestamp.toString( Qt::DefaultLocaleLongDate ) );
         // We don't need to set the timer because this date will never change
     }
+
+    if ( secondsAgo < 0 )
+        timestampLabel.setText( tr( "Time is broken" ) ); // in the future!
 }
 
 QString
