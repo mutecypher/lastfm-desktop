@@ -162,7 +162,6 @@ DeviceScrobbler::scrobbleIpodFiles( const QStringList& files )
                 // add the files so it can delete them when the user has decided what to do
                 m_confirmDialog->addFiles( files );
                 m_confirmDialog->show();
-                m_confirmDialog->raise();
             }
             else
             {
