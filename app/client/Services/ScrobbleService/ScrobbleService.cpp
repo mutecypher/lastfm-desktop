@@ -210,14 +210,10 @@ ScrobbleService::onTrackStarted( const Track& t, const Track& ot )
 
     //This is to prevent the next track being scrobbled
     //instead of the track just listened
-    if ( trackLengthPercent == 100 && !oldtrack.isNull() )
-    {
+    if ( trackLengthPercent == 1.0 && !oldtrack.isNull() )
         m_trackToScrobble = oldtrack;
-    }
     else
-    {
         m_trackToScrobble = t;
-    }
 
     ScrobblePoint timeout( m_currentTrack.duration() * trackLengthPercent );
     delete m_watch;
