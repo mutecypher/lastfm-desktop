@@ -1,0 +1,7 @@
+C:\Users\frantz\Documents\Visual Studio 2010\Projects\AnalyticsService\AnalyticsService\bin\AnalyticsService.dll
+C:\Users\frantz\Documents\Visual Studio 2010\Projects\AnalyticsService\AnalyticsService\bin\AnalyticsService.pdb
+C:\Users\frantz\Documents\Visual Studio 2010\Projects\AnalyticsService\AnalyticsService\bin\GaDotNet.Common.dll
+C:\Users\frantz\Documents\Visual Studio 2010\Projects\AnalyticsService\AnalyticsService\bin\GaDotNet.Common.pdb
+C:\Users\frantz\Documents\Visual Studio 2010\Projects\AnalyticsService\AnalyticsService\obj\Release\ResolveAssemblyReference.cache
+C:\Users\frantz\Documents\Visual Studio 2010\Projects\AnalyticsService\AnalyticsService\obj\Release\AnalyticsService.dll
+C:\Users\frantz\Documents\Visual Studio 2010\Projects\AnalyticsService\AnalyticsService\obj\Release\AnalyticsService.pdb
