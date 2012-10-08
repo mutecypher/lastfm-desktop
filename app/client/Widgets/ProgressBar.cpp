@@ -149,11 +149,11 @@ ProgressBar::paintEvent( QPaintEvent* e )
 
                     int scrobbleMarker = indent + (scrobblePoint * width) / ( m_track.duration() * 1000 );
 
-                    p.setPen( QPen( QColor( 0xbdbdbd ), 1, Qt::DotLine) );
+                    p.setPen( QPen( QColor( 0xbdbdbd ), 1, Qt::DashLine) );
                     p.drawLine( QPoint( scrobbleMarker - 1, rect().top() ),
                                 QPoint( scrobbleMarker - 1, rect().bottom() ) );
 
-                    p.setPen( QPen( QColor( 0xe6e6e6 ), 1, Qt::DotLine) );
+                    p.setPen( QPen( QColor( 0xe6e6e6 ), 1, Qt::DashLine) );
                     p.drawLine( QPoint( scrobbleMarker, rect().top() ),
                                 QPoint( scrobbleMarker, rect().bottom() ) );
 
