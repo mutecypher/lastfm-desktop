@@ -1,3 +1,8 @@
+Join us for chats on IRC!
+
+Server: irc.last.fm
+Channel: #last.desktop
+
 # Build Dependencies
 
 * Qt >= 4.8
