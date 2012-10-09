@@ -396,7 +396,7 @@ ScrobblesListWidget::onGotRecentTracks()
 {
     XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
         m_trackItem->setHidden( true );
 

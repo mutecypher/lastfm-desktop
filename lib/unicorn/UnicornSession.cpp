@@ -115,7 +115,7 @@ Session::onUserGotInfo()
     if ( reply->error() == QNetworkReply::NoError  )
     {
         XmlQuery lfm;
-        if ( lfm.parse( reply->readAll() ) )
+        if ( lfm.parse( reply ) )
         {
             lastfm::User userInfo( lfm["user"] );
 
@@ -167,7 +167,7 @@ Session::onAuthGotSessionInfo()
 
      */
 
-    if ( lfm.parse( static_cast<QNetworkReply*>( sender() )->readAll() ) )
+    if ( lfm.parse( static_cast<QNetworkReply*>( sender() ) ) )
     {
         qDebug() << lfm;
 

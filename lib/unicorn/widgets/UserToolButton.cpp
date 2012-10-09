@@ -65,8 +65,10 @@ UserToolButton::onUserGotInfo( const User& user )
 void 
 UserToolButton::onImageDownloaded()
 {
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>( sender());
-    Q_ASSERT( reply);
+    QNetworkReply* reply = qobject_cast<QNetworkReply*>( sender() );
+    Q_ASSERT( reply );
+
+    reply->deleteLater();
 
     QPixmap pm;
     if( !pm.loadFromData( reply->readAll()) )

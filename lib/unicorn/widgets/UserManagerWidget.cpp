@@ -106,7 +106,7 @@ UserRadioButton::onUserFetched()
     Q_ASSERT( reply );
 
     XmlQuery lfm;
-    if ( lfm.parse( reply->readAll() ) )
+    if ( lfm.parse( reply ) )
     {
         User user( lfm["user"] );
         setUser( user );

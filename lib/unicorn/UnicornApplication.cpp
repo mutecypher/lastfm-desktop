@@ -242,7 +242,7 @@ unicorn::Application::onUserGotInfo()
     QNetworkReply* reply = (QNetworkReply*)sender();
     XmlQuery lfm;
 
-    if ( lfm.parse( reply->readAll() ) )
+    if ( lfm.parse( reply ) )
     {
         lastfm::User userInfo( lfm["user"] );
 

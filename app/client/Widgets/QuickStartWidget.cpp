@@ -105,7 +105,7 @@ QuickStartWidget::onGotTagSuggestions()
 {
     lastfm::XmlQuery lfm;
 
-    if ( lfm.parse( static_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( static_cast<QNetworkReply*>(sender()) ) )
     {
         foreach ( const XmlQuery& suggestion, lfm["suggestions"].children( "suggestion" ) )
             m_tags << suggestion["tag"]["name"].text();
@@ -127,7 +127,7 @@ QuickStartWidget::onGotTopTags()
 {
     lastfm::XmlQuery lfm;
 
-    if ( lfm.parse( static_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( static_cast<QNetworkReply*>(sender()) ) )
     {
         foreach ( const XmlQuery& tag, lfm["toptags"].children( "tag" ) )
             m_tags << tag["name"].text();
@@ -145,7 +145,7 @@ QuickStartWidget::onUserGotTopArtists()
 {
     lastfm::XmlQuery lfm;
 
-    if ( lfm.parse( static_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( static_cast<QNetworkReply*>(sender()) ) )
     {
         foreach ( const XmlQuery& artist, lfm["topartists"].children( "artist" ) )
             m_artists << artist["name"].text();
@@ -166,7 +166,7 @@ QuickStartWidget::onChartGotTopArtists()
 {
     lastfm::XmlQuery lfm;
 
-    if ( lfm.parse( static_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( static_cast<QNetworkReply*>(sender()) ) )
     {
         foreach ( const XmlQuery& artist, lfm["artists"].children( "artist" ) )
             m_artists << artist["name"].text();

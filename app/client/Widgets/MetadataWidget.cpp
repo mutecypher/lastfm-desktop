@@ -227,7 +227,7 @@ MetadataWidget::onArtistGotInfo()
 
     XmlQuery lfm;
 
-    if ( lfm.parse( reply->readAll() ) )
+    if ( lfm.parse( reply ) )
     {
         m_globalArtistScrobbles = lfm["artist"]["stats"]["playcount"].text().toInt();
         m_artistListeners = lfm["artist"]["stats"]["listeners"].text().toInt();
@@ -343,7 +343,7 @@ MetadataWidget::onArtistGotYourTags()
 
     XmlQuery lfm;
 
-    if ( lfm.parse( reply->readAll() ) )
+    if ( lfm.parse( reply ) )
     {
         QList<XmlQuery> tags = lfm["tags"].children("tag").mid(0, 5);
 
@@ -379,7 +379,7 @@ MetadataWidget::onArtistGotEvents()
    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
 
    XmlQuery lfm;
-   if ( lfm.parse( reply->readAll() ) )
+   if ( lfm.parse( reply ) )
    {
 
        if (lfm["events"].children("event").count() > 0)
@@ -402,7 +402,7 @@ MetadataWidget::onAlbumGotInfo()
 {
     XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
 //        int scrobbles = lfm["album"]["playcount"].text().toInt();
 //        int listeners = lfm["album"]["listeners"].text().toInt();
@@ -424,7 +424,7 @@ MetadataWidget::onTrackGotBuyLinks()
 {
     XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
         bool thingsToBuy = false;
 
@@ -550,7 +550,7 @@ MetadataWidget::onTrackGotYourTags()
 {
     XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
         QList<XmlQuery> tags = lfm["tags"].children("tag").mid(0, 5);
 

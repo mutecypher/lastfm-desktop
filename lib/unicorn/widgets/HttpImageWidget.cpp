@@ -79,10 +79,13 @@ void HttpImageWidget::onClick()
 
 void HttpImageWidget::onUrlLoaded()
 {
-    if ( static_cast<QNetworkReply*>(sender())->error() == QNetworkReply::NoError )
+    QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
+    reply->deleteLater();
+
+    if ( reply->error() == QNetworkReply::NoError )
     {
         QPixmap px;
-        if ( px.loadFromData(static_cast<QNetworkReply*>(sender())->readAll()) )
+        if ( px.loadFromData( reply->readAll() ) )
         {
             switch ( m_scale )
             {

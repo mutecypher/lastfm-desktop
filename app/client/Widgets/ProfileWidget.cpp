@@ -71,7 +71,7 @@ ProfileWidget::onGotLibraryArtists()
 {
     lastfm::XmlQuery lfm;
 
-    if ( lfm.parse( static_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( static_cast<QNetworkReply*>(sender()) ) )
     {
         int scrobblesPerDay = aApp->currentSession()->userInfo().scrobbleCount() / aApp->currentSession()->userInfo().dateRegistered().daysTo( QDateTime::currentDateTime() );
         int totalArtists = lfm["artists"].attribute( "total" ).toInt();
@@ -125,7 +125,7 @@ ProfileWidget::onGotTopWeeklyArtists()
 {
     lastfm::XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
         ui->weekFrame->setUpdatesEnabled( false );
 
@@ -156,7 +156,7 @@ ProfileWidget::onGotTopOverallArtists()
 {
     lastfm::XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
         ui->overallFrame->setUpdatesEnabled( false );
 
@@ -186,7 +186,7 @@ ProfileWidget::onGotLovedTracks()
 {
     lastfm::XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
         int lovedTrackCount = lfm["lovedtracks"].attribute( "total" ).toInt();
         ui->loved->setText( tr( "Loved track(s)", "", lovedTrackCount ) );
