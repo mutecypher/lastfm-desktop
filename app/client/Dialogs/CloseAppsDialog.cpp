@@ -6,21 +6,21 @@
 #include <windows.h>
 #include <psapi.h>
 
-#include "../Plugins/IPluginInfo.h"
+#include "../Plugins/ITunesPluginInfo.h"
 #endif
 
 #include "CloseAppsDialog.h"
 #include "ui_CloseAppsDialog.h"
 
 
-unicorn::CloseAppsDialog::CloseAppsDialog( const QList<IPluginInfo*>& plugins, QWidget *parent )
+CloseAppsDialog::CloseAppsDialog( const QList<IPluginInfo*>& plugins, QWidget *parent )
     :QDialog( parent ),
       ui(new Ui::CloseAppsDialog), m_plugins( plugins )
 {
     commonSetup();
 }
 
-unicorn::CloseAppsDialog::CloseAppsDialog(QWidget *parent) :
+CloseAppsDialog::CloseAppsDialog(QWidget *parent) :
     QDialog( parent ),
     ui(new Ui::CloseAppsDialog)
 {
@@ -28,7 +28,7 @@ unicorn::CloseAppsDialog::CloseAppsDialog(QWidget *parent) :
 }
 
 void
-unicorn::CloseAppsDialog::commonSetup()
+CloseAppsDialog::commonSetup()
 {
     ui->setupUi(this);
 
@@ -45,7 +45,7 @@ unicorn::CloseAppsDialog::commonSetup()
 }
 
 bool
-unicorn::CloseAppsDialog::isITunesRunning()
+CloseAppsDialog::isITunesRunning()
 {
     QStringList apps;
 #ifndef Q_OS_MAC
@@ -61,7 +61,7 @@ unicorn::CloseAppsDialog::isITunesRunning()
 }
 
 void
-unicorn::CloseAppsDialog::checkApps()
+CloseAppsDialog::checkApps()
 {
     QStringList apps = runningApps();
 
@@ -80,13 +80,13 @@ unicorn::CloseAppsDialog::checkApps()
 
 #ifndef Q_OS_MAC
 QStringList
-unicorn::CloseAppsDialog::runningApps()
+CloseAppsDialog::runningApps()
 {
     return runningApps( m_plugins );
 }
 
 QStringList
-unicorn::CloseAppsDialog::runningApps( const QList<IPluginInfo*>& plugins )
+CloseAppsDialog::runningApps( const QList<IPluginInfo*>& plugins )
 {
     QStringList apps;
 
@@ -141,7 +141,7 @@ unicorn::CloseAppsDialog::runningApps( const QList<IPluginInfo*>& plugins )
 }
 #endif
 
-unicorn::CloseAppsDialog::~CloseAppsDialog()
+CloseAppsDialog::~CloseAppsDialog()
 {
     delete ui;
 }

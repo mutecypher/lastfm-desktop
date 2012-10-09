@@ -6,7 +6,7 @@
 #include "lib/unicorn/dialogs/ScrobbleConfirmationDialog.h"
 #include "lib/unicorn/UnicornApplication.h"
 #include "IpodDevice.h"
-#include "lib/unicorn/dialogs/CloseAppsDialog.h"
+#include "../Dialogs/CloseAppsDialog.h"
 
 #include "lib/unicorn/QMessageBoxBuilder.h"
 
@@ -32,7 +32,7 @@ void
 DeviceScrobbler::twiddle()
 {
 #ifndef Q_WS_X11
-    if ( unicorn::CloseAppsDialog::isITunesRunning() )
+    if ( CloseAppsDialog::isITunesRunning() )
     {
         if (m_twiddly)
         {
