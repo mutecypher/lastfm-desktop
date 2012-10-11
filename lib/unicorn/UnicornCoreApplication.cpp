@@ -90,22 +90,7 @@ unicorn::CoreApplication::qMsgHandler( QtMsgType type, const char* msg )
     fflush( stderr );
 #endif
 #endif
-
-    static int spam = 0;
-    static QByteArray previous_msg;
-    
-    if (previous_msg == msg) {
-        ++spam;
-        return;
-    }
-    
-    if (spam) {
-        // +1 so as to include first duplication too
-        Logger::the().log( QString( "Times above line spammed: %L1").arg( spam + 1 ).toUtf8() );
-        spam = 0;
-    }
-    
-    previous_msg = msg;    
+      
     Logger::the().log( msg );
 }
 
