@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = "Last.fm"
+TARGET = "Last.fm Scrobbler"
 VERSION = 2.1.24
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql
@@ -208,14 +208,14 @@ mac:HEADERS += CommandReciever/CommandReciever.h \
                 ../../lib/3rdparty/SPMediaKeyTap/SPMediaKeyTap.h \
                 ../../lib/3rdparty/SPMediaKeyTap/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.h
 
-mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp \
-                Dialogs/CloseAppsDialog_mac.mm
+mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
 mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
                             Widgets/NothingPlayingWidget_mac.mm \
                             MediaKeys/MediaKey.mm \
                             ../../lib/3rdparty/SPMediaKeyTap/SPMediaKeyTap.m \
-                            ../../lib/3rdparty/SPMediaKeyTap/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.m
+                            ../../lib/3rdparty/SPMediaKeyTap/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.m \
+                            Dialogs/CloseAppsDialog_mac.mm
 
 FORMS += \
     Widgets/PlaybackControlsWidget.ui \

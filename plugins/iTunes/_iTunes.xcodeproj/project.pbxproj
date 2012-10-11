@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C7B8BBE141657F600C2A26C /* iTunesAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C7B8BBD141657F600C2A26C /* iTunesAPI.cpp */; };
-		4C7B8BC01416683000C2A26C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7B8BBF1416683000C2A26C /* Cocoa.framework */; };
+		4CCE0E96162725220090F29C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CCE0E95162725220090F29C /* Cocoa.framework */; };
 		63233BAF0D7491470009EC65 /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63233BAD0D7491470009EC65 /* Logger.cpp */; };
 		632E70550DD9FF0200A16D88 /* playCountForDatabaseId.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 632E70520DD9FEF900A16D88 /* playCountForDatabaseId.scpt */; };
 		633C62970D6CA1DD00B609B9 /* main_mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 633C62960D6CA1DD00B609B9 /* main_mac.cpp */; };
@@ -38,7 +38,7 @@
 		01285C0700CC38597F000001 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		0AA1909FFE8422F4C02AAC07 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		4C7B8BBD141657F600C2A26C /* iTunesAPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = iTunesAPI.cpp; sourceTree = "<group>"; };
-		4C7B8BBF1416683000C2A26C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		4CCE0E95162725220090F29C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		63233BAD0D7491470009EC65 /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logger.cpp; path = "../../common/c++/Logger.cpp"; sourceTree = "<group>"; };
 		63233BAE0D7491470009EC65 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = "../../common/c++/Logger.h"; sourceTree = "<group>"; };
 		632E70520DD9FEF900A16D88 /* playCountForDatabaseId.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.scpt; name = playCountForDatabaseId.scpt; path = scripts/playCountForDatabaseId.scpt; sourceTree = "<group>"; };
@@ -74,7 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C7B8BC01416683000C2A26C /* Cocoa.framework in Frameworks */,
+				4CCE0E96162725220090F29C /* Cocoa.framework in Frameworks */,
 				DC26679F0BD9410900B4ED68 /* CoreFoundation.framework in Frameworks */,
 				FB4ED6F30D6B00CE00F243B8 /* IOKit.framework in Frameworks */,
 				FB0C1E670D9919CD004820B9 /* CoreServices.framework in Frameworks */,
@@ -98,7 +98,7 @@
 		089C166AFE841209C02AAC07 /* iTunesPlugIn */ = {
 			isa = PBXGroup;
 			children = (
-				4C7B8BBF1416683000C2A26C /* Cocoa.framework */,
+				4CCE0E95162725220090F29C /* Cocoa.framework */,
 				638053590D3E95AF0003DB13 /* Scripts */,
 				08FB77AFFE84173DC02AAC07 /* Source */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -308,7 +308,7 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = _iTunes.plist;
 				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lsqlite3";
 				OTHER_REZFLAGS = "";
@@ -346,7 +346,7 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = _iTunes.plist;
 				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lsqlite3";
 				OTHER_REZFLAGS = "";
@@ -380,7 +380,7 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = _iTunes.plist;
 				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lsqlite3";
 				OTHER_REZFLAGS = "";

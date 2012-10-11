@@ -20,7 +20,7 @@
 
 #include "Utils.h"
 
-#define AUDIOSCROBBLER_BUNDLEID "fm.last.Last.fm"
+#define AUDIOSCROBBLER_BUNDLEID "fm.last.Scrobbler"
 #include <ApplicationServices/ApplicationServices.h>
 
 //This macro clashes with Qt headers

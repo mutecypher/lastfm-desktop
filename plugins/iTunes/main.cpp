@@ -187,7 +187,7 @@ static void cleanup()
 static bool isClientInstalled()
 {
     struct stat st;
-    std::string path = Moose::applicationFolder() + "Last.fm";
+    std::string path = Moose::applicationPath();
     return stat( path.c_str(), &st ) == 0;
 }
 
