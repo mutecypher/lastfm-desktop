@@ -24,7 +24,7 @@
 
 #include <CoreFoundation/CoreFoundation.h>
 
-#include "lib/unicorn/dialogs/CloseAppsDialog.h"
+#include "Dialogs/CloseAppsDialog.h"
 
 #include "ITunesPluginInstaller.h"
 
@@ -74,7 +74,7 @@ ITunesPluginInstaller::install()
         {
             qDebug() << "Installing shipped iTunes plugin...";
 
-            unicorn::CloseAppsDialog* closeApps = new unicorn::CloseAppsDialog();
+            CloseAppsDialog* closeApps = new CloseAppsDialog();
 
             if ( closeApps->result() != QDialog::Accepted )
                 closeApps->exec();

@@ -52,6 +52,7 @@ SOURCES += \
     Services/RadioService/RadioService.cpp \
     Services/RadioService/RadioConnection.cpp \
     Dialogs/DiagnosticsDialog.cpp \
+    Dialogs/CloseAppsDialog.cpp \
     Bootstrapper/PluginBootstrapper.cpp \
     Bootstrapper/ITunesDevice/itunesdevice.cpp \
     Bootstrapper/iTunesBootstrapper.cpp \
@@ -120,6 +121,7 @@ HEADERS += \
     MediaDevices/IpodDevice.h \
     MediaDevices/DeviceScrobbler.h \
     Dialogs/DiagnosticsDialog.h \
+    Dialogs/CloseAppsDialog.h \
     Bootstrapper/PluginBootstrapper.h \
     Bootstrapper/ITunesDevice/MediaDeviceInterface.h \
     Bootstrapper/ITunesDevice/ITunesParser.h \
@@ -206,7 +208,8 @@ mac:HEADERS += CommandReciever/CommandReciever.h \
                 ../../lib/3rdparty/SPMediaKeyTap/SPMediaKeyTap.h \
                 ../../lib/3rdparty/SPMediaKeyTap/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.h
 
-mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
+mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp \
+                Dialogs/CloseAppsDialog_mac.mm
 
 mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
                             Widgets/NothingPlayingWidget_mac.mm \
@@ -217,6 +220,7 @@ mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
 FORMS += \
     Widgets/PlaybackControlsWidget.ui \
     Dialogs/DiagnosticsDialog.ui \
+    Dialogs/CloseAppsDialog.ui \
     Widgets/MetadataWidget.ui \
     Settings/PreferencesDialog.ui \
     Settings/GeneralSettingsWidget.ui \
