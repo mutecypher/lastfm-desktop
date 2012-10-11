@@ -20,7 +20,7 @@
 
 #include "lib/unicorn/QMessageBoxBuilder.h"
 
-#include "lib/unicorn/dialogs/CloseAppsDialog.h"
+#include "../Dialogs/CloseAppsDialog.h"
 
 #include "FirstRunWizard.h"
 #include "BootstrapPage.h"
@@ -64,7 +64,7 @@ BootstrapPage::validatePage()
         QList<IPluginInfo*> plugins;
         plugins << plugin;
 
-        unicorn::CloseAppsDialog* closeApps = new unicorn::CloseAppsDialog( plugins, this );
+        CloseAppsDialog* closeApps = new CloseAppsDialog( plugins, this );
 
         if ( closeApps->result() != QDialog::Accepted )
             closeApps->exec();

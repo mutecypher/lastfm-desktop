@@ -6,7 +6,7 @@
 #include "lib/unicorn/dialogs/ScrobbleConfirmationDialog.h"
 #include "lib/unicorn/UnicornApplication.h"
 #include "IpodDevice.h"
-#include "lib/unicorn/dialogs/CloseAppsDialog.h"
+#include "../Dialogs/CloseAppsDialog.h"
 
 #include "lib/unicorn/QMessageBoxBuilder.h"
 
@@ -32,7 +32,7 @@ void
 DeviceScrobbler::twiddle()
 {
 #ifndef Q_WS_X11
-    if ( unicorn::CloseAppsDialog::isITunesRunning() )
+    if ( CloseAppsDialog::isITunesRunning() )
     {
         if (m_twiddly)
         {
@@ -162,7 +162,6 @@ DeviceScrobbler::scrobbleIpodFiles( const QStringList& files )
                 // add the files so it can delete them when the user has decided what to do
                 m_confirmDialog->addFiles( files );
                 m_confirmDialog->show();
-                m_confirmDialog->raise();
             }
             else
             {

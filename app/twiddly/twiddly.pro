@@ -9,7 +9,7 @@ include( ../../admin/include.qmake )
 
 # TODO: FIX THIS: I think this means that we can only build bundles
 mac {
-    DESTDIR = "../../_bin/Last.fm.app/Contents/Helpers"
+    DESTDIR = "../../_bin/Last.fm Scrobbler.app/Contents/Helpers"
     QMAKE_POST_LINK += ../../admin/dist/mac/bundleFrameworks.sh \"$$DESTDIR/$$TARGET\"
 }
 

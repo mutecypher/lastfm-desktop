@@ -54,7 +54,7 @@ int main( int argc, char** argv )
 {
     //unicorn::CrashReporter* crashReporter = new unicorn::CrashReporter;
 
-    QtSingleCoreApplication::setApplicationName( "Last.fm" );
+    QtSingleCoreApplication::setApplicationName( "Last.fm Scrobbler" );
     QtSingleCoreApplication::setOrganizationName( "Last.fm" );
     QtSingleCoreApplication::setApplicationVersion( APP_VERSION );
 

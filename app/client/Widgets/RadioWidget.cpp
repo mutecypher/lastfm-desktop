@@ -173,7 +173,7 @@ RadioWidget::onGotRecentStations()
 {
     lastfm::XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
         foreach ( const lastfm::XmlQuery& station, lfm["recentstations"].children("station") )
         {

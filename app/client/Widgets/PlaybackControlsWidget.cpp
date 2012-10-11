@@ -203,7 +203,7 @@ void
 PlaybackControlsWidget::onBanFinished()
 {
     lastfm::XmlQuery lfm;
-    lfm.parse( static_cast<QNetworkReply*>(sender())->readAll() );
+    lfm.parse( static_cast<QNetworkReply*>(sender()) );
 
     if ( lfm.attribute( "status" ) != "ok" )
     {

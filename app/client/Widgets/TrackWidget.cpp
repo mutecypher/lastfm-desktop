@@ -323,7 +323,7 @@ TrackWidget::onRemovedScrobble()
 {
    lastfm::XmlQuery lfm;
 
-   if ( lfm.parse( static_cast<QNetworkReply*>( sender() )->readAll() ) )
+   if ( lfm.parse( static_cast<QNetworkReply*>( sender() ) ) )
    {
        qDebug() << lfm;
 
@@ -381,7 +381,7 @@ TrackWidget::onGotBuyLinks()
 
         XmlQuery lfm;
 
-        if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+        if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
         {
             bool thingsToBuy = false;
 

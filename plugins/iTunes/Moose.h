@@ -110,7 +110,7 @@ namespace Moose
     Moose::twiddlyPath()
     {
         FSRef appRef;
-        LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.Last.fm" ), NULL, &appRef, NULL );
+        LSFindApplicationForInfo( kLSUnknownCreator, CFSTR( "fm.last.Scrobbler" ), NULL, &appRef, NULL );
         
         char path[PATH_MAX];
         FSRefMakePath( &appRef, (unsigned char*)path, PATH_MAX );

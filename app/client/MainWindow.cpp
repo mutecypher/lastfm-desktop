@@ -37,7 +37,7 @@
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
 #include "MediaDevices/DeviceScrobbler.h"
-#include "lib/unicorn/dialogs/CloseAppsDialog.h"
+#include "Dialogs/CloseAppsDialog.h"
 #include "../Widgets/ProfileWidget.h"
 #include "../Widgets/FriendListWidget.h"
 #include "../Widgets/ScrobbleControls.h"
@@ -216,7 +216,7 @@ MainWindow::checkUpdatedPlugins()
              .setButtons( QMessageBox::Yes | QMessageBox::No )
              .exec() == QMessageBox::Yes )
         {
-            unicorn::CloseAppsDialog* closeApps = new unicorn::CloseAppsDialog( m_pluginList->updatedList(), this );
+            CloseAppsDialog* closeApps = new CloseAppsDialog( m_pluginList->updatedList(), this );
 
             if ( closeApps->result() != QDialog::Accepted )
                 closeApps->exec();

@@ -198,7 +198,7 @@ FriendListWidget::onGotFriends()
 {
     // add this set of users to the list
     lastfm::XmlQuery lfm;
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
 
         foreach( const lastfm::XmlQuery& user, lfm["friends"].children( "user" ) )
@@ -241,7 +241,7 @@ FriendListWidget::onGotFriendsListeningNow()
 {
     // update the users in the list
     lastfm::XmlQuery lfm;
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
         // reset all the friends to have the same order of max unsigned int
         for ( int i = 1 ; i < ui->friends->count() ; ++i )

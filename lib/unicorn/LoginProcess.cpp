@@ -148,7 +148,7 @@ LoginProcess::onGotToken()
 {
     lastfm::XmlQuery lfm;
 
-    if ( lfm.parse( static_cast<QNetworkReply*>( sender() )->readAll() ) )
+    if ( lfm.parse( static_cast<QNetworkReply*>( sender() ) ) )
     {
         getSession( lfm["token"].text() );
     }
@@ -181,7 +181,7 @@ LoginProcess::onGotSession()
 {
     lastfm::XmlQuery lfm;
 
-    if ( lfm.parse( static_cast<QNetworkReply*>( sender() )->readAll() ) )
+    if ( lfm.parse( static_cast<QNetworkReply*>( sender() ) ) )
     {
         QString username = lfm["session"]["name"].text();
         QString sessionKey = lfm["session"]["key"].text();

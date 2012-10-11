@@ -40,7 +40,7 @@ mac {
     HEADERS += mac/ITunesListener.h \
                     mac/SpotifyListener.h
 
-    LIBS += -framework AppKit
+    LIBS += -weak_framework AppKit
 }
 
 win32 {

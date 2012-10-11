@@ -11,7 +11,7 @@ DEFINES += API_SECRET=\\\"$(LASTFM_API_SECRET)\\\"
 # UniqueApplication
 win32:LIBS += user32.lib shell32.lib ole32.lib
 
-macx:LIBS += -framework Cocoa
+macx:LIBS += -weak_framework Cocoa
 
 SOURCES += \
     dialogs/ShareDialog.cpp \
@@ -62,7 +62,6 @@ SOURCES += \
     dialogs/LoginContinueDialog.cpp \
     dialogs/AboutDialog.cpp \
     dialogs/ScrobbleConfirmationDialog.cpp \
-    dialogs/CloseAppsDialog.cpp \
     AnimatedStatusBar.cpp \
     DesktopServices.cpp \
     Updater/Updater.cpp \
@@ -120,7 +119,6 @@ HEADERS += \
     dialogs/LoginContinueDialog.h \
     dialogs/AboutDialog.h \
     dialogs/ScrobbleConfirmationDialog.h \
-    dialogs/CloseAppsDialog.h \
     AnimatedStatusBar.h \
     AnimatedPushButton.h \
     dialogs/ShareDialog.h \
@@ -138,8 +136,7 @@ macx:SOURCES += mac/AppleScript.cpp
 macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
                           notify/Notify.mm \
                           Updater/Updater_mac.mm \
-                          UnicornApplicationDelegate.mm \
-                          dialogs/CloseAppsDialog_mac.mm \
+                          UnicornApplicationDelegate.mm
 
 macx:HEADERS += mac/AppleScript.h \
                 notify/Notify.h \
@@ -156,7 +153,6 @@ FORMS += \
 	dialogs/LoginDialog.ui \
     dialogs/TagDialog.ui \
     dialogs/AboutDialog.ui \
-    dialogs/CloseAppsDialog.ui \
     dialogs/ScrobbleConfirmationDialog.ui
 
 RESOURCES += \

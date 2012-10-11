@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = "Last.fm"
+TARGET = "Last.fm Scrobbler"
 VERSION = 2.1.24
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql
@@ -7,7 +7,7 @@ CONFIG += lastfm unicorn listener logger phonon fingerprint ffmpeg
 win32:LIBS += user32.lib kernel32.lib psapi.lib
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 
-macx:LIBS += -framework Cocoa
+macx:LIBS += -weak_framework Cocoa
 win32:release {
         LIBS += -lAdvAPI32
 }
@@ -52,6 +52,7 @@ SOURCES += \
     Services/RadioService/RadioService.cpp \
     Services/RadioService/RadioConnection.cpp \
     Dialogs/DiagnosticsDialog.cpp \
+    Dialogs/CloseAppsDialog.cpp \
     Bootstrapper/PluginBootstrapper.cpp \
     Bootstrapper/ITunesDevice/itunesdevice.cpp \
     Bootstrapper/iTunesBootstrapper.cpp \
@@ -120,6 +121,7 @@ HEADERS += \
     MediaDevices/IpodDevice.h \
     MediaDevices/DeviceScrobbler.h \
     Dialogs/DiagnosticsDialog.h \
+    Dialogs/CloseAppsDialog.h \
     Bootstrapper/PluginBootstrapper.h \
     Bootstrapper/ITunesDevice/MediaDeviceInterface.h \
     Bootstrapper/ITunesDevice/ITunesParser.h \
@@ -212,11 +214,13 @@ mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
                             Widgets/NothingPlayingWidget_mac.mm \
                             MediaKeys/MediaKey.mm \
                             ../../lib/3rdparty/SPMediaKeyTap/SPMediaKeyTap.m \
-                            ../../lib/3rdparty/SPMediaKeyTap/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.m
+                            ../../lib/3rdparty/SPMediaKeyTap/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.m \
+                            Dialogs/CloseAppsDialog_mac.mm
 
 FORMS += \
     Widgets/PlaybackControlsWidget.ui \
     Dialogs/DiagnosticsDialog.ui \
+    Dialogs/CloseAppsDialog.ui \
     Widgets/MetadataWidget.ui \
     Settings/PreferencesDialog.ui \
     Settings/GeneralSettingsWidget.ui \

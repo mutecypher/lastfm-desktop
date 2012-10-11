@@ -242,4 +242,4 @@ echo Plugins = ../plugins >> "$qtconf"
 
 
 echo ======= signing bundle ===========
-codesign -f -s "Developer ID Application: Last.fm" -i fm.last.Last.fm "$bundlePath"
+codesign -f -s "Developer ID Application: Last.fm" -i fm.last.Scrobbler "$bundlePath"

@@ -149,7 +149,7 @@ ShareDialog::onShared()
 {
     XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
         if ( lfm.attribute( "status" ) == "ok" )
             close();

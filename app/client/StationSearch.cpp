@@ -43,7 +43,7 @@ StationSearch::onFinished()
 {
     lastfm::XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
         lastfm::XmlQuery station = lfm["stations"]["station"];
         RadioStation rs( QUrl::fromPercentEncoding( station["url"].text().toUtf8() ) );
@@ -78,7 +78,7 @@ StationSearch::onUserGotFriends()
 
     lastfm::XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>( sender() )->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>( sender() ) ) )
     {
         foreach (lastfm::XmlQuery e, lfm["friends"].children("user"))
         {

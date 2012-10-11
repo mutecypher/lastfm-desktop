@@ -6,9 +6,6 @@
 namespace Ui { class CloseAppsDialog; }
 class IPluginInfo;
 
-namespace unicorn
-{
-
 class CloseAppsDialog : public QDialog
 {
     Q_OBJECT
@@ -38,7 +35,5 @@ private:
     Ui::CloseAppsDialog *ui;
     QList<IPluginInfo*> m_plugins;
 };
-
-}
 
 #endif // CLOSEAPPSDIALOG_H

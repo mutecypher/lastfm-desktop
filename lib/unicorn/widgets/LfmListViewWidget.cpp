@@ -100,8 +100,11 @@ void LfmDelegate::setDefaultImage( QPixmap defaultImage )
 void
 LfmItem::onImageLoaded()
 {
+    QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
+    reply->deleteLater();
+
     QPixmap px;
-    px.loadFromData(static_cast<QNetworkReply*>(sender())->readAll());
+    px.loadFromData( reply->readAll() );
     m_icon = QIcon( px );
     emit updated();
 }

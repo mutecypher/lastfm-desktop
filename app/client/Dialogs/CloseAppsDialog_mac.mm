@@ -14,7 +14,7 @@ QString qt_mac_NSStringToQString(const NSString *nsstr)
 }
 
 QStringList
-unicorn::CloseAppsDialog::runningApps()
+CloseAppsDialog::runningApps()
 {
     // we only ever test for iTunes on Mac
 

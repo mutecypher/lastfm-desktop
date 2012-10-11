@@ -540,7 +540,7 @@ RadioService::initRadio()
         return false;
     } 
 
-    mediaObject->setTickInterval( 100 );
+    mediaObject->setTickInterval( 500 );
     connect( mediaObject, SIGNAL(stateChanged( Phonon::State, Phonon::State )), SLOT(onPhononStateChanged( Phonon::State, Phonon::State )) );
     connect( mediaObject, SIGNAL(bufferStatus(int)), SLOT(onBuffering(int)));
     connect( mediaObject, SIGNAL(currentSourceChanged( Phonon::MediaSource )), SLOT(onPhononCurrentSourceChanged( Phonon::MediaSource )) );

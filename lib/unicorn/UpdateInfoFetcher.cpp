@@ -82,7 +82,7 @@ UpdateInfoFetcher::UpdateInfoFetcher( QNetworkReply* reply, QObject* parent )
                   :QObject( parent )
 {
     XmlQuery xq;
-    xq.parse( reply->readAll() );
+    xq.parse( reply );
 
     QList<XmlQuery> plugins = xq.children( "Plugin" );
     foreach( const XmlQuery& plugin, plugins ) {

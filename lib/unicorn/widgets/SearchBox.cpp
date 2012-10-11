@@ -85,7 +85,7 @@ SearchBox::onSearchFinished()
 
     XmlQuery lfm;
 
-    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender())->readAll() ) )
+    if ( lfm.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
 
         searchTerm = ((QDomElement)lfm["results"]).attribute("for");
