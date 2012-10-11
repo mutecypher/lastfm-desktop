@@ -7,7 +7,7 @@ CONFIG += lastfm unicorn listener logger phonon fingerprint ffmpeg
 win32:LIBS += user32.lib kernel32.lib psapi.lib
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
 
-macx:LIBS += -framework Cocoa
+macx:LIBS += -weak_framework Cocoa
 win32:release {
         LIBS += -lAdvAPI32
 }

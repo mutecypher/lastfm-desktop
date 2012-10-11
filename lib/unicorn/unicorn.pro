@@ -11,7 +11,7 @@ DEFINES += API_SECRET=\\\"$(LASTFM_API_SECRET)\\\"
 # UniqueApplication
 win32:LIBS += user32.lib shell32.lib ole32.lib
 
-macx:LIBS += -framework Cocoa
+macx:LIBS += -weak_framework Cocoa
 
 SOURCES += \
     dialogs/ShareDialog.cpp \
