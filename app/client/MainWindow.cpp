@@ -29,6 +29,7 @@
 #include <QToolBar>
 #include <QDockWidget>
 #include <QScrollArea>
+#include <QNetworkReply>
 
 #include "MainWindow.h"
 
@@ -153,6 +154,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn()));
     connect( &RadioService::instance(), SIGNAL(error(int,QVariant)), SLOT(onRadioError(int,QVariant)));
+    connect( &RadioService::instance(), SIGNAL(message(const QString&)), SLOT(onRadioMessage(const QString&)));
 
     connect( &ScrobbleService::instance(), SIGNAL(foundIPodScrobbles(QList<lastfm::Track>)), SLOT(onFoundScrobbles(QList<lastfm::Track>)));
 
@@ -330,6 +332,27 @@ MainWindow::onSpace()
 }
 
 void
+MainWindow::onConfigRetrieved()
+{
+    XmlQuery xq;
+    if(xq.parse(qobject_cast<QNetworkReply*>(sender())->readAll()))
+    {
+        // -- grab the song count and set it for playback.
+        int songCount = xq["songcount"].text().toInt();
+        if(songCount > 0)
+        {
+            RadioService::instance().setMaxUsageCount(songCount);
+        }
+
+        // -- grab the message and display it on load
+        lastfm::XmlQuery message = xq["message"];
+        onRadioMessage(message["text"].text());
+    }
+
+    sender()->deleteLater();
+}
+
+void
 MainWindow::onVisitProfile()
 {
     unicorn::DesktopServices::openUrl( aApp->currentSession()->userInfo().www() );
@@ -454,6 +477,12 @@ void
 MainWindow::onRadioError( int error, const QVariant& data )
 {
     ui.messageBar->show( tr( "%1: %2" ).arg( data.toString(), QString::number( error ) ), "radio" );
+}
+
+void
+MainWindow::onRadioMessage(const QString &message)
+{
+    ui.messageBar->show(message, "radio");
 }
 
 void
