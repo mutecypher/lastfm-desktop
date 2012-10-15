@@ -36,6 +36,7 @@
 #include "Application.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
+#include "Services/AnalyticsService.h"
 #include "MediaDevices/DeviceScrobbler.h"
 #include "Dialogs/CloseAppsDialog.h"
 #include "../Widgets/ProfileWidget.h"
@@ -73,6 +74,8 @@
 #include "MediaKeys/MediaKey.h"
 void qt_mac_set_dock_menu(QMenu *menu);
 #endif
+
+const QString CONFIG_URL = "http://static.last.fm/client/config.xml";
 
 MainWindow::MainWindow( QMenuBar* menuBar )
     :unicorn::MainWindow( menuBar )
@@ -195,6 +198,8 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     {
         ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *aApp->tray()->contextMenu(), aApp->tray()->contextMenu()->actions()[3] );
     }
+
+    connect( lastfm::nam()->get( QNetworkRequest( CONFIG_URL ) ), SIGNAL(finished()), SLOT(onConfigRetrieved()) );
 }
 
 QString
@@ -328,6 +333,7 @@ void
 MainWindow::onVisitProfile()
 {
     unicorn::DesktopServices::openUrl( aApp->currentSession()->userInfo().www() );
+    AnalyticsService::instance().SendEvent(PROFILE_CATEGORY, LINK_CLICKED, "ProfileURLClicked");
 }
 
 void
@@ -364,6 +370,8 @@ MainWindow::onPrefsTriggered()
     m_preferences->show();
     m_preferences->activateWindow();
     m_preferences->adjustSize();
+
+    AnalyticsService::instance().SendEvent(SETTINGS_CATEGORY, BASIC_SETTINGS, "SettingsOpened");
 }
 
 void

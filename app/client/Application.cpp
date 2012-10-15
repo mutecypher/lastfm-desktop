@@ -57,6 +57,7 @@
 #include "MediaDevices/DeviceScrobbler.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
+#include "Services/AnalyticsService.h"
 #include "Widgets/PointyArrow.h"
 #include "Widgets/ScrobbleControls.h"
 #include "Widgets/MetadataWidget.h"
@@ -533,6 +534,15 @@ Application::onScrobbleToggled( bool scrobblingOn )
     unicorn::UserSettings().setValue( "scrobblingOn", scrobblingOn );
     m_submit_scrobbles_toggle->setChecked( scrobblingOn );
     emit scrobbleToggled( scrobblingOn );
+
+    if(scrobblingOn)
+    {
+        AnalyticsService::instance().SendEvent(SETTINGS_CATEGORY, SCROBBLING_SETTINGS, "ScrobbleTurnedOn");
+    }
+    else
+    {
+        AnalyticsService::instance().SendEvent(SETTINGS_CATEGORY, SCROBBLING_SETTINGS, "ScrobbleTurnedOff");
+    }
 }
 
 void

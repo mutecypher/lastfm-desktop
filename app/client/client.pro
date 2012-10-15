@@ -102,8 +102,9 @@ SOURCES += \
     Dialogs/LicensesDialog.cpp \
     Widgets/ScrobblesWidget.cpp \
     Widgets/ScrobblesListWidget.cpp \
-    Fingerprinter/Fingerprinter.cpp\
-    Fingerprinter/LAV_Source.cpp
+    Fingerprinter/Fingerprinter.cpp \
+    Fingerprinter/LAV_Source.cpp \
+    Services/AnalyticsService/AnalyticsService.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -182,6 +183,8 @@ HEADERS += \
     Widgets/ScrobblesWidget.h \
     Fingerprinter/Fingerprinter.h \
     Fingerprinter/LAV_Source.h
+    Services/AnalyticsService.h \
+    Services/AnalyticsService/AnalyticsService.h
 
 win32:HEADERS += Plugins/FooBar08PluginInfo.h \
                     Plugins/FooBar09PluginInfo.h \
