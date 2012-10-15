@@ -1,7 +1,0 @@
-c:\users\frantz\documents\visual studio 2010\Projects\AnalyticsService\AnalyticsService\bin\AnalyticsService.dll
-c:\users\frantz\documents\visual studio 2010\Projects\AnalyticsService\AnalyticsService\bin\AnalyticsService.pdb
-c:\users\frantz\documents\visual studio 2010\Projects\AnalyticsService\AnalyticsService\bin\GaDotNet.Common.dll
-c:\users\frantz\documents\visual studio 2010\Projects\AnalyticsService\AnalyticsService\bin\GaDotNet.Common.pdb
-c:\users\frantz\documents\visual studio 2010\Projects\AnalyticsService\AnalyticsService\obj\Debug\ResolveAssemblyReference.cache
-c:\users\frantz\documents\visual studio 2010\Projects\AnalyticsService\AnalyticsService\obj\Debug\AnalyticsService.dll
-c:\users\frantz\documents\visual studio 2010\Projects\AnalyticsService\AnalyticsService\obj\Debug\AnalyticsService.pdb
