@@ -52,7 +52,14 @@ class AnalyticsService : public QObject
 
 public:
     AnalyticsService();
+    ~AnalyticsService();
+
     static AnalyticsService& instance(){ static AnalyticsService a; return a; }
 
-    void SendEvent(QString category, QString action, QString label);
+public slots:
+    void sendEvent( const QString& category, const QString& action, const QString& label, const QString& value = "" );
+    void sendPageView( const QString& url );
+
+private:
+    class QWebView* m_webView;
 };

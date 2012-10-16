@@ -96,6 +96,6 @@ void
 TagWidget::onClicked()
 {
     unicorn::DesktopServices::openUrl( m_url );
-    AnalyticsService::instance().SendEvent(TAG_CATEGORY, TAG_CLICKED, "TagButtonPressed");
+    AnalyticsService::instance().sendEvent(TAG_CATEGORY, TAG_CLICKED, "TagButtonPressed");
 
 }

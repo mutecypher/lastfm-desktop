@@ -186,7 +186,7 @@ void
 BioWidget::onAnchorClicked( const QUrl& link )
 {
     unicorn::DesktopServices::openUrl( link );
-    AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, LINK_CLICKED, "BioPageLinkClicked");
+    AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, LINK_CLICKED, "BioPageLinkClicked");
 }
 
 

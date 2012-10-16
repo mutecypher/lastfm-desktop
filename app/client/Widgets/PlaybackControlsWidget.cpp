@@ -156,12 +156,12 @@ PlaybackControlsWidget::onPlayClicked( bool checked )
         {
             RadioService::instance().resume();
         }
-        AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, PLAY_CLICKED, "PlayButtonPressed");
+        AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, PLAY_CLICKED, "PlayButtonPressed");
     }
     else
     {
         RadioService::instance().pause();
-        AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, PLAY_CLICKED, "PauseButtonPressed");
+        AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, PLAY_CLICKED, "PauseButtonPressed");
     }
 }
 
@@ -169,7 +169,7 @@ void
 PlaybackControlsWidget::onSkipClicked()
 {
     RadioService::instance().skip();
-    AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, SKIP_CLICKED, "SkipClicked");
+    AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, SKIP_CLICKED, "SkipClicked");
 }
 
 
@@ -181,12 +181,12 @@ PlaybackControlsWidget::onLoveClicked( bool loved )
     if ( loved )
     {
         track.love();
-        AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, LOVE_TRACK, "TrackLoved");
+        AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, LOVE_TRACK, "TrackLoved");
     }
     else
     {
         track.unlove();
-        AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, LOVE_TRACK, "TrackUnLoved");
+        AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, LOVE_TRACK, "TrackUnLoved");
     }
 
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool)));
@@ -207,7 +207,7 @@ PlaybackControlsWidget::onBanClicked()
     QNetworkReply* banReply = MutableTrack( RadioService::instance().currentTrack() ).ban();
     connect(banReply, SIGNAL(finished()), SLOT(onBanFinished()));
 
-    AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, BAN_TRACK, "BanTrackPressed");
+    AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, BAN_TRACK, "BanTrackPressed");
 }
 
 

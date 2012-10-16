@@ -488,7 +488,7 @@ void
 MetadataWidget::onBuyActionTriggered( QAction* buyAction )
 {
     unicorn::DesktopServices::openUrl( buyAction->data().toString() );
-    AnalyticsService::instance().SendEvent(NOW_PLAYING_CATEGORY, LINK_CLICKED, "BuyLinkClicked" );
+    AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, LINK_CLICKED, "BuyLinkClicked" );
 }
 
 void

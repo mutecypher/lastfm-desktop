@@ -54,7 +54,6 @@ SideBar::SideBar(QWidget *parent)
 
     layout->addWidget( ui.nowPlaying = newButton( tr( "Now Playing" ), this ), Qt::AlignHCenter );
     ui.nowPlaying->setObjectName( "nowPlaying" );
-    ui.nowPlaying->setChecked( true ); // the nowPlaying tab is always seleted at startUp
     layout->addWidget( ui.scrobbles = newButton( tr( "Scrobbles" ), this ), Qt::AlignHCenter);
     ui.scrobbles->setObjectName( "scrobbles" ); 
     layout->addWidget( ui.profile = newButton( tr( "Profile" ), this ), Qt::AlignHCenter);
@@ -75,6 +74,8 @@ SideBar::SideBar(QWidget *parent)
     connect( ui.radio, SIGNAL(clicked()), SLOT(onButtonClicked()));
 
     connect( ui.sash, SIGNAL(clicked()), aApp, SLOT(onBetaTriggered()));
+
+    ui.nowPlaying->click();
 }
 
 void
@@ -123,24 +124,25 @@ void
 SideBar::onButtonClicked()
 {
     int index = layout()->indexOf( qobject_cast<QWidget*>( sender() ) );
-    switch(index)
+
+    switch ( index )
     {
     case 0:
-        AnalyticsService::instance().SendEvent(SIDE_BAR_CATEGORY, SIDE_BAR_CLICKED, "NowPlayingClicked");
+        AnalyticsService::instance().sendPageView( "NowPlaying" );
         break;
     case 1:
-        AnalyticsService::instance().SendEvent(SIDE_BAR_CATEGORY, SIDE_BAR_CLICKED, "ScrobblesClicked");
+        AnalyticsService::instance().sendPageView( "Scrobbles" );
         break;
     case 2:
-        AnalyticsService::instance().SendEvent(SIDE_BAR_CATEGORY, SIDE_BAR_CLICKED, "ProfileClicked");
+        AnalyticsService::instance().sendPageView( "Profile" );
         break;
     case 3:
-        AnalyticsService::instance().SendEvent(SIDE_BAR_CATEGORY, SIDE_BAR_CLICKED, "FriendsClicked");
+        AnalyticsService::instance().sendPageView( "Friends" );
         break;
     case 4:
-        AnalyticsService::instance().SendEvent(SIDE_BAR_CATEGORY, SIDE_BAR_CLICKED, "RadioClicked");
+        AnalyticsService::instance().sendPageView( "Radio" );
         break;
     }
 
-    emit currentChanged( index);
+    emit currentChanged( index );
 }

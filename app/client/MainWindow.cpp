@@ -356,7 +356,7 @@ void
 MainWindow::onVisitProfile()
 {
     unicorn::DesktopServices::openUrl( aApp->currentSession()->userInfo().www() );
-    AnalyticsService::instance().SendEvent(PROFILE_CATEGORY, LINK_CLICKED, "ProfileURLClicked");
+    AnalyticsService::instance().sendEvent(PROFILE_CATEGORY, LINK_CLICKED, "ProfileURLClicked");
 }
 
 void
@@ -394,7 +394,7 @@ MainWindow::onPrefsTriggered()
     m_preferences->activateWindow();
     m_preferences->adjustSize();
 
-    AnalyticsService::instance().SendEvent(SETTINGS_CATEGORY, BASIC_SETTINGS, "SettingsOpened");
+    AnalyticsService::instance().sendEvent(SETTINGS_CATEGORY, BASIC_SETTINGS, "SettingsOpened");
 }
 
 void

@@ -18,40 +18,47 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QString>
-#include <QWebView>
 #include <QNetworkCookieJar>
-
-#include <lastfm/ws.h>
 
 #include "lib/unicorn/UnicornSettings.h"
 
 #include "PersistentCookieJar.h"
-#include "AnalyticsService.h"
 
 
-AnalyticsService::AnalyticsService()
+PersistentCookieJar::PersistentCookieJar(QObject *parent)
+    :QNetworkCookieJar(parent)
 {
-    m_webView = new QWebView();
-    PersistentCookieJar* jar = new PersistentCookieJar( this );
-    m_webView->page()->networkAccessManager()->setCookieJar( jar );
-    connect( m_webView, SIGNAL(loadFinished(bool)), jar, SLOT(save()) );
+    load();
 }
 
-AnalyticsService::~AnalyticsService()
+PersistentCookieJar::~PersistentCookieJar()
 {
-    m_webView->close();
+    save();
 }
 
 void
-AnalyticsService::sendEvent( const QString& category, const QString& action, const QString& label, const QString& value )
+PersistentCookieJar::save()
 {
-    m_webView->load( QString( "http://users.last.fm/~michael/ga.html#event?category=%1&action=%2&label=%3&value=%4" ).arg( category, action, label, value ) );
+    QList<QNetworkCookie> list = allCookies();
+    QByteArray data;
+
+    foreach (QNetworkCookie cookie, list)
+    {
+        if (!cookie.isSessionCookie())
+        {
+            data.append(cookie.toRawForm());
+            data.append("\n");
+        }
+    }
+
+    unicorn::AppSettings settings;
+    settings.setValue("Cookies",data);
 }
 
 void
-AnalyticsService::sendPageView( const QString& url )
+PersistentCookieJar::load()
 {
-    m_webView->load( QString( "http://users.last.fm/~michael/ga.html#pageview?url=%1" ).arg( url ) );
+    unicorn::AppSettings settings;
+    QByteArray data = settings.value("Cookies").toByteArray();
+    setAllCookies(QNetworkCookie::parseCookies(data));
 }
-

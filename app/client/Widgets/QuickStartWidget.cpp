@@ -258,7 +258,7 @@ QuickStartWidget::play()
         }
     }
 
-    AnalyticsService::instance().SendEvent(START_CATEGORY, PLAY_CLICKED, "PlayButtonPressed");
+    AnalyticsService::instance().sendEvent(START_CATEGORY, PLAY_CLICKED, "PlayButtonPressed");
 
 }
 

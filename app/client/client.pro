@@ -2,7 +2,7 @@ TEMPLATE = app
 TARGET = "Last.fm Scrobbler"
 VERSION = 2.1.24
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
-QT = core gui xml network sql
+QT = core gui xml network sql webkit
 CONFIG += lastfm unicorn listener logger phonon fingerprint ffmpeg
 win32:LIBS += user32.lib kernel32.lib psapi.lib
 DEFINES += LASTFM_COLLAPSE_NAMESPACE
@@ -104,7 +104,8 @@ SOURCES += \
     Widgets/ScrobblesListWidget.cpp \
     Fingerprinter/Fingerprinter.cpp \
     Fingerprinter/LAV_Source.cpp \
-    Services/AnalyticsService/AnalyticsService.cpp
+    Services/AnalyticsService/AnalyticsService.cpp \
+    Services/AnalyticsService/PersistentCookieJar.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -182,9 +183,10 @@ HEADERS += \
     Widgets/ScrobblesListWidget.h \
     Widgets/ScrobblesWidget.h \
     Fingerprinter/Fingerprinter.h \
-    Fingerprinter/LAV_Source.h
+    Fingerprinter/LAV_Source.h \
     Services/AnalyticsService.h \
-    Services/AnalyticsService/AnalyticsService.h
+    Services/AnalyticsService/AnalyticsService.h \
+    Services/AnalyticsService/PersistentCookieJar.h
 
 win32:HEADERS += Plugins/FooBar08PluginInfo.h \
                     Plugins/FooBar09PluginInfo.h \

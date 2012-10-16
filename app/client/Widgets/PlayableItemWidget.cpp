@@ -127,7 +127,7 @@ PlayableItemWidget::play()
     if(RadioService::instance().isRadioUsageAllowed())
     {
         RadioService::instance().play( m_rs );
-        AnalyticsService::instance().SendEvent(RADIO_CATEGORY, PLAY_CLICKED, "PlayClicked");
+        AnalyticsService::instance().sendEvent(RADIO_CATEGORY, PLAY_CLICKED, "PlayClicked");
     }
 }
 
@@ -137,7 +137,7 @@ PlayableItemWidget::playNext()
     if(RadioService::instance().isRadioUsageAllowed())
     {
         RadioService::instance().playNext( m_rs );
-        AnalyticsService::instance().SendEvent(RADIO_CATEGORY, PLAY_CLICKED, "PlayNextClicked");
+        AnalyticsService::instance().sendEvent(RADIO_CATEGORY, PLAY_CLICKED, "PlayNextClicked");
     }
 }
 
@@ -166,7 +166,7 @@ PlayableItemWidget::playMulti()
         if ( m_rs.url().startsWith("lastfm://user/") )
         {
             RadioService::instance().play( getMultiStation() );
-            AnalyticsService::instance().SendEvent(RADIO_CATEGORY, PLAY_CLICKED, "PlayMultiClicked");
+            AnalyticsService::instance().sendEvent(RADIO_CATEGORY, PLAY_CLICKED, "PlayMultiClicked");
         }
     }
 }
@@ -179,7 +179,7 @@ PlayableItemWidget::playMultiNext()
         if ( m_rs.url().startsWith("lastfm://user/") )
         {
             RadioService::instance().playNext( getMultiStation() );
-            AnalyticsService::instance().SendEvent(RADIO_CATEGORY, PLAY_CLICKED, "PlayMultiNextClicked");
+            AnalyticsService::instance().sendEvent(RADIO_CATEGORY, PLAY_CLICKED, "PlayMultiNextClicked");
         }
     }
 }
