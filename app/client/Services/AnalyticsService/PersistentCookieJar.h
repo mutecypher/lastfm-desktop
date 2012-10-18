@@ -28,6 +28,8 @@ public:
     PersistentCookieJar(QObject *parent);
     ~PersistentCookieJar();
 
+    void clearSessionCookies();
+
     void load();
 
 public slots:

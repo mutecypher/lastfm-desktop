@@ -20,6 +20,9 @@
 #pragma once
 
 #include <QObject>
+#include <QQueue>
+
+#include <lastfm/User.h>
 
 // -- Categories and their associated actions
 #define START_CATEGORY "Start"
@@ -52,14 +55,18 @@ class AnalyticsService : public QObject
 
 public:
     AnalyticsService();
-    ~AnalyticsService();
 
     static AnalyticsService& instance(){ static AnalyticsService a; return a; }
 
-public slots:
+public:
     void sendEvent( const QString& category, const QString& action, const QString& label, const QString& value = "" );
     void sendPageView( const QString& url );
 
+private slots:
+    void onGotUserInfo( const lastfm::User& user );
+
 private:
     class QWebView* m_webView;
+    class PersistentCookieJar* m_cookieJar;
+    lastfm::User m_currentUser;
 };

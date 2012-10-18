@@ -37,6 +37,18 @@ PersistentCookieJar::~PersistentCookieJar()
 }
 
 void
+PersistentCookieJar::clearSessionCookies()
+{
+    QList<QNetworkCookie> cookies = allCookies();
+
+    for ( int i = cookies.count() - 1 ; i >= 0 ; --i )
+        if ( cookies[i].isSessionCookie() || cookies[i].expirationDate() < QDateTime::currentDateTime() )
+            cookies.removeAt( i );
+
+    setAllCookies( cookies );
+}
+
+void
 PersistentCookieJar::save()
 {
     QList<QNetworkCookie> list = allCookies();
@@ -44,6 +56,7 @@ PersistentCookieJar::save()
 
     foreach (QNetworkCookie cookie, list)
     {
+        // don't save session cookies
         if (!cookie.isSessionCookie())
         {
             data.append(cookie.toRawForm());

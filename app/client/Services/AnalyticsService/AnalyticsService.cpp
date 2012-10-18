@@ -21,26 +21,26 @@
 #include <QString>
 #include <QWebView>
 #include <QNetworkCookieJar>
+#include <QCoreApplication>
 
 #include <lastfm/ws.h>
 
 #include "lib/unicorn/UnicornSettings.h"
 
+#include "../Application.h"
 #include "PersistentCookieJar.h"
 #include "AnalyticsService.h"
 
 
 AnalyticsService::AnalyticsService()
+    :m_currentUser( "" )
 {
     m_webView = new QWebView();
-    PersistentCookieJar* jar = new PersistentCookieJar( this );
-    m_webView->page()->networkAccessManager()->setCookieJar( jar );
-    connect( m_webView, SIGNAL(loadFinished(bool)), jar, SLOT(save()) );
-}
+    m_cookieJar = new PersistentCookieJar( this );
+    m_webView->page()->networkAccessManager()->setCookieJar( m_cookieJar );
 
-AnalyticsService::~AnalyticsService()
-{
-    m_webView->close();
+    connect( m_webView, SIGNAL(loadFinished(bool)), m_cookieJar, SLOT(save()) );
+    connect( aApp, SIGNAL(gotUserInfo(lastfm::User)), SLOT(onGotUserInfo(lastfm::User)) );
 }
 
 void
@@ -53,5 +53,28 @@ void
 AnalyticsService::sendPageView( const QString& url )
 {
     m_webView->load( QString( "http://users.last.fm/~michael/ga.html#pageview?url=%1" ).arg( url ) );
+}
+
+QString userTypeToString( lastfm::User::Type type )
+{
+    if ( type == lastfm::User::TypeUser ) return "user";
+    else if ( type == lastfm::User::TypeSubscriber ) return "subscriber";
+    else if ( type == lastfm::User::TypeModerator ) return "moderator";
+    else if ( type == lastfm::User::TypeStaff ) return "staff";
+    else if ( type == lastfm::User::TypeAlumni ) return "alumni";
+    return "unknown";
+}
+
+void
+AnalyticsService::onGotUserInfo( const lastfm::User& user )
+{
+    if ( !m_currentUser.name().isEmpty() )
+        m_cookieJar->clearSessionCookies();
+
+    m_currentUser = user;
+
+    // set all the session level custom vars
+    m_webView->load( QString( "http://users.last.fm/~michael/ga.html#version?version=%1" ).arg( QCoreApplication::applicationVersion() ) );
+    m_webView->load( QString( "http://users.last.fm/~michael/ga.html#usertype?usertype=%1" ).arg( userTypeToString( user.type() ) ) );
 }
 
