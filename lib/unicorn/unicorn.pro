@@ -138,7 +138,6 @@ macx:SOURCES += mac/AppleScript.cpp
 
 macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
                           notify/Notify.mm \
-                          Updater/Updater_mac.mm \
                           UnicornApplicationDelegate.mm
 
 macx:HEADERS += mac/AppleScript.h \

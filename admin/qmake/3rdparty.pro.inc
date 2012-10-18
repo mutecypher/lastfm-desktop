@@ -83,7 +83,7 @@ CONFIG( sparkle ) {
         PKGCONFIG += sparkle
     }
     else:mac{
-        LIBS += -framework Sparkle
+        LIBS += /usr/local/lib/libqtsparkle.a
     }
 }
 
