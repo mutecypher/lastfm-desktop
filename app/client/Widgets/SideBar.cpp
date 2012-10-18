@@ -133,7 +133,8 @@ SideBar::onButtonClicked( QAbstractButton* button )
     if ( button != m_lastButton )
     {
         if ( button == ui.nowPlaying ) AnalyticsService::instance().sendPageView( "NowPlaying" );
-        else if ( button == ui.scrobbles ) AnalyticsService::instance().sendPageView( "Scrobbles" );
+        // the scrobble tab is a bit more complicataed so it sends its own for now
+        //else if ( button == ui.scrobbles ) AnalyticsService::instance().sendPageView( "Scrobbles" );
         else if ( button == ui.profile ) AnalyticsService::instance().sendPageView( "Profile" );
         else if ( button == ui.friends ) AnalyticsService::instance().sendPageView( "Friends" );
         else if ( button == ui.radio ) AnalyticsService::instance().sendPageView( "Radio" );

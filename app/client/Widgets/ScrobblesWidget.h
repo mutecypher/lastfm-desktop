@@ -27,6 +27,7 @@ protected slots:
 
 protected:
     Ui::ScrobblesWidget* ui;
+    int m_lastIndex;
 };
 
 #endif //RECENT_TRACKS_WIDGET_H_

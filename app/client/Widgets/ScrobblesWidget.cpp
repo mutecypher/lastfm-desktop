@@ -7,16 +7,15 @@
 
 #include "lib/unicorn/layouts/SideBySideLayout.h"
 
+#include "Services/AnalyticsService/AnalyticsService.h"
 #include "ScrobblesListWidget.h"
 #include "TrackWidget.h"
 #include "MetadataWidget.h"
-
 #include "ScrobblesWidget.h"
-
 #include "ui_ScrobblesWidget.h"
 
 ScrobblesWidget::ScrobblesWidget( QWidget* parent )
-    :QWidget( parent ), ui( new Ui::ScrobblesWidget )
+    :QWidget( parent ), ui( new Ui::ScrobblesWidget ), m_lastIndex( 0 )
 {
     ui->setupUi( this );
 
@@ -31,7 +30,6 @@ ScrobblesWidget::~ScrobblesWidget()
     delete ui;
 }
 
-
 void
 ScrobblesWidget::refresh()
 {
@@ -41,8 +39,14 @@ ScrobblesWidget::refresh()
 void
 ScrobblesWidget::onCurrentChanged( int index )
 {
-    if ( index == 1 )
-        ui->scrobbles->refresh(); // this tab was clicked on
+    if ( index == 1 && (m_lastIndex != index || ui->layout->currentWidget() != ui->stackedWidget ) )
+    {
+        // We've switch to this tab OR are moving back from Scrobble to ScrobbleList
+        ui->scrobbles->refresh();
+        AnalyticsService::instance().sendPageView( "Scrobbles" );
+    }
+
+    m_lastIndex = index;
 
     ui->layout->moveToWidget( ui->stackedWidget );
 }
@@ -66,12 +70,14 @@ void
 ScrobblesWidget::onMetadataWidgetFinished()
 {
     ui->layout->moveForward();
+    AnalyticsService::instance().sendPageView( "Scrobbles/Scrobble" );
 }
 
 void
 ScrobblesWidget::onBackClicked()
 {
     ui->layout->moveToWidget( ui->stackedWidget );
+    AnalyticsService::instance().sendPageView( "Scrobbles" );
 }
 
 void
