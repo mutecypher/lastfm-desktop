@@ -1,18 +1,19 @@
-#include "DeviceScrobbler.h"
-#include <QDebug>
-#include <QDirIterator>
-
-#include "../Application.h"
-#include "lib/unicorn/dialogs/ScrobbleConfirmationDialog.h"
-#include "lib/unicorn/UnicornApplication.h"
-#include "IpodDevice.h"
-#include "../Dialogs/CloseAppsDialog.h"
-
-#include "lib/unicorn/QMessageBoxBuilder.h"
 
 #ifdef Q_WS_X11
 #include <QFileDialog>
 #endif
+#include <QDebug>
+#include <QDirIterator>
+#include <QTimer>
+
+#include "lib/unicorn/dialogs/ScrobbleConfirmationDialog.h"
+#include "lib/unicorn/UnicornApplication.h"
+#include "lib/unicorn/QMessageBoxBuilder.h"
+
+#include "../Application.h"
+#include "../Dialogs/CloseAppsDialog.h"
+#include "IpodDevice.h"
+#include "DeviceScrobbler.h"
 
 // check for iTunes playcount difference once a minute
 #define BACKGROUND_CHECK_INTERVAL 60000

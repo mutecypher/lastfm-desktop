@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QHeaderView>
 #include <QScrollBar>
+#include <QTimer>
 
 #include <lastfm/Track.h>
 #include <lastfm/UrlBuilder.h>

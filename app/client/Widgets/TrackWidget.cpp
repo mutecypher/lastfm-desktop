@@ -1,5 +1,6 @@
 
 #include <QMovie>
+#include <QTimer>
 
 #include <lastfm/Library.h>
 

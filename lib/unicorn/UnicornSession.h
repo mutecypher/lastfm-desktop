@@ -45,24 +45,8 @@ public:
     static QMap<QString, QString>
     lastSessionData();
 
-    QDataStream& write( QDataStream& out ) const
-    {
-        QMap<QString, QString> data;
-        data[ "username" ] = userInfo().name();
-        data[ "sessionkey" ] = m_sessionKey;
-        out << data;
-        return out;
-    }
-
-    QDataStream& read( QDataStream& in )
-    {
-        QMap<QString, QString> data;
-        in >> data;
-
-        init( data[ "username" ], data[ "sessionkey" ] );
-        
-        return in;
-    }
+    QDataStream& write( QDataStream& out ) const;
+    QDataStream& read( QDataStream& in );
 
 signals:
     void userInfoUpdated( const lastfm::User& userInfo );
