@@ -22,7 +22,7 @@
 #include <QObject>
 #include <QQueue>
 
-#include <lastfm/User.h>
+namespace lastfm { class User; }
 
 // -- Categories and their associated actions
 #define START_CATEGORY "Start"
@@ -62,11 +62,18 @@ public:
     void sendEvent( const QString& category, const QString& action, const QString& label, const QString& value = "" );
     void sendPageView( const QString& url );
 
+private:
+    void loadPages();
+
 private slots:
     void onGotUserInfo( const lastfm::User& user );
+    void onLoadFinished();
 
 private:
     class QWebView* m_webView;
     class PersistentCookieJar* m_cookieJar;
-    lastfm::User m_currentUser;
+    QQueue<QString> m_queue;
+    QQueue<QString> m_customVars;
+    bool m_customVarsSet;
+    bool m_pageLoaded;
 };

@@ -37,18 +37,6 @@ PersistentCookieJar::~PersistentCookieJar()
 }
 
 void
-PersistentCookieJar::clearSessionCookies()
-{
-    QList<QNetworkCookie> cookies = allCookies();
-
-    for ( int i = cookies.count() - 1 ; i >= 0 ; --i )
-        if ( cookies[i].isSessionCookie() || cookies[i].expirationDate() < QDateTime::currentDateTime() )
-            cookies.removeAt( i );
-
-    setAllCookies( cookies );
-}
-
-void
 PersistentCookieJar::save()
 {
     QList<QNetworkCookie> list = allCookies();
@@ -65,7 +53,7 @@ PersistentCookieJar::save()
     }
 
     unicorn::AppSettings settings;
-    settings.setValue("Cookies",data);
+    settings.setValue("Cookies", data);
 }
 
 void
@@ -73,5 +61,5 @@ PersistentCookieJar::load()
 {
     unicorn::AppSettings settings;
     QByteArray data = settings.value("Cookies").toByteArray();
-    setAllCookies(QNetworkCookie::parseCookies(data));
+    setAllCookies( QNetworkCookie::parseCookies( data ) );
 }
