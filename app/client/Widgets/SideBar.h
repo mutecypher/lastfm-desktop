@@ -51,10 +51,14 @@ signals:
     void currentChanged( int index );
 
 public slots:
-    void onButtonClicked();
+    void onButtonClicked( class QAbstractButton* button );
 
     void onUp();
     void onDown();
+
+private:
+    class QButtonGroup* m_buttonGroup;
+    class QAbstractButton* m_lastButton;
 };
 
 #endif // SIDEBAR_H

@@ -18,6 +18,7 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QButtonGroup>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -32,7 +33,7 @@
 #include "../Application.h"
 #include "SideBar.h"
 
-QAbstractButton* newButton( const QString& text, QWidget* parent = 0 )
+QAbstractButton* newButton( const QString& text, QButtonGroup* buttonGroup, QWidget* parent = 0 )
 {
     QAbstractButton* pushButton = new QPushButton( parent );
     pushButton->setText( text );
@@ -41,33 +42,37 @@ QAbstractButton* newButton( const QString& text, QWidget* parent = 0 )
     pushButton->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
     pushButton->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     pushButton->setAttribute( Qt::WA_MacNoClickThrough );
+    buttonGroup->addButton( pushButton );
     return pushButton;
 }
 
 
 SideBar::SideBar(QWidget *parent)
-    :QFrame(parent)
+    :QFrame(parent), m_lastButton( 0 )
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
-    layout->addWidget( ui.nowPlaying = newButton( tr( "Now Playing" ), this ), Qt::AlignHCenter );
+    m_buttonGroup = new QButtonGroup( this );
+    m_buttonGroup->setExclusive( true );
+
+    layout->addWidget( ui.nowPlaying = newButton( tr( "Now Playing" ), m_buttonGroup, this ), Qt::AlignHCenter );
     ui.nowPlaying->setObjectName( "nowPlaying" );
-    layout->addWidget( ui.scrobbles = newButton( tr( "Scrobbles" ), this ), Qt::AlignHCenter);
+    layout->addWidget( ui.scrobbles = newButton( tr( "Scrobbles" ), m_buttonGroup, this ), Qt::AlignHCenter);
     ui.scrobbles->setObjectName( "scrobbles" ); 
-    layout->addWidget( ui.profile = newButton( tr( "Profile" ), this ), Qt::AlignHCenter);
+    layout->addWidget( ui.profile = newButton( tr( "Profile" ), m_buttonGroup, this ), Qt::AlignHCenter);
     ui.profile->setObjectName( "profile" );
-    layout->addWidget( ui.friends = newButton( tr( "Friends" ), this ), Qt::AlignHCenter);
+    layout->addWidget( ui.friends = newButton( tr( "Friends" ), m_buttonGroup, this ), Qt::AlignHCenter);
     ui.friends->setObjectName( "friends" );
-    layout->addWidget( ui.radio = newButton( tr( "Radio" ), this ), Qt::AlignHCenter);
+    layout->addWidget( ui.radio = newButton( tr( "Radio" ), m_buttonGroup, this ), Qt::AlignHCenter);
     ui.radio->setObjectName( "radio" );
     layout->addStretch( 1 );
 
     layout->addWidget( ui.sash = new QPushButton( tr( "Sash" ), this ), Qt::AlignLeft | Qt::AlignBottom );
     ui.sash->setObjectName( "sash" );
 
-    connect( ui.nowPlaying, SIGNAL(clicked()), SLOT(onButtonClicked()));
+    connect( m_buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)), SLOT(onButtonClicked(QAbstractButton*)));
     connect( ui.scrobbles, SIGNAL(clicked()), SLOT(onButtonClicked()));
     connect( ui.profile, SIGNAL(clicked()), SLOT(onButtonClicked()));
     connect( ui.friends, SIGNAL(clicked()), SLOT(onButtonClicked()));
@@ -121,28 +126,20 @@ SideBar::click( int index )
 
 
 void
-SideBar::onButtonClicked()
+SideBar::onButtonClicked( QAbstractButton* button )
 {
-    int index = layout()->indexOf( qobject_cast<QWidget*>( sender() ) );
+    int index = layout()->indexOf( button );
 
-    switch ( index )
+    if ( button != m_lastButton )
     {
-    case 0:
-        AnalyticsService::instance().sendPageView( "NowPlaying" );
-        break;
-    case 1:
-        AnalyticsService::instance().sendPageView( "Scrobbles" );
-        break;
-    case 2:
-        AnalyticsService::instance().sendPageView( "Profile" );
-        break;
-    case 3:
-        AnalyticsService::instance().sendPageView( "Friends" );
-        break;
-    case 4:
-        AnalyticsService::instance().sendPageView( "Radio" );
-        break;
+        if ( button == ui.nowPlaying ) AnalyticsService::instance().sendPageView( "NowPlaying" );
+        else if ( button == ui.scrobbles ) AnalyticsService::instance().sendPageView( "Scrobbles" );
+        else if ( button == ui.profile ) AnalyticsService::instance().sendPageView( "Profile" );
+        else if ( button == ui.friends ) AnalyticsService::instance().sendPageView( "Friends" );
+        else if ( button == ui.radio ) AnalyticsService::instance().sendPageView( "Radio" );
     }
+
+    m_lastButton = button;
 
     emit currentChanged( index );
 }
