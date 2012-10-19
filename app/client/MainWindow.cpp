@@ -249,6 +249,10 @@ MainWindow::checkUpdatedPlugins()
 }
 #endif
 
+QString MainWindow::currentCategory() const
+{
+    return ui.sideBar->currentCategory();
+}
 
 void
 MainWindow::setupMenuBar()
@@ -356,7 +360,7 @@ void
 MainWindow::onVisitProfile()
 {
     unicorn::DesktopServices::openUrl( aApp->currentSession()->userInfo().www() );
-    AnalyticsService::instance().sendEvent(PROFILE_CATEGORY, LINK_CLICKED, "ProfileURLClicked");
+    AnalyticsService::instance().sendEvent( aApp->currentCategory(), LINK_CLICKED, "ProfileURLClicked");
 }
 
 void
@@ -394,7 +398,7 @@ MainWindow::onPrefsTriggered()
     m_preferences->activateWindow();
     m_preferences->adjustSize();
 
-    AnalyticsService::instance().sendEvent(SETTINGS_CATEGORY, BASIC_SETTINGS, "SettingsOpened");
+    AnalyticsService::instance().sendEvent( aApp->currentCategory(), BASIC_SETTINGS, "SettingsOpened");
 }
 
 void

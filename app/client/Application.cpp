@@ -385,6 +385,12 @@ Application::startBootstrap( const QString& pluginId )
     m_bootstrapper->bootStrap();
 }
 
+QString
+Application::currentCategory() const
+{
+    return m_mw->currentCategory();
+}
+
 void
 Application::onTrackGotInfo( const XmlQuery& lfm )
 {
