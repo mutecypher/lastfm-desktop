@@ -15,7 +15,7 @@
 @end
 
 @implementation MediaKeyTapDelegate
-+(void)initialize;
++(void)initialize
 {
     if([self class] != [MediaKeyTapDelegate class]) return;
 

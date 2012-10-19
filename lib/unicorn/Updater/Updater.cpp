@@ -1,42 +1,39 @@
 
-#include "Updater.h"
-
-#ifndef Q_OS_MAC
-
-#ifdef Q_OS_WIN
 #include <QCoreApplication>
 #include <QStringList>
-#include <winsparkle.h>
-#endif
+#include <QUrl>
 
-unicorn::Updater::Updater(QObject *parent) :
-    QObject(parent)
+#include <qtsparkle/Updater>
+
+#include "Updater.h"
+
+unicorn::Updater::Updater( QWidget* parent )
+    :QObject( parent )
 {
-#ifdef Q_OS_WIN
-    win_sparkle_init();
+    QString appcast;
+
+#ifdef Q_OS_MAC
+    if ( qApp->arguments().contains( "--update" ) )
+        appcast = "http://users.last.fm/~michael/updates_mac.xml";
+    else if ( qApp->arguments().contains( "--update-static" ) )
+        appcast = "http://static.last.fm/client/Mac/updates.xml";
+    else
+        appcast ="http://cdn.last.fm/client/Mac/updates.xml";
+#else
 
     if ( qApp->arguments().contains( "--update" ) )
-        win_sparkle_set_appcast_url( "http://users.last.fm/~michael/updates_win.xml" );
+        appcast = "http://users.last.fm/~michael/updates_win.xml";
     else if ( qApp->arguments().contains( "--update-static" ) )
-        win_sparkle_set_appcast_url( "http://static.last.fm/client/Mac/updates.xml" );
+        appcast = "http://static.last.fm/client/Win/updates.xml";
     else
-        win_sparkle_set_appcast_url( "http://cdn.last.fm/client/Win/updates.xml" );
+        appcast = "http://cdn.last.fm/client/Win/updates.xml";
 #endif
+    m_updater = new qtsparkle::Updater( appcast, parent );
 }
 
 void
 unicorn::Updater::checkForUpdates()
 {
-#ifdef Q_OS_WIN
-    win_sparkle_check_update_with_ui();
-#endif
+    m_updater->CheckNow();
 }
 
-unicorn::Updater::~Updater()
-{
-#ifdef Q_OS_WIN
-    win_sparkle_cleanup();
-#endif
-}
-
-#endif // Q_OS_MAC

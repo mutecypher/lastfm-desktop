@@ -39,6 +39,7 @@
 #include "../Application.h"
 #include "../StationSearch.h"
 #include "../Services/RadioService/RadioService.h"
+#include "../Services/AnalyticsService.h"
 
 #include <QStylePainter>
 
@@ -195,16 +196,24 @@ QuickStartWidget::setSuggestions()
         Tag tag1( m_tags.takeAt( qrand() % qMin( m_tags.count(), RESULT_LIMIT ) ) );
         Tag tag2( m_tags.takeAt( qrand() % qMin( m_tags.count(), RESULT_LIMIT ) )  );
 
+        // -- if they can play music, allow them to click on tags
         QStringList suggestions;
-        suggestions << Label::anchor( RadioStation::similar( artist1 ).url(), artist1.name()  )
-                    << Label::anchor( RadioStation::similar( artist2 ).url(), artist2.name() )
-                    << Label::anchor( RadioStation::tag( tag1 ).url(), tag1 )
-                    << Label::anchor( RadioStation::tag( tag2 ).url(), tag2 );
+        if(RadioService::instance().isRadioUsageAllowed(false))
+        {
+            suggestions << Label::anchor( RadioStation::similar( artist1 ).url(), artist1.name()  )
+                        << Label::anchor( RadioStation::similar( artist2 ).url(), artist2.name() )
+                        << Label::anchor( RadioStation::tag( tag1 ).url(), tag1 )
+                        << Label::anchor( RadioStation::tag( tag2 ).url(), tag2 );
 
-        ui.whyNotTry->setText( tr( "Why not try %1, %2, %3 or %4?" ).arg( suggestions.takeAt(qrand() % suggestions.count()),
-                                                                          suggestions.takeAt(qrand() % suggestions.count()),
-                                                                          suggestions.takeAt(qrand() % suggestions.count()),
-                                                                          suggestions.takeAt(qrand() % suggestions.count()) ) );
+            ui.whyNotTry->setText( tr( "Why not try %1, %2, %3 or %4?" ).arg( suggestions.takeAt(qrand() % suggestions.count()),
+                                                                              suggestions.takeAt(qrand() % suggestions.count()),
+                                                                              suggestions.takeAt(qrand() % suggestions.count()),
+                                                                              suggestions.takeAt(qrand() % suggestions.count()) ) );
+        }
+        else
+        {
+            ui.whyNotTry->setText(tr(""));
+        }
     }
 }
 
@@ -217,6 +226,9 @@ QuickStartWidget::setToCurrent()
 void
 QuickStartWidget::play()
 {
+    if(!RadioService::instance().isRadioUsageAllowed())
+        return;
+
     QString trimmedText = ui.edit->text().trimmed();
 
     if ( !trimmedText.isEmpty() )
@@ -245,23 +257,29 @@ QuickStartWidget::play()
             // should switch to the now playing view
         }
     }
+
+    AnalyticsService::instance().sendEvent(START_CATEGORY, PLAY_CLICKED, "PlayButtonPressed");
+
 }
 
 void
 QuickStartWidget::playNext()
 {
-    QString trimmedText = ui.edit->text().trimmed();
-
-    if( trimmedText.startsWith("lastfm://"))
-        RadioService::instance().playNext( RadioStation( trimmedText ) );
-    else if ( ui.edit->text().length() )
+    if(RadioService::instance().isRadioUsageAllowed())
     {
-        StationSearch* s = new StationSearch();
-        connect(s, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(playNext(RadioStation)));
-        s->startSearch(ui.edit->text());
-    }
+        QString trimmedText = ui.edit->text().trimmed();
 
-    ui.edit->clear();
+        if( trimmedText.startsWith("lastfm://"))
+            RadioService::instance().playNext( RadioStation( trimmedText ) );
+        else if ( ui.edit->text().length() )
+        {
+            StationSearch* s = new StationSearch();
+            connect(s, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(playNext(RadioStation)));
+            s->startSearch(ui.edit->text());
+        }
+
+        ui.edit->clear();
+    }
 }
 
 void

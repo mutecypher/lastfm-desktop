@@ -26,7 +26,6 @@
 #include "lib/DllExportMacro.h"
 #include "UnicornSession.h"
 #include <QApplication>
-#include "PlayBus.h"
 #include <QDebug>
 #include <QMainWindow>
 #include <QPointer>
@@ -68,83 +67,7 @@ class QNetworkReply;
 
 namespace unicorn
 {
-    class Bus : public PlayBus
-    {
-        Q_OBJECT
-
-        public:
-            Bus(): PlayBus( "unicorn" )
-            {
-                connect( this, SIGNAL( message(QByteArray)), SLOT( onMessage(QByteArray)));
-                connect( this, SIGNAL( queryRequest( QString, QByteArray )), SLOT( onQuery( QString, QByteArray )));
-            }
-
-            bool isWizardRunning(){ return sendQuery( "WIZARDRUNNING" ) == "TRUE"; }
-
-            QMap<QString, QString> getSessionData()
-            {
-                QByteArray ba = sendQuery( "SESSION" ); 
-                QMap<QString, QString> sessionData;
-                if( ba.length() > 0 )
-                {
-                    QDataStream ds( ba );
-                    ds >> sessionData;
-                }
-                return sessionData;
-            }
-
-            void announceSessionChange( Session* s )
-            {
-                qDebug() << "Session change, let's spread the message through the bus!";
-                QByteArray ba; 
-                QDataStream ds( &ba, QIODevice::WriteOnly | QIODevice::Truncate );
-
-                ds << QString( "SESSIONCHANGED" );
-                ds << ( *s );
-                                
-                sendMessage( ba );
-            }
-        private slots:
-
-            void onMessage( const QByteArray& message )
-            {
-                qDebug() << "Message received";
-                qDebug() << "Message: " << message;
-                QDataStream ds( message );
-                QString stringMessage;
-
-                ds >> stringMessage;
-        
-                if( stringMessage == "SESSIONCHANGED" )
-                {
-                    QMap<QString, QString> sessionData;
-                    ds >> sessionData;
-                    qDebug() << "and it's a session change alert";
-                    emit sessionChanged( sessionData );
-                }
-                else if( message.startsWith( "LOVED=" ))
-                {
-                    QByteArray sessionData = message.right( message.size() - 6);
-                    emit lovedStateChanged( sessionData == "true" );
-                }
-            }
-
-            void onQuery( const QString& uuid, const QByteArray& message )
-            {
-                qDebug() << "query received" << message;
-                if( message == "WIZARDRUNNING" )
-                    emit wizardRunningQuery( uuid );
-                else if( message == "SESSION" )
-                    emit sessionQuery( uuid );
-            }
-
-        signals:
-            void wizardRunningQuery( const QString& uuid );
-            void sessionQuery( const QString& uuid );
-            void sessionChanged( const QMap<QString, QString>& sessionData );
-            void rosterUpdated();
-            void lovedStateChanged(bool loved);
-    };
+    class Bus;
 
     /**
      * Unicorn base Application.
@@ -206,7 +129,7 @@ namespace unicorn
         QMainWindow* findMainWindow();
 
         QString m_styleSheet;
-        Session* m_currentSession;
+        QPointer<Session> m_currentSession;
         bool m_wizardRunning;
         QMap< quint32, QPair<QObject*, const char*> > m_hotKeyMap;
         QString m_cssDir;
@@ -239,7 +162,7 @@ namespace unicorn
 
         void setWizardRunning( bool running );
 
-        Bus m_bus;
+        QPointer<Bus> m_bus;
         lastfm::InternetConnectionMonitor* m_icm;
 	
 
@@ -247,7 +170,7 @@ namespace unicorn
         void onUserGotInfo();
         void onWizardRunningQuery( const QString& );
         void onBusSessionQuery( const QString& );
-        void onBusSessionChanged( const QMap<QString, QString>& sessionData );
+        void onBusSessionChanged( const unicorn::Session& session );
 
     signals:
         void gotUserInfo( const lastfm::User& );

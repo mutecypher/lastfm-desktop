@@ -29,24 +29,6 @@
     #include <QAbstractEventDispatcher>
 #endif
 
-
-#include "UnicornApplication.h"
-
-#include "dialogs/LoginContinueDialog.h"
-#include "dialogs/LoginDialog.h"
-#include "dialogs/UserManagerDialog.h"
-#include "LoginProcess.h"
-#include "QMessageBoxBuilder.h"
-#include "SignalBlocker.h"
-#include "UnicornCoreApplication.h"
-#include "UnicornSettings.h"
-#include "DesktopServices.h"
-#include <lastfm/misc.h>
-#include <lastfm/User.h>
-#include <lastfm/InternetConnectionMonitor.h>
-#include <lastfm/ws.h>
-#include <lastfm/XmlQuery.h>
-
 #include <QProcess>
 #include <QDebug>
 #include <QDir>
@@ -60,6 +42,27 @@
 #include <QTranslator>
 #include <QAction>
 
+#include <lastfm/misc.h>
+#include <lastfm/User.h>
+#include <lastfm/InternetConnectionMonitor.h>
+#include <lastfm/ws.h>
+#include <lastfm/XmlQuery.h>
+
+#include "PlayBus/Bus.h"
+#include "dialogs/LoginContinueDialog.h"
+#include "dialogs/LoginDialog.h"
+#include "dialogs/UserManagerDialog.h"
+#include "LoginProcess.h"
+#include "QMessageBoxBuilder.h"
+#include "SignalBlocker.h"
+#include "UnicornCoreApplication.h"
+#include "UnicornSettings.h"
+#include "DesktopServices.h"
+#include "UnicornApplication.h"
+
+
+
+
 unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
                     : QtSingleApplication( argc, argv ),
                       m_logoutAtQuit( false ),
@@ -67,6 +70,8 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
                       m_wizardRunning( true ),
                       m_icm( 0 )
 {
+    m_bus = new unicorn::Bus( this );
+
 #ifdef Q_OS_MAC
     m_delegate = new UnicornApplicationDelegate( this );
 #endif
@@ -111,15 +116,15 @@ unicorn::Application::init()
 
     m_icm = new lastfm::InternetConnectionMonitor( this );
 
-    connect( m_icm, SIGNAL( up( QString ) ), this, SIGNAL( internetConnectionUp() ) );
-    connect( m_icm, SIGNAL( down( QString ) ), this, SIGNAL( internetConnectionDown() ) );
+    connect( m_icm, SIGNAL(up(QString)), this, SIGNAL(internetConnectionUp()));
+    connect( m_icm, SIGNAL(down(QString)), this, SIGNAL(internetConnectionDown()));
 
-    connect( &m_bus, SIGNAL( wizardRunningQuery( QString )), SLOT( onWizardRunningQuery( QString )));
-    connect( &m_bus, SIGNAL( sessionQuery( QString )), SLOT( onBusSessionQuery( QString )));
-    connect( &m_bus, SIGNAL( sessionChanged( const QMap<QString, QString>& )), SLOT( onBusSessionChanged( const QMap<QString, QString>& )));
-    connect( &m_bus, SIGNAL( lovedStateChanged(bool)), SIGNAL( busLovedStateChanged(bool)));
+    connect( m_bus, SIGNAL(wizardRunningQuery(QString)), SLOT(onWizardRunningQuery(QString)));
+    connect( m_bus, SIGNAL(sessionQuery(QString)), SLOT(onBusSessionQuery(QString)));
+    connect( m_bus, SIGNAL(sessionChanged(unicorn::Session)), SLOT(onBusSessionChanged(unicorn::Session)));
+    connect( m_bus, SIGNAL(lovedStateChanged(bool)), SIGNAL(busLovedStateChanged(bool)));
 
-    m_bus.board();
+    m_bus->board();
 
 #ifdef __APPLE__
     setQuitOnLastWindowClosed( false );
@@ -139,13 +144,13 @@ unicorn::Application::initiateLogin( bool ) throw( StubbornUserException )
 {
     Session* newSession = 0;
 
-    if( m_bus.isWizardRunning() )
+    if( m_bus->isWizardRunning() )
     {
-        SignalBlocker( &m_bus, SIGNAL( sessionChanged( const QMap<QString, QString>& ) ), -1 ).start();
+        SignalBlocker( m_bus, SIGNAL( sessionChanged( const QMap<QString, QString>& ) ), -1 ).start();
     }
     else
     {
-        QMap<QString, QString> sessionData = m_bus.getSessionData();
+        QMap<QString, QString> sessionData = m_bus->getSessionData();
 
         //If the bus returns an empty session data, try to get the session from the last user logged in
         if ( ! ( sessionData.contains( "sessionKey" ) || sessionData.contains( "username" ) ) )
@@ -163,9 +168,9 @@ unicorn::Application::initiateLogin( bool ) throw( StubbornUserException )
     }
     else
     {
-        SignalBlocker( &m_bus, SIGNAL( sessionChanged( const QMap<QString, QString>& ) ), -1 ).start();
+        SignalBlocker( m_bus, SIGNAL( sessionChanged( const QMap<QString, QString>& ) ), -1 ).start();
 
-        QMap<QString, QString> sessionData = m_bus.getSessionData();
+        QMap<QString, QString> sessionData = m_bus->getSessionData();
 
         if ( sessionData.contains( "sessionKey" ) && sessionData.contains( "username" ) )
         {
@@ -268,11 +273,11 @@ unicorn::Application::onWizardRunningQuery( const QString& uuid )
     qDebug() << "Is the Wizard running?";
     if ( m_wizardRunning )
     {
-        m_bus.sendQueryResponse( uuid, "TRUE" );
+        m_bus->sendQueryResponse( uuid, "TRUE" );
     }
     else
     {
-        m_bus.sendQueryResponse( uuid, "FALSE" );
+        m_bus->sendQueryResponse( uuid, "FALSE" );
     }
 
 }
@@ -286,20 +291,21 @@ unicorn::Application::onBusSessionQuery( const QString& uuid )
     sessionData[ "username" ] = currentSession()->userInfo().name();
     sessionData[ "sessionKey" ] = currentSession()->sessionKey();
     s << sessionData;
-    m_bus.sendQueryResponse( uuid, ba );
+    m_bus->sendQueryResponse( uuid, ba );
 }
 
 
 void 
-unicorn::Application::onBusSessionChanged( const QMap<QString, QString>& sessionData )
+unicorn::Application::onBusSessionChanged( const unicorn::Session& session )
 {
-    changeSession( new Session( sessionData[ "username" ], sessionData[ "sessionKey" ] ), false );
+    unicorn::Session* newSession = new unicorn::Session( session.userInfo().name(), session.sessionKey() );
+    changeSession( newSession, false );
 }
 
 unicorn::Session*
 unicorn::Application::changeSession( const QString& username, const QString& sessionKey, bool announce )
 {
-    return changeSession( new Session( username, sessionKey ), announce );
+    return changeSession( new unicorn::Session( username, sessionKey ), announce );
 }
 
 unicorn::Session*
@@ -322,12 +328,7 @@ unicorn::Application::changeSession( Session* newSession, bool announce )
             return 0;
     }
 
-    if ( m_currentSession )
-    {
-        delete m_currentSession;
-        m_currentSession = 0;
-    }
-
+    delete m_currentSession;
     m_currentSession = newSession;
 
     lastfm::ws::Username = m_currentSession->userInfo().name();
@@ -336,7 +337,7 @@ unicorn::Application::changeSession( Session* newSession, bool announce )
     connect( lastfm::User::getInfo(), SIGNAL( finished() ), SLOT( onUserGotInfo() ) );
     
     if( announce )
-        m_bus.announceSessionChange( currentSession() );
+        m_bus->announceSessionChange( currentSession() );
 
     emit sessionChanged( currentSession() );
     return currentSession();
@@ -346,7 +347,7 @@ void
 unicorn::Application::sendBusLovedStateChanged( bool loved )
 {
     QByteArray message = loved ? "LOVED=true" : "LOVED=false";
-    m_bus.sendMessage(message);
+    m_bus->sendMessage(message);
 }
 
 void

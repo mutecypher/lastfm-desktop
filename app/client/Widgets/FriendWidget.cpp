@@ -1,6 +1,7 @@
 
 #include <QHBoxLayout>
 #include <QMovie>
+#include <QTimer>
 
 #include <lastfm/RadioStation.h>
 

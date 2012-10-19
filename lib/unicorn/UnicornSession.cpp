@@ -171,9 +171,9 @@ Session::onAuthGotSessionInfo()
     {
         qDebug() << lfm;
 
-        bool radio = lfm["application"]["radioPermission"]["user type=you"]["radio"].text() != "0";
-        bool canUpgrade = lfm["application"]["radioPermission"]["user type=subscriber"]["radio"].text() != "0";
-        bool freeTrial = lfm["application"]["radioPermission"]["user type=you"]["freetrial"].text() != "0";
+        //bool radio = lfm["application"]["radioPermission"]["user type=you"]["radio"].text() != "0";
+        //bool canUpgrade = lfm["application"]["radioPermission"]["user type=subscriber"]["radio"].text() != "0";
+        //bool freeTrial = lfm["application"]["radioPermission"]["user type=you"]["freetrial"].text() != "0";
     }
     else
     {
@@ -203,6 +203,25 @@ Session::cacheUserInfo( const lastfm::User& userInfo )
     }
     s.endArray();
 
+}
+
+QDataStream&
+Session::write( QDataStream& out ) const
+{
+    QMap<QString, QString> data;
+    data[ "username" ] = userInfo().name();
+    data[ "sessionkey" ] = m_sessionKey;
+    out << data;
+    return out;
+}
+
+QDataStream&
+Session::read( QDataStream& in )
+{
+    QMap<QString, QString> data;
+    in >> data;
+    init( data[ "username" ], data[ "sessionkey" ] );
+    return in;
 }
 
 }

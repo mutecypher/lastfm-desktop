@@ -8,6 +8,7 @@
 #include "../Application.h"
 #include "../Services/RadioService.h"
 #include "../Services/ScrobbleService.h"
+#include "../Services/AnalyticsService.h"
 
 #include "PlaybackControlsWidget.h"
 #include "ui_PlaybackControlsWidget.h"
@@ -155,10 +156,12 @@ PlaybackControlsWidget::onPlayClicked( bool checked )
         {
             RadioService::instance().resume();
         }
+        AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, PLAY_CLICKED, "PlayButtonPressed");
     }
     else
     {
         RadioService::instance().pause();
+        AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, PLAY_CLICKED, "PauseButtonPressed");
     }
 }
 
@@ -166,6 +169,7 @@ void
 PlaybackControlsWidget::onSkipClicked()
 {
     RadioService::instance().skip();
+    AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, SKIP_CLICKED, "SkipClicked");
 }
 
 
@@ -175,9 +179,15 @@ PlaybackControlsWidget::onLoveClicked( bool loved )
     MutableTrack track( RadioService::instance().currentTrack() );
 
     if ( loved )
+    {
         track.love();
+        AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, LOVE_TRACK, "TrackLoved");
+    }
     else
+    {
         track.unlove();
+        AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, LOVE_TRACK, "TrackUnLoved");
+    }
 
     connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->love, SLOT(setChecked(bool)));
 }
@@ -196,6 +206,8 @@ PlaybackControlsWidget::onBanClicked()
 {
     QNetworkReply* banReply = MutableTrack( RadioService::instance().currentTrack() ).ban();
     connect(banReply, SIGNAL(finished()), SLOT(onBanFinished()));
+
+    AnalyticsService::instance().sendEvent(NOW_PLAYING_CATEGORY, BAN_TRACK, "BanTrackPressed");
 }
 
 

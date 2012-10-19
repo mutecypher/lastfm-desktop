@@ -56,6 +56,8 @@ SOURCES += \
     layouts/SlideOverLayout.cpp \
     layouts/SideBySideLayout.cpp \
     layouts/AnimatedListLayout.cpp \
+    PlayBus/PlayBus.cpp \
+    PlayBus/Bus.cpp \
     dialogs/UserManagerDialog.cpp \
     dialogs/TagDialog.cpp \
     dialogs/LoginDialog.cpp \
@@ -107,7 +109,8 @@ HEADERS += \
     qtsingleapplication/qtlockedfile.h \
     qtsingleapplication/qtlocalpeer.h \
     QMessageBoxBuilder.h \
-    PlayBus.h \
+    PlayBus/Bus.h \
+    PlayBus/PlayBus.h \
     LoginProcess.h \
     layouts/SlideOverLayout.h \
     layouts/SideBySideLayout.h \
@@ -135,7 +138,6 @@ macx:SOURCES += mac/AppleScript.cpp
 
 macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
                           notify/Notify.mm \
-                          Updater/Updater_mac.mm \
                           UnicornApplicationDelegate.mm
 
 macx:HEADERS += mac/AppleScript.h \

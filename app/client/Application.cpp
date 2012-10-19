@@ -57,6 +57,7 @@
 #include "MediaDevices/DeviceScrobbler.h"
 #include "Services/RadioService.h"
 #include "Services/ScrobbleService.h"
+#include "Services/AnalyticsService.h"
 #include "Widgets/PointyArrow.h"
 #include "Widgets/ScrobbleControls.h"
 #include "Widgets/MetadataWidget.h"
@@ -530,7 +531,12 @@ Application::changeLovedState(bool loved)
 void
 Application::onScrobbleToggled( bool scrobblingOn )
 {
-    unicorn::UserSettings().setValue( "scrobblingOn", scrobblingOn );
+    if ( unicorn::UserSettings().value( "scrobblingOn", true ) != scrobblingOn )
+    {
+        unicorn::UserSettings().setValue( "scrobblingOn", scrobblingOn );
+        AnalyticsService::instance().sendEvent(SETTINGS_CATEGORY, SCROBBLING_SETTINGS, scrobblingOn ? "ScrobbleTurnedOn" : "ScrobbleTurnedOff" );
+    }
+
     m_submit_scrobbles_toggle->setChecked( scrobblingOn );
     emit scrobbleToggled( scrobblingOn );
 }
