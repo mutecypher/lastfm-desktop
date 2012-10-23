@@ -26,15 +26,16 @@ unicorn::Updater::Updater(QObject *parent) :
 }
 #endif
 
+#ifndef Q_OS_MAC
 void
 unicorn::Updater::checkForUpdates()
 {
-#ifdef Q_OS_WIN
+
     m_updater->CheckNow();
-#endif
+
 }
 
 unicorn::Updater::~Updater()
 {
 }
-
+#endif

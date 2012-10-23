@@ -91,10 +91,9 @@ IpodSettingsWidget::saveSettings()
             plugins << iTunesPluginInfo;
             CloseAppsDialog* closeApps = new CloseAppsDialog( plugins, this );
             delete iTunesPluginInfo;
-
+#else
             CloseAppsDialog* closeApps = new CloseAppsDialog( this );
 #endif
-
             if ( closeApps->result() != QDialog::Accepted )
                 closeApps->exec();
             else
