@@ -5,14 +5,15 @@
 #include <qtsparkle/Updater>
 #include <QCoreApplication>
 #include <QStringList>
+#include <QUrl>
 #endif //Q_OS_WIN
 
 #if defined(Q_OS_WIN) || defined(Q_WS_X11)
-unicorn::Updater::Updater(QObject *parent) :
-    QObject(parent)
+unicorn::Updater::Updater( QWidget *parent )
+    :QWidget( parent )
 {
 #if defined(Q_OS_WIN)
-    QString appcast;
+    QUrl appcast;
 
     if ( qApp->arguments().contains( "--update" ) )
         appcast = "http://users.last.fm/~michael/updates_win.xml";
@@ -30,9 +31,7 @@ unicorn::Updater::Updater(QObject *parent) :
 void
 unicorn::Updater::checkForUpdates()
 {
-
     m_updater->CheckNow();
-
 }
 
 unicorn::Updater::~Updater()
