@@ -80,7 +80,7 @@ CONFIG( phonon ) {
 CONFIG( sparkle ) {
     win32{
         CONFIG += link_pkgconfig
-        PKGCONFIG += qtsparkle
+        PKGCONFIG += winsparkle
     }
     else:mac{
         LIBS += -framework Sparkle
