@@ -37,7 +37,7 @@ RadioService::RadioService( )
        m_mediaObject( 0 ),
        m_state( Stopped ),
        m_bErrorRecover( false ),
-       m_maxUsageCount( 160 )
+       m_maxUsageCount( 180 )
 {
     initRadio();
 
@@ -63,9 +63,8 @@ RadioService::isRadioUsageAllowed(bool showError)
         if(usageCount >= m_maxUsageCount && m_maxUsageCount != ALLOW_ALL_USAGE)
         {
             if(showError)
-            {
-                emit message( "Free trial limit reached. Become a subscriber to continue listening.");
-            }
+                emit message(tr( "Sorry, you've reached your limit of %n track(s). <a href=\"http://www.last.fm/subscribe\">Subscribe</a> for unlimited listening, or visit <a href=\"http://www.last.fm/listen\">last.fm/listen</a>", "", m_maxUsageCount ) );
+
             deInitRadio();
             changeState( Stopped );
             isAllowed = false;

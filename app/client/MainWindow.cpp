@@ -76,7 +76,7 @@
 void qt_mac_set_dock_menu(QMenu *menu);
 #endif
 
-const QString CONFIG_URL = "http://static.last.fm/client/config.xml";
+const QString CONFIG_URL = "http://cdn.last.fm/client/config.xml";
 
 MainWindow::MainWindow( QMenuBar* menuBar )
     :unicorn::MainWindow( menuBar )
@@ -339,21 +339,21 @@ void
 MainWindow::onConfigRetrieved()
 {
     XmlQuery xq;
-    if(xq.parse(qobject_cast<QNetworkReply*>(sender())->readAll()))
+
+    if( xq.parse( qobject_cast<QNetworkReply*>(sender()) ) )
     {
         // -- grab the song count and set it for playback.
         int songCount = xq["songcount"].text().toInt();
+
         if(songCount > 0)
-        {
-            RadioService::instance().setMaxUsageCount(songCount);
-        }
+            RadioService::instance().setMaxUsageCount( songCount );
 
         // -- grab the message and display it on load
-        lastfm::XmlQuery message = xq["message"];
-        onRadioMessage(message["text"].text());
-    }
+        QString message = xq["message"]["text"].text();
 
-    sender()->deleteLater();
+        if ( !message.isEmpty() )
+            onRadioMessage( message );
+    }
 }
 
 void
