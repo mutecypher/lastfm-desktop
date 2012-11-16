@@ -240,7 +240,7 @@ PlayCountsDatabase::update( const ITunesLibrary::Track& track )
 
 
 AutomaticIPod::PlayCountsDatabase::PlayCountsDatabase() 
-              : ::PlayCountsDatabase( lastfm::dir::runtimeData().filePath( "iTunesPlays.db" ) )
+              : ::PlayCountsDatabase( lastfm::dir::runtimeData().filePath( "\\Client\\iTunesPlays.db" ) )
 {}
 
 

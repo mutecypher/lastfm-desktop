@@ -65,6 +65,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 ; icon to the standard user's folder location. Sucks.
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0, 6;
 
+[Dirs]
+Name: "{localappdata}\Last.fm\Client"
 
 [Files]
 ; Main files
@@ -190,7 +192,6 @@ Name: "{group}\Last.fm Scrobbler"; Filename: "{app}\Last.fm Scrobbler.exe"
 Name: "{commondesktop}\Last.fm Scrobbler"; Filename: "{app}\Last.fm Scrobbler.exe"; Tasks: desktopicon
 
 ;Uninstall
-Name: "{group}\Uninstall Last.fm Scrobbler"; Filename: "{uninstallexe}"
 Name: "{group}\Uninstall Last.fm Scrobbler"; Filename: "{app}\UninsHs.exe"; Parameters: "/u0=LastFM"
 
 ; The OnlyBelowVersion flag disables this on Vista as an admin-run installer can't install a quick launch
@@ -227,6 +228,15 @@ Type: filesandordirs; Name: "{app}\plugins\*"
 Type: Files; Name: "{app}\Last.fm.css"
 Type: Files; Name: "{app}\Last.fm Scrobbler.css"
 
+Type: Files; Name: "{group}\Last.fm"
+Type: Files; Name: "{commondesktop}\Last.fm"
+Type: Files; Name: "{group}\Uninstall Last.fm"
+Type: Files; Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"
+
+Type: Files; Name: "{group}\Last.fm Scrobbler"
+Type: Files; Name: "{commondesktop}\Last.fm Scrobbler"
+Type: Files; Name: "{group}\Uninstall Last.fm Scrobbler"
+Type: Files; Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm Scrobbler"
 
 ; This is the LAST step of uninstallation
 [UninstallDelete]

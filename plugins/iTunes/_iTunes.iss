@@ -31,6 +31,9 @@ DisableReadyPage=yes
 AppId=Audioscrobbler iTunes Plugin
 CreateUninstallRegKey=no
 
+[Dirs]
+Name: "{localappdata}\Last.fm\Client"
+
 [Registry]
 ; The name of the final subkey here must match the one in plugins.data
 Root: HKLM; Subkey: "Software\Last.fm\Client\Plugins\itw"; ValueType: string; ValueName: "Version"; ValueData: "{cm:Version}"; Flags: uninsdeletekey
