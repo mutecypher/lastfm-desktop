@@ -242,7 +242,11 @@ PlayCountsDatabase::update( const ITunesLibrary::Track& track )
 
 
 AutomaticIPod::PlayCountsDatabase::PlayCountsDatabase() 
+#ifdef Q_OS_MAC
+              : ::PlayCountsDatabase( lastfm::dir::runtimeData().filePath( "iTunesPlays.db" ) )
+#else
               : ::PlayCountsDatabase( lastfm::dir::runtimeData().filePath( "Client/iTunesPlays.db" ) )
+#endif
 {}
 
 
