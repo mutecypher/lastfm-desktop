@@ -410,11 +410,11 @@ ITunesComThread::syncVisTrackInThread()
                 if ( !m_retrying )
                 {
                     // To avoid lots of superfluous sync attempts on repeated skipping, we
-                    // don't bother trying to sync if less than 20s has passed.
+                    // don't bother trying to sync if less than 1s has passed.
                     m_timeOfLastTrackChange = GetTickCount();
-                    if ( elapsed < ( 20 * 1000 ) )
+                    if ( elapsed < ( 1 * 1000 ) )
                     {
-                        LOGL( 3, "Less than 20s since last change, won't sync" );
+                        LOGL( 3, "Less than 1 second since last change, won't sync" );
 
                         goto refreshCurrentTrack;
                     }
