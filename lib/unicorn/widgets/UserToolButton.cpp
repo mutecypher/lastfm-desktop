@@ -50,7 +50,7 @@ UserToolButton::UserToolButton()
 }
 
 void 
-UserToolButton::onSessionChanged( const unicorn::Session& session )
+UserToolButton::onSessionChanged( const unicorn::Session& /*session*/ )
 {
     setIcon( QIcon() );
 }
