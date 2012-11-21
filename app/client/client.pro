@@ -103,7 +103,6 @@ SOURCES += \
     Widgets/ScrobblesWidget.cpp \
     Widgets/ScrobblesListWidget.cpp \
     Fingerprinter/Fingerprinter.cpp \
-    Fingerprinter/LAV_Source.cpp \
     Services/AnalyticsService/AnalyticsService.cpp \
     Services/AnalyticsService/PersistentCookieJar.cpp
 
@@ -183,10 +182,14 @@ HEADERS += \
     Widgets/ScrobblesListWidget.h \
     Widgets/ScrobblesWidget.h \
     Fingerprinter/Fingerprinter.h \
-    Fingerprinter/LAV_Source.h \
     Services/AnalyticsService.h \
     Services/AnalyticsService/AnalyticsService.h \
     Services/AnalyticsService/PersistentCookieJar.h
+
+contains(DEFINES, FFMPEG_FINGERPRINTING) {
+    SOURCES += Fingerprinter/LAV_Source.cpp
+    HEADERS += Fingerprinter/LAV_Source.h
+}
 
 win32:HEADERS += Plugins/FooBar08PluginInfo.h \
                     Plugins/FooBar09PluginInfo.h \
