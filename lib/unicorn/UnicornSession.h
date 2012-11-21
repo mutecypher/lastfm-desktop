@@ -18,54 +18,53 @@ class UNICORN_DLLEXPORT Session : public QObject
     Q_OBJECT
 public:
     /** Return session object from stored session */
-    Session();
+    Session( QDataStream& dataStream );
     Session( const QString& username, QString sessionKey = "" );
 
+    bool youRadio() const;
+    bool youFreeTrial() const;
+    bool registeredRadio() const;
+    bool registeredFreeTrial() const;
+    bool subscriberRadio() const;
+    bool subscriberFreeTrial() const;
+
     QString sessionKey() const;
+    lastfm::User user() const;
 
-    lastfm::User userInfo() const;
-
-    static QNetworkReply* 
-    getToken()
-    {
-        QMap<QString, QString> params;
-        params["method"] = "auth.getToken";
-        return lastfm::ws::get( params );
-    }
-
-    static QNetworkReply*
-    getSession( QString token )
-    {
-        QMap<QString, QString> params;
-        params["method"] = "auth.getSession";
-        params["token"] = token;
-        return lastfm::ws::post( params, false );
-    }
-
-    static QMap<QString, QString>
-    lastSessionData();
+    static QNetworkReply* getToken();
+    static QNetworkReply* getSession( QString token );
+    static QMap<QString, QString> lastSessionData();
 
     QDataStream& write( QDataStream& out ) const;
     QDataStream& read( QDataStream& in );
 
 signals:
-    void userInfoUpdated( const lastfm::User& userInfo );
+    void userInfoUpdated( const lastfm::User& user );
+    void sessionChanged( const unicorn::Session& session );
 
 protected:
     void init( const QString& username, const QString& sessionKey );
 
 private:
-    void cacheUserInfo( const lastfm::User& userInfo );
+    void cacheUserInfo( const lastfm::User& user );
+    void cacheSessionInfo( const unicorn::Session& session );
 
 private slots:
-    void fetchUserInfo();
+    void fetchInfo();
     void onUserGotInfo();
     void onAuthGotSessionInfo();
 
 private:
     QString m_prevUsername;
     QString m_sessionKey;
-    lastfm::User m_userInfo;
+    lastfm::User m_user;
+
+    bool m_youRadio;
+    bool m_youFreeTrial;
+    bool m_registeredRadio;
+    bool m_registeredFreeTrial;
+    bool m_subscriberRadio;
+    bool m_subscriberFreeTrial;
 };
 
 }

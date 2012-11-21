@@ -293,7 +293,7 @@ Application::init()
     connect( m_toggle_window_action, SIGNAL( triggered()), SLOT( toggleWindow()), Qt::QueuedConnection );
 
     connect( this, SIGNAL(messageReceived(QStringList)), SLOT(onMessageReceived(QStringList)) );
-    connect( this, SIGNAL( sessionChanged( unicorn::Session* ) ), &ScrobbleService::instance(), SLOT( onSessionChanged( unicorn::Session* ) ) );
+    connect( this, SIGNAL(sessionChanged(unicorn::Session)), &ScrobbleService::instance(), SLOT(onSessionChanged(unicorn::Session)) );
 
     connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)));
     connect( &ScrobbleService::instance(), SIGNAL(paused(bool)), SLOT(onTrackPaused(bool)));
@@ -427,9 +427,9 @@ Application::onTrackStarted( const lastfm::Track& track, const Track& oldTrack )
 
     if ( unicorn::UserSettings().value( "fingerprint", true ).toBool() && track.url().isLocalFile() )
     {
-        Fingerprinter* fingerprinter = new Fingerprinter( track, this );
+/*        Fingerprinter* fingerprinter = new Fingerprinter( track, this );
         connect( fingerprinter, SIGNAL(finished()), fingerprinter, SLOT(deleteLater()) );
-        fingerprinter->start();
+        fingerprinter->start(); */
     }
 
     m_tray->setToolTip( track.toString() );

@@ -41,6 +41,8 @@ namespace Phonon
     class Path;
 }
 
+namespace unicorn { class Session; }
+
 /** @author <max@last.fm>
  */
 class RadioService : public QObject
@@ -60,9 +62,6 @@ public:
     Phonon::MediaObject* mediaObject() const { return m_mediaObject; }
 
     static RadioService& instance(){ static RadioService r; return r; }
-
-    bool isRadioUsageAllowed(bool showError=true);
-    void IncrementRadioUsageCount();
 
 public slots:
     void play( const RadioStation& station );
@@ -95,6 +94,8 @@ signals:
     void message( const QString& message );
 
 private slots:
+    void onSessionChanged( const unicorn::Session& session );
+
     void enqueue();
     void onPhononStateChanged( Phonon::State, Phonon::State );
     void onPhononCurrentSourceChanged( const Phonon::MediaSource &);

@@ -45,7 +45,7 @@ public:
     QuickStartWidget( QWidget* parent = 0 );
 
 private slots:
-    void onSessionChanged( unicorn::Session* session );
+    void onSessionChanged( const unicorn::Session& session );
 
     void play();
     void playNext();
@@ -63,6 +63,7 @@ private:
     void setSuggestions();
 
 private:
+    QString m_currentUser;
     QStringList m_tags;
     QStringList m_artists;
 };

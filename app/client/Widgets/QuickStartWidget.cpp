@@ -88,17 +88,21 @@ QuickStartWidget::QuickStartWidget( QWidget* parent )
     shortcut->setContext( Qt::WidgetShortcut );
     connect( shortcut, SIGNAL(activated()), SLOT(setToCurrent()) );
 
-    connect( aApp, SIGNAL(sessionChanged(unicorn::Session*)), SLOT(onSessionChanged(unicorn::Session*)) );
+    connect( aApp, SIGNAL(sessionChanged(unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)) );
 }
 
 void
-QuickStartWidget::onSessionChanged( unicorn::Session* session )
+QuickStartWidget::onSessionChanged( const unicorn::Session& session )
 {
     m_tags.clear();
     m_artists.clear();
 
-    connect( RadioStation::library( session->userInfo() ).getTagSuggestions( RESULT_LIMIT ), SIGNAL(finished()), SLOT(onGotTagSuggestions()) );
-    connect( session->userInfo().getTopArtists( "3month", RESULT_LIMIT ), SIGNAL(finished()), SLOT(onUserGotTopArtists()) );
+    if ( session.user().name() != m_currentUser )
+    {
+        m_currentUser = session.user().name();
+        connect( RadioStation::library( session.user() ).getTagSuggestions( RESULT_LIMIT ), SIGNAL(finished()), SLOT(onGotTagSuggestions()) );
+        connect( session.user().getTopArtists( "3month", RESULT_LIMIT ), SIGNAL(finished()), SLOT(onUserGotTopArtists()) );
+    }
 }
 
 void
@@ -198,22 +202,15 @@ QuickStartWidget::setSuggestions()
 
         // -- if they can play music, allow them to click on tags
         QStringList suggestions;
-        if(RadioService::instance().isRadioUsageAllowed(false))
-        {
-            suggestions << Label::anchor( RadioStation::similar( artist1 ).url(), artist1.name()  )
-                        << Label::anchor( RadioStation::similar( artist2 ).url(), artist2.name() )
-                        << Label::anchor( RadioStation::tag( tag1 ).url(), tag1 )
-                        << Label::anchor( RadioStation::tag( tag2 ).url(), tag2 );
+        suggestions << Label::anchor( RadioStation::similar( artist1 ).url(), artist1.name()  )
+                    << Label::anchor( RadioStation::similar( artist2 ).url(), artist2.name() )
+                    << Label::anchor( RadioStation::tag( tag1 ).url(), tag1 )
+                    << Label::anchor( RadioStation::tag( tag2 ).url(), tag2 );
 
-            ui.whyNotTry->setText( tr( "Why not try %1, %2, %3 or %4?" ).arg( suggestions.takeAt(qrand() % suggestions.count()),
-                                                                              suggestions.takeAt(qrand() % suggestions.count()),
-                                                                              suggestions.takeAt(qrand() % suggestions.count()),
-                                                                              suggestions.takeAt(qrand() % suggestions.count()) ) );
-        }
-        else
-        {
-            ui.whyNotTry->setText(tr(""));
-        }
+        ui.whyNotTry->setText( tr( "Why not try %1, %2, %3 or %4?" ).arg( suggestions.takeAt(qrand() % suggestions.count()),
+                                                                          suggestions.takeAt(qrand() % suggestions.count()),
+                                                                          suggestions.takeAt(qrand() % suggestions.count()),
+                                                                          suggestions.takeAt(qrand() % suggestions.count()) ) );
     }
 }
 
@@ -226,37 +223,34 @@ QuickStartWidget::setToCurrent()
 void
 QuickStartWidget::play()
 {
-    if( RadioService::instance().isRadioUsageAllowed() )
+    AnalyticsService::instance().sendEvent( aApp->currentCategory(), QUICKSTART_PLAY_CLICKED, objectName());
+
+    QString trimmedText = ui.edit->text().trimmed();
+
+    if ( !trimmedText.isEmpty() )
     {
-        AnalyticsService::instance().sendEvent( aApp->currentCategory(), QUICKSTART_PLAY_CLICKED, objectName());
-
-        QString trimmedText = ui.edit->text().trimmed();
-
-        if ( !trimmedText.isEmpty() )
+        if ( trimmedText.startsWith("lastfm://") )
+            RadioService::instance().play( RadioStation( trimmedText ) );
+        else if ( ui.edit->text().length() )
         {
-            if ( trimmedText.startsWith("lastfm://") )
-                RadioService::instance().play( RadioStation( trimmedText ) );
-            else if ( ui.edit->text().length() )
-            {
-                StationSearch* search = new StationSearch();
+            StationSearch* search = new StationSearch();
 
-                connect( search, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)));
-                connect( search, SIGNAL(error(QString,QString)), aApp, SIGNAL(showMessage(QString,QString)));
+            connect( search, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(play(RadioStation)));
+            connect( search, SIGNAL(error(QString,QString)), aApp, SIGNAL(showMessage(QString,QString)));
 
-                search->startSearch( ui.edit->text() );
-            }
-
-            ui.edit->clear();
+            search->startSearch( ui.edit->text() );
         }
+
+        ui.edit->clear();
+    }
+    else
+    {
+        if ( RadioService::instance().state() != Playing )
+            RadioService::instance().play( RadioStation() );
         else
         {
-            if ( RadioService::instance().state() != Playing )
-                RadioService::instance().play( RadioStation() );
-            else
-            {
-                // They are already playing something. Maybe we
-                // should switch to the now playing view
-            }
+            // They are already playing something. Maybe we
+            // should switch to the now playing view
         }
     }
 }
@@ -264,23 +258,20 @@ QuickStartWidget::play()
 void
 QuickStartWidget::playNext()
 {
-    if( RadioService::instance().isRadioUsageAllowed() )
+    AnalyticsService::instance().sendEvent( aApp->currentCategory(), QUICKSTART_PLAY_NEXT_CLICKED, objectName());
+
+    QString trimmedText = ui.edit->text().trimmed();
+
+    if( trimmedText.startsWith("lastfm://"))
+        RadioService::instance().playNext( RadioStation( trimmedText ) );
+    else if ( ui.edit->text().length() )
     {
-        AnalyticsService::instance().sendEvent( aApp->currentCategory(), QUICKSTART_PLAY_NEXT_CLICKED, objectName());
-
-        QString trimmedText = ui.edit->text().trimmed();
-
-        if( trimmedText.startsWith("lastfm://"))
-            RadioService::instance().playNext( RadioStation( trimmedText ) );
-        else if ( ui.edit->text().length() )
-        {
-            StationSearch* s = new StationSearch();
-            connect(s, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(playNext(RadioStation)));
-            s->startSearch(ui.edit->text());
-        }
-
-        ui.edit->clear();
+        StationSearch* s = new StationSearch();
+        connect(s, SIGNAL(searchResult(RadioStation)), &RadioService::instance(), SLOT(playNext(RadioStation)));
+        s->startSearch(ui.edit->text());
     }
+
+    ui.edit->clear();
 }
 
 void

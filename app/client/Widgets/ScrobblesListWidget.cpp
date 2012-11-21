@@ -107,7 +107,7 @@ ScrobblesListWidget::ScrobblesListWidget( QWidget* parent )
     setSelectionMode( QAbstractItemView::NoSelection );
     setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
-    connect( qApp, SIGNAL( sessionChanged( unicorn::Session* )), SLOT(onSessionChanged( unicorn::Session* )));
+    connect( qApp, SIGNAL( sessionChanged(unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));
 
     connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesSubmitted(QList<lastfm::Track>) ) );
     connect( &ScrobbleService::instance(), SIGNAL(scrobblesSubmitted(QList<lastfm::Track>)), SLOT(onScrobblesSubmitted(QList<lastfm::Track>) ) );
@@ -117,7 +117,7 @@ ScrobblesListWidget::ScrobblesListWidget( QWidget* parent )
     connect( &ScrobbleService::instance(), SIGNAL(resumed()), SLOT(onResumed()));
     connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()));
 
-    onSessionChanged( lastfm::ws::Username );
+    onSessionChanged( *aApp->currentSession() );
 }
 
 #ifdef Q_OS_MAC
@@ -182,17 +182,11 @@ ScrobblesListWidget::onMoreClicked()
 }
 
 void
-ScrobblesListWidget::onSessionChanged( unicorn::Session* session )
+ScrobblesListWidget::onSessionChanged( const unicorn::Session& session )
 {
-    onSessionChanged( session->userInfo().name() );
-}
-
-void
-ScrobblesListWidget::onSessionChanged( const QString& username )
-{
-    if ( !username.isEmpty() )
+    if ( !session.user().name().isEmpty() )
     {
-        QString path = lastfm::dir::runtimeData().filePath( username + "_recent_tracks.xml" );
+        QString path = lastfm::dir::runtimeData().filePath( session.user().name() + "_recent_tracks.xml" );
 
         if ( m_path != path )
         {
