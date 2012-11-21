@@ -30,13 +30,13 @@
     nil]];
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification lastTrackRadio:(bool)lastTrackRadio
 {
     qDebug() << "Did finish launching!";
 
     keyTap = [[SPMediaKeyTap alloc] initWithDelegate:self];
 
-    bool actualEnabled = unicorn::Settings().value( "mediaKeys", true ).toBool() && aApp->currentSession()->youRadio();
+    bool actualEnabled = unicorn::Settings().value( "mediaKeys", true ).toBool() && aApp->currentSession()->youRadio() && lastTrackRadio;
 
     if ( [SPMediaKeyTap usesGlobalMediaKeyTap] && actualEnabled )
         [keyTap startWatchingMediaKeys];
@@ -102,7 +102,7 @@
 MediaKeyTapDelegate* g_tapDelegate;
 
 MediaKey::MediaKey( QObject* parent )
-    :QObject( parent ), m_lastTrackRadio( true )
+    :QObject( parent ), m_lastTrackRadio( !aApp->arguments().contains( "--tray" ) )
 {
     g_tapDelegate = [MediaKeyTapDelegate alloc];
 
@@ -147,7 +147,7 @@ MediaKey::initialize()
 void
 MediaKey::applicationDidFinishLaunching( void* aNotification )
 {
-    [g_tapDelegate applicationDidFinishLaunching:static_cast<NSNotification*>(aNotification)];
+    [g_tapDelegate applicationDidFinishLaunching:static_cast<NSNotification*>(aNotification) lastTrackRadio:m_lastTrackRadio];
 }
 
 void
