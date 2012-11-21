@@ -56,7 +56,7 @@ public:
     static ScrobbleService& instance() { static ScrobbleService s; return s; }
 
 public slots:
-    void onSessionChanged( unicorn::Session* );
+    void onSessionChanged( const unicorn::Session& session );
     void onScrobble();
     void scrobbleSettingsChanged();
 

@@ -147,7 +147,7 @@ MetadataWidget::fetchTrackInfo()
         connect( m_track.artist().getTags(), SIGNAL(finished()), SLOT(onArtistGotYourTags()));
         connect( m_track.artist().getEvents(), SIGNAL(finished()), SLOT(onArtistGotEvents()));
 
-        QString country = aApp->currentSession()->userInfo().country();
+        QString country = aApp->currentSession()->user().country();
         connect( m_track.getBuyLinks( country ), SIGNAL(finished()), SLOT(onTrackGotBuyLinks()) );
     }
 }
@@ -320,7 +320,7 @@ MetadataWidget::onArtistGotInfo()
         QDateTime published;
         published.fromString( lfm["artist"]["bio"]["published"].text(), "ddd, d MMM yyyy HH:mm:ss" );
 
-        ui->artistBioEdit->setText( tr( "Edited on %1 | %2 Edit" ).arg( published.toString( "" ), QString::fromUtf8( "ï ‚" ) ) );
+        ui->artistBioEdit->setText( tr( "Edited on %1 | %2 Edit" ).arg( published.toString( "" ), QString::fromUtf8( "ï ‚" ) ) );
 
         connect( ui->artistBio, SIGNAL(finished()), SLOT(checkFinished()) );
         ++m_numCalls;

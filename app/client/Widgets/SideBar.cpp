@@ -73,10 +73,6 @@ SideBar::SideBar(QWidget *parent)
     ui.sash->setObjectName( "sash" );
 
     connect( m_buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)), SLOT(onButtonClicked(QAbstractButton*)));
-    connect( ui.scrobbles, SIGNAL(clicked()), SLOT(onButtonClicked()));
-    connect( ui.profile, SIGNAL(clicked()), SLOT(onButtonClicked()));
-    connect( ui.friends, SIGNAL(clicked()), SLOT(onButtonClicked()));
-    connect( ui.radio, SIGNAL(clicked()), SLOT(onButtonClicked()));
 
     connect( ui.sash, SIGNAL(clicked()), aApp, SLOT(onBetaTriggered()));
 

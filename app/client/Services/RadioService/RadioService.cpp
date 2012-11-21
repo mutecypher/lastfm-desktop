@@ -21,14 +21,17 @@
 #include <QThread>
 #include <QTimer>
 #include <QDesktopServices>
+#include <QCoreApplication>
 
-#include <lastfm/RadioTuner.h>
 #include <phonon/mediaobject.h>
 #include <phonon/backendcapabilities.h>
 
-#include "RadioService.h"
+#include <lastfm/RadioTuner.h>
+
 #include "lib/unicorn/UnicornSettings.h"
-#include <QCoreApplication>
+
+#include "../../Application.h"
+#include "RadioService.h"
 
 #define ALLOW_ALL_USAGE -1
 
@@ -42,6 +45,18 @@ RadioService::RadioService( )
     initRadio();
 
     QDesktopServices::setUrlHandler( "lastfm", this, "onLastFmUrl" );
+
+    onSessionChanged( *aApp->currentSession() );
+
+    connect( aApp, SIGNAL(sessionChanged(unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)) );
+}
+
+void
+RadioService::onSessionChanged( const unicorn::Session& /*session*/ )
+{
+    // if they change user, make sure we stop the radio
+    if ( m_mediaObject && m_mediaObject->state() != Phonon::StoppedState )
+        stop();
 }
 
 void
@@ -51,42 +66,6 @@ RadioService::onLastFmUrl( const QUrl& url )
     play( rs );
 }
 
-bool
-RadioService::isRadioUsageAllowed(bool showError)
-{
-    bool isAllowed = true;
-    unicorn::UserSettings us;
-    bool isSubscriber = us.value(unicorn::UserSettings::subscriptionKey(), false).toBool();
-    if(!isSubscriber)
-    {
-        int usageCount = us.value("usageCount", 0).toInt();
-        if(usageCount >= m_maxUsageCount && m_maxUsageCount != ALLOW_ALL_USAGE)
-        {
-            if(showError)
-                emit message(tr( "Sorry, you've reached your limit of %n track(s). <a href=\"http://www.last.fm/subscribe\">Subscribe</a> for unlimited listening, or visit <a href=\"http://www.last.fm/listen\">last.fm/listen</a>", "", m_maxUsageCount ) );
-
-            deInitRadio();
-            changeState( Stopped );
-            isAllowed = false;
-        }
-    }
-
-    return isAllowed;
-}
-
-void
-RadioService::IncrementRadioUsageCount()
-{
-    unicorn::UserSettings us;
-    bool isSubscriber = us.value(unicorn::UserSettings::subscriptionKey(), false).toBool();
-    if(!isSubscriber)
-    {
-        int count = us.value("usageCount", 0).toInt();
-        ++count;
-        us.setValue("usageCount", count);
-    }
-}
-
 // fixme:
 // todo:
 // note:
@@ -94,7 +73,14 @@ RadioService::IncrementRadioUsageCount()
 // then we *don't* retune.  norman is quite emphatic about this.  :)
 void
 RadioService::play( const RadioStation& station )
-{
+{  
+    if ( !aApp->currentSession()->user().isSubscriber() )
+    {
+        // they are not a subscriber so don't let them start the radio
+        emit error( lastfm::ws::SubscribersOnly, tr( "You need to be a subscriber to listen to radio" ) );
+        return;
+    }
+
     if( m_state == Paused
             && (station.url() == "" || station.url() == m_station.url() ) )
     {
@@ -154,7 +140,6 @@ RadioService::play( const RadioStation& station )
     connect( m_tuner, SIGNAL(error( lastfm::ws::Error, QString )), SLOT(onTunerError( lastfm::ws::Error, QString )) );
 
     changeState( TuningIn );
-    IncrementRadioUsageCount();
 }
 
 // play this radio station after the current track has finished
@@ -204,9 +189,6 @@ RadioService::enqueue()
 void
 RadioService::skip()
 {
-    if(!isRadioUsageAllowed())
-        return;
-
     if (!m_mediaObject)
         return;
     
@@ -238,8 +220,6 @@ RadioService::skip()
         m_mediaObject->blockSignals( false );
         changeState( TuningIn );
     }
-
-    IncrementRadioUsageCount();
 }
 
 
