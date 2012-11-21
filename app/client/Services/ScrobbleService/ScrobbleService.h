@@ -61,7 +61,7 @@ public slots:
     void scrobbleSettingsChanged();
 
 signals:
-    void trackStarted( Track, Track );
+    void trackStarted( const Track& newTrack, const Track& oldTrack );
     void resumed();
     void paused();
     void stopped();

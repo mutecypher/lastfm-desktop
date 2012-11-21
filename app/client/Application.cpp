@@ -87,9 +87,6 @@ using audioscrobbler::Application;
 Application::Application(int& argc, char** argv) 
     :unicorn::Application(argc, argv), m_raiseHotKeyId( (void*)-1 )
 {
-#ifdef Q_OS_MAC
-    m_mediaKey = new MediaKey( this );
-#endif
 }
 
 void
@@ -321,6 +318,8 @@ Application::init()
     connect( &ScrobbleService::instance(), SIGNAL(stopped()), m_notify, SLOT(stopped()) );
 
     new CommandReciever( this );
+
+    m_mediaKey = new MediaKey( this );
 #endif
 }
 
@@ -360,7 +359,6 @@ Application::showAs( bool showAs )
     setQuitOnLastWindowClosed( !showAs && !QSystemTrayIcon::isSystemTrayAvailable() );
 #endif
 }
-
 
 void
 Application::setRaiseHotKey( Qt::KeyboardModifiers mods, int key )
@@ -456,6 +454,13 @@ Application::macEventFilter( EventHandlerCallRef caller, EventRef event )
 
     return m_mediaKey->macEventFilter( caller, event );
 }
+
+void
+Application::setMediaKeysEnabled( bool enabled )
+{
+    m_mediaKey->setEnabled( enabled );
+}
+
 #endif
 
 void

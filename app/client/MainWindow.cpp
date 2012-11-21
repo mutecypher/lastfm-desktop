@@ -72,7 +72,6 @@
 #endif
 
 #ifdef Q_OS_MAC
-#include "MediaKeys/MediaKey.h"
 void qt_mac_set_dock_menu(QMenu *menu);
 #endif
 
@@ -191,9 +190,6 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     QMenu* dockMenu = new QMenu();
     ui.nowPlaying->nowPlaying()->playbackControls()->addToMenu( *dockMenu  );
     qt_mac_set_dock_menu( dockMenu );
-
-
-    m_mediaKey = new MediaKey( this );
 #endif
 
     if (aApp->tray())

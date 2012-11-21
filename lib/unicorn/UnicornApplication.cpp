@@ -73,7 +73,7 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
     m_bus = new unicorn::Bus( this );
 
 #ifdef Q_OS_MAC
-    m_delegate = new UnicornApplicationDelegate( this );
+    m_delegate = new unicorn::UnicornApplicationDelegate( this );
 #endif
 }
 
