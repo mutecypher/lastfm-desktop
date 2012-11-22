@@ -43,7 +43,7 @@
 	<key>BreakpadRequestComments</key>
 	<string>YES</string>
 	<key>CFBundleName</key>
-	<string>Last.fm</string>
+	<string>Last.fm Scrobbler</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
     <key>CFBundleURLTypes</key>
