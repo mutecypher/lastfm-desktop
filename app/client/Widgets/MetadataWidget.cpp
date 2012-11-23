@@ -289,7 +289,7 @@ MetadataWidget::onArtistGotInfo()
                 if ( i == 0 )
                     tagString.append( tr( " %1" ).arg( Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
                 else
-                    tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "・" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
+                    tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "·" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
             }
 
             ui->artistPopTags->setText( tagString );
@@ -320,7 +320,7 @@ MetadataWidget::onArtistGotInfo()
         QDateTime published;
         published.fromString( lfm["artist"]["bio"]["published"].text(), "ddd, d MMM yyyy HH:mm:ss" );
 
-        ui->artistBioEdit->setText( tr( "Edited on %1 | %2 Edit" ).arg( published.toString( "" ), QString::fromUtf8( "� �" ) ) );
+        ui->artistBioEdit->setText( tr( "Edited on %1 | %2 Edit" ).arg( published.toString( "" ), QString::fromUtf8( "✎" ) ) );
 
         connect( ui->artistBio, SIGNAL(finished()), SLOT(checkFinished()) );
         ++m_numCalls;
@@ -359,7 +359,7 @@ MetadataWidget::onArtistGotYourTags()
                 if ( i ==0 )
                     tagString.append( tr( " %1" ).arg( Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
                 else
-                    tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "・" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
+                    tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "·" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
             }
 
             ui->artistYourTags->setText( tagString );
@@ -525,7 +525,7 @@ MetadataWidget::onTrackGotInfo( const QByteArray& data )
                 if ( i ==0 )
                     tagString.append( tr( " %1" ).arg( Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
                 else
-                    tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "・" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
+                    tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "·" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
             }
 
             ui->trackPopTags->setText( tagString );
@@ -567,7 +567,7 @@ MetadataWidget::onTrackGotYourTags()
                 if ( i ==0 )
                     tagString.append( tr( " %1" ).arg( Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
                 else
-                    tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "・" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
+                    tagString.append( tr( " %1 %2" ).arg( QString::fromUtf8( "·" ), Label::anchor( tags.at(i)["url"].text(), tags.at(i)["name"].text() ) ) );
             }
 
             ui->trackYourTags->setText( tagString );

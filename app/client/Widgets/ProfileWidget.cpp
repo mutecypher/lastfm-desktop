@@ -53,6 +53,8 @@ ProfileWidget::onSessionChanged( const unicorn::Session& session )
         disconnect( this, SLOT(onGotTopWeeklyArtists()));
         disconnect( this, SLOT(onGotLibraryArtists()));
 
+        ui->avatar->setPixmap( QPixmap( ":/user_default.png" ) );
+
         connect( session.user().getLovedTracks( 1 ), SIGNAL(finished()), SLOT(onGotLovedTracks()) );
         connect( session.user().getTopArtists( "overall", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopOverallArtists()));
         connect( session.user().getTopArtists( "7day", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopWeeklyArtists()));
