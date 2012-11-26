@@ -94,12 +94,13 @@ QuickStartWidget::QuickStartWidget( QWidget* parent )
 void
 QuickStartWidget::onSessionChanged( const unicorn::Session& session )
 {
-    m_tags.clear();
-    m_artists.clear();
-
     if ( session.user().name() != m_currentUser )
     {
         m_currentUser = session.user().name();
+
+        m_tags.clear();
+        m_artists.clear();
+
         connect( RadioStation::library( session.user() ).getTagSuggestions( RESULT_LIMIT ), SIGNAL(finished()), SLOT(onGotTagSuggestions()) );
         connect( session.user().getTopArtists( "3month", RESULT_LIMIT ), SIGNAL(finished()), SLOT(onUserGotTopArtists()) );
     }

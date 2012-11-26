@@ -28,7 +28,8 @@ UserMenu::onSessionChanged( const unicorn::Session& session )
         if( a->text() == session.user().name() )
             a->setChecked( true );
 
-    m_subscribe->setVisible( !session.youRadio() );
+    // show the subscribe link if they don't have radio and could get it by subscribing
+    m_subscribe->setVisible( !session.youRadio() && session.subscriberRadio() );
 }
 
 void

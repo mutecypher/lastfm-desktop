@@ -1,6 +1,7 @@
 
 #include <QApplication>
 #include <QDebug>
+#include <QTimer>
 
 #include <lastfm/User.h>
 #include <lastfm/Auth.h>
@@ -64,16 +65,23 @@ Session::getSession( QString token )
     return lastfm::ws::post( params, false );
 }
 
+QString
+Session::subscriptionPriceString() const
+{
+    return m_subscriptionPrice;
+}
+
+bool
+Session::isValid() const
+{
+    return m_valid;
+}
+
+
 bool
 Session::youRadio() const
 {
     return m_youRadio;
-}
-
-bool
-Session::youFreeTrial() const
-{
-    return m_youFreeTrial;
 }
 
 bool
@@ -83,21 +91,27 @@ Session::registeredRadio() const
 }
 
 bool
-Session::registeredFreeTrial() const
-{
-    return m_registeredFreeTrial;
-}
-
-bool
 Session::subscriberRadio() const
 {
     return m_subscriberRadio;
 }
 
 bool
-Session::subscriberFreeTrial() const
+Session::youWebRadio() const
 {
-    return m_subscriberFreeTrial;
+    return m_youWebRadio;
+}
+
+bool
+Session::registeredWebRadio() const
+{
+    return m_registeredWebRadio;
+}
+
+bool
+Session::subscriberWebRadio() const
+{
+    return m_subscriberWebRadio;
 }
 
 QString 
@@ -147,12 +161,13 @@ Session::init( const QString& username, const QString& sessionKey )
         us.setValue( "SessionKey", sessionKey );
 
     us.beginGroup( "Session" );
+    m_valid = us.value( "valid", false ).toBool();
     m_youRadio = us.value( "youRadio", false ).toBool();
-    m_youFreeTrial = us.value( "youFreeTrial", false ).toBool();
     m_registeredRadio = us.value( "registeredRadio", false ).toBool();
-    m_registeredFreeTrial = us.value( "registeredFreeTrial", false ).toBool();
     m_subscriberRadio = us.value( "subscriberRadio", false ).toBool();
-    m_subscriberFreeTrial = us.value( "subscriberFreeTrial", false ).toBool();
+    m_youWebRadio = us.value( "youWebRadio", false ).toBool();
+    m_registeredWebRadio = us.value( "registeredWebRadio", false ).toBool();
+    m_subscriberWebRadio = us.value( "subscriberWebRadio", false ).toBool();
     us.endGroup();
 
     fetchInfo();
@@ -199,24 +214,28 @@ Session::onAuthGotSessionInfo()
     {
         qDebug() << lfm;
 
+        m_valid = true;
+
+        m_subscriptionPrice = QString::fromUtf8( "£3" );
+
         XmlQuery you = lfm["application"]["radioPermission"]["user type=you"];
-        m_youRadio = you["radio"].text() != "0";
-        m_youFreeTrial = you["freetrial"].text() != "0";
+        m_youRadio = you["radio"].text() == "1";
+        m_youWebRadio = you["webradio"].text() == "1";
 
         XmlQuery registered = lfm["application"]["radioPermission"]["user type=registered"];
-        m_registeredRadio = registered["radio"].text() != "0";
-        m_registeredFreeTrial = registered["freetrial"].text() != "0";
+        m_registeredRadio = registered["radio"].text() == "1";
+        m_registeredWebRadio = registered["webradio"].text() == "1";
 
         XmlQuery subscriber = lfm["application"]["radioPermission"]["user type=subscriber"];
-        m_subscriberRadio = subscriber["radio"].text() != "0";
-        m_subscriberFreeTrial = subscriber["freetrial"].text() != "0";
+        m_subscriberRadio = subscriber["radio"].text() == "1";
+        m_subscriberWebRadio = subscriber["webradio"].text() == "1";
 
-        bool isSubscriber = lfm["application"]["session"]["subscriber"].text() != "0";
+        bool isSubscriber = lfm["application"]["session"]["subscriber"].text() == "1";
         m_user.setIsSubscriber( isSubscriber );
 
         // fix the wrongness
         m_youRadio = isSubscriber ? m_subscriberRadio : m_registeredRadio;
-        m_youFreeTrial = isSubscriber ? m_subscriberFreeTrial : m_registeredFreeTrial;
+        m_youWebRadio = isSubscriber ? m_subscriberWebRadio : m_registeredWebRadio;
 
         cacheUserInfo( m_user ); // make sure the subscriber flag gets cached
         cacheSessionInfo( *this );
@@ -255,12 +274,13 @@ Session::cacheSessionInfo( const unicorn::Session& session )
 {
     UserSettings us( session.user().name() );
     us.beginGroup( "Session" );
+    us.setValue( "valid", m_valid );
     us.setValue( "youRadio", session.m_youRadio );
-    us.setValue( "youFreeTrial", session.m_youFreeTrial );
     us.setValue( "registeredRadio", session.m_registeredRadio );
-    us.setValue( "registeredFreeTrial", session.m_registeredFreeTrial );
     us.setValue( "subscriberRadio", session.m_subscriberRadio );
-    us.setValue( "subscriberFreeTrial", session.m_subscriberFreeTrial );
+    us.setValue( "youWebRadio", session.m_youWebRadio );
+    us.setValue( "registeredWebRadio", session.m_registeredWebRadio );
+    us.setValue( "subscriberWebRadio", session.m_subscriberWebRadio );
     us.endGroup();
 }
 

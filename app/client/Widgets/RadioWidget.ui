@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="margin">
@@ -114,21 +114,21 @@
           <item>
            <widget class="PlayableItemWidget" name="library">
             <property name="text">
-             <string>My Library Radio</string>
+             <string notr="true">My Library Radio</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="PlayableItemWidget" name="mix">
             <property name="text">
-             <string>My Mix Radio</string>
+             <string notr="true">My Mix Radio</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="PlayableItemWidget" name="rec">
             <property name="text">
-             <string>My Recommendations Radio</string>
+             <string notr="true">My Recommendations Radio</string>
             </property>
            </widget>
           </item>
@@ -170,14 +170,14 @@
           <item>
            <widget class="PlayableItemWidget" name="friends">
             <property name="text">
-             <string>My Friends' Radio</string>
+             <string notr="true">My Friends' Radio</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="PlayableItemWidget" name="neighbours">
             <property name="text">
-             <string>My Neighbourhood Radio</string>
+             <string notr="true">My Neighbourhood Radio</string>
             </property>
            </widget>
           </item>
@@ -234,6 +234,20 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="spinnerPage">
+      <layout class="QVBoxLayout" name="verticalLayout_9">
+       <item>
+        <widget class="QLabel" name="spinner">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="nonSubPage">
       <layout class="QVBoxLayout" name="verticalLayout_7">
        <property name="margin">
@@ -256,6 +270,9 @@
             <property name="text">
              <string>Subscribe to listen to radio</string>
             </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item>
@@ -276,7 +293,7 @@
             <item>
              <widget class="QLabel" name="headphones">
               <property name="text">
-               <string>Headphones</string>
+               <string notr="true">Headphones</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
