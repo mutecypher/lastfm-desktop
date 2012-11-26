@@ -133,6 +133,7 @@ private:
     RadioStation m_station;
     bool m_bErrorRecover;
     int m_maxUsageCount;
+    QString m_currentUser;
 };
 
 
