@@ -141,6 +141,7 @@ Session::init( const QString& username, const QString& sessionKey )
     m_user.setDateRegistered( us.value( "DateRegistered", QDateTime() ).toDateTime() );
     m_user.setRealName( us.value( "RealName", "" ).toString() );
     m_user.setIsSubscriber( us.value( UserSettings::subscriptionKey(), false ).toBool() );
+    m_user.setType( static_cast<lastfm::User::Type>( us.value( "Type", lastfm::User::TypeUser ).toInt() ) );
 
     QList<QUrl> imageUrls;
     int imageCount = us.beginReadArray( "ImageUrls" );
@@ -252,6 +253,7 @@ Session::cacheUserInfo( const lastfm::User& user )
     us.setValue( "ScrobbleCount", user.scrobbleCount() );
     us.setValue( "DateRegistered", user.dateRegistered() );
     us.setValue( "RealName", user.realName() );
+    us.setValue( "Type", user.type() );
 
     QList<User::ImageSize> sizes;
     sizes << User::SmallImage << User::MediumImage << User::LargeImage;
