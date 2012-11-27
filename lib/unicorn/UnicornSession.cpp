@@ -216,7 +216,7 @@ Session::onAuthGotSessionInfo()
 
         m_valid = true;
 
-        m_subscriptionPrice = QString::fromUtf8( "£3" );
+        m_subscriptionPrice = lfm["application"]["radioprice"]["formatted"].text();
 
         XmlQuery you = lfm["application"]["radioPermission"]["user type=you"];
         m_youRadio = you["radio"].text() == "1";
@@ -232,10 +232,6 @@ Session::onAuthGotSessionInfo()
 
         bool isSubscriber = lfm["application"]["session"]["subscriber"].text() == "1";
         m_user.setIsSubscriber( isSubscriber );
-
-        // fix the wrongness
-        m_youRadio = isSubscriber ? m_subscriberRadio : m_registeredRadio;
-        m_youWebRadio = isSubscriber ? m_subscriberWebRadio : m_registeredWebRadio;
 
         cacheUserInfo( m_user ); // make sure the subscriber flag gets cached
         cacheSessionInfo( *this );
