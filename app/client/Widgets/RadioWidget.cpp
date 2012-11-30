@@ -81,15 +81,14 @@ RadioWidget::refresh( const unicorn::Session& session )
             QString stationUrl = us.value( "lastStationUrl", "" ).toString();
             QString stationTitle = us.value( "lastStationTitle", tr( "A Radio Station" ) ).toString();
 
+            ui->nowPlayingFrame->setVisible( !stationUrl.isEmpty() );
+
             RadioStation lastStation( stationUrl );
             lastStation.setTitle( stationTitle );
 
             ui->lastStation->setStation( lastStation, stationTitle );
             ui->lastStation->setObjectName( "station" );
             style()->polish( ui->lastStation );
-
-            if ( stationUrl.isEmpty() )
-                ui->nowPlayingFrame->hide();
 
             ui->library->setStation( RadioStation::library( session.user() ), tr( "My Library Radio" ), tr( "Music you know and love" ) );
             ui->mix->setStation( RadioStation::mix( session.user() ), tr( "My Mix Radio" ), tr( "Your library plus new music" ) );
