@@ -46,22 +46,11 @@ ProfileWidget::onSessionChanged( const unicorn::Session& session )
     if ( session.user().name() != m_currentUser )
     {
         m_currentUser = session.user().name();
-
-        // Make sure we don't recieve any updates about the last session
-        disconnect( this, SLOT(onGotLovedTracks()) );
-        disconnect( this, SLOT(onGotTopOverallArtists()));
-        disconnect( this, SLOT(onGotTopWeeklyArtists()));
-        disconnect( this, SLOT(onGotLibraryArtists()));
-
         ui->avatar->setPixmap( QPixmap( ":/user_default.png" ) );
+        onGotUserInfo( session.user() );
 
-        connect( session.user().getLovedTracks( 1 ), SIGNAL(finished()), SLOT(onGotLovedTracks()) );
-        connect( session.user().getTopArtists( "overall", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopOverallArtists()));
-        connect( session.user().getTopArtists( "7day", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopWeeklyArtists()));
-        connect( lastfm::Library::getArtists( session.user().name(), 1 ), SIGNAL(finished()), SLOT(onGotLibraryArtists()));
+        refresh();
     }
-
-    onGotUserInfo( session.user() );
 }
 
 
@@ -87,8 +76,16 @@ ProfileWidget::onGotUserInfo( const lastfm::User& user )
 void
 ProfileWidget::refresh()
 {
-    m_currentUser = ""; // force a refresh
-    onSessionChanged( *aApp->currentSession() );
+    // Make sure we don't recieve any updates about the last session
+    disconnect( this, SLOT(onGotLovedTracks()));
+    disconnect( this, SLOT(onGotTopOverallArtists()));
+    disconnect( this, SLOT(onGotTopWeeklyArtists()));
+    disconnect( this, SLOT(onGotLibraryArtists()));
+
+    connect( aApp->currentSession()->user().getLovedTracks( 1 ), SIGNAL(finished()), SLOT(onGotLovedTracks()) );
+    connect( aApp->currentSession()->user().getTopArtists( "overall", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopOverallArtists()));
+    connect( aApp->currentSession()->user().getTopArtists( "7day", 5, 1 ), SIGNAL(finished()), SLOT(onGotTopWeeklyArtists()));
+    connect( lastfm::Library::getArtists( aApp->currentSession()->user().name(), 1 ), SIGNAL(finished()), SLOT(onGotLibraryArtists()));
 }
 
 void
