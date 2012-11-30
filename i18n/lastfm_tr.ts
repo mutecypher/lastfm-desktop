@@ -231,42 +231,42 @@
 <context>
     <name>DeviceScrobbler</name>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="316"/>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="326"/>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="372"/>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="382"/>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="412"/>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="421"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="314"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="324"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="370"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="380"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="410"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="419"/>
         <source>Scrobble iPod</source>
         <translation>iPod&apos;u skropla</translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="317"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="315"/>
         <source>Do you want to associate the device %1 to your audioscrobbler user account?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="327"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="325"/>
         <source>Device successfully associated to your user account. From now on you can scrobble the tracks you listen on this device.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="373"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="371"/>
         <source>%1 tracks scrobbled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="383"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="381"/>
         <source>No tracks to scrobble since your last sync.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="413"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="411"/>
         <source>The iPod database could not be opened.</source>
         <translation>iPod veritabanı açılamadı.</translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="422"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="420"/>
         <source>An unknown error occurred while trying to access the iPod database.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1197,7 +1197,7 @@
     <name>PluginBootstrapper</name>
     <message>
         <location filename="../app/client/Bootstrapper/PluginBootstrapper.cpp" line="50"/>
-        <source>test! Last.fm is importing your current media library...</source>
+        <source>Last.fm is importing your current media library...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1397,34 +1397,34 @@ Profilin, yeni parçalarla birkaç dakika içinde güncellenecek.</translation>
     </message>
     <message numerus="yes">
         <location filename="../app/client/Widgets/ProfileWidget.cpp" line="28"/>
-        <location filename="../app/client/Widgets/ProfileWidget.cpp" line="193"/>
+        <location filename="../app/client/Widgets/ProfileWidget.cpp" line="190"/>
         <source>Loved track(s)</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../app/client/Widgets/ProfileWidget.cpp" line="111"/>
+        <location filename="../app/client/Widgets/ProfileWidget.cpp" line="108"/>
         <source>%L1 artist(s)</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../app/client/Widgets/ProfileWidget.cpp" line="112"/>
+        <location filename="../app/client/Widgets/ProfileWidget.cpp" line="109"/>
         <source>%L1 track(s)</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/ProfileWidget.cpp" line="114"/>
+        <location filename="../app/client/Widgets/ProfileWidget.cpp" line="111"/>
         <source>You have %1 in your library and on average listen to %2 per day.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../app/client/Widgets/ProfileWidget.cpp" line="79"/>
-        <location filename="../app/client/Widgets/ProfileWidget.cpp" line="223"/>
+        <location filename="../app/client/Widgets/ProfileWidget.cpp" line="68"/>
+        <location filename="../app/client/Widgets/ProfileWidget.cpp" line="220"/>
         <source>Scrobble(s) since %1</source>
         <translation type="unfinished">
             <numerusform></numerusform>
@@ -1472,7 +1472,7 @@ Profilin, yeni parçalarla birkaç dakika içinde güncellenecek.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="282"/>
+        <location filename="../app/client/MediaDevices/DeviceScrobbler.cpp" line="280"/>
         <source>Where is your iPod mounted?</source>
         <translation>iPod&apos;un nereye bağlı?</translation>
     </message>
@@ -1487,17 +1487,17 @@ Profilin, yeni parçalarla birkaç dakika içinde güncellenecek.</translation>
     <message>
         <location filename="../app/client/Widgets/QuickStartWidget.cpp" line="67"/>
         <location filename="../app/client/Widgets/QuickStartWidget.cpp" line="68"/>
-        <location filename="../app/client/Widgets/QuickStartWidget.cpp" line="285"/>
+        <location filename="../app/client/Widgets/QuickStartWidget.cpp" line="283"/>
         <source>Play</source>
         <translation>Çal</translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/QuickStartWidget.cpp" line="211"/>
+        <location filename="../app/client/Widgets/QuickStartWidget.cpp" line="209"/>
         <source>Why not try %1, %2, %3 or %4?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/QuickStartWidget.cpp" line="288"/>
+        <location filename="../app/client/Widgets/QuickStartWidget.cpp" line="286"/>
         <source>Play next</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1520,26 +1520,21 @@ Profilin, yeni parçalarla birkaç dakika içinde güncellenecek.</translation>
     <name>RadioWidget</name>
     <message>
         <location filename="../app/client/Widgets/RadioWidget.ui" line="68"/>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="208"/>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="221"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="207"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="220"/>
         <source>Last Station</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../app/client/Widgets/RadioWidget.ui" line="75"/>
         <location filename="../app/client/Widgets/RadioWidget.cpp" line="82"/>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="167"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="166"/>
         <source>A Radio Station</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../app/client/Widgets/RadioWidget.ui" line="95"/>
         <source>Personal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../app/client/Widgets/RadioWidget.ui" line="242"/>
-        <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1563,37 +1558,37 @@ Profilin, yeni parçalarla birkaç dakika içinde güncellenecek.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="94"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="93"/>
         <source>My Library Radio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="94"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="93"/>
         <source>Music you know and love</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="95"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="94"/>
         <source>My Mix Radio</source>
         <translation>Karışık Radyom</translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="95"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="94"/>
         <source>Your library plus new music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="96"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="95"/>
         <source>My Recommended Radio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="96"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="95"/>
         <source>New music from Last.fm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="126"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="125"/>
         <source>Subscribe to listen to radio, only %1 a month</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1603,22 +1598,22 @@ Profilin, yeni parçalarla birkaç dakika içinde güncellenecek.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="98"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="97"/>
         <source>My Friends&apos; Radio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="98"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="97"/>
         <source>Music your friends like</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="99"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="98"/>
         <source>My Neighbourhood Radio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="99"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="98"/>
         <source>Music from listeners like you</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1628,8 +1623,8 @@ Profilin, yeni parçalarla birkaç dakika içinde güncellenecek.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="166"/>
-        <location filename="../app/client/Widgets/RadioWidget.cpp" line="217"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="165"/>
+        <location filename="../app/client/Widgets/RadioWidget.cpp" line="216"/>
         <source>Now Playing</source>
         <translation>Şimdi Çalıyor</translation>
     </message>
@@ -2427,12 +2422,12 @@ or choose from below</source>
 <context>
     <name>unicorn::Application</name>
     <message>
-        <location filename="../lib/unicorn/UnicornApplication.cpp" line="298"/>
+        <location filename="../lib/unicorn/UnicornApplication.cpp" line="300"/>
         <source>Changing User</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lib/unicorn/UnicornApplication.cpp" line="299"/>
+        <location filename="../lib/unicorn/UnicornApplication.cpp" line="301"/>
         <source>%1 will be logged into the Scrobbler and Last.fm Radio. All music will now be scrobbled to this account. Do you want to continue?</source>
         <translation type="unfinished"></translation>
     </message>
