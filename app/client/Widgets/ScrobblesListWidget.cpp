@@ -512,39 +512,43 @@ ScrobblesListWidget::addTracks( const QList<lastfm::Track>& tracks )
 
     for ( int i = 0 ; i < tracks.count() ; ++i )
     {
-        int pos = -1;
-
-        for ( int j = 0 ; j < count() ; ++j )
+        if ( tracks[i].scrobbleError() != Track::Invalid  )
         {
-            TrackWidget* trackWidget = qobject_cast<TrackWidget*>( itemWidget( item( j ) ) );
+            // the track was not filtered client side for being invalid
+            int pos = -1;
 
-            if ( trackWidget
-                    && !static_cast<ScrobblesListWidgetItem*>( item( j ) )->isNowPlaying()
-                    && tracks[i].timestamp().toTime_t() == trackWidget->track().timestamp().toTime_t() )
+            for ( int j = 0 ; j < count() ; ++j )
             {
-                pos = j;
-                break;
+                TrackWidget* trackWidget = qobject_cast<TrackWidget*>( itemWidget( item( j ) ) );
+
+                if ( trackWidget
+                     && !static_cast<ScrobblesListWidgetItem*>( item( j ) )->isNowPlaying()
+                     && tracks[i].timestamp().toTime_t() == trackWidget->track().timestamp().toTime_t() )
+                {
+                    pos = j;
+                    break;
+                }
             }
-        }
 
-        if ( pos == -1 )
-        {
-            // the track was not in the list
-            ScrobblesListWidgetItem* item = new ScrobblesListWidgetItem( this );
-            Track track = tracks[i];
-            TrackWidget* trackWidget = new TrackWidget( track, this );
-            setItemWidget( item, trackWidget );
-            item->setSizeHint( trackWidget->sizeHint() );
+            if ( pos == -1 )
+            {
+                // the track was not in the list
+                ScrobblesListWidgetItem* item = new ScrobblesListWidgetItem( this );
+                Track track = tracks[i];
+                TrackWidget* trackWidget = new TrackWidget( track, this );
+                setItemWidget( item, trackWidget );
+                item->setSizeHint( trackWidget->sizeHint() );
 
-            connect( trackWidget, SIGNAL(removed()), SLOT(onTrackWidgetRemoved()));
-            connect( trackWidget, SIGNAL(clicked(TrackWidget&)), SLOT(onItemClicked(TrackWidget&)) );
+                connect( trackWidget, SIGNAL(removed()), SLOT(onTrackWidgetRemoved()));
+                connect( trackWidget, SIGNAL(clicked(TrackWidget&)), SLOT(onItemClicked(TrackWidget&)) );
 
-            connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(write()));
-            connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged(short)), SLOT(write()));
-        }
-        else
-        {
-            // update the track in the list with the new infos!
+                connect( track.signalProxy(), SIGNAL(loveToggled(bool)), SLOT(write()));
+                connect( track.signalProxy(), SIGNAL(scrobbleStatusChanged(short)), SLOT(write()));
+            }
+            else
+            {
+                // update the track in the list with the new infos!
+            }
         }
     }
 
