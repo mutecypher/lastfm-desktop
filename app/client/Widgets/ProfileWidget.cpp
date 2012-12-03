@@ -65,7 +65,7 @@ ProfileWidget::onGotUserInfo( const lastfm::User& user )
 
      ui->infoString->setText( user.getInfoString() );
 
-     ui->scrobbles->setText( tr( "Scrobble(s) since %1", "", user.scrobbleCount() ).arg( user.dateRegistered().toString( "d MMMM yyyy" ) ) );
+     ui->scrobbles->setText( tr( "Scrobble(s) since %1", "", user.scrobbleCount() ).arg( user.dateRegistered().toString( Qt::DefaultLocaleShortDate ) ) );
 
      m_scrobbleCount = user.scrobbleCount();
      setScrobbleCount();
