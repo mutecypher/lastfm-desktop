@@ -75,12 +75,16 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
 void
 PlaybackControlsWidget::onSessionChanged( const unicorn::Session& session )
 {
-    aApp->playAction()->setVisible( session.youRadio() );
-    aApp->skipAction()->setVisible( session.youRadio() );
-    aApp->banAction()->setVisible( session.youRadio() );
-    m_playAction->setVisible( session.youRadio() );
+    // don't change them until the session is valid
+    if ( session.isValid() )
+    {
+        aApp->playAction()->setVisible( session.youRadio() );
+        aApp->skipAction()->setVisible( session.youRadio() );
+        aApp->banAction()->setVisible( session.youRadio() );
+        m_playAction->setVisible( session.youRadio() );
 
-    onActionsChanged();
+        onActionsChanged();
+    }
 }
 
 void

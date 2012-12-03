@@ -21,12 +21,19 @@ public:
     Session( QDataStream& dataStream );
     Session( const QString& username, QString sessionKey = "" );
 
+    bool isValid() const;
+
+    // client radio permissions
     bool youRadio() const;
-    bool youFreeTrial() const;
     bool registeredRadio() const;
-    bool registeredFreeTrial() const;
     bool subscriberRadio() const;
-    bool subscriberFreeTrial() const;
+
+    // web radio permissions
+    bool youWebRadio() const;
+    bool registeredWebRadio() const;
+    bool subscriberWebRadio() const;
+
+    QString subscriptionPriceString() const;
 
     QString sessionKey() const;
     lastfm::User user() const;
@@ -59,12 +66,17 @@ private:
     QString m_sessionKey;
     lastfm::User m_user;
 
+    QString m_subscriptionPrice;
+
+    bool m_valid;
+
     bool m_youRadio;
-    bool m_youFreeTrial;
     bool m_registeredRadio;
-    bool m_registeredFreeTrial;
     bool m_subscriberRadio;
-    bool m_subscriberFreeTrial;
+
+    bool m_youWebRadio;
+    bool m_registeredWebRadio;
+    bool m_subscriberWebRadio;
 };
 
 }

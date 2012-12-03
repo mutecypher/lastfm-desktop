@@ -40,6 +40,8 @@ private:
     Ui::RadioWidget* ui;
 
     QString m_currentUsername;
+
+    QPointer<QMovie> m_movie;
 };
 
 #endif // RADIOWIDGET_H

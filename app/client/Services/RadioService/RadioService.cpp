@@ -52,11 +52,16 @@ RadioService::RadioService( )
 }
 
 void
-RadioService::onSessionChanged( const unicorn::Session& /*session*/ )
+RadioService::onSessionChanged( const unicorn::Session& session )
 {
-    // if they change user, make sure we stop the radio
-    if ( m_mediaObject && m_mediaObject->state() != Phonon::StoppedState )
-        stop();
+    if ( session.user().name() != m_currentUser )
+    {
+        m_currentUser = session.user().name();
+
+        // if they change user, make sure we stop the radio
+        if ( m_mediaObject && m_mediaObject->state() != Phonon::StoppedState )
+            stop();
+    }
 }
 
 void

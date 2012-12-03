@@ -79,27 +79,27 @@ QuickStartWidget::QuickStartWidget( QWidget* parent )
 
     ui.button->setAttribute( Qt::WA_MacNoClickThrough );
 
-    connect( RadioStation::library( User() ).getTagSuggestions( RESULT_LIMIT ), SIGNAL(finished()), SLOT(onGotTagSuggestions()) );
-    connect( User().getTopArtists( "3month", RESULT_LIMIT ), SIGNAL(finished()), SLOT(onUserGotTopArtists()) );
-
-
     QShortcut* shortcut = new QShortcut( ui.edit );
     shortcut->setKey( Qt::CTRL + Qt::Key_D );
     shortcut->setContext( Qt::WidgetShortcut );
     connect( shortcut, SIGNAL(activated()), SLOT(setToCurrent()) );
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)) );
+
+    onSessionChanged( *aApp->currentSession() );
 }
 
 void
 QuickStartWidget::onSessionChanged( const unicorn::Session& session )
 {
-    m_tags.clear();
-    m_artists.clear();
-
     if ( session.user().name() != m_currentUser )
     {
         m_currentUser = session.user().name();
+
+        m_tags.clear();
+        m_artists.clear();
+        ui.whyNotTry->clear();
+
         connect( RadioStation::library( session.user() ).getTagSuggestions( RESULT_LIMIT ), SIGNAL(finished()), SLOT(onGotTagSuggestions()) );
         connect( session.user().getTopArtists( "3month", RESULT_LIMIT ), SIGNAL(finished()), SLOT(onUserGotTopArtists()) );
     }
@@ -194,7 +194,6 @@ QuickStartWidget::setSuggestions()
         //ui.edit->setCompleter( completer );
 
         // pick two tags and two artists at random from the top ten of each
-        qsrand( QDateTime::currentDateTime().toTime_t() );
         Artist artist1( m_artists.takeAt( qrand() % qMin( m_artists.count(), RESULT_LIMIT ) ) );
         Artist artist2( m_artists.takeAt( qrand() % qMin( m_artists.count(), RESULT_LIMIT ) ) );
         Tag tag1( m_tags.takeAt( qrand() % qMin( m_tags.count(), RESULT_LIMIT ) ) );

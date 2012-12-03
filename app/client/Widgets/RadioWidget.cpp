@@ -3,6 +3,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QScrollArea>
+#include <QMovie>
 
 #include <lastfm/RadioStation.h>
 #include <lastfm/XmlQuery.h>
@@ -49,6 +50,10 @@ RadioWidget::RadioWidget(QWidget *parent)
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session)), SLOT(onSessionChanged(unicorn::Session) ) );
 
+    m_movie = new QMovie( ":/loading_meta.gif", "GIF", this );
+    m_movie->setCacheMode( QMovie::CacheAll );
+    ui->spinner->setMovie( m_movie );
+
     refresh( *aApp->currentSession() );
 }
 
@@ -66,53 +71,65 @@ RadioWidget::onSessionChanged( const unicorn::Session& session )
 void
 RadioWidget::refresh( const unicorn::Session& session )
 {
-    if ( session.youRadio() )
+    if ( session.isValid() )
     {
-        unicorn::UserSettings us( session.user().name() );
-        QString stationUrl = us.value( "lastStationUrl", "" ).toString();
-        QString stationTitle = us.value( "lastStationTitle", tr( "A Radio Station" ) ).toString();
+        m_movie->stop();
 
-        RadioStation lastStation( stationUrl );
-        lastStation.setTitle( stationTitle );
-
-        ui->lastStation->setStation( lastStation, stationTitle );
-        ui->lastStation->setObjectName( "station" );
-        style()->polish( ui->lastStation );
-
-        if ( stationUrl.isEmpty() )
-            ui->nowPlayingFrame->hide();
-
-        ui->library->setStation( RadioStation::library( session.user() ), tr( "My Library Radio" ), tr( "Music you know and love" ) );
-        ui->mix->setStation( RadioStation::mix( session.user() ), tr( "My Mix Radio" ), tr( "Your library plus new music" ) );
-        ui->rec->setStation( RadioStation::recommendations( session.user() ), tr( "My Recommended Radio" ), tr( "New music from Last.fm" ) );
-
-        ui->friends->setStation( RadioStation::friends( session.user() ), tr( "My Friends' Radio" ), tr( "Music your friends like" ) );
-        ui->neighbours->setStation( RadioStation::neighbourhood( session.user() ), tr( "My Neighbourhood Radio" ), tr ( "Music from listeners like you" ) );
-
-        if ( m_currentUsername != session.user().name() )
+        if ( session.youRadio() )
         {
-            m_currentUsername = session.user().name();
+            unicorn::UserSettings us( session.user().name() );
+            QString stationUrl = us.value( "lastStationUrl", "" ).toString();
+            QString stationTitle = us.value( "lastStationTitle", tr( "A Radio Station" ) ).toString();
 
-            // clear the recent stations
-            QLayout* recentStationsLayout = ui->recentStations->layout();
-            while ( recentStationsLayout->count() )    
+            ui->nowPlayingFrame->setVisible( !stationUrl.isEmpty() );
+
+            RadioStation lastStation( stationUrl );
+            lastStation.setTitle( stationTitle );
+
+            ui->lastStation->setStation( lastStation, stationTitle );
+            ui->lastStation->setObjectName( "station" );
+            style()->polish( ui->lastStation );
+
+            ui->library->setStation( RadioStation::library( session.user() ), tr( "My Library Radio" ), tr( "Music you know and love" ) );
+            ui->mix->setStation( RadioStation::mix( session.user() ), tr( "My Mix Radio" ), tr( "Your library plus new music" ) );
+            ui->rec->setStation( RadioStation::recommendations( session.user() ), tr( "My Recommended Radio" ), tr( "New music from Last.fm" ) );
+
+            ui->friends->setStation( RadioStation::friends( session.user() ), tr( "My Friends' Radio" ), tr( "Music your friends like" ) );
+            ui->neighbours->setStation( RadioStation::neighbourhood( session.user() ), tr( "My Neighbourhood Radio" ), tr ( "Music from listeners like you" ) );
+
+            if ( m_currentUsername != session.user().name() )
             {
-                QLayoutItem* item = recentStationsLayout->takeAt( 0 );
-                delete item->widget();
-                delete item;
+                m_currentUsername = session.user().name();
+
+                // clear the recent stations
+                QLayout* recentStationsLayout = ui->recentStations->layout();
+                while ( recentStationsLayout->count() )
+                {
+                    QLayoutItem* item = recentStationsLayout->takeAt( 0 );
+                    delete item->widget();
+                    delete item;
+                }
+
+                // fetch recent stations
+                connect( session.user().getRecentStations( MAX_RECENT_STATIONS ), SIGNAL(finished()), SLOT(onGotRecentStations()));
             }
 
-            // fetch recent stations
-            connect( session.user().getRecentStations( MAX_RECENT_STATIONS ), SIGNAL(finished()), SLOT(onGotRecentStations()));
+            ui->stackedWidget->setCurrentWidget( ui->mainPage );
         }
+        else
+        {
+            ui->listen->setVisible( session.registeredWebRadio() );
 
-        ui->stackedWidget->setCurrentWidget( ui->mainPage );
+            ui->stackedWidget->setCurrentWidget( ui->nonSubPage );
+
+            ui->title->setText( tr( "Subscribe to listen to radio, only %1 a month" ).arg( session.subscriptionPriceString() ) );
+            ui->subscribe->setVisible( session.subscriberRadio() );
+        }
     }
     else
     {
-        ui->stackedWidget->setCurrentWidget( ui->nonSubPage );
-
-        ui->subscribe->setVisible( session.subscriberRadio() );
+        ui->stackedWidget->setCurrentWidget( ui->spinnerPage );
+        m_movie->start();
     }
 }
 

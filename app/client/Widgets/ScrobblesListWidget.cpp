@@ -192,9 +192,8 @@ ScrobblesListWidget::onSessionChanged( const unicorn::Session& session )
         {
             m_path = path;
             read();
+            refresh();
         }
-
-        refresh();
     }
 }
 

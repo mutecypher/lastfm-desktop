@@ -72,6 +72,8 @@ unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserE
 {
     m_bus = new unicorn::Bus( this );
 
+    qsrand( QDateTime::currentDateTime().toTime_t() + QCoreApplication::applicationPid() );
+
 #ifdef Q_OS_MAC
     m_delegate = new unicorn::UnicornApplicationDelegate( this );
 #endif
