@@ -102,7 +102,7 @@ ProfileWidget::onGotLibraryArtists()
 
     if ( lfm.parse( static_cast<QNetworkReply*>(sender()) ) )
     {
-        int scrobblesPerDay = aApp->currentSession()->user().scrobbleCount() / aApp->currentSession()->user().dateRegistered().daysTo( QDateTime::currentDateTime() );
+        int scrobblesPerDay = aApp->currentSession()->user().scrobbleCount() / (aApp->currentSession()->user().dateRegistered().daysTo( QDateTime::currentDateTime() ) + 1 );
         int totalArtists = lfm["artists"].attribute( "total" ).toInt();
 
         QString artistsString = tr( "%L1 artist(s)", "", totalArtists ).arg( totalArtists );
