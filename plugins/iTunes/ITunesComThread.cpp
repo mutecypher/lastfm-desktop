@@ -52,23 +52,9 @@ ITunesComThread::ITunesComThread() :
     m_retrying( false ),
     m_retryAttempts( 0 )
 {
-    InitializeCriticalSection( &m_critSect );
+    InitializeCriticalSection(&m_critSect);
 
-    unsigned threadId;
-    m_threadHandle = reinterpret_cast<HANDLE>(
-        _beginthreadex(
-            NULL,          // security crap
-            0,             // stack size
-            threadMain,    // start function
-            reinterpret_cast<void*>(this),  // argument to thread
-            0,             // run straight away
-            &threadId ) ); // thread id out
-
-    if ( m_threadHandle == 0 ) // Error
-    {
-        // FIXME
-        LOGL( 1, "Failed to start iTunes COM thread: " << string( strerror(errno) ) );
-    }
+	startComThread();
 }
 
 
@@ -88,15 +74,40 @@ ITunesComThread::~ITunesComThread()
     {
         LOGL( 3, "iTunes COM thread terminated" );
     }
+	
 
     CloseHandle( m_threadHandle );
     DeleteCriticalSection( &m_critSect );
 }
 
+void
+ITunesComThread::startComThread()
+{
+   unsigned threadId;
+    m_threadHandle = reinterpret_cast<HANDLE>(
+        _beginthreadex(
+            NULL,          // security crap
+            0,             // stack size
+            threadMain,    // start function
+            reinterpret_cast<void*>(this),  // argument to thread
+            0,             // run straight away
+            &threadId ) ); // thread id out
+
+    if ( m_threadHandle == 0 ) // Error
+    {
+        // FIXME
+        LOGL( 1, "Failed to start iTunes COM thread: " << string( strerror(errno) ) );
+    }
+}
 
 void
 ITunesComThread::syncTrack( const VisualPluginTrack& vpt )
 {
+	// If the com thread was closed due to a close signal
+	// but iTunes didn't actaully close we should start up our thread again
+	if ( !m_com )
+		startComThread();
+
     // Needs guarding because it will be read by the worker thread after the
     // PostMessage. If we come into this function twice before the worker thread
     // has had a chance to wake up, it shouldn't matter that we miss we the first
@@ -294,7 +305,9 @@ ITunesComThread::eventLoop()
     }
 
     delete m_com;
+	m_com = 0;
     delete m_db;
+	m_db = 0;
 
     LOGL( 3, "Thread shutting down" );
 
