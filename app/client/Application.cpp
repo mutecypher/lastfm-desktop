@@ -178,7 +178,7 @@ Application::init()
     QMenu* menu = new QMenu;
     m_tray->setContextMenu(menu);
 
-    menu->addMenu( new UserMenu() )->setText( "Accounts" );
+    menu->addMenu( new UserMenu() )->setText( tr( "Accounts" ) );
 
     m_show_window_action = menu->addAction( tr("Show Scrobbler"));
     m_show_window_action->setShortcut( Qt::CTRL + Qt::META + Qt::Key_S );
