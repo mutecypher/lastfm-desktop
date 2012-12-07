@@ -33,7 +33,8 @@
 #include "AccessPage.h"
 
 AccessPage::AccessPage()
-    :m_valid( false )
+    :m_valid( false ),
+      m_gotUserInfo( false )
 {
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setContentsMargins( 0, 0, 0, 0 );
@@ -82,6 +83,7 @@ AccessPage::onAuthenticated( unicorn::Session* session )
     if ( session )
     {
         // Wait to find out they're details such as canBootstrap, subscriber, etc
+        connect( aApp, SIGNAL(sessionChanged(unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)));
         connect( aApp, SIGNAL(gotUserInfo(lastfm::User)), SLOT(onGotUserInfo(lastfm::User)));
     }
     else
@@ -91,13 +93,26 @@ AccessPage::onAuthenticated( unicorn::Session* session )
 }
 
 void
-AccessPage::onGotUserInfo( const lastfm::User& user )
+AccessPage::onGotUserInfo( const lastfm::User& /*user*/ )
 {
-    qDebug() << user.name();
+    m_gotUserInfo = true;
 
-    if ( wizard()->user().name() != user.name() )
+    check();
+}
+
+void
+AccessPage::onSessionChanged( const unicorn::Session& session )
+{
+    if ( session.isValid() )
+        check();
+}
+
+void
+AccessPage::check()
+{
+    if ( aApp->currentSession()->isValid() && m_gotUserInfo )
     {
-        wizard()->setUser( user );
+        // we've now got both the session info and the user info
         m_valid = true;
 
         // make sure the wizard is shown again after they allow access on the website.
