@@ -79,7 +79,7 @@ RadioService::onLastFmUrl( const QUrl& url )
 void
 RadioService::play( const RadioStation& station )
 {  
-    if ( !aApp->currentSession()->user().isSubscriber() )
+    if ( !aApp->currentSession()->youRadio() )
     {
         // they are not a subscriber so don't let them start the radio
         emit error( lastfm::ws::SubscribersOnly, tr( "You need to be a subscriber to listen to radio" ) );
