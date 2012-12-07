@@ -25,18 +25,6 @@
 #include <QLocalServer>
 #include <QMap>
 #include "lib/DllExportMacro.h"
-#include <stdexcept>
-
-
-#ifdef WIN32
-#include <windows.h>
-// ignore the warning about the exception specification
-#pragma warning( disable : 4290 )
-#endif
-
-#define BUFSIZE 4096
-
-
 
 /** listens to external clients via a TcpSocket and notifies a receiver to their
   * commands */
@@ -50,47 +38,15 @@ public:
 signals:
     void newConnection( class PlayerConnection* );
     void bootstrapCompleted( const QString& playerId );
-#ifdef Q_OS_WIN
-    void pipeConnected();
-#endif
 
 private slots:
     void onNewConnection();
     void onDataReady();
 
-#ifdef Q_OS_WIN
-    void onPipeConnected();
-#endif
-
-private:
     QString processLine( const QString& line );
-#ifdef Q_OS_WIN
-
-    bool addListener();
-
-    static VOID CALLBACK onConnectedNamedPipe( PVOID lpParameter, BOOLEAN TimerOrWaitFired );
-    static VOID CALLBACK onReadFileComplete( DWORD dwErrorCode, DWORD dwNumberOfBytesTransfered, LPOVERLAPPED lpOverlapped );
-    static VOID CALLBACK onWriteFileComplete( DWORD dwErrorCode, DWORD dwNumberOfBytesTransfered, LPOVERLAPPED lpOverlapped );
-#endif
 
 private:    
     QMap<QString, PlayerConnection*> m_connections;
-#ifdef Q_OS_WIN
-    HANDLE m_connectEvent;
-
-    struct Listener
-    {
-        OVERLAPPED overlapped;
-        HANDLE pipeHandle;
-        PlayerListener* self;
-        TCHAR readBuffer[BUFSIZE];
-        TCHAR writeBuffer[BUFSIZE];
-        bool connected;
-    };
-
-    QList<Listener> m_listeners;
-    QList<Listener> m_pipes;
-#endif
 };
 
 
