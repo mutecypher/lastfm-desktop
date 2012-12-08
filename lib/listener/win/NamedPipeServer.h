@@ -3,11 +3,6 @@
 
 #include <QThread>
 
-#include <windows.h>
-#include <stdio.h>
-#include <tchar.h>
-#include <strsafe.h>
-
 class NamedPipeServer : public QThread
 {
     Q_OBJECT
@@ -16,9 +11,6 @@ public:
 
 private:
     void run();
-
-    static VOID DisconnectAndReconnect(DWORD i);
-    static BOOL ConnectToNewClient(HANDLE hPipe, LPOVERLAPPED lpo);
 
 signals:
     QString lineReady( const QString& line );

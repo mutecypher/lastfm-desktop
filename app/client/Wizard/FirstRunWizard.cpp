@@ -174,7 +174,7 @@ FirstRunWizard::next()
             else
                 ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
 #elif defined Q_OS_MAC
-            if( m_user.canBootstrap() )
+            if( aApp->currentSession()->user().canBootstrap() )
                 ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
             else
                 ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
@@ -249,7 +249,7 @@ FirstRunWizard::skip()
         else
             ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
 #elif defined Q_OS_MAC
-        if( m_user.canBootstrap() )
+        if( aApp->currentSession()->user().canBootstrap() )
             ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
         else
             ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );

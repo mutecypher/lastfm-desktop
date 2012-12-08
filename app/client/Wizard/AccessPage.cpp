@@ -97,18 +97,18 @@ AccessPage::onGotUserInfo( const lastfm::User& /*user*/ )
 {
     m_gotUserInfo = true;
 
-    check();
+    checkComplete();
 }
 
 void
 AccessPage::onSessionChanged( const unicorn::Session& session )
 {
     if ( session.isValid() )
-        check();
+        checkComplete();
 }
 
 void
-AccessPage::check()
+AccessPage::checkComplete()
 {
     if ( aApp->currentSession()->isValid() && m_gotUserInfo )
     {

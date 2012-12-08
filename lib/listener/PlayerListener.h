@@ -20,10 +20,11 @@
 #ifndef PLAYER_LISTENER_H
 #define PLAYER_LISTENER_H
 
-#include "common/HideStupidWarnings.h"
-#include "PlayerConnection.h"
 #include <QLocalServer>
 #include <QMap>
+
+#include "common/HideStupidWarnings.h"
+#include "PlayerConnection.h"
 #include "lib/DllExportMacro.h"
 
 /** listens to external clients via a TcpSocket and notifies a receiver to their
@@ -33,7 +34,7 @@ class LISTENER_DLLEXPORT PlayerListener : public QLocalServer
     Q_OBJECT
 
 public:
-    PlayerListener( QObject* parent = 0 ) throw( std::runtime_error );
+    explicit PlayerListener( QObject* parent = 0 );
 
 signals:
     void newConnection( class PlayerConnection* );

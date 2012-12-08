@@ -1,6 +1,11 @@
 
 #include <QDebug>
 
+#include <windows.h>
+#include <stdio.h>
+#include <tchar.h>
+#include <strsafe.h>
+
 #include "NamedPipeServer.h"
 
 #include "common/c++/win/scrobSubPipeName.cpp"
@@ -266,7 +271,7 @@ NamedPipeServer::run()
 // call ConnectNamedPipe to wait for another client to connect.
 
 VOID
-NamedPipeServer::DisconnectAndReconnect(DWORD i)
+DisconnectAndReconnect(DWORD i)
 {
 // Disconnect the pipe instance.
 
@@ -292,7 +297,7 @@ NamedPipeServer::DisconnectAndReconnect(DWORD i)
 // connection has been completed.
 
 BOOL
-NamedPipeServer::ConnectToNewClient(HANDLE hPipe, LPOVERLAPPED lpo)
+ConnectToNewClient(HANDLE hPipe, LPOVERLAPPED lpo)
 {
    BOOL fConnected, fPendingIO = FALSE;
 

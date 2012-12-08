@@ -48,7 +48,7 @@ public:
     void cleanupPage();
 
 private:
-    void check();
+    void checkComplete();
 
 private slots:
     void onAuthenticated( unicorn::Session* );

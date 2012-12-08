@@ -31,7 +31,7 @@
 #include <lastfm/misc.h>
 #endif
 
-PlayerListener::PlayerListener( QObject* parent ) throw( std::runtime_error )
+PlayerListener::PlayerListener( QObject* parent )
               : QLocalServer( parent )
 {
     connect( this, SIGNAL(newConnection()), SLOT(onNewConnection()) );
@@ -56,8 +56,8 @@ PlayerListener::PlayerListener( QObject* parent ) throw( std::runtime_error )
     if( QFile::exists( fullPath ))
         QFile::remove( fullPath );
 
-    if (!listen( fullPath ))
-        throw std::runtime_error( errorString().toStdString() );
+    bool success = listen( fullPath );
+    Q_ASSERT( success );
 #endif
 }
 
