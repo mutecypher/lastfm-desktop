@@ -22,7 +22,8 @@ class DeviceScrobbler : public QObject
 {
     Q_OBJECT
 public:
-    DeviceScrobbler( QObject* parent = 0 );
+    explicit DeviceScrobbler( QObject* parent = 0 );
+    ~DeviceScrobbler();
 
 signals:
     void foundScrobbles( const QList<lastfm::Track>& tracks );

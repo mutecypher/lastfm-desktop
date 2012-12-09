@@ -29,6 +29,10 @@ DeviceScrobbler::DeviceScrobbler( QObject *parent )
     m_twiddlyTimer->start( BACKGROUND_CHECK_INTERVAL );
 }
 
+DeviceScrobbler::~DeviceScrobbler()
+{
+    delete m_confirmDialog;
+}
 
 void
 DeviceScrobbler::twiddle()
@@ -158,6 +162,8 @@ DeviceScrobbler::scrobbleIpodFiles( const QStringList& files )
                     m_confirmDialog = new ScrobbleConfirmationDialog( scrobbles );
                     connect( m_confirmDialog, SIGNAL(finished(int)), SLOT(onScrobblesConfirmationFinished(int)) );
                 }
+                else
+                    m_confirmDialog->addTracks( scrobbles );
 
                 // add the files so it can delete them when the user has decided what to do
                 m_confirmDialog->addFiles( files );

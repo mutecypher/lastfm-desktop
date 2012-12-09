@@ -132,19 +132,14 @@ void
 ScrobbleService::resetScrobbler()
 {
 /// audioscrobbler
-    if( m_as )
-        delete m_as;
-
+    delete m_as;
     m_as = new Audioscrobbler( "ass" );
     connect( m_as, SIGNAL(scrobblesCached(QList<lastfm::Track>)), SIGNAL(scrobblesCached(QList<lastfm::Track>)));
     connect( m_as, SIGNAL(scrobblesSubmitted(QList<lastfm::Track>)), SIGNAL(scrobblesSubmitted(QList<lastfm::Track>)));
 
 /// DeviceScrobbler
-    if( m_deviceScrobbler )
-        delete m_deviceScrobbler;
-
+    delete m_deviceScrobbler;
     m_deviceScrobbler = new DeviceScrobbler( this );
-
     connect( m_deviceScrobbler, SIGNAL(foundScrobbles(QList<lastfm::Track>)), SLOT(onFoundScrobbles(QList<lastfm::Track>)));
     connect( m_deviceScrobbler, SIGNAL(foundScrobbles(QList<lastfm::Track>)), SIGNAL(foundIPodScrobbles(QList<lastfm::Track>)));
 
