@@ -40,7 +40,7 @@ TourRadioPage::initializePage()
     }
     else
     {
-        setTitle( tr( "Subscribe and listen to non-stop, personalised radio*" ) );
+        setTitle( tr( "Subscribe and listen to non-stop, personalised radio" ) );
         ui.description->setText( tr( "<p>Subscribe to Last.fm and use the Last.fm Desktop App to listen to personalised radio based on the music you want to hear.</p>"
                                      "<p>Every play of every Last.fm station is totally different, from stations based on artists and tags to brand new recommendations tailored to your music taste.</p>" ) );
 

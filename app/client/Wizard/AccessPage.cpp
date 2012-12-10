@@ -110,7 +110,7 @@ AccessPage::onSessionChanged( const unicorn::Session& session )
 void
 AccessPage::checkComplete()
 {
-    if ( aApp->currentSession()->isValid() && m_gotUserInfo )
+    if ( aApp->currentSession()->isValid() && m_gotUserInfo && !m_valid )
     {
         // we've now got both the session info and the user info
         m_valid = true;

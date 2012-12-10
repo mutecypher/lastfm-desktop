@@ -213,13 +213,16 @@ FirstRunWizard::next()
 void
 FirstRunWizard::back()
 {
-    setCommitPage( false );
+    if ( canGoBack() )
+    {
+        setCommitPage( false );
 
-    ui->welcome->hide();
+        ui->welcome->hide();
 
-    cleanupPage( ui->stackedWidget->currentWidget() );
-    ui->stackedWidget->setCurrentWidget( m_pages.takeLast() );
-    initializePage( ui->stackedWidget->currentWidget() );
+        cleanupPage( ui->stackedWidget->currentWidget() );
+        ui->stackedWidget->setCurrentWidget( m_pages.takeLast() );
+        initializePage( ui->stackedWidget->currentWidget() );
+    }
 }
 
 void
