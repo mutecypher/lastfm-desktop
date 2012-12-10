@@ -588,7 +588,8 @@ unicorn::Application::restart()
     // In Mac OS the full path of aplication binary is:
     //    <base-path>/myApp.app/Contents/MacOS/myApp
     QStringList args;
-    args << applicationDirPath() + "/../../../Last.fm.app";
+    args << "-b";
+    args << "fm.last.Scrobbler";
     args << "-n"; // open a new instance even if one is running
     qDebug() << QProcess::startDetached( "open", args );
 #endif
