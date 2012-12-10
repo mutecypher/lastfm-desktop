@@ -32,6 +32,9 @@ typedef struct
 PIPEINST Pipe[INSTANCES];
 HANDLE hEvents[INSTANCES];
 
+VOID DisconnectAndReconnect(DWORD i);
+BOOL ConnectToNewClient(HANDLE hPipe, LPOVERLAPPED lpo);
+
 NamedPipeServer::NamedPipeServer(QObject *parent)
     :QThread(parent)
 {
@@ -42,7 +45,6 @@ NamedPipeServer::run()
 {
    DWORD i, dwWait, cbRet, dwErr;
    BOOL fSuccess;
-   QString responseString;
    QByteArray response;
 
    std::string s;
@@ -221,7 +223,6 @@ NamedPipeServer::run()
 
          case WRITING_STATE:
             response = emit lineReady( QString::fromUtf8( (char*)Pipe[i].chRequest, Pipe[i].cbRead ) ).toUtf8();
-            //response = "OK\n";
             StringCchCopy( Pipe[i].chReply, BUFSIZE, (LPCTSTR)response.data() );
             Pipe[i].cbToWrite = response.size();
 
