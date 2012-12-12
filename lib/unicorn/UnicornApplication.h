@@ -108,11 +108,12 @@ namespace unicorn
         void unInstallHotKey( void* id );
         bool isInternetConnectionUp() const;
 
+        void translate();
 #ifdef Q_OS_MAC
+        void macTranslate( const QString& lang );
         void hideDockIcon( bool hideDockIcon );
         UnicornApplicationDelegate* delegate() const { return m_delegate; }
 #endif
-
     public slots:
         void manageUsers();
         unicorn::Session* changeSession( const QString& username, const QString& sessionKey, bool announce = true );
@@ -122,7 +123,7 @@ namespace unicorn
 
     private:
         unicorn::Session* changeSession( unicorn::Session* newSession, bool announce = true );
-        void translate();
+
         void setupHotKeys();
         void onHotKeyEvent(quint32 id);
         void loadStyleSheet( QFile& );

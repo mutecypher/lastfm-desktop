@@ -236,6 +236,10 @@ unicorn::Application::translate()
 
     installTranslator( t1 );
     installTranslator( t2 );
+
+#ifdef Q_OS_MAC
+    macTranslate( qmExt );
+#endif
 }
 
 

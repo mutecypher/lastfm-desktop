@@ -114,6 +114,10 @@ GeneralSettingsWidget::saveSettings()
 
             unicorn::AppSettings().setValue( "language", currLanguage );
 
+#ifdef Q_OS_MAC
+            aApp->translate();
+#endif
+
             restartNeeded = true;
         }
 
