@@ -52,6 +52,7 @@ GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
 
 #else
     ui->showWhere->hide();
+    ui->showWhereLabel->hide();
     ui->mediaKeys->hide();
 
     ui->showAs->setChecked( unicorn::Settings().value( SETTING_SHOW_AS, ui->showAs->isChecked() ).toBool() );
