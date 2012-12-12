@@ -95,7 +95,7 @@ PluginsPage::initializePage()
             }
         }
     }
-#endif
+
 
     m_pluginsLayout->addStretch();
 
@@ -104,14 +104,17 @@ PluginsPage::initializePage()
     checkPluginsSelected();
     if ( wizard()->canGoBack() )
         wizard()->setButton( FirstRunWizard::BackButton, tr( "<< Back" ) );
+#endif
 }
 
 void
 PluginsPage::checkPluginsSelected()
 {
+#ifdef Q_OS_WIN32
     wizard()->setButton( FirstRunWizard::SkipButton, tr( "Skip >>" ) )->setVisible( wizard()->pluginList()->installList().count() > 0 );
     wizard()->setButton( FirstRunWizard::NextButton,
                          wizard()->pluginList()->installList().count() > 0 ?
                              tr( "Install Plugins" ):
                              tr( "Continue" ) );
+#endif Q_OS_WIN32
 }
