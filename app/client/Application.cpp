@@ -347,6 +347,12 @@ Application::init()
 #endif
 }
 
+QWidget*
+Application::mainWindow() const
+{
+    return m_mw;
+}
+
 QSystemTrayIcon*
 Application::tray()
 {

@@ -159,7 +159,7 @@ DeviceScrobbler::scrobbleIpodFiles( const QStringList& files )
             {
                 if ( !m_confirmDialog )
                 {
-                    m_confirmDialog = new ScrobbleConfirmationDialog( scrobbles );
+                    m_confirmDialog = new ScrobbleConfirmationDialog( scrobbles, aApp->mainWindow() );
                     connect( m_confirmDialog, SIGNAL(finished(int)), SLOT(onScrobblesConfirmationFinished(int)) );
                 }
                 else
