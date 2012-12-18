@@ -169,12 +169,12 @@ FirstRunWizard::next()
         else if ( currentPage == ui->pluginsPage )
             ui->stackedWidget->setCurrentWidget( ui->pluginsInstallPage );
         else if ( currentPage == ui->pluginsInstallPage )
-            if( aApp->currentSession()->user().canBootstrap() && (m_plugins->bootstrappablePlugins().count() > 0) )
+            if( aApp->currentSession().user().canBootstrap() && (m_plugins->bootstrappablePlugins().count() > 0) )
                 ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
             else
                 ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
 #elif defined Q_OS_MAC
-            if( aApp->currentSession()->user().canBootstrap() )
+            if( aApp->currentSession().user().canBootstrap() )
                 ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
             else
                 ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
@@ -186,7 +186,7 @@ FirstRunWizard::next()
         else if ( currentPage == ui->tourScrobblesPage )
             ui->stackedWidget->setCurrentWidget( ui->tourMetadataPage );
         // only show the radio page if you can subscribe to get radio
-        else if ( currentPage == ui->tourMetadataPage && aApp->currentSession()->subscriberRadio() )
+        else if ( currentPage == ui->tourMetadataPage && aApp->currentSession().subscriberRadio() )
             ui->stackedWidget->setCurrentWidget( ui->tourRadioPage );
         else if ( currentPage == ui->tourRadioPage )
 #ifndef Q_WS_X11 // don't show the sys tray page on linux because there isn't one
@@ -200,7 +200,7 @@ FirstRunWizard::next()
         if ( m_showWelcome )
         {
             m_showWelcome = false;
-            ui->welcome->setText( tr( "Thanks <strong>%1</strong>, your account is now connected!" ).arg( aApp->currentSession()->user().name() ) );
+            ui->welcome->setText( tr( "Thanks <strong>%1</strong>, your account is now connected!" ).arg( aApp->currentSession().user().name() ) );
             ui->welcome->show();
         }
 
@@ -247,12 +247,12 @@ FirstRunWizard::skip()
     else if ( currentPage == ui->pluginsPage )
         ui->stackedWidget->setCurrentWidget( ui->pluginsInstallPage );
     else if ( currentPage == ui->pluginsInstallPage )
-        if( aApp->currentSession()->user().canBootstrap() && (m_plugins->bootstrappablePlugins().count() > 0) )
+        if( aApp->currentSession().user().canBootstrap() && (m_plugins->bootstrappablePlugins().count() > 0) )
             ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
         else
             ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
 #elif defined Q_OS_MAC
-        if( aApp->currentSession()->user().canBootstrap() )
+        if( aApp->currentSession().user().canBootstrap() )
             ui->stackedWidget->setCurrentWidget( ui->bootstrapPage );
         else
             ui->stackedWidget->setCurrentWidget( ui->tourScrobblesPage );
