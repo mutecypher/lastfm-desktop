@@ -51,7 +51,6 @@ private:
     void checkComplete();
 
 private slots:
-    void onAuthenticated( unicorn::Session* );
     void tryAgain();
 
     void onGotUserInfo( const lastfm::User& user );
