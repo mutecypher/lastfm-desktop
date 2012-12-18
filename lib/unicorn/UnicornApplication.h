@@ -101,7 +101,7 @@ namespace unicorn
             return m_styleSheet;
         }
 
-        Session* currentSession() { return m_currentSession; }
+        Session& currentSession() const;
 
         static unicorn::Application* instance(){ return (unicorn::Application*)qApp; }
         void* installHotKey( Qt::KeyboardModifiers, quint32, QObject* receiver, const char* slot );
@@ -115,13 +115,13 @@ namespace unicorn
 
     public slots:
         void manageUsers();
-        unicorn::Session* changeSession( const QString& username, const QString& sessionKey, bool announce = true );
+        void changeSession( const QString& username, const QString& sessionKey, bool announce = true );
         void sendBusLovedStateChanged(bool loved);
         void refreshStyleSheet();
         void restart();
 
     private:
-        unicorn::Session* changeSession( unicorn::Session* newSession, bool announce = true );
+        void changeSession( unicorn::Session* newSession, bool announce = true );
         void translate();
         void setupHotKeys();
         void onHotKeyEvent(quint32 id);

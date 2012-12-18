@@ -156,7 +156,7 @@ Application::init()
     setWindowIcon( QIcon( ":/as.png" ) );
 #endif
 
-    if ( !currentSession() )
+    if ( !currentSession().isValid() )
     {
         // there won't be a current session if one wasn't created by the wizard
 
@@ -165,7 +165,7 @@ Application::init()
             changeSession( lastSession[ "username" ], lastSession[ "sessionKey" ] );
     }
 
-    initiateLogin( !currentSession() );
+    initiateLogin( !currentSession().isValid() );
 
 //    QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
 //    diskCache->setCacheDirectory( lastfm::dir::cache().path() );

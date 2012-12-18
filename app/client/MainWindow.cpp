@@ -355,7 +355,7 @@ MainWindow::onConfigRetrieved()
 void
 MainWindow::onVisitProfile()
 {
-    unicorn::DesktopServices::openUrl( aApp->currentSession()->user().www() );
+    unicorn::DesktopServices::openUrl( aApp->currentSession().user().www() );
     AnalyticsService::instance().sendEvent( aApp->currentCategory(), LINK_CLICKED, "ProfileURLClicked");
 }
 

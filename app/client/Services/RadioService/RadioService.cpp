@@ -35,7 +35,7 @@
 
 #define ALLOW_ALL_USAGE -1
 
-RadioService::RadioService( )
+RadioService::RadioService()
      : m_audioOutput( 0 ),
        m_mediaObject( 0 ),
        m_state( Stopped ),
@@ -46,7 +46,7 @@ RadioService::RadioService( )
 
     QDesktopServices::setUrlHandler( "lastfm", this, "onLastFmUrl" );
 
-    onSessionChanged( *aApp->currentSession() );
+    onSessionChanged( aApp->currentSession() );
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)) );
 }
@@ -79,7 +79,7 @@ RadioService::onLastFmUrl( const QUrl& url )
 void
 RadioService::play( const RadioStation& station )
 {  
-    if ( !aApp->currentSession()->youRadio() )
+    if ( !aApp->currentSession().youRadio() )
     {
         // they are not a subscriber so don't let them start the radio
         emit error( lastfm::ws::SubscribersOnly, tr( "You need to be a subscriber to listen to radio" ) );
