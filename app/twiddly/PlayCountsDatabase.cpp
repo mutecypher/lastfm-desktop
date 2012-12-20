@@ -151,6 +151,8 @@ PlayCountsDatabase::operator[]( const QString& uid )
 void
 PlayCountsDatabase::beginTransaction()
 {
+    qDebug() << "beginTransaction";
+
     // we try until blue in the face to begin the transaction, as we really,
     // really want db lock
     
@@ -172,6 +174,8 @@ PlayCountsDatabase::beginTransaction()
 void
 PlayCountsDatabase::endTransaction()
 {
+    qDebug() << "endTransaction";
+
     // FIXME: what happens if exec returns false?
     QSqlQuery( m_db ).exec( "END TRANSACTION;" );
 }
