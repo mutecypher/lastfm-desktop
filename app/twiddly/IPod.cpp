@@ -237,15 +237,20 @@ IPod::twiddle()
 
     qDebug() << "There were " << nullTrackCount << " null tracks";
 
-    db.beginTransaction();
+    if ( tracksToUpdate.count() + tracksToInsert.count() > 0 )
+    {
+        // We've got some updates and inserts to do so lock the database and do them
 
-    foreach ( const ITunesLibrary::Track& track, tracksToUpdate )
-        db.update( track );
+        db.beginTransaction();
 
-    foreach ( const ITunesLibrary::Track& track, tracksToInsert )
-        db.insert( track );
+        foreach ( const ITunesLibrary::Track& track, tracksToUpdate )
+            db.update( track );
 
-    db.endTransaction();
+        foreach ( const ITunesLibrary::Track& track, tracksToInsert )
+            db.insert( track );
+
+        db.endTransaction();
+    }
 
     delete &db;
     delete &library;
