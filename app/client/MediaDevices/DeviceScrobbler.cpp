@@ -16,8 +16,16 @@
 #include <QFileDialog>
 #endif
 
-// check for iTunes playcount difference once a minute
-#define BACKGROUND_CHECK_INTERVAL 60000
+
+#ifdef Q_OS_MAC
+// Check for iTunes playcount difference once every 3 minutes
+// (usually takes about 1 sec on Mac)
+#define BACKGROUND_CHECK_INTERVAL 3 * 60 * 1000
+#else
+// On Windows the iPod scrobble check can take around 90 seconds
+// for a fairly large library, so only run it every 30 minutes
+#define BACKGROUND_CHECK_INTERVAL 30 * 60 * 1000
+#endif
 
 QString getIpodMountPath();
 
