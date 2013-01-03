@@ -55,6 +55,7 @@ private:
 #ifdef Q_WS_X11
     QPointer<IpodDeviceLinux> iPod;
 #endif
+    bool isITunesPluginInstalled();
     void twiddled( const QStringList& arguments );
     void scrobbleIpodFiles( const QStringList& files );
     QList<lastfm::Track> scrobblesFromFiles( const QStringList& files );
