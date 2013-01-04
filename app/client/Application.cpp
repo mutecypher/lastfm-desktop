@@ -669,12 +669,6 @@ Application::onPrefsTriggered()
 }
 
 void
-Application::onBetaTriggered()
-{
-    m_mw->onBetaTriggered();
-}
-
-void
 Application::onDiagnosticsTriggered()
 {
     m_mw->onDiagnosticsTriggered();

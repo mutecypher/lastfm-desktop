@@ -13,7 +13,6 @@
 #endif
 
 #include "Settings/PreferencesDialog.h"
-#include "Dialogs/BetaDialog.h"
 #include "Dialogs/DiagnosticsDialog.h"
 
 #if defined(Q_OS_MAC) || defined(Q_OS_WIN)
@@ -78,7 +77,6 @@ signals:
 
 public slots:
     void onPrefsTriggered();
-    void onBetaTriggered();
     void onDiagnosticsTriggered();
     void onMinimizeTriggered();
     void onZoomTriggered();
@@ -128,7 +126,6 @@ private:
     QList<QAction*> m_buttons;
 
     QPointer<PreferencesDialog> m_preferences;
-    QPointer<BetaDialog> m_beta;
     QPointer<DiagnosticsDialog> m_diagnostics;
 #if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     QPointer<Updater> m_updater;

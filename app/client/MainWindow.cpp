@@ -204,7 +204,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 QString
 MainWindow::applicationName()
 {
-    return QCoreApplication::applicationName() + " Beta";
+    return QCoreApplication::applicationName();
 }
 
 #ifdef Q_OS_WIN32
@@ -396,16 +396,6 @@ MainWindow::onPrefsTriggered()
     m_preferences->adjustSize();
 
     AnalyticsService::instance().sendEvent( aApp->currentCategory(), BASIC_SETTINGS, "SettingsOpened");
-}
-
-void
-MainWindow::onBetaTriggered()
-{
-    if ( !m_beta )
-        m_beta = new BetaDialog( this );
-
-    m_beta->show();
-    m_beta->activateWindow();
 }
 
 void
