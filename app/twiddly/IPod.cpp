@@ -140,6 +140,7 @@ IPod::twiddle()
     QList<ITunesLibrary::Track> tracksToUpdate;
     QList<ITunesLibrary::Track> tracksToInsert;
     QList<ITunesLibrary::Track> tracksToScrobble;
+    QList<ITunesLibrary::Track> tracksToRemove;
 
     int nullTrackCount = 0;
 
@@ -170,12 +171,11 @@ IPod::twiddle()
 #ifdef Q_OS_WIN32
             if( diffedTrackPaths.contains( track.uniqueId() ) )
             {
+                tracksToRemove << track;
                 //This is a duplicate entry in the iTunes library.
                 //For sanity this track AND the previous identical track
                 //will be ignored. - This is due to no pids on windows.
 
-                m_scrobbles.removeAllWithUniqueId( track.uniqueId() );
-                db.remove( track );
                 qDebug() << "Multiple tracks were found with the same unique id / path, this track won't be scrobbled from the iPod:" << track.uniqueId();
                 continue;
             }
@@ -266,6 +266,12 @@ IPod::twiddle()
 
         foreach ( const ITunesLibrary::Track& track, tracksToInsert )
             db.insert( track );
+
+        foreach ( const ITunesLibrary::Track& track, tracksToRemove )
+        {
+            m_scrobbles.removeAllWithUniqueId( track.uniqueId() );
+            db.remove( track );
+        }
 
         db.endTransaction();
     }
