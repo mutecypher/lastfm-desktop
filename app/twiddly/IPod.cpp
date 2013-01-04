@@ -191,13 +191,15 @@ IPod::twiddle()
             //      matching up this track up with its previous incarnation. Thus
             //      we don't scrobble it as we have no idea if it was played or not
             //      chances are, it wasn't
-            if ( db[id].isNull() )
+            PlayCountsDatabase::Track dbTrack = db[id];
+
+            if ( dbTrack.isNull() )
             {
                 tracksToInsert << track;
                 continue;
             }
 
-            const int diff = track.playCount() - db[id].playCount(); // can throw
+            const int diff = track.playCount() - dbTrack.playCount(); // can throw
         
             if ( diff > 0 )
             {
