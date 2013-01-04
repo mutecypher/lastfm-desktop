@@ -139,12 +139,13 @@ IPod::twiddle()
 
     QList<ITunesLibrary::Track> tracksToUpdate;
     QList<ITunesLibrary::Track> tracksToInsert;
+    QList<ITunesLibrary::Track> tracksToScrobble;
 
     int nullTrackCount = 0;
 
-    #ifdef Q_OS_WIN32
-        QSet<QString> diffedTrackPaths;
-    #endif
+#ifdef Q_OS_WIN32
+    QSet<QString> diffedTrackPaths;
+#endif
     // If creation of the library class failed due to a dialog showing in iTunes
     // or COM not responding for some other reason, hasTracks will just return false
     // and we will quit this run.
@@ -166,20 +167,21 @@ IPod::twiddle()
                 continue;
             }
 
-            #ifdef Q_OS_WIN32
-                if( diffedTrackPaths.contains( track.uniqueId() ) )
-                {
-                    //This is a duplicate entry in the iTunes library.
-                    //For sanity this track AND the previous identical track
-                    //will be ignored. - This is due to no pids on windows.
+#ifdef Q_OS_WIN32
+            if( diffedTrackPaths.contains( track.uniqueId() ) )
+            {
+                //This is a duplicate entry in the iTunes library.
+                //For sanity this track AND the previous identical track
+                //will be ignored. - This is due to no pids on windows.
 
-                    m_scrobbles.removeAllWithUniqueId( track.uniqueId() );
-                    db.remove( track );
-                    qDebug() << "Multiple tracks were found with the same unique id / path, this track won't be scrobbled from the iPod:" << track.uniqueId();
-                    continue;
-                }
-                diffedTrackPaths.insert( track.uniqueId() );
-            #endif
+                m_scrobbles.removeAllWithUniqueId( track.uniqueId() );
+                db.remove( track );
+                qDebug() << "Multiple tracks were found with the same unique id / path, this track won't be scrobbled from the iPod:" << track.uniqueId();
+                continue;
+            }
+
+            diffedTrackPaths.insert( track.uniqueId() );
+#endif
 
             QString id = track.uniqueId();
 
@@ -202,29 +204,7 @@ IPod::twiddle()
             const int diff = track.playCount() - dbTrack.playCount(); // can throw
         
             if ( diff > 0 )
-            {
-                ::Track t = track.lastfmTrack(); // can throw
-
-                if (!t.isNull())
-                {
-                    IPodScrobble t2( t );
-                    t2.setPlayCount( diff );
-                    t2.setMediaDeviceId( scrobbleId() );
-                    t2.setUniqueId( track.uniqueId() );
-                    m_scrobbles += t2;
-                    qDebug() << diff << "scrobbles found for" << t;
-                }
-                else
-                {
-                    qWarning() << "Couldn't get Track for" << id;
-                    
-                    // We get here if COM fails to populate the Track for whatever reason.
-                    // Therefore we continue and don't let the local db update. That way we
-                    // maintain the diff and we should be picking up on it next time twiddly
-                    // runs.
-                    continue;
-                }
-            }
+                tracksToScrobble;
 
             // a worthwhile optimisation since updatePlayCount() is really slow
             // NOTE negative diffs *are* possible
@@ -239,11 +219,47 @@ IPod::twiddle()
 
     qDebug() << "There were " << nullTrackCount << " null tracks";
 
-    if ( tracksToUpdate.count() + tracksToInsert.count() > 0 )
+    if ( tracksToUpdate.count() + tracksToInsert.count() + tracksToScrobble.count() > 0 )
     {
         // We've got some updates and inserts to do so lock the database and do them
 
         db.beginTransaction();
+
+        foreach ( const ITunesLibrary::Track& track, tracksToScrobble )
+        {
+            try
+            {
+                ::Track t = track.lastfmTrack(); // can throw
+
+                // Because we take a snapshot of our playcounts db there is a possible race condition.
+                // use db.track here to fetch the latest playcount now that we've locked the database
+                const int diff = track.playCount() - db.track( track.uniqueId() ).playCount();
+
+                if (!t.isNull())
+                {
+                    IPodScrobble t2( t );
+                    t2.setPlayCount( diff );
+                    t2.setMediaDeviceId( scrobbleId() );
+                    t2.setUniqueId( track.uniqueId() );
+                    m_scrobbles += t2;
+                    qDebug() << diff << "scrobbles found for" << t;
+                }
+                else
+                {
+                    qWarning() << "Couldn't get Track for" << track.uniqueId();
+
+                    // We get here if COM fails to populate the Track for whatever reason.
+                    // Therefore we continue and don't let the local db update. That way we
+                    // maintain the diff and we should be picking up on it next time twiddly
+                    // runs.
+                    continue;
+                }
+            }
+            catch ( ITunesException& )
+            {
+                // Carry on...
+            }
+        }
 
         foreach ( const ITunesLibrary::Track& track, tracksToUpdate )
             db.update( track );
