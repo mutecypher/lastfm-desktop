@@ -210,7 +210,7 @@ IPod::twiddle()
 
             // a worthwhile optimisation since updatePlayCount() is really slow
             // NOTE negative diffs *are* possible
-            if ( diff != 0 )
+            if ( diff < 0 )
                 tracksToUpdate << track; // can throw
         }
         catch ( ITunesException& )
@@ -241,14 +241,29 @@ IPod::twiddle()
                 // use db.track here to fetch the latest playcount now that we've locked the database
                 const int diff = track.playCount() - db.track( track.uniqueId() ).playCount();
 
-                if (!t.isNull())
+                if ( !t.isNull() )
                 {
-                    IPodScrobble t2( t );
-                    t2.setPlayCount( diff );
-                    t2.setMediaDeviceId( scrobbleId() );
-                    t2.setUniqueId( track.uniqueId() );
-                    m_scrobbles += t2;
-                    qDebug() << diff << "scrobbles found for" << t;
+                    if ( t.timestamp().secsTo( QDateTime::currentDateTime() ) > 30 )
+                    {
+                        // we only scrobble tracks with a timestamp older than 30 seconds
+                        // to give the iTunes plugin time so update the playcount db
+                        // after a track change - bit of a hack, but it stops spurious iPod scrobbles
+
+                        // update the playcount db to the current playcount for this track
+                        // this means that we won't try to scrobble the track again
+                        db.update( track );
+
+                        IPodScrobble t2( t );
+                        t2.setPlayCount( diff );
+                        t2.setMediaDeviceId( scrobbleId() );
+                        t2.setUniqueId( track.uniqueId() );
+                        m_scrobbles += t2;
+                        qDebug() << diff << "scrobbles found for" << t;
+                    }
+                    else
+                    {
+                        qDebug() << "Timestamp less than 30 seconds. Don't scrobble yet.";
+                    }
                 }
                 else
                 {
@@ -267,13 +282,21 @@ IPod::twiddle()
             }
         }
 
+        // this should just be tracks with negative playcount diffs
         foreach ( const ITunesLibrary::Track& track, tracksToUpdate )
             db.update( track );
 
+        // insert all the new tracks we've found
         foreach ( const ITunesLibrary::Track& track, tracksToInsert )
             db.insert( track );
 
 #ifdef Q_OS_WIN32
+        // remove all the duplicate with the same uid
+        // not really sure why we do this as on Windows the uid is the filepath
+        // and you can't have two different tracks with the same filepath
+        // but I'm not going to change this code. Although maybe is gets rid
+        // of all iTunes Match tracks that have been erronously added as they will
+        // all have no filepath
         foreach ( const ITunesLibrary::Track& track, tracksToRemove )
         {
             m_scrobbles.removeAllWithUniqueId( track.uniqueId() );
