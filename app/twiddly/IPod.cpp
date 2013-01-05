@@ -140,7 +140,9 @@ IPod::twiddle()
     QList<ITunesLibrary::Track> tracksToUpdate;
     QList<ITunesLibrary::Track> tracksToInsert;
     QList<ITunesLibrary::Track> tracksToScrobble;
+#ifdef Q_OS_WIN32
     QList<ITunesLibrary::Track> tracksToRemove;
+#endif
 
     int nullTrackCount = 0;
 
@@ -204,7 +206,7 @@ IPod::twiddle()
             const int diff = track.playCount() - dbTrack.playCount(); // can throw
         
             if ( diff > 0 )
-                tracksToScrobble;
+                tracksToScrobble << track;
 
             // a worthwhile optimisation since updatePlayCount() is really slow
             // NOTE negative diffs *are* possible
@@ -219,7 +221,11 @@ IPod::twiddle()
 
     qDebug() << "There were " << nullTrackCount << " null tracks";
 
-    if ( tracksToUpdate.count() + tracksToInsert.count() + tracksToScrobble.count() > 0 )
+    if ( tracksToUpdate.count() + tracksToInsert.count() + tracksToScrobble.count()
+#ifdef Q_OS_WIN32
+         + tracksToRemove.count()
+#endif
+         > 0 )
     {
         // We've got some updates and inserts to do so lock the database and do them
 
@@ -267,11 +273,13 @@ IPod::twiddle()
         foreach ( const ITunesLibrary::Track& track, tracksToInsert )
             db.insert( track );
 
+#ifdef Q_OS_WIN32
         foreach ( const ITunesLibrary::Track& track, tracksToRemove )
         {
             m_scrobbles.removeAllWithUniqueId( track.uniqueId() );
             db.remove( track );
         }
+#endif
 
         db.endTransaction();
     }
