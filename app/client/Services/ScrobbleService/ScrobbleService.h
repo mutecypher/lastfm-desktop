@@ -102,6 +102,7 @@ protected:
     QPointer <DeviceScrobbler> m_deviceScrobbler;
     Track m_currentTrack;
     Track m_trackToScrobble;
+    QString m_currentUsername;
 };
 
 
