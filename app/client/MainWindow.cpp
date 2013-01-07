@@ -30,6 +30,7 @@
 #include <QDockWidget>
 #include <QScrollArea>
 #include <QNetworkReply>
+#include <QWebView>
 
 #include "MainWindow.h"
 
@@ -203,7 +204,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
 QString
 MainWindow::applicationName()
 {
-    return QCoreApplication::applicationName() + " Beta";
+    return QCoreApplication::applicationName();
 }
 
 #ifdef Q_OS_WIN32
@@ -301,12 +302,12 @@ MainWindow::setupMenuBar()
 
     /// Window
     QMenu* windowMenu = appMenuBar()->addMenu( tr("Window") );
-    windowMenu->addAction( tr( "Minimize" ) );
-    windowMenu->addAction( tr( "Zoom" ) );
+    windowMenu->addAction( tr( "Minimize" ), this, SLOT(onMinimizeTriggered()) );
+    windowMenu->addAction( tr( "Zoom" ), this, SLOT(onZoomTriggered()) );
+    //windowMenu->addSeparator();
+    //windowMenu->addAction( tr( "Last.fm" ), this, SLOT(onZoomTriggered()) );
     windowMenu->addSeparator();
-    windowMenu->addAction( tr( "Last.fm" ) );
-    windowMenu->addSeparator();
-    windowMenu->addAction( tr( "Bring All to Front" ) );
+    windowMenu->addAction( tr( "Bring All to Front" ), this, SLOT(onBringAllToFrontTriggered()) );
 
     /// Help
     QMenu* helpMenu = appMenuBar()->addMenu( tr("Help") );
@@ -398,16 +399,6 @@ MainWindow::onPrefsTriggered()
 }
 
 void
-MainWindow::onBetaTriggered()
-{
-    if ( !m_beta )
-        m_beta = new BetaDialog( this );
-
-    m_beta->show();
-    m_beta->activateWindow();
-}
-
-void
 MainWindow::onDiagnosticsTriggered()
 {
     if ( !m_diagnostics )
@@ -415,6 +406,36 @@ MainWindow::onDiagnosticsTriggered()
 
     m_diagnostics->show();
     m_diagnostics->activateWindow();
+}
+
+void
+MainWindow::onMinimizeTriggered()
+{
+    setWindowState( Qt::WindowMinimized );
+}
+
+void
+MainWindow::onZoomTriggered()
+{
+    setWindowState( Qt::WindowMaximized );
+}
+
+void
+MainWindow::onBringAllToFrontTriggered()
+{
+	return;
+
+    foreach ( QWidget* widget, aApp->topLevelWidgets() )
+    {
+        if ( widget->isWindow()
+             && !qobject_cast<QMenu*>( widget )
+             && !qobject_cast<QWebView*>( widget )
+             && !qobject_cast<QMenu*>( widget ) )
+        {
+            widget->raise();
+            widget->show();
+        }
+    }
 }
 
 void

@@ -16,8 +16,16 @@
 #include <QFileDialog>
 #endif
 
-// check for iTunes playcount difference once a minute
-#define BACKGROUND_CHECK_INTERVAL 60000
+
+#ifdef Q_OS_MAC
+// Check for iTunes playcount difference once every 3 minutes
+// (usually takes about 1 sec on Mac)
+#define BACKGROUND_CHECK_INTERVAL 3 * 60 * 1000
+#else
+// On Windows the iPod scrobble check can take around 90 seconds
+// for a fairly large library, so only run it every 30 minutes
+#define BACKGROUND_CHECK_INTERVAL 30 * 60 * 1000
+#endif
 
 QString getIpodMountPath();
 
@@ -27,6 +35,9 @@ DeviceScrobbler::DeviceScrobbler( QObject *parent )
     m_twiddlyTimer = new QTimer( this );
     connect( m_twiddlyTimer, SIGNAL(timeout()), SLOT(twiddle()) );
     m_twiddlyTimer->start( BACKGROUND_CHECK_INTERVAL );
+
+    // run once 3 seconds after starting up
+    QTimer::singleShot( 3 * 1000, this, SLOT(twiddle()) );
 }
 
 DeviceScrobbler::~DeviceScrobbler()
@@ -34,11 +45,23 @@ DeviceScrobbler::~DeviceScrobbler()
     delete m_confirmDialog;
 }
 
+bool
+DeviceScrobbler::isITunesPluginInstalled()
+{
+#ifdef Q_OS_WIN
+    QSettings settings( "HKEY_LOCAL_MACHINE\\SOFTWARE\\Last.fm\\Client\\Plugins\\itw", QSettings::NativeFormat );
+    QFile pluginFile( settings.value( "Path" ).toString() );
+    return pluginFile.exists();
+#else
+    return true;
+#endif
+}
+
 void
 DeviceScrobbler::twiddle()
 {
 #ifndef Q_WS_X11
-    if ( CloseAppsDialog::isITunesRunning() )
+    if ( CloseAppsDialog::isITunesRunning() && isITunesPluginInstalled() )
     {
         if (m_twiddly)
         {

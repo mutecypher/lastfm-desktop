@@ -131,10 +131,13 @@ ScrobbleService::onSessionChanged( const unicorn::Session& )
 void
 ScrobbleService::resetScrobbler()
 {
-    if ( !aApp->currentSession().user().name().isEmpty() )
+    if ( !aApp->currentSession().user().name().isEmpty()
+         && aApp->currentSession().user().name() != m_currentUsername)
     {
         // only create the scrobble cache, etc if we have a user
         // we won't have a user during the first run wizard
+
+        m_currentUsername = aApp->currentSession().user().name();
 
         /// audioscrobbler
         delete m_as;

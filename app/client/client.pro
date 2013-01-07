@@ -97,7 +97,6 @@ SOURCES += \
     Widgets/ContextLabel.cpp \
     Widgets/SimilarArtistWidget.cpp \
     Widgets/PushButton.cpp \
-    Dialogs/BetaDialog.cpp \
     Widgets/TrackWidget.cpp \
     Dialogs/LicensesDialog.cpp \
     Widgets/ScrobblesWidget.cpp \
@@ -178,7 +177,6 @@ HEADERS += \
     Widgets/ContextLabel.h \
     Widgets/SimilarArtistWidget.h \
     Widgets/PushButton.h \
-    Dialogs/BetaDialog.h \
     Widgets/TrackWidget.h \
     Dialogs/LicensesDialog.h \
     Widgets/ScrobblesListWidget.h \
@@ -244,7 +242,6 @@ FORMS += \
     Widgets/NothingPlayingWidget.ui \
     Widgets/FriendWidget.ui \
     Widgets/FriendListWidget.ui \
-    Dialogs/BetaDialog.ui \
     Widgets/TrackWidget.ui \
     Dialogs/LicensesDialog.ui \
     Widgets/ScrobblesWidget.ui \

@@ -23,6 +23,9 @@
 
 #include <QString>
 #include <QSqlDatabase>
+#include <QHash>
+
+class QSqlQuery;
 
 class ITunesLibraryTrack;
 
@@ -64,7 +67,8 @@ public:
     };
 
     /** the uid is path on Windows, persistentId on mac */
-    Track operator[]( const QString& uid );
+    Track operator[]( const QString& uid ); // gets the snapshot value
+    Track track( const QString& uid ); // this actually fetchs the current value
 
     // NOTE never put these in the ctor/dtor, as if exception is thrown we 
     // mustn't commit the transaction!
@@ -87,9 +91,11 @@ protected:
 
 protected:
     QSqlDatabase m_db;
+    QSqlQuery* m_query;
+    QHash<QString,int> m_snapshot;
 
 private:
-    Q_DISABLE_COPY( PlayCountsDatabase );
+    Q_DISABLE_COPY( PlayCountsDatabase )
 
     QString m_path;
 };
