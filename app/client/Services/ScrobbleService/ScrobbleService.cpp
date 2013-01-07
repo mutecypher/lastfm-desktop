@@ -326,7 +326,3 @@ ScrobbleService::handleTwiddlyMessage( const QStringList& message )
     m_deviceScrobbler->handleMessage( message );
 }
 
-
-ScrobbleService::~ScrobbleService()
-{    
-}
