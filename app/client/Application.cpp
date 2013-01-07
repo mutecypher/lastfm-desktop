@@ -468,9 +468,13 @@ Application::onTrackStarted( const lastfm::Track& track, const Track& oldTrack )
 #endif
        )
     {
-        Fingerprinter* fingerprinter = new Fingerprinter( track, this );
-        connect( fingerprinter, SIGNAL(finished()), fingerprinter, SLOT(deleteLater()) );
-        fingerprinter->start();
+        QFile trackFile( track.url().toLocalFile() );
+        if ( trackFile.exists() )
+        {
+            Fingerprinter* fingerprinter = new Fingerprinter( track, this );
+            connect( fingerprinter, SIGNAL(finished()), fingerprinter, SLOT(deleteLater()) );
+            fingerprinter->start();
+        }
     }
 
     m_tray->setToolTip( track.toString() );
