@@ -40,8 +40,6 @@ class ScrobbleService : public QObject
 
 public:
     ScrobbleService();
-    ~ScrobbleService();
-
 
     bool scrobblableTrack( const lastfm::Track& track ) const;
 
