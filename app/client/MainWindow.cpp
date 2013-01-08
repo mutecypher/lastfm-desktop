@@ -306,7 +306,7 @@ MainWindow::setupMenuBar()
 
     /// Window
     QMenu* windowMenu = appMenuBar()->addMenu( tr("Window") );
-    windowMenu->addAction( tr( "Minimize" ), this, SLOT(onMinimizeTriggered()) );
+    windowMenu->addAction( tr( "Minimize" ), this, SLOT(onMinimizeTriggered()), Qt::CTRL + Qt::Key_M );
     windowMenu->addAction( tr( "Zoom" ), this, SLOT(onZoomTriggered()) );
     //windowMenu->addSeparator();
     //windowMenu->addAction( tr( "Last.fm" ), this, SLOT(onZoomTriggered()) );
