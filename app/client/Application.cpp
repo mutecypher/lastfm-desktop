@@ -580,7 +580,7 @@ Application::onSkipTriggered()
         // Make a note of the station and the time that it was skipped
         m_skips[ station ].enqueue( QDateTime::currentDateTimeUtc() );
 
-        if ( m_skips[ station ].count() >= 2 )
+        if ( m_skips[ station ].count() >= 4 )
         {
             // show a warning that there are only a few skips left
             int skipsLeft = SKIP_LIMIT - m_skips[ station ].count();
