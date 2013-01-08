@@ -142,7 +142,7 @@ Source: "..\..\..\_bin\libfftw3f-3.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\libsamplerate-0.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\avcodec-54.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\avformat-54.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\..\_bin\avutil-51.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\avutil-52.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\swresample-0.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ;The stylesheets
@@ -209,6 +209,8 @@ Type: Files; Name: "{app}\libFLAC_dynamic.dll"
 Type: Files; Name: "{app}\libogg.dll"
 Type: Files; Name: "{app}\libvorbis.dll"
 Type: Files; Name: "{app}\libvorbisfile.dll"
+
+Type: Files; Name: "{app}\avutil-51.dll";
 
 Type: Files; Name: "{commondesktop}\Last.fm.lnk"
 Type: Files; Name: "{app}\Last.fm.exe"
