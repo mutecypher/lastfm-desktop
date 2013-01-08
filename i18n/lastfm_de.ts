@@ -17,13 +17,8 @@
 <context>
     <name>AccessPage</name>
     <message>
-        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&apos;t connected because you closed the browser window or you clicked cancel, please try again.&lt;p /&gt;&lt;/p&gt;</source>
-        <translation type="obsolete">&lt;p&gt;Klicke in deinem Webbrowser auf die Schaltfläche &lt;strong&gt;Ja, Zugang gestatten&lt;/strong&gt;, um dein Last.fm-Konto mit der Last.fm-Desktop-App zu verbinden.&lt;/p&gt;&lt;p&gt;Versuche es bitte noch einmal, wenn keine Verbindung hergestellt werden konnte, weil du das Browserfenster geschlossen oder auf Abbrechen geklickt hast.&lt;p /&gt;&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <location filename="../app/client/Wizard/AccessPage.cpp" line="46"/>
-        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&apos;t connected because you closed the browser window or you clicked cancel, please try again.&lt;p/&gt;</source>
-        <translation type="unfinished"></translation>
+        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&apos;t connected because you closed the browser window or you clicked cancel, please try again.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Klicke in deinem Webbrowser auf die Schaltfläche &lt;strong&gt;Ja, Zugang gestatten&lt;/strong&gt;, um dein Last.fm-Konto mit der Last.fm-Desktop-App zu verbinden.&lt;/p&gt;&lt;p&gt;Versuche es bitte noch einmal, wenn keine Verbindung hergestellt werden konnte, weil du das Browserfenster geschlossen oder auf Abbrechen geklickt hast.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../app/client/Wizard/AccessPage.cpp" line="60"/>
@@ -64,34 +59,6 @@
         <translation>Proxy:</translation>
     </message>
     <message>
-        <source>Automatic</source>
-        <translation type="obsolete">Automatisch</translation>
-    </message>
-    <message>
-        <source>Manual</source>
-        <translation type="obsolete">Manuell</translation>
-    </message>
-    <message>
-        <source>Host:</source>
-        <translation type="obsolete">Host:</translation>
-    </message>
-    <message>
-        <source>Username:</source>
-        <translation type="obsolete">Benutzername:</translation>
-    </message>
-    <message>
-        <source>Password:</source>
-        <translation type="obsolete">Passwort:</translation>
-    </message>
-    <message>
-        <source>Port:</source>
-        <translation type="obsolete">Port:</translation>
-    </message>
-    <message>
-        <source>Leave fields blank to use a direct connection</source>
-        <translation type="obsolete">Felder frei lassen für eine direkte Verbindung</translation>
-    </message>
-    <message>
         <location filename="../app/client/Settings/AdvancedSettingsWidget.ui" line="48"/>
         <source>Cache Size:</source>
         <translation>Cachegröße:</translation>
@@ -123,21 +90,6 @@
         <location filename="../lib/unicorn/widgets/AvatarWidget.cpp" line="40"/>
         <source>Alumnus</source>
         <translation>Absolvent</translation>
-    </message>
-</context>
-<context>
-    <name>BetaDialog</name>
-    <message>
-        <source>Create Issue</source>
-        <translation type="obsolete">Etwas melden</translation>
-    </message>
-    <message>
-        <source>Beta</source>
-        <translation type="obsolete">Beta</translation>
-    </message>
-    <message>
-        <source>Visit Audioscrobbler Beta group</source>
-        <translation type="obsolete">Audioscrobbler-Betagruppe besuchen</translation>
     </message>
 </context>
 <context>
@@ -380,13 +332,8 @@
         <translation>Finde deine Freunde auf Last.fm</translation>
     </message>
     <message>
-        <source>&lt;h3&gt;You haven&apos;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;p /&gt;&lt;/p&gt;</source>
-        <translation type="obsolete">&lt;h3&gt;Du hast noch keine Freundschaften auf Last.fm geschlossen.&lt;/h3&gt;&lt;p&gt;Mit dem Freundefinder kannst du schnell und einfach deine Facebook-Freunde und E-Mail-Kontakte auf Last.fm finden.&lt;p /&gt;&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <location filename="../app/client/Widgets/FriendListWidget.cpp" line="61"/>
-        <source>&lt;h3&gt;You haven&apos;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;p&gt;</source>
-        <translation type="unfinished"></translation>
+        <source>&lt;h3&gt;You haven&apos;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;/p&gt;</source>
+        <translation>&lt;h3&gt;Du hast noch keine Freundschaften auf Last.fm geschlossen.&lt;/h3&gt;&lt;p&gt;Mit dem Freundefinder kannst du schnell und einfach deine Facebook-Freunde und E-Mail-Kontakte auf Last.fm finden.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../app/client/Widgets/FriendListWidget.cpp" line="66"/>
@@ -407,10 +354,6 @@
 </context>
 <context>
     <name>FriendWidget</name>
-    <message>
-        <source>%1%2s Library Radio</source>
-        <translation type="obsolete">%1%2s Musiksammlungs-Radio</translation>
-    </message>
     <message>
         <location filename="../app/client/Widgets/FriendWidget.cpp" line="41"/>
         <source>%1&apos;s Library Radio</source>
@@ -599,48 +542,6 @@
     </message>
 </context>
 <context>
-    <name>LoginDialog</name>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.ui" line="20"/>
-        <source>Log in to Last.fm</source>
-        <translation>Bei Last.fm einloggen</translation>
-    </message>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.ui" line="48"/>
-        <source>Username:</source>
-        <translation>Benutzername:</translation>
-    </message>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.ui" line="61"/>
-        <source>Password:</source>
-        <translation>Passwort:</translation>
-    </message>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.ui" line="90"/>
-        <source>Remember Me</source>
-        <translation>Angemeldet bleiben</translation>
-    </message>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.ui" line="168"/>
-        <source>&lt;a href=&apos;http://last.fm/join/&apos;&gt;Sign up&lt;/a&gt;&lt;br&gt;&lt;a href=&apos;http://last.fm/settings/lostpassword/&apos;&gt;Forgot your password?&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;a href=&quot;http://last.fm/join/&quot;&gt;Sign up&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://last.fm/settings/lostpassword/&quot;&gt;Forgot your password?&lt;/a&gt;&lt;/br&gt;</source>
-        <translation type="obsolete">&lt;a href=&quot;http://last.fm/join/&quot;&gt;Registrieren&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://last.fm/settings/lostpassword/&quot;&gt;Passwort vergessen?&lt;/a&gt;&lt;/br&gt;</translation>
-    </message>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.cpp" line="31"/>
-        <source>Last.fm needs your permission first!</source>
-        <translation>Last.fm benötigt zuerst deine Erlaubnis!</translation>
-    </message>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.cpp" line="34"/>
-        <source>This application needs your permission to connect to your Last.fm profile.  Click OK to go to the Last.fm website and do this.</source>
-        <translation>Diese Anwendung benötigt deine Erlaubnis, um sich mit deinem Last.fm-Profil zu verbinden. Klicke auf OK, um zur Last.fm-Website zu gehen und dies zu tun.</translation>
-    </message>
-</context>
-<context>
     <name>LoginPage</name>
     <message>
         <location filename="../app/client/Wizard/LoginPage.cpp" line="50"/>
@@ -759,10 +660,6 @@
         <location filename="../app/client/MainWindow.cpp" line="312"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
-    </message>
-    <message>
-        <source>Last.fm</source>
-        <translation type="obsolete">Last.fm</translation>
     </message>
     <message>
         <location filename="../app/client/MainWindow.cpp" line="316"/>
@@ -996,31 +893,11 @@
         <translation>Empfohlen, weil du %1, %2, %3, %4 und %5 hörst.</translation>
     </message>
     <message>
-        <source>From %2%1s library.</source>
-        <translation type="obsolete">Aus der Musiksammlung von %2%1.</translation>
-    </message>
-    <message>
-        <source>From %2 and %3%1s libraries.</source>
-        <translation type="obsolete">Aus den Musiksammlungen von %2 und %3%1.</translation>
-    </message>
-    <message>
-        <source>From %2, %3, and %4%1s libraries.</source>
-        <translation type="obsolete">Aus den Musiksammlungen von %2, %3 und %4%1.</translation>
-    </message>
-    <message>
-        <source>From %2, %3, %4, and %5%1s libraries.</source>
-        <translation type="obsolete">Aus den Musiksammlungen von %2, %3, %4 und %5%1.</translation>
-    </message>
     <message>
         <location filename="../app/client/Widgets/MetadataWidget.cpp" line="671"/>
         <source>From %1&apos;s library.</source>
         <translation>Aus der Musiksammlung von %1</translation>
     </message>
-    <message>
-        <source>From %2, %3, %4, %5, and %6%1s libraries.</source>
-        <translation type="obsolete">Aus den Musiksammlungen von %2, %3, %4, %5 und %6%1.</translation>
-    </message>
-    <message>
         <location filename="../app/client/Widgets/MetadataWidget.cpp" line="672"/>
         <source>From %1 and %2&apos;s libraries.</source>
         <translation>Aus den Musiksammlungen von %1 und %2.</translation>
@@ -1232,10 +1109,6 @@
 </context>
 <context>
     <name>PluginBootstrapper</name>
-    <message>
-        <source>test! Last.fm is importing your current media library...</source>
-        <translation type="obsolete">Test! Last.fm importiert deine aktuelle Mediensammlung ...</translation>
-    </message>
     <message>
         <location filename="../app/client/Bootstrapper/PluginBootstrapper.cpp" line="51"/>
         <source>Last.fm has imported your media library.
@@ -1607,13 +1480,6 @@ Dein Profil wird in ein paar Minuten mit den neuen Titeln aktualisiert.</transla
 </context>
 <context>
     <name>RadioService</name>
-    <message numerus="yes">
-        <source>Sorry, you&apos;ve reached your limit of %n track(s). &lt;a href=&quot;http://www.last.fm/subscribe&quot;&gt;Subscribe&lt;/a&gt; for unlimited listening, or visit &lt;a href=&quot;http://www.last.fm/listen&quot;&gt;last.fm/listen&lt;/a&gt;</source>
-        <translation type="obsolete">
-            <numerusform>Sorry, aber du hast dein Limit von %n Titel erreicht. &lt;a href=&quot;http://www.last.fm/subscribe&quot;&gt;Abonniere Last.fm&lt;/a&gt; für ein unbegrenztes Hörerlebnis oder besuche &lt;a href=&quot;http://www.last.fm/listen&quot;&gt;last.fm/listen&lt;/a&gt;</numerusform>
-            <numerusform>Sorry, aber du hast dein Limit von %n Titeln erreicht. &lt;a href=&quot;http://www.last.fm/subscribe&quot;&gt;Abonniere Last.fm&lt;/a&gt; für ein unbegrenztes Hörerlebnis oder besuche &lt;a href=&quot;http://www.last.fm/listen&quot;&gt;last.fm/listen&lt;/a&gt;</numerusform>
-        </translation>
-    </message>
     <message>
         <location filename="../app/client/Services/RadioService/RadioService.cpp" line="128"/>
         <location filename="../app/client/Services/RadioService/RadioService.cpp" line="162"/>
@@ -1644,7 +1510,7 @@ Dein Profil wird in ein paar Minuten mit den neuen Titeln aktualisiert.</transla
     </message>
     <message>
         <source>Personal Stations</source>
-        <translation type="obsolete">Persönliche Stationen</translation>
+        <translation>Persönliche Stationen</translation>
     </message>
     <message>
         <location filename="../app/client/Widgets/RadioWidget.cpp" line="93"/>
@@ -1660,11 +1526,6 @@ Dein Profil wird in ein paar Minuten mit den neuen Titeln aktualisiert.</transla
         <location filename="../app/client/Widgets/RadioWidget.cpp" line="94"/>
         <source>My Mix Radio</source>
         <translation>Mein Mix-Radio</translation>
-    </message>
-    <message>
-        <location filename="../app/client/Widgets/RadioWidget.ui" line="95"/>
-        <source>Personal</source>
-        <translation>Persönlich</translation>
     </message>
     <message>
         <location filename="../app/client/Widgets/RadioWidget.cpp" line="94"/>
@@ -2023,10 +1884,6 @@ Dein Profil wird in ein paar Minuten mit den neuen Titeln aktualisiert.</transla
         <translation>Radio</translation>
     </message>
     <message>
-        <source>Sash</source>
-        <translation type="obsolete">Sash</translation>
-    </message>
-    <message>
         <location filename="../app/client/Widgets/SideBar.cpp" line="119"/>
         <source>Next Section</source>
         <translation>Nächster Abschnitt</translation>
@@ -2236,10 +2093,6 @@ oder wähle unten eines aus</translation>
         <location filename="../app/client/Wizard/TourRadioPage.cpp" line="37"/>
         <source>Listen to non-stop, personalised radio</source>
         <translation>Höre ununterbrochenes, personalisiertes Radio</translation>
-    </message>
-    <message>
-        <source>Subscribe and listen to non-stop, personalised radio*</source>
-        <translation type="obsolete">Werde Abonnent und höre ununterbrochenes, personalisiertes Radio*</translation>
     </message>
     <message>
         <location filename="../app/client/Wizard/TourRadioPage.cpp" line="38"/>
@@ -2558,14 +2411,12 @@ oder wähle unten eines aus</translation>
         <source>You&apos;ve reached this station&apos;s skip limit. Skip again in %n minute(s).</source>
         <translation type="unfinished">
             <numerusform></numerusform>
-            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../app/client/Application.cpp" line="586"/>
         <source>You have %n skip(s) remaining on this station.</source>
         <translation type="unfinished">
-            <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
     </message>

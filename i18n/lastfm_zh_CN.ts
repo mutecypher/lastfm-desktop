@@ -17,13 +17,8 @@
 <context>
     <name>AccessPage</name>
     <message>
-        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&apos;t connected because you closed the browser window or you clicked cancel, please try again.&lt;p /&gt;&lt;/p&gt;</source>
-        <translation type="obsolete">&lt;p&gt;请点击浏览器中的&lt;strong&gt;允许访问&lt;/strong&gt;按钮，将您的 Last.fm 帐户连接到 Last.fm 桌面程序。&lt;/p&gt;&lt;p&gt;如果您关闭了浏览器窗口或点击了取消而未能连接，请再试一次。&lt;p /&gt;&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <location filename="../app/client/Wizard/AccessPage.cpp" line="46"/>
-        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&apos;t connected because you closed the browser window or you clicked cancel, please try again.&lt;p/&gt;</source>
-        <translation type="unfinished"></translation>
+        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&apos;t connected because you closed the browser window or you clicked cancel, please try again.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;请点击浏览器中的&lt;strong&gt;允许访问&lt;/strong&gt;按钮，将您的 Last.fm 帐户连接到 Last.fm 桌面程序。&lt;/p&gt;&lt;p&gt;如果您关闭了浏览器窗口或点击了取消而未能连接，请再试一次。&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../app/client/Wizard/AccessPage.cpp" line="60"/>
@@ -64,34 +59,6 @@
         <translation>代理：</translation>
     </message>
     <message>
-        <source>Automatic</source>
-        <translation type="obsolete">自动</translation>
-    </message>
-    <message>
-        <source>Manual</source>
-        <translation type="obsolete">手动</translation>
-    </message>
-    <message>
-        <source>Host:</source>
-        <translation type="obsolete">主机：</translation>
-    </message>
-    <message>
-        <source>Username:</source>
-        <translation type="obsolete">用户名：</translation>
-    </message>
-    <message>
-        <source>Password:</source>
-        <translation type="obsolete">密码：</translation>
-    </message>
-    <message>
-        <source>Port:</source>
-        <translation type="obsolete">端口：</translation>
-    </message>
-    <message>
-        <source>Leave fields blank to use a direct connection</source>
-        <translation type="obsolete">要使用直接连接，请留空这些字段</translation>
-    </message>
-    <message>
         <location filename="../app/client/Settings/AdvancedSettingsWidget.ui" line="48"/>
         <source>Cache Size:</source>
         <translation>缓存大小：</translation>
@@ -123,21 +90,6 @@
         <location filename="../lib/unicorn/widgets/AvatarWidget.cpp" line="40"/>
         <source>Alumnus</source>
         <translation>老友</translation>
-    </message>
-</context>
-<context>
-    <name>BetaDialog</name>
-    <message>
-        <source>Create Issue</source>
-        <translation type="obsolete">创建问题</translation>
-    </message>
-    <message>
-        <source>Beta</source>
-        <translation type="obsolete">测试版</translation>
-    </message>
-    <message>
-        <source>Visit Audioscrobbler Beta group</source>
-        <translation type="obsolete">访问 Audioscrobbler 测试版小组</translation>
     </message>
 </context>
 <context>
@@ -379,13 +331,8 @@
         <translation>在 Last.fm 上寻找好友</translation>
     </message>
     <message>
-        <source>&lt;h3&gt;You haven&apos;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;p /&gt;&lt;/p&gt;</source>
-        <translation type="obsolete">&lt;h3&gt;您还未在 Last.fm 上结交好友呢。&lt;/h3&gt;&lt;p&gt;使用好友搜索功能，您可以在 Last.fm 上轻松找到 Facebook 好友和电邮联系人。&lt;p /&gt;&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <location filename="../app/client/Widgets/FriendListWidget.cpp" line="61"/>
-        <source>&lt;h3&gt;You haven&apos;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;p&gt;</source>
-        <translation type="unfinished"></translation>
+        <source>&lt;h3&gt;You haven&apos;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;/p&gt;</source>
+        <translation>&lt;h3&gt;您还未在 Last.fm 上结交好友呢。&lt;/h3&gt;&lt;p&gt;使用好友搜索功能，您可以在 Last.fm 上轻松找到 Facebook 好友和电邮联系人。&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../app/client/Widgets/FriendListWidget.cpp" line="66"/>
@@ -406,10 +353,6 @@
 </context>
 <context>
     <name>FriendWidget</name>
-    <message>
-        <source>%1%2s Library Radio</source>
-        <translation type="obsolete">%1 的音乐库电台</translation>
-    </message>
     <message>
         <location filename="../app/client/Widgets/FriendWidget.cpp" line="41"/>
         <source>%1&apos;s Library Radio</source>
@@ -598,48 +541,6 @@
     </message>
 </context>
 <context>
-    <name>LoginDialog</name>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.ui" line="20"/>
-        <source>Log in to Last.fm</source>
-        <translation>登录到 Last.fm</translation>
-    </message>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.ui" line="48"/>
-        <source>Username:</source>
-        <translation>用户名：</translation>
-    </message>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.ui" line="61"/>
-        <source>Password:</source>
-        <translation>密码：</translation>
-    </message>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.ui" line="90"/>
-        <source>Remember Me</source>
-        <translation>记住我</translation>
-    </message>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.ui" line="168"/>
-        <source>&lt;a href=&apos;http://last.fm/join/&apos;&gt;Sign up&lt;/a&gt;&lt;br&gt;&lt;a href=&apos;http://last.fm/settings/lostpassword/&apos;&gt;Forgot your password?&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;a href=&quot;http://last.fm/join/&quot;&gt;Sign up&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://last.fm/settings/lostpassword/&quot;&gt;Forgot your password?&lt;/a&gt;&lt;/br&gt;</source>
-        <translation type="obsolete">&lt;a href=&quot;http://last.fm/join/&quot;&gt;注册&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://last.fm/settings/lostpassword/&quot;&gt;忘了密码&lt;/a&gt;？&lt;/br&gt;</translation>
-    </message>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.cpp" line="31"/>
-        <source>Last.fm needs your permission first!</source>
-        <translation>Last.fm 需要您的许可！</translation>
-    </message>
-    <message>
-        <location filename="../lib/unicorn/dialogs/LoginDialog.cpp" line="34"/>
-        <source>This application needs your permission to connect to your Last.fm profile.  Click OK to go to the Last.fm website and do this.</source>
-        <translation>在连接到您的 Last.fm 专页前，此程序需要获得您的许可。请点击“确认”前往 Last.fm 网站进行相关操作。</translation>
-    </message>
-</context>
-<context>
     <name>LoginPage</name>
     <message>
         <location filename="../app/client/Wizard/LoginPage.cpp" line="50"/>
@@ -758,10 +659,6 @@
         <location filename="../app/client/MainWindow.cpp" line="312"/>
         <source>Zoom</source>
         <translation>缩放</translation>
-    </message>
-    <message>
-        <source>Last.fm</source>
-        <translation type="obsolete">Last.fm</translation>
     </message>
     <message>
         <location filename="../app/client/MainWindow.cpp" line="316"/>
@@ -991,29 +888,9 @@
         <translation>因为您收听%1、%2、%3、%4和%5，所以向您推荐这位艺术家。</translation>
     </message>
     <message>
-        <source>From %2%1s library.</source>
-        <translation type="obsolete">选自%2％1s的音乐库。</translation>
-    </message>
-    <message>
-        <source>From %2 and %3%1s libraries.</source>
-        <translation type="obsolete">选自%2和%3%1s的音乐库。</translation>
-    </message>
-    <message>
-        <source>From %2, %3, and %4%1s libraries.</source>
-        <translation type="obsolete">选自%2、%3和%4%1s的音乐库。</translation>
-    </message>
-    <message>
-        <source>From %2, %3, %4, and %5%1s libraries.</source>
-        <translation type="obsolete">选自%2、%3、%4和%5%1s的音乐库。</translation>
-    </message>
-    <message>
         <location filename="../app/client/Widgets/MetadataWidget.cpp" line="671"/>
         <source>From %1&apos;s library.</source>
         <translation>选自%1的音乐库。</translation>
-    </message>
-    <message>
-        <source>From %2, %3, %4, %5, and %6%1s libraries.</source>
-        <translation type="obsolete">选自%2、%3、%4、%5和%6%1s的音乐库。</translation>
     </message>
     <message>
         <location filename="../app/client/Widgets/MetadataWidget.cpp" line="672"/>
@@ -1225,10 +1102,6 @@
 </context>
 <context>
     <name>PluginBootstrapper</name>
-    <message>
-        <source>test! Last.fm is importing your current media library...</source>
-        <translation type="obsolete">测试！Last.fm 正在导入当前媒体库...</translation>
-    </message>
     <message>
         <location filename="../app/client/Bootstrapper/PluginBootstrapper.cpp" line="51"/>
         <source>Last.fm has imported your media library.
@@ -1594,12 +1467,6 @@ Your profile will be updated with the new tracks in a few minutes.</source>
 </context>
 <context>
     <name>RadioService</name>
-    <message numerus="yes">
-        <source>Sorry, you&apos;ve reached your limit of %n track(s). &lt;a href=&quot;http://www.last.fm/subscribe&quot;&gt;Subscribe&lt;/a&gt; for unlimited listening, or visit &lt;a href=&quot;http://www.last.fm/listen&quot;&gt;last.fm/listen&lt;/a&gt;</source>
-        <translation type="obsolete">
-            <numerusform>真遗憾，您已达到 %n 首单曲的收听极限。请&lt;a href=&quot;http://www.last.fm/subscribe&quot;&gt;订购服务&lt;/a&gt;获得无限制收听，或访问 &lt;a href=&quot;http://www.last.fm/listen&quot;&gt;last.fm/listen&lt;/a&gt;</numerusform>
-        </translation>
-    </message>
     <message>
         <location filename="../app/client/Services/RadioService/RadioService.cpp" line="128"/>
         <location filename="../app/client/Services/RadioService/RadioService.cpp" line="162"/>
@@ -1646,11 +1513,6 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <location filename="../app/client/Widgets/RadioWidget.cpp" line="94"/>
         <source>My Mix Radio</source>
         <translation>混合电台</translation>
-    </message>
-    <message>
-        <location filename="../app/client/Widgets/RadioWidget.ui" line="95"/>
-        <source>Personal</source>
-        <translation>个人</translation>
     </message>
     <message>
         <location filename="../app/client/Widgets/RadioWidget.cpp" line="94"/>
@@ -2008,10 +1870,6 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>电台</translation>
     </message>
     <message>
-        <source>Sash</source>
-        <translation type="obsolete">Sash</translation>
-    </message>
-    <message>
         <location filename="../app/client/Widgets/SideBar.cpp" line="119"/>
         <source>Next Section</source>
         <translation>下一视图</translation>
@@ -2221,10 +2079,6 @@ or choose from below</source>
         <location filename="../app/client/Wizard/TourRadioPage.cpp" line="37"/>
         <source>Listen to non-stop, personalised radio</source>
         <translation>无间断收听个性化电台</translation>
-    </message>
-    <message>
-        <source>Subscribe and listen to non-stop, personalised radio*</source>
-        <translation type="obsolete">成为付费用户，无间断地收听个性化电台*</translation>
     </message>
     <message>
         <location filename="../app/client/Wizard/TourRadioPage.cpp" line="38"/>
