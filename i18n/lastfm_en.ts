@@ -499,12 +499,17 @@
 <context>
     <name>IpodSettingsWidget</name>
     <message>
-        <location filename="../app/client/Settings/IpodSettingsWidget.cpp" line="111"/>
+        <location filename="../app/client/Settings/IpodSettingsWidget.cpp" line="72"/>
+        <source>&lt;p&gt;Please note:&lt;/p&gt;&lt;p&gt;Using an iOS scrobbling app, like %1, may result in double scrobbles. Please only enable scrobbling in one of them.&lt;/p&gt;&lt;p&gt;iTunes Match synchronises play counts, but not last played times, across multiple devices. This will lead to duplicate scrobbles, at incorrect times. For now, we recommend iTunes Match users disable device scrobbling on desktop devices and scrobble iPhones/iPods using an iOS scrobbling app, like %1.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/client/Settings/IpodSettingsWidget.cpp" line="116"/>
         <source>Setting not changed</source>
         <translation>Setting not changed</translation>
     </message>
     <message>
-        <location filename="../app/client/Settings/IpodSettingsWidget.cpp" line="113"/>
+        <location filename="../app/client/Settings/IpodSettingsWidget.cpp" line="118"/>
         <source>You did not close iTunes for this setting to change</source>
         <translation>You did not close iTunes for this setting to change</translation>
     </message>

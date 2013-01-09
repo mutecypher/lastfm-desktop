@@ -1425,3 +1425,8 @@ QDialog#AboutDialog QLabel#as {
 	max-height: 64px;
 	max-width: 64px;
 }
+
+IpodSettingsWidget unicorn--Label {
+	font-size: 12px;
+	color: #333;
+}
