@@ -471,9 +471,11 @@ Application::onTrackStarted( const lastfm::Track& track, const Track& oldTrack )
          && track.url().isLocalFile()
 #endif
        )
-    {
-        QFile trackFile( track.url().toLocalFile() );
-        if ( trackFile.exists() )
+    {       
+        QFileInfo trackFileInfo( track.url().toLocalFile() );
+
+        if ( trackFileInfo.exists()
+             && trackFileInfo.isWritable() ) // this stops us fingerprinting CDs (but maybe other things)
         {
             Fingerprinter* fingerprinter = new Fingerprinter( track, this );
             connect( fingerprinter, SIGNAL(finished()), fingerprinter, SLOT(deleteLater()) );
