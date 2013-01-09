@@ -60,7 +60,6 @@ SOURCES += \
     PlayBus/Bus.cpp \
     dialogs/UserManagerDialog.cpp \
     dialogs/TagDialog.cpp \
-    dialogs/LoginDialog.cpp \
     dialogs/LoginContinueDialog.cpp \
     dialogs/AboutDialog.cpp \
     dialogs/ScrobbleConfirmationDialog.cpp \
@@ -118,7 +117,6 @@ HEADERS += \
     dialogs/UserManagerDialog.h \
     dialogs/UnicornDialog.h \
     dialogs/TagDialog.h \
-    dialogs/LoginDialog.h \
     dialogs/LoginContinueDialog.h \
     dialogs/AboutDialog.h \
     dialogs/ScrobbleConfirmationDialog.h \
@@ -153,7 +151,6 @@ CONFIG( break ) {
                           
 FORMS += \
 	dialogs/ShareDialog.ui \
-	dialogs/LoginDialog.ui \
     dialogs/TagDialog.ui \
     dialogs/AboutDialog.ui \
     dialogs/ScrobbleConfirmationDialog.ui
