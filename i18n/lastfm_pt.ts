@@ -2402,8 +2402,8 @@ ou escolha abaixo</translation>
         <translation>de %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../app/client/Application.cpp" line="576"/>
-        <location filename="../app/client/Application.cpp" line="590"/>
+        <location filename="../app/client/Application.cpp" line="578"/>
+        <location filename="../app/client/Application.cpp" line="592"/>
         <source>You&apos;ve reached this station&apos;s skip limit. Skip again in %n minute(s).</source>
         <translation type="unfinished">
             <numerusform></numerusform>
@@ -2411,7 +2411,7 @@ ou escolha abaixo</translation>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../app/client/Application.cpp" line="592"/>
+        <location filename="../app/client/Application.cpp" line="594"/>
         <source>You have %n skip(s) remaining on this station.</source>
         <translation type="unfinished">
             <numerusform></numerusform>
@@ -2419,12 +2419,12 @@ ou escolha abaixo</translation>
         </translation>
     </message>
     <message>
-        <location filename="../app/client/Application.cpp" line="848"/>
+        <location filename="../app/client/Application.cpp" line="850"/>
         <source>Are you sure you want to quit %1?</source>
         <translation>Tem certeza de que deseja fechar %1?</translation>
     </message>
     <message>
-        <location filename="../app/client/Application.cpp" line="849"/>
+        <location filename="../app/client/Application.cpp" line="851"/>
         <source>%1 is about to quit. Tracks played will not be scrobbled if you continue.</source>
         <translation>%1 está prestes a fechar. As faixas executadas não serão incluídas no scrobble se você continuar.</translation>
     </message>
