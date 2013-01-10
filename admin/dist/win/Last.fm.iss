@@ -204,40 +204,59 @@ Filename: "{app}\UninsHs.exe"; Parameters: "/r0=LastFM,{language},{srcexe},{app}
 
 [InstallDelete]
 ;All the files that are not in fixed components (so the Radio compontent is actually removed on modify)
-
 Type: Files; Name: "{app}\libFLAC_dynamic.dll"
 Type: Files; Name: "{app}\libogg.dll"
 Type: Files; Name: "{app}\libvorbis.dll"
 Type: Files; Name: "{app}\libvorbisfile.dll"
 
 Type: Files; Name: "{app}\avutil-51.dll";
-
-Type: Files; Name: "{commondesktop}\Last.fm.lnk"
 Type: Files; Name: "{app}\Last.fm.exe"
 Type: Files; Name: "{app}\Last.fm Scrobbler.exe"
 Type: Files; Name: "{app}\phonon4.dll"
 Type: Files; Name: "{app}\phonon.dll"
 Type: Files; Name: "{app}\Last.fm.css"
-Type: filesandordirs; Name: "{app}\imageformats\*"
-Type: filesandordirs; Name: "{app}\phonon_backend\*"
-Type: filesandordirs; Name: "{app}\sqldrivers\*"
+Type: filesandordirs; Name: "{app}\phonon_backend"
+Type: filesandordirs; Name: "{app}\sqldrivers"
 Type: dirifempty; Name: "{app}\imageformats"
 Type: dirifempty; Name: "{app}\phonon_backend"
 Type: dirifempty; Name: "{app}\sqldrivers"
-Type: filesandordirs; Name: "{app}\plugins\*"
+Type: filesandordirs; Name: "{app}\plugins"
 
 Type: Files; Name: "{app}\Last.fm.css"
 Type: Files; Name: "{app}\Last.fm Scrobbler.css"
-
-Type: Files; Name: "{group}\Last.fm"
 Type: Files; Name: "{commondesktop}\Last.fm"
-Type: Files; Name: "{group}\Uninstall Last.fm"
-Type: Files; Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"
-
-Type: Files; Name: "{group}\Last.fm Scrobbler"
+Type: Files; Name: "{commondesktop}\Last.fm.lnk"
 Type: Files; Name: "{commondesktop}\Last.fm Scrobbler"
-Type: Files; Name: "{group}\Uninstall Last.fm Scrobbler"
+Type: Files; Name: "{commondesktop}\Last.fm Scrobbler.lnk"
+Type: Files; Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm"
 Type: Files; Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm Scrobbler"
+Type: Files; Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm.lnk"
+Type: Files; Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Last.fm Scrobbler.lnk"
+Type: filesandordirs; Name: "{group}"
+
+;Files from the olde app
+Type: Files; Name: "{app}\Cleaner.exe"
+Type: Files; Name: "{app}\CrashReporter.exe"
+Type: Files; Name: "{app}\killer.exe"
+Type: Files; Name: "{app}\LastFM.exe"
+Type: Files; Name: "{app}\LastFM.exe.config"
+Type: Files; Name: "{app}\Updater.exe"
+Type: Files; Name: "{app}\ChangeLog.txt"
+Type: Files; Name: "{app}\Moose1.dll"
+Type: Files; Name: "{app}\LastFmFingerprint1.dll"
+Type: Files; Name: "{app}\LastFmTools1.dll"
+Type: Files; Name: "{app}\breakpad.dll"
+Type: Files; Name: "{app}\srv_httpinput.dll"
+Type: Files; Name: "{app}\srv_madtranscode.dll"
+Type: Files; Name: "{app}\srv_rtaudioplayback.dll"
+Type: Files; Name: "{app}\unins000.dat"
+Type: Files; Name: "{app}\unins000.exe"
+Type: Files; Name: "{app}\zlibwapi.dll"
+Type: Files; Name: "{app}\VistaLib32.dll"
+Type: Files; Name: "{app}\VistaLib64.dll"
+Type: filesandordirs; Name: "{app}\data"
+Type: filesandordirs; Name: "{app}\imageformats"
+Type: filesandordirs; Name: "{app}\Microsoft.VC80.CRT"
 
 ; This is the LAST step of uninstallation
 [UninstallDelete]
