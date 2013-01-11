@@ -95,7 +95,7 @@ IpodSettingsWidget::saveSettings()
             ITunesPluginInfo* iTunesPluginInfo = new ITunesPluginInfo;
             plugins << iTunesPluginInfo;
             CloseAppsDialog* closeApps = new CloseAppsDialog( plugins, this );
-            delete iTunesPluginInfo;
+            closeApps->setOwnsPlugins( true );
 #else
             CloseAppsDialog* closeApps = new CloseAppsDialog( this );
 #endif
