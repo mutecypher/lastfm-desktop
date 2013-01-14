@@ -545,6 +545,19 @@
     </message>
 </context>
 <context>
+    <name>LoginDialog</name>
+    <message>
+        <location filename="../lib/unicorn/dialogs/LoginDialog.cpp" line="31"/>
+        <source>Last.fm needs your permission first!</source>
+        <translation>Last.fm 需要您的许可！</translation>
+    </message>
+    <message>
+        <location filename="../lib/unicorn/dialogs/LoginDialog.cpp" line="34"/>
+        <source>This application needs your permission to connect to your Last.fm profile.  Click OK to go to the Last.fm website and do this.</source>
+        <translation>在连接到您的 Last.fm 专页前，此程序需要获得您的许可。请点击“确认”前往 Last.fm 网站进行相关操作。</translation>
+    </message>
+</context>
+<context>
     <name>LoginPage</name>
     <message>
         <location filename="../app/client/Wizard/LoginPage.cpp" line="50"/>
