@@ -359,11 +359,7 @@ DeviceScrobbler::scrobbleIpodTracks( int trackCount )
         }
         else
         {
-            unicorn::Session* currentSession = qobject_cast<unicorn::Application*>( qApp )->currentSession();
-            if ( currentSession )
-            {
-                IpodDeviceLinux::deleteDeviceHistory( currentSession->userInfo().name(), iPod->deviceId() );
-            }
+            IpodDeviceLinux::deleteDeviceHistory( qobject_cast<unicorn::Application*>( qApp )->currentSession().user().name(), iPod->deviceId() );
         }
     }
 
