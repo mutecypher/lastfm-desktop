@@ -16,11 +16,19 @@ public:
 
 private:
     void setUser( const lastfm::User& user );
+#ifdef Q_OS_WIN
+    void startApp( const QString& app );
+#endif
 
 private slots:
     void onSessionChanged( const unicorn::Session& session );
 
     void oniTunesClicked();
+#ifdef Q_OS_WIN
+    void onWinampClicked();
+    void onWMPClicked();
+    void onFoobarClicked();
+#endif
 
 private:
     Ui::NothingPlayingWidget* ui;
