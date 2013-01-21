@@ -135,6 +135,8 @@ namespace audioscrobbler
 
         QWidget* mainWindow() const;
 
+        void setBetaUpdates( bool betaUpdates );
+
         void setRaiseHotKey( Qt::KeyboardModifiers mods, int key );
 
         void startBootstrap( const QString& pluginId );

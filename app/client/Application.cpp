@@ -413,6 +413,12 @@ Application::setRaiseHotKey( Qt::KeyboardModifiers mods, int key )
 }
 
 void
+Application::setBetaUpdates( bool betaUpdates )
+{
+    m_mw->setBetaUpdates( betaUpdates );
+}
+
+void
 Application::startBootstrap( const QString& pluginId )
 {
     if ( pluginId == "itw"

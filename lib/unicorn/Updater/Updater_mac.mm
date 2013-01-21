@@ -46,11 +46,27 @@ unicorn::Updater::Updater(QObject *parent) :
     [updater setDelegate:g_Delegate];
 
     if ( qApp->arguments().contains( "--update" ) )
-        [updater setFeedURL:[NSURL URLWithString:@"http://users.last.fm/~michael/updates_mac.xml"]];
-    else if ( qApp->arguments().contains( "--update-static" ) )
-        [updater setFeedURL:[NSURL URLWithString:@"http://static.last.fm/client/Mac/updates.xml"]];
+    {
+        int urlIndex = qApp->arguments().indexOf( "--update" ) + 1;
+
+        if ( qApp->arguments().count() > urlIndex && qApp->arguments()[urlIndex].startsWith( "http://" ) )
+            [updater setFeedURL:[NSURL URLWithString: qApp->arguments()[urlIndex].toUtf8() ]] );
+        else
+            setBetaUpdates( unicorn::Settings().value( SETTING_BETA_UPGRADES, false ).toBool() );
+    }
     else
-        [updater setFeedURL:[NSURL URLWithString:@"http://cdn.last.fm/client/Mac/updates.xml"]];
+        setBetaUpdates( unicorn::Settings().value( SETTING_BETA_UPGRADES, false ).toBool() );
+
+}
+
+void
+unicorn::Updater::setBetaUpdates( bool betaUpdates )
+{
+    if ( betaUpdates )
+        [updater setFeedURL:[NSURL URLWithString:UPDATE_URL_MAC_BETA]];
+    else
+        [updater setFeedURL:[NSURL URLWithString:UPDATE_URL_MAC]];
+
 }
 
 void
