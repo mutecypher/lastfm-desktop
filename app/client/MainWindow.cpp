@@ -413,6 +413,13 @@ MainWindow::onDiagnosticsTriggered()
 }
 
 void
+MainWindow::setBetaUpdates( bool betaUpdates )
+{
+    if ( m_updater )
+        m_updater->setBetaUpdates( betaUpdates );
+}
+
+void
 MainWindow::onMinimizeTriggered()
 {
     setWindowState( Qt::WindowMinimized );
