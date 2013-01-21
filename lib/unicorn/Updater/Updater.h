@@ -8,7 +8,7 @@
 #ifdef Q_OS_WIN
 #define UPDATE_URL_WIN "http://cdn.last.fm/client/updates/updates.win.xml"
 #define UPDATE_URL_WIN_BETA "http://cdn.last.fm/client/updates/updates.win.beta.xml"
-#elif Q_OS_MAC
+#elif defined( Q_OS_MAC )
 #define UPDATE_URL_MAC @"http://cdn.last.fm/client/updates/updates.mac.xml"
 #define UPDATE_URL_MAC_BETA @"http://cdn.last.fm/client/updates/updates.mac.beta.xml"
 #endif

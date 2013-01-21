@@ -50,7 +50,7 @@ unicorn::Updater::Updater(QObject *parent) :
         int urlIndex = qApp->arguments().indexOf( "--update" ) + 1;
 
         if ( qApp->arguments().count() > urlIndex && qApp->arguments()[urlIndex].startsWith( "http://" ) )
-            [updater setFeedURL:[NSURL URLWithString: qApp->arguments()[urlIndex].toUtf8() ]] );
+            [updater setFeedURL:[NSURL URLWithString: [NSString stringWithCharacters:(const unichar *)qApp->arguments()[urlIndex].unicode() length:(NSUInteger)qApp->arguments()[urlIndex].length() ]]];
         else
             setBetaUpdates( unicorn::Settings().value( SETTING_BETA_UPGRADES, false ).toBool() );
     }
@@ -63,9 +63,9 @@ void
 unicorn::Updater::setBetaUpdates( bool betaUpdates )
 {
     if ( betaUpdates )
-        [updater setFeedURL:[NSURL URLWithString:UPDATE_URL_MAC_BETA]];
+        [[SUUpdater sharedUpdater] setFeedURL:[NSURL URLWithString:UPDATE_URL_MAC_BETA]];
     else
-        [updater setFeedURL:[NSURL URLWithString:UPDATE_URL_MAC]];
+        [[SUUpdater sharedUpdater] setFeedURL:[NSURL URLWithString:UPDATE_URL_MAC]];
 
 }
 
