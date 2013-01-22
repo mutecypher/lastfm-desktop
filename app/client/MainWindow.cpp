@@ -415,8 +415,10 @@ MainWindow::onDiagnosticsTriggered()
 void
 MainWindow::setBetaUpdates( bool betaUpdates )
 {
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     if ( m_updater )
         m_updater->setBetaUpdates( betaUpdates );
+#endif
 }
 
 void

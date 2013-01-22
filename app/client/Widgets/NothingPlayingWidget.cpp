@@ -79,7 +79,7 @@ NothingPlayingWidget::onSessionChanged( const unicorn::Session& session )
     }
 }
 
-#ifndef Q_OS_MAC
+#ifdef Q_OS_WIN
 void
 NothingPlayingWidget::startApp( const QString& app )
 {
