@@ -235,6 +235,14 @@ MainWindow::checkUpdatedPlugins()
             {
                 foreach ( IPluginInfo* info, m_pluginList->updatedList() )
                     info->doInstall();
+
+                // The user didn't close their media players
+                QMessageBoxBuilder( this ).setTitle( tr( "Plugin(s) installed!", "", m_pluginList->updatedList().count() ) )
+                        .setIcon( QMessageBox::Information )
+                        .setText( tr( "<p>Your plugin(s) ha(s|ve) been installed.</p>"
+                                      "<p>You're now ready to scrobble with your media player(s)</p>", "", m_pluginList->updatedList().count() ) )
+                        .setButtons( QMessageBox::Ok )
+                        .exec();
             }
             else
             {
