@@ -274,6 +274,7 @@ MainWindow::setupMenuBar()
 
     foreach ( IPluginInfo* info, m_pluginList->supportedList() )
     {
+        info->setVerbose( true );
         pluginMenu->addAction( info->name(), info, SLOT(doInstall()));
     }
 #endif
