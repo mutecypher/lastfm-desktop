@@ -48,6 +48,7 @@
 #include "lib/unicorn/QMessageBoxBuilder.h"
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "lib/unicorn/DesktopServices.h"
+#include "lib/unicorn/dialogs/UserManagerDialog.h"
 #ifdef Q_OS_MAC
 #include "MediaKeys/MediaKey.h"
 #include "lib/unicorn/notify/Notify.h"
@@ -88,7 +89,9 @@ using audioscrobbler::Application;
 #endif
 
 Application::Application(int& argc, char** argv) 
-    :unicorn::Application(argc, argv), m_raiseHotKeyId( (void*)-1 )
+    :unicorn::Application(argc, argv)
+    , m_raiseHotKeyId( (void*)-1 )
+    , m_reauthenticating( false )
 {
     setAttribute( Qt::AA_DontShowIconsInMenus );
 
@@ -732,8 +735,36 @@ Application::onWsError( lastfm::ws::Error e )
     switch (e)
     {
         case lastfm::ws::InvalidSessionKey:
-            //quit();
-            // ask the current user to reauthenticate!
+
+        if ( !m_reauthenticating )
+        {
+            m_reauthenticating = true;
+
+            QString unauthedUser = aApp->currentSession().user().name();
+
+            unicorn::Settings us;
+            us.beginGroup( "Users" );
+            us.remove( unauthedUser );
+            us.endGroup();
+
+            us.setValue( SETTING_FIRST_RUN_WIZARD_COMPLETED, false );
+
+            // Tell them that there was an error
+            QMessageBoxBuilder( m_mw )
+                    .setIcon( QMessageBox::Critical )
+                    .setTitle( tr("Authentication Required") )
+                    .setText( tr( "<p>The user account <strong>%1</strong> is no longer authenticated with Last.fm.</p>"
+                                  "<p>Click OK to start the setup process and reauthenticate this account.</p>" ).arg( unauthedUser ) )
+                    .setButtons( QMessageBox::Ok )
+                    .exec();
+
+
+            qobject_cast<unicorn::Application*>( qApp )->restart();
+
+
+            m_reauthenticating = false;
+        }
+
             break;
         default:
             break;
