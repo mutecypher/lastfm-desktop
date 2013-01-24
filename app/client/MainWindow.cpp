@@ -234,7 +234,11 @@ MainWindow::checkUpdatedPlugins()
             if ( closeApps->result() == QDialog::Accepted )
             {
                 foreach ( IPluginInfo* info, m_pluginList->updatedList() )
+                {
+                    info->setVerbose( false );
                     info->doInstall();
+                    info->setVerbose( true );
+                }
 
                 // The user didn't close their media players
                 QMessageBoxBuilder( this ).setTitle( tr( "Plugin(s) installed!", "", m_pluginList->updatedList().count() ) )
