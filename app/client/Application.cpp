@@ -117,6 +117,9 @@ Application::Application(int& argc, char** argv)
 
     if ( nam )
         nam->setUserProxy( proxy );
+
+    AudioscrobblerSettings settings;
+    lastfm::ws::setScheme( settings.value( "enableSsl", false ).toBool() ? lastfm::ws::Https : lastfm::ws::Http );
 }
 
 void
