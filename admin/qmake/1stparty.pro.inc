@@ -20,7 +20,13 @@ CONFIG( lastfm ) {
     LIBS += -llastfm
     win32 {
         CONFIG += link_pkgconfig
-        PKGCONFIG += lastfm
+
+        CONFIG(debug, debug|release) {
+            PKGCONFIG += lastfm-debug
+        }
+        else {
+            PKGCONFIG += lastfm-release
+        }
 
     }
     mac{
