@@ -86,13 +86,53 @@ ScrobbleService::ScrobbleService()
 
 
 bool
+ScrobbleService::isDirExcluded( const lastfm::Track& track ) const
+{
+    if ( track.source() == lastfm::Track::LastFmRadio )
+        return false;
+
+    QString pathToTest = track.url().toLocalFile();
+
+#ifdef Q_OS_WIN
+    pathToTest = pathToTest.toLower();
+#endif
+
+    if ( pathToTest.isEmpty() )
+        return false;
+
+    unicorn::UserSettings us;
+    QStringList exculsionDirs = us.value( "ExclusionDirs" ).toStringList();
+
+    foreach ( QString bannedPath, exculsionDirs )
+    {
+        bannedPath = QDir( bannedPath ).absolutePath();
+#ifdef Q_OS_WIN
+        bannedPath = bannedPath.toLower();
+#endif
+
+        qDebug() << pathToTest << bannedPath;
+
+        // Try and match start of given path with banned dir
+        if ( pathToTest.startsWith( bannedPath ) )
+        {
+            // Found, this path is from a banned dir
+            return true;
+        }
+    }
+
+    // The path wasn't found in exclusions list
+    return false;
+}
+
+bool
 ScrobbleService::scrobblableTrack( const lastfm::Track& track ) const
 {
     return unicorn::UserSettings().value( "scrobblingOn", true ).toBool()
             && track.extra( "playerId" ) != "spt"
             && !track.artist().isNull()
             && ( unicorn::UserSettings().value( "podcasts", true ).toBool() || !track.isPodcast() )
-            && !track.isVideo();
+            && !track.isVideo()
+            && !isDirExcluded( track );
 }
 
 bool

@@ -103,7 +103,9 @@ SOURCES += \
     Widgets/ScrobblesListWidget.cpp \
     Fingerprinter/Fingerprinter.cpp \
     Services/AnalyticsService/AnalyticsService.cpp \
-    Services/AnalyticsService/PersistentCookieJar.cpp
+    Services/AnalyticsService/PersistentCookieJar.cpp \
+    Settings/CheckFileSystemModel.cpp \
+    Settings/CheckFileSystemView.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -182,7 +184,9 @@ HEADERS += \
     Fingerprinter/Fingerprinter.h \
     Services/AnalyticsService.h \
     Services/AnalyticsService/AnalyticsService.h \
-    Services/AnalyticsService/PersistentCookieJar.h
+    Services/AnalyticsService/PersistentCookieJar.h \
+    Settings/CheckFileSystemModel.h \
+    Settings/CheckFileSystemView.h
 
 contains(DEFINES, FFMPEG_FINGERPRINTING) {
     SOURCES += Fingerprinter/LAV_Source.cpp
