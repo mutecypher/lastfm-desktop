@@ -40,18 +40,14 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
     ui->foobar->hide();
 
 #if defined( Q_OS_WIN ) || defined( Q_OS_MAC )
-    PluginList pluginList;
-#ifdef Q_OS_WIN32
-    QString iTunesId  = "itw";
-#elif
-    QString iTunesId  = "osx";
-#endif
-    ui->itunes->setVisible( pluginList.pluginById( iTunesId )->isAppInstalled() );
+    ui->itunes->setVisible( true ); // always show iTunes on Mac
     ui->itunes->setAttribute( Qt::WA_LayoutUsesWidgetRect );
 
     connect( ui->itunes, SIGNAL(clicked()), SLOT(oniTunesClicked()));
 
 #ifndef Q_OS_MAC
+    PluginList pluginList;
+    ui->itunes->setVisible( pluginList.pluginById( "itw" )->isAppInstalled() );
     ui->wmp->setVisible( pluginList.pluginById( "wmp" )->isAppInstalled() );
     ui->wmp->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->winamp->setVisible( pluginList.pluginById( "wa2" )->isAppInstalled() );
