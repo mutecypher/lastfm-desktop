@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>304</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -148,7 +148,7 @@
   <customwidget>
    <class>CheckFileSystemView</class>
    <extends>QTreeView</extends>
-   <header>CheckFileSystemView.h</header>
+   <header>../Settings/CheckFileSystemView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
