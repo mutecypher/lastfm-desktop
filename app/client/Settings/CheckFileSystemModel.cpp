@@ -16,7 +16,7 @@ CheckFileSystemModel::data( const QModelIndex& index, int role) const
 {
     if (role == Qt::CheckStateRole)
     {
-        int id = index.internalId();
+        qint64 id = index.internalId();
         return m_checkTable.contains(id) ? m_checkTable.value(id) : Qt::Unchecked;
     }
     else
