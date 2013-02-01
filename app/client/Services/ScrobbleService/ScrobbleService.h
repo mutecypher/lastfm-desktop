@@ -42,6 +42,7 @@ public:
     ScrobbleService();
 
     bool scrobblableTrack( const lastfm::Track& track ) const;
+    bool isDirExcluded( const lastfm::Track& track ) const;
 
     Track currentTrack() const { return m_currentTrack; }
     QPointer<DeviceScrobbler> deviceScrobbler() { return m_deviceScrobbler; }
