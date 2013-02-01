@@ -89,7 +89,7 @@ using audioscrobbler::Application;
 #endif
 
 Application::Application(int& argc, char** argv) 
-    :unicorn::Application(argc, argv)
+    :unicorn::Application( "fm.last.Scrobbler", argc, argv )
     , m_raiseHotKeyId( (void*)-1 )
     , m_reauthenticating( false )
 {

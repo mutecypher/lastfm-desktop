@@ -63,8 +63,8 @@
 
 
 
-unicorn::Application::Application( int& argc, char** argv ) throw( StubbornUserException )
-                    : QtSingleApplication( argc, argv ),
+unicorn::Application::Application(const QString &id, int &argc, char **argv) throw( StubbornUserException )
+                    : QtSingleApplication( id, argc, argv ),
                       m_logoutAtQuit( false ),
                       m_currentSession( new unicorn::Session ),
                       m_wizardRunning( true ),
