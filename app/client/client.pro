@@ -1,5 +1,8 @@
 TEMPLATE = app
 TARGET = "Last.fm Scrobbler"
+unix:!mac {
+    TARGET = lastfm-scrobbler
+}
 VERSION = 2.1.33
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql webkit
