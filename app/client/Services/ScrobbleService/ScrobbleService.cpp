@@ -86,7 +86,7 @@ ScrobbleService::ScrobbleService()
 
 
 bool
-ScrobbleService::isDirExcluded( const lastfm::Track& track ) const
+ScrobbleService::isDirExcluded( const lastfm::Track& track )
 {
     if ( track.source() == lastfm::Track::LastFmRadio )
         return false;
