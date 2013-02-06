@@ -588,8 +588,12 @@ unicorn::Application::winEventFilter ( void* message )
 void
 unicorn::Application::restart()
 {
+
 #ifdef Q_OS_WIN
-    QProcess::startDetached( applicationFilePath() );
+    QStringList args;
+    args << "--new"; // force a new instance of the app, even if one is running
+    qDebug() << applicationFilePath();
+    QProcess::startDetached( applicationFilePath(), args );
 #endif
 
 #ifdef Q_OS_MAC
@@ -599,6 +603,8 @@ unicorn::Application::restart()
     args << "-b";
     args << "fm.last.Scrobbler";
     args << "-n"; // open a new instance even if one is running
+    args << "--args";
+    args << "--new"; // force a new instance of the app, even if one is running
     qDebug() << QProcess::startDetached( "open", args );
 #endif
 
