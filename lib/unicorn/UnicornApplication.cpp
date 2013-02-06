@@ -237,6 +237,12 @@ unicorn::Application::translate()
     installTranslator( t1 );
     installTranslator( t2 );
 
+#ifdef Q_OS_WIN
+    QTranslator* t3 = new QTranslator;
+    t3->load( d.filePath( "qtsparkle/" + qmExt ) );
+    installTranslator( t3 );
+#endif
+
 #ifdef Q_OS_MAC
     macTranslate( qmExt );
 #endif
