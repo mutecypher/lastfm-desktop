@@ -81,11 +81,14 @@ using audioscrobbler::Application;
 #define SKIP_LIMIT 6
 
 #ifdef Q_WS_X11
-    #define AS_TRAY_ICON ":22x22.png"
+#define AS_TRAY_ICON ":/22x22.png"
+#define AS_TRAY_ICON_OFF ":/lastfm_icon_22_grayscale.png"
 #elif defined( Q_WS_WIN )
-    #define AS_TRAY_ICON ":16x16.png"
+#define AS_TRAY_ICON ":/16x16.png"
+#define AS_TRAY_ICON_OFF ":/lastfm_icon_16_grayscale.png"
 #elif defined( Q_WS_MAC )
-    #define AS_TRAY_ICON ":systray_icon_rest_mac.png"
+#define AS_TRAY_ICON ":/systray_icon_rest_mac.png"
+#define AS_TRAY_ICON_FF ":/mac_control_bar_as_OFF.png"
 #endif
 
 Application::Application(int& argc, char** argv) 
@@ -378,24 +381,32 @@ Application::tray()
     if ( !m_tray )
     {
         m_tray = new QSystemTrayIcon(this);
-        QIcon trayIcon( AS_TRAY_ICON );
-#ifdef Q_WS_MAC
-        trayIcon.addFile( ":systray_icon_pressed_mac.png", QSize(), QIcon::Selected );
-#endif
+        setTrayIcon();
 
-#ifdef Q_WS_WIN
+#if defined(Q_OS_WIN) || defined(Q_WS_X11)
         connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
 #endif
-
-#ifdef Q_WS_X11
-        connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
-#endif
-        m_tray->setIcon(trayIcon);
         showAs( unicorn::Settings().value( SETTING_SHOW_AS, true ).toBool() );
         connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
     }
 
     return m_tray;
+}
+
+void
+Application::setTrayIcon()
+{
+    if ( m_tray )
+    {
+        bool scrobblingOn = unicorn::UserSettings().value( "scrobblingOn", true ).toBool();
+
+        QIcon trayIcon( scrobblingOn ? AS_TRAY_ICON : AS_TRAY_ICON_OFF );
+#ifdef Q_WS_MAC
+        trayIcon.addFile( ":systray_icon_pressed_mac.png", QSize(), QIcon::Selected );
+#endif
+
+        m_tray->setIcon(trayIcon);
+    }
 }
 
 void
@@ -693,6 +704,9 @@ Application::onScrobbleToggled( bool scrobblingOn )
     }
 
     m_submit_scrobbles_toggle->setChecked( scrobblingOn );
+
+    setTrayIcon();
+
     emit scrobbleToggled( scrobblingOn );
 }
 
