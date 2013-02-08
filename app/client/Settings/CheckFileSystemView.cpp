@@ -7,11 +7,11 @@ CheckFileSystemView::CheckFileSystemView( QWidget* parent )
     :QTreeView( parent )
 {
     m_fsModel = new CheckFileSystemModel( this );
-    m_fsModel->setRootPath( QDir::rootPath() );
+    m_fsModel->setRootPath( "" );
     m_fsModel->setFilter( QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks );
     setModel( m_fsModel );
 
-    setRootIndex( m_fsModel->index( QDir::rootPath() ) );
+    setRootIndex( m_fsModel->index( "" ) );
 
     setColumnHidden(1, true);
     setColumnHidden(2, true);
