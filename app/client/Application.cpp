@@ -587,16 +587,20 @@ Application::onSkipTriggered()
 {
     QString station = RadioService::instance().station().url();
 
+    bool ok = false;
+    int envSkipLimit = QString( qgetenv( "LASTFM_SKIP_LIMIT" ) ).toInt( &ok );
+    int skipLimit = ok ? envSkipLimit : SKIP_LIMIT;
+
     // remove skips for this station that are older than an hour
     while ( (m_skips[ station ].count()
             && m_skips[ station ].head().secsTo( QDateTime::currentDateTimeUtc() ) >= 60 * 60 ) // limit to skips in the last hour
-            || m_skips[ station ].count() > SKIP_LIMIT ) // limit to the last SKIP_LIMIT skips
+            || m_skips[ station ].count() > skipLimit ) // limit to the last skipLimit skips
         m_skips[ station ].dequeue();
 
-    if ( m_skips[ station ].count() == SKIP_LIMIT
+    if ( m_skips[ station ].count() == skipLimit
          && m_skips[ station ].last().secsTo( QDateTime::currentDateTimeUtc() ) < 10 * 60 )
     {
-        // There have been SKIP_LIMIT skips in the last hour
+        // There have been skipLimit skips in the last hour
         // and the last skip was under 10 minutes ago
         m_mw->showMessage( tr( "You've reached this station's skip limit. Skip again in %n minute(s).", "", minutesUntilNextSkip( RadioService::instance().station() ) ), "skips", 10 );
     }
@@ -605,10 +609,10 @@ Application::onSkipTriggered()
         // Make a note of the station and the time that it was skipped
         m_skips[ station ].enqueue( QDateTime::currentDateTimeUtc() );
 
-        if ( m_skips[ station ].count() >= 4 )
+        if ( m_skips[ station ].count() >= skipLimit - 2 )
         {
             // show a warning that there are only a few skips left
-            int skipsLeft = SKIP_LIMIT - m_skips[ station ].count();
+            int skipsLeft = skipLimit - m_skips[ station ].count();
 
             // if skips is 0 and we got here it's because there were no skips in the last 10 minutes
             if ( skipsLeft <= 0 || m_skips[ station ].last().secsTo( QDateTime::currentDateTimeUtc() ) >= 10 * 60 )
