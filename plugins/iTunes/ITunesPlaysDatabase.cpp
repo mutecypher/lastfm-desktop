@@ -379,12 +379,11 @@ ITunesPlaysDatabase::needsBootstrap()
 int
 ITunesPlaysDatabase::playCount( const ITunesTrack& track )
 {
-#ifndef WIN32
-	std::string
+#ifdef WIN32
+	std::string id = Moose::wStringToUtf8( track.persistentId() );
 #else
-	std::wstring
+	std::string id = track.persistentId();
 #endif
-	id = track.persistentId();
     char* format = "SELECT play_count FROM " TABLE_NAME " WHERE persistent_id='%q'";
 
     char* token = sqlite3_mprintf( format, id.c_str() );
