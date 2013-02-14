@@ -25,7 +25,7 @@ public:
     explicit DeviceScrobbler( QObject* parent = 0 );
     ~DeviceScrobbler();
 
-    QProcess* doTwiddle( bool manual );
+    bool doTwiddle( bool manual );
 
 signals:
     void foundScrobbles( const QList<lastfm::Track>& tracks );

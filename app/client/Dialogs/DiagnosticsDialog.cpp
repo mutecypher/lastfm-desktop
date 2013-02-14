@@ -77,6 +77,30 @@ DiagnosticsDialog::DiagnosticsDialog( QWidget *parent )
     connect( ui->logs_button, SIGNAL(clicked()), SLOT(onSendLogsClicked()) );
 
     onScrobblePointReached();
+
+#ifndef Q_WS_X11
+    QString path = unicorn::CoreApplication::log( "iPodScrobbler" ).absoluteFilePath();
+
+    // we seek to the end below, but then twiddly's logger pretruncates the file
+    // which then means our seeked position is beyond the file's end, and we
+    // thus don't show any log output
+#ifdef WIN32
+    Logger::truncate( (wchar_t*) path.utf16() );
+#else
+    QByteArray const cpath = QFile::encodeName( path );
+    Logger::truncate( cpath.data() );
+#endif
+
+    m_ipod_log = new QFile( path, this );
+    m_ipod_log->open( QIODevice::ReadOnly );
+    m_ipod_log->seek( m_ipod_log->size() );
+    ui->ipod_log->clear();
+
+    QTimer* timer = new QTimer( this );
+    timer->setInterval( 10 );
+    connect( timer, SIGNAL(timeout()), SLOT(poll()) );
+    timer->start();
+#endif
 }
 
 DiagnosticsDialog::~DiagnosticsDialog()
@@ -180,35 +204,12 @@ DiagnosticsDialog::poll()
 void
 DiagnosticsDialog::onScrobbleIPodClicked()
 {
-#ifndef Q_WS_X11
-    QString path = unicorn::CoreApplication::log( "iPodScrobbler" ).absoluteFilePath();
-    //path = path.remove( ".debug" ); //because we run the release twiddly always
-
-    // we seek to the end below, but then twiddly's logger pretruncates the file
-    // which then means our seeked position is beyond the file's end, and we
-    // thus don't show any log output
-#ifdef WIN32
-    Logger::truncate( (wchar_t*) path.utf16() );
-#else
-    QByteArray const cpath = QFile::encodeName( path );
-    Logger::truncate( cpath.data() );
-#endif
-
-    m_ipod_log = new QFile( path );
-    m_ipod_log->open( QIODevice::ReadOnly );
-    m_ipod_log->seek( m_ipod_log->size() );
-    ui->ipod_log->clear();
-
     bool const isManual = ( ui->ipod_type->currentIndex() == 1 );
+    bool isAlreadyRunning = ScrobbleService::instance().deviceScrobbler()->doTwiddle( isManual );
 
-    QProcess* twiddly = ScrobbleService::instance().deviceScrobbler()->doTwiddle( isManual );
-    m_ipod_log->setParent( twiddly );
-    
-    QTimer* timer = new QTimer( twiddly );
-    timer->setInterval( 10 );
-    connect( timer, SIGNAL(timeout()), SLOT(poll()) );
-    timer->start();
-#endif
+    if ( isAlreadyRunning )
+        ui->ipod_log->appendPlainText( "ALREADY SCROBBLING IPOD..." );
+
 }
 
 

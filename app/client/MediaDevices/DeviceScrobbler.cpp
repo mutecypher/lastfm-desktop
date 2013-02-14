@@ -71,17 +71,16 @@ DeviceScrobbler::twiddle()
     doTwiddle( false );
 }
 
-QProcess*
+bool
 DeviceScrobbler::doTwiddle( bool manual )
 {
-    QProcess* twiddly = 0;
 #ifndef Q_WS_X11
     if ( unicorn::CloseAppsDialog::isITunesRunning() && isITunesPluginInstalled() )
     {
         if ( m_twiddly )
         {
             qWarning() << "m_twiddly already running. Early out.";
-            return m_twiddly;
+            return true;
         }
 
         //"--device diagnostic --vid 0000 --pid 0000 --serial UNKNOWN
@@ -96,7 +95,6 @@ DeviceScrobbler::doTwiddle( bool manual )
             args += "--manual";
 
         m_twiddly = new QProcess( this );
-        twiddly = m_twiddly;
         connect( m_twiddly, SIGNAL(finished( int, QProcess::ExitStatus )), SLOT(onTwiddlyFinished( int, QProcess::ExitStatus )) );
         connect( m_twiddly, SIGNAL(error( QProcess::ProcessError )), SLOT(onTwiddlyError( QProcess::ProcessError )) );
 #ifdef Q_OS_WIN
@@ -106,7 +104,7 @@ DeviceScrobbler::doTwiddle( bool manual )
 #endif
     }
 #endif //  Q_WS_X11
-    return twiddly;
+    return false;
 }
 
 void
