@@ -81,6 +81,15 @@ main( int argc, char** argv )
     if ( iTunesPluginInfo->installedVersion() < compatibleVersion )
     {
         delete iTunesPluginInfo;
+
+        // tell the app that the plugin is incompatible
+        QStringList args;
+        args << "--tray";
+        args << "--twiddly";
+        args << "incompatible-plugin";
+
+        Utils::startAudioscrobbler( args );
+
         qDebug() << "The iTunes pluggin is old and incompatible. Please update. Shutting down" << app.arguments();
         return 1;
     }

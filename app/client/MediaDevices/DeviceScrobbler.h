@@ -29,6 +29,7 @@ public:
 
 signals:
     void foundScrobbles( const QList<lastfm::Track>& tracks );
+    void error( const QString& message );
 
 public slots:
 #ifdef Q_WS_X11

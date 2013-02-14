@@ -32,6 +32,8 @@ QString getIpodMountPath();
 DeviceScrobbler::DeviceScrobbler( QObject *parent )
     :QObject( parent )
 {
+    connect( this, SIGNAL(error(QString)), aApp, SIGNAL(error(QString)));
+
     m_twiddlyTimer = new QTimer( this );
     connect( m_twiddlyTimer, SIGNAL(timeout()), SLOT(twiddle()) );
     m_twiddlyTimer->start( BACKGROUND_CHECK_INTERVAL );
@@ -160,6 +162,8 @@ DeviceScrobbler::handleMessage( const QStringList& message )
     
     if( action == "complete" )
         twiddled( message );
+    else if ( action == "incompatible-plugin" )
+        emit error( tr( "Device scrobbling disabled - incompatible iTunes plugin - please update" ) );
 }
 
 
