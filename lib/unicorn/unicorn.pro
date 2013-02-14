@@ -15,7 +15,7 @@ DEFINES += API_KEY=\\\"$(LASTFM_API_KEY)\\\"
 DEFINES += API_SECRET=\\\"$(LASTFM_API_SECRET)\\\"
 
 # UniqueApplication
-win32:LIBS += user32.lib shell32.lib ole32.lib
+win32:LIBS += user32.lib shell32.lib ole32.lib kernel32.lib psapi.lib
 
 macx:LIBS += -weak_framework Cocoa
 
@@ -70,6 +70,7 @@ SOURCES += \
     dialogs/LoginContinueDialog.cpp \
     dialogs/AboutDialog.cpp \
     dialogs/ScrobbleConfirmationDialog.cpp \
+    dialogs/CloseAppsDialog.cpp \
     AnimatedStatusBar.cpp \
     DesktopServices.cpp \
     Updater/Updater.cpp \
@@ -130,6 +131,7 @@ HEADERS += \
     dialogs/LoginContinueDialog.h \
     dialogs/AboutDialog.h \
     dialogs/ScrobbleConfirmationDialog.h \
+    dialogs/CloseAppsDialog.h \
     AnimatedStatusBar.h \
     AnimatedPushButton.h \
     dialogs/ShareDialog.h \
@@ -142,14 +144,31 @@ HEADERS += \
     widgets/ProxyWidget.h \
     dialogs/ProxyDialog.h
 	
-win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp
+win32:HEADERS += Plugins/FooBar08PluginInfo.h \
+                    Plugins/FooBar09PluginInfo.h \
+                    Plugins/ITunesPluginInfo.h \
+                    Plugins/WinampPluginInfo.h \
+                    Plugins/WmpPluginInfo.h \
+                    Plugins/PluginList.h \
+                    Plugins/KillProcess.h \
+                    Plugins/IPluginInfo.h
+
+win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp\
+                    Plugins/PluginList.cpp \
+                    Plugins/IPluginInfo.cpp \
+                    Plugins/FooBar08PluginInfo.cpp \
+                    Plugins/FooBar09PluginInfo.cpp \
+                    Plugins/ITunesPluginInfo.cpp \
+                    Plugins/WinampPluginInfo.cpp \
+                    Plugins/WmpPluginInfo.cpp
 	
 macx:SOURCES += mac/AppleScript.cpp
 
 macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
                           notify/Notify.mm \
                           Updater/Updater_mac.mm \
-                          UnicornApplicationDelegate.mm
+                          UnicornApplicationDelegate.mm \
+                          dialogs/CloseAppsDialog_mac.mm
 
 macx:HEADERS += mac/AppleScript.h \
                 notify/Notify.h \
@@ -167,12 +186,10 @@ FORMS += \
     dialogs/AboutDialog.ui \
     dialogs/ScrobbleConfirmationDialog.ui \
     widgets/ProxyWidget.ui \
-    dialogs/ProxyDialog.ui
+    dialogs/ProxyDialog.ui \
+    dialogs/CloseAppsDialog.ui
 
 unix:!mac {
     SOURCES -= Updater/Updater.cpp
     HEADERS -= Updater/Updater.h
 }
-
-RESOURCES += \
-	qrc/unicorn.qrc

@@ -3,7 +3,12 @@
 
 #include "IPluginInfo.h"
 
-class ITunesPluginInfo : public IPluginInfo
+#include <lib/DllExportMacro.h>
+
+namespace unicorn
+{
+
+class UNICORN_DLLEXPORT ITunesPluginInfo : public IPluginInfo
 {
     Q_OBJECT
 public:
@@ -27,6 +32,8 @@ public:
     bool isInstalled() const { return true; }
 #endif
 };
+
+}
 
 #endif //ITUNES_PLUGIN_INFO_H_
 

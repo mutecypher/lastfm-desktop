@@ -1,17 +1,22 @@
-#ifndef FOOBAR09_PLUGIN_INFO_H_
-#define FOOBAR09_PLUGIN_INFO_H_
+#ifndef WINAMP_PLUGIN_INFO_H_
+#define WINAMP_PLUGIN_INFO_H_
 
-#include "IPluginInfo.h"
+#include "../Plugins/IPluginInfo.h"
 
-class FooBar09PluginInfo : public IPluginInfo
+#include <lib/DllExportMacro.h>
+
+namespace unicorn
+{
+
+class UNICORN_DLLEXPORT WinampPluginInfo : public IPluginInfo
 {
     Q_OBJECT
 public:
-    FooBar09PluginInfo( QObject* parent = 0 );
+    WinampPluginInfo( QObject* parent = 0 );
 
     Version version() const;
     QString name() const;
-
+    
     QString displayName() const;
     QString processName() const;
 
@@ -23,5 +28,7 @@ public:
     QString pluginInstaller() const;
 };
 
-#endif //FOOBAR09_PLUGIN_INFO_H_
+}
+
+#endif //WINAMP_PLUGIN_INFO_H_
 

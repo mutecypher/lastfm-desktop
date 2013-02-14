@@ -18,16 +18,21 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #include "IPod.h"
 #include "TwiddlyApplication.h"
-#include "lib/unicorn/UnicornCoreApplication.h"
+#include "Utils.h"
+
 #include "plugins/iTunes/ITunesExceptions.h"
+#include "common/c++/Logger.h"
+#include "lib/unicorn/UnicornCoreApplication.h"
+#include "lib/unicorn/plugins/ITunesPluginInfo.h"
+
 #include <lastfm/misc.h>
+
 #include <QtCore>
 #include <QtXml>
 #include <iostream>
-#include "common/c++/Logger.h"
-#include "Utils.h"
 
 void writeXml( const QDomDocument&, const QString& path );
 void logException( QString );
@@ -68,6 +73,19 @@ main( int argc, char** argv )
 #elif defined Q_OS_WIN
     TwiddlyApplication::addLibraryPath( QDir( TwiddlyApplication::applicationDirPath() ).absoluteFilePath( "plugins" ) );
 #endif
+
+    // check we're using a compatible version of the plugin
+    unicorn::Version compatibleVersion( 6, 0, 5, 4 );
+    unicorn::ITunesPluginInfo* iTunesPluginInfo = new unicorn::ITunesPluginInfo;
+
+    if ( iTunesPluginInfo->installedVersion() < compatibleVersion )
+    {
+        delete iTunesPluginInfo;
+        qDebug() << "The iTunes pluggin is old and incompatible. Please update. Shutting down" << app.arguments();
+        return 1;
+    }
+
+    delete iTunesPluginInfo;
 
     try
     {

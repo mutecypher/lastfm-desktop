@@ -19,7 +19,7 @@
 #include "KillProcess.h"
 
 QString
-Version::toString() const
+unicorn::Version::toString() const
 {
     return QString( "%1.%2.%3.%4" ).arg( QString::number( m_major ),
                                          QString::number( m_minor ),
@@ -27,8 +27,8 @@ Version::toString() const
                                          QString::number( m_revision ) );
 }
 
-Version
-Version::fromString( const QString& string )
+unicorn::Version
+unicorn::Version::fromString( const QString& string )
 {
     QStringList versionList = string.split( "." );
 
@@ -40,14 +40,14 @@ Version::fromString( const QString& string )
     return Version( major, minor, build, revision );
 }
 
-IPluginInfo::IPluginInfo( QObject* parent )
+unicorn::IPluginInfo::IPluginInfo( QObject* parent )
     :QObject( parent )
     , m_install( false )
     , m_verbose( false )
 {}
 
 void
-IPluginInfo::doInstall()
+unicorn::IPluginInfo::doInstall()
 {
     QList<IPluginInfo*> plugins;
     plugins << this;
@@ -91,20 +91,20 @@ IPluginInfo::doInstall()
 }
 
 bool
-IPluginInfo::install() const
+unicorn::IPluginInfo::install() const
 {
     return m_install;
 }
 
 
 void
-IPluginInfo::install( bool install )
+unicorn::IPluginInfo::install( bool install )
 {
     m_install = install;
 }
 
 BOOL
-IPluginInfo::isWow64()
+unicorn::IPluginInfo::isWow64()
 {
     BOOL bIsWow64 = FALSE;
 
@@ -127,39 +127,39 @@ IPluginInfo::isWow64()
 
 
 bool
-IPluginInfo::isInstalled() const
+unicorn::IPluginInfo::isInstalled() const
 {
     QSettings settings( "HKEY_LOCAL_MACHINE\\SOFTWARE\\Last.fm\\Client\\Plugins", QSettings::NativeFormat );
     return settings.childGroups().contains( id() );
 }
 
-Version
-IPluginInfo::installedVersion() const
+unicorn::Version
+unicorn::IPluginInfo::installedVersion() const
 {
     QSettings settings( "HKEY_LOCAL_MACHINE\\SOFTWARE\\Last.fm\\Client\\Plugins\\" + id(), QSettings::NativeFormat );
     return Version::fromString( settings.value( "Version", "0.0.0.0" ).toString() );
 }
 
 bool
-IPluginInfo::canBootstrap() const
+unicorn::IPluginInfo::canBootstrap() const
 {
     return bootstrapType() != NoBootstrap;
 }
 
 QString
-IPluginInfo::programFilesX86() const
+unicorn::IPluginInfo::programFilesX86() const
 {
     return QString( getenv( "ProgramFiles(x86)" ) );
 }
 
 QString
-IPluginInfo::programFiles64() const
+unicorn::IPluginInfo::programFiles64() const
 {
     return QString( getenv( "ProgramW6432" ) );
 }
 
 void
-IPluginInfo::setVerbose( bool verbose )
+unicorn::IPluginInfo::setVerbose( bool verbose )
 {
     m_verbose = verbose;
 }

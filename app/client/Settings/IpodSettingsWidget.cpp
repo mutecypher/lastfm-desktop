@@ -26,11 +26,11 @@
 #endif
 
 #ifdef Q_OS_WIN
-#include "../Plugins/ITunesPluginInfo.h"
+#include "lib/unicorn/plugins/ITunesPluginInfo.h"
 #endif
 
 #include "lib/unicorn/UnicornApplication.h"
-#include "../Dialogs/CloseAppsDialog.h"
+#include "lib/unicorn/dialogs/CloseAppsDialog.h"
 #include "lib/unicorn/QMessageBoxBuilder.h"
 
 #include "../MediaDevices/IpodDevice.h"
@@ -91,13 +91,13 @@ IpodSettingsWidget::saveSettings()
         if ( currentlyEnabled != ui->deviceScrobblingEnabled->isChecked() )
         {
 #ifdef Q_OS_WIN
-            QList<IPluginInfo*> plugins;
-            ITunesPluginInfo* iTunesPluginInfo = new ITunesPluginInfo;
+            QList<unicorn::IPluginInfo*> plugins;
+            unicorn::ITunesPluginInfo* iTunesPluginInfo = new unicorn::ITunesPluginInfo;
             plugins << iTunesPluginInfo;
-            CloseAppsDialog* closeApps = new CloseAppsDialog( plugins, this );
+            unicorn::CloseAppsDialog* closeApps = new unicorn::CloseAppsDialog( plugins, this );
             closeApps->setOwnsPlugins( true );
 #else
-            CloseAppsDialog* closeApps = new CloseAppsDialog( this );
+            unicorn::CloseAppsDialog* closeApps = new unicorn::CloseAppsDialog( this );
 #endif
             if ( closeApps->result() != QDialog::Accepted )
                 closeApps->exec();

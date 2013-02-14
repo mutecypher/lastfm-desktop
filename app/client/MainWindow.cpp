@@ -39,7 +39,7 @@
 #include "Services/ScrobbleService.h"
 #include "Services/AnalyticsService.h"
 #include "MediaDevices/DeviceScrobbler.h"
-#include "Dialogs/CloseAppsDialog.h"
+#include "lib/unicorn/dialogs/CloseAppsDialog.h"
 #include "../Widgets/ProfileWidget.h"
 #include "../Widgets/FriendListWidget.h"
 #include "../Widgets/ScrobbleControls.h"
@@ -68,7 +68,7 @@
 #include "lib/unicorn/DesktopServices.h"
 
 #ifdef Q_OS_WIN32
-#include "../Plugins/PluginList.h"
+#include "lib/unicorn/plugins/PluginList.h"
 #endif
 
 #ifdef Q_OS_MAC
@@ -172,7 +172,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     finishUi();
 
 #ifdef Q_OS_WIN32
-    m_pluginList = new PluginList( this );
+    m_pluginList = new unicorn::PluginList( this );
 
     QTimer::singleShot( 1000, this, SLOT(checkUpdatedPlugins()) );
 
@@ -223,7 +223,7 @@ MainWindow::checkUpdatedPlugins()
              .setButtons( QMessageBox::Yes | QMessageBox::No )
              .exec() == QMessageBox::Yes )
         {
-            CloseAppsDialog* closeApps = new CloseAppsDialog( m_pluginList->updatedList(), this );
+            unicorn::CloseAppsDialog* closeApps = new unicorn::CloseAppsDialog( m_pluginList->updatedList(), this );
 
             if ( closeApps->result() != QDialog::Accepted )
                 closeApps->exec();
@@ -232,7 +232,7 @@ MainWindow::checkUpdatedPlugins()
 
             if ( closeApps->result() == QDialog::Accepted )
             {
-                foreach ( IPluginInfo* info, m_pluginList->updatedList() )
+                foreach ( unicorn::IPluginInfo* info, m_pluginList->updatedList() )
                 {
                     info->setVerbose( false );
                     info->doInstall();
@@ -275,7 +275,7 @@ MainWindow::setupMenuBar()
 #ifdef Q_OS_WIN32
     QMenu* pluginMenu = fileMenu->addMenu( tr( "Install plugins" ) );
 
-    foreach ( IPluginInfo* info, m_pluginList->supportedList() )
+    foreach ( unicorn::IPluginInfo* info, m_pluginList->supportedList() )
     {
         info->setVerbose( true );
         pluginMenu->addAction( info->name(), info, SLOT(doInstall()));

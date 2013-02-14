@@ -1,12 +1,17 @@
 #ifndef CLOSEAPPSDIALOG_H
 #define CLOSEAPPSDIALOG_H
 
+#include "lib/DllExportMacro.h"
+
 #include <QDialog>
 
 namespace Ui { class CloseAppsDialog; }
+
+namespace unicorn
+{
 class IPluginInfo;
 
-class CloseAppsDialog : public QDialog
+class UNICORN_DLLEXPORT CloseAppsDialog : public QDialog
 {
     Q_OBJECT
     
@@ -39,5 +44,7 @@ private:
 
     bool m_ownsPlugins;
 };
+
+}
 
 #endif // CLOSEAPPSDIALOG_H

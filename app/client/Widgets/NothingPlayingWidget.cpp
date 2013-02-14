@@ -11,8 +11,8 @@
 #include "lib/unicorn/widgets/Label.h"
 
 #ifdef Q_OS_WIN
-#include "../Plugins/IPluginInfo.h"
-#include "../Plugins/PluginList.h"
+#include "lib/unicorn/plugins/IPluginInfo.h"
+#include "lib/unicorn/plugins/PluginList.h"
 #endif
 
 #include "NothingPlayingWidget.h"
@@ -46,7 +46,7 @@ NothingPlayingWidget::NothingPlayingWidget( QWidget* parent )
     connect( ui->itunes, SIGNAL(clicked()), SLOT(oniTunesClicked()));
 
 #ifndef Q_OS_MAC
-    PluginList pluginList;
+    unicorn::PluginList pluginList;
     ui->itunes->setVisible( pluginList.pluginById( "itw" )->isAppInstalled() );
     ui->wmp->setVisible( pluginList.pluginById( "wmp" )->isAppInstalled() );
     ui->wmp->setAttribute( Qt::WA_LayoutUsesWidgetRect );

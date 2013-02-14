@@ -16,7 +16,11 @@
 #include "Dialogs/DiagnosticsDialog.h"
 
 #if defined(Q_OS_MAC) || defined(Q_OS_WIN)
-namespace unicorn { class Updater; }
+namespace unicorn
+{
+    class Updater;
+    class PluginList;
+}
 using unicorn::Updater;
 #endif
 
@@ -30,7 +34,7 @@ class FirstRunWizard;
 class MessageBar;
 class SlideOverLayout;
 class UserToolButton;
-class PluginList;
+
 class IpodDevice;
 
 class MainWindow : public unicorn::MainWindow
@@ -132,7 +136,7 @@ private:
 #if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     QPointer<Updater> m_updater;
 #endif
-    QPointer<PluginList> m_pluginList;
+    QPointer<unicorn::PluginList> m_pluginList;
 
 #ifdef Q_WS_MAC
     QPointer<ITunesPluginInstaller> m_installer;

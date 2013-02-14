@@ -714,6 +714,12 @@ ITunesComThread::syncQueue()
                 LOGWL( 2, "ITunesComThread failed to update the local database for: "
                          << diffTrack.toString() );
             }
+
+			if ( !m_db->syncOld( diffTrack ) )
+            {
+                LOGWL( 2, "ITunesComThread failed to update the old local database for: "
+                         << diffTrack.toString() );
+            }
         }
         catch ( ITunesException& )
         {

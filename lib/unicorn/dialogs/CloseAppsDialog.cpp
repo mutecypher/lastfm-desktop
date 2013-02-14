@@ -13,7 +13,7 @@
 #include "ui_CloseAppsDialog.h"
 
 
-CloseAppsDialog::CloseAppsDialog( const QList<IPluginInfo*>& plugins, QWidget *parent )
+unicorn::CloseAppsDialog::CloseAppsDialog( const QList<IPluginInfo*>& plugins, QWidget *parent )
     :QDialog( parent ),
       ui(new Ui::CloseAppsDialog),
       m_plugins( plugins ),
@@ -22,7 +22,7 @@ CloseAppsDialog::CloseAppsDialog( const QList<IPluginInfo*>& plugins, QWidget *p
     commonSetup();
 }
 
-CloseAppsDialog::CloseAppsDialog(QWidget *parent) :
+unicorn::CloseAppsDialog::CloseAppsDialog(QWidget *parent) :
     QDialog( parent ),
     ui(new Ui::CloseAppsDialog)
 {
@@ -30,7 +30,7 @@ CloseAppsDialog::CloseAppsDialog(QWidget *parent) :
 }
 
 void
-CloseAppsDialog::commonSetup()
+unicorn::CloseAppsDialog::commonSetup()
 {
     ui->setupUi(this);
 
@@ -47,13 +47,13 @@ CloseAppsDialog::commonSetup()
 }
 
 void
-CloseAppsDialog::setOwnsPlugins( bool ownsPlugins )
+unicorn::CloseAppsDialog::setOwnsPlugins( bool ownsPlugins )
 {
     m_ownsPlugins = ownsPlugins;
 }
 
 bool
-CloseAppsDialog::isITunesRunning()
+unicorn::CloseAppsDialog::isITunesRunning()
 {
     QStringList apps;
 #ifndef Q_OS_MAC
@@ -69,7 +69,7 @@ CloseAppsDialog::isITunesRunning()
 }
 
 void
-CloseAppsDialog::checkApps()
+unicorn::CloseAppsDialog::checkApps()
 {
     QStringList apps = runningApps();
 
@@ -88,13 +88,13 @@ CloseAppsDialog::checkApps()
 
 #ifndef Q_OS_MAC
 QStringList
-CloseAppsDialog::runningApps()
+unicorn::CloseAppsDialog::runningApps()
 {
     return runningApps( m_plugins );
 }
 
 QStringList
-CloseAppsDialog::runningApps( const QList<IPluginInfo*>& plugins )
+unicorn::CloseAppsDialog::runningApps( const QList<IPluginInfo*>& plugins )
 {
     QStringList apps;
 
@@ -149,7 +149,7 @@ CloseAppsDialog::runningApps( const QList<IPluginInfo*>& plugins )
 }
 #endif
 
-CloseAppsDialog::~CloseAppsDialog()
+unicorn::CloseAppsDialog::~CloseAppsDialog()
 {
     delete ui;
 #ifdef Q_OS_WIN

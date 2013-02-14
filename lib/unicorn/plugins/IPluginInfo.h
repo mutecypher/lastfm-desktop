@@ -1,6 +1,8 @@
 #ifndef PLUGIN_INFO_H_
 #define PLUGIN_INFO_H_
 
+#include <lib/DllExportMacro.h>
+
 #include <QString>
 #include <QSettings>
 
@@ -9,7 +11,10 @@
 #include <Shlobj.h>
 #endif
 
-class Version
+namespace unicorn
+{
+
+class UNICORN_DLLEXPORT Version
 {
 public:
     Version(): m_valid( false ){}
@@ -54,7 +59,7 @@ private:
 };
 
 
-class IPluginInfo : public QObject
+class UNICORN_DLLEXPORT IPluginInfo : public QObject
 {
     Q_OBJECT
 public:
@@ -101,4 +106,5 @@ private:
     bool m_verbose;
 };
 
+}
 #endif //PLUGIN_INFO_H_

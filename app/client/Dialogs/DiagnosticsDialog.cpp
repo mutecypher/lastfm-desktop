@@ -18,22 +18,24 @@
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QByteArray>
-#include <QDebug>
-#include <QHeaderView>
-#include <QProcess>
+#include "lib/unicorn/UnicornCoreApplication.h"
+
+#include "ui_DiagnosticsDialog.h"
+#include "DiagnosticsDialog.h"
+#include "../Services/ScrobbleService/ScrobbleService.h"
+#include "../MediaDevices/DeviceScrobbler.h"
+
+#include "common/c++/Logger.h"
 
 #include <lastfm/Audioscrobbler.h>
 #include <lastfm/misc.h>
 #include <lastfm/ScrobbleCache.h>
 #include <lastfm/ws.h>
 
-#include "lib/unicorn/UnicornCoreApplication.h"
-
-#include "ui_DiagnosticsDialog.h"
-#include "DiagnosticsDialog.h"
-
-#include "common/c++/Logger.h"
+#include <QByteArray>
+#include <QDebug>
+#include <QHeaderView>
+#include <QProcess>
 
 DiagnosticsDialog::DiagnosticsDialog( QWidget *parent )
         : QDialog( parent ),
@@ -179,24 +181,6 @@ void
 DiagnosticsDialog::onScrobbleIPodClicked()
 {
 #ifndef Q_WS_X11
-    if (m_twiddly)
-    {
-        qWarning() << "m_twiddly already running. Early out.";
-        return;
-    }
-
-    //"--device diagnostic --vid 0000 --pid 0000 --serial UNKNOWN
-    
-    QStringList args = (QStringList()
-                    << "--device" << "diagnostic"
-                    << "--vid" << "0000"
-                    << "--pid" << "0000"
-                    << "--serial" << "UNKNOWN");
-
-    bool const isManual = ( ui->ipod_type->currentIndex() == 1 );
-    if (isManual)
-        args += "--manual";
-
     QString path = unicorn::CoreApplication::log( "iPodScrobbler" ).absoluteFilePath();
     //path = path.remove( ".debug" ); //because we run the release twiddly always
 
@@ -214,39 +198,17 @@ DiagnosticsDialog::onScrobbleIPodClicked()
     m_ipod_log->open( QIODevice::ReadOnly );
     m_ipod_log->seek( m_ipod_log->size() );
     ui->ipod_log->clear();
+
+    bool const isManual = ( ui->ipod_type->currentIndex() == 1 );
+
+    QProcess* twiddly = ScrobbleService::instance().deviceScrobbler()->doTwiddle( isManual );
+    m_ipod_log->setParent( twiddly );
     
-    m_twiddly = new QProcess( this );
-    connect( m_twiddly, SIGNAL(finished( int, QProcess::ExitStatus )), SLOT(onTwiddlyFinished( int, QProcess::ExitStatus )) );
-    connect( m_twiddly, SIGNAL(error( QProcess::ProcessError )), SLOT(onTwiddlyError( QProcess::ProcessError )) );
-#ifdef Q_OS_WIN
-    m_twiddly->start( QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "iPodScrobbler.exe" ), args );
-#else
-    m_twiddly->start( QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "../Helpers/iPodScrobbler" ), args );
-#endif
-    m_ipod_log->setParent( m_twiddly );
-    
-    QTimer* timer = new QTimer( m_twiddly );
+    QTimer* timer = new QTimer( twiddly );
     timer->setInterval( 10 );
     connect( timer, SIGNAL(timeout()), SLOT(poll()) );
     timer->start();
 #endif
-}
-
-
-void
-DiagnosticsDialog::onTwiddlyFinished( int code, QProcess::ExitStatus status )
-{    
-    qDebug() << "Exit code:" << code << lastfm::qMetaEnumString<QProcess>( status, "ExitStatus" );
-    poll(); //get last bit
-    m_twiddly->deleteLater();
-}
-
-
-void
-DiagnosticsDialog::onTwiddlyError( QProcess::ProcessError e )
-{
-    qDebug() << "Twiddly error:" << lastfm::qMetaEnumString<QProcess>( e, "ProcessError" );
-    m_twiddly->deleteLater();
 }
 
 

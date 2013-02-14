@@ -5,7 +5,7 @@
 #include "lib/unicorn/QMessageBoxBuilder.h"
 
 #include "../Application.h"
-#include "../Dialogs/CloseAppsDialog.h"
+#include "lib/unicorn/dialogs/CloseAppsDialog.h"
 #include "IpodDevice.h"
 #include "DeviceScrobbler.h"
 #include "../Services/ScrobbleService/ScrobbleService.h"
@@ -66,13 +66,20 @@ DeviceScrobbler::isITunesPluginInstalled()
 void
 DeviceScrobbler::twiddle()
 {
+    doTwiddle( false );
+}
+
+QProcess*
+DeviceScrobbler::doTwiddle( bool manual )
+{
+    QProcess* twiddly = 0;
 #ifndef Q_WS_X11
-    if ( CloseAppsDialog::isITunesRunning() && isITunesPluginInstalled() )
+    if ( unicorn::CloseAppsDialog::isITunesRunning() && isITunesPluginInstalled() )
     {
-        if (m_twiddly)
+        if ( m_twiddly )
         {
             qWarning() << "m_twiddly already running. Early out.";
-            return;
+            return m_twiddly;
         }
 
         //"--device diagnostic --vid 0000 --pid 0000 --serial UNKNOWN
@@ -83,10 +90,11 @@ DeviceScrobbler::twiddle()
                             << "--pid" << "0000"
                             << "--serial" << "UNKNOWN");
 
-        if ( false )
+        if ( manual )
             args += "--manual";
 
         m_twiddly = new QProcess( this );
+        twiddly = m_twiddly;
         connect( m_twiddly, SIGNAL(finished( int, QProcess::ExitStatus )), SLOT(onTwiddlyFinished( int, QProcess::ExitStatus )) );
         connect( m_twiddly, SIGNAL(error( QProcess::ProcessError )), SLOT(onTwiddlyError( QProcess::ProcessError )) );
 #ifdef Q_OS_WIN
@@ -96,6 +104,7 @@ DeviceScrobbler::twiddle()
 #endif
     }
 #endif //  Q_WS_X11
+    return twiddly;
 }
 
 void

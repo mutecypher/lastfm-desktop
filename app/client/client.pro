@@ -55,7 +55,6 @@ SOURCES += \
     Services/RadioService/RadioService.cpp \
     Services/RadioService/RadioConnection.cpp \
     Dialogs/DiagnosticsDialog.cpp \
-    Dialogs/CloseAppsDialog.cpp \
     Bootstrapper/PluginBootstrapper.cpp \
     Bootstrapper/ITunesDevice/itunesdevice.cpp \
     Bootstrapper/iTunesBootstrapper.cpp \
@@ -126,7 +125,6 @@ HEADERS += \
     MediaDevices/IpodDevice.h \
     MediaDevices/DeviceScrobbler.h \
     Dialogs/DiagnosticsDialog.h \
-    Dialogs/CloseAppsDialog.h \
     Bootstrapper/PluginBootstrapper.h \
     Bootstrapper/ITunesDevice/MediaDeviceInterface.h \
     Bootstrapper/ITunesDevice/ITunesParser.h \
@@ -196,24 +194,6 @@ contains(DEFINES, FFMPEG_FINGERPRINTING) {
     HEADERS += Fingerprinter/LAV_Source.h
 }
 
-win32:HEADERS += Plugins/FooBar08PluginInfo.h \
-                    Plugins/FooBar09PluginInfo.h \
-                    Plugins/ITunesPluginInfo.h \
-                    Plugins/WinampPluginInfo.h \
-                    Plugins/WmpPluginInfo.h \
-                    Plugins/PluginList.h \
-                    Plugins/KillProcess.h \
-                    Plugins/IPluginInfo.h
-
-win32:SOURCES += Plugins/PluginList.cpp \
-                    Plugins/IPluginInfo.cpp \
-                    Plugins/FooBar08PluginInfo.cpp \
-                    Plugins/FooBar09PluginInfo.cpp \
-                    Plugins/ITunesPluginInfo.cpp \
-                    Plugins/WinampPluginInfo.cpp \
-                    Plugins/WmpPluginInfo.cpp
-
-
 mac:HEADERS += CommandReciever/CommandReciever.h \
                 Services/ITunesPluginInstaller.h \
                 Services/ITunesPluginInstaller/ITunesPluginInstaller.h \
@@ -227,13 +207,11 @@ mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
                             Widgets/NothingPlayingWidget_mac.mm \
                             MediaKeys/MediaKey.mm \
                             ../../lib/3rdparty/SPMediaKeyTap/SPMediaKeyTap.m \
-                            ../../lib/3rdparty/SPMediaKeyTap/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.m \
-                            Dialogs/CloseAppsDialog_mac.mm
+                            ../../lib/3rdparty/SPMediaKeyTap/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.m
 
 FORMS += \
     Widgets/PlaybackControlsWidget.ui \
     Dialogs/DiagnosticsDialog.ui \
-    Dialogs/CloseAppsDialog.ui \
     Widgets/MetadataWidget.ui \
     Settings/PreferencesDialog.ui \
     Settings/GeneralSettingsWidget.ui \

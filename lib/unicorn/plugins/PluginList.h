@@ -8,7 +8,12 @@
 #include "ITunesPluginInfo.h"
 #include "Foobar09PluginInfo.h"
 
-class PluginList : public QObject
+#include <lib/DllExportMacro.h>
+
+namespace unicorn
+{
+
+class UNICORN_DLLEXPORT PluginList : public QObject
 {
     Q_OBJECT
 public:
@@ -34,5 +39,7 @@ public:
 private:
     QList<IPluginInfo*> m_plugins;
 };
+
+}
 
 #endif //PLUGIN_LIST_H_

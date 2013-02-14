@@ -25,6 +25,8 @@ public:
     explicit DeviceScrobbler( QObject* parent = 0 );
     ~DeviceScrobbler();
 
+    QProcess* doTwiddle( bool manual );
+
 signals:
     void foundScrobbles( const QList<lastfm::Track>& tracks );
 
@@ -39,7 +41,6 @@ private slots:
     void scrobbleIpodTracks( int trackCount );
     void onIpodScrobblingError();
 #endif
-
     void twiddle();
     void onTwiddlyFinished( int, QProcess::ExitStatus );
     void onTwiddlyError( QProcess::ProcessError );
@@ -56,6 +57,7 @@ private:
     QPointer<IpodDeviceLinux> iPod;
 #endif
     bool isITunesPluginInstalled();
+
     void twiddled( const QStringList& arguments );
     void scrobbleIpodFiles( const QStringList& files );
     QList<lastfm::Track> scrobblesFromFiles( const QStringList& files );

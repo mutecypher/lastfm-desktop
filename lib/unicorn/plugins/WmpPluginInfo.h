@@ -1,13 +1,18 @@
-#ifndef FOOBAR08_PLUGIN_INFO_H_
-#define FOOBAR08_PLUGIN_INFO_H_
+#ifndef WMP_PLUGIN_INFO_H_
+#define WMP_PLUGIN_INFO_H_
 
-#include "IPluginInfo.h"
+#include "../Plugins/IPluginInfo.h"
 
-class FooBar08PluginInfo : public IPluginInfo
+#include <lib/DllExportMacro.h>
+
+namespace unicorn
+{
+
+class UNICORN_DLLEXPORT WmpPluginInfo : public IPluginInfo
 {
     Q_OBJECT
 public:
-    FooBar08PluginInfo( QObject* parent = 0 );
+    WmpPluginInfo( QObject* parent = 0 );
 
     Version version() const;
     QString name() const;
@@ -23,4 +28,7 @@ public:
     QString pluginInstaller() const;
 };
 
-#endif //FOOBAR08_PLUGIN_INFO_H_
+}
+
+#endif //WMP_PLUGIN_INFO_H_
+
