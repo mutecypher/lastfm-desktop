@@ -46,9 +46,11 @@ unicorn::IPluginInfo::IPluginInfo( QObject* parent )
     , m_verbose( false )
 {}
 
-void
+bool
 unicorn::IPluginInfo::doInstall()
 {
+    bool success = false;
+
     QList<IPluginInfo*> plugins;
     plugins << this;
 
@@ -64,19 +66,34 @@ unicorn::IPluginInfo::doInstall()
         QString installer = QString( "\"%1\"" ).arg( QCoreApplication::applicationDirPath() + "/plugins/" + pluginInstaller() );
         qDebug() << installer;
         QProcess* installerProcess = new QProcess( this );
-        installerProcess->start( installer, QStringList() << "/SILENT" );
-        bool finished = installerProcess->waitForFinished( -1 );
-        qDebug() << finished << installerProcess->error() << installerProcess->errorString();
+        QStringList args;
+        if ( !m_verbose )
+            args << "/SILENT";
+        installerProcess->start( installer, args );
+        success = installerProcess->waitForFinished( -1 );
 
         if ( m_verbose )
         {
-            // The user didn't closed their media players
-            QMessageBoxBuilder( 0 ).setTitle( tr( "Plugin installed!" ) )
-                    .setIcon( QMessageBox::Information )
-                    .setText( tr( "<p>The %1 plugin has been installed.<p>"
-                                  "<p>You're now ready to scrobble with %1.</p>" ).arg( name() ) )
-                    .setButtons( QMessageBox::Ok )
-                    .exec();
+            if ( !success )
+            {
+                // Tell the user that
+                QMessageBoxBuilder( 0 ).setTitle( tr( "Plugin install error" ) )
+                        .setIcon( QMessageBox::Information )
+                        .setText( tr( "<p>There was an error updating your plugin.</p>"
+                                      "<p>Please try again later.</p>" ) )
+                        .setButtons( QMessageBox::Ok )
+                        .exec();
+            }
+            else
+            {
+                // The user didn't closed their media players
+                QMessageBoxBuilder( 0 ).setTitle( tr( "Plugin installed!" ) )
+                        .setIcon( QMessageBox::Information )
+                        .setText( tr( "<p>The %1 plugin has been installed.<p>"
+                                      "<p>You're now ready to scrobble with %1.</p>" ).arg( name() ) )
+                        .setButtons( QMessageBox::Ok )
+                        .exec();
+            }
         }
     }
     else
@@ -88,6 +105,8 @@ unicorn::IPluginInfo::doInstall()
                 .setButtons( QMessageBox::Ok )
                 .exec();
     }
+
+    return success;
 }
 
 bool

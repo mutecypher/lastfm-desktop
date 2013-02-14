@@ -69,6 +69,7 @@ public:
 
     bool install() const;
 
+
     virtual QString name() const = 0;
 
     virtual Version version() const = 0;
@@ -94,7 +95,7 @@ public:
     void setVerbose( bool verbose );
 
 public slots:
-    void doInstall();
+    bool doInstall();
     void install( bool install );
 
 protected:

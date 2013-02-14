@@ -72,7 +72,13 @@ PluginsInstallPage::install()
     if ( closeApps->result() == QDialog::Accepted )
     {
         foreach( unicorn::IPluginInfo* plugin, wizard()->pluginList()->installList() )
-            plugin->doInstall();
+        {
+            if ( !plugin->doInstall() )
+            {
+                // The plugin failed to install
+                // should probably do something
+            }
+        }
     }
     else
     {

@@ -232,20 +232,36 @@ MainWindow::checkUpdatedPlugins()
 
             if ( closeApps->result() == QDialog::Accepted )
             {
+                bool error = false;
+
                 foreach ( unicorn::IPluginInfo* info, m_pluginList->updatedList() )
                 {
                     info->setVerbose( false );
-                    info->doInstall();
+                    if ( !info->doInstall() )
+                        error = true;
                     info->setVerbose( true );
                 }
 
-                // The user didn't close their media players
-                QMessageBoxBuilder( this ).setTitle( tr( "Plugin(s) installed!", "", m_pluginList->updatedList().count() ) )
-                        .setIcon( QMessageBox::Information )
-                        .setText( tr( "<p>Your plugin(s) ha(s|ve) been installed.</p>"
-                                      "<p>You're now ready to scrobble with your media player(s)</p>", "", m_pluginList->updatedList().count() ) )
-                        .setButtons( QMessageBox::Ok )
-                        .exec();
+                if ( error )
+                {
+                    // Tell the user that
+                    QMessageBoxBuilder( this ).setTitle( tr( "Plugin install error", "", m_pluginList->updatedList().count() ) )
+                            .setIcon( QMessageBox::Information )
+                            .setText( tr( "<p>There was an error updating your plugin(s).</p>"
+                                          "<p>Please try again later.</p>", "", m_pluginList->updatedList().count() ) )
+                            .setButtons( QMessageBox::Ok )
+                            .exec();
+                }
+                else
+                {
+                    // Tell the user that
+                    QMessageBoxBuilder( this ).setTitle( tr( "Plugin(s) installed!", "", m_pluginList->updatedList().count() ) )
+                            .setIcon( QMessageBox::Information )
+                            .setText( tr( "<p>Your plugin(s) ha(s|ve) been installed.</p>"
+                                          "<p>You're now ready to scrobble with your media player(s)</p>", "", m_pluginList->updatedList().count() ) )
+                            .setButtons( QMessageBox::Ok )
+                            .exec();
+                }
             }
             else
             {
