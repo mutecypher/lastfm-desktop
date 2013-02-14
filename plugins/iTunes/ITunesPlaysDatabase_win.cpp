@@ -111,7 +111,7 @@ ITunesPlaysDatabase::syncOld( const ExtendedITunesTrack& track )
                                        Moose::wStringToUtf8( track.path() ).c_str(),
                                        playCountToSync );
 
-        LOGWL( 3, "Syncing local db for: " << track.artist() << " - " << track.track() );
+        LOGWL( 3, "Syncing old local db for: " << track.artist() << " - " << track.track() );
 
         bool success = query( token );
         sqlite3_free( token );
