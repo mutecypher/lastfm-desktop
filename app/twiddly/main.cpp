@@ -26,7 +26,13 @@
 #include "plugins/iTunes/ITunesExceptions.h"
 #include "common/c++/Logger.h"
 #include "lib/unicorn/UnicornCoreApplication.h"
+
+#ifdef Q_OS_MAC
+#include "lib/unicorn/plugins/Version.h"
+#include "lib/unicorn/plugins/ITunesPluginInstaller.h"
+#else
 #include "lib/unicorn/plugins/ITunesPluginInfo.h"
+#endif
 
 #include <lastfm/misc.h>
 
@@ -84,7 +90,7 @@ main( int argc, char** argv )
     delete iTunesPluginInfo;
 #else
     // TODO: get the actual installed version
-    installedVersion = unicorn::Version( 5, 0, 5, 4 );
+    installedVersion = unicorn::ITunesPluginInstaller::installedVersion();
 #endif
 
     if ( installedVersion < compatibleVersion )

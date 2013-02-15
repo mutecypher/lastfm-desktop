@@ -9,7 +9,7 @@
 #include "lib/unicorn/UnicornMainWindow.h"
 
 #ifdef  Q_OS_MAC
-#include "Services/ITunesPluginInstaller/ITunesPluginInstaller.h"
+#include "lib/unicorn/plugins/ITunesPluginInstaller.h"
 #endif
 
 #include "Settings/PreferencesDialog.h"
@@ -139,7 +139,7 @@ private:
     QPointer<unicorn::PluginList> m_pluginList;
 
 #ifdef Q_WS_MAC
-    QPointer<ITunesPluginInstaller> m_installer;
+    QPointer<unicorn::ITunesPluginInstaller> m_installer;
 #endif
 };
 

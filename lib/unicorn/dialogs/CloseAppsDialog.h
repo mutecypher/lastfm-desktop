@@ -20,6 +20,9 @@ public:
     explicit CloseAppsDialog(QWidget *parent = 0);
     ~CloseAppsDialog();
 
+    void setTitle( const QString& title );
+    void setDescription( const QString& description );
+
     void setOwnsPlugins( bool ownsPlugins );
 
     static bool isITunesRunning();

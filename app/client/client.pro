@@ -195,13 +195,9 @@ contains(DEFINES, FFMPEG_FINGERPRINTING) {
 }
 
 mac:HEADERS += CommandReciever/CommandReciever.h \
-                Services/ITunesPluginInstaller.h \
-                Services/ITunesPluginInstaller/ITunesPluginInstaller.h \
                 MediaKeys/MediaKey.h \
                 ../../lib/3rdparty/SPMediaKeyTap/SPMediaKeyTap.h \
                 ../../lib/3rdparty/SPMediaKeyTap/SPInvocationGrabbing/NSObject+SPInvocationGrabbing.h
-
-mac:SOURCES += Services/ITunesPluginInstaller/ITunesPluginInstaller_mac.cpp
 
 mac:OBJECTIVE_SOURCES += CommandReciever/CommandReciever.mm \
                             Widgets/NothingPlayingWidget_mac.mm \

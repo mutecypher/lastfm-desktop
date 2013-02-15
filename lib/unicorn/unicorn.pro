@@ -76,7 +76,8 @@ SOURCES += \
     Updater/Updater.cpp \
     widgets/StackedWidget.cpp \
     widgets/ProxyWidget.cpp \
-    dialogs/ProxyDialog.cpp
+    dialogs/ProxyDialog.cpp \
+    plugins/Version.cpp
 
 HEADERS += \
     widgets/UserToolButton.h \
@@ -142,27 +143,29 @@ HEADERS += \
     DesktopServices.h \
     widgets/StackedWidget.h \
     widgets/ProxyWidget.h \
-    dialogs/ProxyDialog.h
+    dialogs/ProxyDialog.h \
+    plugins/Version.h
 	
-win32:HEADERS += Plugins/FooBar08PluginInfo.h \
-                    Plugins/FooBar09PluginInfo.h \
-                    Plugins/ITunesPluginInfo.h \
-                    Plugins/WinampPluginInfo.h \
-                    Plugins/WmpPluginInfo.h \
-                    Plugins/PluginList.h \
-                    Plugins/KillProcess.h \
-                    Plugins/IPluginInfo.h
+win32:HEADERS += plugins/FooBar08PluginInfo.h \
+                    plugins/FooBar09PluginInfo.h \
+                    plugins/ITunesPluginInfo.h \
+                    plugins/WinampPluginInfo.h \
+                    plugins/WmpPluginInfo.h \
+                    plugins/PluginList.h \
+                    plugins/KillProcess.h \
+                    plugins/IPluginInfo.h
 
 win32:SOURCES += qtsingleapplication/qtlockedfile_win.cpp\
-                    Plugins/PluginList.cpp \
-                    Plugins/IPluginInfo.cpp \
-                    Plugins/FooBar08PluginInfo.cpp \
-                    Plugins/FooBar09PluginInfo.cpp \
-                    Plugins/ITunesPluginInfo.cpp \
-                    Plugins/WinampPluginInfo.cpp \
-                    Plugins/WmpPluginInfo.cpp
-	
-macx:SOURCES += mac/AppleScript.cpp
+                    plugins/PluginList.cpp \
+                    plugins/IPluginInfo.cpp \
+                    plugins/FooBar08PluginInfo.cpp \
+                    plugins/FooBar09PluginInfo.cpp \
+                    plugins/ITunesPluginInfo.cpp \
+                    plugins/WinampPluginInfo.cpp \
+                    plugins/WmpPluginInfo.cpp
+
+macx:SOURCES += mac/AppleScript.cpp \
+                plugins/ITunesPluginInstaller.cpp
 
 macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
                           notify/Notify.mm \
@@ -172,7 +175,8 @@ macx:OBJECTIVE_SOURCES += UnicornApplication_mac.mm \
 
 macx:HEADERS += mac/AppleScript.h \
                 notify/Notify.h \
-                UnicornApplicationDelegate.h
+                UnicornApplicationDelegate.h \
+                plugins/ITunesPluginInstaller.h \
 
 CONFIG( break ) {
     HEADERS += CrashReporter/CrashReporter.h

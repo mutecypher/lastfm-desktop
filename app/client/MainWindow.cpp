@@ -404,7 +404,7 @@ MainWindow::showEvent(QShowEvent *)
 #ifdef Q_OS_MAC
     if ( !m_installer )
     {
-        m_installer = new ITunesPluginInstaller( this );
+        m_installer = new unicorn::ITunesPluginInstaller( this );
         QTimer::singleShot( 1000, m_installer, SLOT(install()) );
     }
 #endif

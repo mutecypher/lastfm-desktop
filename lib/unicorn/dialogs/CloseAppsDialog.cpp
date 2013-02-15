@@ -30,13 +30,28 @@ unicorn::CloseAppsDialog::CloseAppsDialog(QWidget *parent) :
 }
 
 void
+unicorn::CloseAppsDialog::setTitle( const QString& title )
+{
+    setWindowTitle( title );
+}
+
+void
+unicorn::CloseAppsDialog::setDescription( const QString& description )
+{
+    ui->text->setText( description );
+    ui->text->adjustSize();
+    adjustSize();
+}
+
+void
 unicorn::CloseAppsDialog::commonSetup()
 {
     ui->setupUi(this);
 
     ui->text->setText( tr( "Please close the following apps to continue." ) );
 
-    setVisible( runningApps().count() > 0 );
+    if ( runningApps().count() == 0 )
+        hide();
 
     checkApps();
 
