@@ -5,8 +5,10 @@
 #ifdef Q_OS_WIN
 #include <windows.h>
 #include <psapi.h>
+#endif
 
-#include "../Plugins/ITunesPluginInfo.h"
+#ifndef Q_OS_MAC
+#include "../plugins/ITunesPluginInfo.h"
 #endif
 
 #include "CloseAppsDialog.h"
