@@ -122,6 +122,7 @@ unicorn::IPluginInfo::install( bool install )
     m_install = install;
 }
 
+#ifdef Q_OS_WIN
 BOOL
 unicorn::IPluginInfo::isWow64()
 {
@@ -143,6 +144,7 @@ unicorn::IPluginInfo::isWow64()
     }
     return bIsWow64;
 }
+#endif
 
 
 bool

@@ -74,14 +74,21 @@ main( int argc, char** argv )
     TwiddlyApplication::addLibraryPath( QDir( TwiddlyApplication::applicationDirPath() ).absoluteFilePath( "plugins" ) );
 #endif
 
+
     // check we're using a compatible version of the plugin
     unicorn::Version compatibleVersion( 6, 0, 5, 4 );
+    unicorn::Version installedVersion;
+#ifdef Q_OS_WIN
     unicorn::ITunesPluginInfo* iTunesPluginInfo = new unicorn::ITunesPluginInfo;
+    installedVersion = iTunesPluginInfo->installedVersion()
+    delete iTunesPluginInfo;
+#else
+    // TODO: get the actual installed version
+    installedVersion = unicorn::Version( 5, 0, 5, 4 );
+#endif
 
-    if ( iTunesPluginInfo->installedVersion() < compatibleVersion )
+    if ( installedVersion < compatibleVersion )
     {
-        delete iTunesPluginInfo;
-
         // tell the app that the plugin is incompatible
         QStringList args;
         args << "--tray";
@@ -93,8 +100,6 @@ main( int argc, char** argv )
         qDebug() << "The iTunes pluggin is old and incompatible. Please update. Shutting down" << app.arguments();
         return 1;
     }
-
-    delete iTunesPluginInfo;
 
     try
     {

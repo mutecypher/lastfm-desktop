@@ -88,7 +88,7 @@ using audioscrobbler::Application;
 #define AS_TRAY_ICON_OFF ":/lastfm_icon_16_grayscale.png"
 #elif defined( Q_WS_MAC )
 #define AS_TRAY_ICON ":/systray_icon_rest_mac.png"
-#define AS_TRAY_ICON_FF ":/mac_control_bar_as_OFF.png"
+#define AS_TRAY_ICON_OFF ":/mac_control_bar_as_OFF.png"
 #endif
 
 Application::Application(int& argc, char** argv) 

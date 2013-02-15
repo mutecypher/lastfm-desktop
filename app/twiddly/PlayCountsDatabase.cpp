@@ -287,7 +287,7 @@ AutomaticIPod::PlayCountsDatabase::bootstrap()
                         "VALUES ( '" + t.uniqueId() + "', '" + plays + "' )" );
 
         }
-        catch ( ITunesException& )
+        catch ( ... )
         {
             // Move on...
         }

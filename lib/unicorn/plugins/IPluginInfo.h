@@ -87,7 +87,9 @@ public:
 
     virtual QString pluginInstaller() const = 0;
 
+#ifdef Q_OS_WIN
     static BOOL isWow64();
+#endif
 
     virtual bool isInstalled() const;
     bool canBootstrap() const;
