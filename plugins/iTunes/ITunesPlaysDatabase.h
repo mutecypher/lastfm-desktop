@@ -87,6 +87,7 @@ protected:
 #ifndef WIN32
     static void* onPlayStateChanged( void* );
     static void* sync( void* );
+    static void* syncOld( void* );
     
     static pthread_mutex_t s_mutex;
 #endif
