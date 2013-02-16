@@ -17,13 +17,13 @@
  *   51 Franklin Steet, Fifth Floor, Boston, MA  02110-1301, USA.          *
  ***************************************************************************/
 
-#ifndef ITUNES_PLUGIN_INSTALLER_H
-#define ITUNES_PLUGIN_INSTALLER_H
+#pragma once
 
 #include "Version.h"
 
 #include <lib/DllExportMacro.h>
 
+#include <QObject>
 #include <QString>
 
 namespace unicorn
@@ -61,5 +61,3 @@ private:
 };
 
 }
-
-#endif
