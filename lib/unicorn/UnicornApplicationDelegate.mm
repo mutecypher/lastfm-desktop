@@ -39,55 +39,67 @@
 
 - (NSString*)trackTitle
 {
-    QString string = m_observer->m_observer->trackTitle();
+    if ( m_observer->m_observer )
+    {
+        QString string = m_observer->m_observer->trackTitle();
 
-    if ( !string.isEmpty() )
-        return [NSString stringWithCharacters:(const unichar *)string.unicode() length:(NSUInteger)string.length() ];
+        if ( !string.isEmpty() )
+            return [NSString stringWithCharacters:(const unichar *)string.unicode() length:(NSUInteger)string.length() ];
+    }
 
     return nil;
 }
 
 - (NSString*)artist
 {
-    QString string = m_observer->m_observer->artist();
+    if ( m_observer->m_observer )
+    {
+        QString string = m_observer->m_observer->artist();
 
-    if ( !string.isEmpty() )
-        return [NSString stringWithCharacters:(const unichar *)string.unicode() length:(NSUInteger)string.length() ];
+        if ( !string.isEmpty() )
+            return [NSString stringWithCharacters:(const unichar *)string.unicode() length:(NSUInteger)string.length() ];
+    }
 
     return nil;
 }
 
 - (NSString*)album
 {
-    QString string = m_observer->m_observer->album();
+    if ( m_observer->m_observer )
+    {
+        QString string = m_observer->m_observer->album();
 
-    if ( !string.isEmpty() )
-        return [NSString stringWithCharacters:(const unichar *)string.unicode() length:(NSUInteger)string.length() ];
+        if ( !string.isEmpty() )
+            return [NSString stringWithCharacters:(const unichar *)string.unicode() length:(NSUInteger)string.length() ];
+    }
 
     return nil;
 }
 
 - (NSNumber*)duration
 {
-    return [NSNumber numberWithInt:m_observer->m_observer->duration()];
+    return [NSNumber numberWithInt:m_observer->m_observer ? m_observer->m_observer->duration() : 0];
 }
 
 - (NSData*)artwork
 {
-    QPixmap pixmap = m_observer->m_observer->artwork();
+    if ( m_observer->m_observer )
+    {
+        QPixmap pixmap = m_observer->m_observer->artwork();
 
-    if ( !pixmap.isNull() )
-    {
-        CGImageRef cgImage = pixmap.toMacCGImageRef();
-        NSImage* nsImage = [[NSImage alloc] initWithCGImage:(CGImageRef)cgImage size:(NSSize)NSZeroSize];
-        NSData* data = [nsImage TIFFRepresentation];
-        return data;
-    }
-    else
-    {
-        NSImage* img = [NSImage imageNamed: NSImageNameApplicationIcon];
-        NSData* data = [img TIFFRepresentation];
-        return data;
+        if ( !pixmap.isNull() )
+        {
+            CGImageRef cgImage = pixmap.toMacCGImageRef();
+            NSImage* nsImage = [[NSImage alloc] initWithCGImage:(CGImageRef)cgImage size:(NSSize)NSZeroSize];
+            NSData* data = [nsImage TIFFRepresentation];
+            return data;
+        }
+        else
+        {
+            NSImage* img = [NSImage imageNamed: NSImageNameApplicationIcon];
+            NSData* data = [img TIFFRepresentation];
+            return data;
+        }
     }
 
     return nil;
@@ -95,7 +107,7 @@
 
 - (BOOL)loved
 {
-    return m_observer->m_observer->loved() ? YES : NO;
+    return m_observer->m_observer && m_observer->m_observer->loved() ? YES : NO;
 }
 
 @end
@@ -103,7 +115,7 @@
 LFMAppDelegate* g_appDelegate;
 
 unicorn::UnicornApplicationDelegate::UnicornApplicationDelegate(QObject *parent) :
-    QObject(parent)
+    QObject(parent), m_observer( 0 )
 {
     g_appDelegate = [[LFMAppDelegate alloc] init:this];
 
