@@ -71,40 +71,46 @@ DeviceScrobbler::twiddle()
     doTwiddle( false );
 }
 
-bool
+DeviceScrobbler::DoTwiddlyResult
 DeviceScrobbler::doTwiddle( bool manual )
 {
 #ifndef Q_WS_X11
-    if ( unicorn::CloseAppsDialog::isITunesRunning() && isITunesPluginInstalled() )
+    if ( unicorn::CloseAppsDialog::isITunesRunning() )
     {
-        if ( m_twiddly )
+        if ( isITunesPluginInstalled() )
         {
-            qWarning() << "m_twiddly already running. Early out.";
-            return true;
-        }
+            if ( m_twiddly )
+            {
+                qWarning() << "m_twiddly already running. Early out.";
+                return AlreadyRunning;
+            }
 
-        //"--device diagnostic --vid 0000 --pid 0000 --serial UNKNOWN
+            //"--device diagnostic --vid 0000 --pid 0000 --serial UNKNOWN
 
-        QStringList args = (QStringList()
-                            << "--device" << "background"
-                            << "--vid" << "0000"
-                            << "--pid" << "0000"
-                            << "--serial" << "UNKNOWN");
+            QStringList args = (QStringList()
+                         << "--device" << "background"
+                         << "--vid" << "0000"
+                         << "--pid" << "0000"
+                         << "--serial" << "UNKNOWN");
 
-        if ( manual )
-            args += "--manual";
+            if ( manual )
+                args += "--manual";
 
-        m_twiddly = new QProcess( this );
-        connect( m_twiddly, SIGNAL(finished( int, QProcess::ExitStatus )), SLOT(onTwiddlyFinished( int, QProcess::ExitStatus )) );
-        connect( m_twiddly, SIGNAL(error( QProcess::ProcessError )), SLOT(onTwiddlyError( QProcess::ProcessError )) );
+            m_twiddly = new QProcess( this );
+            connect( m_twiddly, SIGNAL(finished( int, QProcess::ExitStatus )), SLOT(onTwiddlyFinished( int, QProcess::ExitStatus )) );
+            connect( m_twiddly, SIGNAL(error( QProcess::ProcessError )), SLOT(onTwiddlyError( QProcess::ProcessError )) );
 #ifdef Q_OS_WIN
-        m_twiddly->start( QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "iPodScrobbler.exe" ), args );
+            m_twiddly->start( QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "iPodScrobbler.exe" ), args );
 #else
-        m_twiddly->start( QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "../Helpers/iPodScrobbler" ), args );
+            m_twiddly->start( QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "../Helpers/iPodScrobbler" ), args );
 #endif
+            return Started;
+        }
+        else
+            return ITunesPluginNotInstalled;
     }
 #endif //  Q_WS_X11
-    return false;
+    return ITunesNotRunning;
 }
 
 void

@@ -205,11 +205,23 @@ void
 DiagnosticsDialog::onScrobbleIPodClicked()
 {
     bool const isManual = ( ui->ipod_type->currentIndex() == 1 );
-    bool isAlreadyRunning = ScrobbleService::instance().deviceScrobbler()->doTwiddle( isManual );
+    DeviceScrobbler::DoTwiddlyResult doTwiddlyResult = ScrobbleService::instance().deviceScrobbler()->doTwiddle( isManual );
 
-    if ( isAlreadyRunning )
+    switch ( doTwiddlyResult )
+    {
+    case DeviceScrobbler::AlreadyRunning:
         ui->ipod_log->appendPlainText( "ALREADY SCROBBLING IPOD..." );
-
+        break;
+    case DeviceScrobbler::ITunesNotRunning:
+        ui->ipod_log->appendPlainText( "ITUNES NOT RUNNING..." );
+        break;
+    case DeviceScrobbler::ITunesPluginNotInstalled:
+        ui->ipod_log->appendPlainText( "ALREADY SCROBBLING IPOD..." );
+        break;
+    default:
+        // don't say anything; it was DoTwiddlyResult::Started
+        break;
+    }
 }
 
 

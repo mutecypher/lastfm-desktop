@@ -22,10 +22,19 @@ class DeviceScrobbler : public QObject
 {
     Q_OBJECT
 public:
+    enum DoTwiddlyResult
+    {
+        Started,
+        AlreadyRunning,
+        ITunesNotRunning,
+        ITunesPluginNotInstalled
+    };
+
+public:
     explicit DeviceScrobbler( QObject* parent = 0 );
     ~DeviceScrobbler();
 
-    bool doTwiddle( bool manual );
+    DoTwiddlyResult doTwiddle( bool manual );
 
 signals:
     void foundScrobbles( const QList<lastfm::Track>& tracks );
