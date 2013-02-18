@@ -547,6 +547,8 @@ ScrobblesListWidget::addTracks( const QList<lastfm::Track>& tracks )
             else
             {
                 // update the track in the list with the new infos!
+                TrackWidget* trackWidget = qobject_cast<TrackWidget*>( itemWidget( item( pos ) ) );
+                trackWidget->update( tracks[i] );
             }
         }
     }

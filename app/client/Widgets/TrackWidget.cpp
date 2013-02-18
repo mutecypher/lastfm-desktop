@@ -197,6 +197,15 @@ TrackWidget::setTrackTitleWidth()
 }
 
 void
+TrackWidget::update( const lastfm::Track& track )
+{
+    // we're getting an update from a track fetched from user.getRecentTracks
+    MutableTrack mt( m_track );
+    mt.setScrobbleStatus( Track::Submitted ); // it's definitely been scrobbled
+    mt.setLoved( track.isLoved() ); // make sure the love state is consistent with Last.fm
+}
+
+void
 TrackWidget::setTrack( lastfm::Track& track )
 {
     disconnect( m_track.signalProxy(), 0, this, 0 );

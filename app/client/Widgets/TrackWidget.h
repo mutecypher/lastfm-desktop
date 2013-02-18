@@ -18,6 +18,8 @@ public:
     explicit TrackWidget( Track& track, QWidget *parent = 0 );
     ~TrackWidget();
 
+    void update( const lastfm::Track& track );
+
     void setTrack( lastfm::Track& track );
     lastfm::Track track() const;
 
