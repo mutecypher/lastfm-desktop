@@ -3,7 +3,7 @@ TARGET = "Last.fm Scrobbler"
 unix:!mac {
     TARGET = lastfm-scrobbler
 }
-VERSION = 2.1.33
+VERSION = 2.1.34
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 QT = core gui xml network sql webkit
 CONFIG += lastfm unicorn listener logger phonon fingerprint ffmpeg

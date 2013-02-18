@@ -2,13 +2,13 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [CustomMessages]
-Version=2.1.33
+Version=2.1.34
 
 
 [Setup]
-OutputBaseFilename=Last.fm-2.1.33
-VersionInfoVersion=2.1.33
-VersionInfoTextVersion=2.1.33
+OutputBaseFilename=Last.fm-2.1.34
+VersionInfoVersion=2.1.34
+VersionInfoTextVersion=2.1.34
 AppName="Last.fm Scrobbler"
 AppVerName="Last.fm Scrobbler {cm:Version}"
 VersionInfoDescription=Last.fm Installer
