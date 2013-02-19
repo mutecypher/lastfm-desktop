@@ -93,12 +93,6 @@ macx:CONFIG( app_bundle ): contains( TEMPLATE, app ) {
     QMAKE_POST_LINK += echo Copying airfoil tracks file..; \
                         cp \"$$ROOT_DIR/admin/dist/mac/fm.last.Scrobbler.scpt\" \"$$BUNDLE_DIR/Contents/Resources\";
 
-    QMAKE_POST_LINK += echo Copying the VLC plugins.dat cache file..; \
-                        mkdir -p \"$${BUNDLE_DIR}/Contents/plugins/\"; \
-                        cp -f \"$${ROOT_DIR}/admin/dist/mac/plugins.dat\" \"$${BUNDLE_DIR}/Contents/plugins/\"; \
-                        mkdir -p \"$${BUNDLE_DIR}/Contents/MacOS/\"; \
-                        cp -f \"$${ROOT_DIR}/admin/dist/mac/plugins.MacOS.dat\" \"$${BUNDLE_DIR}/Contents/MacOS/plugins.dat\";
-
     ## add the translations
     QMAKE_POST_LINK += mkdir -p \"$${BUNDLE_DIR}/Contents/Resources/qm/\"; \
                         mv -f \"$${ROOT_DIR}/i18n/\"*.qm \"$${BUNDLE_DIR}/Contents/Resources/qm/\";
