@@ -43,7 +43,8 @@ def build
 	system 'qmake -r CONFIG+=release'
 	system 'make'
 
-	system 'mv -f _bin/Last.fm\\ Scrobbler.app _bin/Last.fm.app'
+	system 'rm -rf _bin/Last.fm.app'
+	system 'mv "_bin/Last.fm Scrobbler.app" _bin/Last.fm.app'
 end
 
 def copy_plugin
@@ -57,6 +58,9 @@ def create_zip
 		system "rm -rf #{$version}"
 		system "mkdir #{$version}"
 		system "tar cjf #{$version}/Last.fm-#{$version}.tar.bz2 'Last.fm.app'"
+		Dir.chdir("Last.fm.app/Contents") do
+			system "tar cjf ../../#{$version}/Last.fm_Mac_Update_#{$version}.tar.bz2 *"
+		end
 		system "zip -ry #{$version}/Last.fm-#{$version}.zip 'Last.fm.app'"
 	end
 end
@@ -90,8 +94,10 @@ def upload_files
 	# scp the main zip file
 	# scp all the deltas
 	# put them in my userhome if we are doing a test update
-	#system "scp _bin/#{$version}/Last.fm-#{$version}.tar.bz2 badger:#{$upload_folder}"
-	#system "scp _bin/#{$version}/Last.fm-#{$version}.zip badger:#{$upload_folder}"
+
+	system "scp _bin/#{$version}/Last.fm-#{$version}.tar.bz2 badger:#{$upload_folder}"
+	system "scp _bin/#{$version}/Last.fm_Mac_Update_#{$version}.tar.bz2 badger:#{$upload_folder}"
+	system "scp _bin/#{$version}/Last.fm-#{$version}.zip badger:#{$upload_folder}"
 
 	$deltas.each do |delta|
 		system "scp _bin/#{$version}/Last.fm-#{$version}-#{delta}.delta badger:#{$upload_folder}"
@@ -127,15 +133,14 @@ def generate_appcast_xml
 	end
 end
 
-
-# run all the things
 if not ARGV.include?( "--no-build" )
+	# build the app
 	clean
 	build
 	copy_plugin
-	system 'open _bin/Last.fm.app'
 end
 if not ARGV.include?( "--no-package" )
+	# package and upload the app
 	create_zip
 	create_deltas
 	upload_files
