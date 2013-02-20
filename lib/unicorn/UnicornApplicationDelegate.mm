@@ -1,15 +1,57 @@
+
+#include "UnicornSettings.h"
 #include "UnicornApplicationDelegate.h"
 
-#import <Cocoa/Cocoa.h>
+#include <QWidget>
+#include <QApplication>
+#include <QDebug>
 
+#import <Cocoa/Cocoa.h>
+#import <AppKit/NSView.h>
 
 @interface LFMAppDelegate : NSObject <NSApplicationDelegate> {
     unicorn::UnicornApplicationDelegate* m_observer;
+    BOOL m_show;
 }
 - (LFMAppDelegate*) init:(unicorn::UnicornApplicationDelegate*)observer;
+- (void)transformStep1:(BOOL)show;
+- (void)transformStep2;
+- (void)transformStep3;
 @end
 
 @implementation LFMAppDelegate
+
+- (void)transformStep1:(BOOL)show;
+{
+    foreach ( QWidget* widget, QApplication::topLevelWidgets() )
+    {
+         NSView* view = reinterpret_cast<NSView*>( widget->winId() );
+         [[view window] setCanHide:NO];
+    }
+
+    m_show = show;
+    [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+    [self performSelector:@selector(transformStep2) withObject:nil afterDelay:0.1];
+}
+
+- (void)transformStep2
+{
+    ProcessSerialNumber psn = { 0, kCurrentProcess };
+    (void) TransformProcessType(&psn, m_show ? kProcessTransformToForegroundApplication : kProcessTransformToUIElementApplication );
+    [self performSelector:@selector(transformStep3) withObject:nil afterDelay:0.1];
+}
+
+- (void)transformStep3
+{
+    [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+
+    foreach ( QWidget* widget, QApplication::topLevelWidgets() )
+    {
+         NSView* view = reinterpret_cast<NSView*>( widget->winId() );
+         [[view window] setCanHide:YES];
+    }
+}
+
 - (LFMAppDelegate*) init:(unicorn::UnicornApplicationDelegate*)observer
 {
     if ( (self = [super init]) )
@@ -24,6 +66,18 @@
 {
     m_observer->forceInitialize();
 }
+
+- (void)applicationWillFinishLaunching:(NSNotification *)aNotification
+{
+    qDebug() << "applicationWillFinishLaunching";
+
+    if ( unicorn::Settings().value( "showDock", true ).toBool() )
+    {
+        ProcessSerialNumber psn = { 0, kCurrentProcess };
+        (void) TransformProcessType(&psn, kProcessTransformToForegroundApplication);
+    }
+}
+
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
@@ -120,6 +174,12 @@ unicorn::UnicornApplicationDelegate::UnicornApplicationDelegate(QObject *parent)
     g_appDelegate = [[LFMAppDelegate alloc] init:this];
 
     [[NSApplication sharedApplication] setDelegate: g_appDelegate];
+}
+
+void
+unicorn::UnicornApplicationDelegate::showDockIcon( bool show )
+{
+    [g_appDelegate transformStep1:show?YES:NO];
 }
 
 void

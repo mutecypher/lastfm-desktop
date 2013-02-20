@@ -142,8 +142,9 @@ GeneralSettingsWidget::saveSettings()
 
         if ( showDockOld != ui->showDock->isChecked() )
         {
-            aApp->hideDockIcon( !ui->showDock->isChecked() );
-            restartNeeded = true;
+            // the setting has changed
+
+            aApp->showDockIcon( ui->showDock->isChecked() );
         }
 #endif
 

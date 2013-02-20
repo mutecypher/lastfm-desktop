@@ -113,7 +113,7 @@ namespace unicorn
         void translate();
 #ifdef Q_OS_MAC
         void macTranslate( const QString& lang );
-        void hideDockIcon( bool hideDockIcon );
+        void showDockIcon( bool show );
         UnicornApplicationDelegate* delegate() const { return m_delegate; }
 #endif
     public slots:

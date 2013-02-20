@@ -24,6 +24,8 @@ class UNICORN_DLLEXPORT UnicornApplicationDelegate : public QObject
 public:
     explicit UnicornApplicationDelegate( QObject *parent = 0 );
 
+    void showDockIcon( bool show );
+
     void setCommandObserver( UnicornApplicationDelegateCommandObserver* observer );
 
     void forceInitialize();
