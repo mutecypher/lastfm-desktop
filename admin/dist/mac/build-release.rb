@@ -129,11 +129,16 @@ end
 
 
 # run all the things
-clean
-build
-copy_plugin
-create_zip
-create_deltas
-upload_files
-generate_appcast_xml
+if not ARGV.include?( "--no-build" )
+	clean
+	build
+	copy_plugin
+	system 'open _bin/Last.fm.app'
+end
+if not ARGV.include?( "--no-package" )
+	create_zip
+	create_deltas
+	upload_files
+	generate_appcast_xml
+end
 
