@@ -9,6 +9,14 @@
 #import <Cocoa/Cocoa.h>
 #import <AppKit/NSView.h>
 
+// Declare this here ourselves so we can compile on OSX 10.6
+// and ProcessTransformToUIElementApplication just won't work
+enum {
+  ProcessTransformToForegroundApplication = 1,
+  ProcessTransformToBackgroundApplication = 2, /* functional in Mac OS X Barolo and later */
+  ProcessTransformToUIElementApplication = 4 /* functional in Mac OS X Barolo and later */
+};
+
 @interface LFMAppDelegate : NSObject <NSApplicationDelegate> {
     unicorn::UnicornApplicationDelegate* m_observer;
     BOOL m_show;
@@ -37,7 +45,7 @@
 - (void)transformStep2
 {
     ProcessSerialNumber psn = { 0, kCurrentProcess };
-    (void) TransformProcessType(&psn, m_show ? kProcessTransformToForegroundApplication : kProcessTransformToUIElementApplication );
+    (void) TransformProcessType(&psn, m_show ? ProcessTransformToForegroundApplication : ProcessTransformToUIElementApplication );
     [self performSelector:@selector(transformStep3) withObject:nil afterDelay:0.1];
 }
 
@@ -74,7 +82,7 @@
     if ( unicorn::Settings().value( "showDock", true ).toBool() )
     {
         ProcessSerialNumber psn = { 0, kCurrentProcess };
-        (void) TransformProcessType(&psn, kProcessTransformToForegroundApplication);
+        (void) TransformProcessType(&psn, ProcessTransformToForegroundApplication);
     }
 }
 
