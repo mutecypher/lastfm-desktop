@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <AppKit/NSView.h>
+#import <Carbon/Carbon.h>
 
 // Declare this here ourselves so we can compile on OSX 10.6
 // and ProcessTransformToUIElementApplication just won't work
@@ -22,43 +23,9 @@ enum {
     BOOL m_show;
 }
 - (LFMAppDelegate*) init:(unicorn::UnicornApplicationDelegate*)observer;
-- (void)transformStep1:(BOOL)show;
-- (void)transformStep2;
-- (void)transformStep3;
 @end
 
 @implementation LFMAppDelegate
-
-- (void)transformStep1:(BOOL)show;
-{
-    foreach ( QWidget* widget, QApplication::topLevelWidgets() )
-    {
-         NSView* view = reinterpret_cast<NSView*>( widget->winId() );
-         [[view window] setCanHide:NO];
-    }
-
-    m_show = show;
-    [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
-    [self performSelector:@selector(transformStep2) withObject:nil afterDelay:0.1];
-}
-
-- (void)transformStep2
-{
-    ProcessSerialNumber psn = { 0, kCurrentProcess };
-    (void) TransformProcessType(&psn, m_show ? ProcessTransformToForegroundApplication : ProcessTransformToUIElementApplication );
-    [self performSelector:@selector(transformStep3) withObject:nil afterDelay:0.1];
-}
-
-- (void)transformStep3
-{
-    [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
-
-    foreach ( QWidget* widget, QApplication::topLevelWidgets() )
-    {
-         NSView* view = reinterpret_cast<NSView*>( widget->winId() );
-         [[view window] setCanHide:YES];
-    }
-}
 
 - (LFMAppDelegate*) init:(unicorn::UnicornApplicationDelegate*)observer
 {
@@ -82,7 +49,10 @@ enum {
     if ( unicorn::Settings().value( "showDock", true ).toBool() )
     {
         ProcessSerialNumber psn = { 0, kCurrentProcess };
-        (void) TransformProcessType(&psn, ProcessTransformToForegroundApplication);
+        TransformProcessType(&psn, ProcessTransformToForegroundApplication);
+        SetSystemUIMode(kUIModeNormal, 0);
+        [[NSWorkspace sharedWorkspace] launchAppWithBundleIdentifier:@"com.apple.dock" options:NSWorkspaceLaunchDefault additionalEventParamDescriptor:nil launchIdentifier:nil];
+        [[NSApplication sharedApplication] activateIgnoringOtherApps:TRUE];
     }
 }
 
@@ -187,7 +157,11 @@ unicorn::UnicornApplicationDelegate::UnicornApplicationDelegate(QObject *parent)
 void
 unicorn::UnicornApplicationDelegate::showDockIcon( bool show )
 {
-    [g_appDelegate transformStep1:show?YES:NO];
+    ProcessSerialNumber psn = { 0, kCurrentProcess };
+    TransformProcessType(&psn, show?ProcessTransformToForegroundApplication:ProcessTransformToUIElementApplication);
+    SetSystemUIMode(kUIModeNormal, 0);
+    [[NSWorkspace sharedWorkspace] launchAppWithBundleIdentifier:@"com.apple.dock" options:NSWorkspaceLaunchDefault additionalEventParamDescriptor:nil launchIdentifier:nil];
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:TRUE];
 }
 
 void
