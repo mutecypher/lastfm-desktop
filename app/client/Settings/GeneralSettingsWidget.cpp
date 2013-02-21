@@ -162,8 +162,11 @@ GeneralSettingsWidget::saveSettings()
         if ( showDockOld != ui->showDock->isChecked() )
         {
             // the setting has changed
-
             aApp->showDockIcon( ui->showDock->isChecked() );
+
+            // Hiding the dock icon while the app is running is not supported on Snow Leopard
+            if ( QSysInfo::MacintoshVersion <= QSysInfo::MV_10_6 && !ui->showDock->isChecked() )
+                restartNeeded = true;
         }
 #endif
 
