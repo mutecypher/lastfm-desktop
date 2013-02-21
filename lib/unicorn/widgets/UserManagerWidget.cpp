@@ -285,14 +285,14 @@ UserManagerWidget::onUserRemoved()
     if( result != QMessageBox::Yes )
         return;
 
-    unicorn::Settings us;
-    us.beginGroup( "Users" );
-    us.remove( urb->user() );
-    us.endGroup();
+    unicorn::Settings settings;
+    settings.beginGroup( "Users" );
+    settings.remove( urb->user() );
+    settings.endGroup();
 
-    if ( us.userRoster().count() == 0 )
+    if ( settings.userRoster().count() == 0 )
     {
-        us.setValue( SETTING_FIRST_RUN_WIZARD_COMPLETED, false );
+        settings.setFirstRunWizardCompleted( false );
         qobject_cast<unicorn::Application*>( qApp )->restart();
     }
 

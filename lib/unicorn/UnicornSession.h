@@ -37,6 +37,22 @@ class UNICORN_DLLEXPORT Session : public QObject
 {
     Q_OBJECT
 public:
+    struct Info
+    {
+        bool valid;
+
+        QString subscriptionPrice;
+
+        bool youRadio;
+        bool registeredRadio;
+        bool subscriberRadio;
+
+        bool youWebRadio;
+        bool registeredWebRadio;
+        bool subscriberWebRadio;
+    };
+
+public:
     /** Return session object from stored session */
     Session();
     Session( QDataStream& dataStream );
@@ -87,17 +103,7 @@ private:
     QString m_sessionKey;
     lastfm::User m_user;
 
-    QString m_subscriptionPrice;
-
-    bool m_valid;
-
-    bool m_youRadio;
-    bool m_registeredRadio;
-    bool m_subscriberRadio;
-
-    bool m_youWebRadio;
-    bool m_registeredWebRadio;
-    bool m_subscriberWebRadio;
+    Info m_info;
 };
 
 }

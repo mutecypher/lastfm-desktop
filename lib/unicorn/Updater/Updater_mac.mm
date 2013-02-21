@@ -55,10 +55,10 @@ unicorn::Updater::Updater(QWidget *parent) :
         if ( qApp->arguments().count() > urlIndex && qApp->arguments()[urlIndex].startsWith( "http://" ) )
             [updater setFeedURL:[NSURL URLWithString: [NSString stringWithCharacters:(const unichar *)qApp->arguments()[urlIndex].unicode() length:(NSUInteger)qApp->arguments()[urlIndex].length() ]]];
         else
-            setBetaUpdates( unicorn::Settings().value( SETTING_BETA_UPGRADES, false ).toBool() );
+            setBetaUpdates( unicorn::Settings().betaUpdates() );
     }
     else
-        setBetaUpdates( unicorn::Settings().value( SETTING_BETA_UPGRADES, false ).toBool() );
+        setBetaUpdates( unicorn::Settings().betaUpdates() );
 
 }
 

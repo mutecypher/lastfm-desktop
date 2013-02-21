@@ -65,7 +65,7 @@ enum {
 {
     qDebug() << "applicationWillFinishLaunching";
 
-    if ( unicorn::Settings().value( "showDock", true ).toBool() )
+    if ( unicorn::Settings().showDock() )
     {
         ProcessSerialNumber psn = { 0, kCurrentProcess };
         TransformProcessType(&psn, ProcessTransformToForegroundApplication);

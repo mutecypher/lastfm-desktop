@@ -36,9 +36,9 @@ GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
 
     populateLanguages();
 
-    ui->notifications->setChecked( unicorn::Settings().value( SETTING_NOTIFICATIONS, ui->notifications->isChecked() ).toBool() );
-    ui->sendCrashReports->setChecked( unicorn::Settings().value( SETTING_SEND_CRASH_REPORTS, ui->sendCrashReports->isChecked() ).toBool() );
-    ui->beta->setChecked( unicorn::Settings().value( SETTING_BETA_UPGRADES, false ).toBool() );
+    ui->notifications->setChecked( unicorn::Settings().notifications() );
+    ui->sendCrashReports->setChecked( unicorn::Settings().sendCrashReports() );
+    ui->beta->setChecked( unicorn::Settings().betaUpdates() );
 
 #if !defined( Q_OS_WIN ) && !defined( Q_OS_MAC )
     ui->beta->hide(); // only have a beta update setting in mac and windows
@@ -47,21 +47,8 @@ GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
 #ifdef Q_OS_MAC
     ui->mediaKeys->setChecked( unicorn::Settings().value( "mediaKeys", true ).toBool() );
 
-    int showWhereIndex = unicorn::Settings().value( SETTING_SHOW_WHERE, -1 ).toInt();
-
-    if ( showWhereIndex == -1 )
-    {
-        ui->showAs->setChecked( unicorn::Settings().value( SETTING_SHOW_AS, true ).toBool() );
-        ui->showDock->setChecked( unicorn::Settings().value( SETTING_SHOW_DOCK, true ).toBool() );
-    }
-    else
-    {
-        // 0 == show both, 1 == show only dock, 2 == show only menu bar
-        ui->showAs->setChecked( showWhereIndex != 1 );
-        ui->showDock->setChecked( showWhereIndex != 2 );
-
-        unicorn::Settings().remove( SETTING_SHOW_WHERE ); // don't read this setting again
-    }
+    ui->showAs->setChecked( unicorn::Settings().showAS() );
+    ui->showDock->setChecked( unicorn::Settings().showDock() );
 
 #else
     ui->showDock->hide();
@@ -71,8 +58,8 @@ GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
 #endif
 
 #ifndef Q_WS_X11
-    ui->launch->setChecked( unicorn::AppSettings( OLDE_PLUGIN_SETTINGS ).value( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() ).toBool() );
-    ui->updates->setChecked( unicorn::Settings().value( SETTING_CHECK_UPDATES, ui->updates->isChecked() ).toBool() );
+    ui->launch->setChecked( unicorn::OldeAppSettings().launchWithMediaPlayers() );
+    ui->updates->setChecked( unicorn::Settings().checkForUpdates() );
 #else
     ui->launch->hide();
     ui->updates->hide();
@@ -141,12 +128,12 @@ GeneralSettingsWidget::saveSettings()
         }
 
         // setting is for the 'Client' aplication for compatibility with old media player plugins
-        unicorn::AppSettings( OLDE_PLUGIN_SETTINGS ).setValue( SETTING_LAUNCH_ITUNES, ui->launch->isChecked() );
+        unicorn::OldeAppSettings().setLaunchWithMediaPlayers( ui->launch->isChecked() );
 
-        unicorn::Settings().setValue( SETTING_NOTIFICATIONS, ui->notifications->isChecked() );
-        unicorn::Settings().setValue( SETTING_SEND_CRASH_REPORTS, ui->sendCrashReports->isChecked() );
-        unicorn::Settings().setValue( SETTING_CHECK_UPDATES, ui->updates->isChecked() );
-        unicorn::Settings().setValue( SETTING_BETA_UPGRADES, ui->beta->isChecked() );
+        unicorn::Settings().setNotifications( ui->notifications->isChecked() );
+        unicorn::Settings().setSendCrashReports( ui->sendCrashReports->isChecked() );
+        unicorn::Settings().setCheckForUpdates( ui->updates->isChecked() );
+        unicorn::Settings().setBetaUpdates( ui->beta->isChecked() );
 
         aApp->setBetaUpdates( ui->beta->isChecked() );
 
@@ -156,8 +143,8 @@ GeneralSettingsWidget::saveSettings()
         aApp->setMediaKeysEnabled( ui->mediaKeys->isChecked() );
 
         /// dock hiding
-        bool showDockOld = unicorn::Settings().value( SETTING_SHOW_DOCK, true ).toBool();
-        unicorn::Settings().setValue( SETTING_SHOW_DOCK, ui->showDock->isChecked() );
+        bool showDockOld = unicorn::Settings().showDock();
+        unicorn::Settings().setShowDock( ui->showDock->isChecked() );
 
         if ( showDockOld != ui->showDock->isChecked() )
         {
@@ -170,7 +157,7 @@ GeneralSettingsWidget::saveSettings()
         }
 #endif
 
-        unicorn::Settings().setValue( SETTING_SHOW_AS, ui->showAs->isChecked() );
+        unicorn::Settings().setShowAS( ui->showAs->isChecked() );
         aApp->showAs( ui->showAs->isChecked() );
 
         onSettingsSaved();

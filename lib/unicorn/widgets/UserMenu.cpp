@@ -57,7 +57,7 @@ UserMenu::onTriggered( QAction* a )
     unicorn::UserSettings us( a->text() );
 
     QString username = a->text();
-    QString sessionKey = us.value( "SessionKey", "" ).toString();
+    QString sessionKey = us.sessionKey();
     QMetaObject::invokeMethod( qApp, "changeSession",
                                      Q_ARG( const QString, username ),
                                      Q_ARG( const QString, sessionKey ) );

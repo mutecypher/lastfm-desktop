@@ -344,7 +344,7 @@ FirstRunWizard::onBootstrapDone( int status )
 void
 FirstRunWizard::onWizardCompleted()
 {
-    unicorn::Settings().setValue( SETTING_FIRST_RUN_WIZARD_COMPLETED, true );
+    unicorn::Settings().setFirstRunWizardCompleted( true );
 }
 
 

@@ -213,7 +213,7 @@ DeviceScrobbler::scrobbleIpodFiles( const QStringList& files )
 
     bool removeFiles = false;
 
-    if ( unicorn::AppSettings( OLDE_PLUGIN_SETTINGS ).value( SETTING_OLDE_ITUNES_DEVICE_SCROBBLING_ENABLED, true ).toBool() )
+    if ( unicorn::OldeAppSettings().deviceScrobblingEnabled() )
     {
         QList<lastfm::Track> scrobbles = scrobblesFromFiles( files );
 
@@ -227,7 +227,7 @@ DeviceScrobbler::scrobbleIpodFiles( const QStringList& files )
         {
             if ( scrobbles.count() > 0 )
             {
-                if ( unicorn::AppSettings().value( SETTING_ALWAYS_ASK, true ).toBool()
+                if ( unicorn::AppSettings().alwaysAsk()
                      || scrobbles.count() >= 200 ) // always get them to check scrobbles over 200
                 {
                     if ( !m_confirmDialog )
@@ -318,7 +318,7 @@ DeviceScrobbler::onScrobblesConfirmationFinished( int result )
 
         emit foundScrobbles( scrobbles );
 
-        unicorn::AppSettings().setValue( SETTING_ALWAYS_ASK, !m_confirmDialog->autoScrobble() );
+        unicorn::AppSettings().setAlwaysAsk( !m_confirmDialog->autoScrobble() );
     }
 
     // delete all the iPod scrobble files whether it was accepted or not

@@ -130,7 +130,7 @@ Application::initiateLogin( bool forceWizard ) throw( StubbornUserException )
 {
     closeAllWindows();
 
-    if( forceWizard || !unicorn::Settings().value( SETTING_FIRST_RUN_WIZARD_COMPLETED, false ).toBool() )
+    if( forceWizard || !unicorn::Settings().firstRunWizardCompleted() )
     {
         setWizardRunning( true );
 
@@ -386,7 +386,7 @@ Application::tray()
 #if defined(Q_OS_WIN) || defined(Q_WS_X11)
         connect( m_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason)) );
 #endif
-        showAs( unicorn::Settings().value( SETTING_SHOW_AS, true ).toBool() );
+        showAs( unicorn::Settings().showAS() );
         connect( this, SIGNAL( aboutToQuit()), m_tray, SLOT( hide()));
     }
 
@@ -479,7 +479,7 @@ Application::onTrackStarted( const lastfm::Track& track, const Track& oldTrack )
         m_currentTrack = track;
 
         if ( ScrobbleService::instance().scrobblableTrack( m_currentTrack )
-             && unicorn::Settings().value( SETTING_NOTIFICATIONS, true ).toBool() )
+             && unicorn::Settings().notifications() )
         {
 #ifdef Q_OS_MAC
             m_notify->newTrack( track );
@@ -768,7 +768,7 @@ Application::onWsError( lastfm::ws::Error e )
             us.remove( unauthedUser );
             us.endGroup();
 
-            us.setValue( SETTING_FIRST_RUN_WIZARD_COMPLETED, false );
+            us.setFirstRunWizardCompleted( false );
 
             // Tell them that there was an error
             QMessageBoxBuilder( m_mw )
