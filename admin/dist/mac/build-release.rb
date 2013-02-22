@@ -9,7 +9,7 @@
 $version = '2.1.34'
 
 # TODO: get the version numbers from the argument list
-$deltas = ['2.1.33']
+$deltas = []
 
 if ( ARGV.include?( "--release" ) )
 	$upload_folder = '/web/site/static.last.fm/client/Mac'
