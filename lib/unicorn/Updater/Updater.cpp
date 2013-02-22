@@ -47,10 +47,10 @@ unicorn::Updater::Updater( QWidget* parent ) :
             m_updater->SetIcon( QPixmap( ":/scrobbler_64.png" ) );
         }
         else
-            setBetaUpdates( unicorn::Settings().value( SETTING_BETA_UPGRADES, false ).toBool() );
+            setBetaUpdates( unicorn::Settings().betaUpdates() );
     }
     else
-        setBetaUpdates( unicorn::Settings().value( SETTING_BETA_UPGRADES, false ).toBool() );
+        setBetaUpdates( unicorn::Settings().betaUpdates() );
 
 
 #endif

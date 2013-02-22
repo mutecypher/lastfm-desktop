@@ -54,7 +54,7 @@ GeneralSettingsWidget::GeneralSettingsWidget( QWidget* parent )
     ui->showDock->hide();
     ui->mediaKeys->hide();
 
-    ui->showAs->setChecked( unicorn::Settings().value( SETTING_SHOW_AS, ui->showAs->isChecked() ).toBool() );
+    ui->showAs->setChecked( unicorn::Settings().showAS() );
 #endif
 
 #ifndef Q_WS_X11

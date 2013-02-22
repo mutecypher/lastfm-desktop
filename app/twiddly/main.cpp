@@ -86,7 +86,7 @@ main( int argc, char** argv )
     unicorn::Version installedVersion;
 #ifdef Q_OS_WIN
     unicorn::ITunesPluginInfo* iTunesPluginInfo = new unicorn::ITunesPluginInfo;
-    installedVersion = iTunesPluginInfo->installedVersion()
+    installedVersion = iTunesPluginInfo->installedVersion();
     delete iTunesPluginInfo;
 #else
     // TODO: get the actual installed version
