@@ -213,10 +213,10 @@ DiagnosticsDialog::onScrobbleIPodClicked()
         ui->ipod_log->appendPlainText( "ALREADY SCROBBLING IPOD..." );
         break;
     case DeviceScrobbler::ITunesNotRunning:
-        ui->ipod_log->appendPlainText( "ITUNES NOT RUNNING..." );
+        ui->ipod_log->appendPlainText( "ITUNES NOT RUNNING!" );
         break;
     case DeviceScrobbler::ITunesPluginNotInstalled:
-        ui->ipod_log->appendPlainText( "ALREADY SCROBBLING IPOD..." );
+        ui->ipod_log->appendPlainText( "ITUNES PLUGIN NOT INSTALLED!" );
         break;
     default:
         // don't say anything; it was DoTwiddlyResult::Started
