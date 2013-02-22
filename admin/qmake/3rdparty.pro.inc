@@ -69,11 +69,17 @@ CONFIG( phonon ) {
     }
     else:win32 {
         CONFIG += link_pkgconfig
-        PKGCONFIG += phonon
+
+        CONFIG(debug, debug|release) {
+            PKGCONFIG += phonon-debug
+        }
+        else {
+            PKGCONFIG += phonon-release
+        }
     }
-	else {
-		QT += phonon
-	}
+    else {
+        QT += phonon
+    }
 }
 
 CONFIG( sparkle ) {
