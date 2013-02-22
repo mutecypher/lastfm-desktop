@@ -57,6 +57,8 @@ private:
 #endif
     QStringList runningApps();
 
+    void showEvent( QShowEvent* event );
+
 private slots:
     void checkApps();
 

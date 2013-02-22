@@ -61,15 +61,12 @@ void
 unicorn::CloseAppsDialog::setDescription( const QString& description )
 {
     ui->text->setText( description );
-    ui->text->adjustSize();
-    adjustSize();
 }
 
 void
 unicorn::CloseAppsDialog::showPluginList( bool showPluginList )
 {
     ui->listWidget->setVisible( showPluginList );
-    adjustSize();
 }
 
 void
@@ -128,6 +125,12 @@ unicorn::CloseAppsDialog::checkApps()
 
     if ( apps.count() == 0 )
         accept();
+}
+
+void
+unicorn::CloseAppsDialog::showEvent( QShowEvent* event )
+{
+    adjustSize();
 }
 
 #ifndef Q_OS_MAC
