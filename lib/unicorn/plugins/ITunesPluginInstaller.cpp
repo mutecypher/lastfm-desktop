@@ -109,6 +109,7 @@ unicorn::ITunesPluginInstaller::install()
             closeApps->setTitle( tr( "Close iTunes for plugin update!" ) );
             closeApps->setDescription( tr( "<p>Your iTunes plugin (%2) is different to the one shipped with this version of the app (%1).</p>"
                                            "<p>Please close iTunes now to update.</p>" ).arg( shippedVersion.toString(), installVersion == Version() ? tr( "not installed" ) : installVersion.toString() ) );
+            closeApps->showPluginList( false );
 
             if ( closeApps->result() != QDialog::Accepted )
             {

@@ -43,6 +43,8 @@ public:
     void setTitle( const QString& title );
     void setDescription( const QString& description );
 
+    void showPluginList( bool showPluginList );
+
     void setOwnsPlugins( bool ownsPlugins );
 
     static bool isITunesRunning();

@@ -66,6 +66,13 @@ unicorn::CloseAppsDialog::setDescription( const QString& description )
 }
 
 void
+unicorn::CloseAppsDialog::showPluginList( bool showPluginList )
+{
+    ui->listWidget->setVisible( showPluginList );
+    adjustSize();
+}
+
+void
 unicorn::CloseAppsDialog::commonSetup()
 {
     ui->setupUi(this);
