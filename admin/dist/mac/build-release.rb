@@ -11,14 +11,8 @@ $version = '2.1.34'
 # TODO: get the version numbers from the argument list
 $deltas = []
 
-if ( ARGV.include?( "--release" ) )
-	$upload_folder = '/web/site/static.last.fm/client/Mac'
-	$download_folder = 'http://cdn.last.fm/client/Mac'
-else
-	$upload_folder = '/userhome/michael/www/client/Mac'
-	$download_folder = 'http://users.last.fm/~michael/client/Mac'
-end
-
+$upload_folder = '/userhome/michael/www/client/Mac'
+$download_folder = 'http://users.last.fm/~michael/client/Mac'
 
 ## Check that we are running from the root of the lastfm-desktop project
 # ?
