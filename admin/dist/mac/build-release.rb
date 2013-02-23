@@ -1,15 +1,38 @@
-### Usage build-release.rb <version> --deltas <version> <version>
+### Usage build-release.rb --deltas <version> <version> [--no-build] [--no-package]
 # the deltas should be in a zip in the filder under bin with the expected filename format
 # example /_bin/<version>/Last.fm-<version>
+# TODO: download the previous versions from cdn and use that for the delta
+#       there's no chance they'll be wrong then
 
-# find the current version from the plist.info?
-#version = ARGV[0]
+require 'rexml/document'
 
-# TODO: find out the app version from the app's plist.info
-$version = '2.1.34'
+# find the app version from the app's Info.plist
+xml_data = File::read( "admin/dist/mac/Standard.plist" )
 
-# TODO: get the version numbers from the argument list
+# extract event information
+doc = REXML::Document.new(xml_data)
+
+doc.elements.each('plist/dict/key') do |ele|
+	if ele.text == "CFBundleVersion"
+		$version = ele.next_element().text
+	end
+end
+
+print "Building version #{$version}\n"
+
+# get the delta versions from the command line
 $deltas = []
+deltasIndex = ARGV.index("--deltas")
+
+if deltasIndex != nil
+	while deltasIndex + 1 < ARGV.length and not ARGV.at( deltasIndex + 1 ).start_with?("--")
+		deltasIndex = deltasIndex + 1
+		print "Creating binary delta for version #{ARGV.at(deltasIndex)}\n"
+		$deltas << ARGV.at(deltasIndex)
+	end
+end
+
+
 
 $upload_folder = '/userhome/michael/www/client/Mac'
 $download_folder = 'http://users.last.fm/~michael/client/Mac'
