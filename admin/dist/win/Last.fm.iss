@@ -143,6 +143,8 @@ Source: "..\..\..\_bin\avcodec-54.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\avformat-54.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\avutil-52.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\..\_bin\swresample-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\_bin\ssleay32.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ;The stylesheets
 Source: "..\..\..\app\client\Last.fm Scrobbler.css"; DestDir: "{app}"; Flags: ignoreversion
@@ -178,8 +180,10 @@ Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: ""; ValueData: "URL:
 Root: HKCR; Subkey: "lastfm"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Flags: uninsdeletekey
 Root: HKCR; Subkey: "lastfm\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\Last.fm Scrobbler.exe"" ""%1"""; Flags: uninsdeletekey
 
-; WinSparkle - This stop it asking the user if they want to check for updates on first run.
-Root: HKCU; Subkey: "Software\Last.fm\Last.fm Desktop App\WinSparkle"; ValueType: string; ValueName: "CheckForUpdates"; ValueData: "1"; Flags: uninsdeletekey
+; qtsparkle - This stop it asking the user if they want to check for updates on first run.
+Root: HKCU; Subkey: "Software\Last.fm\Last.fm Scrobbler\QtSparkle"; ValueType: string; ValueName: "asked_permission"; ValueData: "true"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Last.fm\Last.fm Scrobbler\QtSparkle"; ValueType: string; ValueName: "check_automatically"; ValueData: "true"; Flags: uninsdeletekey createvalueifdoesntexist
+Root: HKCU; Subkey: "Software\Last.fm\Last.fm Scrobbler\QtSparkle"; ValueType: string; ValueName: "first_boot"; ValueData: "false"; Flags: uninsdeletekey
 
 ; This is just for deleting keys at uninstall
 Root: HKCU; Subkey: "Software\Last.fm"; Flags: dontcreatekey uninsdeletekey
