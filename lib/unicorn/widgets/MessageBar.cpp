@@ -24,6 +24,7 @@
 #include "lib/unicorn/dialogs/ScrobbleConfirmationDialog.h"
 #include "lib/unicorn/widgets/Label.h"
 #include "lib/unicorn/DesktopServices.h"
+#include "lib/unicorn/plugins/ITunesPluginInstaller.h"
 
 #include "MessageBar.h"
 
@@ -107,6 +108,11 @@ MessageBar::onLinkActivated( const QString& link )
         ScrobbleConfirmationDialog confirmDialog( m_tracks );
         confirmDialog.setReadOnly();
         confirmDialog.exec();
+    }
+    else if ( link == "plugin" )
+    {
+        unicorn::ITunesPluginInstaller* installer = new unicorn::ITunesPluginInstaller( this );
+        installer->install();
     }
     else
     {

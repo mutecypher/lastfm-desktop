@@ -23,6 +23,7 @@
 #include "lib/unicorn/QMessageBoxBuilder.h"
 
 #include "../Application.h"
+#include "lib/unicorn/widgets/Label.h"
 #include "lib/unicorn/dialogs/CloseAppsDialog.h"
 #include "IpodDevice.h"
 #include "DeviceScrobbler.h"
@@ -185,7 +186,8 @@ DeviceScrobbler::handleMessage( const QStringList& message )
     if( action == "complete" )
         twiddled( message );
     else if ( action == "incompatible-plugin" )
-        emit error( tr( "Device scrobbling disabled - incompatible iTunes plugin - please update" ) );
+        emit error( tr( "Device scrobbling disabled - incompatible iTunes plugin - %1" )
+                    .arg( unicorn::Label::anchor( "plugin", tr("please update" ) ) ) );
 }
 
 
