@@ -52,9 +52,9 @@ public:
     /** in milliseconds */
     uint elapsed() const;
 
-    ScrobblePoint scrobblePoint() const { return m_point; }
-    uint duration() const { return m_duration; }
-    bool scrobbled() const { return m_scrobbled; }
+    ScrobblePoint scrobblePoint() const;
+    uint duration() const;
+    bool scrobbled() const;
     
 signals:
     void paused( bool );
