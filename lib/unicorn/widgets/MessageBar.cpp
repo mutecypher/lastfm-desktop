@@ -24,8 +24,9 @@
 #include "lib/unicorn/dialogs/ScrobbleConfirmationDialog.h"
 #include "lib/unicorn/widgets/Label.h"
 #include "lib/unicorn/DesktopServices.h"
+#ifdef Q_OS_MAC
 #include "lib/unicorn/plugins/ITunesPluginInstaller.h"
-
+#endif
 #include "MessageBar.h"
 
 MessageBar::MessageBar( QWidget* parent )
@@ -109,11 +110,13 @@ MessageBar::onLinkActivated( const QString& link )
         confirmDialog.setReadOnly();
         confirmDialog.exec();
     }
+#ifdef Q_OS_MAC
     else if ( link == "plugin" )
     {
         unicorn::ITunesPluginInstaller* installer = new unicorn::ITunesPluginInstaller( this );
         installer->install();
     }
+#endif
     else
     {
         // this should be a url so open it in the browser
