@@ -365,3 +365,15 @@ unicorn::UserSettings::setExclusionDirs( const QStringList& exclusionDirs )
 {
     setValue( "ExclusionDirs", exclusionDirs );
 }
+
+bool
+unicorn::UserSettings::enforceScrobbleTimeMax() const
+{
+    return value( "enforceScrobbleTimeMax", true ).toBool();
+}
+
+void
+unicorn::UserSettings::setEnforceScrobbleTimeMax( bool enforceScrobbleTimeMax )
+{
+    setValue( "enforceScrobbleTimeMax", enforceScrobbleTimeMax );
+}

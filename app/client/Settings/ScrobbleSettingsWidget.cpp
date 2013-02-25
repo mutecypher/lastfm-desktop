@@ -42,28 +42,32 @@ ScrobbleSettingsWidget::ScrobbleSettingsWidget( QWidget* parent )
 {
     ui->setupUi( this );
 
-    double scrobblePointValue = unicorn::UserSettings().scrobblePoint();
+    unicorn::UserSettings userSettings;
+
+    double scrobblePointValue = userSettings.scrobblePoint();
     ui->scrobblePoint->setValue( scrobblePointValue );
     ui->percentText->setText( QString::number(scrobblePointValue) );
     ui->percentText->setFixedWidth( ui->percentText->fontMetrics().width( "100" ) );
     m_initialScrobblePercentage = scrobblePointValue;
 
-    ui->allowFingerprint->setChecked( unicorn::UserSettings().fingerprinting() );
+    ui->allowFingerprint->setChecked( userSettings.fingerprinting() );
+    ui->enfocreScrobbleTimeMax->setChecked( userSettings.enforceScrobbleTimeMax() );
+    ui->scrobblingOn->setChecked( userSettings.scrobblingOn() );
+    ui->podcasts->setChecked( userSettings.podcasts() );
 
-    ui->scrobblingOn->setChecked( unicorn::UserSettings().scrobblingOn() );
-    ui->podcasts->setChecked( unicorn::UserSettings().podcasts() );
-
-    QStringList exclusionDirs = unicorn::UserSettings().exclusionDirs();
+    QStringList exclusionDirs = userSettings.exclusionDirs();
     exclusionDirs.removeAll( "" );
     ui->exclusionDirs->setExclusions( exclusionDirs );
 
     connect( ui->scrobblePoint, SIGNAL(sliderMoved(int)), SLOT(onSliderMoved(int)) );
+    connect( ui->scrobblePoint, SIGNAL(valueChanged(int)), SLOT(onSliderMoved(int)) );
     connect( ui->scrobblePoint, SIGNAL(valueChanged(int)), SLOT(onSettingsChanged()) );
     connect( ui->allowFingerprint, SIGNAL(stateChanged(int)), SLOT(onSettingsChanged()) );
 
     connect( aApp, SIGNAL(scrobbleToggled(bool)), ui->scrobblingOn, SLOT(setChecked(bool)));
     connect( ui->scrobblingOn, SIGNAL(clicked(bool)), SLOT(onSettingsChanged()) );
     connect( ui->podcasts, SIGNAL(stateChanged(int)), SLOT(onSettingsChanged()) );
+    connect( ui->enfocreScrobbleTimeMax, SIGNAL(stateChanged(int)), SLOT(onSettingsChanged()) );
 
     connect( ui->exclusionDirs, SIGNAL(dataChanged()), SLOT(onSettingsChanged()) );
 }
@@ -89,14 +93,18 @@ ScrobbleSettingsWidget::saveSettings()
 
         aApp->onScrobbleToggled( ui->scrobblingOn->isChecked() );
 
-        unicorn::UserSettings().setScrobblePoint( ui->scrobblePoint->value() );
-        unicorn::UserSettings().setFingerprinting( ui->allowFingerprint->isChecked() );
-        unicorn::UserSettings().setPodcasts( ui->podcasts->isChecked() );
+        unicorn::UserSettings userSettings;
+        userSettings.setScrobblePoint( ui->scrobblePoint->value() );
+        userSettings.setFingerprinting( ui->allowFingerprint->isChecked() );
+        userSettings.setPodcasts( ui->podcasts->isChecked() );
+        userSettings.setEnforceScrobbleTimeMax( ui->enfocreScrobbleTimeMax->isChecked() );
 
         QStringList exclusionDirs = ui->exclusionDirs->getExclusions();
         exclusionDirs.removeAll( "" );
         qDebug() << exclusionDirs;
-        unicorn::UserSettings().setExclusionDirs( exclusionDirs );
+        userSettings.setExclusionDirs( exclusionDirs );
+
+        userSettings.sync();
 
         ScrobbleService::instance().scrobbleSettingsChanged();
 

@@ -131,10 +131,12 @@ ScrobbleService::isDirExcluded( const lastfm::Track& track )
 bool
 ScrobbleService::scrobblableTrack( const lastfm::Track& track ) const
 {
-    return unicorn::UserSettings().value( "scrobblingOn", true ).toBool()
+    unicorn::UserSettings userSettings;
+
+    return userSettings.scrobblingOn()
             && track.extra( "playerId" ) != "spt"
             && !track.artist().isNull()
-            && ( unicorn::UserSettings().value( "podcasts", true ).toBool() || !track.isPodcast() )
+            && ( userSettings.podcasts() || !track.isPodcast() )
             && !track.isVideo()
             && !isDirExcluded( track );
 }
@@ -148,11 +150,20 @@ ScrobbleService::scrobblingOn() const
 void
 ScrobbleService::scrobbleSettingsChanged()
 {
+    if ( m_watch )
+    {
+        ScrobblePoint timeout( ( m_currentTrack.duration() * unicorn::UserSettings().scrobblePoint() ) / 100.0 );
+        timeout.setEnforceScrobbleTimeMax( unicorn::UserSettings().enforceScrobbleTimeMax() );
+        m_watch->setScrobblePoint( timeout );
+    }
+
     bool scrobblingOn = scrobblableTrack( m_currentTrack );
 
+    // Check if the current track now meets the requirements
+    // and scrobble it straight away if so
     if ( m_as
          && m_watch
-         && m_watch->scrobbled()
+         && m_watch->elapsed() >= (m_watch->scrobblePoint() * 1000)
          && m_currentTrack.scrobbleStatus() == Track::Null
          && scrobblingOn )
         m_as->cache( m_currentTrack );
@@ -285,6 +296,7 @@ ScrobbleService::onTrackStarted( const Track& t, const Track& ot )
     m_currentTrack = t;
 
     ScrobblePoint timeout( ( m_currentTrack.duration() * unicorn::UserSettings().scrobblePoint() ) / 100.0 );
+    timeout.setEnforceScrobbleTimeMax( unicorn::UserSettings().enforceScrobbleTimeMax() );
     delete m_watch;
     m_watch = new StopWatch(m_currentTrack.duration(), timeout);
     m_watch->start();

@@ -137,6 +137,9 @@ namespace unicorn
 
         QStringList exclusionDirs() const;
         void setExclusionDirs( const QStringList& exclusionDirs );
+
+        bool enforceScrobbleTimeMax() const;
+        void setEnforceScrobbleTimeMax( bool enforceScrobbleTimeMax );
     };
 }
 

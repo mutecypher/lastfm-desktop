@@ -40,6 +40,12 @@ StopWatch::scrobblePoint() const
     return m_point;
 }
 
+void
+StopWatch::setScrobblePoint( const ScrobblePoint& timeout_in_seconds )
+{
+    m_point = timeout_in_seconds;
+}
+
 uint
 StopWatch::duration() const
 {
@@ -52,11 +58,12 @@ StopWatch::scrobbled() const
     return m_scrobbled;
 }
 
-void StopWatch::onFrameChanged( int /*frame*/ )
+void
+StopWatch::onFrameChanged( int /*frame*/ )
 {
     emit frameChanged( m_timeline->currentTime() );
 
-    if ( !m_scrobbled && static_cast<uint>(m_timeline->currentTime()) >= (m_point * 1000) )
+    if ( !m_scrobbled && elapsed() >= (m_point * 1000) )
     {
         emit scrobble();
         m_scrobbled = true;
