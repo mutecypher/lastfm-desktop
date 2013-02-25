@@ -69,9 +69,10 @@ IpodSettingsWidget::IpodSettingsWidget( QWidget* parent )
     connect( ui->deviceScrobblingEnabled, SIGNAL(clicked(bool)), SLOT(onSettingsChanged()));
 #endif
 
-    ui->note->setText( unicorn::Label::boldLinkStyle( tr( "<p>Please note:</p>"
-                           "<p>Using an iOS scrobbling app, like %1, may result in double scrobbles. Please only enable scrobbling in one of them.</p>"
-                           "<p>iTunes Match synchronises play counts, but not last played times, across multiple devices. This will lead to duplicate scrobbles, at incorrect times. For now, we recommend iTunes Match users disable device scrobbling on desktop devices and scrobble iPhones/iPods using an iOS scrobbling app, like %1.</p>" ).arg( unicorn::Label::anchor( "itmss://itunes.apple.com/gb/app/scrobbler-for-ios/id585235199", "Scrobbler for iOS" ) ), Qt::black ) );
+    ui->note->setText( unicorn::Label::boldLinkStyle( tr( "<p>Using an iOS scrobbling app, like %1, may result in double scrobbles. Please only enable scrobbling in one of them.</p>"
+                                                          "<p>iTunes Match synchronises play counts, but not last played times, across multiple devices. This will lead to duplicate scrobbles, at incorrect times. For now, we recommend iTunes Match users disable device scrobbling on desktop devices and scrobble iPhones/iPods using an iOS scrobbling app, like %1.</p>" ).arg( unicorn::Label::anchor( "itmss://itunes.apple.com/gb/app/scrobbler-for-ios/id585235199", "Scrobbler for iOS" ) ), Qt::black ) );
+    ui->note->adjustSize();
+    ui->noteBox->adjustSize();
 }
 
 void
