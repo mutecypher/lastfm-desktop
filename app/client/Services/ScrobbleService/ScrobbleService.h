@@ -92,7 +92,7 @@ private:
     bool scrobblingOn() const;
 
 protected:
-    State state;
+    State m_state;
 
     QPointer <StopWatch> m_watch;
     QPointer <PlayerMediator> m_mediator;
@@ -100,7 +100,6 @@ protected:
     QPointer <Audioscrobbler> m_as;
     QPointer <DeviceScrobbler> m_deviceScrobbler;
     Track m_currentTrack;
-    Track m_trackToScrobble;
     QString m_currentUsername;
 };
 

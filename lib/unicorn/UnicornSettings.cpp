@@ -305,3 +305,63 @@ unicorn::UserSettings::setType( User::Type type )
 {
     setValue( "Type", type );
 }
+
+double
+unicorn::UserSettings::scrobblePoint() const
+{
+    return value( "scrobblePoint", 50 ).toDouble();
+}
+
+void
+unicorn::UserSettings::setScrobblePoint( double scrobblePoint )
+{
+    setValue( "scrobblePoint", scrobblePoint );
+}
+
+bool
+unicorn::UserSettings::fingerprinting() const
+{
+    return value( "fingerprint", true ).toBool();
+}
+
+void
+unicorn::UserSettings::setFingerprinting( bool fingerprinting )
+{
+    setValue( "fingerprint", fingerprinting );
+}
+
+bool
+unicorn::UserSettings::podcasts() const
+{
+    return value( "podcasts", true ).toBool();
+}
+
+void
+unicorn::UserSettings::setPodcasts( bool podcasts )
+{
+    setValue( "podcasts", podcasts );
+}
+
+bool
+unicorn::UserSettings::scrobblingOn() const
+{
+    return value( "scrobblingOn", true ).toBool();
+}
+
+void
+unicorn::UserSettings::setScrobblingOn( bool scrobblingOn )
+{
+    setValue( "scrobblingOn", scrobblingOn );
+}
+
+QStringList
+unicorn::UserSettings::exclusionDirs() const
+{
+    return value( "ExclusionDirs", QStringList() ).toStringList();
+}
+
+void
+unicorn::UserSettings::setExclusionDirs( const QStringList& exclusionDirs )
+{
+    setValue( "ExclusionDirs", exclusionDirs );
+}

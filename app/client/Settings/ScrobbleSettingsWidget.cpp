@@ -36,29 +36,24 @@
 #include "ui_ScrobbleSettingsWidget.h"
 #include "ScrobbleSettingsWidget.h"
 
-#define SETTING_SCROBBLE_POINT "scrobblePoint"
-#define SETTING_ALLOW_FINGERPRINTING "fingerprint"
-#define SETTING_PODCASTS "podcasts"
-
-
 ScrobbleSettingsWidget::ScrobbleSettingsWidget( QWidget* parent )
     : SettingsWidget( parent ),
       ui( new Ui::ScrobbleSettingsWidget )
 {
     ui->setupUi( this );
 
-    int scrobblePointValue = unicorn::UserSettings().value( SETTING_SCROBBLE_POINT, ui->scrobblePoint->value() ).toInt();
+    double scrobblePointValue = unicorn::UserSettings().scrobblePoint();
     ui->scrobblePoint->setValue( scrobblePointValue );
     ui->percentText->setText( QString::number(scrobblePointValue) );
     ui->percentText->setFixedWidth( ui->percentText->fontMetrics().width( "100" ) );
     m_initialScrobblePercentage = scrobblePointValue;
 
-    ui->allowFingerprint->setChecked( unicorn::UserSettings().value( SETTING_ALLOW_FINGERPRINTING, ui->allowFingerprint->isChecked() ).toBool() );
+    ui->allowFingerprint->setChecked( unicorn::UserSettings().fingerprinting() );
 
-    ui->scrobblingOn->setChecked( unicorn::UserSettings().value( "scrobblingOn", ui->scrobblingOn->isChecked() ).toBool() );
-    ui->podcasts->setChecked( unicorn::UserSettings().value( SETTING_PODCASTS, ui->podcasts->isChecked() ).toBool() );
+    ui->scrobblingOn->setChecked( unicorn::UserSettings().scrobblingOn() );
+    ui->podcasts->setChecked( unicorn::UserSettings().podcasts() );
 
-    QStringList exclusionDirs = unicorn::UserSettings().value( "ExclusionDirs", QStringList() ).toStringList();
+    QStringList exclusionDirs = unicorn::UserSettings().exclusionDirs();
     exclusionDirs.removeAll( "" );
     ui->exclusionDirs->setExclusions( exclusionDirs );
 
@@ -75,7 +70,7 @@ ScrobbleSettingsWidget::ScrobbleSettingsWidget( QWidget* parent )
 
 ScrobbleSettingsWidget::~ScrobbleSettingsWidget()
 {
-    if ( unicorn::UserSettings().value( SETTING_SCROBBLE_POINT, 50 ).toInt() != m_initialScrobblePercentage )
+    if ( unicorn::UserSettings().scrobblePoint() != m_initialScrobblePercentage )
         AnalyticsService::instance().sendEvent(SETTINGS_CATEGORY, SCROBBLING_SETTINGS, "ScrobblePercentageChanged", QString::number( ui->scrobblePoint->value() ) );
 }
 
@@ -94,14 +89,14 @@ ScrobbleSettingsWidget::saveSettings()
 
         aApp->onScrobbleToggled( ui->scrobblingOn->isChecked() );
 
-        unicorn::UserSettings().setValue( SETTING_SCROBBLE_POINT, ui->scrobblePoint->value() );
-        unicorn::UserSettings().setValue( SETTING_ALLOW_FINGERPRINTING, ui->allowFingerprint->isChecked() );
-        unicorn::UserSettings().setValue( SETTING_PODCASTS, ui->podcasts->isChecked() );
+        unicorn::UserSettings().setScrobblePoint( ui->scrobblePoint->value() );
+        unicorn::UserSettings().setFingerprinting( ui->allowFingerprint->isChecked() );
+        unicorn::UserSettings().setPodcasts( ui->podcasts->isChecked() );
 
         QStringList exclusionDirs = ui->exclusionDirs->getExclusions();
         exclusionDirs.removeAll( "" );
         qDebug() << exclusionDirs;
-        unicorn::UserSettings().setValue( "ExclusionDirs", exclusionDirs );
+        unicorn::UserSettings().setExclusionDirs( exclusionDirs );
 
         ScrobbleService::instance().scrobbleSettingsChanged();
 

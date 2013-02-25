@@ -122,6 +122,21 @@ namespace unicorn
 
         User::Type type() const;
         void setType( User::Type type );
+
+        double scrobblePoint() const;
+        void setScrobblePoint( double scrobblePoint );
+
+        bool fingerprinting() const;
+        void setFingerprinting( bool fingerprinting );
+
+        bool podcasts() const;
+        void setPodcasts( bool podcasts );
+
+        bool scrobblingOn() const;
+        void setScrobblingOn( bool scrobblingOn );
+
+        QStringList exclusionDirs() const;
+        void setExclusionDirs( const QStringList& exclusionDirs );
     };
 }
 
