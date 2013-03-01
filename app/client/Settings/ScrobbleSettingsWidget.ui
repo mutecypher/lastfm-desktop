@@ -44,7 +44,7 @@
            <number>100</number>
           </property>
           <property name="singleStep">
-           <number>5</number>
+           <number>1</number>
           </property>
           <property name="tracking">
            <bool>false</bool>
