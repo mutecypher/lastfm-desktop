@@ -216,6 +216,7 @@ void
 ScrobbleService::onFoundScrobbles( QList<lastfm::Track> tracks )
 {
     m_as->cacheBatch( tracks );
+    m_as->submit();
 }
 
 
