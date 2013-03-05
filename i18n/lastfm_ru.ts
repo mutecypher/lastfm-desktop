@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0" language="ru_RU">
+<!DOCTYPE SYSTEM>
+<TS version="2.0" language="ru">
+
 <context>
     <name>AboutDialog</name>
     <message>
@@ -15,11 +16,11 @@
 <context>
     <name>AccessPage</name>
     <message>
-        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&apos;t connected because you closed the browser window or you clicked cancel, please try again.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&#x27;t connected because you closed the browser window or you clicked cancel, please try again.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Нажми кнопку &lt;strong&gt;Да, разрешить доступ&lt;/strong&gt; в браузере, чтобы привязать аккаунт Last.fm к скробблеру Last.fm.&lt;/p&gt;&lt;p&gt;Если не удалось привязать аккаунт из-за того, что ты нажал(а) кнопку &quot;Отмена&quot; или закрыл(а) окно браузера, попробуй еще раз.&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>We&apos;re waiting for you to connect to Last.fm</source>
+        <source>We&#x27;re waiting for you to connect to Last.fm</source>
         <translation>Необходимо подключиться к Last.fm</translation>
     </message>
     <message>
@@ -35,8 +36,8 @@
         <translation>Повторить попытку</translation>
     </message>
     <message>
-        <source>&lt;p&gt;If your web browser didn&apos;t open, copy and paste the link below into your address bar.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <source>&lt;p&gt;If your web browser didn&#x27;t open, copy and paste the link below into your address bar.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Если окно браузера не открылось, скопируй и вставь ссылку, опубликованную ниже, в строку адреса.&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -55,7 +56,7 @@
     </message>
     <message>
         <source>Enable SSL</source>
-        <translation type="unfinished"></translation>
+        <translation>Включить SSL</translation>
     </message>
     <message>
         <source>Cache Size:</source>
@@ -99,7 +100,7 @@
         <translation>&lt;p&gt;Ты можешь получать рекомендации, соответствующие твоему вкусу. Для этого рекомендуем импортировать историю воспроизведения из медиаплеера.&lt;/p&gt;&lt;p&gt;Выбери медиаплеер и нажми &lt;strong&gt;Начать импорт&lt;/strong&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>Your plugins haven&apos;t been installed</source>
+        <source>Your plugins haven&#x27;t been installed</source>
         <translation>Модули не установлены</translation>
     </message>
     <message>
@@ -111,7 +112,7 @@
         <translation>iTunes</translation>
     </message>
     <message>
-        <source>Now let&apos;s import your listening history</source>
+        <source>Now let&#x27;s import your listening history</source>
         <translation>Теперь мы импортируем твою историю воспроизведения</translation>
     </message>
     <message>
@@ -130,7 +131,7 @@
 <context>
     <name>BootstrapProgressPage</name>
     <message>
-        <source>&lt;p&gt;Don&apos;t worry, the upload process shouldn&apos;t take more than a couple of minutes, depending on the size of your music library.&lt;/p&gt;&lt;p&gt;While we&apos;re hard at work adding your listening history to your Last.fm profile, why don&apos;t you check out the main features of the Last.fm Desktop App. Click &lt;strong&gt;Continue&lt;/strong&gt; to take the tour.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Don&#x27;t worry, the upload process shouldn&#x27;t take more than a couple of minutes, depending on the size of your music library.&lt;/p&gt;&lt;p&gt;While we&#x27;re hard at work adding your listening history to your Last.fm profile, why don&#x27;t you check out the main features of the Last.fm Desktop App. Click &lt;strong&gt;Continue&lt;/strong&gt; to take the tour.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Не волнуйся, загрузка займет не более двух минут в зависимости от размера твоей музыкальной библиотеки.&lt;/p&gt;&lt;p&gt;Пока мы работаем над добавлением твоей истории воспроизведения в профиль Last.fm, ты можешь ознакомиться со списком возможностей скробблера Last.fm. Нажми &lt;strong&gt;Продолжить&lt;/strong&gt; для ознакомления.&lt;/p&gt;</translation>
     </message>
     <message>
@@ -150,18 +151,18 @@
     </message>
     <message>
         <source>Please close the following apps to continue.</source>
-        <translation type="obsolete">Чтобы продолжить, закрой следующие приложения</translation>
+        <translation>Чтобы продолжить, закрой следующие приложения</translation>
     </message>
 </context>
 <context>
     <name>DeviceScrobbler</name>
     <message>
         <source>Device scrobbling disabled - incompatible iTunes plugin - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Скробллинг с устройства отключен - несовместимый модуль iTunes - %1</translation>
     </message>
     <message>
         <source>please update</source>
-        <translation type="unfinished"></translation>
+        <translation>требуется обновление</translation>
     </message>
     <message>
         <source>Scrobble iPod</source>
@@ -256,6 +257,7 @@
             <numerusform>%n композиция сохранена в локальном кэше</numerusform>
             <numerusform>%n композиции сохранены в локальном кэше</numerusform>
             <numerusform>%n композиций сохранены в локальном кэше</numerusform>
+            <numerusform>%n композиции сохранены в локальном кэше</numerusform>
         </translation>
     </message>
 </context>
@@ -285,7 +287,7 @@
         <translation>Найти друзей на Last.fm</translation>
     </message>
     <message>
-        <source>&lt;h3&gt;You haven&apos;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;/p&gt;</source>
+        <source>&lt;h3&gt;You haven&#x27;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;/p&gt;</source>
         <translation>&lt;h3&gt;У тебя пока нет друзей на Last.fm.&lt;/h3&gt;&lt;p&gt;Используй Friend Finder, чтобы найти своих друзей по Facebook и почтовые контакты на Last.fm.&lt;p /&gt;&lt;/p&gt;</translation>
     </message>
     <message>
@@ -304,7 +306,7 @@
 <context>
     <name>FriendWidget</name>
     <message>
-        <source>%1&apos;s Library Radio</source>
+        <source>%1&#x27;s Library Radio</source>
         <translation>Радио библиотеки %1</translation>
     </message>
     <message>
@@ -351,7 +353,7 @@
     </message>
     <message>
         <source>Show:</source>
-        <translation type="obsolete">Показать:</translation>
+        <translation>Показать:</translation>
     </message>
     <message>
         <source>Launch application with media players</source>
@@ -359,7 +361,7 @@
     </message>
     <message>
         <source>Show dock icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Показать значок на панели Dock</translation>
     </message>
     <message>
         <source>Show desktop notifications</source>
@@ -367,7 +369,7 @@
     </message>
     <message>
         <source>Remember last radio station and tune in on start up</source>
-        <translation type="obsolete">Запоминать последнюю станцию и включать ее при запуске</translation>
+        <translation>Запоминать последнюю станцию и включать ее при запуске</translation>
     </message>
     <message>
         <source>Send crash reports to Last.fm</source>
@@ -379,15 +381,15 @@
     </message>
     <message>
         <source>Menu bar and dock icons</source>
-        <translation type="obsolete">Значки строки меню и панели Dock</translation>
+        <translation>Значки строки меню и панели Dock</translation>
     </message>
     <message>
         <source>Only dock icon (hide menu bar icon)</source>
-        <translation type="obsolete">Только значок панели Dock (скрыть значок панели меню)</translation>
+        <translation>Только значок панели Dock (скрыть значок панели меню)</translation>
     </message>
     <message>
         <source>Only menu bar icon (hide dock icon)</source>
-        <translation type="obsolete">Только значок панели меню (скрыть значок панели Dock)</translation>
+        <translation>Только значок панели меню (скрыть значок панели Dock)</translation>
     </message>
     <message>
         <source>Enable media keys</source>
@@ -407,18 +409,18 @@
     </message>
     <message>
         <source>Update to beta versions - Warning: only for the brave!</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновление до бета-версий (только для храбрых!)</translation>
     </message>
 </context>
 <context>
     <name>IPluginInfo</name>
     <message>
-        <source>The %1 plugin hasn&apos;t been installed</source>
-        <translation type="obsolete">Модуль %1 не установлен</translation>
+        <source>The %1 plugin hasn&#x27;t been installed</source>
+        <translation>Модуль %1 не установлен</translation>
     </message>
     <message>
-        <source>You didn&apos;t close %1 so its plugin hasn&apos;t been installed.</source>
-        <translation type="obsolete">Для установки модуля необходимо закрыть приложение %1.</translation>
+        <source>You didn&#x27;t close %1 so its plugin hasn&#x27;t been installed.</source>
+        <translation>Для установки модуля необходимо закрыть приложение %1.</translation>
     </message>
 </context>
 <context>
@@ -432,7 +434,8 @@
     <name>IpodSettingsWidget</name>
     <message>
         <source>&lt;p&gt;Using an iOS scrobbling app, like %1, may result in double scrobbles. Please only enable scrobbling in one of them.&lt;/p&gt;&lt;p&gt;iTunes Match synchronises play counts, but not last played times, across multiple devices. This will lead to duplicate scrobbles, at incorrect times. For now, we recommend iTunes Match users disable device scrobbling on desktop devices and scrobble iPhones/iPods using an iOS scrobbling app, like %1.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Использование приложения для скробблинга под iOS, например %1, может привести к дублированию скробблинга. Скробблинг следует активировать только в одном приложении.&lt;/p&gt;&lt;p&gt;iTunes Match синхронизирует количество воспроизведений, но не время последнего воспроизведения. Это приведет к появлению повторяющихся записей и сохранению  ошибочных временных меток. В настоящее время мы рекомендуем пользователям iTunes Match отключить скробблинг на компьютерах и использовать для скробблинга на iPhone/iPod скробблер для iOS, например %1.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Использование приложения для скробблинга под iOS, например %1, может привести к дублированию скробблинга. Скробблинг следует активировать только в одном приложении.&lt;/p&gt;
+&lt;p&gt;iTunes Match синхронизирует между устройствами информацию о количестве воспроизведений, но не о времени последнего воспроизведения. Это приводит к появлению повторяющихся записей и сохранению ошибочных временных меток. В настоящее время мы рекомендуем пользователям iTunes Match отключить скробблинг на компьютерах и использовать для скробблинга на iPhone/iPod скробблер для iOS, например %1.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Setting not changed</source>
@@ -452,7 +455,7 @@
     </message>
     <message>
         <source>Please note</source>
-        <translation>Обрати внимание!</translation>
+        <translation>Обрати внимание</translation>
     </message>
 </context>
 <context>
@@ -487,11 +490,11 @@
 <context>
     <name>LoginPage</name>
     <message>
-        <source>&lt;p&gt;Already a Last.fm user? Connect your account with the Last.fm Desktop App and it&apos;ll update your profile with the music you&apos;re listening to.&lt;/p&gt;&lt;p&gt;If you don&apos;t have an account you can sign up now for free now.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Already a Last.fm user? Connect your account with the Last.fm Desktop App and it&#x27;ll update your profile with the music you&#x27;re listening to.&lt;/p&gt;&lt;p&gt;If you don&#x27;t have an account you can sign up now for free now.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Ты уже являешься пользователем Last.fm? Подключи свой аккаунт к скробблеру Last.fm для того, чтобы сохранить в твоем профиле музыку, которую ты слушаешь.&lt;/p&gt;&lt;p&gt;Если у тебя нет аккаунта, можешь зарегистрироваться прямо сейчас. Это бесплатно!&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>Let&apos;s get started by connecting your Last.fm account</source>
+        <source>Let&#x27;s get started by connecting your Last.fm account</source>
         <translation>Давай начнем с подключения твоего аккаунта Last.fm</translation>
     </message>
     <message>
@@ -515,38 +518,42 @@
     </message>
     <message numerus="yes">
         <source>Plugin install error</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>В ходе установки модуля возникла ошибка</numerusform>
+            <numerusform>В ходе установки модулей возникла ошибка</numerusform>
+            <numerusform>В ходе установки модулей возникла ошибка</numerusform>
+            <numerusform>В ходе установки модулей возникла ошибка</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>&lt;p&gt;There was an error updating your plugin(s).&lt;/p&gt;&lt;p&gt;Please try again later.&lt;/p&gt;</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>&lt;p&gt;При обновлении модуля возникла ошибка.&lt;/p&gt;&lt;p&gt;Повтори попытку позже.&lt;/p&gt;</numerusform>
+            <numerusform>&lt;p&gt;При обновлении модулей возникла ошибка.&lt;/p&gt;&lt;p&gt;Повтори попытку позже.&lt;/p&gt;</numerusform>
+            <numerusform>&lt;p&gt;При обновлении модулей возникла ошибка.&lt;/p&gt;&lt;p&gt;Повтори попытку позже.&lt;/p&gt;</numerusform>
+            <numerusform>&lt;p&gt;При обновлении модулей возникла ошибка.&lt;/p&gt;&lt;p&gt;Повтори попытку позже.&lt;/p&gt;</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Plugin(s) installed!</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Модуль установлен!</numerusform>
+            <numerusform>Модули установлены!</numerusform>
+            <numerusform>Модули установлены!</numerusform>
+            <numerusform>Модули установлены!</numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <source>&lt;p&gt;Your plugin(s) ha(s|ve) been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to scrobble with your media player(s)&lt;/p&gt;</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <source>&lt;p&gt;Your plugin(s) ha(s|ve) been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to scrobble with your media player(s)&lt;/p&gt;</source>
+        <translation>
+            <numerusform>&lt;p&gt;Модуль установлен.&lt;/p&gt;&lt;p&gt;Проигрыватель готов для скробблинга&lt;/p&gt;</numerusform>
+            <numerusform>&lt;p&gt;Модули установлены.&lt;/p&gt;&lt;p&gt;Проигрыватель готов для скробблинга&lt;/p&gt;</numerusform>
+            <numerusform>&lt;p&gt;Подключаемые модули установлены.&lt;/p&gt;&lt;p&gt;Все готово для скробблинга в вашем плеере&lt;/p&gt;</numerusform>
+            <numerusform>&lt;p&gt;Модули установлены.&lt;/p&gt;&lt;p&gt;Проигрыватель готов для скробблинга&lt;/p&gt;</numerusform>
         </translation>
     </message>
     <message>
-        <source>Your plugins haven&apos;t been installed</source>
+        <source>Your plugins haven&#x27;t been installed</source>
         <translation>Модули не установлены</translation>
     </message>
     <message>
@@ -667,6 +674,7 @@
             <numerusform>&lt;a href=&quot;tracks&quot;&gt;%n композиция&lt;/a&gt; заскробблена с этого устройства</numerusform>
             <numerusform>&lt;a href=&quot;tracks&quot;&gt;%n композиции&lt;/a&gt; заскробблены с этого устройства</numerusform>
             <numerusform>&lt;a href=&quot;tracks&quot;&gt;%n композиций&lt;/a&gt; заскробблены с этого устройства</numerusform>
+            <numerusform>&lt;a href=&quot;tracks&quot;&gt;%n композиции&lt;/a&gt; заскробблены с этого устройства</numerusform>
         </translation>
     </message>
 </context>
@@ -714,6 +722,7 @@
             <numerusform>воспроизведение</numerusform>
             <numerusform>воспроизведения</numerusform>
             <numerusform>воспроизведений</numerusform>
+            <numerusform>воспроизведения</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -722,6 +731,7 @@
             <numerusform>воспроизведение в твоей библиотеке</numerusform>
             <numerusform>воспроизведения в твоей библиотеке</numerusform>
             <numerusform>воспроизведений в твоей библиотеке</numerusform>
+            <numerusform>воспроизведения в твоей библиотеке</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -730,6 +740,7 @@
             <numerusform>слушатель</numerusform>
             <numerusform>слушателя</numerusform>
             <numerusform>слушателей</numerusform>
+            <numerusform>слушателя</numerusform>
         </translation>
     </message>
     <message>
@@ -789,11 +800,11 @@
         <translation>Рекомендуется, так как ты слушаешь %1, %2, %3, %4 и %5.</translation>
     </message>
     <message>
-        <source>From %1&apos;s library.</source>
+        <source>From %1&#x27;s library.</source>
         <translation>Из библиотеки %1.</translation>
     </message>
     <message>
-        <source>From %1 and %2&apos;s libraries.</source>
+        <source>From %1 and %2&#x27;s libraries.</source>
         <translation>Из библиотек %1 и %2.</translation>
     </message>
     <message numerus="yes">
@@ -802,30 +813,31 @@
             <numerusform>%L1 раз</numerusform>
             <numerusform>%L1 раза</numerusform>
             <numerusform>%L1 раз</numerusform>
+            <numerusform>%L1 раз</numerusform>
         </translation>
     </message>
     <message>
-        <source>From %1, %2, and %3&apos;s libraries.</source>
+        <source>From %1, %2, and %3&#x27;s libraries.</source>
         <translation>Из библиотек %1, %2 и %3.</translation>
     </message>
     <message>
-        <source>You&apos;ve listened to %1 %2 and %3 %4.</source>
+        <source>You&#x27;ve listened to %1 %2 and %3 %4.</source>
         <translation>Ты слушал(а) %1 %2 и %3 %4.</translation>
     </message>
     <message>
-        <source>From %1, %2, %3, and %4&apos;s libraries.</source>
-        <translation>Из библиотек %1, %2, %3 и %4&apos;.</translation>
+        <source>From %1, %2, %3, and %4&#x27;s libraries.</source>
+        <translation>Из библиотек %1, %2, %3 и %4&#x27;.</translation>
     </message>
     <message>
-        <source>You&apos;ve listened to %1 %2, but not this track.</source>
+        <source>You&#x27;ve listened to %1 %2, but not this track.</source>
         <translation>Ты слушал(а) %1 %2, но не эту композицию</translation>
     </message>
     <message>
-        <source>From %1, %2, %3, %4, and %5&apos;s libraries.</source>
+        <source>From %1, %2, %3, %4, and %5&#x27;s libraries.</source>
         <translation>Из библиотек %1, %2, %3, %4 и %5.</translation>
     </message>
     <message>
-        <source>This is the first time you&apos;ve listened to %1.</source>
+        <source>This is the first time you&#x27;ve listened to %1.</source>
         <translation>Это твое первое прослушивание %1.</translation>
     </message>
 </context>
@@ -946,6 +958,7 @@
             <numerusform>%L1 воспроизведение</numerusform>
             <numerusform>%L1 воспроизведения</numerusform>
             <numerusform>%L1 воспроизведений</numerusform>
+            <numerusform>%L1 воспроизведения</numerusform>
         </translation>
     </message>
 </context>
@@ -968,7 +981,7 @@
         <translation>Отменить импорт?</translation>
     </message>
     <message>
-        <source>Last.fm couldn&apos;t find any played tracks in your media library.
+        <source>Last.fm couldn&#x27;t find any played tracks in your media library.
 
  Click OK to continue.</source>
         <translation>Last.fm не удалось найти композиции в твоей библиотеке.
@@ -1002,7 +1015,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>Не удалось импортировать библиотеку</translation>
     </message>
     <message>
-        <source>Sorry, Last.fm was unable to import your listening history. This is probably because you&apos;ve already scrobbled too many tracks. Listening history can only be imported to brand new profiles.</source>
+        <source>Sorry, Last.fm was unable to import your listening history. This is probably because you&#x27;ve already scrobbled too many tracks. Listening history can only be imported to brand new profiles.</source>
         <translation>Не удалось импортировать журнал прослушанной музыки. Вероятно, в твоем профиле уже заскробблено некоторое количество композиций. Журнал прослушиваний можно импортировать только в новые профили.</translation>
     </message>
 </context>
@@ -1025,7 +1038,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>&lt;&lt; Назад</translation>
     </message>
     <message>
-        <source>Your plugins haven&apos;t been installed</source>
+        <source>Your plugins haven&#x27;t been installed</source>
         <translation>Модули не установлены</translation>
     </message>
     <message>
@@ -1103,6 +1116,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
             <numerusform>%L1 воспроизведение</numerusform>
             <numerusform>%L1 воспроизведения</numerusform>
             <numerusform>%L1 воспроизведений</numerusform>
+            <numerusform>%L1 воспроизведения</numerusform>
         </translation>
     </message>
 </context>
@@ -1122,6 +1136,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
             <numerusform>заскроббленная композиция</numerusform>
             <numerusform>заскроббленные композиции</numerusform>
             <numerusform>заскроббленных композиций</numerusform>
+            <numerusform>заскроббленные композиции</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -1130,6 +1145,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
             <numerusform>любимая композиция</numerusform>
             <numerusform>любимые композиции</numerusform>
             <numerusform>любимых композиций</numerusform>
+            <numerusform>любимые композиции</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -1138,6 +1154,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
             <numerusform>%L1 исполнитель</numerusform>
             <numerusform>%L1 исполнителя</numerusform>
             <numerusform>%L1 исполнителей</numerusform>
+            <numerusform>%L1 исполнителей</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -1145,6 +1162,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>
             <numerusform>%L1 композиция</numerusform>
             <numerusform>%L1 композиции</numerusform>
+            <numerusform>%L1 композиций</numerusform>
             <numerusform>%L1 композиций</numerusform>
         </translation>
     </message>
@@ -1158,6 +1176,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
             <numerusform>Композиция с %1</numerusform>
             <numerusform>Композиции с %1</numerusform>
             <numerusform>Композиций с %1</numerusform>
+            <numerusform>Композиций %1</numerusform>
         </translation>
     </message>
 </context>
@@ -1169,7 +1188,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
     </message>
     <message>
         <source>Not scrobbling - excluded directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Скробблинг не выполняется, каталог исключен</translation>
     </message>
     <message>
         <source>Not scrobbling - not a music video</source>
@@ -1188,7 +1207,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>Скробблинг не выполняется — слишком короткая композиция</translation>
     </message>
     <message>
-        <source>Enable scrobbling in Spotify&apos;s preferences!</source>
+        <source>Enable scrobbling in Spotify&#x27;s preferences!</source>
         <translation>Включи скробблинг в настройках Spotify!</translation>
     </message>
 </context>
@@ -1219,19 +1238,19 @@ Your profile will be updated with the new tracks in a few minutes.</source>
     </message>
     <message>
         <source>Auto-detect</source>
-        <translation type="obsolete">Автоматическое определение</translation>
+        <translation>Автоматическое определение</translation>
     </message>
     <message>
         <source>No-proxy</source>
-        <translation type="obsolete">Нет прокси-сервера</translation>
+        <translation>Нет прокси-сервера</translation>
     </message>
     <message>
         <source>HTTP</source>
-        <translation type="obsolete">HTTP</translation>
+        <translation>HTTP</translation>
     </message>
     <message>
         <source>SOCKS5</source>
-        <translation type="obsolete">SOCKS5</translation>
+        <translation>SOCKS5</translation>
     </message>
 </context>
 <context>
@@ -1334,7 +1353,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>Слушать бесплатно на www.lastfm.ru</translation>
     </message>
     <message>
-        <source>My Friends&apos; Radio</source>
+        <source>My Friends&#x27; Radio</source>
         <translation>Радио моих друзей</translation>
     </message>
     <message>
@@ -1369,7 +1388,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>Скробблинг с устройства</translation>
     </message>
     <message>
-        <source>It looks like you&apos;ve played these tracks. Would you like to scrobble them?</source>
+        <source>It looks like you&#x27;ve played these tracks. Would you like to scrobble them?</source>
         <translation>Ты слушал(а) эти композиции. Хочешь их заскробблить?</translation>
     </message>
     <message>
@@ -1386,6 +1405,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
             <numerusform>%n композиция заскробблена с устройства</numerusform>
             <numerusform>%n композиции заскробблено с устройства</numerusform>
             <numerusform>%n композиций заскробблено с устройства</numerusform>
+            <numerusform>%n композиции заскробблено с устройства</numerusform>
         </translation>
     </message>
 </context>
@@ -1448,7 +1468,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
     </message>
     <message>
         <source>...or at 4 minutes (whichever comes first)</source>
-        <translation type="unfinished"></translation>
+        <translation>...или через 4 минуты (в зависимости от того, какое событие наступит раньше)</translation>
     </message>
     <message>
         <source>Scrobble podcasts</source>
@@ -1460,7 +1480,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
     </message>
     <message>
         <source>Selected directories will not be scrobbled</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось выполнить скробблинг для выбранных каталогов</translation>
     </message>
 </context>
 <context>
@@ -1536,7 +1556,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
 <context>
     <name>ScrobblesWidget</name>
     <message>
-        <source>You haven&apos;t scrobbled any music to Last.fm yet.</source>
+        <source>You haven&#x27;t scrobbled any music to Last.fm yet.</source>
         <translation>Ты еще не заскробблил(а) музыку на Last.fm</translation>
     </message>
     <message>
@@ -1702,11 +1722,11 @@ or choose from below</source>
 <context>
     <name>TourFinishPage</name>
     <message>
-        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&apos;ve also finished importing your listening history and have added it to your Last.fm profile.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <source>&lt;p&gt;Now you&#x27;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&#x27;ve also finished importing your listening history and have added it to your Last.fm profile.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
         <translation>&lt;p&gt;Все готово, можешь приступать! Просто нажми кнопку &lt;strong&gt;Готово&lt;/strong&gt; и начинай изучать возможности приложения.&lt;/p&gt;&lt;p&gt;Мы также завершили импорт твоей истории воспроизведения и добавили ее в твой профиль Last.fm.&lt;/p&gt;&lt;p&gt;Благодарим за установку скробблера Last.fm, надеемся он тебе понравится!&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>That&apos;s it, you&apos;re good to go!</source>
+        <source>That&#x27;s it, you&#x27;re good to go!</source>
         <translation>Все готово, можешь приступать!</translation>
     </message>
     <message>
@@ -1744,7 +1764,7 @@ or choose from below</source>
 <context>
     <name>TourMetadataPage</name>
     <message>
-        <source>&lt;p&gt;Find out more about the music you&apos;re listening to, including biographies, listening stats, photos and similar artists, as well as the tags listeners use to describe them.&lt;/p&gt;&lt;p&gt;Check out the &lt;strong&gt;Now Playing&lt;/strong&gt; tab, or simply click on any track in your &lt;strong&gt;Scrobbles&lt;/strong&gt; tab to learn more.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Find out more about the music you&#x27;re listening to, including biographies, listening stats, photos and similar artists, as well as the tags listeners use to describe them.&lt;/p&gt;&lt;p&gt;Check out the &lt;strong&gt;Now Playing&lt;/strong&gt; tab, or simply click on any track in your &lt;strong&gt;Scrobbles&lt;/strong&gt; tab to learn more.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Узнай больше о музыке, которую слушаешь: в твоем распоряжении  биографии, статистика воспроизведения, фотографии, рекомендации похожих исполнителей, а также теги, добавленные слушателями.&lt;/p&gt;&lt;p&gt;Открой вкладку &lt;strong&gt;Ты слушаешь&lt;/strong&gt; или щелкни любую композицию на вкладке &lt;strong&gt;Композиции&lt;/strong&gt;, чтобы узнать больше.&lt;/p&gt;</translation>
     </message>
     <message>
@@ -1802,7 +1822,7 @@ or choose from below</source>
 <context>
     <name>TourScrobblesPage</name>
     <message>
-        <source>&lt;p&gt;The desktop client runs in the background, quietly updating your Last.fm profile with the music you&apos;re playing, which you can use to get music recommendations, gig tips and more. &lt;/p&gt;&lt;p&gt;You can also use the Last.fm Desktop App to find out more about the artist you&apos;re listening to, and to play personalised radio.&lt;/p&gt;</source>
+        <source>&lt;p&gt;The desktop client runs in the background, quietly updating your Last.fm profile with the music you&#x27;re playing, which you can use to get music recommendations, gig tips and more. &lt;/p&gt;&lt;p&gt;You can also use the Last.fm Desktop App to find out more about the artist you&#x27;re listening to, and to play personalised radio.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Скробблер работает в фоновом режиме и обновляет твой профиль Last.fm музыкой, которую ты слушаешь. В дальнейшем эта информация используется для составления рекомендаций по музыке и концертам и др. &lt;/p&gt;&lt;p&gt;Кроме того, скробблер Last.fm можно использовать для поиска информации об исполнителе и прослушивания персональных радиостанций.&lt;/p&gt;</translation>
     </message>
     <message>
@@ -1929,11 +1949,11 @@ or choose from below</source>
     </message>
     <message>
         <source>This user has already been added.</source>
-        <translation type="unfinished"></translation>
+        <translation>Пользователь уже добавлен.</translation>
     </message>
     <message>
         <source>To add a new account you must connect it to the Last.fm user permissions.</source>
-        <translation type="obsolete">Чтобы добавить аккаунт, необходимо подключить его в разрешениях пользователя Last.fm</translation>
+        <translation>Чтобы добавить аккаунт, необходимо подключить его в разрешениях пользователя Last.fm</translation>
     </message>
     <message>
         <source>Removing %1</source>
@@ -2021,11 +2041,12 @@ or choose from below</source>
         <translation>с альбома %1</translation>
     </message>
     <message numerus="yes">
-        <source>You&apos;ve reached this station&apos;s skip limit. Skip again in %n minute(s).</source>
+        <source>You&#x27;ve reached this station&#x27;s skip limit. Skip again in %n minute(s).</source>
         <translation>
             <numerusform>Достигнуто ограничение станции по числу переходов между композициями. Повтори попытку через %n минуту.</numerusform>
             <numerusform>Достигнуто ограничение станции по числу переходов между композициями. Повтори попытку через %n минуты.</numerusform>
             <numerusform>Достигнуто ограничение станции по числу переходов между композициями. Повтори попытку через %n минут.</numerusform>
+            <numerusform>Достигнуто ограничение станции по числу переходов между композициями. Повтори попытку через %n минуты.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -2034,15 +2055,16 @@ or choose from below</source>
             <numerusform>Для этой станции доступен %n переход между композициями.</numerusform>
             <numerusform>Для этой станции доступно %n перехода между композициями.</numerusform>
             <numerusform>Для этой станции доступно %n переходов между композициями.</numerusform>
+            <numerusform>Для этой станции доступно %n перехода между композициями.</numerusform>
         </translation>
     </message>
     <message>
         <source>Authentication Required</source>
-        <translation type="unfinished"></translation>
+        <translation>Требуется аутентификация</translation>
     </message>
     <message>
         <source>&lt;p&gt;The user account &lt;strong&gt;%1&lt;/strong&gt; is no longer authenticated with Last.fm.&lt;/p&gt;&lt;p&gt;Click OK to start the setup process and reauthenticate this account.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Аккаунт &lt;strong&gt;%1&lt;/strong&gt; больше не аутентифицирован на Last.fm.&lt;/p&gt;&lt;p&gt;Нажми кнопку OK, чтобы запустить процесс установки и заново аутентифицировать аккаунт.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Are you sure you want to quit %1?</source>
@@ -2068,73 +2090,73 @@ or choose from below</source>
     <name>unicorn::CloseAppsDialog</name>
     <message>
         <source>Please close the following apps to continue.</source>
-        <translation type="unfinished">Чтобы продолжить, закрой следующие приложения</translation>
+        <translation>Чтобы продолжить, закрой следующие приложения.</translation>
     </message>
 </context>
 <context>
     <name>unicorn::IPluginInfo</name>
     <message>
         <source>Plugin install error</source>
-        <translation type="unfinished"></translation>
+        <translation>В ходе установки модуля возникла ошибка</translation>
     </message>
     <message>
         <source>&lt;p&gt;There was an error updating your plugin.&lt;/p&gt;&lt;p&gt;Please try again later.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;В ходе установки модуля возникла ошибка.&lt;/p&gt;&lt;p&gt;Повтори попытку позже.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Plugin installed!</source>
-        <translation type="unfinished"></translation>
+        <translation>Модуль установлен.</translation>
     </message>
     <message>
-        <source>&lt;p&gt;The %1 plugin has been installed.&lt;p&gt;&lt;p&gt;You&apos;re now ready to scrobble with %1.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <source>&lt;p&gt;The %1 plugin has been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to scrobble with %1.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Модуль %1 установлен.&lt;/p&gt;&lt;p&gt;Все готово для скробблинга в %1.&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>The %1 plugin hasn&apos;t been installed</source>
-        <translation type="unfinished">Модуль %1 не установлен</translation>
+        <source>The %1 plugin hasn&#x27;t been installed</source>
+        <translation>Модуль %1 не установлен</translation>
     </message>
     <message>
-        <source>You didn&apos;t close %1 so its plugin hasn&apos;t been installed.</source>
-        <translation type="unfinished">Для установки модуля необходимо закрыть приложение %1.</translation>
+        <source>You didn&#x27;t close %1 so its plugin hasn&#x27;t been installed.</source>
+        <translation>Ты не закрыл(а) приложение %1, поэтому модуль для него не был установлен.</translation>
     </message>
 </context>
 <context>
     <name>unicorn::ITunesPluginInstaller</name>
     <message>
         <source>Close iTunes for plugin update!</source>
-        <translation type="unfinished"></translation>
+        <translation>Закрой iTunes для обновления модуля!</translation>
     </message>
     <message>
         <source>&lt;p&gt;Your iTunes plugin (%2) is different to the one shipped with this version of the app (%1).&lt;/p&gt;&lt;p&gt;Please close iTunes now to update.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Версия установленного модуля iTunes (%2) отличается от версии, которая поставляется с этой версией приложения (%1).&lt;/p&gt;&lt;p&gt;Закрой iTunes для обновления.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>not installed</source>
-        <translation type="unfinished"></translation>
+        <translation>не установлено</translation>
     </message>
     <message>
-        <source>Your plugin hasn&apos;t been installed</source>
-        <translation type="unfinished"></translation>
+        <source>Your plugin hasn&#x27;t been installed</source>
+        <translation>Модуль не установлен</translation>
     </message>
     <message>
         <source>There was an error while removing the old plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Ошибка удаления старого модуля</translation>
     </message>
     <message>
         <source>iTunes Plugin installed!</source>
-        <translation type="unfinished"></translation>
+        <translation>Модуль iTunes не установлен!</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Your iTunes plugin has been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to device scrobble.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <source>&lt;p&gt;Your iTunes plugin has been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to device scrobble.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Установка модуля iTunes завершена.&lt;/p&gt;&lt;p&gt;Все готово для скробблинга с этого устройства.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>There was an error while copying the new plugin into place</source>
-        <translation type="unfinished"></translation>
+        <translation>Ошибка копирования нового модуля</translation>
     </message>
     <message>
-        <source>You didn&apos;t close iTunes</source>
-        <translation type="unfinished"></translation>
+        <source>You didn&#x27;t close iTunes</source>
+        <translation>Ты не закрыл(а) iTunes</translation>
     </message>
 </context>
 <context>
@@ -2149,11 +2171,13 @@ or choose from below</source>
             <numerusform>%n мин. назад</numerusform>
             <numerusform>%n мин. назад</numerusform>
             <numerusform>%n мин. назад</numerusform>
+            <numerusform>%n мин. назад</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s) ago</source>
         <translation>
+            <numerusform>%n ч. назад</numerusform>
             <numerusform>%n ч. назад</numerusform>
             <numerusform>%n ч. назад</numerusform>
             <numerusform>%n ч. назад</numerusform>
@@ -2164,39 +2188,39 @@ or choose from below</source>
     <name>unicorn::LoginProcess</name>
     <message>
         <source>Login Failed</source>
-        <translation type="obsolete">Ошибка входа в систему</translation>
+        <translation>Ошибка входа в систему</translation>
     </message>
     <message>
-        <source>Sorry, we don&apos;t recognise that username, or you typed the password wrongly.</source>
-        <translation type="obsolete">Имя пользователя не опознано или пароль введен неверно.</translation>
+        <source>Sorry, we don&#x27;t recognise that username, or you typed the password wrongly.</source>
+        <translation>Имя пользователя не опознано или пароль введен неверно.</translation>
     </message>
     <message>
         <source>Last.fm Unavailable</source>
-        <translation type="obsolete">Службы Last.fm недоступны</translation>
+        <translation>Службы Last.fm недоступны</translation>
     </message>
     <message>
         <source>There was a problem communicating with the Last.fm services. Please try again later.</source>
-        <translation type="obsolete">Ошибка соединения со службами Last.fm. Повтори попытку позже.</translation>
+        <translation>Ошибка соединения со службами Last.fm. Повтори попытку позже.</translation>
     </message>
     <message>
         <source>Cannot connect to Last.fm</source>
-        <translation type="obsolete">Не удается подключиться к Last.fm.</translation>
+        <translation>Не удается подключиться к Last.fm.</translation>
     </message>
     <message>
         <source>Last.fm cannot be reached. Please check your firewall or proxy settings.</source>
-        <translation type="obsolete">Службы Last.fm недоступны. Проверь параметры прокси-сервера или брандмауэра.</translation>
+        <translation>Службы Last.fm недоступны. Проверь параметры прокси-сервера или брандмауэра.</translation>
     </message>
     <message>
         <source>There was a network error: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Ошибка сети: %1</translation>
     </message>
     <message>
         <source>You have not authorised this application</source>
-        <translation type="unfinished"></translation>
+        <translation>Ты не авторизовал(а) это приложение</translation>
     </message>
     <message>
         <source>Authentication Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Ошибка аутентификации</translation>
     </message>
 </context>
 <context>
@@ -2209,7 +2233,7 @@ or choose from below</source>
 <context>
     <name>unicorn::MessageDialog</name>
     <message>
-        <source>Don&apos;t ask this again</source>
+        <source>Don&#x27;t ask this again</source>
         <translation>Больше не спрашивать</translation>
     </message>
 </context>
@@ -2217,19 +2241,18 @@ or choose from below</source>
     <name>unicorn::ProxyWidget</name>
     <message>
         <source>Auto-detect</source>
-        <translation type="unfinished">Автоматическое определение</translation>
+        <translation>Определять автоматически</translation>
     </message>
     <message>
         <source>No-proxy</source>
-        <translation type="unfinished">Нет прокси-сервера</translation>
+        <translation>Без прокси-сервера</translation>
     </message>
     <message>
         <source>HTTP</source>
-        <translation type="unfinished">HTTP</translation>
+        <translation>HTTP</translation>
     </message>
     <message>
         <source>SOCKS5</source>
-        <translation type="unfinished">SOCKS5</translation>
+        <translation>SOCKS5</translation>
     </message>
-</context>
-</TS>
+</context></TS>
