@@ -497,6 +497,7 @@ Application::onTrackStarted( const lastfm::Track& track, const Track& oldTrack )
         }
     }
 
+#ifdef FFMPEG_FINGERPRINTING
     if ( unicorn::UserSettings().value( "fingerprint", true ).toBool()
 #if QT_VERSION >= 0x040800
          && track.url().isLocalFile()
@@ -513,6 +514,7 @@ Application::onTrackStarted( const lastfm::Track& track, const Track& oldTrack )
             fingerprinter->start();
         }
     }
+#endif
 
     m_tray->setToolTip( track.toString() );
 
