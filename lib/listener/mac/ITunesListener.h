@@ -29,9 +29,6 @@
 class ITunesListener : public QThread
 {
     Q_OBJECT
-
-    virtual void run();    
-    
 public:
     ITunesListener( QObject* parent );
 
@@ -41,6 +38,8 @@ signals:
     void newConnection( class PlayerConnection* );
     
 private:
+    void run();
+
     static bool iTunesIsPlaying();
 
     /** iTunes notification center callback */
@@ -51,8 +50,11 @@ private:
                           CFDictionaryRef );
 
     void callback( CFDictionaryRef );
+
+private slots:
     void setupCurrentTrack();
 
+private:
     State m_state;
     QString m_previousPid;
     struct ITunesConnection* m_connection;

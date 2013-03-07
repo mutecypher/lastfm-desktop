@@ -46,10 +46,9 @@ struct ITunesConnection : PlayerConnection
 
 
 ITunesListener::ITunesListener( QObject* parent )
-              : m_connection( 0 )
+              :QThread( parent ), m_connection( 0 )
 {
     qRegisterMetaType<Track>("Track");
-    connect( parent, SIGNAL(destroyed()), SLOT(deleteLater()) ); //FIXME safe?
 
     m_currentTrackScript = AppleScript("tell application \"iTunes\" to tell current track\n"
                                           "try\n"
@@ -68,7 +67,7 @@ ITunesListener::run()
 {
     emit newConnection( m_connection = new ITunesConnection );
     
-    setupCurrentTrack();
+
 
     CFNotificationCenterAddObserver( CFNotificationCenterGetDistributedCenter(), 
                                     this,
@@ -78,7 +77,7 @@ ITunesListener::run()
                                     CFNotificationSuspensionBehaviorDeliverImmediately );
 
     
-
+    QTimer::singleShot( 0, this, SLOT(setupCurrentTrack()) );
     exec();
 
 	delete m_connection;
