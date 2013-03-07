@@ -38,6 +38,7 @@ namespace unicorn
 	
     public:
         CoreApplication( const QString& id, int& argc, char** argv );
+        CoreApplication( int& argc, char** argv );
 	
     	static QFileInfo log()
     	{

@@ -18,20 +18,27 @@
    along with liblastfm.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QThread>
+#include <QObject>
 
 #include <lastfm/Track.h>
+#include <lastfm/Fingerprint.h>
 
-class Fingerprinter : public QThread
+namespace lastfm { class FingerprintableSource; }
+
+class Fingerprinter : public QObject
 {
     Q_OBJECT
 public:
     explicit Fingerprinter( const lastfm::Track& track, QObject* parent = 0 );
+    ~Fingerprinter();
+
+private slots:
+    void onFingerprintSubmitted();
+    void onGotSuggestions();
 
 private:
-    void run();
-
-private:
+    lastfm::Fingerprint m_fp;
+    lastfm::FingerprintableSource* m_fpSource;
     lastfm::Track m_track;
 };
 

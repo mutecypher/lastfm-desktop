@@ -55,7 +55,6 @@
 #include "CommandReciever/CommandReciever.h"
 #endif
 
-#include "Fingerprinter/Fingerprinter.h"
 #include "Dialogs/LicensesDialog.h"
 #include "MediaDevices/DeviceScrobbler.h"
 #include "Services/RadioService.h"
@@ -497,7 +496,6 @@ Application::onTrackStarted( const lastfm::Track& track, const Track& oldTrack )
         }
     }
 
-#ifdef FFMPEG_FINGERPRINTING
     if ( unicorn::UserSettings().value( "fingerprint", true ).toBool()
 #if QT_VERSION >= 0x040800
          && track.url().isLocalFile()
@@ -509,12 +507,26 @@ Application::onTrackStarted( const lastfm::Track& track, const Track& oldTrack )
         if ( trackFileInfo.exists()
              && trackFileInfo.isWritable() ) // this stops us fingerprinting CDs (but maybe other things)
         {
-            Fingerprinter* fingerprinter = new Fingerprinter( track, this );
-            connect( fingerprinter, SIGNAL(finished()), fingerprinter, SLOT(deleteLater()) );
-            fingerprinter->start();
+            QProcess* fpProcess = new QProcess( this );
+            connect( fpProcess, SIGNAL(finished(int)), fpProcess, SLOT(deleteLater()) );
+
+            QStringList arguments;
+            arguments << User().name();
+            arguments << track.url().toLocalFile();
+            arguments << "--title" << track.title();
+            arguments << "--album" << track.album();
+            arguments << "--artist" << track.artist();
+
+#ifdef Q_OS_WIN
+            QString fpExe = QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "fingerprinter.exe" );
+#elif defined( Q_OS_MAC )
+            QString fpExe = QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "../Helpers/fingerprinter" );
+#else
+            QString fpExe = QDir( QCoreApplication::applicationDirPath() ).absoluteFilePath( "fingerprinter" );
+#endif
+            fpProcess->start( fpExe, arguments );
         }
     }
-#endif
 
     m_tray->setToolTip( track.toString() );
 

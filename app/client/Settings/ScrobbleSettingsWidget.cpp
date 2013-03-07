@@ -50,12 +50,7 @@ ScrobbleSettingsWidget::ScrobbleSettingsWidget( QWidget* parent )
     ui->percentText->setFixedWidth( ui->percentText->fontMetrics().width( "100" ) );
     m_initialScrobblePercentage = scrobblePointValue;
 
-#ifdef FFMPEG_FINGERPRINTING
     ui->allowFingerprint->setChecked( userSettings.fingerprinting() );
-#else
-    ui->allowFingerprint->setEnabled( false );
-    ui->allowFingerprint->setChecked( false );
-#endif
 
     ui->enfocreScrobbleTimeMax->setChecked( userSettings.enforceScrobbleTimeMax() );
     ui->scrobblingOn->setChecked( userSettings.scrobblingOn() );

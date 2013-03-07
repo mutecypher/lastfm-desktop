@@ -72,15 +72,6 @@ main( int argc, char** argv )
         return 1;
     }
 
-#ifdef Q_OS_MAC
-    // We need to tell twiddly where to load the plugins because it
-    // loads system ones when not in the /Contents/MacOS directory
-    TwiddlyApplication::addLibraryPath( QDir( TwiddlyApplication::applicationDirPath() ).absoluteFilePath( "../plugins" ) );
-#elif defined Q_OS_WIN
-    TwiddlyApplication::addLibraryPath( QDir( TwiddlyApplication::applicationDirPath() ).absoluteFilePath( "plugins" ) );
-#endif
-
-
     // check we're using a compatible version of the plugin
     unicorn::Version compatibleVersion( 6, 0, 5, 4 );
     unicorn::Version installedVersion;

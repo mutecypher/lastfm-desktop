@@ -103,7 +103,6 @@ SOURCES += \
     Dialogs/LicensesDialog.cpp \
     Widgets/ScrobblesWidget.cpp \
     Widgets/ScrobblesListWidget.cpp \
-    Fingerprinter/Fingerprinter.cpp \
     Services/AnalyticsService/AnalyticsService.cpp \
     Services/AnalyticsService/PersistentCookieJar.cpp \
     Settings/CheckFileSystemModel.cpp \
@@ -182,17 +181,11 @@ HEADERS += \
     Dialogs/LicensesDialog.h \
     Widgets/ScrobblesListWidget.h \
     Widgets/ScrobblesWidget.h \
-    Fingerprinter/Fingerprinter.h \
     Services/AnalyticsService.h \
     Services/AnalyticsService/AnalyticsService.h \
     Services/AnalyticsService/PersistentCookieJar.h \
     Settings/CheckFileSystemModel.h \
     Settings/CheckFileSystemView.h
-
-contains(DEFINES, FFMPEG_FINGERPRINTING) {
-    SOURCES += Fingerprinter/LAV_Source.cpp
-    HEADERS += Fingerprinter/LAV_Source.h
-}
 
 mac:HEADERS += CommandReciever/CommandReciever.h \
                 MediaKeys/MediaKey.h \
