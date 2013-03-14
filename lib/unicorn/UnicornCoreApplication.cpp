@@ -57,12 +57,14 @@ unicorn::CoreApplication::init()
     lastfm::ws::ApiKey = QString( API_KEY ).isEmpty() ? "9e89b44de1ff37c5246ad0af18406454" : API_KEY;
     lastfm::ws::SharedSecret = QString( API_SECRET ).isEmpty() ? "147320ea9b8930fe196a4231da50ada4" : API_SECRET;
 
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
 #ifdef Q_OS_MAC
     QString pluginsDir = applicationDirPath() + "/../plugins";
-#elif defined Q_OS_WIN
+#else
     QString pluginsDir = applicationDirPath() + "/plugins";
 #endif
     addLibraryPath( pluginsDir );
+#endif
 
 
     dir::runtimeData().mkpath( "." );
@@ -85,7 +87,9 @@ unicorn::CoreApplication::init()
     qInstallMsgHandler( qMsgHandler );
     qDebug() << "Introducing" << applicationName()+' '+applicationVersion();
     qDebug() << "Directed by" << lastfm::platform();
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     qDebug() << "Plugin DIR" << pluginsDir;
+#endif
 }
 
 
