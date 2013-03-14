@@ -23,6 +23,7 @@
 
 #include <lastfm/ws.h>
 #include <lastfm/misc.h>
+#include <lastfm/Fingerprint.h>
 
 #include "UnicornCoreApplication.h"
 
@@ -118,4 +119,23 @@ unicorn::CoreApplication::log( const QString& productName )
 #else
     return dir::logs().filePath( productName + ".debug.log" );
 #endif
+}
+
+bool
+unicorn::CoreApplication::notify(QObject* receiver, QEvent* event )
+{
+    try
+    {
+        return QCoreApplication::notify( receiver, event );
+    }
+    catch( const lastfm::Fingerprint::Error& e )
+    {
+        qDebug() << "Fingerprint error" << e;
+        qApp->quit();
+    }
+    catch(...)
+    {
+       qDebug() << "Exception caught.";
+       qApp->quit();
+    }
 }
