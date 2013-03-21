@@ -26,6 +26,11 @@ CONFIG( ffmpeg ) {
     }
 }
 
+CONFIG( analytics ) {
+    QT += webkit
+    DEFINES += LASTFM_ANALYTICS
+}
+
 CONFIG( boost ) {
     mac:CONFIG(app_bundle){
         LIBS += /usr/local/lib/libboost_thread-mt.a
