@@ -128,14 +128,18 @@ unicorn::CoreApplication::notify(QObject* receiver, QEvent* event )
     {
         return QCoreApplication::notify( receiver, event );
     }
+#ifdef LASTFM_FINGERPRINTER
     catch( const lastfm::Fingerprint::Error& e )
     {
         qDebug() << "Fingerprint error" << e;
         qApp->quit();
     }
+#endif
     catch(...)
     {
        qDebug() << "Exception caught.";
        qApp->quit();
     }
+
+    return false;
 }
