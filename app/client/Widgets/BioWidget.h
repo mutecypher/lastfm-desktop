@@ -33,6 +33,8 @@ class BioWidget : public QTextBrowser
     Q_OBJECT
 public:
     BioWidget( QWidget* parent );
+    ~BioWidget();
+
     bool eventFilter( QObject* o, QEvent* e );
     
     void setBioText( const QString& bioText );

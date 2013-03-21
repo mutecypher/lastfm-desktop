@@ -230,17 +230,17 @@ unicorn::Application::translate()
 #endif
 
     //TODO need a unicorn/core/etc. translation, plus policy of no translations elsewhere or something!
-    QTranslator* t1 = new QTranslator;
+    QTranslator* t1 = new QTranslator( this );
     t1->load( d.filePath( "lastfm_" + qmExt ) );
 
-    QTranslator* t2 = new QTranslator;
+    QTranslator* t2 = new QTranslator( this );
     t2->load( d.filePath( "qt_" + qmExt ) );
 
     installTranslator( t1 );
     installTranslator( t2 );
 
 #ifdef Q_OS_WIN
-    QTranslator* t3 = new QTranslator;
+    QTranslator* t3 = new QTranslator( this );
     t3->load( d.filePath( "qtsparkle/" + qmExt ) );
     installTranslator( t3 );
 #endif

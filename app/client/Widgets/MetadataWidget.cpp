@@ -17,6 +17,34 @@
   You should have received a copy of the GNU General Public License
   along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+
+#include "MetadataWidget.h"
+#include "ui_MetadataWidget.h"
+
+#include "../Application.h"
+#include "../Services/ScrobbleService.h"
+#include "../Services/RadioService.h"
+#include "../Services/AnalyticsService.h"
+#include "ScrobbleControls.h"
+#include "BioWidget.h"
+#include "TagWidget.h"
+
+#include "lib/unicorn/widgets/HttpImageWidget.h"
+#include "lib/unicorn/widgets/DataBox.h"
+#include "lib/unicorn/widgets/DataListWidget.h"
+#include "lib/unicorn/widgets/BannerWidget.h"
+#include "lib/unicorn/widgets/LfmListViewWidget.h"
+#include "lib/unicorn/widgets/Label.h"
+#include "lib/unicorn/layouts/FlowLayout.h"
+#include "lib/unicorn/DesktopServices.h"
+
+#include <lastfm/XmlQuery.h>
+#include <lastfm/ws.h>
+#include <lastfm/User.h>
+#include <lastfm/Track.h>
+#include <lastfm/Artist.h>
+
 #include <QDebug>
 #include <QVBoxLayout>
 #include <QGridLayout>
@@ -33,34 +61,7 @@
 #include <QTextFrame>
 #include <QScrollBar>
 #include <QMenu>
-#include <QDebug>
 #include <QMovie>
-
-#include <lastfm/XmlQuery.h>
-#include <lastfm/ws.h>
-#include <lastfm/User.h>
-#include <lastfm/Track.h>
-#include <lastfm/Artist.h>
-
-#include "lib/unicorn/widgets/HttpImageWidget.h"
-#include "lib/unicorn/widgets/DataBox.h"
-#include "lib/unicorn/widgets/DataListWidget.h"
-#include "lib/unicorn/widgets/BannerWidget.h"
-#include "lib/unicorn/widgets/LfmListViewWidget.h"
-#include "lib/unicorn/widgets/Label.h"
-#include "lib/unicorn/layouts/FlowLayout.h"
-#include "lib/unicorn/DesktopServices.h"
-
-#include "../Application.h"
-#include "../Services/ScrobbleService.h"
-#include "../Services/RadioService.h"
-#include "../Services/AnalyticsService.h"
-#include "ScrobbleControls.h"
-#include "BioWidget.h"
-#include "TagWidget.h"
-
-#include "MetadataWidget.h"
-#include "ui_MetadataWidget.h"
 
 using unicorn::Label;
 

@@ -65,6 +65,11 @@ BioWidget::BioWidget( QWidget* p )
     qDebug() << fontInfo().pixelSize();
 }
 
+BioWidget::~BioWidget()
+{
+    delete m_widgetTextObject;
+}
+
 void
 BioWidget::setBioText( const QString& bioText )
 {

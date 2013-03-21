@@ -232,16 +232,11 @@ ScrobbleService::setConnection(PlayerConnection*c)
     }
 
     //
-    connect(c, SIGNAL(trackStarted(Track, Track)), SLOT(onTrackStarted(Track, Track)));
-    connect(c, SIGNAL(paused()), SLOT(onPaused()));
-    connect(c, SIGNAL(resumed()), SLOT(onResumed()));
-    connect(c, SIGNAL(stopped()), SLOT(onStopped()));
-
-    //connect(c, SIGNAL(trackStarted(Track, Track)), SIGNAL(trackStarted(Track, Track)));
-    connect(c, SIGNAL(resumed()), SIGNAL(resumed()));
-    connect(c, SIGNAL(paused()), SIGNAL(paused()));
-    connect(c, SIGNAL(stopped()), SIGNAL(stopped()));
-    connect(c, SIGNAL(bootstrapReady(QString)), SIGNAL( bootstrapReady(QString)));
+    connect(c, SIGNAL(trackStarted(Track, Track)), SLOT(onTrackStarted(Track, Track)), Qt::QueuedConnection);
+    connect(c, SIGNAL(paused()), SLOT(onPaused()), Qt::QueuedConnection);
+    connect(c, SIGNAL(resumed()), SLOT(onResumed()), Qt::QueuedConnection);
+    connect(c, SIGNAL(stopped()), SLOT(onStopped()), Qt::QueuedConnection);
+    connect(c, SIGNAL(bootstrapReady(QString)), SIGNAL( bootstrapReady(QString)), Qt::QueuedConnection);
 
     m_connection = c;
 
