@@ -46,7 +46,7 @@ struct ITunesConnection : PlayerConnection
 
 
 ITunesListener::ITunesListener( QObject* parent )
-              :QThread( parent ), m_connection( 0 )
+    :QObject( parent ), m_connection( 0 )
 {
     qRegisterMetaType<Track>("Track");
 
@@ -59,37 +59,26 @@ ITunesListener::ITunesListener( QObject* parent )
                                           "end try\n"
                                           "return artist & \"\n\" & album artist & \"\n\" & album & \"\n\" & name & \"\n\" & (duration as integer) & \"\n\" & L & \"\n\" & persistent ID & \"\n\" & podcast & \"\n\" & video kind\n"
                                       "end tell\n" );
-}
 
-
-void
-ITunesListener::run()
-{
-    emit newConnection( m_connection = new ITunesConnection );
-    
-
-
-    CFNotificationCenterAddObserver( CFNotificationCenterGetDistributedCenter(), 
+    CFNotificationCenterAddObserver( CFNotificationCenterGetDistributedCenter(),
                                     this,
-                                    callback, 
-                                    CFSTR( "com.apple.iTunes.playerInfo" ), 
-                                    NULL, 
+                                    callback,
+                                    CFSTR( "com.apple.iTunes.playerInfo" ),
+                                    NULL,
                                     CFNotificationSuspensionBehaviorDeliverImmediately );
 
-    
-    QTimer::singleShot( 0, this, SLOT(setupCurrentTrack()) );
-    exec();
+    QMetaObject::invokeMethod( this, SLOT(setupCurrentTrack()), Qt::QueuedConnection );
+}
 
-	delete m_connection;
+
+ITunesListener::~ITunesListener()
+{
+    delete m_connection;
 }
 
     
 void
-ITunesListener::callback( CFNotificationCenterRef, 
-                        void* observer, 
-                        CFStringRef, 
-                        const void*, 
-                        CFDictionaryRef info )
+ITunesListener::callback( CFNotificationCenterRef, void* observer, CFStringRef, const void*, CFDictionaryRef info )
 {    
     static_cast<ITunesListener*>(observer)->callback( info );
 }
@@ -181,6 +170,9 @@ encodeAmp( QString data )
 void
 ITunesListener::callback( CFDictionaryRef info )
 {
+    if ( !m_connection )
+        emit newConnection( m_connection = new ITunesConnection );
+
     ITunesDictionaryHelper dict( info );
     State const previousState = m_state;
     m_state = dict.state;
@@ -275,5 +267,9 @@ ITunesListener::setupCurrentTrack()
     t.setUrl( QUrl::fromLocalFile( path ) );
     t.setPodcast( podcast );
     t.setVideo( video );
+
+    if ( !m_connection )
+        emit newConnection( m_connection = new ITunesConnection );
+
     m_connection->start( t );
 }

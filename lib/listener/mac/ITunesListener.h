@@ -26,11 +26,12 @@
 #include "lib/unicorn/mac/AppleScript.h"
 
 /** @author Max Howell <max@last.fm> */
-class ITunesListener : public QThread
+class ITunesListener : public QObject
 {
     Q_OBJECT
 public:
     ITunesListener( QObject* parent );
+    ~ITunesListener();
 
     enum State { Unknown = -1, Playing, Paused, Stopped };
 
@@ -38,8 +39,6 @@ signals:
     void newConnection( class PlayerConnection* );
     
 private:
-    void run();
-
     static bool iTunesIsPlaying();
 
     /** iTunes notification center callback */
