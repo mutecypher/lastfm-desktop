@@ -88,6 +88,13 @@ ScrobbleService::ScrobbleService()
     resetScrobbler();
 }
 
+ScrobbleService&
+ScrobbleService::ScrobbleService::instance()
+{
+    static ScrobbleService s;
+    return s;
+}
+
 
 bool
 ScrobbleService::isDirExcluded( const lastfm::Track& track )
@@ -232,11 +239,11 @@ ScrobbleService::setConnection(PlayerConnection*c)
     }
 
     //
-    connect(c, SIGNAL(trackStarted(Track, Track)), SLOT(onTrackStarted(Track, Track)), Qt::QueuedConnection);
-    connect(c, SIGNAL(paused()), SLOT(onPaused()), Qt::QueuedConnection);
-    connect(c, SIGNAL(resumed()), SLOT(onResumed()), Qt::QueuedConnection);
-    connect(c, SIGNAL(stopped()), SLOT(onStopped()), Qt::QueuedConnection);
-    connect(c, SIGNAL(bootstrapReady(QString)), SIGNAL( bootstrapReady(QString)), Qt::QueuedConnection);
+    connect(c, SIGNAL(trackStarted(Track, Track)), this, SLOT(onTrackStarted(Track, Track)), Qt::QueuedConnection);
+    connect(c, SIGNAL(paused()), this, SLOT(onPaused()), Qt::QueuedConnection);
+    connect(c, SIGNAL(resumed()), this, SLOT(onResumed()), Qt::QueuedConnection);
+    connect(c, SIGNAL(stopped()), this, SLOT(onStopped()), Qt::QueuedConnection);
+    connect(c, SIGNAL(bootstrapReady(QString)), SIGNAL( bootstrapReady(QString)));
 
     m_connection = c;
 

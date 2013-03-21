@@ -52,7 +52,7 @@ public:
     void handleTwiddlyMessage( const QStringList& message );
     void handleIPodDetectedMessage( const QStringList& message );
     
-    static ScrobbleService& instance() { static ScrobbleService s; return s; }
+    static ScrobbleService& instance();
 
 public slots:
     void onSessionChanged( const unicorn::Session& session );
