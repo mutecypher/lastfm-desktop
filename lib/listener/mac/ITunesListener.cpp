@@ -67,7 +67,7 @@ ITunesListener::ITunesListener( QObject* parent )
                                     NULL,
                                     CFNotificationSuspensionBehaviorDeliverImmediately );
 
-    QMetaObject::invokeMethod( this, SLOT(setupCurrentTrack()), Qt::QueuedConnection );
+    QMetaObject::invokeMethod( this, "setupCurrentTrack", Qt::QueuedConnection );
 }
 
 
