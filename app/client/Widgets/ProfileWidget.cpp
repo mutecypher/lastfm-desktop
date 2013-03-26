@@ -229,6 +229,7 @@ ProfileWidget::onScrobbleStatusChanged( short scrobbleStatus )
 {
     if (scrobbleStatus == lastfm::Track::Submitted)
     {
+        disconnect( sender(), SIGNAL(scrobbleStatusChanged( short )), this, SLOT(onScrobbleStatusChanged( short )));
         ++m_scrobbleCount;
         setScrobbleCount();
     }
