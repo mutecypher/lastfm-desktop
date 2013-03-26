@@ -106,14 +106,23 @@ DeviceScrobbler::doTwiddle( bool manual )
 
             //"--device diagnostic --vid 0000 --pid 0000 --serial UNKNOWN
 
-            QStringList args = (QStringList()
-                         << "--device" << "background"
-                         << "--vid" << "0000"
-                         << "--pid" << "0000"
-                         << "--serial" << "UNKNOWN");
+            QStringList args;
+
+            if ( sender() )
+                args << "--device" << "background";
+            else
+                args << "--device" << "diagnostic";
+
+            args << "--vid" << "0000";
+            args << "--pid" << "0000";
 
             if ( manual )
+            {
+                args << "--serial" << "manual";
                 args += "--manual";
+            }
+            else
+                args << "--serial" << "automatic";
 
             m_twiddly = new QProcess( this );
             connect( m_twiddly, SIGNAL(finished( int, QProcess::ExitStatus )), SLOT(onTwiddlyFinished( int, QProcess::ExitStatus )) );
