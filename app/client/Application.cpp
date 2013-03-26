@@ -511,8 +511,8 @@ Application::onTrackStarted( const lastfm::Track& track, const Track& oldTrack )
             connect( fpProcess, SIGNAL(finished(int)), fpProcess, SLOT(deleteLater()) );
 
             QStringList arguments;
-            arguments << User().name();
-            arguments << track.url().toLocalFile();
+            arguments << "--username" << User().name();
+            arguments << "--filename" << track.url().toLocalFile();
             arguments << "--title" << track.title();
             arguments << "--album" << track.album();
             arguments << "--artist" << track.artist();

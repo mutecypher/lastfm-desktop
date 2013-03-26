@@ -28,10 +28,12 @@
 #include <QCoreApplication>
 #include <QDebug>
 
-// ./fingerprinter <username> <filename> --title <title> --album <album> --artist <artist>
+// ./fingerprinter --username <username> --filename <filename> --title <title> --album <album> --artist <artist>
 
 int main(int argc, char *argv[])
 {
+    int exitCode = -1;
+
     QtSingleCoreApplication::setApplicationName( "Last.fm Fingerprinter" );
     QtSingleCoreApplication::setOrganizationName( "Last.fm" );
 
@@ -39,26 +41,34 @@ int main(int argc, char *argv[])
 
     qDebug() << a.arguments();
 
-    // create the track from the command line arguments
-    MutableTrack track;
+    int usernameIndex = a.arguments().indexOf( "--username" );
+    int filenameIndex = a.arguments().indexOf( "--filename" );
 
-    // argument 1 should always be the filename
-    lastfm::ws::Username = a.arguments().at( 1 );
-    track.setUrl( QUrl::fromLocalFile( a.arguments().at( 2 ) ) );
+    if ( usernameIndex != -1 && filenameIndex != -1 )
+    {
+        // username and filename are required fields
+        lastfm::ws::Username = a.arguments().at( usernameIndex + 1 );
 
-    int titleIndex = a.arguments().indexOf( "--title" );
-    int albumIndex = a.arguments().indexOf( "--album" );
-    int artistIndex = a.arguments().indexOf( "--artist" );
+        // create the track from the command line arguments
+        MutableTrack track;
+        track.setUrl( QUrl::fromLocalFile( a.arguments().at( filenameIndex + 1 ) ) );
 
-    if ( titleIndex != -1 ) track.setTitle( a.arguments().at( titleIndex + 1 ) );
-    if ( albumIndex != -1 ) track.setAlbum( a.arguments().at( albumIndex + 1 ) );
-    if ( artistIndex != -1 ) track.setTitle( a.arguments().at( artistIndex + 1 ) );
+        int titleIndex = a.arguments().indexOf( "--title" );
+        int albumIndex = a.arguments().indexOf( "--album" );
+        int artistIndex = a.arguments().indexOf( "--artist" );
 
-    Fingerprinter* fingerprinter = new Fingerprinter( track );
+        if ( titleIndex != -1 ) track.setTitle( a.arguments().at( titleIndex + 1 ) );
+        if ( albumIndex != -1 ) track.setAlbum( a.arguments().at( albumIndex + 1 ) );
+        if ( artistIndex != -1 ) track.setTitle( a.arguments().at( artistIndex + 1 ) );
 
-    int exitCode = a.exec();
-
-    delete fingerprinter;
+        Fingerprinter* fingerprinter = new Fingerprinter( track );
+        exitCode = a.exec();
+        delete fingerprinter;
+    }
+    else
+    {
+        qWarning() << "Usage: fingerprinter --username <username> --filename <filename> --title <title> --album <album> --artist <artist>";
+    }
 
     return exitCode;
 }
