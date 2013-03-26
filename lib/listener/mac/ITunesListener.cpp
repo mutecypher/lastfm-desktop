@@ -17,7 +17,6 @@
    You should have received a copy of the GNU General Public License
    along with lastfm-desktop.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <QThread>
 
 #include <lastfm/misc.h>
 
