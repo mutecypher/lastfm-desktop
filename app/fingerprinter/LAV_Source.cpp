@@ -65,6 +65,7 @@ public:
 #endif
         , streamIndex(-1)
         , duration(0)
+        , timestamp(0)
         , bitrate(0)
         , eof(false)
         , overflowSize(0)
@@ -91,6 +92,7 @@ public:
 #endif
     int streamIndex;
     int duration;
+    double timestamp;
     int bitrate;
     bool eof;
     uint8_t *outBuffer;
@@ -281,8 +283,11 @@ uint8_t * LAV_SourcePrivate::decodeOneFrame(int &dataSize, int &channels, int& n
                 memcpy(outBuffer, decodedFrame->data[0], dataSize);
             }
         }
+        if ( packet.pts != AV_NOPTS_VALUE )
+            timestamp = av_q2d(inFormatContext->streams[streamIndex]->time_base)*packet.pts;
         av_free_packet(&packet);
     }
+    timestamp += (double)nSamples / decodedFrame->sample_rate;
     avcodec_free_frame(&decodedFrame);
     return outBuffer;
 }
@@ -462,25 +467,14 @@ void LAV_Source::skipSilence(double silenceThreshold /* = 0.0001 */)
 
 void LAV_Source::skip(const int mSecs)
 {
-    char buf[256];
-    if ( mSecs <= 0 || d->streamIndex < 0 || !d->inFormatContext )
-        return;
-
-    // Skip ahead from current frame position
-    AVRational time_base = d->inFormatContext->streams[d->streamIndex]->time_base;
-    int64_t frameNum = av_rescale(mSecs, time_base.den, time_base.num) + d->inCodecContext->frame_number;
-    frameNum /= 1000;
-    int ret = avformat_seek_file( d->inFormatContext, d->streamIndex, 0, frameNum, frameNum, 0);
-    if (ret < 0)
+    double targetTimestamp = d->timestamp + mSecs/1000.0;
+    int dataSize, channels, nSamples;
+    for (;;)
     {
-        // FIXME?
-        // We might still get pretty close to where we want to be even if the
-        // seek returns an error.
-        av_strerror(ret, buf, sizeof(buf));
-        cerr << "Problem seeking in file: " << buf << endl;
+        d->decodeOneFrame(dataSize, channels, nSamples);
+        if ( d->timestamp > targetTimestamp || d->eof )
+           return;
     }
-
-    avcodec_flush_buffers(d->inCodecContext);
 }
 
 
