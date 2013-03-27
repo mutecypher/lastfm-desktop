@@ -69,7 +69,17 @@ public:
         , eof(false)
         , overflowSize(0)
     {
+        outBuffer = (uint8_t*)av_malloc(sizeof(uint8_t)*AVCODEC_MAX_AUDIO_FRAME_SIZE*4);
+        outBufferSize = sizeof(uint8_t)*AVCODEC_MAX_AUDIO_FRAME_SIZE*4;
+        overflow = (uint8_t*)av_malloc(sizeof(uint8_t)*AVCODEC_MAX_AUDIO_FRAME_SIZE*4);
     }
+
+    ~LAV_SourcePrivate()
+    {
+        av_free(outBuffer);
+        av_free(overflow);
+    }
+
     uint8_t * decodeOneFrame(int &dataSize, int &channels, int& nSamples);
 
     AVFormatContext *inFormatContext;
@@ -83,8 +93,9 @@ public:
     int duration;
     int bitrate;
     bool eof;
-    uint8_t outBuffer[AVCODEC_MAX_AUDIO_FRAME_SIZE*4];
-    uint8_t overflow[AVCODEC_MAX_AUDIO_FRAME_SIZE*4];
+    uint8_t *outBuffer;
+    size_t outBufferSize;
+    uint8_t *overflow;
     size_t overflowSize;
 };
 
@@ -178,12 +189,14 @@ uint8_t * LAV_SourcePrivate::decodeOneFrame(int &dataSize, int &channels, int& n
                 }
             }
 
-            uint8_t *pOutBuffer = outBuffer;
             if (resampleContext)
             {
-                const uint8_t **in = const_cast<const uint8_t **>(decodedFrame->extended_data);
-                int maxOutSamples = sizeof(outBuffer) / channels / outSampleSize;
-                int nSamplesOut = swr_convert(resampleContext, &pOutBuffer, maxOutSamples, in, decodedFrame->nb_samples);
+                int maxOutSamples = outBufferSize / channels / outSampleSize;
+                int nSamplesOut = swr_convert(resampleContext,
+                                              &outBuffer,
+                                              maxOutSamples,
+                                              const_cast<const uint8_t **>(decodedFrame->extended_data),
+                                              decodedFrame->nb_samples);
                 if (nSamplesOut < 0)
                 {
                     cerr << "swr_convert failed" << endl;
@@ -237,16 +250,16 @@ uint8_t * LAV_SourcePrivate::decodeOneFrame(int &dataSize, int &channels, int& n
                 }
             }
 
-            uint8_t *pOutBuffer = outBuffer;
             if (resampleContext)
             {
                 int outLinesize;
+                int maxOutSamples = outBufferSize / channels / outSampleSize;
                 av_samples_get_buffer_size(&outLinesize,
                                             channels,
                                             decodedFrame->nb_samples,
                                             outSampleFmt, 0);
-                int maxOutSamples = sizeof(outBuffer) / channels / outSampleSize;
-                int nSamplesOut = avresample_convert(resampleContext, &pOutBuffer,
+                int nSamplesOut = avresample_convert(resampleContext,
+                                            &outBuffer,
                                             outLinesize,
                                             maxOutSamples,
                                             decodedFrame->extended_data,
