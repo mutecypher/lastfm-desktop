@@ -270,7 +270,7 @@ uint8_t * LAV_SourcePrivate::decodeOneFrame(int &dataSize, int &channels, int& n
         }
         av_free_packet(&packet);
     }
-    av_free(decodedFrame);
+    avcodec_free_frame(&decodedFrame);
     return outBuffer;
 }
 
