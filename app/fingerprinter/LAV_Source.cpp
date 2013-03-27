@@ -342,6 +342,10 @@ void LAV_Source::init(const QString& fileName)
     }
 
     d->inCodecContext = d->inFormatContext->streams[d->streamIndex]->codec;
+
+    // MP3 decodes to S16P, but we always want S16, so request it
+    d->inCodecContext->request_sample_fmt = outSampleFmt;
+
     if ( !avcodec_open2(d->inCodecContext, codec, NULL) < 0 )
     {
         release();
