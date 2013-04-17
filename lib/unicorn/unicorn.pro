@@ -59,9 +59,6 @@ SOURCES += \
     qtsingleapplication/qtlocalpeer.cpp \
     QMessageBoxBuilder.cpp \
     LoginProcess.cpp \
-    layouts/SlideOverLayout.cpp \
-    layouts/SideBySideLayout.cpp \
-    layouts/AnimatedListLayout.cpp \
     PlayBus/PlayBus.cpp \
     PlayBus/Bus.cpp \
     dialogs/UserManagerDialog.cpp \
@@ -122,9 +119,6 @@ HEADERS += \
     PlayBus/Bus.h \
     PlayBus/PlayBus.h \
     LoginProcess.h \
-    layouts/SlideOverLayout.h \
-    layouts/SideBySideLayout.h \
-    layouts/AnimatedListLayout.h \
     dialogs/UserManagerDialog.h \
     dialogs/UnicornDialog.h \
     dialogs/TagDialog.h \

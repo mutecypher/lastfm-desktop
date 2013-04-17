@@ -46,7 +46,7 @@ public:
     MetadataWidget( const Track& track, QWidget* p = 0 );
     ~MetadataWidget();
 
-    void fetchTrackInfo();
+    void fetchTrackInfo( bool force );
 
     class ScrobbleControls* scrobbleControls() const;
 

@@ -58,7 +58,6 @@
 #include "lib/unicorn/widgets/MessageBar.h"
 #include "lib/unicorn/widgets/UserMenu.h"
 #include "lib/unicorn/qtwin.h"
-#include "lib/unicorn/layouts/SlideOverLayout.h"
 #include "lib/unicorn/widgets/SlidingStackedWidget.h"
 #include "lib/listener/PlayerConnection.h"
 #if defined(Q_OS_MAC) || defined(Q_OS_WIN)

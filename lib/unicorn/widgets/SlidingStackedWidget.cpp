@@ -27,7 +27,7 @@
 unicorn::SlidingStackedWidget::SlidingStackedWidget( QWidget* parent )
     : QStackedWidget(parent),
     m_speed( 200 ),
-    m_animationtype( QEasingCurve::InQuad ),
+    m_animationtype( QEasingCurve::OutQuart ),
     m_vertical( false ),
     m_now( 0 ),
     m_next( 0 ),

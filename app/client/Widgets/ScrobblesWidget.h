@@ -42,7 +42,7 @@ public slots:
 protected slots:
     void onTrackClicked( class TrackWidget& trackWidget );
     void onBackClicked();
-    void onMoveFinished( class QLayoutItem* i );
+    void onMoveFinished();
     void onMetadataWidgetFinished();
 
 protected:

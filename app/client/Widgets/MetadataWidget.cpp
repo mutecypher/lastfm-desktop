@@ -124,9 +124,9 @@ MetadataWidget::~MetadataWidget()
 }
 
 void
-MetadataWidget::fetchTrackInfo()
+MetadataWidget::fetchTrackInfo( bool force )
 {
-    if ( isVisible() && !m_fetchedTrackInfo )
+    if ( ( force || isVisible() ) && !m_fetchedTrackInfo )
     {
         m_fetchedTrackInfo = true;
 
@@ -158,7 +158,7 @@ MetadataWidget::showEvent( QShowEvent* /*e*/ )
 {
     if ( !m_fetchedTrackInfo )
         m_movie->start();
-    fetchTrackInfo();
+    fetchTrackInfo( false );
 }
 
 void
