@@ -7,13 +7,6 @@ unix:!mac {
     QMAKE_DISTCLEAN += -f ../../_bin/liblistener.a
 }
 
-# basically not easy to support on other platforms, but feel free to fork
-unix:!mac {
-    QT += dbus
-    SOURCES += DBusListener.cpp
-    HEADERS += DBusListener.h
-}
-
 include( ../../admin/include.qmake )
 
 DEFINES += _LISTENER_DLLEXPORT LASTFM_COLLAPSE_NAMESPACE
@@ -37,6 +30,7 @@ HEADERS += \
         legacy/LegacyPlayerListener.h
 
 unix:!mac {
+    QT += dbus
     SOURCES -= legacy/LegacyPlayerListener.cpp
     HEADERS -= legacy/LegacyPlayerListener.h
     SOURCES += mpris2/Mpris2Listener.cpp \
