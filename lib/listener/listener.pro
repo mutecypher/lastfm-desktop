@@ -39,6 +39,10 @@ HEADERS += \
 unix:!mac {
     SOURCES -= legacy/LegacyPlayerListener.cpp
     HEADERS -= legacy/LegacyPlayerListener.h
+    SOURCES += mpris2/Mpris2Listener.cpp \
+               mpris2/Mpris2Service.cpp
+    HEADERS += mpris2/Mpris2Listener.h \
+               mpris2/Mpris2Service.h
 }
 
 mac {
