@@ -186,37 +186,42 @@ ITunesListener::callback( CFDictionaryRef info )
 
         qDebug() << output;
 
-        QTextStream s( &output, QIODevice::ReadOnly | QIODevice::Text );
-
-        QString artist = s.readLine();
-        QString albumArtist = s.readLine();
-        QString album = s.readLine();
-        QString track = s.readLine();
-        QString duration = s.readLine();
-        QString path = s.readLine();
-        QString pid = s.readLine();
-        bool podcast = s.readLine() == "true";
-        QString videoKind = s.readLine();
-        bool video = videoKind != "none" && videoKind != "music video";
-
-        // if the track is restarted it has the same pid
-        if ( m_previousPid == pid && previousState == Paused )
-            m_connection->resume();
-        else
+        if ( !output.isEmpty() )
         {
-            MutableTrack t;
-            t.setArtist( artist );
-            t.setAlbumArtist( albumArtist );
-            t.setTitle( track );
-            t.setAlbum( album );
-            t.setDuration( duration.toInt() );
-            t.setUrl( QUrl::fromLocalFile( path ) );
-            t.setPodcast( podcast );
-            t.setVideo( video );
-            m_connection->start( t );
-        }
+            QTextStream s( &output, QIODevice::ReadOnly | QIODevice::Text );
 
-        m_previousPid = pid;
+            QString artist = s.readLine();
+            QString albumArtist = s.readLine();
+            QString album = s.readLine();
+            QString track = s.readLine();
+            QString duration = s.readLine();
+            QString path = s.readLine();
+            QString pid = s.readLine();
+            bool podcast = s.readLine() == "true";
+            QString videoKind = s.readLine();
+            bool video = videoKind != "none" && videoKind != "music video";
+
+            // if the track is restarted it has the same pid
+            if ( m_previousPid == pid && previousState == Paused )
+                m_connection->resume();
+            else
+            {
+                MutableTrack t;
+                t.setArtist( artist );
+                t.setAlbumArtist( albumArtist );
+                t.setTitle( track );
+                t.setAlbum( album );
+                t.setDuration( duration.toInt() );
+                t.setUrl( QUrl::fromLocalFile( path ) );
+                t.setPodcast( podcast );
+                t.setVideo( video );
+                m_connection->start( t );
+            }
+
+            m_previousPid = pid;
+        }
+        else
+            m_connection->stop();
     }
     else
           qWarning() << "Unknown state.";
@@ -242,33 +247,36 @@ ITunesListener::setupCurrentTrack()
 
     qDebug() << output;
 
-    QTextStream s( &output, QIODevice::ReadOnly | QIODevice::Text );
+    if ( !output.isEmpty() )
+    {
+        QTextStream s( &output, QIODevice::ReadOnly | QIODevice::Text );
 
-    QString artist = s.readLine();
-    QString albumArtist = s.readLine();
-    QString album = s.readLine();
-    QString track = s.readLine();
-    QString duration = s.readLine();
-    QString path = s.readLine();
-    QString persistentID = s.readLine();
-    bool podcast = s.readLine() == "true";
-    QString videoKind = s.readLine();
-    bool video = videoKind != "none" && videoKind != "music video";
+        QString artist = s.readLine();
+        QString albumArtist = s.readLine();
+        QString album = s.readLine();
+        QString track = s.readLine();
+        QString duration = s.readLine();
+        QString path = s.readLine();
+        QString persistentID = s.readLine();
+        bool podcast = s.readLine() == "true";
+        QString videoKind = s.readLine();
+        bool video = videoKind != "none" && videoKind != "music video";
 
-    m_previousPid = persistentID;
-        
-    MutableTrack t;
-    t.setArtist( artist );
-    t.setAlbumArtist( albumArtist );
-    t.setTitle( track );
-    t.setAlbum( album );
-    t.setDuration( duration.toInt() );
-    t.setUrl( QUrl::fromLocalFile( path ) );
-    t.setPodcast( podcast );
-    t.setVideo( video );
+        m_previousPid = persistentID;
 
-    if ( !m_connection )
-        emit newConnection( m_connection = new ITunesConnection );
+        MutableTrack t;
+        t.setArtist( artist );
+        t.setAlbumArtist( albumArtist );
+        t.setTitle( track );
+        t.setAlbum( album );
+        t.setDuration( duration.toInt() );
+        t.setUrl( QUrl::fromLocalFile( path ) );
+        t.setPodcast( podcast );
+        t.setVideo( video );
 
-    m_connection->start( t );
+        if ( !m_connection )
+            emit newConnection( m_connection = new ITunesConnection );
+
+        m_connection->start( t );
+    }
 }
