@@ -88,7 +88,7 @@ ScrobbleService::ScrobbleService()
 }
 
 ScrobbleService&
-ScrobbleService::ScrobbleService::instance()
+ScrobbleService::instance()
 {
     static ScrobbleService s;
     return s;
