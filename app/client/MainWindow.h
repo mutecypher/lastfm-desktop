@@ -111,7 +111,7 @@ public slots:
 private slots:
     void onVisitProfile();
 
-    void onTrackStarted(const Track&, const Track&);
+    void onTrackStarted(const lastfm::Track&, const lastfm::Track&);
     void onStopped();
     void onPaused();
     void onResumed();

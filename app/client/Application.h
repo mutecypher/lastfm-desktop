@@ -221,7 +221,7 @@ namespace audioscrobbler
 
         void toggleWindow();
 
-        void onTrackStarted( const Track&, const Track& );
+        void onTrackStarted( const lastfm::Track&, const lastfm::Track& );
         void onTrackPaused( bool );
 
         void onTrackSpooled( const Track& );

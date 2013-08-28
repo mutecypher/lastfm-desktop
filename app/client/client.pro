@@ -75,7 +75,6 @@ SOURCES += \
     Widgets/ShortcutEdit.cpp \
     Widgets/ProfileArtistWidget.cpp \
     Widgets/ScrobbleControls.cpp \
-    Widgets/ProgressBar.cpp \
     Widgets/QuickStartWidget.cpp \
     Widgets/PointyArrow.cpp \
     Widgets/PlaybackControlsWidget.cpp \
@@ -106,7 +105,8 @@ SOURCES += \
     Services/AnalyticsService/AnalyticsService.cpp \
     Services/AnalyticsService/PersistentCookieJar.cpp \
     Settings/CheckFileSystemModel.cpp \
-    Settings/CheckFileSystemView.cpp
+    Settings/CheckFileSystemView.cpp \
+    Widgets/VolumeSlider.cpp
 
 HEADERS += \
     ScrobSocket.h \
@@ -143,7 +143,6 @@ HEADERS += \
     Widgets/StatusBar.h \
     Widgets/SideBar.h \
     Widgets/ScrobbleControls.h \
-    Widgets/ProgressBar.h \
     Widgets/QuickStartWidget.h \
     Widgets/PointyArrow.h \
     Widgets/PlaybackControlsWidget.h \
@@ -185,7 +184,8 @@ HEADERS += \
     Services/AnalyticsService/AnalyticsService.h \
     Services/AnalyticsService/PersistentCookieJar.h \
     Settings/CheckFileSystemModel.h \
-    Settings/CheckFileSystemView.h
+    Settings/CheckFileSystemView.h \
+    Widgets/VolumeSlider.h
 
 mac:HEADERS += CommandReciever/CommandReciever.h \
                 MediaKeys/MediaKey.h \

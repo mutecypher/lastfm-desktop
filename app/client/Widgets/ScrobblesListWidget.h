@@ -51,7 +51,7 @@ private slots:
     void onItemClicked( class TrackWidget& index );
     void onMoreClicked();
 
-    void onTrackStarted( const Track& track, const Track& );
+    void onTrackStarted( const lastfm::Track& track, const lastfm::Track& );
 
     void onSessionChanged( const unicorn::Session& session );
 

@@ -132,7 +132,7 @@ ScrobblesListWidget::ScrobblesListWidget( QWidget* parent )
     connect( &ScrobbleService::instance(), SIGNAL(scrobblesCached(QList<lastfm::Track>)), SLOT(onScrobblesSubmitted(QList<lastfm::Track>) ) );
     connect( &ScrobbleService::instance(), SIGNAL(scrobblesSubmitted(QList<lastfm::Track>)), SLOT(onScrobblesSubmitted(QList<lastfm::Track>) ) );
 
-    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)));
+    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(lastfm::Track,lastfm::Track)), SLOT(onTrackStarted(lastfm::Track,lastfm::Track)));
     connect( &ScrobbleService::instance(), SIGNAL(paused()), SLOT(onPaused()));
     connect( &ScrobbleService::instance(), SIGNAL(resumed()), SLOT(onResumed()));
     connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(onStopped()));

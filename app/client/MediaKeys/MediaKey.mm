@@ -130,7 +130,7 @@ MediaKey::MediaKey( QObject* parent )
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session)), SLOT(onSessionChanged(unicorn::Session)) );
 
-    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)) );
+    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(lastfm::Track,lastfm::Track)), SLOT(onTrackStarted(lastfm::Track,lastfm::Track)) );
 }
 
 void MediaKey::onSessionChanged( const unicorn::Session& session )
@@ -178,7 +178,7 @@ MediaKey::setEnabled( bool enabled )
 
 
 void
-MediaKey::onTrackStarted( const Track& newTrack, const Track& /*oldTrack*/ )
+MediaKey::onTrackStarted( const lastfm::Track& newTrack, const lastfm::Track& /*oldTrack*/ )
 {
     m_lastTrackRadio = newTrack.source() == Track::LastFmRadio;
     bool actualEnabled = unicorn::Settings().value( "mediaKeys", true ).toBool() && aApp->currentSession().youRadio() && m_lastTrackRadio;

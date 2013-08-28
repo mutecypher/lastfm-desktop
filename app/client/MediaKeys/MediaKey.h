@@ -42,7 +42,7 @@ private slots:
     void initialize();
     void applicationDidFinishLaunching( void* aNotification );
     void onSessionChanged( const unicorn::Session& session );
-    void onTrackStarted( const Track& newTrack, const Track& oldTrack );
+    void onTrackStarted( const lastfm::Track& newTrack, const lastfm::Track& oldTrack );
 
 private:
     bool m_lastTrackRadio;

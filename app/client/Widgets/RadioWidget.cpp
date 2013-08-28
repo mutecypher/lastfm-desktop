@@ -64,7 +64,7 @@ RadioWidget::RadioWidget(QWidget *parent)
     // need to know when we are playing the radio so we can switch between now playing and last playing
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation) ) );
     connect( &RadioService::instance(), SIGNAL(stopped()), SLOT(onRadioStopped()));
-    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(onTrackStarted(Track,Track)) );
+    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(lastfm::Track,lastfm::Track)), SLOT(onTrackStarted(lastfm::Track,lastfm::Track)) );
 
     connect( aApp, SIGNAL(sessionChanged(unicorn::Session)), SLOT(onSessionChanged(unicorn::Session) ) );
 
@@ -226,7 +226,7 @@ RadioWidget::onRadioStopped()
 }
 
 void
-RadioWidget::onTrackStarted( const Track& track, const Track& /*oldTrack*/ )
+RadioWidget::onTrackStarted( const lastfm::Track& track, const lastfm::Track& /*oldTrack*/ )
 {
     // if a track starts and it's not a radio track, we are no longer listening to the radio
     if ( track.source() == Track::LastFmRadio )

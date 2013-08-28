@@ -238,7 +238,7 @@ ScrobbleService::setConnection(PlayerConnection*c)
     }
 
     //
-    connect(c, SIGNAL(trackStarted(Track, Track)), this, SLOT(onTrackStarted(Track, Track)), Qt::QueuedConnection);
+    connect(c, SIGNAL(trackStarted(lastfm::Track,lastfm::Track)), this, SLOT(onTrackStarted(lastfm::Track,lastfm::Track)), Qt::QueuedConnection);
     connect(c, SIGNAL(paused()), this, SLOT(onPaused()), Qt::QueuedConnection);
     connect(c, SIGNAL(resumed()), this, SLOT(onResumed()), Qt::QueuedConnection);
     connect(c, SIGNAL(stopped()), this, SLOT(onStopped()), Qt::QueuedConnection);
@@ -254,7 +254,7 @@ ScrobbleService::setConnection(PlayerConnection*c)
 }
 
 void
-ScrobbleService::onTrackStarted( const Track& t, const Track& ot )
+ScrobbleService::onTrackStarted( const lastfm::Track& t, const lastfm::Track& ot )
 {
     Q_ASSERT(m_connection);
 

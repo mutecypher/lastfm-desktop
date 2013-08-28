@@ -143,7 +143,7 @@ MainWindow::MainWindow( QMenuBar* menuBar )
     setWindowTitle( applicationName() );
     setUnifiedTitleAndToolBarOnMac( true );
 
-    connect( &ScrobbleService::instance(), SIGNAL( trackStarted(Track, Track) ), SLOT( onTrackStarted(Track, Track) ) );
+    connect( &ScrobbleService::instance(), SIGNAL( trackStarted(lastfm::Track, lastfm::Track) ), SLOT( onTrackStarted(lastfm::Track, lastfm::Track) ) );
     connect( &ScrobbleService::instance(), SIGNAL( paused() ), SLOT( onPaused() ) );
     connect( &ScrobbleService::instance(), SIGNAL( resumed() ), SLOT( onResumed() ) );
     connect( &ScrobbleService::instance(), SIGNAL( stopped() ), SLOT( onStopped() ) );
@@ -482,7 +482,7 @@ MainWindow::onTuningIn()
 }
 
 void
-MainWindow::onTrackStarted( const Track& t, const Track& /*previous*/ )
+MainWindow::onTrackStarted( const lastfm::Track& t, const lastfm::Track& /*previous*/ )
 {
     m_currentTrack = t;
 

@@ -60,7 +60,7 @@ public slots:
     void scrobbleSettingsChanged();
 
 signals:
-    void trackStarted( const Track& newTrack, const Track& oldTrack );
+    void trackStarted( const lastfm::Track& newTrack, const lastfm::Track& oldTrack );
     void resumed();
     void paused();
     void stopped();
@@ -80,7 +80,7 @@ public slots:
 
 protected slots:
     void setConnection( PlayerConnection* );
-    void onTrackStarted( const Track&, const Track& );
+    void onTrackStarted( const lastfm::Track&, const lastfm::Track& );
     void onPaused();
     void onResumed(); 
     void onStopped();

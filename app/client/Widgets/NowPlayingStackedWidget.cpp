@@ -41,7 +41,7 @@ NowPlayingStackedWidget::NowPlayingStackedWidget( QWidget* parent )
     addWidget( ui.nowPlaying = new NowPlayingWidget( this ) );
 
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(showNowPlaying()) );
-    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(Track,Track)), SLOT(showNowPlaying()));
+    connect( &ScrobbleService::instance(), SIGNAL(trackStarted(lastfm::Track,lastfm::Track)), SLOT(showNowPlaying()));
     connect( &ScrobbleService::instance(), SIGNAL(stopped()), SLOT(showNothingPlaying()));
 }
 

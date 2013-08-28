@@ -246,6 +246,12 @@ QFrame#splitter5 {
 	margin: 0px 20px;
 }
 
+PlaybackControlsWidget QFrame#progressFrame QFrame#splitter1,
+PlaybackControlsWidget QFrame#progressFrame QFrame#splitter2 {
+	margin: 0px;
+}
+
+
 QFrame#splitter,
 QFrame#hsplitter1,
 QFrame#hsplitter2 {
@@ -1083,21 +1089,16 @@ PlaybackControlsWidget[scrobbleTrack="true"] QFrame#statusFrame QLabel {
 color: #333;
 }
 
+PlaybackControlsWidget QFrame#buttons {
+	margin: 0px 20px 0px 0px;
+}
+
 PlaybackControlsWidget QPushButton {
 background-color: transparent;
 background-repeat: no-repeat;
 border: none;
 color: transparent;
 height: 28px;
-margin: 0px 3px;
-}
-
-PlaybackControlsWidget QFrame#controls {
-margin: 0px 12px 0px 0px;
-}
-
-PlaybackControlsWidget QFrame#buttons {
-margin: 8px 0px -2px 0px;
 }
 
 PlaybackControlsWidget QPushButton#love {
@@ -1106,73 +1107,87 @@ max-width: 29px;
 min-width: 29px;
 }
 
-PlaybackControlsWidget QPushButton#love:hover {
-background-image: url(":/controls_love_OFF_HOVER.png");
-}
-PlaybackControlsWidget QPushButton#love:pressed {
-background-image: url(":/controls_love_OFF_PRESS.png");
-}
-PlaybackControlsWidget QPushButton#love:checked {
-background-image: url(":/controls_love_ON_REST.png");
-}
-PlaybackControlsWidget QPushButton#love:checked:hover {
-background-image: url(":/controls_love_ON_HOVER.png");
-}
-PlaybackControlsWidget QPushButton#love:checked:pressed {
-background-image: url(":/controls_love_ON_PRESS.png");
-}
+PlaybackControlsWidget QPushButton#love:hover {background-image: url(":/controls_love_OFF_HOVER.png");}
+PlaybackControlsWidget QPushButton#love:pressed {background-image: url(":/controls_love_OFF_PRESS.png");}
+PlaybackControlsWidget QPushButton#love:checked {background-image: url(":/controls_love_ON_REST.png");}
+PlaybackControlsWidget QPushButton#love:checked:hover {background-image: url(":/controls_love_ON_HOVER.png");}
+PlaybackControlsWidget QPushButton#love:checked:pressed {background-image: url(":/controls_love_ON_PRESS.png");}
 		
 PlaybackControlsWidget QPushButton#ban {
 background-image: url(":/controls_ban_REST.png");
 max-width: 28px;
 min-width: 28px;
 }
-PlaybackControlsWidget QPushButton#ban:hover {
-background-image: url(":/controls_ban_HOVER.png");
-}
-PlaybackControlsWidget QPushButton#ban:pressed {
-background-image: url(":/controls_ban_PRESS.png");
-}
+PlaybackControlsWidget QPushButton#ban:hover {background-image: url(":/controls_ban_HOVER.png");}
+PlaybackControlsWidget QPushButton#ban:pressed {background-image: url(":/controls_ban_PRESS.png");}
 		
 PlaybackControlsWidget QPushButton#play {
 background-image: url(":/controls_play_REST.png");
 max-width: 25px;
 min-width: 25px;
 }
-PlaybackControlsWidget QPushButton#play:hover {
-background-image: url(":/controls_play_HOVER.png");
-}
-PlaybackControlsWidget QPushButton#play:pressed {
-background-image: url(":/controls_play_PRESS.png");
-}
-PlaybackControlsWidget QPushButton#play:checked {
-background-image: url(":/controls_pause_REST.png");
-}
-PlaybackControlsWidget QPushButton#play:checked:hover {
-background-image: url(":/controls_pause_HOVER.png");
-}
-PlaybackControlsWidget QPushButton#play:checked:pressed {
-background-image: url(":/controls_pause_PRESS.png");
-}
+PlaybackControlsWidget QPushButton#play:hover {background-image: url(":/controls_play_HOVER.png");}
+PlaybackControlsWidget QPushButton#play:pressed {background-image: url(":/controls_play_PRESS.png");}
+PlaybackControlsWidget QPushButton#play:checked {background-image: url(":/controls_pause_REST.png");}
+PlaybackControlsWidget QPushButton#play:checked:hover {background-image: url(":/controls_pause_HOVER.png");}
+PlaybackControlsWidget QPushButton#play:checked:pressed {background-image: url(":/controls_pause_PRESS.png");}
 		
 PlaybackControlsWidget QPushButton#skip {
 background-image: url(":/controls_skip_REST.png");
 max-width: 39px;
 min-width: 39px;
 }
-PlaybackControlsWidget QPushButton#skip:hover {
-background-image: url(":/controls_skip_HOVER.png");
+PlaybackControlsWidget QPushButton#skip:hover { background-image: url(":/controls_skip_HOVER.png"); }
+PlaybackControlsWidget QPushButton#skip:pressed { background-image: url(":/controls_skip_PRESS.png"); }
+
+PlaybackControlsWidget QPushButton#back {
+background-image: url(":/controls_playlist_skip_back_REST.png");
+max-width: 39px;
+min-width: 39px;
 }
-PlaybackControlsWidget QPushButton#skip:pressed {
-background-image: url(":/controls_skip_PRESS.png");
+PlaybackControlsWidget QPushButton#back:hover { background-image: url(":/controls_playlist_skip_back_HOVER.png"); }
+PlaybackControlsWidget QPushButton#back:pressed { background-image: url(":/controls_playlist_skip_back_PRESS.png"); }
+
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#love {background-image: url(":/controls_playlist_love_OFF_REST.png");}
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#love:hover {background-image: url(":/controls_playlist_love_OFF_HOVER.png");}
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#love:pressed {background-image: url(":/controls_playlist_love_OFF_PRESS.png");}
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#love:checked {background-image: url(":/controls_playlist_love_ON_REST.png");}
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#love:checked:hover {background-image: url(":/controls_playlist_love_ON_HOVER.png");}
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#love:checked:pressed {background-image: url(":/controls_playlist_love_ON_PRESS.png");}
+
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#play {background-image: url(":/controls_playlist_play_REST.png");}
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#play:hover {background-image: url(":/controls_playlist_play_HOVER.png");}
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#play:pressed {background-image: url(":/controls_playlist_play_PRESS.png");}
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#play:checked {background-image: url(":/controls_playlist_pause_REST.png");}
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#play:checked:hover {background-image: url(":/controls_playlist_pause_HOVER.png");}
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#play:checked:pressed {background-image: url(":/controls_playlist_pause_PRESS.png");}
+		
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#skip {background-image: url(":/controls_playlist_skip_REST.png");}
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#skip:hover { background-image: url(":/controls_playlist_skip_HOVER.png"); }
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#skip:pressed { background-image: url(":/controls_playlist_skip_PRESS.png"); }
+
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#playlist {
+	background-image: url(":/controls_playlist_playlist_HOVER.png");
+	max-width: 28px;
+	min-width: 28px;
+}
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#playlist:hover {background-image: url(":/controls_playlist_playlist_PRESS.png");}
+PlaybackControlsWidget[scrobbleTrack="true"] QPushButton#playlist:pressed {background-image: url(":/controls_playlist_playlist_REST.png");}
+
+PlaybackControlsWidget QFrame#progressFrame {
+	border: none;
+	border-top: 1px solid #e5e5e5;
+	border-bottom: 1px solid #9b9b9b;
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #cccccc, stop:0 #e5e5e5);
+	padding: 0px 20px;
+	max-height: 24px;
+	min-height: 24px;
 }
 
-PlaybackControlsWidget ProgressBar {
-border-top: 1px solid #e5e5e5;
-border-bottom: 1px solid #9b9b9b;
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #cccccc, stop:0 #e5e5e5);
-qproperty-chunk: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #b6b6b6, stop:0 #cdcdcd);
-min-height: 21px;
+PlaybackControlsWidget QFrame#progressFrame QLabel#message,
+PlaybackControlsWidget QFrame#progressFrame QLabel#time {
+	font-size: 11px;
+	color: #333;
 }
 
 ScrobbleControls QPushButton {
@@ -1355,44 +1370,68 @@ background-image: url(":/settings_PRESS.png");
 
 StatusBar QLabel#scrobbleIcon { qproperty-pixmap: url(":/scrobble_OFF.png"); }
 
-PlaybackControlsWidget QFrame#volume {
-border: none;
-margin: 0px 0px 4px 4px;
+PlaybackControlsWidget QSlider {
+	padding: 0px 2px;
 }
 
-PlaybackControlsWidget QLabel#volMin,
-PlaybackControlsWidget QLabel#volMax {
-border: none;
-background-repeat: no-repeat;
-background-position: center;
-min-width: 16px;
-max-width: 16px;
-height: 16px;
-margin: 0px 0px 0px 0px;
-background-image: url(":/volume_min.png");
-}
-
-PlaybackControlsWidget QLabel#volMin {
-min-width: 8px;
-max-width: 8px;
-}
-
-PlaybackControlsWidget QLabel#volMax {
-background-image: url(":/volume_max.png");
+PlaybackControlsWidget VolumeSlider {
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:1 #cccccc, stop:0 #e5e5e5);
 }
 
 PlaybackControlsWidget Phonon--VolumeSlider {
-min-width: 104px;
-max-width: 112px;
-margin: 0px -3px 0px -3px;
+	min-width: 60px;
+	max-width: 60px;
+	background-image: none;
+	background-repeat: none;
+	qproperty-muteVisible: false;
+	height: 16px;
 }
 
 PlaybackControlsWidget QSlider::groove:horizontal {
-background-repeat: no-repeat;
-background-position: center;
-width: 112px;
-height: 16px;
-background-image: url(":/volume_slot_OFF.png");
+	padding: 0px -7px;
+	height: 16px;
+	border-image: url(":/progress_slot_OFF.png") 0px 3px 0px 3px stretch;
+	border-left-width: 3px;
+	border-right-width: 3px;
+}
+
+PlaybackControlsWidget QSlider::sub-page:horizontal {
+	border-image: url(":/progress_slot_ON.png") 0px 3px 0px 3px stretch;
+	border-left-width: 3px;
+	border-right-width: 3px;
+}
+
+PlaybackControlsWidget QProgressBar#progress {
+	border-image: url(":/progress_slot_OFF.png") 0px 3px 0px 3px stretch;
+	border-left-width: 3px;
+	border-right-width: 3px;
+	padding: 0px -3px;
+	max-height: 16px;
+}
+
+PlaybackControlsWidget QProgressBar#progress::chunk {
+	border-image: url(":/progress_slot_ON.png") 0px 3px 0px 3px stretch;
+	border-left-width: 3px;
+	border-right-width: 3px;
+}
+
+PlaybackControlsWidget QFrame#progressFrame QProgressBar#scrobbleMeter {
+	background-image: url(":/scrobble_progress_OFF.png");
+	background-repeat: none;
+	background-color: transparent;
+	background-position: inherit center;
+	min-height: 16px;
+	max-height: 16px;
+	width: 30px;
+	border: none;
+	qproperty-textVisible: false;
+}
+
+PlaybackControlsWidget QFrame#progressFrame QProgressBar#scrobbleMeter:chunk {
+	background-image: url(":/scrobble_progress_ON.png");
+	min-height: 16px;
+	max-height: 16px;
+	background-repeat: none;
 }
 
 PlaybackControlsWidget QSlider::handle:horizontal {

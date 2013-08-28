@@ -46,7 +46,7 @@ private slots:
 
     void onTuningIn( const RadioStation& station );
     void onRadioStopped();
-    void onTrackStarted( const Track& track , const Track& oldTrack );
+    void onTrackStarted( const lastfm::Track& track , const lastfm::Track& oldTrack );
 
     void onGotRecentStations();
 
