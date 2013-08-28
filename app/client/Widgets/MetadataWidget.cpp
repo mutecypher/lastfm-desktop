@@ -192,34 +192,35 @@ MetadataWidget::onTrackCorrected( QString )
 void
 MetadataWidget::setTrackDetails( const Track& track )
 {
-   if ( ui->scrollArea->verticalScrollBar()->isVisible() )
-       ui->scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+    if ( ui->scrollArea->verticalScrollBar()->isVisible() )
+        ui->scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 
-   ui->trackTitle->setText( Label::anchor( track.www().toString(), track.title( Track::Corrected ) ) );
-   ui->trackArtist->setText( tr("by %1").arg( Label::anchor( track.artist( Track::Corrected ).www().toString(), track.artist( Track::Corrected ))));
-   ui->artistArtist->setText( Label::anchor( track.artist( Track::Corrected ).www().toString(),track.artist( Track::Corrected )));
+    ui->trackTitle->setText( Label::anchor( track.www().toString(), track.title( Track::Corrected ) ) );
+    ui->trackArtist->setText( tr("by %1").arg( Label::anchor( track.artist( Track::Corrected ).www().toString(), track.artist( Track::Corrected ))));
+    ui->artistArtist->setText( Label::anchor( track.artist( Track::Corrected ).www().toString(),track.artist( Track::Corrected )));
+    ui->similarArtists->setText( Label::anchor( "http://www.last.fm/music/" + track.artist( Track::Corrected ) + "/+similar", tr( "Similar Artists" ) ) );
 
-   if ( !m_albumGuess.isNull() )
-       ui->trackAlbum->setText( tr("from %1").arg( Label::anchor( m_albumGuess.www().toString(), m_albumGuess)));
-   else
-   {
-       if ( m_track.album().isNull() )
-           ui->trackAlbum->hide();
-       else
-           ui->trackAlbum->setText( tr("from %1").arg( Label::anchor( track.album( Track::Corrected ).www().toString(), track.album( Track::Corrected ))));
-   }
+    if ( !m_albumGuess.isNull() )
+        ui->trackAlbum->setText( tr("from %1").arg( Label::anchor( m_albumGuess.www().toString(), m_albumGuess)));
+    else
+    {
+        if ( m_track.album().isNull() )
+            ui->trackAlbum->hide();
+        else
+            ui->trackAlbum->setText( tr("from %1").arg( Label::anchor( track.album( Track::Corrected ).www().toString(), track.album( Track::Corrected ))));
+    }
 
-   ui->radio->setStation( RadioStation::similar( Artist( track.artist().name() ) ), tr( "Play %1 Radio" ).arg( track.artist().name() ) );
+    ui->radio->setStation( RadioStation::similar( Artist( track.artist().name() ) ), tr( "Play %1 Radio" ).arg( track.artist().name() ) );
 
-   connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->scrobbleControls, SLOT(setLoveChecked(bool)));
+    connect( track.signalProxy(), SIGNAL(loveToggled(bool)), ui->scrobbleControls, SLOT(setLoveChecked(bool)));
 
-   // Add the green astrix to the title, if it has been corrected
-   if ( track.corrected() )
-   {
-       // TODO: The hover text doesn't work at the moment.
-       QString toolTip = tr("Auto-corrected from: %1").arg( track.toString( Track::Original ) );
-       ui->trackTitle->setText( ui->trackTitle->text() + "<img src=\":/asterisk_small.png\" alt=\"" + toolTip + "\" title=\"" + toolTip + "\" />" );
-   }
+    // Add the green astrix to the title, if it has been corrected
+    if ( track.corrected() )
+    {
+        // TODO: The hover text doesn't work at the moment.
+        QString toolTip = tr("Auto-corrected from: %1").arg( track.toString( Track::Original ) );
+        ui->trackTitle->setText( ui->trackTitle->text() + "<img src=\":/asterisk_small.png\" alt=\"" + toolTip + "\" title=\"" + toolTip + "\" />" );
+    }
 }
 
 void

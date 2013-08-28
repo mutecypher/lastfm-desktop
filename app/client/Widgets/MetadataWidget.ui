@@ -436,9 +436,12 @@
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="similarArtists">
+               <widget class="unicorn::Label" name="similarArtists">
                 <property name="text">
                  <string>Similar Artists</string>
+                </property>
+                <property name="textFormat">
+                 <enum>Qt::RichText</enum>
                 </property>
                </widget>
               </item>
@@ -594,14 +597,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>HttpImageWidget</class>
-   <extends>QLabel</extends>
-   <header>lib/unicorn/widgets/HttpImageWidget.h</header>
-  </customwidget>
-  <customwidget>
    <class>unicorn::Label</class>
    <extends>QLabel</extends>
    <header>lib/unicorn/widgets/Label.h</header>
+  </customwidget>
+  <customwidget>
+   <class>HttpImageWidget</class>
+   <extends>QLabel</extends>
+   <header>lib/unicorn/widgets/HttpImageWidget.h</header>
   </customwidget>
   <customwidget>
    <class>ScrobbleControls</class>
