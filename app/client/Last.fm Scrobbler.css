@@ -689,6 +689,10 @@ FriendListWidget QListView::item:selected {
   background-color: #dddddd;
 }
 
+ScrobbleConfirmationDialog QLabel#invalidScrobbleWarning {
+	color: red;
+}
+
 QuickStartWidget QLineEdit {
 border: 1px solid #cdcdcd;
 border-radius: 5px;
