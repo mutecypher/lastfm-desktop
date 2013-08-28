@@ -198,7 +198,7 @@ CommandReciever::trackTitle() const
     QString string;
 
     if ( !t.isNull() && artworkDownloaded() )
-        string = t.title( Track::Corrected );
+        string = t.title();
 
     return string;
 }
@@ -210,7 +210,7 @@ CommandReciever::artist() const
     QString string;
 
     if ( !t.isNull() && artworkDownloaded() )
-        string = t.artist( Track::Corrected );
+        string = t.artist();
 
     return string;
 }
@@ -222,7 +222,7 @@ CommandReciever::album() const
     QString string;
 
     if ( !t.isNull() && artworkDownloaded() )
-        string = t.album( Track::Corrected );
+        string = t.album();
 
     return string;
 }

@@ -56,7 +56,6 @@ TrackWidget::TrackWidget( Track& track, QWidget *parent )
     ui->buttonLayout->setAlignment( ui->tag, Qt::AlignTop );
     ui->buttonLayout->setAlignment( ui->share, Qt::AlignTop );
     ui->buttonLayout->setAlignment( ui->buy, Qt::AlignTop );
-    ui->trackTitleLayout->setAlignment( ui->asterisk, Qt::AlignTop );
 
     ui->albumArt->setAttribute( Qt::WA_LayoutUsesWidgetRect );
     ui->love->setAttribute( Qt::WA_LayoutUsesWidgetRect );
@@ -208,10 +207,6 @@ void
 TrackWidget::setTrackTitleWidth()
 {
     int width = qMin( ui->trackTitleFrame->width(), ui->trackTitle->fontMetrics().width( ui->trackTitle->text() ) + 1 );
-
-    if ( ui->asterisk->isVisible() )
-        width = qMin( width, ui->trackTitleFrame->width() - (ui->asterisk->width() + 3) );
-
     ui->trackTitle->setFixedWidth( width );
 }
 
@@ -237,7 +232,6 @@ TrackWidget::setTrack( lastfm::Track& track )
 
     m_movie->stop();
     ui->equaliser->hide();
-    ui->asterisk->hide();
 
     setTrackDetails();
 
@@ -251,15 +245,8 @@ TrackWidget::setTrack( lastfm::Track& track )
 void
 TrackWidget::setTrackDetails()
 {
-    ui->trackTitle->setText( m_track.title( lastfm::Track::Corrected ) );
-    ui->artist->setText( m_track.artist( lastfm::Track::Corrected ).name() );
-
-    if ( m_track.title( lastfm::Track::Corrected ) != m_track.title( lastfm::Track::Original )
-         || m_track.title( lastfm::Track::Corrected ) != m_track.title( lastfm::Track::Original ) )
-    {
-         ui->asterisk->show();
-         ui->asterisk->setToolTip( tr( "Auto-corrected from: %1" ).arg( m_track.toString( lastfm::Track::Original ) ) );
-    }
+    ui->trackTitle->setText( m_track.title() );
+    ui->artist->setText( m_track.artist().name() );
 
     if ( m_timestampTimer ) m_timestampTimer->stop();
 

@@ -66,7 +66,6 @@ private slots:
     void onTrackGotYourTags();
     void onArtistGotYourTags();
 
-    void onTrackCorrected( QString correction );
     void listItemClicked( const class QModelIndex& );
 
     void onScrobblesCached( const QList<lastfm::Track>& tracks );
