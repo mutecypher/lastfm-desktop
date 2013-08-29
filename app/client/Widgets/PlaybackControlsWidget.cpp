@@ -74,6 +74,7 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     // love is dealt with by the application
     connect( aApp->banAction(), SIGNAL(triggered(bool)), SLOT(onBanClicked()) );
     connect( aApp->playAction(), SIGNAL(triggered(bool)), SLOT(onPlayClicked(bool)) );
+    connect( aApp->muteAction(), SIGNAL(triggered(bool)), SLOT(mute()) );
     connect( aApp, SIGNAL(skipTriggered()), SLOT(onSkipClicked()) );
 
     m_playAction = new QAction( tr( "Play" ), aApp );
@@ -84,6 +85,7 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     connect( aApp->loveAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
     connect( aApp->banAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
     connect( aApp->playAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
+    connect( aApp->skipAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
     connect( aApp->skipAction(), SIGNAL(changed()), SLOT(onActionsChanged()) );
 
     connect( &RadioService::instance(), SIGNAL(tuningIn(RadioStation)), SLOT(onTuningIn(RadioStation)));
@@ -111,7 +113,7 @@ PlaybackControlsWidget::PlaybackControlsWidget(QWidget *parent) :
     connect( ui->ban, SIGNAL(clicked()), aApp->banAction(), SLOT(trigger()));
     connect( ui->play, SIGNAL(clicked()), aApp->playAction(), SLOT(trigger()));
     connect( ui->skip, SIGNAL(clicked()), aApp->skipAction(), SLOT(trigger()));
-    connect( ui->volume, SIGNAL(clicked()), SLOT(onVolumeClicked()));
+    connect( ui->volume, SIGNAL(clicked()), SLOT(mute()));
 
     connect( &ScrobbleService::instance(), SIGNAL(frameChanged(int)), SLOT(onFrameChanged(int)) );
 }
@@ -540,7 +542,7 @@ PlaybackControlsWidget::eventFilter( QObject *obj, QEvent *event )
 }
 
 void
-PlaybackControlsWidget::onVolumeClicked()
+PlaybackControlsWidget::mute()
 {
     qreal volume = RadioService::instance().audioOutput()->volume();
     RadioService::instance().audioOutput()->setMuted( !RadioService::instance().audioOutput()->isMuted() );

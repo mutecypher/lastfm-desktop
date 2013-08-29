@@ -72,7 +72,7 @@ private slots:
     void onScrobbleStatusChanged( short scrobbleStatus );
 
     void onVolumeChanged( qreal volume );
-    void onVolumeClicked();
+    void mute();
 
 private:
     void setTime( int frame, const Track& track );
