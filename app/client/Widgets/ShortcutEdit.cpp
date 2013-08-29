@@ -29,7 +29,11 @@ ShortcutEdit::ShortcutEdit( QWidget* parent )
 {
     setEditable( true );
     QStringList keys;
+#ifdef Q_OS_MAC
     keys << QString::fromUtf8("⌃⌘ S")
+#else
+    keys << QString::fromUtf8("Ctrl+Shift+S")
+#endif
          << "F1"
          << "F3"
          << "F2"
@@ -83,25 +87,41 @@ ShortcutEdit::keyPressEvent( QKeyEvent* e )
     Qt::KeyboardModifiers modifiers;
 
     //Modifier to symbol
+    if( e->modifiers() & Qt::ControlModifier )
+    {
+#ifdef Q_OS_MAC
+        text += QString::fromUtf8( "⌘" );
+#else
+        text += "Ctrl+";
+#endif
+        modifiers |= Qt::ControlModifier;
+    }
+    if( e->modifiers() & Qt::AltModifier )
+    {
+#ifdef Q_OS_MAC
+        text += QString::fromUtf8( "⌥" );
+#else
+        text += "Alt+";
+#endif
+        modifiers |= Qt::AltModifier;
+    }
     if( e->modifiers() & Qt::ShiftModifier )
     {
+#ifdef Q_OS_MAC
         text += QString::fromUtf8( "⇧" );
+#else
+        text += "Shift+";
+#endif
         modifiers |= Qt::ShiftModifier;
     }
     if( e->modifiers() & Qt::MetaModifier )
     {
+#ifdef Q_OS_MAC
         text += QString::fromUtf8( "⌃" );
+#else
+        text += "Win+";
+#endif
         modifiers |= Qt::MetaModifier;
-    }
-    if( e->modifiers() & Qt::AltModifier )
-    {
-        text += QString::fromUtf8( "⌥" );
-        modifiers |= Qt::AltModifier;
-    }
-    if( e->modifiers() & Qt::ControlModifier )
-    {
-        text += QString::fromUtf8( "⌘" );
-        modifiers |= Qt::ControlModifier;
     }
 
     //Backspace key to clear shortcut
