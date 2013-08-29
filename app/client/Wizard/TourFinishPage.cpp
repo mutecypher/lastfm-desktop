@@ -21,8 +21,10 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
-#include "FirstRunWizard.h"
 #include "TourFinishPage.h"
+
+#include "../Application.h"
+#include "../Bootstrapper/AbstractBootstrapper.h"
 
 TourFinishPage::TourFinishPage()
 {
@@ -32,15 +34,50 @@ TourFinishPage::TourFinishPage()
 
     layout->addWidget( ui.image = new QLabel( this ), 0, Qt::AlignTop | Qt::AlignHCenter );
     ui.image->setObjectName( "image" );
-    layout->addWidget( ui.description = new QLabel( tr( "<p>Now you're ready to get started! Just click <strong>Finish</strong> and start exploring.</p>"
-                                                        "<p>We've also finished importing your listening history and have added it to your Last.fm profile.</p>"
-                                                        "<p>Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!</p>"), this ),
-                         0,
-                         Qt::AlignTop);
+    layout->addWidget( ui.description = new QLabel( this ), 0, Qt::AlignTop );
     ui.description->setObjectName( "description" );
     ui.description->setWordWrap( true );
+    setDescription( wizard()->bootstrapState(), wizard()->bootstrapStatus() );
+
+    connect( aApp, SIGNAL(bootstrapDone(AbstractBootstrapper::BootstrapStatus)), SLOT(onBootstrapDone(AbstractBootstrapper::BootstrapStatus)));
 }
 
+void
+TourFinishPage::setDescription( FirstRunWizard::BootstrapState state, AbstractBootstrapper::BootstrapStatus status )
+{
+    if ( state == FirstRunWizard::BootstrapFinished )
+    {
+        if ( status == AbstractBootstrapper::Bootstrap_Ok )
+        {
+            ui.description->setText( tr( "<p>Now you're ready to get started! Just click <strong>Finish</strong> and start exploring.</p>"
+                                         "<p>We've also finished importing your listening history and have added it to your Last.fm profile.</p>"
+                                         "<p>Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!</p>") );
+        }
+        else
+        {
+            QMap<AbstractBootstrapper::BootstrapStatus, QString> reasons;
+            reasons[AbstractBootstrapper::Bootstrap_UploadError] = tr( "there was an upload error" );
+            reasons[AbstractBootstrapper::Bootstrap_Denied] = tr( "the submission was denied by Last.fm" );
+            reasons[AbstractBootstrapper::Bootstrap_Spam] = tr( "it was detected as spam (too high playcounts?)" );
+            reasons[AbstractBootstrapper::Bootstrap_Cancelled] = tr( "the submission was cancelled" );
+
+            ui.description->setText( tr( "<p>Now you're ready to get started! Just click <strong>Finish</strong> and start exploring.</p>"
+                                         "<p>Importing your listening history to Last.fm failed because %1. Sorry about that!</p>"
+                                         "<p>Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!</p>").arg( reasons[status] ) );
+        }
+    }
+    else if ( state == FirstRunWizard::BootstrapStarted )
+    {
+        ui.description->setText( tr( "<p>Now you're ready to get started! Just click <strong>Finish</strong> and start exploring.</p>"
+                                     "<p>We're still importing your listening history and it will be added to your Last.fm profile soon.</p>"
+                                     "<p>Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!</p>") );
+    }
+    else
+    {
+        ui.description->setText( tr( "<p>Now you're ready to get started! Just click <strong>Finish</strong> and start exploring.</p>"
+                                     "<p>Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!</p>") );
+    }
+}
 
 void
 TourFinishPage::initializePage()
@@ -57,3 +94,12 @@ void
 TourFinishPage::cleanupPage()
 {
 }
+
+
+void
+TourFinishPage::onBootstrapDone( AbstractBootstrapper::BootstrapStatus status )
+{
+    setDescription( FirstRunWizard::BootstrapFinished, status);
+}
+
+

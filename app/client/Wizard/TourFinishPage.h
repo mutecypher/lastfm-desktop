@@ -22,6 +22,8 @@
 #define TOURFINISHPAGE_H
 
 #include "WizardPage.h"
+#include "../Bootstrapper/AbstractBootstrapper.h"
+#include "FirstRunWizard.h"
 
 class TourFinishPage : public WizardPage
 {
@@ -36,7 +38,11 @@ private:
 public:
     explicit TourFinishPage();
 
+private slots:
+    void onBootstrapDone( AbstractBootstrapper::BootstrapStatus status );
+
 private:
+    void setDescription( FirstRunWizard::BootstrapState state, AbstractBootstrapper::BootstrapStatus status );
     void initializePage();
     void cleanupPage();
 };

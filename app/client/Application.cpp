@@ -451,7 +451,7 @@ Application::startBootstrap( const QString& pluginId )
     else
         m_bootstrapper = new PluginBootstrapper( pluginId, this );
 
-    connect( m_bootstrapper, SIGNAL(done(int)), SIGNAL(bootstrapDone(int)) );
+    connect( m_bootstrapper, SIGNAL(done(AbstractBootstrapper::BootstrapStatus)), SIGNAL(bootstrapDone(AbstractBootstrapper::BootstrapStatus)) );
     emit bootstrapStarted( pluginId );
     m_bootstrapper->bootStrap();
 }

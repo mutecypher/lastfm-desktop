@@ -172,7 +172,7 @@ namespace audioscrobbler
         void showMessage( const QString& message, const QString& id );
 
         void bootstrapStarted( const QString& pluginId );
-        void bootstrapDone( int status );
+        void bootstrapDone( AbstractBootstrapper::BootstrapStatus status );
 
         void scrobbleToggled( bool on );
 
