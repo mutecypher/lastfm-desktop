@@ -303,7 +303,6 @@ PlaybackControlsWidget::onTuningIn( const RadioStation& station )
     ui->love->setVisible( true );
     ui->ban->setVisible( true );
     ui->as->setVisible( true );
-    ui->splitter1->setVisible( true );
     ui->time->setVisible( false );
     ui->time->setText( "" );
     ui->scrobbleMeter->setVisible( true );
@@ -524,7 +523,7 @@ PlaybackControlsWidget::eventFilter( QObject *obj, QEvent *event )
 
         if ( obj == ui->volume && !m_volumeSlider->isVisible() )
         {
-            QPoint topLeft( ui->splitter2->geometry().topLeft() );
+            QPoint topLeft( ui->volumeSplitter2->geometry().topLeft() );
             topLeft = ui->volume->parentWidget()->mapTo( this, topLeft );
             QRect geo( topLeft, QSize( m_volumeSlider->size().width(), ui->volume->height() ) );
             m_volumeSlider->setGeometry( geo );

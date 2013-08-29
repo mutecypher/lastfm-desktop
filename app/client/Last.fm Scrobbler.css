@@ -246,9 +246,23 @@ QFrame#splitter5 {
 	margin: 0px 20px;
 }
 
-PlaybackControlsWidget QFrame#progressFrame QFrame#splitter1,
-PlaybackControlsWidget QFrame#progressFrame QFrame#splitter2 {
+QFrame#volumeSplitter1,
+QFrame#volumeSplitter2 {
+	border: none;
+	border-right: 1px solid #eee;
+	border-left: 1px solid #bbb;
+	min-width: 0px;
+	max-width: 0px;
+	margin: 0px 20px;
+}
+
+PlaybackControlsWidget QFrame#progressFrame QFrame#volumeSplitter1,
+PlaybackControlsWidget QFrame#progressFrame QFrame#volumeSplitter2 {
 	margin: 0px;
+}
+
+PlaybackControlsWidget QPushButton#volume {
+	padding: 0px 3px;
 }
 
 

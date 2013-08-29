@@ -16,8 +16,8 @@ VolumeSlider::VolumeSlider( Phonon::AudioOutput* audioOutput, QWidget* parent )
 
     layout->addWidget( ui.volumeSlider = new Phonon::VolumeSlider( audioOutput, this ), 0, Qt::AlignLeft );
 
-    m_timeLine = new QTimeLine( 500, this );
-    m_timeLine->setEasingCurve( QEasingCurve::OutQuint );
+    m_timeLine = new QTimeLine( 300, this );
+    m_timeLine->setEasingCurve( QEasingCurve::OutQuad );
     connect( m_timeLine, SIGNAL(frameChanged(int)), SLOT(onFrameChanged(int)));
     connect( m_timeLine, SIGNAL(finished()), SLOT(onFinished()));
 }
@@ -28,9 +28,9 @@ VolumeSlider::paintEvent( QPaintEvent* event )
     QFrame::paintEvent( event );
 
     QPainter p( this );
-    p.setPen( Qt::white );
+    p.setPen( QColor( 0xeeeeee ) );
     p.drawLine( rect().topRight() - QPoint( 0, 0 ), rect().bottomRight() - QPoint( 0, 0 ) );
-    p.setPen( QColor( 0xcdcdcd ) );
+    p.setPen( QColor( 0xbbbbbb ) );
     p.drawLine( rect().topRight() - QPoint( 1, 0 ), rect().bottomRight() - QPoint( 1, 0 ) );
 }
 
