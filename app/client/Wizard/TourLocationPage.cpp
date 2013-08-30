@@ -53,8 +53,12 @@ TourLocationPage::TourLocationPage()
 
 TourLocationPage::~TourLocationPage()
 {
-    if ( m_flashTimer ) m_flashTimer->stop();
-    aApp->tray()->setIcon( m_normalIcon );
+    if ( m_flashTimer )
+        m_flashTimer->stop();
+
+    if ( !m_normalIcon.isNull() )
+        aApp->tray()->setIcon( m_normalIcon );
+
     delete m_arrow;
 }
 
