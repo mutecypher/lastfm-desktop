@@ -24,6 +24,7 @@
 #include <QNetworkReply>
 #include <QEventLoop>
 #include <QDebug>
+#include <QTimer>
 
 #include <lastfm/Fingerprint.h>
 #include <lastfm/FingerprintableSource.h>
@@ -50,7 +51,7 @@ Fingerprinter::Fingerprinter( const lastfm::Track& track, QObject* parent )
             catch ( const lastfm::Fingerprint::Error& error )
             {
                 qWarning() << "Fingerprint error: " << error;
-                qApp->quit();
+                QTimer::singleShot(250, qApp, SLOT(quit()));
             }
         }
     }
@@ -63,7 +64,7 @@ Fingerprinter::Fingerprinter( const lastfm::Track& track, QObject* parent )
         // day we might do something with this info, like offer corrections
         connect( m_fp.id().getSuggestions(), SIGNAL(finished()), SLOT(onGotSuggestions()) );
 #else
-        qApp->quit();
+        QTimer::singleShot(250, qApp, SLOT(quit()));
 #endif
     }
 }
@@ -76,15 +77,24 @@ Fingerprinter::~Fingerprinter()
 void
 Fingerprinter::onFingerprintSubmitted()
 {
-    m_fp.decode( static_cast<QNetworkReply*>( sender() ) );
-    qDebug() << "Fingerprint success: " << m_fp.id();
+    try
+    {
+        m_fp.decode( static_cast<QNetworkReply*>( sender() ) );
+        qDebug() << "Fingerprint success: " << m_fp.id();
+    }
+    catch ( const lastfm::Fingerprint::Error& error )
+    {
+        qWarning() << "Fingerprint error: " << error;
+        QTimer::singleShot(250, qApp, SLOT(quit()));
+        return;
+    }
 
 #ifndef NDEBUG
     // This code will fetch the suggestions from the fingerprint id, one
     // day we might do something with this info, like offer corrections
     connect( m_fp.id().getSuggestions(), SIGNAL(finished()), SLOT(onGotSuggestions()) );
 #else
-    qApp->quit();
+    QTimer::singleShot(250, qApp, SLOT(quit()));
 #endif
 
 }
@@ -94,5 +104,5 @@ Fingerprinter::onGotSuggestions()
 {
     QMap<float, Track> suggestions = lastfm::FingerprintId::getSuggestions( static_cast<QNetworkReply*>( sender() ) );
     qDebug() << suggestions;
-    qApp->quit();
+    QTimer::singleShot(250, qApp, SLOT(quit()));
 }
