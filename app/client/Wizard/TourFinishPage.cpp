@@ -37,7 +37,6 @@ TourFinishPage::TourFinishPage()
     layout->addWidget( ui.description = new QLabel( this ), 0, Qt::AlignTop );
     ui.description->setObjectName( "description" );
     ui.description->setWordWrap( true );
-    setDescription( wizard()->bootstrapState(), wizard()->bootstrapStatus() );
 
     connect( aApp, SIGNAL(bootstrapDone(AbstractBootstrapper::BootstrapStatus)), SLOT(onBootstrapDone(AbstractBootstrapper::BootstrapStatus)));
 }
@@ -83,6 +82,8 @@ void
 TourFinishPage::initializePage()
 {
     setTitle( tr( "That's it, you're good to go!" ) );
+
+    setDescription( wizard()->bootstrapState(), wizard()->bootstrapStatus() );
 
     wizard()->setButton( FirstRunWizard::FinishButton, tr( "Finish" ) );
 
