@@ -349,8 +349,6 @@ TrackWidget::onRemovedScrobble()
 
    if ( lfm.parse( static_cast<QNetworkReply*>( sender() ) ) )
    {
-       qDebug() << lfm;
-
        emit removed();
    }
    else

@@ -178,8 +178,6 @@ unicorn::CloseAppsDialog::runningApps( const QList<IPluginInfo*>& plugins )
                     {
                         GetModuleBaseName( hProcess, hMod, szProcessName, sizeof(szProcessName)/sizeof(TCHAR) );
 
-                        qDebug() << QString( "%1  (PID: %2)").arg( QString::fromStdWString( szProcessName ), QString::number( aProcesses[i] ) );
-
                         foreach( IPluginInfo* plugin, plugins )
                             if ( plugin->processName().compare( QString::fromStdWString( szProcessName ), Qt::CaseInsensitive ) == 0 )
                                 apps << plugin->name();

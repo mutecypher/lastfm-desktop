@@ -565,8 +565,6 @@ Application::onSessionChanged( unicorn::Session& session )
     QDataStream skipsDataStream( &skipsData, QIODevice::ReadWrite );
 
     skipsDataStream >> m_skips;
-
-    qDebug() << m_skips;
 }
 
 void
@@ -578,8 +576,6 @@ Application::saveSkips() const
 
     unicorn::UserSettings us;
     us.setValue( "skips", skipsData );
-
-    qDebug() << m_skips;
 }
 
 void

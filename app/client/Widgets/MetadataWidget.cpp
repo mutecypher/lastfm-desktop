@@ -696,8 +696,6 @@ MetadataWidget::scrobbleString( const Track& track )
 
     QString scrobbleString;
 
-    qDebug() << m_userTrackScrobbles << m_userArtistScrobbles;
-
     if ( m_userTrackScrobbles != 0 )
         scrobbleString = tr( "You've listened to %1 %2 and %3 %4." ).arg( artistString, userArtistScrobblesString, trackString, userTrackScrobblesString );
     else

@@ -221,8 +221,6 @@ ScrobblesListWidget::onSessionChanged( const unicorn::Session& session )
 void
 ScrobblesListWidget::read()
 {
-    qDebug() << m_path;
-
     clear();
 
     // always have a now playing item in the list
@@ -291,8 +289,6 @@ ScrobblesListWidget::write()
 void
 ScrobblesListWidget::doWrite()
 {
-    qDebug() << "Writing recent_tracks";
-
     if ( count() == 0 )
         QFile::remove( m_path );
     else

@@ -61,8 +61,6 @@ BioWidget::BioWidget( QWidget* p )
     connect( ui.image, SIGNAL(loaded()), SLOT(update()));
 
     connect( this, SIGNAL(highlighted(QString)), SLOT(onHighlighted(QString)) );
-
-    qDebug() << fontInfo().pixelSize();
 }
 
 BioWidget::~BioWidget()
@@ -86,8 +84,6 @@ BioWidget::onHighlighted( const QString& url )
 void
 BioWidget::onImageLoaded()
 {
-    qDebug() << ui.image->pixmap()->width() << ui.image->pixmap()->height();
-
     insertWidget( ui.onTour );
 
     append( m_bioText );
@@ -241,10 +237,7 @@ BioWidget::polish()
 void
 BioWidget::setPixmap( const QPixmap& pixmap )
 {
-    qDebug() << pixmap.height();
-
     ui.image->setPixmap( pixmap );
-    //onImageLoaded();
 }
 
 void 
