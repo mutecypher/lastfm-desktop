@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.0" language="zh-CN">
-
 <context>
     <name>AboutDialog</name>
     <message>
@@ -16,11 +15,11 @@
 <context>
     <name>AccessPage</name>
     <message>
-        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&#x27;t connected because you closed the browser window or you clicked cancel, please try again.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&apos;t connected because you closed the browser window or you clicked cancel, please try again.&lt;/p&gt;</source>
         <translation>&lt;p&gt;请点击浏览器中的&lt;strong&gt;允许访问&lt;/strong&gt;按钮，将您的 Last.fm 帐户连接到 Last.fm 桌面程序。&lt;/p&gt;&lt;p&gt;如果您已关闭浏览器窗口或点击取消而未能连接，请再试一次。&lt;p /&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>We&#x27;re waiting for you to connect to Last.fm</source>
+        <source>We&apos;re waiting for you to connect to Last.fm</source>
         <translation>我们正等待您连接到 Last.fm</translation>
     </message>
     <message>
@@ -36,7 +35,7 @@
         <translation>再试一次</translation>
     </message>
     <message>
-        <source>&lt;p&gt;If your web browser didn&#x27;t open, copy and paste the link below into your address bar.&lt;/p&gt;</source>
+        <source>&lt;p&gt;If your web browser didn&apos;t open, copy and paste the link below into your address bar.&lt;/p&gt;</source>
         <translation>&lt;p&gt;如果浏览器未启动，请复制以下链接并将其粘贴到浏览器地址栏。&lt;/p&gt;</translation>
     </message>
 </context>
@@ -100,7 +99,7 @@
         <translation>&lt;p&gt;要获得最适合您音乐品味的推荐，建议您从媒体播放器导入收听历史。&lt;/p&gt;&lt;p&gt;请选择您最常用的媒体播放器，然后点击&lt;strong&gt;开始导入&lt;/strong&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>Your plugins haven&#x27;t been installed</source>
+        <source>Your plugins haven&apos;t been installed</source>
         <translation>插件尚未安装</translation>
     </message>
     <message>
@@ -112,7 +111,7 @@
         <translation>iTunes</translation>
     </message>
     <message>
-        <source>Now let&#x27;s import your listening history</source>
+        <source>Now let&apos;s import your listening history</source>
         <translation>现在导入收听历史</translation>
     </message>
     <message>
@@ -131,7 +130,7 @@
 <context>
     <name>BootstrapProgressPage</name>
     <message>
-        <source>&lt;p&gt;Don&#x27;t worry, the upload process shouldn&#x27;t take more than a couple of minutes, depending on the size of your music library.&lt;/p&gt;&lt;p&gt;While we&#x27;re hard at work adding your listening history to your Last.fm profile, why don&#x27;t you check out the main features of the Last.fm Desktop App. Click &lt;strong&gt;Continue&lt;/strong&gt; to take the tour.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Don&apos;t worry, the upload process shouldn&apos;t take more than a couple of minutes, depending on the size of your music library.&lt;/p&gt;&lt;p&gt;While we&apos;re hard at work adding your listening history to your Last.fm profile, why don&apos;t you check out the main features of the Last.fm Desktop App. Click &lt;strong&gt;Continue&lt;/strong&gt; to take the tour.&lt;/p&gt;</source>
         <translation>&lt;p&gt;别担心，上传过程至多只需要几分钟，具体取决于您的音乐库大小，。&lt;/p&gt;&lt;p&gt;趁我们忙着将收听历史添加到您的 Last.fm 专页，去看看 Last.fm 桌面程序有什么主要功能吧。点击&lt;strong&gt;继续&lt;/strong&gt;观看功能介绍。&lt;/p&gt;</translation>
     </message>
     <message>
@@ -148,10 +147,6 @@
     <message>
         <source>Close Apps</source>
         <translation>关闭程序</translation>
-    </message>
-    <message>
-        <source>Please close the following apps to continue.</source>
-        <translation>要继续，请先关闭以下程序。</translation>
     </message>
 </context>
 <context>
@@ -284,7 +279,7 @@
         <translation>在 Last.fm 上寻找好友</translation>
     </message>
     <message>
-        <source>&lt;h3&gt;You haven&#x27;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;/p&gt;</source>
+        <source>&lt;h3&gt;You haven&apos;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;/p&gt;</source>
         <translation>&lt;h3&gt;您尚未在 Last.fm 上结交任何好友。&lt;/h3&gt;&lt;p&gt;使用好友搜索功能，可以在 Last.fm 上轻松找到 Facebook 好友和电邮联系人。&lt;p /&gt;&lt;/p&gt;</translation>
     </message>
     <message>
@@ -303,7 +298,7 @@
 <context>
     <name>FriendWidget</name>
     <message>
-        <source>%1&#x27;s Library Radio</source>
+        <source>%1&apos;s Library Radio</source>
         <translation>%1的音乐库电台</translation>
     </message>
     <message>
@@ -349,10 +344,6 @@
         <translation>在菜单栏中显示应用程序图标</translation>
     </message>
     <message>
-        <source>Show:</source>
-        <translation>显示：</translation>
-    </message>
-    <message>
         <source>Launch application with media players</source>
         <translation>随媒体播放器启动程序</translation>
     </message>
@@ -365,28 +356,12 @@
         <translation>显示桌面通知</translation>
     </message>
     <message>
-        <source>Remember last radio station and tune in on start up</source>
-        <translation>记住上次播放的电台，并在启动后自动播放</translation>
-    </message>
-    <message>
         <source>Send crash reports to Last.fm</source>
         <translation>向 Last.fm 发送程序崩溃报告</translation>
     </message>
     <message>
         <source>Check for updates automatically</source>
         <translation>自动检查更新</translation>
-    </message>
-    <message>
-        <source>Menu bar and dock icons</source>
-        <translation>菜单栏和 Dock 图标</translation>
-    </message>
-    <message>
-        <source>Only dock icon (hide menu bar icon)</source>
-        <translation>仅限 Dock 图标（隐藏菜单栏图标）</translation>
-    </message>
-    <message>
-        <source>Only menu bar icon (hide dock icon)</source>
-        <translation>仅限菜单栏图标（隐藏 Dock 图标）</translation>
     </message>
     <message>
         <source>Enable media keys</source>
@@ -407,17 +382,6 @@
     <message>
         <source>Update to beta versions - Warning: only for the brave!</source>
         <translation>更新到测试版 － 注意：这是勇敢者的游戏！</translation>
-    </message>
-</context>
-<context>
-    <name>IPluginInfo</name>
-    <message>
-        <source>The %1 plugin hasn&#x27;t been installed</source>
-        <translation>%1 插件尚未安装</translation>
-    </message>
-    <message>
-        <source>You didn&#x27;t close %1 so its plugin hasn&#x27;t been installed.</source>
-        <translation>您未关闭 %1，因此其插件尚未安装。</translation>
     </message>
 </context>
 <context>
@@ -487,11 +451,11 @@
 <context>
     <name>LoginPage</name>
     <message>
-        <source>&lt;p&gt;Already a Last.fm user? Connect your account with the Last.fm Desktop App and it&#x27;ll update your profile with the music you&#x27;re listening to.&lt;/p&gt;&lt;p&gt;If you don&#x27;t have an account you can sign up now for free now.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Already a Last.fm user? Connect your account with the Last.fm Desktop App and it&apos;ll update your profile with the music you&apos;re listening to.&lt;/p&gt;&lt;p&gt;If you don&apos;t have an account you can sign up now for free now.&lt;/p&gt;</source>
         <translation>&lt;p&gt;已经是 Last.fm 用户了？将 Last.fm 桌面程序连接到帐户吧，这样您收听的音乐就会更新到专页。&lt;/p&gt;&lt;p&gt;还没有帐户？马上免费注册。&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>Let&#x27;s get started by connecting your Last.fm account</source>
+        <source>Let&apos;s get started by connecting your Last.fm account</source>
         <translation>我们首先来连接您的 Last.fm 帐户</translation>
     </message>
     <message>
@@ -532,13 +496,13 @@
         </translation>
     </message>
     <message numerus="yes">
-        <source>&lt;p&gt;Your plugin(s) ha(s|ve) been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to scrobble with your media player(s)&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your plugin(s) ha(s|ve) been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to scrobble with your media player(s)&lt;/p&gt;</source>
         <translation>
             <numerusform>&lt;p&gt;插件安装完毕。&lt;/p&gt;&lt;p&gt;现在可以用媒体播放器记录音乐了。&lt;/p&gt;</numerusform>
         </translation>
     </message>
     <message>
-        <source>Your plugins haven&#x27;t been installed</source>
+        <source>Your plugins haven&apos;t been installed</source>
         <translation>还没安装插件</translation>
     </message>
     <message>
@@ -691,10 +655,6 @@
         <translation>播放%1电台</translation>
     </message>
     <message>
-        <source>Auto-corrected from: %1</source>
-        <translation>自动更正自：%1</translation>
-    </message>
-    <message>
         <source>%L1</source>
         <translation>%L1</translation>
     </message>
@@ -773,11 +733,11 @@
         <translation>因为您收听%1、%2、%3、%4和%5，所以向您推荐这位艺术家。</translation>
     </message>
     <message>
-        <source>From %1&#x27;s library.</source>
+        <source>From %1&apos;s library.</source>
         <translation>选自%1的音乐库。</translation>
     </message>
     <message>
-        <source>From %1 and %2&#x27;s libraries.</source>
+        <source>From %1 and %2&apos;s libraries.</source>
         <translation>选自%1和%2的音乐库。</translation>
     </message>
     <message numerus="yes">
@@ -787,27 +747,27 @@
         </translation>
     </message>
     <message>
-        <source>From %1, %2, and %3&#x27;s libraries.</source>
+        <source>From %1, %2, and %3&apos;s libraries.</source>
         <translation>选自%1、%2和%3的音乐库。</translation>
     </message>
     <message>
-        <source>You&#x27;ve listened to %1 %2 and %3 %4.</source>
+        <source>You&apos;ve listened to %1 %2 and %3 %4.</source>
         <translation>您收听过%1 %2，%3 %4。</translation>
     </message>
     <message>
-        <source>From %1, %2, %3, and %4&#x27;s libraries.</source>
+        <source>From %1, %2, %3, and %4&apos;s libraries.</source>
         <translation>选自%1、%2、%3和%4的音乐库。</translation>
     </message>
     <message>
-        <source>You&#x27;ve listened to %1 %2, but not this track.</source>
+        <source>You&apos;ve listened to %1 %2, but not this track.</source>
         <translation>您收听过%1 %2，但不是这首单曲。</translation>
     </message>
     <message>
-        <source>From %1, %2, %3, %4, and %5&#x27;s libraries.</source>
+        <source>From %1, %2, %3, %4, and %5&apos;s libraries.</source>
         <translation>选自%1、%2、%3、%4和%5的音乐库。</translation>
     </message>
     <message>
-        <source>This is the first time you&#x27;ve listened to %1.</source>
+        <source>This is the first time you&apos;ve listened to %1.</source>
         <translation>这是您第一次收听%1。</translation>
     </message>
 </context>
@@ -919,6 +879,30 @@
         <source>Scrobbling from</source>
         <translation>记录自</translation>
     </message>
+    <message>
+        <source>Scrobble meter: %1%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not scrobbled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable scrobbling by getting the %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last.fm app for Spotify</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scrobbled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PlaysLabel</name>
@@ -948,7 +932,7 @@
         <translation>确定要取消导入吗？</translation>
     </message>
     <message>
-        <source>Last.fm couldn&#x27;t find any played tracks in your media library.
+        <source>Last.fm couldn&apos;t find any played tracks in your media library.
 
  Click OK to continue.</source>
         <translation>Last.fm 无法在媒体库中找到任何已播放曲目。
@@ -982,7 +966,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>媒体库导入失败</translation>
     </message>
     <message>
-        <source>Sorry, Last.fm was unable to import your listening history. This is probably because you&#x27;ve already scrobbled too many tracks. Listening history can only be imported to brand new profiles.</source>
+        <source>Sorry, Last.fm was unable to import your listening history. This is probably because you&apos;ve already scrobbled too many tracks. Listening history can only be imported to brand new profiles.</source>
         <translation>真遗憾，Last.fm 未能导入您的收听历史。这可能是由于您已经记录了太多的歌曲。收听历史只能导入到新注册的专页。</translation>
     </message>
 </context>
@@ -1005,7 +989,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>&lt;&lt; 返回</translation>
     </message>
     <message>
-        <source>Your plugins haven&#x27;t been installed</source>
+        <source>Your plugins haven&apos;t been installed</source>
         <translation>还没安装插件</translation>
     </message>
     <message>
@@ -1130,37 +1114,6 @@ Your profile will be updated with the new tracks in a few minutes.</source>
     </message>
 </context>
 <context>
-    <name>ProgressBar</name>
-    <message>
-        <source>Scrobbling off</source>
-        <translation>音乐记录关闭</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - excluded directory</source>
-        <translation>未记录音乐 － 该目录不在记录范围</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - not a music video</source>
-        <translation>未记录－不是 MV</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - podcasts disabled</source>
-        <translation>未记录－播客功能已停用</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - missing artist</source>
-        <translation>未记录－艺术家信息缺失</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - track too short</source>
-        <translation>未记录－曲目太短</translation>
-    </message>
-    <message>
-        <source>Enable scrobbling in Spotify&#x27;s preferences!</source>
-        <translation>在 Spotify 的偏好设置中启用音乐记录！</translation>
-    </message>
-</context>
-<context>
     <name>ProxyDialog</name>
     <message>
         <source>Proxy Settings</source>
@@ -1184,22 +1137,6 @@ Your profile will be updated with the new tracks in a few minutes.</source>
     <message>
         <source>Password:</source>
         <translation>密码：</translation>
-    </message>
-    <message>
-        <source>Auto-detect</source>
-        <translation>自动检测</translation>
-    </message>
-    <message>
-        <source>No-proxy</source>
-        <translation>无代理</translation>
-    </message>
-    <message>
-        <source>HTTP</source>
-        <translation>HTTP</translation>
-    </message>
-    <message>
-        <source>SOCKS5</source>
-        <translation>SOCKS5</translation>
     </message>
 </context>
 <context>
@@ -1302,7 +1239,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>在 www.last.fm 免费收听</translation>
     </message>
     <message>
-        <source>My Friends&#x27; Radio</source>
+        <source>My Friends&apos; Radio</source>
         <translation>好友电台</translation>
     </message>
     <message>
@@ -1337,7 +1274,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>设备音乐记录</translation>
     </message>
     <message>
-        <source>It looks like you&#x27;ve played these tracks. Would you like to scrobble them?</source>
+        <source>It looks like you&apos;ve played these tracks. Would you like to scrobble them?</source>
         <translation>您好像播放了这些歌曲，想记录到专页吗？</translation>
     </message>
     <message>
@@ -1353,6 +1290,10 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>
             <numerusform>已从设备记录过 %n 次播放</numerusform>
         </translation>
+    </message>
+    <message>
+        <source>Tracks appearing in red are invalid and will not be scrobbled. Hover your mouse over each track to find out why.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1502,7 +1443,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
 <context>
     <name>ScrobblesWidget</name>
     <message>
-        <source>You haven&#x27;t scrobbled any music to Last.fm yet.</source>
+        <source>You haven&apos;t scrobbled any music to Last.fm yet.</source>
         <translation>您还未向 Last.fm 记录过音乐。</translation>
     </message>
     <message>
@@ -1668,11 +1609,11 @@ or choose from below</source>
 <context>
     <name>TourFinishPage</name>
     <message>
-        <source>&lt;p&gt;Now you&#x27;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&#x27;ve also finished importing your listening history and have added it to your Last.fm profile.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&apos;ve also finished importing your listening history and have added it to your Last.fm profile.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
         <translation>&lt;p&gt;现在一切就绪，可以使用了！请点击&lt;strong&gt;完成&lt;/strong&gt;，开始音乐之旅吧。&lt;/p&gt;&lt;p&gt;我们还导入了您的收听历史，并更新了您的 Last.fm 专页。&lt;/p&gt;&lt;p&gt;感谢您安装 Last.fm 桌面程序，祝您使用愉快！&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>That&#x27;s it, you&#x27;re good to go!</source>
+        <source>That&apos;s it, you&apos;re good to go!</source>
         <translation>好了，一切就绪！</translation>
     </message>
     <message>
@@ -1682,6 +1623,34 @@ or choose from below</source>
     <message>
         <source>&lt;&lt; Back</source>
         <translation>&lt;&lt; 返回</translation>
+    </message>
+    <message>
+        <source>there was an upload error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>the submission was denied by Last.fm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>it was detected as spam (too high playcounts?)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>the submission was cancelled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;Importing your listening history to Last.fm failed because %1. Sorry about that!&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&apos;re still importing your listening history and it will be added to your Last.fm profile soon.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1710,7 +1679,7 @@ or choose from below</source>
 <context>
     <name>TourMetadataPage</name>
     <message>
-        <source>&lt;p&gt;Find out more about the music you&#x27;re listening to, including biographies, listening stats, photos and similar artists, as well as the tags listeners use to describe them.&lt;/p&gt;&lt;p&gt;Check out the &lt;strong&gt;Now Playing&lt;/strong&gt; tab, or simply click on any track in your &lt;strong&gt;Scrobbles&lt;/strong&gt; tab to learn more.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Find out more about the music you&apos;re listening to, including biographies, listening stats, photos and similar artists, as well as the tags listeners use to describe them.&lt;/p&gt;&lt;p&gt;Check out the &lt;strong&gt;Now Playing&lt;/strong&gt; tab, or simply click on any track in your &lt;strong&gt;Scrobbles&lt;/strong&gt; tab to learn more.&lt;/p&gt;</source>
         <translation>&lt;p&gt;进一步了解您在收听的音乐，包括人物传记、收听数据、照片、相似艺术家及听众使用哪些标签来描述这些音乐等。&lt;/p&gt;&lt;p&gt;请在&lt;strong&gt;正在播放&lt;/strong&gt;或&lt;strong&gt;音乐记录&lt;/strong&gt;页面点击任何单曲查看更多信息。&lt;/p&gt;</translation>
     </message>
     <message>
@@ -1768,7 +1737,7 @@ or choose from below</source>
 <context>
     <name>TourScrobblesPage</name>
     <message>
-        <source>&lt;p&gt;The desktop client runs in the background, quietly updating your Last.fm profile with the music you&#x27;re playing, which you can use to get music recommendations, gig tips and more. &lt;/p&gt;&lt;p&gt;You can also use the Last.fm Desktop App to find out more about the artist you&#x27;re listening to, and to play personalised radio.&lt;/p&gt;</source>
+        <source>&lt;p&gt;The desktop client runs in the background, quietly updating your Last.fm profile with the music you&apos;re playing, which you can use to get music recommendations, gig tips and more. &lt;/p&gt;&lt;p&gt;You can also use the Last.fm Desktop App to find out more about the artist you&apos;re listening to, and to play personalised radio.&lt;/p&gt;</source>
         <translation>&lt;p&gt;桌面程序在后台运行，将您播放的音乐更新到 Last.fm 专页，通过这些数据，您可以获得音乐推荐、音乐会信息和其他精彩内容。&lt;/p&gt;&lt;p&gt;您还可以在收听某位艺术家的同时，使用 Last.fm 桌面程序获取更多相关信息，并可播放个性化电台。&lt;/p&gt;</translation>
     </message>
     <message>
@@ -1835,10 +1804,6 @@ or choose from below</source>
         <translation>%1电台</translation>
     </message>
     <message>
-        <source>Auto-corrected from: %1</source>
-        <translation>自动更正自：%1</translation>
-    </message>
-    <message>
         <source>Cached</source>
         <translation>已缓存</translation>
     </message>
@@ -1896,10 +1861,6 @@ or choose from below</source>
     <message>
         <source>This user has already been added.</source>
         <translation>该用户已被加入。</translation>
-    </message>
-    <message>
-        <source>To add a new account you must connect it to the Last.fm user permissions.</source>
-        <translation>要添加新帐户，请先将该帐户连接到 Last.fm 用户许可。</translation>
     </message>
     <message>
         <source>Removing %1</source>
@@ -1987,7 +1948,7 @@ or choose from below</source>
         <translation>专辑：%1</translation>
     </message>
     <message numerus="yes">
-        <source>You&#x27;ve reached this station&#x27;s skip limit. Skip again in %n minute(s).</source>
+        <source>You&apos;ve reached this station&apos;s skip limit. Skip again in %n minute(s).</source>
         <translation>
             <numerusform>您已达到该电台的跳过次数上限，请在 %n 分钟后再使用跳过功能。</numerusform>
         </translation>
@@ -2048,15 +2009,15 @@ or choose from below</source>
         <translation>插件安装完毕！</translation>
     </message>
     <message>
-        <source>&lt;p&gt;The %1 plugin has been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to scrobble with %1.&lt;/p&gt;</source>
+        <source>&lt;p&gt;The %1 plugin has been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to scrobble with %1.&lt;/p&gt;</source>
         <translation>&lt;p&gt;%1 插件已安装。&lt;/p&gt;&lt;p&gt;可以用 %1 记录音乐了。&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>The %1 plugin hasn&#x27;t been installed</source>
+        <source>The %1 plugin hasn&apos;t been installed</source>
         <translation>%1 插件未安装</translation>
     </message>
     <message>
-        <source>You didn&#x27;t close %1 so its plugin hasn&#x27;t been installed.</source>
+        <source>You didn&apos;t close %1 so its plugin hasn&apos;t been installed.</source>
         <translation>您未关闭 %1，因此其插件未能安装。</translation>
     </message>
 </context>
@@ -2075,7 +2036,7 @@ or choose from below</source>
         <translation>未安装</translation>
     </message>
     <message>
-        <source>Your plugin hasn&#x27;t been installed</source>
+        <source>Your plugin hasn&apos;t been installed</source>
         <translation>插件未安装</translation>
     </message>
     <message>
@@ -2087,7 +2048,7 @@ or choose from below</source>
         <translation>iTunes 插件安装完成！</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Your iTunes plugin has been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to device scrobble.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your iTunes plugin has been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to device scrobble.&lt;/p&gt;</source>
         <translation>&lt;p&gt;iTunes 插件已安装。&lt;/p&gt;&lt;p&gt;可以用设备记录音乐了。&lt;/p&gt;</translation>
     </message>
     <message>
@@ -2095,7 +2056,7 @@ or choose from below</source>
         <translation>复制新插件时发生错误</translation>
     </message>
     <message>
-        <source>You didn&#x27;t close iTunes</source>
+        <source>You didn&apos;t close iTunes</source>
         <translation>尚未关闭 iTunes</translation>
     </message>
 </context>
@@ -2121,30 +2082,6 @@ or choose from below</source>
 <context>
     <name>unicorn::LoginProcess</name>
     <message>
-        <source>Login Failed</source>
-        <translation>登录失败</translation>
-    </message>
-    <message>
-        <source>Sorry, we don&#x27;t recognise that username, or you typed the password wrongly.</source>
-        <translation>哎呀，没有这个用户名，也许您的密码不对。</translation>
-    </message>
-    <message>
-        <source>Last.fm Unavailable</source>
-        <translation>Last.fm 服务中断</translation>
-    </message>
-    <message>
-        <source>There was a problem communicating with the Last.fm services. Please try again later.</source>
-        <translation>同 Last.fm 服务器通讯时发生问题，请稍后再试。</translation>
-    </message>
-    <message>
-        <source>Cannot connect to Last.fm</source>
-        <translation>无法连接到 Last.fm</translation>
-    </message>
-    <message>
-        <source>Last.fm cannot be reached. Please check your firewall or proxy settings.</source>
-        <translation>无法连接到 Last.fm，请检查防火墙或代理设置。</translation>
-    </message>
-    <message>
         <source>There was a network error: %1</source>
         <translation>发生网络错误：%1</translation>
     </message>
@@ -2167,7 +2104,7 @@ or choose from below</source>
 <context>
     <name>unicorn::MessageDialog</name>
     <message>
-        <source>Don&#x27;t ask this again</source>
+        <source>Don&apos;t ask this again</source>
         <translation>不再询问</translation>
     </message>
 </context>
@@ -2189,4 +2126,5 @@ or choose from below</source>
         <source>SOCKS5</source>
         <translation>SOCKS5</translation>
     </message>
-</context></TS>
+</context>
+</TS>

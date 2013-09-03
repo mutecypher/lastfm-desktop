@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.0" language="ja">
-
 <context>
     <name>AboutDialog</name>
     <message>
@@ -16,11 +15,11 @@
 <context>
     <name>AccessPage</name>
     <message>
-        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&#x27;t connected because you closed the browser window or you clicked cancel, please try again.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&apos;t connected because you closed the browser window or you clicked cancel, please try again.&lt;/p&gt;</source>
         <translation>&lt;p&gt;ウェブブラウザ上の&lt;strong&gt;｢アクセスを許可する｣&lt;/strong&gt;ボタンをクリックし、Last.fm アカウントを Last.fm デスクトップ・アプリに接続してください。&lt;/p&gt;&lt;p&gt;ブラウザ・ウインドウを閉じたもしくはキャンセルをクリックしたため接続していない場合は、もう一度試してください。&lt;p /&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>We&#x27;re waiting for you to connect to Last.fm</source>
+        <source>We&apos;re waiting for you to connect to Last.fm</source>
         <translation>Last.fm への接続をお待ちしています</translation>
     </message>
     <message>
@@ -36,7 +35,7 @@
         <translation>再実行</translation>
     </message>
     <message>
-        <source>&lt;p&gt;If your web browser didn&#x27;t open, copy and paste the link below into your address bar.&lt;/p&gt;</source>
+        <source>&lt;p&gt;If your web browser didn&apos;t open, copy and paste the link below into your address bar.&lt;/p&gt;</source>
         <translation>&lt;p&gt;ウェブ・ブラウザが開かなかった場合、以下のリンクをアドレスバーにコピー＆ペーストしてください。&lt;/p&gt;</translation>
     </message>
 </context>
@@ -100,7 +99,7 @@
         <translation>&lt;p&gt;あなたの音楽テイストに基づいた最高のおすすめ情報を入手するには、お使いのメディアプレイヤーから再生履歴をインポートすることをお勧めします。&lt;/p&gt;&lt;p&gt;優先するメディアプレイヤーを選択して&lt;strong&gt;インポート開始&lt;/strong&gt;をクリックしてください&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>Your plugins haven&#x27;t been installed</source>
+        <source>Your plugins haven&apos;t been installed</source>
         <translation>マイ プラグインはインストールされませんでした</translation>
     </message>
     <message>
@@ -112,7 +111,7 @@
         <translation>iTunes</translation>
     </message>
     <message>
-        <source>Now let&#x27;s import your listening history</source>
+        <source>Now let&apos;s import your listening history</source>
         <translation>再生履歴をインポートしましょう</translation>
     </message>
     <message>
@@ -131,7 +130,7 @@
 <context>
     <name>BootstrapProgressPage</name>
     <message>
-        <source>&lt;p&gt;Don&#x27;t worry, the upload process shouldn&#x27;t take more than a couple of minutes, depending on the size of your music library.&lt;/p&gt;&lt;p&gt;While we&#x27;re hard at work adding your listening history to your Last.fm profile, why don&#x27;t you check out the main features of the Last.fm Desktop App. Click &lt;strong&gt;Continue&lt;/strong&gt; to take the tour.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Don&apos;t worry, the upload process shouldn&apos;t take more than a couple of minutes, depending on the size of your music library.&lt;/p&gt;&lt;p&gt;While we&apos;re hard at work adding your listening history to your Last.fm profile, why don&apos;t you check out the main features of the Last.fm Desktop App. Click &lt;strong&gt;Continue&lt;/strong&gt; to take the tour.&lt;/p&gt;</source>
         <translation>&lt;p&gt;ご安心ください。マイ ライブラリのサイズにもよりますが、アップロード処理にかかる時間は数分です。&lt;/p&gt;&lt;p&gt;再生履歴を Last.fm プロフィールに追加している間、Last.fm デスクトップ・アプリのメイン機能をチェックしてみませんか？&lt;strong&gt;続行&lt;/strong&gt;をクリックしてサイトツアー開始。&lt;/p&gt;</translation>
     </message>
     <message>
@@ -148,10 +147,6 @@
     <message>
         <source>Close Apps</source>
         <translation>アプリを閉じる</translation>
-    </message>
-    <message>
-        <source>Please close the following apps to continue.</source>
-        <translation>続行するには以下のアプリを閉じてください。</translation>
     </message>
 </context>
 <context>
@@ -284,7 +279,7 @@
         <translation>Last.fm で友だち検索</translation>
     </message>
     <message>
-        <source>&lt;h3&gt;You haven&#x27;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;/p&gt;</source>
+        <source>&lt;h3&gt;You haven&apos;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;/p&gt;</source>
         <translation>&lt;h3&gt;まだ Last.fm 上に友だちはいません。&lt;/h3&gt;&lt;p&gt;友だち検索機能で素早く簡単に Facebook の友だちを探して Last.fm 上でメールしてみましょう。&lt;p /&gt;&lt;/p&gt;</translation>
     </message>
     <message>
@@ -303,7 +298,7 @@
 <context>
     <name>FriendWidget</name>
     <message>
-        <source>%1&#x27;s Library Radio</source>
+        <source>%1&apos;s Library Radio</source>
         <translation>%1 さんのライブラリ・ラジオ</translation>
     </message>
     <message>
@@ -349,10 +344,6 @@
         <translation>メニューバーにアプリケーションアイコンを表示</translation>
     </message>
     <message>
-        <source>Show:</source>
-        <translation>表示：</translation>
-    </message>
-    <message>
         <source>Launch application with media players</source>
         <translation>メディアプレイヤーでアプリケーションを起動</translation>
     </message>
@@ -365,28 +356,12 @@
         <translation>デスクトップ通知を表示</translation>
     </message>
     <message>
-        <source>Remember last radio station and tune in on start up</source>
-        <translation>最終ラジオステーションを呼び出してスタート</translation>
-    </message>
-    <message>
         <source>Send crash reports to Last.fm</source>
         <translation>クラッシュレポートを Last.fm に送信</translation>
     </message>
     <message>
         <source>Check for updates automatically</source>
         <translation>自動的にアップデートをチェック</translation>
-    </message>
-    <message>
-        <source>Menu bar and dock icons</source>
-        <translation>メニューバー＆ドックアイコン</translation>
-    </message>
-    <message>
-        <source>Only dock icon (hide menu bar icon)</source>
-        <translation>ドックアイコンのみ（メニューバーアイコン非表示）</translation>
-    </message>
-    <message>
-        <source>Only menu bar icon (hide dock icon)</source>
-        <translation>メニューバーアイコンのみ（ドックアイコン非表示）</translation>
     </message>
     <message>
         <source>Enable media keys</source>
@@ -407,17 +382,6 @@
     <message>
         <source>Update to beta versions - Warning: only for the brave!</source>
         <translation>ベータ版にアップデート - 注：勇敢な人限定！</translation>
-    </message>
-</context>
-<context>
-    <name>IPluginInfo</name>
-    <message>
-        <source>The %1 plugin hasn&#x27;t been installed</source>
-        <translation>%1 プラグインはインストールされていません。</translation>
-    </message>
-    <message>
-        <source>You didn&#x27;t close %1 so its plugin hasn&#x27;t been installed.</source>
-        <translation>%1 を閉じなかったのでプラグインはインストールされませんでした。</translation>
     </message>
 </context>
 <context>
@@ -486,11 +450,11 @@
 <context>
     <name>LoginPage</name>
     <message>
-        <source>&lt;p&gt;Already a Last.fm user? Connect your account with the Last.fm Desktop App and it&#x27;ll update your profile with the music you&#x27;re listening to.&lt;/p&gt;&lt;p&gt;If you don&#x27;t have an account you can sign up now for free now.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Already a Last.fm user? Connect your account with the Last.fm Desktop App and it&apos;ll update your profile with the music you&apos;re listening to.&lt;/p&gt;&lt;p&gt;If you don&apos;t have an account you can sign up now for free now.&lt;/p&gt;</source>
         <translation>&lt;p&gt;すでに Last.fm ユーザーですか？アカウントを Last.fm デスクトップ・アプリに接続すると、再生した音楽でマイ プロフィールが更新されます。&lt;/p&gt;&lt;p&gt;アカウントをお持ちでな場合、今すぐ無料で登録できます。&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>Let&#x27;s get started by connecting your Last.fm account</source>
+        <source>Let&apos;s get started by connecting your Last.fm account</source>
         <translation>Last.fm アカウントと接続してスタート</translation>
     </message>
     <message>
@@ -531,13 +495,13 @@
         </translation>
     </message>
     <message numerus="yes">
-        <source>&lt;p&gt;Your plugin(s) ha(s|ve) been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to scrobble with your media player(s)&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your plugin(s) ha(s|ve) been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to scrobble with your media player(s)&lt;/p&gt;</source>
         <translation>
             <numerusform>&lt;p&gt;プラグインのインストール完了です。&lt;/p&gt;&lt;p&gt;お使いのメディア・プレイヤーで Scrobble する準備ができました。&lt;/p&gt;</numerusform>
         </translation>
     </message>
     <message>
-        <source>Your plugins haven&#x27;t been installed</source>
+        <source>Your plugins haven&apos;t been installed</source>
         <translation>マイ プラグインはインストールされませんでした</translation>
     </message>
     <message>
@@ -690,10 +654,6 @@
         <translation>%1 ラジオを再生</translation>
     </message>
     <message>
-        <source>Auto-corrected from: %1</source>
-        <translation>オートコレクト：%1</translation>
-    </message>
-    <message>
         <source>%L1</source>
         <translation>%L1</translation>
     </message>
@@ -772,11 +732,11 @@
         <translation>%1, %2, %3, %4, %5 を再生しているのでオススメ。</translation>
     </message>
     <message>
-        <source>From %1&#x27;s library.</source>
+        <source>From %1&apos;s library.</source>
         <translation>%1 さんのライブラリから。</translation>
     </message>
     <message>
-        <source>From %1 and %2&#x27;s libraries.</source>
+        <source>From %1 and %2&apos;s libraries.</source>
         <translation>%1 ＆ %2 さんのライブラリから。</translation>
     </message>
     <message numerus="yes">
@@ -786,27 +746,27 @@
         </translation>
     </message>
     <message>
-        <source>From %1, %2, and %3&#x27;s libraries.</source>
+        <source>From %1, %2, and %3&apos;s libraries.</source>
         <translation>%1, %2, ＆ %3 さんのライブラリから。</translation>
     </message>
     <message>
-        <source>You&#x27;ve listened to %1 %2 and %3 %4.</source>
+        <source>You&apos;ve listened to %1 %2 and %3 %4.</source>
         <translation>%1 %2 と %3 %4 を再生しました。</translation>
     </message>
     <message>
-        <source>From %1, %2, %3, and %4&#x27;s libraries.</source>
+        <source>From %1, %2, %3, and %4&apos;s libraries.</source>
         <translation>%1, %2, %3, ＆ %4 さんのライブラリから。</translation>
     </message>
     <message>
-        <source>You&#x27;ve listened to %1 %2, but not this track.</source>
+        <source>You&apos;ve listened to %1 %2, but not this track.</source>
         <translation>%1 %2 は再生しましたが、このトラックは再生していません。</translation>
     </message>
     <message>
-        <source>From %1, %2, %3, %4, and %5&#x27;s libraries.</source>
+        <source>From %1, %2, %3, %4, and %5&apos;s libraries.</source>
         <translation>%1, %2, %3, %4, ＆ %5 さんのライブラリから。</translation>
     </message>
     <message>
-        <source>This is the first time you&#x27;ve listened to %1.</source>
+        <source>This is the first time you&apos;ve listened to %1.</source>
         <translation>%1 の初回再生です。</translation>
     </message>
 </context>
@@ -918,6 +878,30 @@
         <source>Scrobbling from</source>
         <translation>Scrobble 中：</translation>
     </message>
+    <message>
+        <source>Scrobble meter: %1%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not scrobbled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable scrobbling by getting the %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last.fm app for Spotify</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scrobbled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PlaysLabel</name>
@@ -947,7 +931,7 @@
         <translation>本当にインポートをキャンセルしますか?</translation>
     </message>
     <message>
-        <source>Last.fm couldn&#x27;t find any played tracks in your media library.
+        <source>Last.fm couldn&apos;t find any played tracks in your media library.
 
  Click OK to continue.</source>
         <translation>Last.fm はメディアプレイヤーで再生されたトラックを検出できませんでした。
@@ -981,7 +965,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>ライブラリ・インポート失敗</translation>
     </message>
     <message>
-        <source>Sorry, Last.fm was unable to import your listening history. This is probably because you&#x27;ve already scrobbled too many tracks. Listening history can only be imported to brand new profiles.</source>
+        <source>Sorry, Last.fm was unable to import your listening history. This is probably because you&apos;ve already scrobbled too many tracks. Listening history can only be imported to brand new profiles.</source>
         <translation>Sorry! Last.fm は再生履歴をインポートできませんでした。Scrobble 済みのトラック数が多すぎるようです。再生履歴は、新しいプロフィールページにのみインポート可能です。</translation>
     </message>
 </context>
@@ -1004,7 +988,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>&lt;&lt; 戻る</translation>
     </message>
     <message>
-        <source>Your plugins haven&#x27;t been installed</source>
+        <source>Your plugins haven&apos;t been installed</source>
         <translation>マイ プラグインはインストールされませんでした</translation>
     </message>
     <message>
@@ -1129,37 +1113,6 @@ Your profile will be updated with the new tracks in a few minutes.</source>
     </message>
 </context>
 <context>
-    <name>ProgressBar</name>
-    <message>
-        <source>Scrobbling off</source>
-        <translation>Scrobble オフ</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - excluded directory</source>
-        <translation>Scrobble していません - ディレクトリ除外</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - not a music video</source>
-        <translation>Scrobble できません - ミュージックビデオではありません</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - podcasts disabled</source>
-        <translation>Scrobble できません - Podcast は無効です</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - missing artist</source>
-        <translation>Scrobble できません - アーティストが不明です</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - track too short</source>
-        <translation>Scrobble できません - トラックが短すぎます</translation>
-    </message>
-    <message>
-        <source>Enable scrobbling in Spotify&#x27;s preferences!</source>
-        <translation>Spotify 設定で Scrobble を有効にする！</translation>
-    </message>
-</context>
-<context>
     <name>ProxyDialog</name>
     <message>
         <source>Proxy Settings</source>
@@ -1183,22 +1136,6 @@ Your profile will be updated with the new tracks in a few minutes.</source>
     <message>
         <source>Password:</source>
         <translation>パスワード：</translation>
-    </message>
-    <message>
-        <source>Auto-detect</source>
-        <translation>自動検出</translation>
-    </message>
-    <message>
-        <source>No-proxy</source>
-        <translation>プロキシではありません</translation>
-    </message>
-    <message>
-        <source>HTTP</source>
-        <translation>HTTP</translation>
-    </message>
-    <message>
-        <source>SOCKS5</source>
-        <translation>SOCKS5</translation>
     </message>
 </context>
 <context>
@@ -1301,7 +1238,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>www.last.fm で無料再生</translation>
     </message>
     <message>
-        <source>My Friends&#x27; Radio</source>
+        <source>My Friends&apos; Radio</source>
         <translation>マイ 友だちラジオ</translation>
     </message>
     <message>
@@ -1336,7 +1273,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>デバイス Scrobble</translation>
     </message>
     <message>
-        <source>It looks like you&#x27;ve played these tracks. Would you like to scrobble them?</source>
+        <source>It looks like you&apos;ve played these tracks. Would you like to scrobble them?</source>
         <translation>これらのトラックを再生したようです。Scrobble しますか？</translation>
     </message>
     <message>
@@ -1352,6 +1289,10 @@ Your profile will be updated with the new tracks in a few minutes.</source>
         <translation>
             <numerusform>デバイスから %n 回 Scrobble</numerusform>
         </translation>
+    </message>
+    <message>
+        <source>Tracks appearing in red are invalid and will not be scrobbled. Hover your mouse over each track to find out why.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1501,7 +1442,7 @@ Your profile will be updated with the new tracks in a few minutes.</source>
 <context>
     <name>ScrobblesWidget</name>
     <message>
-        <source>You haven&#x27;t scrobbled any music to Last.fm yet.</source>
+        <source>You haven&apos;t scrobbled any music to Last.fm yet.</source>
         <translation>まだ Last.fm で音楽を Scrobble していません。</translation>
     </message>
     <message>
@@ -1666,11 +1607,11 @@ or choose from below</source>
 <context>
     <name>TourFinishPage</name>
     <message>
-        <source>&lt;p&gt;Now you&#x27;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&#x27;ve also finished importing your listening history and have added it to your Last.fm profile.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&apos;ve also finished importing your listening history and have added it to your Last.fm profile.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
         <translation>&lt;p&gt;スタート準備ができました！&lt;strong&gt;終了&lt;/strong&gt;をクリックして探索を開始してください。&lt;/p&gt;&lt;p&gt;再生履歴もインポート完了、Last.fm マイ プロフィールに追加しました。&lt;/p&gt;&lt;p&gt;Last.fm デスクトップ・アプリをインストールしていただきありがとうございます。Last.fm を楽しんでご利用ください！&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>That&#x27;s it, you&#x27;re good to go!</source>
+        <source>That&apos;s it, you&apos;re good to go!</source>
         <translation>これで終了、いよいよスタートです！</translation>
     </message>
     <message>
@@ -1680,6 +1621,34 @@ or choose from below</source>
     <message>
         <source>&lt;&lt; Back</source>
         <translation>&lt;&lt; 戻る</translation>
+    </message>
+    <message>
+        <source>there was an upload error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>the submission was denied by Last.fm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>it was detected as spam (too high playcounts?)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>the submission was cancelled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;Importing your listening history to Last.fm failed because %1. Sorry about that!&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&apos;re still importing your listening history and it will be added to your Last.fm profile soon.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1708,7 +1677,7 @@ or choose from below</source>
 <context>
     <name>TourMetadataPage</name>
     <message>
-        <source>&lt;p&gt;Find out more about the music you&#x27;re listening to, including biographies, listening stats, photos and similar artists, as well as the tags listeners use to describe them.&lt;/p&gt;&lt;p&gt;Check out the &lt;strong&gt;Now Playing&lt;/strong&gt; tab, or simply click on any track in your &lt;strong&gt;Scrobbles&lt;/strong&gt; tab to learn more.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Find out more about the music you&apos;re listening to, including biographies, listening stats, photos and similar artists, as well as the tags listeners use to describe them.&lt;/p&gt;&lt;p&gt;Check out the &lt;strong&gt;Now Playing&lt;/strong&gt; tab, or simply click on any track in your &lt;strong&gt;Scrobbles&lt;/strong&gt; tab to learn more.&lt;/p&gt;</source>
         <translation>&lt;p&gt;バイオ、再生統計データ、写真や似てるアーティスト、さらにリスナーが分類に利用するタグなど、再生中の音楽について詳細情報を見つけてください。&lt;/p&gt;&lt;p&gt;&lt;strong&gt;ただ今再生中&lt;/strong&gt;タブをチェックするか &lt;strong&gt;Scrobble&lt;/strong&gt; タブ上のトラックをクリックするだけで詳細をご覧いただけます。&lt;/p&gt;</translation>
     </message>
     <message>
@@ -1766,7 +1735,7 @@ or choose from below</source>
 <context>
     <name>TourScrobblesPage</name>
     <message>
-        <source>&lt;p&gt;The desktop client runs in the background, quietly updating your Last.fm profile with the music you&#x27;re playing, which you can use to get music recommendations, gig tips and more. &lt;/p&gt;&lt;p&gt;You can also use the Last.fm Desktop App to find out more about the artist you&#x27;re listening to, and to play personalised radio.&lt;/p&gt;</source>
+        <source>&lt;p&gt;The desktop client runs in the background, quietly updating your Last.fm profile with the music you&apos;re playing, which you can use to get music recommendations, gig tips and more. &lt;/p&gt;&lt;p&gt;You can also use the Last.fm Desktop App to find out more about the artist you&apos;re listening to, and to play personalised radio.&lt;/p&gt;</source>
         <translation>&lt;p&gt;デスクトップ・クライアントは、再生している音楽で Last.fm マイ プロフィールをひそかにアップデートしながら、バックグラウンドで動作し、おすすめ音楽やライブの内部情報などの入手に活用できます。&lt;/p&gt;&lt;p&gt;また Last.fm デスクトップ・アプリも再生中のアーティスト詳細情報チェックやカスタムラジオ再生にご利用いただけます。&lt;/p&gt;</translation>
     </message>
     <message>
@@ -1833,10 +1802,6 @@ or choose from below</source>
         <translation>%1 ラジオ</translation>
     </message>
     <message>
-        <source>Auto-corrected from: %1</source>
-        <translation>オートコレクト：%1</translation>
-    </message>
-    <message>
         <source>Cached</source>
         <translation>キャッシュ済み</translation>
     </message>
@@ -1894,10 +1859,6 @@ or choose from below</source>
     <message>
         <source>This user has already been added.</source>
         <translation>このユーザーはすでに追加済みです。</translation>
-    </message>
-    <message>
-        <source>To add a new account you must connect it to the Last.fm user permissions.</source>
-        <translation>新しいアカウントを追加するには、Last.fm ユーザー許可に接続する必要があります。</translation>
     </message>
     <message>
         <source>Removing %1</source>
@@ -1985,7 +1946,7 @@ or choose from below</source>
         <translation>from %1</translation>
     </message>
     <message numerus="yes">
-        <source>You&#x27;ve reached this station&#x27;s skip limit. Skip again in %n minute(s).</source>
+        <source>You&apos;ve reached this station&apos;s skip limit. Skip again in %n minute(s).</source>
         <translation>
             <numerusform>このステーションのスキップ制限に達しました。%n 分後にもう一度スキップしてください。</numerusform>
         </translation>
@@ -2046,15 +2007,15 @@ or choose from below</source>
         <translation>プラグイン インストール完了！</translation>
     </message>
     <message>
-        <source>&lt;p&gt;The %1 plugin has been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to scrobble with %1.&lt;/p&gt;</source>
+        <source>&lt;p&gt;The %1 plugin has been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to scrobble with %1.&lt;/p&gt;</source>
         <translation>&lt;p&gt;%1 プラグインのインストール完了です。&lt;/p&gt;&lt;p&gt;%1 で Scrobble する準備ができました。&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>The %1 plugin hasn&#x27;t been installed</source>
+        <source>The %1 plugin hasn&apos;t been installed</source>
         <translation>%1 プラグインはインストールされていません。</translation>
     </message>
     <message>
-        <source>You didn&#x27;t close %1 so its plugin hasn&#x27;t been installed.</source>
+        <source>You didn&apos;t close %1 so its plugin hasn&apos;t been installed.</source>
         <translation>%1 を閉じなかったためプラグインはインストールされませんでした。</translation>
     </message>
 </context>
@@ -2073,7 +2034,7 @@ or choose from below</source>
         <translation>インストールされていません</translation>
     </message>
     <message>
-        <source>Your plugin hasn&#x27;t been installed</source>
+        <source>Your plugin hasn&apos;t been installed</source>
         <translation>プラグインはインストールされていません</translation>
     </message>
     <message>
@@ -2085,7 +2046,7 @@ or choose from below</source>
         <translation>iTunes プラグイン インストール完了！</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Your iTunes plugin has been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to device scrobble.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your iTunes plugin has been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to device scrobble.&lt;/p&gt;</source>
         <translation>&lt;p&gt;iTunes プラグインのインストール完了です。&lt;/p&gt;&lt;p&gt;お使いのメディア・プレイヤーで Scrobble する準備ができました。&lt;/p&gt;</translation>
     </message>
     <message>
@@ -2093,7 +2054,7 @@ or choose from below</source>
         <translation>新しいプラグインを所定の位置にコピー中、エラーが発生しました</translation>
     </message>
     <message>
-        <source>You didn&#x27;t close iTunes</source>
+        <source>You didn&apos;t close iTunes</source>
         <translation>iTunes を閉じませんでした</translation>
     </message>
 </context>
@@ -2119,30 +2080,6 @@ or choose from below</source>
 <context>
     <name>unicorn::LoginProcess</name>
     <message>
-        <source>Login Failed</source>
-        <translation>ログイン失敗</translation>
-    </message>
-    <message>
-        <source>Sorry, we don&#x27;t recognise that username, or you typed the password wrongly.</source>
-        <translation>Sorry ! このユーザー名を認識できません。またはパスワードの入力に誤りがあります。</translation>
-    </message>
-    <message>
-        <source>Last.fm Unavailable</source>
-        <translation>Last.fm をご利用いただけません</translation>
-    </message>
-    <message>
-        <source>There was a problem communicating with the Last.fm services. Please try again later.</source>
-        <translation>Last.fm サービス接続中に問題が発生しました。後でもう一度試してください。</translation>
-    </message>
-    <message>
-        <source>Cannot connect to Last.fm</source>
-        <translation>Last.fm に接続できません</translation>
-    </message>
-    <message>
-        <source>Last.fm cannot be reached. Please check your firewall or proxy settings.</source>
-        <translation>Last.fm に接続できません。ご利用のファイアウォールもしくはプロキシ設定をチェックしてください。</translation>
-    </message>
-    <message>
         <source>There was a network error: %1</source>
         <translation>ネットワークエラー発生：%1</translation>
     </message>
@@ -2165,7 +2102,7 @@ or choose from below</source>
 <context>
     <name>unicorn::MessageDialog</name>
     <message>
-        <source>Don&#x27;t ask this again</source>
+        <source>Don&apos;t ask this again</source>
         <translation>次回以降確認しない</translation>
     </message>
 </context>
@@ -2187,4 +2124,5 @@ or choose from below</source>
         <source>SOCKS5</source>
         <translation>SOCKS5</translation>
     </message>
-</context></TS>
+</context>
+</TS>

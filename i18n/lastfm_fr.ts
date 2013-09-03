@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.0" language="fr">
-
 <context>
     <name>AboutDialog</name>
     <message>
@@ -16,11 +15,11 @@
 <context>
     <name>AccessPage</name>
     <message>
-        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&#x27;t connected because you closed the browser window or you clicked cancel, please try again.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Veuillez cliquer sur le bouton &lt;strong&gt;Oui, autoriser l&#x27;accès&lt;/strong&gt; dans votre navigateur Web pour associer votre compte Last.fm à l&#x27;application de bureau Last.fm.&lt;/p&gt;&lt;p&gt;Si vous ne vous êtes pas connecté car vous avez fermé la fenêtre du navigateur ou cliqué sur Annuler, veuillez réessayer.&lt;p /&gt;&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&apos;t connected because you closed the browser window or you clicked cancel, please try again.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Veuillez cliquer sur le bouton &lt;strong&gt;Oui, autoriser l&apos;accès&lt;/strong&gt; dans votre navigateur Web pour associer votre compte Last.fm à l&apos;application de bureau Last.fm.&lt;/p&gt;&lt;p&gt;Si vous ne vous êtes pas connecté car vous avez fermé la fenêtre du navigateur ou cliqué sur Annuler, veuillez réessayer.&lt;p /&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>We&#x27;re waiting for you to connect to Last.fm</source>
+        <source>We&apos;re waiting for you to connect to Last.fm</source>
         <translation>Nous attendons que vous vous connectiez à Last.fm</translation>
     </message>
     <message>
@@ -36,8 +35,8 @@
         <translation>Réessayer</translation>
     </message>
     <message>
-        <source>&lt;p&gt;If your web browser didn&#x27;t open, copy and paste the link below into your address bar.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Si votre navigateur ne s&#x27;ouvre pas, copiez et collez le lien ci-dessous dans votre barre d&#x27;adresse.&lt;/p&gt;</translation>
+        <source>&lt;p&gt;If your web browser didn&apos;t open, copy and paste the link below into your address bar.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Si votre navigateur ne s&apos;ouvre pas, copiez et collez le lien ci-dessous dans votre barre d&apos;adresse.&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -75,7 +74,7 @@
     </message>
     <message>
         <source>Staff</source>
-        <translation>L&#x27;équipe</translation>
+        <translation>L&apos;équipe</translation>
     </message>
     <message>
         <source>Alumna</source>
@@ -97,11 +96,11 @@
     <name>BootstrapPage</name>
     <message>
         <source>&lt;p&gt;For the best possible recommendations based on your music taste we advise that you import your listening history from your media player.&lt;/p&gt;&lt;p&gt;Please select your preferred media player and click &lt;strong&gt;Start Import&lt;/strong&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Pour les meilleures recommandations sur base de vos goûts musicaux, nous vous conseillons d&#x27;importer votre historique d&#x27;écoute depuis votre lecteur média.&lt;/p&gt;&lt;p&gt;Veuillez sélectionner votre lecteur média préféré et cliquer sur &lt;strong&gt;Démarrer l&#x27;importation&lt;/strong&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Pour les meilleures recommandations sur base de vos goûts musicaux, nous vous conseillons d&apos;importer votre historique d&apos;écoute depuis votre lecteur média.&lt;/p&gt;&lt;p&gt;Veuillez sélectionner votre lecteur média préféré et cliquer sur &lt;strong&gt;Démarrer l&apos;importation&lt;/strong&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>Your plugins haven&#x27;t been installed</source>
-        <translation>Vos plug-ins n&#x27;ont pas été installés</translation>
+        <source>Your plugins haven&apos;t been installed</source>
+        <translation>Vos plug-ins n&apos;ont pas été installés</translation>
     </message>
     <message>
         <source>You can install them later through the file menu</source>
@@ -112,12 +111,12 @@
         <translation>iTunes</translation>
     </message>
     <message>
-        <source>Now let&#x27;s import your listening history</source>
-        <translation>Maintenant, importons votre historique d&#x27;écoute</translation>
+        <source>Now let&apos;s import your listening history</source>
+        <translation>Maintenant, importons votre historique d&apos;écoute</translation>
     </message>
     <message>
         <source>Start Import</source>
-        <translation>Commencer l&#x27;importation</translation>
+        <translation>Commencer l&apos;importation</translation>
     </message>
     <message>
         <source>&lt;&lt; Back</source>
@@ -131,8 +130,8 @@
 <context>
     <name>BootstrapProgressPage</name>
     <message>
-        <source>&lt;p&gt;Don&#x27;t worry, the upload process shouldn&#x27;t take more than a couple of minutes, depending on the size of your music library.&lt;/p&gt;&lt;p&gt;While we&#x27;re hard at work adding your listening history to your Last.fm profile, why don&#x27;t you check out the main features of the Last.fm Desktop App. Click &lt;strong&gt;Continue&lt;/strong&gt; to take the tour.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Ne vous inquiétez pas, le processus de téléchargement ne devrait pas prendre plus de quelques minutes, selon la taille de votre bibliothèque musicale.&lt;/p&gt;&lt;p&gt;Pendant que nous travaillons d&#x27;arrache-pied pour ajouter votre historique d&#x27;écoute à votre profil Last.fm, pourquoi ne jetteriez-vous pas un œil aux principales fonctionnalités de l&#x27;app de bureau Last.fm. Cliquez sur &lt;strong&gt;Continuer&lt;/strong&gt; pour démarrer la présentation&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Don&apos;t worry, the upload process shouldn&apos;t take more than a couple of minutes, depending on the size of your music library.&lt;/p&gt;&lt;p&gt;While we&apos;re hard at work adding your listening history to your Last.fm profile, why don&apos;t you check out the main features of the Last.fm Desktop App. Click &lt;strong&gt;Continue&lt;/strong&gt; to take the tour.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Ne vous inquiétez pas, le processus de téléchargement ne devrait pas prendre plus de quelques minutes, selon la taille de votre bibliothèque musicale.&lt;/p&gt;&lt;p&gt;Pendant que nous travaillons d&apos;arrache-pied pour ajouter votre historique d&apos;écoute à votre profil Last.fm, pourquoi ne jetteriez-vous pas un œil aux principales fonctionnalités de l&apos;app de bureau Last.fm. Cliquez sur &lt;strong&gt;Continuer&lt;/strong&gt; pour démarrer la présentation&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Continue</source>
@@ -149,10 +148,6 @@
         <source>Close Apps</source>
         <translation>Fermer les apps</translation>
     </message>
-    <message>
-        <source>Please close the following apps to continue.</source>
-        <translation>Veuillez fermer les apps suivantes pour continuer.</translation>
-    </message>
 </context>
 <context>
     <name>DeviceScrobbler</name>
@@ -166,15 +161,15 @@
     </message>
     <message>
         <source>Scrobble iPod</source>
-        <translation>Scrobbler l&#x27;iPod</translation>
+        <translation>Scrobbler l&apos;iPod</translation>
     </message>
     <message>
         <source>Do you want to associate the device %1 to your audioscrobbler user account?</source>
-        <translation>Souhaitez-vous associer l&#x27;appareil %1 au scrobbler audio de votre compte d&#x27;utilisateur ?</translation>
+        <translation>Souhaitez-vous associer l&apos;appareil %1 au scrobbler audio de votre compte d&apos;utilisateur ?</translation>
     </message>
     <message>
         <source>Device successfully associated to your user account. From now on you can scrobble the tracks you listen on this device.</source>
-        <translation>Appareil bien associé à votre compte d&#x27;utilisateur. Vous pouvez désormais scrobbler les titres que vous écoutez sur celui-ci.</translation>
+        <translation>Appareil bien associé à votre compte d&apos;utilisateur. Vous pouvez désormais scrobbler les titres que vous écoutez sur celui-ci.</translation>
     </message>
     <message>
         <source>%1 tracks scrobbled.</source>
@@ -186,11 +181,11 @@
     </message>
     <message>
         <source>The iPod database could not be opened.</source>
-        <translation>Impossible d&#x27;ouvrir la base de données de l&#x27;iPod.</translation>
+        <translation>Impossible d&apos;ouvrir la base de données de l&apos;iPod.</translation>
     </message>
     <message>
         <source>An unknown error occurred while trying to access the iPod database.</source>
-        <translation>Une erreur inconnue est survenue lors de la tentative d&#x27;accès à la base de données de l&#x27;iPod.</translation>
+        <translation>Une erreur inconnue est survenue lors de la tentative d&apos;accès à la base de données de l&apos;iPod.</translation>
     </message>
 </context>
 <context>
@@ -205,7 +200,7 @@
     </message>
     <message>
         <source>This is an easter egg!</source>
-        <translation>C&#x27;est un œuf de Pâques !</translation>
+        <translation>C&apos;est un œuf de Pâques !</translation>
     </message>
     <message>
         <source>Artist</source>
@@ -221,15 +216,15 @@
     </message>
     <message>
         <source>Fingerprinting</source>
-        <translation>Réaliser l&#x27;empreinte acoustique</translation>
+        <translation>Réaliser l&apos;empreinte acoustique</translation>
     </message>
     <message>
         <source>Recently Fingerprinted Tracks</source>
-        <translation>Titres dont l&#x27;empreinte acoustique a été réalisée récemment</translation>
+        <translation>Titres dont l&apos;empreinte acoustique a été réalisée récemment</translation>
     </message>
     <message>
         <source>iPod Scrobbling</source>
-        <translation>Scrobbling de l&#x27;iPod</translation>
+        <translation>Scrobbling de l&apos;iPod</translation>
     </message>
     <message>
         <source>iTunes automatically manages my iPod</source>
@@ -241,7 +236,7 @@
     </message>
     <message>
         <source>Scrobble iPod</source>
-        <translation>Scrobbler l&#x27;iPod</translation>
+        <translation>Scrobbler l&apos;iPod</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -285,8 +280,8 @@
         <translation>Trouvez vos amis sur Last.fm</translation>
     </message>
     <message>
-        <source>&lt;h3&gt;You haven&#x27;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;/p&gt;</source>
-        <translation>&lt;h3&gt;Vous ne vous êtes pas encore fait d&#x27;amis sur Last.fm.&lt;/h3&gt;&lt;p&gt;Trouvez vos amis Facebook et contactez-les par e-mail facilement et rapidement depuis Last.fm en utilisant l&#x27;outil de recherche d&#x27;amis.&lt;p /&gt;&lt;/p&gt;</translation>
+        <source>&lt;h3&gt;You haven&apos;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;/p&gt;</source>
+        <translation>&lt;h3&gt;Vous ne vous êtes pas encore fait d&apos;amis sur Last.fm.&lt;/h3&gt;&lt;p&gt;Trouvez vos amis Facebook et contactez-les par e-mail facilement et rapidement depuis Last.fm en utilisant l&apos;outil de recherche d&apos;amis.&lt;p /&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Search for a friend by username or real name</source>
@@ -304,7 +299,7 @@
 <context>
     <name>FriendWidget</name>
     <message>
-        <source>%1&#x27;s Library Radio</source>
+        <source>%1&apos;s Library Radio</source>
         <translation>Radio de la bibliothèque de %1</translation>
     </message>
     <message>
@@ -347,47 +342,27 @@
     </message>
     <message>
         <source>Show application icon in menu bar</source>
-        <translation>Afficher l&#x27;icône de l&#x27;app dans la barre de menu</translation>
-    </message>
-    <message>
-        <source>Show:</source>
-        <translation>Afficher :</translation>
+        <translation>Afficher l&apos;icône de l&apos;app dans la barre de menu</translation>
     </message>
     <message>
         <source>Launch application with media players</source>
-        <translation>Lancer l&#x27;app depuis des lecteurs média</translation>
+        <translation>Lancer l&apos;app depuis des lecteurs média</translation>
     </message>
     <message>
         <source>Show dock icon</source>
-        <translation>Afficher l&#x27;icône du Dock</translation>
+        <translation>Afficher l&apos;icône du Dock</translation>
     </message>
     <message>
         <source>Show desktop notifications</source>
         <translation>Afficher les notifications de bureau</translation>
     </message>
     <message>
-        <source>Remember last radio station and tune in on start up</source>
-        <translation>Se souvenir de la dernière station de radio et la lancer au démarrage</translation>
-    </message>
-    <message>
         <source>Send crash reports to Last.fm</source>
-        <translation>Envoyer les rapports d&#x27;incident à Last.fm</translation>
+        <translation>Envoyer les rapports d&apos;incident à Last.fm</translation>
     </message>
     <message>
         <source>Check for updates automatically</source>
         <translation>Chercher automatiquement des mises à jour</translation>
-    </message>
-    <message>
-        <source>Menu bar and dock icons</source>
-        <translation>Barre de menu et icônes de dock</translation>
-    </message>
-    <message>
-        <source>Only dock icon (hide menu bar icon)</source>
-        <translation>Icône de dock uniquement (masquer l&#x27;icône de barre de menu)</translation>
-    </message>
-    <message>
-        <source>Only menu bar icon (hide dock icon)</source>
-        <translation>Icône de barre de menu uniquement (masquer l&#x27;icône de dock)</translation>
     </message>
     <message>
         <source>Enable media keys</source>
@@ -403,7 +378,7 @@
     </message>
     <message>
         <source>An application restart is required for the change to take effect. Would you like to restart now?</source>
-        <translation>Un redémarrage de l&#x27;application est requis pour que les modifications soient appliquées. Aimeriez-vous la redémarrer maintenant ?</translation>
+        <translation>Un redémarrage de l&apos;application est requis pour que les modifications soient appliquées. Aimeriez-vous la redémarrer maintenant ?</translation>
     </message>
     <message>
         <source>Update to beta versions - Warning: only for the brave!</source>
@@ -411,28 +386,17 @@
     </message>
 </context>
 <context>
-    <name>IPluginInfo</name>
-    <message>
-        <source>The %1 plugin hasn&#x27;t been installed</source>
-        <translation>Le plug-in %1 n&#x27;a pas été installé</translation>
-    </message>
-    <message>
-        <source>You didn&#x27;t close %1 so its plugin hasn&#x27;t been installed.</source>
-        <translation>Vous n&#x27;avez pas fermé %1 donc son plug-in n&#x27;a pas été installé.</translation>
-    </message>
-</context>
-<context>
     <name>IpodDeviceLinux</name>
     <message>
         <source>The iPod database could not be opened.</source>
-        <translation>Impossible d&#x27;ouvrir la base de données de l&#x27;iPod.</translation>
+        <translation>Impossible d&apos;ouvrir la base de données de l&apos;iPod.</translation>
     </message>
 </context>
 <context>
     <name>IpodSettingsWidget</name>
     <message>
         <source>&lt;p&gt;Using an iOS scrobbling app, like %1, may result in double scrobbles. Please only enable scrobbling in one of them.&lt;/p&gt;&lt;p&gt;iTunes Match synchronises play counts, but not last played times, across multiple devices. This will lead to duplicate scrobbles, at incorrect times. For now, we recommend iTunes Match users disable device scrobbling on desktop devices and scrobble iPhones/iPods using an iOS scrobbling app, like %1.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Utiliser une app de scrobbling sous iOS, comme %1, peut entraîner une duplication des scrobbles. Veuillez n&#x27;activer le scrobbling que sur l&#x27;une d&#x27;elles.&lt;/p&gt;&lt;p&gt;iTunes Match synchronise le nombre de lectures sur de multiples appareils mais pas les dernières lectures. Une duplication des scrobbles pourrait dès lors avoir lieu à des moments inopportuns. Nous recommandons, pour l&#x27;instant, aux utilisateurs d&#x27;iTunes Match de désactiver le scrobbling d&#x27;appareils sur les dispositifs de bureau et de ne scrobbler des iPhones/iPods qu&#x27;en utilisant une app de scrobbling sous iOS comme %1.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Utiliser une app de scrobbling sous iOS, comme %1, peut entraîner une duplication des scrobbles. Veuillez n&apos;activer le scrobbling que sur l&apos;une d&apos;elles.&lt;/p&gt;&lt;p&gt;iTunes Match synchronise le nombre de lectures sur de multiples appareils mais pas les dernières lectures. Une duplication des scrobbles pourrait dès lors avoir lieu à des moments inopportuns. Nous recommandons, pour l&apos;instant, aux utilisateurs d&apos;iTunes Match de désactiver le scrobbling d&apos;appareils sur les dispositifs de bureau et de ne scrobbler des iPhones/iPods qu&apos;en utilisant une app de scrobbling sous iOS comme %1.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Setting not changed</source>
@@ -440,7 +404,7 @@
     </message>
     <message>
         <source>You did not close iTunes for this setting to change</source>
-        <translation>Vous n&#x27;avez pas fermé iTunes pour que cette configuration soit modifiée</translation>
+        <translation>Vous n&apos;avez pas fermé iTunes pour que cette configuration soit modifiée</translation>
     </message>
     <message>
         <source>Enable Device Scrobbling</source>
@@ -466,32 +430,32 @@
     <name>LoginContinueDialog</name>
     <message>
         <source>Are we done?</source>
-        <translation>C&#x27;est tout ?</translation>
+        <translation>C&apos;est tout ?</translation>
     </message>
     <message>
         <source>Click OK once you have approved this app.</source>
-        <translation>Cliquez sur OK une fois l&#x27;app approuvée.</translation>
+        <translation>Cliquez sur OK une fois l&apos;app approuvée.</translation>
     </message>
 </context>
 <context>
     <name>LoginDialog</name>
     <message>
         <source>Last.fm needs your permission first!</source>
-        <translation>Last.fm a d&#x27;abord besoin de votre autorisation !</translation>
+        <translation>Last.fm a d&apos;abord besoin de votre autorisation !</translation>
     </message>
     <message>
         <source>This application needs your permission to connect to your Last.fm profile.  Click OK to go to the Last.fm website and do this.</source>
-        <translation>L&#x27;application a besoin de votre autorisation pour associer votre profil Last.fm. Cliquez sur OK pour vous rendre sur le site Web de Last.fm et le faire.</translation>
+        <translation>L&apos;application a besoin de votre autorisation pour associer votre profil Last.fm. Cliquez sur OK pour vous rendre sur le site Web de Last.fm et le faire.</translation>
     </message>
 </context>
 <context>
     <name>LoginPage</name>
     <message>
-        <source>&lt;p&gt;Already a Last.fm user? Connect your account with the Last.fm Desktop App and it&#x27;ll update your profile with the music you&#x27;re listening to.&lt;/p&gt;&lt;p&gt;If you don&#x27;t have an account you can sign up now for free now.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Vous êtes déjà utilisateur de Last.fm ? Associez votre compte à l&#x27;app de bureau Last.fm et mettez à jour votre profil en renseignant la musique que vous écoutez.&lt;/p&gt;&lt;p&gt;Si vous n&#x27;avez pas encore de compte, inscrivez-vous gratuitement maintenant.&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Already a Last.fm user? Connect your account with the Last.fm Desktop App and it&apos;ll update your profile with the music you&apos;re listening to.&lt;/p&gt;&lt;p&gt;If you don&apos;t have an account you can sign up now for free now.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Vous êtes déjà utilisateur de Last.fm ? Associez votre compte à l&apos;app de bureau Last.fm et mettez à jour votre profil en renseignant la musique que vous écoutez.&lt;/p&gt;&lt;p&gt;Si vous n&apos;avez pas encore de compte, inscrivez-vous gratuitement maintenant.&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>Let&#x27;s get started by connecting your Last.fm account</source>
+        <source>Let&apos;s get started by connecting your Last.fm account</source>
         <translation>Commençons par associer votre compte Last.fm</translation>
     </message>
     <message>
@@ -500,7 +464,7 @@
     </message>
     <message>
         <source>Sign up</source>
-        <translation>S&#x27;inscrire</translation>
+        <translation>S&apos;inscrire</translation>
     </message>
     <message>
         <source>Proxy?</source>
@@ -516,8 +480,8 @@
     <message numerus="yes">
         <source>Plugin install error</source>
         <translation>
-            <numerusform>Error d&#x27;installation du plug-in</numerusform>
-            <numerusform>Error d&#x27;installation des plug-ins</numerusform>
+            <numerusform>Error d&apos;installation du plug-in</numerusform>
+            <numerusform>Error d&apos;installation des plug-ins</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -535,15 +499,15 @@
         </translation>
     </message>
     <message numerus="yes">
-        <source>&lt;p&gt;Your plugin(s) ha(s|ve) been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to scrobble with your media player(s)&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your plugin(s) ha(s|ve) been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to scrobble with your media player(s)&lt;/p&gt;</source>
         <translation>
             <numerusform>&lt;p&gt;Votre plug-in a bien été installé.&lt;/p&gt;&lt;p&gt;Vous pouvez désormais scrobbler depuis votre lecteur média.&lt;/p&gt;</numerusform>
             <numerusform>&lt;p&gt;Vos plug-ins ont bien été installés.&lt;/p&gt;&lt;p&gt;Vous pouvez désormais scrobbler depuis votre lecteur média.&lt;/p&gt;</numerusform>
         </translation>
     </message>
     <message>
-        <source>Your plugins haven&#x27;t been installed</source>
-        <translation>Vos plug-ins n&#x27;ont pas été installés</translation>
+        <source>Your plugins haven&apos;t been installed</source>
+        <translation>Vos plug-ins n&apos;ont pas été installés</translation>
     </message>
     <message>
         <source>You can install them later through the file menu</source>
@@ -696,10 +660,6 @@
         <translation>Lecture de la radio %1</translation>
     </message>
     <message>
-        <source>Auto-corrected from: %1</source>
-        <translation>Correction automatique depuis : %1</translation>
-    </message>
-    <message>
         <source>%L1</source>
         <translation>%L1</translation>
     </message>
@@ -781,11 +741,11 @@
         <translation>Recommandé car vous écoutez %1, %2, %3, %4 et %5.</translation>
     </message>
     <message>
-        <source>From %1&#x27;s library.</source>
+        <source>From %1&apos;s library.</source>
         <translation>Depuis la bibliothèque de %1.</translation>
     </message>
     <message>
-        <source>From %1 and %2&#x27;s libraries.</source>
+        <source>From %1 and %2&apos;s libraries.</source>
         <translation>Depuis les bibliothèques de %1 et %2.</translation>
     </message>
     <message numerus="yes">
@@ -796,28 +756,28 @@
         </translation>
     </message>
     <message>
-        <source>From %1, %2, and %3&#x27;s libraries.</source>
+        <source>From %1, %2, and %3&apos;s libraries.</source>
         <translation>Depuis les bibliothèques de %1, %2 et %3.</translation>
     </message>
     <message>
-        <source>You&#x27;ve listened to %1 %2 and %3 %4.</source>
+        <source>You&apos;ve listened to %1 %2 and %3 %4.</source>
         <translation>Vous avez écouté %1, %2 et %3, %4.</translation>
     </message>
     <message>
-        <source>From %1, %2, %3, and %4&#x27;s libraries.</source>
+        <source>From %1, %2, %3, and %4&apos;s libraries.</source>
         <translation>Depuis les bibliothèques de %1, %2, %3 et %4.</translation>
     </message>
     <message>
-        <source>You&#x27;ve listened to %1 %2, but not this track.</source>
+        <source>You&apos;ve listened to %1 %2, but not this track.</source>
         <translation>Vous avez écouté %1, %2, mais pas ce titre.</translation>
     </message>
     <message>
-        <source>From %1, %2, %3, %4, and %5&#x27;s libraries.</source>
+        <source>From %1, %2, %3, %4, and %5&apos;s libraries.</source>
         <translation>Depuis les bibliothèques de %1, %2, %3, %4 et %5.</translation>
     </message>
     <message>
-        <source>This is the first time you&#x27;ve listened to %1.</source>
-        <translation>C&#x27;est la première fois que vous écoutez %1.</translation>
+        <source>This is the first time you&apos;ve listened to %1.</source>
+        <translation>C&apos;est la première fois que vous écoutez %1.</translation>
     </message>
 </context>
 <context>
@@ -848,7 +808,7 @@
     </message>
     <message>
         <source>&lt;h2&gt;Scrobble from your music player&lt;/h2&gt;&lt;p&gt;Start listening to some music in your media player. You can see more information about the tracks you play on the Now Playing tab.&lt;/p&gt;</source>
-        <translation>&lt;h2&gt;Scrobbler depuis votre lecteur média&lt;/h2&gt;&lt;p&gt;Commencez à écouter de la musique depuis votre lecteur média. Vous pouvez découvrir plus d&#x27;informations sur les titres que vous écoutez en consultant l&#x27;onglet En écoute.&lt;/p&gt;</translation>
+        <translation>&lt;h2&gt;Scrobbler depuis votre lecteur média&lt;/h2&gt;&lt;p&gt;Commencez à écouter de la musique depuis votre lecteur média. Vous pouvez découvrir plus d&apos;informations sur les titres que vous écoutez en consultant l&apos;onglet En écoute.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Hello, %1!</source>
@@ -871,7 +831,7 @@
     </message>
     <message>
         <source>Cue %1</source>
-        <translation>Mettre %1 en file d&#x27;attente</translation>
+        <translation>Mettre %1 en file d&apos;attente</translation>
     </message>
     <message>
         <source>Play %1 and %2 Library Radio</source>
@@ -879,7 +839,7 @@
     </message>
     <message>
         <source>Cue %1 and %2 Library Radio</source>
-        <translation>Mettre les radios des bibliothèques %1 et %2 en file d&#x27;attente</translation>
+        <translation>Mettre les radios des bibliothèques %1 et %2 en file d&apos;attente</translation>
     </message>
 </context>
 <context>
@@ -928,6 +888,30 @@
         <source>Scrobbling from</source>
         <translation>Scrobbler depuis</translation>
     </message>
+    <message>
+        <source>Scrobble meter: %1%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not scrobbled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable scrobbling by getting the %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last.fm app for Spotify</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scrobbled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PlaysLabel</name>
@@ -958,16 +942,16 @@
         <translation>Êtes-vous sûr de vouloir annuler cette importation ?</translation>
     </message>
     <message>
-        <source>Last.fm couldn&#x27;t find any played tracks in your media library.
+        <source>Last.fm couldn&apos;t find any played tracks in your media library.
 
  Click OK to continue.</source>
-        <translation>Last.fm n&#x27;a trouvé aucun titre diffusé dans votre bibliothèque média.
+        <translation>Last.fm n&apos;a trouvé aucun titre diffusé dans votre bibliothèque média.
 
  Cliquez sur OK pour continuer.</translation>
     </message>
     <message>
         <source>Last.fm is importing your current media library...</source>
-        <translation>Last.fm est en train d&#x27;importer votre bibliothèque média actuelle.</translation>
+        <translation>Last.fm est en train d&apos;importer votre bibliothèque média actuelle.</translation>
     </message>
     <message>
         <source>Where is Winamp?</source>
@@ -984,27 +968,27 @@
     <message>
         <source>Last.fm has submitted your listening history to the server.
 Your profile will be updated with the new tracks in a few minutes.</source>
-        <translation>Last.fm a envoyé votre historique d&#x27;écoute au serveur.
+        <translation>Last.fm a envoyé votre historique d&apos;écoute au serveur.
 Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</translation>
     </message>
     <message>
         <source>Library Import Failed</source>
-        <translation>Échec de l&#x27;importation de la bibliothèque</translation>
+        <translation>Échec de l&apos;importation de la bibliothèque</translation>
     </message>
     <message>
-        <source>Sorry, Last.fm was unable to import your listening history. This is probably because you&#x27;ve already scrobbled too many tracks. Listening history can only be imported to brand new profiles.</source>
-        <translation>Désolé, Last.fm n&#x27;a pu importer votre historique d&#x27;écoute. Vous avez sans doute déjà scrobblé un trop grand nombre de titres. L&#x27;historique ne peut être importé que sur les nouveaux profils.</translation>
+        <source>Sorry, Last.fm was unable to import your listening history. This is probably because you&apos;ve already scrobbled too many tracks. Listening history can only be imported to brand new profiles.</source>
+        <translation>Désolé, Last.fm n&apos;a pu importer votre historique d&apos;écoute. Vous avez sans doute déjà scrobblé un trop grand nombre de titres. L&apos;historique ne peut être importé que sur les nouveaux profils.</translation>
     </message>
 </context>
 <context>
     <name>PluginsInstallPage</name>
     <message>
         <source>&lt;p&gt;Please follow the instructions that appear from your operating system to install the plugins.&lt;/p&gt;&lt;p&gt;Once the plugins have been installed on you computer, click &lt;strong&gt;Continue&lt;/strong&gt;.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Veuillez suivre les instructions qui apparaissent sur votre système d&#x27;exploitation pour installer les plug-ins.&lt;/p&gt;&lt;p&gt;Une fois ceux-ci installés sur votre ordinateur, cliquez sur &lt;strong&gt;Continuer&lt;/strong&gt;.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Veuillez suivre les instructions qui apparaissent sur votre système d&apos;exploitation pour installer les plug-ins.&lt;/p&gt;&lt;p&gt;Une fois ceux-ci installés sur votre ordinateur, cliquez sur &lt;strong&gt;Continuer&lt;/strong&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Your plugins are now being installed</source>
-        <translation>Vos plug-ins sont en cours d&#x27;installation</translation>
+        <translation>Vos plug-ins sont en cours d&apos;installation</translation>
     </message>
     <message>
         <source>Continue</source>
@@ -1015,8 +999,8 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
         <translation>&lt;&lt; Retour</translation>
     </message>
     <message>
-        <source>Your plugins haven&#x27;t been installed</source>
-        <translation>Vos plug-ins n&#x27;ont pas été installés</translation>
+        <source>Your plugins haven&apos;t been installed</source>
+        <translation>Vos plug-ins n&apos;ont pas été installés</translation>
     </message>
     <message>
         <source>You can install them later through the file menu</source>
@@ -1027,7 +1011,7 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
     <name>PluginsPage</name>
     <message>
         <source>&lt;p&gt;Your media players need a special Last.fm plugin to be able to scrobble the music you listen to.&lt;/p&gt;&lt;p&gt;Please select the media players that you would like to scrobble your music from and click &lt;strong&gt;Install Plugins&lt;/strong&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Vos lecteurs média ont besoin d&#x27;un plug-in spécial Last.fm pour être en mesure de scrobbler la musique que vous écoutez.&lt;/p&gt;&lt;p&gt;Veuillez sélectionner les lecteurs média depuis lesquels vous aimeriez scrobbler et cliquez sur &lt;strong&gt;Installer les plug-ins&lt;/strong&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Vos lecteurs média ont besoin d&apos;un plug-in spécial Last.fm pour être en mesure de scrobbler la musique que vous écoutez.&lt;/p&gt;&lt;p&gt;Veuillez sélectionner les lecteurs média depuis lesquels vous aimeriez scrobbler et cliquez sur &lt;strong&gt;Installer les plug-ins&lt;/strong&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>(newer version)</source>
@@ -1146,37 +1130,6 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
     </message>
 </context>
 <context>
-    <name>ProgressBar</name>
-    <message>
-        <source>Scrobbling off</source>
-        <translation>Scrobbling désactivé</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - excluded directory</source>
-        <translation>Pas de scrobbling : répertoires exclus</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - not a music video</source>
-        <translation>Pas de scrobbling : pas une vidéo musicale</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - podcasts disabled</source>
-        <translation>Pas de scrobbling : podcast désactivé</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - missing artist</source>
-        <translation>Pas de scrobbling : artiste manquant</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - track too short</source>
-        <translation>Pas de scrobbling : titre trop court</translation>
-    </message>
-    <message>
-        <source>Enable scrobbling in Spotify&#x27;s preferences!</source>
-        <translation>Activer le scrobbling dans les préférences de Spotify !</translation>
-    </message>
-</context>
-<context>
     <name>ProxyDialog</name>
     <message>
         <source>Proxy Settings</source>
@@ -1191,7 +1144,7 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
     </message>
     <message>
         <source>Username:</source>
-        <translation>Nom d&#x27;utilisateur :</translation>
+        <translation>Nom d&apos;utilisateur :</translation>
     </message>
     <message>
         <source>Port:</source>
@@ -1200,22 +1153,6 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
     <message>
         <source>Password:</source>
         <translation>Mot de passe :</translation>
-    </message>
-    <message>
-        <source>Auto-detect</source>
-        <translation>Détection automatique</translation>
-    </message>
-    <message>
-        <source>No-proxy</source>
-        <translation>Aucun proxy</translation>
-    </message>
-    <message>
-        <source>HTTP</source>
-        <translation>HTTP</translation>
-    </message>
-    <message>
-        <source>SOCKS5</source>
-        <translation>SOCKS5</translation>
     </message>
 </context>
 <context>
@@ -1303,7 +1240,7 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
     </message>
     <message>
         <source>You need to be a Last.fm subscriber to listen to radio in this app. Subscribe now to start listening and take advantage of other great benefits too!</source>
-        <translation>Vous devez être abonné pour pouvoir écouter la radio avec cette app. Abonnez-vous maintenant pour commencer à écouter et bénéficiez d&#x27;une multitude d&#x27;autres avantages !</translation>
+        <translation>Vous devez être abonné pour pouvoir écouter la radio avec cette app. Abonnez-vous maintenant pour commencer à écouter et bénéficiez d&apos;une multitude d&apos;autres avantages !</translation>
     </message>
     <message>
         <source>Network Stations</source>
@@ -1318,7 +1255,7 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
         <translation>Écoutez gratuitement sur www.last.fm</translation>
     </message>
     <message>
-        <source>My Friends&#x27; Radio</source>
+        <source>My Friends&apos; Radio</source>
         <translation>La radio de mes amis</translation>
     </message>
     <message>
@@ -1331,7 +1268,7 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
     </message>
     <message>
         <source>Music from listeners like you</source>
-        <translation>La musique d&#x27;auditeurs qui vous ressemblent</translation>
+        <translation>La musique d&apos;auditeurs qui vous ressemblent</translation>
     </message>
     <message>
         <source>Recent Stations</source>
@@ -1353,7 +1290,7 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
         <translation>Les scrobbles depuis cet appareil</translation>
     </message>
     <message>
-        <source>It looks like you&#x27;ve played these tracks. Would you like to scrobble them?</source>
+        <source>It looks like you&apos;ve played these tracks. Would you like to scrobble them?</source>
         <translation>On dirait que vous avez écouté ces titres. Aimeriez-vous les scrobbler ?</translation>
     </message>
     <message>
@@ -1370,6 +1307,10 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
             <numerusform>%n écoute a été scrobblée depuis cet appareil</numerusform>
             <numerusform>%n écoutes ont été scrobblées depuis cet appareil</numerusform>
         </translation>
+    </message>
+    <message>
+        <source>Tracks appearing in red are invalid and will not be scrobbled. Hover your mouse over each track to find out why.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1439,7 +1380,7 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
     </message>
     <message>
         <source>Allow Last.fm to fingerprint my tracks</source>
-        <translation>Permettre à Last.fm d&#x27;effectuer une empreinte acoustique de mes titres</translation>
+        <translation>Permettre à Last.fm d&apos;effectuer une empreinte acoustique de mes titres</translation>
     </message>
     <message>
         <source>Selected directories will not be scrobbled</source>
@@ -1493,7 +1434,7 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
     </message>
     <message>
         <source>The artist name is missing</source>
-        <translation>Le nom de l&#x27;artiste est manquant</translation>
+        <translation>Le nom de l&apos;artiste est manquant</translation>
     </message>
     <message>
         <source>Invalid track title</source>
@@ -1505,7 +1446,7 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
     </message>
     <message>
         <source>There is no timestamp</source>
-        <translation>Il n&#x27;existe aucun horadatage</translation>
+        <translation>Il n&apos;existe aucun horadatage</translation>
     </message>
     <message>
         <source>This track is too far in the future</source>
@@ -1519,8 +1460,8 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
 <context>
     <name>ScrobblesWidget</name>
     <message>
-        <source>You haven&#x27;t scrobbled any music to Last.fm yet.</source>
-        <translation>Vous n&#x27;avez scrobblé encore aucune musique de Last.fm.</translation>
+        <source>You haven&apos;t scrobbled any music to Last.fm yet.</source>
+        <translation>Vous n&apos;avez scrobblé encore aucune musique de Last.fm.</translation>
     </message>
     <message>
         <source>Start listening to some music in your media player or start a radio station:</source>
@@ -1555,7 +1496,7 @@ Les nouveaux titres seront ajoutés à votre profil dans quelques minutes.</tran
     </message>
     <message>
         <source>Check out %1</source>
-        <translation>Jetez un coup d&#x27;œil à %1</translation>
+        <translation>Jetez un coup d&apos;œil à %1</translation>
     </message>
 </context>
 <context>
@@ -1685,11 +1626,11 @@ ou choisissez-en un ci-dessous</translation>
 <context>
     <name>TourFinishPage</name>
     <message>
-        <source>&lt;p&gt;Now you&#x27;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&#x27;ve also finished importing your listening history and have added it to your Last.fm profile.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Vous voilà désormais fin prêt à commencer ! Cliquez simplement sur &lt;strong&gt;Terminer&lt;/strong&gt; et commencez à explorer.&lt;/p&gt;&lt;p&gt;Nous avons également terminé l&#x27;importation de votre historique d&#x27;écoute et l&#x27;avons ajouté à votre profil Last.fm.&lt;/p&gt;&lt;p&gt;Merci d&#x27;avoir installé l&#x27;app de bureau Last.fm, nous espérons qu&#x27;elle vous plaira !&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&apos;ve also finished importing your listening history and have added it to your Last.fm profile.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Vous voilà désormais fin prêt à commencer ! Cliquez simplement sur &lt;strong&gt;Terminer&lt;/strong&gt; et commencez à explorer.&lt;/p&gt;&lt;p&gt;Nous avons également terminé l&apos;importation de votre historique d&apos;écoute et l&apos;avons ajouté à votre profil Last.fm.&lt;/p&gt;&lt;p&gt;Merci d&apos;avoir installé l&apos;app de bureau Last.fm, nous espérons qu&apos;elle vous plaira !&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>That&#x27;s it, you&#x27;re good to go!</source>
+        <source>That&apos;s it, you&apos;re good to go!</source>
         <translation>Vous voilà fin prêt !</translation>
     </message>
     <message>
@@ -1700,20 +1641,48 @@ ou choisissez-en un ci-dessous</translation>
         <source>&lt;&lt; Back</source>
         <translation>&lt;&lt; Retour</translation>
     </message>
+    <message>
+        <source>there was an upload error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>the submission was denied by Last.fm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>it was detected as spam (too high playcounts?)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>the submission was cancelled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;Importing your listening history to Last.fm failed because %1. Sorry about that!&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&apos;re still importing your listening history and it will be added to your Last.fm profile soon.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TourLocationPage</name>
     <message>
         <source>&lt;p&gt;The red arrow on your screen points to the location of the Last.fm Desktop App in your system tray.&lt;/p&gt;&lt;p&gt;Click the icon to quickly access radio play controls, share and tag track, edit your preferences and visit your Last.fm profile.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;La flèche rouge sur votre écran indique où se trouve l&#x27;app de bureau Last.fm dans la barre d&#x27;état de votre système.&lt;/p&gt;&lt;p&gt;Cliquez sur l&#x27;icône pour accéder rapidement aux commandes de lecture de la radio, pour partager et taguer des titres, pour modifier vos préférences et vous rendre sur votre profil Last.fm&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;La flèche rouge sur votre écran indique où se trouve l&apos;app de bureau Last.fm dans la barre d&apos;état de votre système.&lt;/p&gt;&lt;p&gt;Cliquez sur l&apos;icône pour accéder rapidement aux commandes de lecture de la radio, pour partager et taguer des titres, pour modifier vos préférences et vous rendre sur votre profil Last.fm&lt;/p&gt;</translation>
     </message>
     <message>
         <source>The Last.fm Desktop App in your menu bar</source>
-        <translation>L&#x27;app de bureau Last.fm dans votre barre de menu</translation>
+        <translation>L&apos;app de bureau Last.fm dans votre barre de menu</translation>
     </message>
     <message>
         <source>The Last.fm Desktop App in your system tray</source>
-        <translation>L&#x27;app de bureau Last.fm dans la barre d&#x27;état de votre système</translation>
+        <translation>L&apos;app de bureau Last.fm dans la barre d&apos;état de votre système</translation>
     </message>
     <message>
         <source>Continue</source>
@@ -1727,8 +1696,8 @@ ou choisissez-en un ci-dessous</translation>
 <context>
     <name>TourMetadataPage</name>
     <message>
-        <source>&lt;p&gt;Find out more about the music you&#x27;re listening to, including biographies, listening stats, photos and similar artists, as well as the tags listeners use to describe them.&lt;/p&gt;&lt;p&gt;Check out the &lt;strong&gt;Now Playing&lt;/strong&gt; tab, or simply click on any track in your &lt;strong&gt;Scrobbles&lt;/strong&gt; tab to learn more.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Découvrez-en plus sur la musique que vous écoutez, y compris les biographies, les stats d&#x27;écoute, les photos et les artistes similaires, ainsi que les tags que les auditeurs utilisent pour les décrire.&lt;/p&gt;&lt;p&gt;Découvrez l&#x27;onglet &lt;strong&gt;En écoute&lt;/strong&gt; et cliquez simplement sur n&#x27;importe quel titre repris sous l&#x27;onglet &lt;strong&gt;Scrobbles&lt;/strong&gt; pour en savoir plus.&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Find out more about the music you&apos;re listening to, including biographies, listening stats, photos and similar artists, as well as the tags listeners use to describe them.&lt;/p&gt;&lt;p&gt;Check out the &lt;strong&gt;Now Playing&lt;/strong&gt; tab, or simply click on any track in your &lt;strong&gt;Scrobbles&lt;/strong&gt; tab to learn more.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Découvrez-en plus sur la musique que vous écoutez, y compris les biographies, les stats d&apos;écoute, les photos et les artistes similaires, ainsi que les tags que les auditeurs utilisent pour les décrire.&lt;/p&gt;&lt;p&gt;Découvrez l&apos;onglet &lt;strong&gt;En écoute&lt;/strong&gt; et cliquez simplement sur n&apos;importe quel titre repris sous l&apos;onglet &lt;strong&gt;Scrobbles&lt;/strong&gt; pour en savoir plus.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Discover more about the artists you love</source>
@@ -1755,7 +1724,7 @@ ou choisissez-en un ci-dessous</translation>
     </message>
     <message>
         <source>&lt;p&gt;Use the Last.fm Desktop App to listen to personalised radio based on the music you want to hear.&lt;/p&gt;&lt;p&gt;Every play of every Last.fm station is totally different, from stations based on artists and tags to brand new recommendations tailored to your music taste.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Utilisez l&#x27;app de bureau Last.fm pour écouter une radio personnalisée, basée sur la musique que vous préférez.&lt;/p&gt;&lt;p&gt;Chaque écoute de chaque station radio de Last.fm est complètement différente car les stations se basent sur des artistes, des tags voire des recommandations afin de répondre au mieux à vos goûts musicaux.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Utilisez l&apos;app de bureau Last.fm pour écouter une radio personnalisée, basée sur la musique que vous préférez.&lt;/p&gt;&lt;p&gt;Chaque écoute de chaque station radio de Last.fm est complètement différente car les stations se basent sur des artistes, des tags voire des recommandations afin de répondre au mieux à vos goûts musicaux.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Subscribe and listen to non-stop, personalised radio</source>
@@ -1763,11 +1732,11 @@ ou choisissez-en un ci-dessous</translation>
     </message>
     <message>
         <source>&lt;p&gt;Subscribe to Last.fm and use the Last.fm Desktop App to listen to personalised radio based on the music you want to hear.&lt;/p&gt;&lt;p&gt;Every play of every Last.fm station is totally different, from stations based on artists and tags to brand new recommendations tailored to your music taste.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Abonnez-vous à Last.fm et utilisez l&#x27;app de bureau Last.fm pour écouter une radio personnalisée, basée sur la musique que vous préférez.&lt;/p&gt;&lt;p&gt;Chaque écoute de chaque station radio de Last.fm est complètement différente car les stations se basent sur des artistes, des tags voire des recommandations afin de répondre au mieux à vos goûts musicaux&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Abonnez-vous à Last.fm et utilisez l&apos;app de bureau Last.fm pour écouter une radio personnalisée, basée sur la musique que vous préférez.&lt;/p&gt;&lt;p&gt;Chaque écoute de chaque station radio de Last.fm est complètement différente car les stations se basent sur des artistes, des tags voire des recommandations afin de répondre au mieux à vos goûts musicaux&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Subscribe</source>
-        <translation>S&#x27;abonner</translation>
+        <translation>S&apos;abonner</translation>
     </message>
     <message>
         <source>Continue</source>
@@ -1785,12 +1754,12 @@ ou choisissez-en un ci-dessous</translation>
 <context>
     <name>TourScrobblesPage</name>
     <message>
-        <source>&lt;p&gt;The desktop client runs in the background, quietly updating your Last.fm profile with the music you&#x27;re playing, which you can use to get music recommendations, gig tips and more. &lt;/p&gt;&lt;p&gt;You can also use the Last.fm Desktop App to find out more about the artist you&#x27;re listening to, and to play personalised radio.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Le client de bureau fonctionne en arrière-plan, mettant à jour discrètement votre profil Last.fm et la musique que vous jouez. Vous pouvez l&#x27;utiliser pour découvrir des recommandations musicales, des actus concerts et bien plus encore. &lt;/p&gt;&lt;p&gt;Vous pouvez également utiliser l&#x27;app de bureau Last.fm pour en apprendre davantage sur l&#x27;artiste que vous écoutez et écouter votre radio personnalisée.&lt;/p&gt;</translation>
+        <source>&lt;p&gt;The desktop client runs in the background, quietly updating your Last.fm profile with the music you&apos;re playing, which you can use to get music recommendations, gig tips and more. &lt;/p&gt;&lt;p&gt;You can also use the Last.fm Desktop App to find out more about the artist you&apos;re listening to, and to play personalised radio.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Le client de bureau fonctionne en arrière-plan, mettant à jour discrètement votre profil Last.fm et la musique que vous jouez. Vous pouvez l&apos;utiliser pour découvrir des recommandations musicales, des actus concerts et bien plus encore. &lt;/p&gt;&lt;p&gt;Vous pouvez également utiliser l&apos;app de bureau Last.fm pour en apprendre davantage sur l&apos;artiste que vous écoutez et écouter votre radio personnalisée.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Welcome to the Last.fm Desktop App!</source>
-        <translation>Bienvenue sur l&#x27;app de bureau Last.fm !</translation>
+        <translation>Bienvenue sur l&apos;app de bureau Last.fm !</translation>
     </message>
     <message>
         <source>Continue</source>
@@ -1845,15 +1814,11 @@ ou choisissez-en un ci-dessous</translation>
     </message>
     <message>
         <source>Cue %1 Radio</source>
-        <translation>Mettre la radio %1 en file d&#x27;attente</translation>
+        <translation>Mettre la radio %1 en file d&apos;attente</translation>
     </message>
     <message>
         <source>%1 Radio</source>
         <translation>Radio %1</translation>
-    </message>
-    <message>
-        <source>Auto-corrected from: %1</source>
-        <translation>Correction automatique depuis : %1</translation>
     </message>
     <message>
         <source>Cached</source>
@@ -1900,23 +1865,19 @@ ou choisissez-en un ci-dessous</translation>
     <name>UserManagerWidget</name>
     <message>
         <source>Connected User Accounts:</source>
-        <translation>Comptes d&#x27;utilisateur associés :</translation>
+        <translation>Comptes d&apos;utilisateur associés :</translation>
     </message>
     <message>
         <source>Add New User Account</source>
-        <translation>Ajouter un nouveau compte d&#x27;utilisateur</translation>
+        <translation>Ajouter un nouveau compte d&apos;utilisateur</translation>
     </message>
     <message>
         <source>Add User Error</source>
-        <translation>Ajouter une erreur d&#x27;utilisateur</translation>
+        <translation>Ajouter une erreur d&apos;utilisateur</translation>
     </message>
     <message>
         <source>This user has already been added.</source>
-        <translation>L&#x27;utilisateur a déjà été ajouté</translation>
-    </message>
-    <message>
-        <source>To add a new account you must connect it to the Last.fm user permissions.</source>
-        <translation>Pour ajouter un nouveau compte, vous devez l&#x27;associer aux autorisations d&#x27;utilisateur de Last.fm</translation>
+        <translation>L&apos;utilisateur a déjà été ajouté</translation>
     </message>
     <message>
         <source>Removing %1</source>
@@ -1924,7 +1885,7 @@ ou choisissez-en un ci-dessous</translation>
     </message>
     <message>
         <source>Are you sure you want to remove this user? All user settings will be lost and you will need to re authenticate in order to scrobble in the future.</source>
-        <translation>Êtes-vous sûr de vouloir supprimer cet utilisateur ? Tous les paramètres de cet utilisateur seront perdus et vous devrez vous authentifier à nouveau pour scrobbler à l&#x27;avenir.</translation>
+        <translation>Êtes-vous sûr de vouloir supprimer cet utilisateur ? Tous les paramètres de cet utilisateur seront perdus et vous devrez vous authentifier à nouveau pour scrobbler à l&apos;avenir.</translation>
     </message>
 </context>
 <context>
@@ -1985,7 +1946,7 @@ ou choisissez-en un ci-dessous</translation>
     </message>
     <message>
         <source>Scrobble iPod...</source>
-        <translation>Scrobbler l&#x27;iPod...</translation>
+        <translation>Scrobbler l&apos;iPod...</translation>
     </message>
     <message>
         <source>Visit Last.fm profile</source>
@@ -2004,7 +1965,7 @@ ou choisissez-en un ci-dessous</translation>
         <translation>de %1</translation>
     </message>
     <message numerus="yes">
-        <source>You&#x27;ve reached this station&#x27;s skip limit. Skip again in %n minute(s).</source>
+        <source>You&apos;ve reached this station&apos;s skip limit. Skip again in %n minute(s).</source>
         <translation>
             <numerusform> Vous avez cliqué sur Suivant le maximum de fois autorisé pour le moment pour cette radio. Veuillez attendre %n minute avant de cliquer sur Suivant à nouveau.</numerusform>
             <numerusform> Vous avez cliqué sur Suivant le maximum de fois autorisé pour le moment pour cette radio. Veuillez attendre %n minutes avant de cliquer sur Suivant à nouveau.</numerusform>
@@ -2023,7 +1984,7 @@ ou choisissez-en un ci-dessous</translation>
     </message>
     <message>
         <source>&lt;p&gt;The user account &lt;strong&gt;%1&lt;/strong&gt; is no longer authenticated with Last.fm.&lt;/p&gt;&lt;p&gt;Click OK to start the setup process and reauthenticate this account.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Le compte d&#x27;utilisateur &lt;strong&gt;%1&lt;/strong&gt; n&#x27;est plus authentifié avec Last.fm.&lt;/p&gt;&lt;p&gt;Cliquez sur OK pour commencer le processus d&#x27;authentification et authentifier à nouveau ce compte.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Le compte d&apos;utilisateur &lt;strong&gt;%1&lt;/strong&gt; n&apos;est plus authentifié avec Last.fm.&lt;/p&gt;&lt;p&gt;Cliquez sur OK pour commencer le processus d&apos;authentification et authentifier à nouveau ce compte.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Are you sure you want to quit %1?</source>
@@ -2038,7 +1999,7 @@ ou choisissez-en un ci-dessous</translation>
     <name>unicorn::Application</name>
     <message>
         <source>Changing User</source>
-        <translation>Changement d&#x27;utilisateur en cours</translation>
+        <translation>Changement d&apos;utilisateur en cours</translation>
     </message>
     <message>
         <source>%1 will be logged into the Scrobbler and Last.fm Radio. All music will now be scrobbled to this account. Do you want to continue?</source>
@@ -2056,7 +2017,7 @@ ou choisissez-en un ci-dessous</translation>
     <name>unicorn::IPluginInfo</name>
     <message>
         <source>Plugin install error</source>
-        <translation>Erreur d&#x27;installation du plug-in</translation>
+        <translation>Erreur d&apos;installation du plug-in</translation>
     </message>
     <message>
         <source>&lt;p&gt;There was an error updating your plugin.&lt;/p&gt;&lt;p&gt;Please try again later.&lt;/p&gt;</source>
@@ -2067,16 +2028,16 @@ ou choisissez-en un ci-dessous</translation>
         <translation>Plug-in installé !</translation>
     </message>
     <message>
-        <source>&lt;p&gt;The %1 plugin has been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to scrobble with %1.&lt;/p&gt;</source>
+        <source>&lt;p&gt;The %1 plugin has been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to scrobble with %1.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Le plug-in %1 a bien été installé.&lt;/p&gt;&lt;p&gt;Vous êtes désormais prêt à scrobbler avec %1.&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>The %1 plugin hasn&#x27;t been installed</source>
-        <translation>Le plug-in %1 n&#x27;a pas été installé</translation>
+        <source>The %1 plugin hasn&apos;t been installed</source>
+        <translation>Le plug-in %1 n&apos;a pas été installé</translation>
     </message>
     <message>
-        <source>You didn&#x27;t close %1 so its plugin hasn&#x27;t been installed.</source>
-        <translation>Vous n&#x27;avez pas fermé %1 donc son plug-in n&#x27;a pas été installé.</translation>
+        <source>You didn&apos;t close %1 so its plugin hasn&apos;t been installed.</source>
+        <translation>Vous n&apos;avez pas fermé %1 donc son plug-in n&apos;a pas été installé.</translation>
     </message>
 </context>
 <context>
@@ -2087,26 +2048,26 @@ ou choisissez-en un ci-dessous</translation>
     </message>
     <message>
         <source>&lt;p&gt;Your iTunes plugin (%2) is different to the one shipped with this version of the app (%1).&lt;/p&gt;&lt;p&gt;Please close iTunes now to update.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Votre plug-in iTunes (%2) est différent de celui expédié avec cette version de l&#x27;app (%1).&lt;/p&gt;&lt;p&gt;Veuillez fermer iTunes maintenant pour le mettre à jour.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Votre plug-in iTunes (%2) est différent de celui expédié avec cette version de l&apos;app (%1).&lt;/p&gt;&lt;p&gt;Veuillez fermer iTunes maintenant pour le mettre à jour.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>not installed</source>
         <translation>pas installé</translation>
     </message>
     <message>
-        <source>Your plugin hasn&#x27;t been installed</source>
-        <translation>Votre plug-in n&#x27;a pas été installé</translation>
+        <source>Your plugin hasn&apos;t been installed</source>
+        <translation>Votre plug-in n&apos;a pas été installé</translation>
     </message>
     <message>
         <source>There was an error while removing the old plugin</source>
-        <translation>Une erreur est survenue lors de la suppression de l&#x27;ancien plug-in</translation>
+        <translation>Une erreur est survenue lors de la suppression de l&apos;ancien plug-in</translation>
     </message>
     <message>
         <source>iTunes Plugin installed!</source>
         <translation>Plug-in iTunes installé !</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Your iTunes plugin has been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to device scrobble.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your iTunes plugin has been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to device scrobble.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Votre plug-in iTunes est bien installé.&lt;/p&gt;&lt;p&gt;Vous pouvez désormais scrobbler depuis votre périphérique.&lt;/p&gt;</translation>
     </message>
     <message>
@@ -2114,15 +2075,15 @@ ou choisissez-en un ci-dessous</translation>
         <translation>Une erreur est survenue lors de la copie du nouveau plug-in à son nouvel emplacement</translation>
     </message>
     <message>
-        <source>You didn&#x27;t close iTunes</source>
-        <translation>Vous n&#x27;avez pas fermé iTunes</translation>
+        <source>You didn&apos;t close iTunes</source>
+        <translation>Vous n&apos;avez pas fermé iTunes</translation>
     </message>
 </context>
 <context>
     <name>unicorn::Label</name>
     <message>
         <source>Time is broken</source>
-        <translation>Le temps s&#x27;est fait la malle</translation>
+        <translation>Le temps s&apos;est fait la malle</translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s) ago</source>
@@ -2142,36 +2103,12 @@ ou choisissez-en un ci-dessous</translation>
 <context>
     <name>unicorn::LoginProcess</name>
     <message>
-        <source>Login Failed</source>
-        <translation>Échec de la connexion</translation>
-    </message>
-    <message>
-        <source>Sorry, we don&#x27;t recognise that username, or you typed the password wrongly.</source>
-        <translation>Désolé, nous ne reconnaissons pas ce nom d&#x27;utilisateur ; il se peut également que le mot de passe saisi soit incorrect.</translation>
-    </message>
-    <message>
-        <source>Last.fm Unavailable</source>
-        <translation>Last.fm n&#x27;est pas disponible</translation>
-    </message>
-    <message>
-        <source>There was a problem communicating with the Last.fm services. Please try again later.</source>
-        <translation>Un erreur de communication avec les services de Last.fm est survenue. Veuillez réessayer ultérieurement.</translation>
-    </message>
-    <message>
-        <source>Cannot connect to Last.fm</source>
-        <translation>Connexion à Last.fm impossible</translation>
-    </message>
-    <message>
-        <source>Last.fm cannot be reached. Please check your firewall or proxy settings.</source>
-        <translation>Last.fm est inaccessible. Veuillez vérifier les paramètres de votre pare-feu ou de votre proxy.</translation>
-    </message>
-    <message>
         <source>There was a network error: %1</source>
         <translation>Une erreur réseau est survenue : %1</translation>
     </message>
     <message>
         <source>You have not authorised this application</source>
-        <translation>Vous n&#x27;avez pas autorisé cette application</translation>
+        <translation>Vous n&apos;avez pas autorisé cette application</translation>
     </message>
     <message>
         <source>Authentication Error</source>
@@ -2188,7 +2125,7 @@ ou choisissez-en un ci-dessous</translation>
 <context>
     <name>unicorn::MessageDialog</name>
     <message>
-        <source>Don&#x27;t ask this again</source>
+        <source>Don&apos;t ask this again</source>
         <translation>Ne plus me le demander</translation>
     </message>
 </context>
@@ -2210,4 +2147,5 @@ ou choisissez-en un ci-dessous</translation>
         <source>SOCKS5</source>
         <translation>SOCKS5</translation>
     </message>
-</context></TS>
+</context>
+</TS>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.0" language="sv">
-
 <context>
     <name>AboutDialog</name>
     <message>
@@ -16,11 +15,11 @@
 <context>
     <name>AccessPage</name>
     <message>
-        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&#x27;t connected because you closed the browser window or you clicked cancel, please try again.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Please click the &lt;strong&gt;Yes, Allow Access&lt;/strong&gt; button in your web browser to connect your Last.fm account to the Last.fm Desktop App.&lt;/p&gt;&lt;p&gt;If you haven&apos;t connected because you closed the browser window or you clicked cancel, please try again.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Klicka på knappen &lt;strong&gt;Ja, tillåt åtkomst&lt;/strong&gt; i din webbläsare för att ansluta ditt Last.fm-konto till Last.fm-programmet.&lt;/p&gt;&lt;p&gt;Om du inte har anslutit eftersom du har stängt din webbläsare eller klickat på avbryt, försök igen.&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>We&#x27;re waiting for you to connect to Last.fm</source>
+        <source>We&apos;re waiting for you to connect to Last.fm</source>
         <translation>Vi väntar på att du ska ansluta dig till Last.fm</translation>
     </message>
     <message>
@@ -36,7 +35,7 @@
         <translation>Försök igen</translation>
     </message>
     <message>
-        <source>&lt;p&gt;If your web browser didn&#x27;t open, copy and paste the link below into your address bar.&lt;/p&gt;</source>
+        <source>&lt;p&gt;If your web browser didn&apos;t open, copy and paste the link below into your address bar.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Om din webbläsare inte öppnades, kopiera och klistra in länken nedan i ditt adressfält.&lt;/p&gt;</translation>
     </message>
 </context>
@@ -100,7 +99,7 @@
         <translation>&lt;p&gt;För de bästa möjliga rekommendationerna baserat på din musiksmak rekommenderar vi att du importerar din lyssningshistorik från din mediaspelare.&lt;/p&gt;&lt;p&gt;Välj den mediaspelare du föredrar och klicka på &lt;strong&gt;Starta import&lt;/strong&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>Your plugins haven&#x27;t been installed</source>
+        <source>Your plugins haven&apos;t been installed</source>
         <translation>Dina insticksprogram har inte installerats</translation>
     </message>
     <message>
@@ -112,7 +111,7 @@
         <translation>iTunes</translation>
     </message>
     <message>
-        <source>Now let&#x27;s import your listening history</source>
+        <source>Now let&apos;s import your listening history</source>
         <translation>Låt oss nu importera din lyssningshistorik</translation>
     </message>
     <message>
@@ -131,7 +130,7 @@
 <context>
     <name>BootstrapProgressPage</name>
     <message>
-        <source>&lt;p&gt;Don&#x27;t worry, the upload process shouldn&#x27;t take more than a couple of minutes, depending on the size of your music library.&lt;/p&gt;&lt;p&gt;While we&#x27;re hard at work adding your listening history to your Last.fm profile, why don&#x27;t you check out the main features of the Last.fm Desktop App. Click &lt;strong&gt;Continue&lt;/strong&gt; to take the tour.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Don&apos;t worry, the upload process shouldn&apos;t take more than a couple of minutes, depending on the size of your music library.&lt;/p&gt;&lt;p&gt;While we&apos;re hard at work adding your listening history to your Last.fm profile, why don&apos;t you check out the main features of the Last.fm Desktop App. Click &lt;strong&gt;Continue&lt;/strong&gt; to take the tour.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Oroa dig inte, uppladdningsprocessen bör inte ta mer än några minuter beroende på storleken på ditt musikbibliotek.&lt;/p&gt;&lt;p&gt;Medan vi jobbar hårt med att lägga till din lyssningshistorik till din Last.fm-profil kan du kolla in Last.fm-programmets huvudfunktioner. Klicka på &lt;strong&gt;Fortsätt&lt;/strong&gt; för att ta turen.&lt;/p&gt;</translation>
     </message>
     <message>
@@ -148,10 +147,6 @@
     <message>
         <source>Close Apps</source>
         <translation>Stäng program</translation>
-    </message>
-    <message>
-        <source>Please close the following apps to continue.</source>
-        <translation>Vänligen stäng följande program för att fortsätta.</translation>
     </message>
 </context>
 <context>
@@ -285,7 +280,7 @@
         <translation>Hitta dina vänner på Last.fm</translation>
     </message>
     <message>
-        <source>&lt;h3&gt;You haven&#x27;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;/p&gt;</source>
+        <source>&lt;h3&gt;You haven&apos;t made any friends on Last.fm yet.&lt;/h3&gt;&lt;p&gt;Find your Facebook friends and email contacts on Last.fm quickly and easily using the friend finder.&lt;/p&gt;</source>
         <translation>&lt;h3&gt;Du har inga vänner på Last.fm än.&lt;/h3&gt;&lt;p&gt;Hitta dina Facebook-vänner och e-postkontakter på Last.fm snabbt och enkelt med vänsökaren.&lt;p /&gt;&lt;/p&gt;</translation>
     </message>
     <message>
@@ -304,7 +299,7 @@
 <context>
     <name>FriendWidget</name>
     <message>
-        <source>%1&#x27;s Library Radio</source>
+        <source>%1&apos;s Library Radio</source>
         <translation>%1s biblioteksradio</translation>
     </message>
     <message>
@@ -350,10 +345,6 @@
         <translation>Visa programikon i menylistan</translation>
     </message>
     <message>
-        <source>Show:</source>
-        <translation>Visa:</translation>
-    </message>
-    <message>
         <source>Launch application with media players</source>
         <translation>Starta program med mediaspelare</translation>
     </message>
@@ -366,28 +357,12 @@
         <translation>Visa skrivbordsmeddelanden</translation>
     </message>
     <message>
-        <source>Remember last radio station and tune in on start up</source>
-        <translation>Kom ihåg senaste radiostationen och lyssna vid uppstart</translation>
-    </message>
-    <message>
         <source>Send crash reports to Last.fm</source>
         <translation>Skicka kraschrapporter till Last.fm</translation>
     </message>
     <message>
         <source>Check for updates automatically</source>
         <translation>Leta automatiskt efter uppdateringar</translation>
-    </message>
-    <message>
-        <source>Menu bar and dock icons</source>
-        <translation>Menyrad och dockikoner</translation>
-    </message>
-    <message>
-        <source>Only dock icon (hide menu bar icon)</source>
-        <translation>Endast dockikon (dölj menyradens ikon)</translation>
-    </message>
-    <message>
-        <source>Only menu bar icon (hide dock icon)</source>
-        <translation>Endast menyrad (dölj dockikon)</translation>
     </message>
     <message>
         <source>Enable media keys</source>
@@ -408,17 +383,6 @@
     <message>
         <source>Update to beta versions - Warning: only for the brave!</source>
         <translation>Uppdatera till betaversioner - varning: endast för de modiga!</translation>
-    </message>
-</context>
-<context>
-    <name>IPluginInfo</name>
-    <message>
-        <source>The %1 plugin hasn&#x27;t been installed</source>
-        <translation>Insticksprogrammet %1 har inte installerats</translation>
-    </message>
-    <message>
-        <source>You didn&#x27;t close %1 so its plugin hasn&#x27;t been installed.</source>
-        <translation>Du stängde inte %1 så dess insticksprogram har inte installerats.</translation>
     </message>
 </context>
 <context>
@@ -487,11 +451,11 @@
 <context>
     <name>LoginPage</name>
     <message>
-        <source>&lt;p&gt;Already a Last.fm user? Connect your account with the Last.fm Desktop App and it&#x27;ll update your profile with the music you&#x27;re listening to.&lt;/p&gt;&lt;p&gt;If you don&#x27;t have an account you can sign up now for free now.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Already a Last.fm user? Connect your account with the Last.fm Desktop App and it&apos;ll update your profile with the music you&apos;re listening to.&lt;/p&gt;&lt;p&gt;If you don&apos;t have an account you can sign up now for free now.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Redan Last.fm-användare? Anslut ditt konto till Last.fm-programmet så kommer din profil att uppdateras med den musik du lyssnar på.&lt;/p&gt;&lt;p&gt;Om du inte har ett konto kan du registrera dig gratis nu.&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>Let&#x27;s get started by connecting your Last.fm account</source>
+        <source>Let&apos;s get started by connecting your Last.fm account</source>
         <translation>Kom igång genom att ansluta ditt Last.fm-konto</translation>
     </message>
     <message>
@@ -535,14 +499,14 @@
         </translation>
     </message>
     <message numerus="yes">
-        <source>&lt;p&gt;Your plugin(s) ha(s|ve) been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to scrobble with your media player(s)&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your plugin(s) ha(s|ve) been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to scrobble with your media player(s)&lt;/p&gt;</source>
         <translation>
             <numerusform>&lt;p&gt;Ditt insticksprogram har installerats.&lt;/p&gt;&lt;p&gt;Du kan nu skrobbla med din mediaspelare&lt;/p&gt;</numerusform>
             <numerusform>&lt;p&gt;Dina insticksprogram har installerats.&lt;/p&gt;&lt;p&gt;Du kan nu skrobbla med dina mediaspelare&lt;/p&gt;</numerusform>
         </translation>
     </message>
     <message>
-        <source>Your plugins haven&#x27;t been installed</source>
+        <source>Your plugins haven&apos;t been installed</source>
         <translation>Dina insticksprogram har inte installerats</translation>
     </message>
     <message>
@@ -696,10 +660,6 @@
         <translation>Spela %1-radio</translation>
     </message>
     <message>
-        <source>Auto-corrected from: %1</source>
-        <translation>Automatiskt korrigerat från: %1</translation>
-    </message>
-    <message>
         <source>%L1</source>
         <translation>%L1</translation>
     </message>
@@ -781,11 +741,11 @@
         <translation>Rekommenderat eftersom du lyssnar på %1, %2, %3, %4 och %5.</translation>
     </message>
     <message>
-        <source>From %1&#x27;s library.</source>
+        <source>From %1&apos;s library.</source>
         <translation>Från %1s bibliotek.</translation>
     </message>
     <message>
-        <source>From %1 and %2&#x27;s libraries.</source>
+        <source>From %1 and %2&apos;s libraries.</source>
         <translation>Från %1 och %2s bibliotek.</translation>
     </message>
     <message numerus="yes">
@@ -796,27 +756,27 @@
         </translation>
     </message>
     <message>
-        <source>From %1, %2, and %3&#x27;s libraries.</source>
+        <source>From %1, %2, and %3&apos;s libraries.</source>
         <translation>Från %1, %2 och %3s bibliotek.</translation>
     </message>
     <message>
-        <source>You&#x27;ve listened to %1 %2 and %3 %4.</source>
+        <source>You&apos;ve listened to %1 %2 and %3 %4.</source>
         <translation>Du har lyssnat på %1 %2 och %3 %4.</translation>
     </message>
     <message>
-        <source>From %1, %2, %3, and %4&#x27;s libraries.</source>
+        <source>From %1, %2, %3, and %4&apos;s libraries.</source>
         <translation>Från %1, %2, %3 och %4s bibliotek.</translation>
     </message>
     <message>
-        <source>You&#x27;ve listened to %1 %2, but not this track.</source>
+        <source>You&apos;ve listened to %1 %2, but not this track.</source>
         <translation>Du har lyssnat på %1 %2, men inte denna låt.</translation>
     </message>
     <message>
-        <source>From %1, %2, %3, %4, and %5&#x27;s libraries.</source>
+        <source>From %1, %2, %3, %4, and %5&apos;s libraries.</source>
         <translation>Från %1, %2, %3, %4 och %5s bibliotek.</translation>
     </message>
     <message>
-        <source>This is the first time you&#x27;ve listened to %1.</source>
+        <source>This is the first time you&apos;ve listened to %1.</source>
         <translation>Detta är första gången du lyssnar på %1.</translation>
     </message>
 </context>
@@ -928,6 +888,30 @@
         <source>Scrobbling from</source>
         <translation>Skrobblar från</translation>
     </message>
+    <message>
+        <source>Scrobble meter: %1%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not scrobbled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable scrobbling by getting the %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last.fm app for Spotify</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scrobbled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PlaysLabel</name>
@@ -958,7 +942,7 @@
         <translation>Är du säker på att du vill avbryta importen?</translation>
     </message>
     <message>
-        <source>Last.fm couldn&#x27;t find any played tracks in your media library.
+        <source>Last.fm couldn&apos;t find any played tracks in your media library.
 
  Click OK to continue.</source>
         <translation>Last.fm kunde inte hitta några spelade låtar i ditt mediabibliotek.
@@ -992,7 +976,7 @@ Din profil kommer att uppdateras med de nya låtarna om några minuter.</transla
         <translation>Kunde inte importera bibliotek</translation>
     </message>
     <message>
-        <source>Sorry, Last.fm was unable to import your listening history. This is probably because you&#x27;ve already scrobbled too many tracks. Listening history can only be imported to brand new profiles.</source>
+        <source>Sorry, Last.fm was unable to import your listening history. This is probably because you&apos;ve already scrobbled too many tracks. Listening history can only be imported to brand new profiles.</source>
         <translation>Ledsen, Last.fm kunde inte importera din lyssningshistorik. Du har förmodligen redan skrobblat för många låtar. Lyssningshistoriken kan bara importeras till nya profiler.</translation>
     </message>
 </context>
@@ -1015,7 +999,7 @@ Din profil kommer att uppdateras med de nya låtarna om några minuter.</transla
         <translation>&lt;&lt; Tillbaka</translation>
     </message>
     <message>
-        <source>Your plugins haven&#x27;t been installed</source>
+        <source>Your plugins haven&apos;t been installed</source>
         <translation>Dina insticksprogram har inte installerats</translation>
     </message>
     <message>
@@ -1146,37 +1130,6 @@ Din profil kommer att uppdateras med de nya låtarna om några minuter.</transla
     </message>
 </context>
 <context>
-    <name>ProgressBar</name>
-    <message>
-        <source>Scrobbling off</source>
-        <translation>Skrobbling av</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - excluded directory</source>
-        <translation>Skrobblar inte - utelämnad katalog</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - not a music video</source>
-        <translation>Skrobblar inte - inte en musikvideo</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - podcasts disabled</source>
-        <translation>Skrobblar inte - podcasts avaktiverade</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - missing artist</source>
-        <translation>Skrobblar inte - artist saknas</translation>
-    </message>
-    <message>
-        <source>Not scrobbling - track too short</source>
-        <translation>Skrobblar inte - låt för kort</translation>
-    </message>
-    <message>
-        <source>Enable scrobbling in Spotify&#x27;s preferences!</source>
-        <translation>Aktivera skrobbling i Spotifys inställningar!</translation>
-    </message>
-</context>
-<context>
     <name>ProxyDialog</name>
     <message>
         <source>Proxy Settings</source>
@@ -1200,22 +1153,6 @@ Din profil kommer att uppdateras med de nya låtarna om några minuter.</transla
     <message>
         <source>Password:</source>
         <translation>Lösenord:</translation>
-    </message>
-    <message>
-        <source>Auto-detect</source>
-        <translation>Automatisk upptäckt</translation>
-    </message>
-    <message>
-        <source>No-proxy</source>
-        <translation>Ingen proxy</translation>
-    </message>
-    <message>
-        <source>HTTP</source>
-        <translation>HTTP</translation>
-    </message>
-    <message>
-        <source>SOCKS5</source>
-        <translation>SOCKS5</translation>
     </message>
 </context>
 <context>
@@ -1318,7 +1255,7 @@ Din profil kommer att uppdateras med de nya låtarna om några minuter.</transla
         <translation>Lyssna gratis på www.last.fm</translation>
     </message>
     <message>
-        <source>My Friends&#x27; Radio</source>
+        <source>My Friends&apos; Radio</source>
         <translation>Mina vänners radio</translation>
     </message>
     <message>
@@ -1353,7 +1290,7 @@ Din profil kommer att uppdateras med de nya låtarna om några minuter.</transla
         <translation>Enhetsskrobblingar</translation>
     </message>
     <message>
-        <source>It looks like you&#x27;ve played these tracks. Would you like to scrobble them?</source>
+        <source>It looks like you&apos;ve played these tracks. Would you like to scrobble them?</source>
         <translation>Det ser ut som om du har spelat dessa låtar. Vill du skrobbla dem?</translation>
     </message>
     <message>
@@ -1370,6 +1307,10 @@ Din profil kommer att uppdateras med de nya låtarna om några minuter.</transla
             <numerusform>%n spelad låt har skrobblats från en enhet  </numerusform>
             <numerusform>%n spelade låtar har skrobblats från en enhet  </numerusform>
         </translation>
+    </message>
+    <message>
+        <source>Tracks appearing in red are invalid and will not be scrobbled. Hover your mouse over each track to find out why.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1519,7 +1460,7 @@ Din profil kommer att uppdateras med de nya låtarna om några minuter.</transla
 <context>
     <name>ScrobblesWidget</name>
     <message>
-        <source>You haven&#x27;t scrobbled any music to Last.fm yet.</source>
+        <source>You haven&apos;t scrobbled any music to Last.fm yet.</source>
         <translation>Du har inte skrobblat någon musik till Last.fm än.</translation>
     </message>
     <message>
@@ -1685,11 +1626,11 @@ eller välj från nedanstående</translation>
 <context>
     <name>TourFinishPage</name>
     <message>
-        <source>&lt;p&gt;Now you&#x27;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&#x27;ve also finished importing your listening history and have added it to your Last.fm profile.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&apos;ve also finished importing your listening history and have added it to your Last.fm profile.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
         <translation>&lt;p&gt;Nu kan du komma igång! Klicka bara på &lt;strong&gt;Avsluta&lt;/strong&gt; och börja utforska.&lt;/p&gt;&lt;p&gt;Vi är också klara med importen av din lyssningshistorik och har lagt till den i din Last.fm-profil.&lt;/p&gt;&lt;p&gt;Tack för att du har installerat Last.fm-programmet, vi hoppas att du kommer att ha glädje av den!&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>That&#x27;s it, you&#x27;re good to go!</source>
+        <source>That&apos;s it, you&apos;re good to go!</source>
         <translation>Det var det, du är klar att börja!</translation>
     </message>
     <message>
@@ -1699,6 +1640,34 @@ eller välj från nedanstående</translation>
     <message>
         <source>&lt;&lt; Back</source>
         <translation>&lt;&lt; Tillbaka</translation>
+    </message>
+    <message>
+        <source>there was an upload error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>the submission was denied by Last.fm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>it was detected as spam (too high playcounts?)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>the submission was cancelled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;Importing your listening history to Last.fm failed because %1. Sorry about that!&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;We&apos;re still importing your listening history and it will be added to your Last.fm profile soon.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Now you&apos;re ready to get started! Just click &lt;strong&gt;Finish&lt;/strong&gt; and start exploring.&lt;/p&gt;&lt;p&gt;Thanks for installing the Last.fm Desktop App, we hope you enjoy using it!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1727,7 +1696,7 @@ eller välj från nedanstående</translation>
 <context>
     <name>TourMetadataPage</name>
     <message>
-        <source>&lt;p&gt;Find out more about the music you&#x27;re listening to, including biographies, listening stats, photos and similar artists, as well as the tags listeners use to describe them.&lt;/p&gt;&lt;p&gt;Check out the &lt;strong&gt;Now Playing&lt;/strong&gt; tab, or simply click on any track in your &lt;strong&gt;Scrobbles&lt;/strong&gt; tab to learn more.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Find out more about the music you&apos;re listening to, including biographies, listening stats, photos and similar artists, as well as the tags listeners use to describe them.&lt;/p&gt;&lt;p&gt;Check out the &lt;strong&gt;Now Playing&lt;/strong&gt; tab, or simply click on any track in your &lt;strong&gt;Scrobbles&lt;/strong&gt; tab to learn more.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Få mer information om musiken du lyssnar på, inklusive biografier, lyssningsstatistik, foton och liknande artister samt taggar som lyssnare använder för att beskriva dem.&lt;/p&gt;&lt;p&gt;Kolla in fliken &lt;strong&gt;Spelas nu&lt;/strong&gt; eller klicka bara på en låt på din flik &lt;strong&gt;Skrobblingar&lt;/strong&gt; för mer information.&lt;/p&gt;</translation>
     </message>
     <message>
@@ -1785,7 +1754,7 @@ eller välj från nedanstående</translation>
 <context>
     <name>TourScrobblesPage</name>
     <message>
-        <source>&lt;p&gt;The desktop client runs in the background, quietly updating your Last.fm profile with the music you&#x27;re playing, which you can use to get music recommendations, gig tips and more. &lt;/p&gt;&lt;p&gt;You can also use the Last.fm Desktop App to find out more about the artist you&#x27;re listening to, and to play personalised radio.&lt;/p&gt;</source>
+        <source>&lt;p&gt;The desktop client runs in the background, quietly updating your Last.fm profile with the music you&apos;re playing, which you can use to get music recommendations, gig tips and more. &lt;/p&gt;&lt;p&gt;You can also use the Last.fm Desktop App to find out more about the artist you&apos;re listening to, and to play personalised radio.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Programmet körs i bakgrunden och uppdaterar tyst din Last.fm-profil i bakgrunden med musiken du spelar, vilket du kan använda för att få musikrekommendationer, spelningstips med mera. &lt;/p&gt;&lt;p&gt;Du kan också använda Last.fm-programmet för att få mer information om artisten du lyssnar på och spela personlig radio.&lt;/p&gt;</translation>
     </message>
     <message>
@@ -1852,10 +1821,6 @@ eller välj från nedanstående</translation>
         <translation>%1-radio</translation>
     </message>
     <message>
-        <source>Auto-corrected from: %1</source>
-        <translation>Automatiskt korrigerat från: %1</translation>
-    </message>
-    <message>
         <source>Cached</source>
         <translation>Cachat</translation>
     </message>
@@ -1913,10 +1878,6 @@ eller välj från nedanstående</translation>
     <message>
         <source>This user has already been added.</source>
         <translation>Användaren har redan lagts till.</translation>
-    </message>
-    <message>
-        <source>To add a new account you must connect it to the Last.fm user permissions.</source>
-        <translation>För att lägga till ett nytt konto måste du ansluta det till Last.fm-användartillstånd.</translation>
     </message>
     <message>
         <source>Removing %1</source>
@@ -2004,7 +1965,7 @@ eller välj från nedanstående</translation>
         <translation>från %1</translation>
     </message>
     <message numerus="yes">
-        <source>You&#x27;ve reached this station&#x27;s skip limit. Skip again in %n minute(s).</source>
+        <source>You&apos;ve reached this station&apos;s skip limit. Skip again in %n minute(s).</source>
         <translation>
             <numerusform>Du har nått denna stations gräns för antalet gånger du får hoppa över en låt. Hoppa över igen om %n minut.</numerusform>
             <numerusform>Du har nått denna stations gräns för antalet gånger du får hoppa över en låt. Hoppa över igen om %n minuter.</numerusform>
@@ -2067,15 +2028,15 @@ eller välj från nedanstående</translation>
         <translation>Insticksprogram installerat!</translation>
     </message>
     <message>
-        <source>&lt;p&gt;The %1 plugin has been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to scrobble with %1.&lt;/p&gt;</source>
+        <source>&lt;p&gt;The %1 plugin has been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to scrobble with %1.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Insticksprogrammet %1 har installerats.&lt;/p&gt;&lt;p&gt;Du kan nu skrobbla med %1.&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>The %1 plugin hasn&#x27;t been installed</source>
+        <source>The %1 plugin hasn&apos;t been installed</source>
         <translation>Insticksprogrammet %1 har inte installerats</translation>
     </message>
     <message>
-        <source>You didn&#x27;t close %1 so its plugin hasn&#x27;t been installed.</source>
+        <source>You didn&apos;t close %1 so its plugin hasn&apos;t been installed.</source>
         <translation>Du stängde inte %1 så dess insticksprogram har inte installerats.</translation>
     </message>
 </context>
@@ -2094,7 +2055,7 @@ eller välj från nedanstående</translation>
         <translation>inte installerat</translation>
     </message>
     <message>
-        <source>Your plugin hasn&#x27;t been installed</source>
+        <source>Your plugin hasn&apos;t been installed</source>
         <translation>Ditt insticksprogram har inte installerats</translation>
     </message>
     <message>
@@ -2106,7 +2067,7 @@ eller välj från nedanstående</translation>
         <translation>iTunes-insticksprogram installerat!</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Your iTunes plugin has been installed.&lt;/p&gt;&lt;p&gt;You&#x27;re now ready to device scrobble.&lt;/p&gt;</source>
+        <source>&lt;p&gt;Your iTunes plugin has been installed.&lt;/p&gt;&lt;p&gt;You&apos;re now ready to device scrobble.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Ditt iTunes-insticksprogram har installerats.&lt;/p&gt;&lt;p&gt;Du kan nu skrobbla från enheten.&lt;/p&gt;</translation>
     </message>
     <message>
@@ -2114,7 +2075,7 @@ eller välj från nedanstående</translation>
         <translation>Det uppstod ett fel vid kopieringen av det nya insticksprogrammet</translation>
     </message>
     <message>
-        <source>You didn&#x27;t close iTunes</source>
+        <source>You didn&apos;t close iTunes</source>
         <translation>Du stängde inte iTunes</translation>
     </message>
 </context>
@@ -2142,30 +2103,6 @@ eller välj från nedanstående</translation>
 <context>
     <name>unicorn::LoginProcess</name>
     <message>
-        <source>Login Failed</source>
-        <translation>Inloggningen misslyckades</translation>
-    </message>
-    <message>
-        <source>Sorry, we don&#x27;t recognise that username, or you typed the password wrongly.</source>
-        <translation>Ledsen, vi känner inte igen det användarnamnet eller så angav du fel lösenord.</translation>
-    </message>
-    <message>
-        <source>Last.fm Unavailable</source>
-        <translation>Last.fm otillgänglig</translation>
-    </message>
-    <message>
-        <source>There was a problem communicating with the Last.fm services. Please try again later.</source>
-        <translation>Det uppstod ett problen under anslutningen till Last.fm-tjänsten. Försök igen senare.</translation>
-    </message>
-    <message>
-        <source>Cannot connect to Last.fm</source>
-        <translation>Kan inte ansluta till Last.fm</translation>
-    </message>
-    <message>
-        <source>Last.fm cannot be reached. Please check your firewall or proxy settings.</source>
-        <translation>Last.fm kan inte nås. Kontrollera dina brandväggs- eller proxy-inställningar.</translation>
-    </message>
-    <message>
         <source>There was a network error: %1</source>
         <translation>Det uppstod ett nätverksfel: %1</translation>
     </message>
@@ -2188,7 +2125,7 @@ eller välj från nedanstående</translation>
 <context>
     <name>unicorn::MessageDialog</name>
     <message>
-        <source>Don&#x27;t ask this again</source>
+        <source>Don&apos;t ask this again</source>
         <translation>Fråga inte detta igen</translation>
     </message>
 </context>
@@ -2210,4 +2147,5 @@ eller välj från nedanstående</translation>
         <source>SOCKS5</source>
         <translation>SOCKS5</translation>
     </message>
-</context></TS>
+</context>
+</TS>
